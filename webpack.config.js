@@ -1,5 +1,8 @@
 'use strict';
 
+// Helper: root() is defined at the bottom
+var path = require('path');
+
 // Modules
 var webpack = require('webpack');
 var autoprefixer = require('autoprefixer');
@@ -14,6 +17,8 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 var ENV = process.env.npm_lifecycle_event;
 var isTest = ENV === 'test' || ENV === 'test-watch';
 var isProd = ENV === 'build';
+
+var PORT = 3000;
 
 module.exports = function makeWebpackConfig() {
   /**
@@ -30,7 +35,7 @@ module.exports = function makeWebpackConfig() {
    * Karma will set this when it's a test build
    */
   config.entry = isTest ? void 0 : {
-    app: './src/app/app.js'
+    app: './src/app/app.js',
   };
 
   /**
@@ -45,7 +50,7 @@ module.exports = function makeWebpackConfig() {
 
     // Output path from the view of the page
     // Uses webpack-dev-server in development
-    publicPath: isProd ? '/' : 'http://localhost:8080/',
+    publicPath: isProd ? '/' : `http://localhost:${PORT}/`,
 
     // Filename for entry points
     // Only adds hash in build mode
@@ -53,7 +58,7 @@ module.exports = function makeWebpackConfig() {
 
     // Filename for non-entry points
     // Only adds hash in build mode
-    chunkFilename: isProd ? '[name].[hash].js' : '[name].bundle.js'
+    chunkFilename: isProd ? '[name].[hash].js' : '[name].bundle.js',
   };
 
   /**
@@ -68,7 +73,7 @@ module.exports = function makeWebpackConfig() {
     config.devtool = 'source-map';
   }
   else {
-    config.devtool = 'eval-source-map';
+    config.devtool = 'cheap-module-source-map';
   }
 
   /**
@@ -80,14 +85,34 @@ module.exports = function makeWebpackConfig() {
 
   // Initialize module
   config.module = {
-    rules: [{
+    rules: [ {
       // JS LOADER
       // Reference: https://github.com/babel/babel-loader
       // Transpile .js files using babel-loader
       // Compiles ES6 and ES7 into ES5 code
       test: /\.js$/,
       loader: 'babel-loader',
-      exclude: /node_modules/
+      exclude: /node_modules/,
+
+    }, {
+      // support for .scss files
+      // use 'null' loader in test mode (https://github.com/webpack/null-loader)
+      // all css in src/style will be bundled in an external css file
+      test: /\.(scss|sass)$/,
+      // exclude: root('src', 'app'),
+      loader: isTest ? 'null-loader' : ExtractTextPlugin.extract({
+        fallbackLoader: 'style-loader',
+        loader: [
+          { loader: 'css-loader', options: { sourceMap: true } },
+          { loader: 'postcss-loader' },
+          { loader: 'sass-loader', options: { sourceMap: true } },
+        ],
+      }),
+    }, {
+      // all css required in src/app files will be merged in js files
+      test: /\.(scss|sass)$/,
+      exclude: root('src', 'style'),
+      loader: 'raw-loader!postcss-loader!sass-loader',
     }, {
       // CSS LOADER
       // Reference: https://github.com/webpack/css-loader
@@ -105,10 +130,10 @@ module.exports = function makeWebpackConfig() {
       loader: isTest ? 'null-loader' : ExtractTextPlugin.extract({
         fallbackLoader: 'style-loader',
         loader: [
-          {loader: 'css-loader', query: {sourceMap: true}},
-          {loader: 'postcss-loader'}
+          { loader: 'css-loader', query: { sourceMap: true } },
+          { loader: 'postcss-loader' },
         ],
-      })
+      }),
     }, {
       // ASSET LOADER
       // Reference: https://github.com/webpack/file-loader
@@ -117,14 +142,14 @@ module.exports = function makeWebpackConfig() {
       // Pass along the updated reference to your code
       // You can add here any file extension you want to get copied to your output
       test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
-      loader: 'file-loader'
+      loader: 'file-loader',
     }, {
       // HTML LOADER
       // Reference: https://github.com/webpack/raw-loader
       // Allow loading html through js
       test: /\.html$/,
-      loader: 'raw-loader'
-    }]
+      loader: 'raw-loader',
+    } ],
   };
 
   // ISTANBUL LOADER
@@ -137,12 +162,12 @@ module.exports = function makeWebpackConfig() {
       test: /\.js$/,
       exclude: [
         /node_modules/,
-        /\.spec\.js$/
+        /\.spec\.js$/,
       ],
       loader: 'istanbul-instrumenter-loader',
       query: {
-        esModules: true
-      }
+        esModules: true,
+      },
     })
   }
 
@@ -151,8 +176,8 @@ module.exports = function makeWebpackConfig() {
    * Reference: https://github.com/postcss/autoprefixer-core
    * Add vendor prefixes to your css
    */
-   // NOTE: This is now handled in the `postcss.config.js`
-   //       webpack2 has some issues, making the config file necessary
+  // NOTE: This is now handled in the `postcss.config.js`
+  //       webpack2 has some issues, making the config file necessary
 
   /**
    * Plugins
@@ -164,10 +189,10 @@ module.exports = function makeWebpackConfig() {
       test: /\.scss$/i,
       options: {
         postcss: {
-          plugins: [autoprefixer]
-        }
-      }
-    })
+          plugins: [ autoprefixer ],
+        },
+      },
+    }),
   ];
 
   // Skip rendering index.html in test mode
@@ -177,13 +202,13 @@ module.exports = function makeWebpackConfig() {
     config.plugins.push(
       new HtmlWebpackPlugin({
         template: './src/public/index.html',
-        inject: 'body'
+        inject: 'body',
       }),
 
       // Reference: https://github.com/webpack/extract-text-webpack-plugin
       // Extract css files
       // Disabled when in test mode or not in build mode
-      new ExtractTextPlugin({filename: 'css/[name].css', disable: !isProd, allChunks: true})
+      new ExtractTextPlugin({ filename: 'css/[name].css', disable: !isProd, allChunks: true }),
     )
   }
 
@@ -192,11 +217,11 @@ module.exports = function makeWebpackConfig() {
     config.plugins.push(
       // Reference: http://webpack.github.io/docs/list-of-plugins.html#noerrorsplugin
       // Only emit files when there are no errors
-      new webpack.NoErrorsPlugin(),
+      new webpack.NoEmitOnErrorsPlugin(),
 
       // Reference: http://webpack.github.io/docs/list-of-plugins.html#dedupeplugin
       // Dedupe modules in the output
-      new webpack.optimize.DedupePlugin(),
+      // new webpack.optimize.DedupePlugin(),
 
       // Reference: http://webpack.github.io/docs/list-of-plugins.html#uglifyjsplugin
       // Minify all javascript, switch loaders to minimizing mode
@@ -204,9 +229,9 @@ module.exports = function makeWebpackConfig() {
 
       // Copy assets from the public folder
       // Reference: https://github.com/kevlened/copy-webpack-plugin
-      new CopyWebpackPlugin([{
-        from: __dirname + '/src/public'
-      }])
+      new CopyWebpackPlugin([ {
+        from: __dirname + '/src/public',
+      } ]),
     )
   }
 
@@ -217,8 +242,15 @@ module.exports = function makeWebpackConfig() {
    */
   config.devServer = {
     contentBase: './src/public',
-    stats: 'minimal'
+    stats: 'minimal',
+    port: PORT,
   };
 
   return config;
 }();
+
+// Helper functions
+function root(args) {
+  args = Array.prototype.slice.call(arguments, 0);
+  return path.join.apply(path, [ __dirname ].concat(args));
+}

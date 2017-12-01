@@ -1,0 +1,22 @@
+// styles in src/style directory are applied to the whole page
+
+// Default variables.
+@import "variables";
+
+// Bootstrap Framework.
+$icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
+@import "~bootstrap-sass/assets/stylesheets/bootstrap-sprockets";
+@import "~bootstrap-sass/assets/stylesheets/bootstrap";
+
+// Font Awesome
+$fa-font-path: "../fonts/fa";
+@import 'font-awesome/font-awesome';
+
+// Bootswatch Flatly Theme
+@import "bootswatch";
+
+// Fims Overrides
+@import "fims/fims";
+
+// Base-theme overrides.
+@import 'overrides';

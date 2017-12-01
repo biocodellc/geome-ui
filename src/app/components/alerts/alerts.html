@@ -1,0 +1,8 @@
+<div class="alerts">
+    <div ng-repeat="alert in alerts.getAlerts()" class="alert alert-{{alert.level}} alert-dismissable">
+        <button type="button" class="close" ng-click="alerts.remove(alert)" aria-label="Close">
+            <i class="fa fa-times fa-sm"></i>
+        </button>
+        {{ alert.msg }}
+    </div>
+</div>

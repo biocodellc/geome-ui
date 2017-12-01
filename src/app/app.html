@@ -1,8 +1,9 @@
-<main>
-  <h1 class="title">Hello from Angular !</h1>
-
-  <!-- Images (and assets) are parsed and loaded from within the public directory -->
-  <img src="/img/logo.png">
+<header ng-include="'components/header/header.tpl.html'"></header>
+<main class="main">
+  <alerts />
+  <div class="content" id="content">
+    <div class="container-fluid" ui-view></div>
+  </div>
 </main>
 <footer>
   <a ng-href="{{app.url}}">Webpack Angular Starter</a>
