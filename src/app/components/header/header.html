@@ -1,0 +1,114 @@
+<div>
+
+    <!-- Sidebar navigation -->
+    <nav class="side-nav navbar navbar-default">
+        <div class="section">
+            <h5 class="section-title">Main</h5>
+            <ul class="nav nav-stacked">
+                <li><a ui-sref="home"><i class="fa fa-home fa-fw"></i> Home</a></li>
+                <li><a ui-sref="template"
+                       ng-class="{disabled: !header.project}"
+                       uib-tooltip="Select a project"
+                       tooltip-enable="!header.project">
+                    <i class="fa fa-file-excel-o fa-fw"></i> Generate Template</a></li>
+                <li><a ui-sref="query"
+                       ng-class="{disabled: !header.project}"
+                       uib-tooltip="Select a project"
+                       tooltip-enable="!header.project">
+                    <i class="fa fa-search fa-fw"></i> View Data</a></li>
+                <li><a ui-sref="validate"
+                       ng-class="{disabled: !header.project}"
+                       uib-tooltip="Select a project"
+                       tooltip-enable="!header.project">
+                    <i class="fa fa-upload fa-fw"></i> Validate and Upload Data</a></li>
+            </ul>
+        </div>
+
+        <div class="section" ng-show="header.user">
+            <h5 class="section-title">Admin</h5>
+            <ul class="nav nav-stacked">
+                <li><a ui-sref="expeditions.list"
+                       ng-class="{disabled: !header.project}"
+                       uib-tooltip="Select a project"
+                       tooltip-enable="!header.project">
+                    <i class="fa fa-cog fa-fw"></i> My Expeditions</a></li>
+                <li><a ui-sref="project"
+                       ng-show="header.user.userId === header.project.user.userId">
+                    <i class="fa fa-wrench fa-fw"></i> Project Settings</a></li>
+                <li><a ui-sref="profile"><i class="fa fa-user fa-fw"></i> User Profile</a></li>
+            </ul>
+        </div>
+    </nav>
+    <!--/. Sidebar navigation -->
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-default">
+
+        <div class="navbar-header">
+            <a class="navbar-brand separator" ui-sref="home">Biocode-Fims</a>
+        </div>
+
+        <ul class="nav navbar-nav pull-right">
+            <li class="dropdown">
+                <a href="#" data-toggle="dropdown" class="dropdown-toggle"><i class="fa fa-cog fa-md"></i>
+                    <i class="fa fa-angle-down"></i></a>
+                <ul class="dropdown-menu dropdown-menu-right">
+                    <li><a ng-click="header.apidocs()"><i class="fa fa-code fa-fw"></i> Api Docs</a></li>
+                    <li><a href="http://fims.readthedocs.org/en/stable/"><i class="fa fa-question"></i> Help</a></li>
+                </ul>
+            </li>
+        </ul>
+
+        <ul class="nav navbar-nav pull-right">
+            <li class="dropdown separator">
+                <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                    <span ng-show="header.user" style="padding-right: 5px;">hi, {{ header.user.username }}!</span>
+                    <i class="fa fa-user-circle-o fa-lg"></i> <i class="fa fa-angle-down"></i>
+                </a>
+
+                <ul class="dropdown-menu dropdown-menu-right">
+                    <li ng-show="!header.user">
+                        <a ng-click="header.login()"><i class="fa fa-sign-in fa-fw"></i> Sign In</a>
+                    </li>
+                    <li ng-show="header.user">
+                        <a ui-sref="profile"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                    </li>
+                    <li ng-show="header.user" role="separator" class="divider"></li>
+                    <li ng-show="header.user">
+                        <a ng-click="header.logout()" ui-sref="home"><i class="fa fa-sign-out fa-fw"></i> Sign Out</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+        <ul class="project-selector nav navbar-nav pull-right">
+            <li uib-dropdown is-open="header.projectSelectorOpen"
+                auto-close="outsideClick" class="separator">
+                <a href="#" uib-dropdown-toggle ng-click="header.togle()">
+                    <span ng-show="header.project">{{ header.project.projectTitle }}</span>
+                    <span ng-show="!header.project">Choose a Project</span>
+                    <i class="fa fa-angle-down"></i>
+                </a>
+                <ul uib-dropdown-menu class="dropdown-menu dropdown-menu-right separator">
+                    <li class="section-title clearfix">Switch Project
+                        <span class="include-public pull-right" ng-show="header.user">
+                            <label>include public</label>
+                            <input type="checkbox" class="pull-right" ng-model="header.includePublicProjects"/>
+                        </span>
+                    </li>
+                    <li class="divider"></li>
+                    <li ng-repeat="project in header.projects">
+                        <a href='#' ng-click="header.setProject(project); header.projectSelectorOpen=false;">
+                            {{ ::project.projectTitle }} <i ng-show="header.project.projectId === project.projectId"
+                                                            class="fa fa-check fa-after"></i>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <!--<li><a ui-sref="lookup" class='enabled'>ID Lookup</a></li>-->
+    <!--<li ng-show="!header.user"><a href='#' class='disabled'>BCID Creator</a></li>-->
+    <!--<li ng-show="header.user"><a ui-sref="creator" class='enabled'>BCID Creator</a></li>-->
+
+</div>
