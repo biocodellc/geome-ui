@@ -1,55 +1,40 @@
 const routing = ($stateProvider, $urlRouterProvider, $urlMatcherFactoryProvider, $locationProvider) => {
 
-  // make trailing / optional
-  $urlMatcherFactoryProvider.strictMode(false);
-
   $stateProvider
-    .state('home', {
-      url: "/",
-      templateUrl: "app/components/home/home.html",
-    })
-    .state('validate', {
-      url: "/validate",
-      templateUrl: "app/components/validation/validation.html",
-      controller: "ValidationController as vm",
-      projectRequired: true,
-      loginRequired: true,
-    })
-    .state('lookup', {
-      url: "/lookup?id",
-      templateUrl: "app/components/lookup/lookup.html",
-      controller: "LookupCtrl as vm",
-    })
-    .state('lookup.metadata', {
-      url: "/metadata/*ark",
-      templateUrl: "app/components/lookup/lookup.metadata.html",
-      controller: "LookupMetadataCtrl as vm",
-    })
-    .state('query', {
-      url: "/query",
-      templateUrl: "app/components/query/query.html",
-      controller: "QueryCtrl as queryVm",
-      projectRequired: true,
-    })
-    .state('creator', {
-      url: "/bcidCreator",
-      templateUrl: "app/components/creator/bcidCreator.jsp",
-      controller: "CreatorCtrl as vm",
-      loginRequired: true,
-    })
-    .state('projects', {
-      url: "/secure/projects",
-      templateUrl: "app/components/projects/projects.html",
-      controller: "ProjectCtrl as vm",
-      projectRequired: true,
-      loginRequired: true,
-    })
+    // .state('validate', {
+    //   url: "/validate",
+    //   templateUrl: "app/components/validation/validation.html",
+    //   controller: "ValidationController as vm",
+    //   projectRequired: true,
+    //   loginRequired: true,
+    // })
+    // .state('lookup', {
+    //   url: "/lookup?id",
+    //   templateUrl: "app/components/lookup/lookup.html",
+    //   controller: "LookupCtrl as vm",
+    // })
+    // .state('lookup.metadata', {
+    //   url: "/metadata/*ark",
+    //   templateUrl: "app/components/lookup/lookup.metadata.html",
+    //   controller: "LookupMetadataCtrl as vm",
+    // })
+    // .state('creator', {
+    //   url: "/bcidCreator",
+    //   templateUrl: "app/components/creator/bcidCreator.jsp",
+    //   controller: "CreatorCtrl as vm",
+    //   loginRequired: true,
+    // })
+    // .state('projects', {
+    //   url: "/secure/projects",
+    //   template: "app/components/projects/projects.html",
+    //   controller: "ProjectCtrl as vm",
+    //   projectRequired: true,
+    //   loginRequired: true,
+    // })
     .state('notFound', {
       url: '*path',
-      templateUrl: "app/partials/page-not-found.html",
+      template: require('partials/page-not-found.html'),
     });
-
-  $locationProvider.html5Mode(true);
 
   // redirect all legacy route
   $urlRouterProvider

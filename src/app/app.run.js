@@ -1,8 +1,8 @@
 import angular from 'angular';
 
-run.$inject = ['$http', '$rootScope', '$transitions'];//, 'LoadingModal'];
+run.$inject = ['$http', '$rootScope', '$transitions', 'LoadingModal'];
 
-export default function run($http, $rootScope, $transitions) {//}, LoadingModal) {
+export default function run($http, $rootScope, $transitions, LoadingModal) {
   $http.defaults.headers.common = {'Fims-App': 'Biscicol-Fims'};
 
   $rootScope.isEmpty = function (val) {
@@ -11,15 +11,15 @@ export default function run($http, $rootScope, $transitions) {//}, LoadingModal)
 
   $transitions.onStart({}, function (trans) {
     if (trans.$to().resolvables.length > 0) {
-      // LoadingModal.open();
+      LoadingModal.open();
     }
   });
 
   $transitions.onFinish({}, function () {
-    // LoadingModal.close();
+    LoadingModal.close();
   });
 
   $transitions.onError({}, function () {
-    // LoadingModal.close(true);
+    LoadingModal.close(true);
   });
 }

@@ -1,0 +1,97 @@
+<div class="admin">
+    <div class="row profile">
+        <div class="col-xs-12">
+            <section>
+                <div class="heading">
+                    <h2 class="username"><i class="fa fa-user"></i> {{ vm.user.username }}</h2>
+                </div>
+
+                <div class="settings">
+
+                    <div class="section">
+                        <h3 class="title">Profile</h3>
+
+                        <form ng-submit="vm.save()">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-6">
+                                    <div class="form-group" show-errors="">
+                                        <label class="control-label">First Name</label>
+                                        <input type="text" required name="firstName" class="form-control"
+                                               ng-model="vm.user.firstName"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 col-md-6">
+                                    <div class="form-group" show-errors>
+                                        <label class="control-label">Last Name</label>
+                                        <input type="text" required name="lastName" class="form-control"
+                                               ng-model="vm.user.lastName"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 col-md-6">
+                                    <div class="form-group" show-errors>
+                                        <label class="control-label">Email</label>
+                                        <input type="email" required name="email" class="form-control"
+                                               ng-model="vm.user.email"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 col-md-6">
+                                    <div class="form-group" show-errors>
+                                        <label class="control-label">Institution</label>
+                                        <input type="text" required name="institution" class="form-control"
+                                               ng-model="vm.user.institution"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <input type="submit" class="btn btn-primary" value="Save"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="title">Change Password</h3>
+
+                        <form ng-submit="vm.updatePassword()" class="form-inline change-password-form"
+                              name="passwordForm">
+
+                            <div class="form-group" show-errors="">
+                                <label class="control-label">Current Password</label>
+                                <input type="password" required name="currentPassword" class="form-control"
+                                       ng-model="vm.currentPassword"/>
+                            </div>
+                            <div class="form-group" show-errors="">
+                                <label class="control-label">New Password</label>
+                                <input type="password" required name="newPassword" class="form-control"
+                                       ng-model="vm.newPassword" minlength="10"/>
+                                <p class="help-block"
+                                   ng-if="passwordForm.newPassword.$error.minlength && passwordForm.newPassword.$touched">
+                                    Password must be at least 10 characters long.</p>
+                            </div>
+                            <div class="form-group" show-errors="">
+                                <label class="control-label">Verify Password</label>
+                                <input type="password" required name="verifyPassword" class="form-control"
+                                       ng-model="vm.verifyPassword" compare-to="vm.newPassword"/>
+                                <p class="help-block"
+                                   ng-if="passwordForm.verifyPassword.$error.compareTo && passwordForm.verifyPassword.$touched">
+                                    Passwords do not match.</p>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="submit" class="btn btn-primary" value="Change Password"/>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+
+            </section>
+        </div>
+    </div>
+</div>
+

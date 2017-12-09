@@ -1,0 +1,37 @@
+<li class="settings-list-item">
+    <div class="row-actions">
+        <a href="#" ng-click="vm.toggleEdit()"><i class="fa fa-pencil fa-fw"></i></a>
+        <a href="#" ng-click="vm.remove()"><i class="fa fa-trash text-danger fa-fw"></i></a>
+    </div>
+
+    <div class="info">
+        <div class="row">
+            <div class="col-xs-6 col-lg-4">
+                <a ui-sref="project.config.entities.detail({ alias: vm.entity.conceptAlias, entity: vm.entity })"
+                   href class="title">
+                    {{ vm.entity.conceptAlias }}
+                </a>
+            </div>
+            <div class="col-xs-6 col-lg-2">
+                <ul class="list-unstyled pull-right">
+                    <li>
+                        <a href ui-sref=".detail.attributes({ alias: vm.entity.conceptAlias, entity: vm.entity })">
+                            <span class="badge">{{ vm.entity.attributes.length }}</span> Attributes
+                        </a>
+                    </li>
+                    <li>
+                        <a href ui-sref=".detail.rules({ alias: vm.entity.conceptAlias, entity: vm.entity })">
+                            <span class="badge">{{ vm.entity.rules.length }}</span> Rules
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-xs-12">
+                <ul class="list-inline metadata" ng-click="vm.toggleEdit()">
+                    <li ng-show="vm.entity.worksheet"><strong>worksheet:</strong> {{ vm.entity.worksheet }}</li>
+                    <li ng-show="vm.entity.parentEntity"><strong>parentEntity:</strong> {{ vm.entity.parentEntity }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</li>

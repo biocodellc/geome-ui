@@ -1,0 +1,20 @@
+<div class="settings">
+    <ul class="settings-list">
+        <li class="settings-list-item" ng-repeat="expedition in vm.expeditions">
+            <div class="row-actions">
+                <a href ui-sref="project.expeditions.detail.settings({ id:expedition.expeditionId, expedition:expedition })">
+                    <i class="fa fa-pencil fa-fw"></i></a>
+                <a href ng-click="vm.export(expedition)" uib-tooltip="export data"><i class="fa fa-download fa-fw"></i></a>
+                <a href="#" ng-click="vm.delete(expedition)"><i class="fa fa-trash text-danger fa-fw"></i></a>
+            </div>
+
+            <div class="info">
+                <div class="title">{{ expedition.expeditionTitle }}</div>
+                <ul class="list-inline metadata">
+                    <li><strong>Code:</strong> {{ expedition.expeditionCode}}</li>
+                    <li><strong>Owner:</strong> {{ expedition.user.username }}</li>
+                </ul>
+            </div>
+        </li>
+    </ul>
+</div>

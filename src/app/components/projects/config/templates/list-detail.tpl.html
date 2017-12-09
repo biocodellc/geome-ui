@@ -1,0 +1,41 @@
+<div class="settings">
+    <div class="settings-bar">
+        <div class="settings-bar-container">
+            <ul class="actions pull-right">
+                <li class="save-config" ng-show="vm.config.modified">
+                    <a href="#" ng-click="vm.save()">
+                        <i class="fa fa-upload"></i> Save Config</a>
+                </li>
+                <li class="add">
+                    <a href="#" ng-click="vm.add()">
+                        <i class="fa fa-plus fa-fw"></i> Add Field
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+
+    <div class="row back">
+        <div class="col-xs-12">
+            <a href ui-sref="project.config.lists"> <i class="fa fa-chevron-left"></i>
+                Lists</a>
+        </div>
+    </div>
+
+    <table class="table attributes-table">
+        <thead>
+            <th></th>
+            <th>Value</th>
+            <th>Defined By</th>
+            <th>Definition</th>
+        </thead>
+
+        <tbody>
+            <tr ng-repeat="field in vm.list.fields track by $index"
+                editable-field index="$index" field="field" list="vm.list"
+                on-delete="vm.deleteField(index)" id="field_{{ $index }}">
+            </tr>
+        </tbody>
+    </table>
+</div>

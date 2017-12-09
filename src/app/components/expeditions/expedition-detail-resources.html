@@ -1,0 +1,15 @@
+<div class="settings">
+    <ul class="resources settings-list">
+        <li class="resources-heading settings-list-item">
+            <div class="col-xs-4">Entity</div>
+            <div class="col-xs-8">Root Identifier</div>
+        </li>
+        <li class="resource settings-list-item" ng-repeat="entityIdentifier in vm.expedition.entityIdentifiers">
+            <div class="col-xs-4">{{ entityIdentifier.conceptAlias }}</div>
+            <div class="col-xs-8">
+                <a href="http://n2t.net/{{entityIdentifier.identifier}}">http://n2t.net/{{
+                    entityIdentifier.identifier }}</a>
+            </div>
+        </li>
+    </ul>
+</div>

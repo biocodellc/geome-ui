@@ -1,0 +1,20 @@
+<table class="table attributes-table">
+    <thead>
+        <th></th>
+        <th>Column</th>
+        <th>Group</th>
+        <th>Data Type</th>
+    </thead>
+
+    <tbody dnd-list="vm.attributes" dnd-drop="vm.dndDrop(index, item)">
+        <tr ng-repeat="attribute in vm.attributes track by $index" dnd-draggable="attribute"
+            editable-attribute index="$index" attribute="attribute"
+            dnd-dragstart="vm.dndStart()"
+            on-delete="vm.deleteAttr(index)" id="attribute_{{ $index }}">
+        </tr>
+        <!--define a custom <tr> placeholder -->
+        <tr class="dndPlaceholder">
+            <td colspan="4"></td>
+        </tr>
+    </tbody>
+</table>

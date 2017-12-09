@@ -1,0 +1,21 @@
+<div class="row">
+    <div class="add-view col-xs-9 col-sm-8 col-md-7 col-lg-5">
+        <form ng-show="!vm.rule">
+            <div class="form-group">
+                <label>Rule Type</label>
+                <select class="form-control" ng-model="vm.rule"
+                        ng-options="rule as rule.name for rule in vm.availableRules">
+                    <option value="">Choose a Rule</option>
+                </select>
+            </div>
+        </form>
+
+        <div ng-show="vm.rule" class="row"
+             ng-include="'app/components/projects/config/templates/edit-rule-form.tpl.html'"></div>
+        <div class="form-group" ng-class="{'col-xs-offset-3': vm.rule }">
+            <button ng-show="vm.rule" class="btn btn-primary" ng-click="vm.add()">Add Rule</button>
+            <button ng-show="vm.rule" class="btn btn-default" ng-click="vm.rule = undefined">Change Type</button>
+            <a href ui-sref='^' class="btn btn-default">Cancel</a>
+        </div>
+    </div>
+</div>

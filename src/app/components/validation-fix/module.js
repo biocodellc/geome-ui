@@ -1,0 +1,1 @@
+angular.module('fims.validation', ['ui.bootstrap', 'ngFileUpload', 'fims.users', 'fims.expeditions', 'fims.filters.html', 'fims.modals']);

@@ -1,0 +1,48 @@
+<div class="settings">
+    <div ui-view>
+        <div class="settings-bar">
+            <div class="settings-bar-container">
+                <ul class="actions">
+                    <li>
+                        <div class="dropdown">
+                            <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                                Order by: <span class="order-by">{{ vm.orderBy }} <i
+                                    class="fa fa-angle-down"></i></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li ng-repeat="orderBy in vm.orderByList">
+                                    <a href='#' class="text-capitalize" ng-click="vm.orderBy = orderBy">
+                                        {{ ::orderBy }} <i ng-show="vm.orderBy === orderBy"
+                                                           class="fa fa-check fa-after"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="add pull-right">
+                        <a href ui-sref="project.members.add">
+                            <i class="fa fa-plus fa-fw"></i> Grant User Access
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <ul class="settings-list">
+            <li class="settings-list-item" ng-repeat="member in vm.members | orderBy:vm.orderBy">
+                <div class="row-actions">
+                    <a href ng-class="{disabled: member.username === vm.user.username}" ng-click="vm.remove(member)">
+                        <i class="fa fa-ban text-danger fa-fw"></i></a>
+                </div>
+
+                <div class="info">
+                    <div class="title">{{ member.username }}</div>
+                    <ul class="list-inline metadata" ng-show="member.institution">
+                        <li><strong>name:</strong> {{ member.firstName }} {{ member.lastName }}</li>
+                        <li><strong>institution:</strong> {{ member.institution }}</li>
+                        <li><strong>email:</strong> {{ member.email }}</li>
+                    </ul>
+                </div>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,29 @@
+<h3>Definition</h3>
+
+<p>Click on "DEF" next to any of the headings to see the definition of the term.</p>
+
+<div ng-show="defVm.attribute">
+    <p>
+        <strong>Column Name: {{ defVm.attribute.column }}</strong>
+        <br>
+        <span ng-show="defVm.attribute.defined_by">Defined By: <a href="{{ defVm.attribute.defined_by }}"
+                                                                  target="_blank">{{
+        defVm.attribute.defined_by }}</a></span>
+    </p>
+
+    <p><strong>Definition</strong></p>
+    <p>{{ defVm.attribute.definition }}</p>
+
+    <div ng-show="defVm.rules.length > 0">
+        <p><strong>Validation Rules</strong></p>
+        <ul class="list-unstyled" ng-repeat="rule in defVm.rules">
+            <li><strong>Type:</strong> {{ rule.name }}</li>
+            <li><strong>Level:</strong> {{ rule.level }}</li>
+            <li ng-if="rule.listName"><strong>list:</strong>
+                <ul>
+                    <li ng-repeat="field in defVm.getListFields(rule.listName)">{{ field.value }}</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>

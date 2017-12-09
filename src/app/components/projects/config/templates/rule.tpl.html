@@ -1,0 +1,16 @@
+<td class="row-actions">
+    <a href="#" ng-click="vm.toggleEdit()"><i class="fa fa-pencil fa-fw"></i></a>
+    <a href="#" class="delete" ng-click="vm.remove()"><i
+            class="fa fa-trash text-danger fa-fw"></i></a>
+</td>
+<td ng-click="vm.toggleEdit()">{{ vm.rule.name }}</td>
+<td ng-click="vm.toggleEdit()">{{ vm.rule.level }}</td>
+<td ng-click="vm.toggleEdit()">
+    <ul class="list-inline">
+        <li ng-repeat="(key, value) in vm.rule.metadata()">
+            <strong class="text-capitalize">{{ key }}:</strong>
+            <span ng-if="vm.isArray(value)">{{ value.join(', ') }}</span>
+            <span ng-if="!vm.isArray(value)">{{ value }}</span>
+        </li>
+    </ul>
+</td>

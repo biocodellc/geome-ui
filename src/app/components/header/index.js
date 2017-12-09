@@ -1,15 +1,13 @@
 import projects from '../projects';
 
-import HeaderController from './HeaderController';
+import HeaderController from './header.controller';
 
-let header = () => {
-  return {
-    template: require('./header.html'),
-    controller: 'HeaderController as header',
-  }
-};
+let header = () => ({
+  template: require('./header.html'),
+  controller: HeaderController,
+  controllerAs: 'header',
+});
 
 export default angular.module('fims.header', [ projects ])
   .directive('fimsHeader', header)
-  .controller('HeaderController', HeaderController)
   .name;

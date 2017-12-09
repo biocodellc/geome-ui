@@ -1,0 +1,28 @@
+<div class="settings">
+    <div ui-view>
+        <div class="settings-bar">
+            <div class="settings-bar-container">
+                <ul class="nav nav-pills pull-left">
+                    <li><a href ui-sref="project.config.entities" ui-sref-active="active">Entities</a></li>
+                    <li><a href ui-sref="project.config.lists" ui-sref-active="active">Lists</a></li>
+                    <li><a href ui-sref="project.config.metadata" ui-sref-active="active">Metadata</a></li>
+                </ul>
+
+                <ul class="actions pull-right">
+                    <li class="save-config" ng-show="vm.config.modified">
+                        <a href="#"  ng-click="vm.save()">
+                            <i class="fa fa-upload"></i> Save Config</a>
+                    </li>
+                    <li class="add">
+                        <a href ng-click="vm.add()">
+                            <i class="fa fa-plus fa-fw"></i> Add {{ vm.addText }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div ui-view="objects"></div>
+
+    </div>
+</div>

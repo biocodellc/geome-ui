@@ -1,0 +1,41 @@
+<div class="row back">
+    <div class="col-xs-12">
+        <a href ui-sref="project.members" ui-sref-opts="{reload:true}" ng-click="vm.removeAlerts()"> <i
+                class="fa fa-chevron-left"></i> Members</a>
+    </div>
+</div>
+
+<form class="add-member add-view">
+    <div class="form-group clearfix">
+        <div class="col-xs-9 col-xm-8 col-md-7 col-lg-5">
+            <label>User</label>
+            <div class="input-group">
+                <ui-select ng-model="vm.username" tagging="vm.inviteUser" tagging-label="false">
+                    <ui-select-match>{{ $select.selected.username }}</ui-select-match>
+                    <ui-select-choices position="down"
+                                       repeat="u.username as u in vm.users | filter: { $: $select.search }">
+                        <div class="title" ng-bind-html="u.username | highlight: $select.search | trusted_html"></div>
+                        <div class="info">
+                            <ul class="list-inline">
+                                <li><label>email:</label> <span
+                                        ng-bind-html="u.email | highlight: $select.search | trusted_html"></span></li>
+                                <li><label>name:</label> <span
+                                        ng-bind-html="u.firstName | highlight: $select.search | trusted_html"></span>
+                                    <span ng-bind-html="u.lastName | highlight: $select.search | trusted_html"></span>
+                                </li>
+                                <li><label>institution:</label> <span
+                                        ng-bind-html="u.institution | highlight: $select.search | trusted_html"></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </ui-select-choices>
+                </ui-select>
+                <span class="input-group-btn" ng-show="vm.username">
+                    <button class="btn btn-primary" ng-click="vm.add()">Add User</button>
+            </span>
+            </div>
+            <p class="help-block">To add new user, enter their email and we will send them an invitation to create an
+                account. Upon account creation they will be added as a project member.</p>
+        </div>
+    </div>
+</form>

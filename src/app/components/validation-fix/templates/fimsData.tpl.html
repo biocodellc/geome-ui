@@ -1,0 +1,20 @@
+<div class="form-group" show-errors="{trigger: 'change'}">
+    <label for="fimsData" class="col-sm-3 control-label">FIMS Dataset</label>
+    <div class="col-sm-7">
+        <div class="input-group">
+            <label class="input-group-btn">
+                <span class="btn btn-default form-control">Browse &hellip;</span>
+                <input type="file" style="display:none;" id="fimsData" name="fimsMetadata"
+                       class="form-control"
+                       ngf-select="modelValueChange($files)"
+                       ngf-pattern="'.xls,.xlsx,.txt,.csv'"
+                       ng-required="isRequired"
+                       ngf-model-invalid="invalidFimsMetadataFile"
+                       ng-model="fimsMetadata"/>
+            </label>
+            <input type="text" class="form-control" ng-value="fimsMetadata.name || invalidFimsMetadataFile.name" readonly/>
+        </div>
+        <p class="help-block" ng-show="invalid">
+            File must have one of the following extensions: .xls, xlsx, .txt, or .csv</p>
+    </div>
+</div>

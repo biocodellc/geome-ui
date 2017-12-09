@@ -1,0 +1,49 @@
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-login">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <a href="#" class="active" id="reset-pass-form-link">Reset Password</a>
+                    </div>
+                </div>
+                <hr>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div ng-show="!vm.resetPass" class="col-lg-12">
+                        <form id="login-form" ng-submit="vm.resetPassword()" method="post" role="form" style="display: block;">
+                            <div class="form-group" show-errors>
+                                <input type="password" name="password" ng-model="vm.password" id="password" required data-indicator="pwindicator"
+                                       tabindex="1" class="form-control pwcheck" placeholder="New Password">
+                                <div class="center-block help-block" id="pwindicator">
+                                    <div class="label"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12 alert alert-error alert-dismissable" role="alert"
+                                         ng-show="vm.error">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                        </button>
+                                        <strong>Error!</strong> {{ vm.error }}
+                                    </div>
+                                    <div class="col-sm-12 alert alert-success alert-dismissable" role="alert"
+                                         ng-show="vm.success" ng-bind-html="vm.success">
+                                    </div>
+                                    <div class="col-sm-6 col-sm-offset-3">
+                                        <input type="submit" name="reset-pass-submit" id="reset-pass-submit"
+                                               tabindex="2"
+                                               class="form-control btn btn-login btn-primary" value="Reset Password">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

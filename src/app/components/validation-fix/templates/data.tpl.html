@@ -1,0 +1,48 @@
+<fims-data ng-model="vm.fimsMetadata"
+           is-required="true"
+           change="vm.fimsMetadataChange()"></fims-data>
+
+<hr class="separator"/>
+
+<project-select project="vm.project" select-classes="form-control"
+                required="true" ng-show="vm.showProject"></project-select>
+
+<div class="form-group" show-errors ng-show="vm.project">
+    <label for="expeditionCode" class="col-xs-3 control-label">Expedition Name</label>
+    <div class="row col-xs-8">
+        <div class="col-xs-8" ng-show="!vm.newExpedition">
+            <select id="expeditionCode" name="expeditionCode"
+                    ng-model="vm.expedition"
+                    ng-options="expedition as expedition.expeditionTitle for expedition in vm.expeditions | orderBy: 'expeditionTitle' track by expedition.expeditionId"
+                    required
+                    class="form-control col-xs-6">
+                <option value="">-- Select an Expedition --</option>
+            </select>
+        </div>
+        <div class="col-xs-8" ng-show="vm.newExpedition">
+            <input type="text" class="form-control" name="newExpeditionCode"
+                   ng-model="vm.expedition.expeditionCode"
+                   required ng-pattern=/^[a-zA-Z0-9_-]{4,50}$/ />
+        </div>
+        <label class="col-xs-3 checkbox-inline">
+            <input type="checkbox" name="newExpedition"
+                   ng-model="vm.newExpedition"
+                   ng-click="vm.resetExpedition()"
+                   value="true"/>
+            New Expedition?
+        </label>
+        <div class="col-xs-12" ng-show="vm.newExpedition">
+            <p class="help-block"
+               ng-if="vm.uploadForm.newExpeditionCode.$error.pattern && vm.uploadForm.newExpeditionCode.$touched">
+                <b>Expedition
+                    Name</b> must contain only numbers, letters, or underscores and be 4 to 50
+                characters long</p>
+            <p class="help-block col-xs-12" style="padding-left:0px;"
+               ng-show="vm.uploadForm.newExpeditionCode.$error.exists">
+                Expedition with that name already exists
+            </p>
+        </div>
+    </div>
+</div>
+
+<hr ng-show="vm.showProject" class="separator"/>

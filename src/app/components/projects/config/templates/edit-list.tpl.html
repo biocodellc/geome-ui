@@ -1,0 +1,28 @@
+<div>
+    <a class="edit-close" href="#"><i ng-click="vm.toggleEdit()" class="fa fa-times"></i></a>
+    <div class="row">
+        <div class="col-xs-12">
+
+            <form class="form-horizontal">
+
+                <div class="form-group" ng-class="{ 'has-error': vm.duplicateValue }">
+                    <label class="control-label col-xs-3">Name</label>
+                    <div class="col-xs-9">
+                        <input type="text" class="form-control" ng-model="vm.list.alias"/>
+                        <div class="help-block" ng-show="vm.duplicateValue">Another list with this name already exists.</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox col-xs-offset-3 col-xs-9">
+                        <label>
+                            <input type="checkbox" ng-model="vm.caseSensitive"
+                                   ng-change="vm.list.caseInsensitive = !vm.caseSensitive"/> case sensitive?
+                        </label>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

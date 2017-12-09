@@ -1,0 +1,11 @@
+<td class="row-actions">
+    <a href="#" uib-tooltip="click and drag to reorder attributes">
+        <i class="fa fa-arrows fa-fw"></i>
+    </a>
+    <a href="#" ng-click="vm.toggleEdit()"><i class="fa fa-pencil fa-fw"></i></a>
+    <a href="#" class="delete" ng-click="vm.remove()"><i
+            class="fa fa-trash text-danger fa-fw"></i></a>
+</td>
+<td ng-click="vm.toggleEdit()">{{ vm.attribute.column }}</td>
+<td ng-click="vm.toggleEdit()">{{ vm.attribute.group || 'Default' }}</td>
+<td ng-click="vm.toggleEdit()">{{ vm.attribute.datatype }}</td>
