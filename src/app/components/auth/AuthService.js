@@ -1,5 +1,7 @@
-class AuthService {
+export default class AuthService {
   constructor($rootScope, $http, $q, $timeout, StorageService, AUTH_TIMEOUT, REST_ROOT, APP_ROOT) {
+    'ngInject';
+
     this._triedToRefresh = false;
     this._authTimoutPromise = undefined;
 
@@ -105,7 +107,3 @@ class AuthService {
     });
   }
 }
-
-AuthService.$inject = [ '$rootScope', '$http', '$q', '$timeout', 'StorageService', 'AUTH_TIMEOUT', 'REST_ROOT', 'APP_ROOT' ];
-
-export default AuthService;

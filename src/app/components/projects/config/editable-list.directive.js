@@ -2,10 +2,10 @@
     'use strict';
 
     angular.module('fims.projects')
-        .directive('editList', editList)
-        .directive('editableList', editableList);
+        // .directive('editList', editList)
+        // .directive('editableList', editableList);
 
-    editList.$inject = ['$uibTooltip'];
+    // editList.$inject = ['$uibTooltip'];
 
     function editList($uibTooltip) {
         return {
@@ -33,7 +33,7 @@
         }
     }
 
-    editableList.$inject = ['$compile'];
+    // editableList.$inject = ['$compile'];
 
     function editableList($compile) {
         return {

@@ -1,3 +1,5 @@
+import QueryController from "./query.controller";
+
 const routing = (routerHelper) => {
   routerHelper.configureStates(getStates());
 };
@@ -8,8 +10,8 @@ function getStates() {
       state: 'query',
       config: {
         url: '/query',
-        template: require('.query.html'),
-        controller: "QueryController",
+        template: require('./query.html'),
+        controller: QueryController,
         controllerA: "queryVm",
         projectRequired: true,
       }

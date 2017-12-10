@@ -1,12 +1,15 @@
 class AuthInterceptor {
   constructor($q, $injector, $templateCache) {
+    'ngInject';
+
     this.q = $q;
     this.injector = $injector;
     this.templateCache = $templateCache;
     this.triedToRefresh = false;
   }
 
-  request(config) {
+  // angular only keeps reference of the methods, so we need to use arrow functions to keep 'this' context
+  request = (config) => {
     // only add query string if the request url isn't in the $templateCache
     if (this.templateCache.get(config.url) === undefined) {
       const AuthService = this.injector.get('AuthService');
@@ -19,7 +22,7 @@ class AuthInterceptor {
     return config;
   }
 
-  responseError(response) {
+  responseError = (response) => {
     if (!this.triedToRefresh &&
       (response.status === 401 || (response.status === 400 && response.data.usrMessage === 'invalid_grant' ))) {
       const AuthService = this.injector.get('AuthService');
@@ -43,7 +46,5 @@ class AuthInterceptor {
     return this.q.reject(response);
   }
 }
-
-AuthInterceptor.$inject = [ '$q', '$injector', '$templateCache' ];
 
 export default AuthInterceptor;

@@ -18,7 +18,7 @@ class QueryController {
     this.queryResults = null;
     this.queryInfo = {
       size: 0,
-      totalElements: 0
+      totalElements: 0,
     };
     this.currentPage = 1;
 
@@ -64,11 +64,11 @@ class QueryController {
       projectId: this.project.projectId,
       query: (this.queryString.trim().length > 0)
         ? this.queryString
-        : "*"
+        : "*",
     };
 
     this.$http.post(REST_ROOT + "projects/query/json/?limit=50&page=" + (
-    this.currentPage - 1), data).then((response) => {
+      this.currentPage - 1), data).then((response) => {
       this.queryResults = this._transformData(response.data);
     }, (response) => {
       if (response.status = -1 && !response.data) {
@@ -77,12 +77,12 @@ class QueryController {
         this.error = response.data.error || response.data.usrMessage || "Server Error!";
       }
       this.queryResults = null;
-    }). finally(() => this.LoadingModal.close());
+    }).finally(() => this.LoadingModal.close());
   }
 
   addFilter() {
     const filter = Object.assign({}, DEFAULT_FILTER);
-    filter.column = this.filterOptions[0];
+    filter.column = this.filterOptions[ 0 ];
     this.filters.push(filter);
   }
 
@@ -95,7 +95,7 @@ class QueryController {
       projectId: this.project.projectId,
       query: (this.queryString.trim().length > 0)
         ? this.queryString
-        : "*"
+        : "*",
     };
 
     this.$http.post(this.REST_ROOT + "projects/query/excel", data).then((response) => {
@@ -114,7 +114,7 @@ class QueryController {
       projectId: this.project.projectId,
       query: (this.queryString.trim().length > 0)
         ? this.queryString
-        : "*"
+        : "*",
     };
 
     this.$http.post(this.REST_ROOT + "projects/query/kml", data).then((response) => {
@@ -133,7 +133,7 @@ class QueryController {
       projectId: this.project.projectId,
       query: (this.queryString.trim().length > 0)
         ? this.queryString
-        : "*"
+        : "*",
     };
 
     this.$http.post(this.REST_ROOT + "projects/query/csv", data).then((response) => {
@@ -149,13 +149,13 @@ class QueryController {
 
   getExpeditions() {
     this.ExpeditionService.getExpeditions(this.project.projectId).then((response) => {
-      this.selectedExpeditions = [];
-      this.expeditions = [];
-      resonse.data.forEach(expedition => this.expeditions.push(expedition.expeditionCode);
-    },
-    () => {
-      this.error = "Failed to load Expeditions.";
-    });
+        this.selectedExpeditions = [];
+        this.expeditions = [];
+        response.data.forEach(expedition => this.expeditions.push(expedition.expeditionCode));
+      },
+      () => {
+        this.error = "Failed to load Expeditions.";
+      });
   }
 
   getFilterOptions() {
@@ -173,17 +173,17 @@ class QueryController {
   _transformData(data) {
     var transformedData = {
       keys: [],
-      data: []
+      data: [],
     };
     if (data) {
       this.queryInfo.size = data.size;
       this.queryInfo.totalElements = data.totalElements;
 
       if (data.content.length > 0) {
-        transformedData.keys = Object.keys(data.content[0]);
+        transformedData.keys = Object.keys(data.content[ 0 ]);
 
         data.content.forEach((resource) => {
-          const resourceData = transformedData.keys.map(key => resource[key]);
+          const resourceData = transformedData.keys.map(key => resource[ key ]);
           transformedData.data.push(resourceData);
         });
       }
@@ -200,31 +200,31 @@ class QueryController {
       q += "_expeditions_:[" + this.selectedExpeditions.join(", ") + "]";
     }
 
-    this.filters.forEach((filter) => {}
-    if (filter.value) {
-      if (q.trim().length > 0) {
-        q += " AND ";
+    this.filters.forEach((filter) => {
+      if (filter.value) {
+        if (q.trim().length > 0) {
+          q += " AND ";
+        }
+
+        q += filter.column + " = \"" + filter.value + "\"";
       }
+    });
 
-      q += filter.column + " = \"" + filter.value + "\"";
-    }
-  });
-
-  this.queryString = q;
-}
+    this.queryString = q;
+  }
 }
 
 QueryController.$inject = [
-'$scope',
-'$http',
-'LoadingModal',
-'FailModalFactory',
-'ProjectService',
-'ExpeditionService',
-'AuthService',
-'FileService',
-'exception',
-'REST_ROOT'
+  '$scope',
+  '$http',
+  'LoadingModal',
+  'FailModalFactory',
+  'ProjectService',
+  'ExpeditionService',
+  'AuthService',
+  'FileService',
+  'exception',
+  'REST_ROOT',
 ];
 
 export default QueryController;

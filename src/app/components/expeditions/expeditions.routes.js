@@ -27,7 +27,7 @@ function getStates() {
       state: 'expeditions.list',
       config: {
         url: '/expeditions',
-        template: require('expeditions.html'),
+        template: require('./expeditions.html'),
         onEnter: expeditionsOnEnter,
         controller: ExpeditionsController,
         controllerAs: 'vm',
@@ -37,7 +37,7 @@ function getStates() {
       state: 'expeditions.detail',
       config: {
         url: '/expeditions/:id',
-        template: require('expedition-detail.html'),
+        template: require('./expedition-detail.html'),
         onEnter: expeditionDetailOnEnter,
         controller: ExpeditionController,
         controllerAs: 'vm',
@@ -61,7 +61,7 @@ function getStates() {
         url: '/settings',
         views: {
           "details": {
-            template: require('expedition-detail-settings.html'),
+            template: require('./expedition-detail-settings.html'),
             controller: ExpeditionSettingsController,
             controllerAs: 'vm',
           },
@@ -74,7 +74,7 @@ function getStates() {
         url: '/resources',
         views: {
           "details": {
-            template: require('expedition-detail-resources.html'),
+            template: require('./expedition-detail-resources.html'),
             controller: ExpeditionResourcesController,
             controllerAs: 'vm',
           },
@@ -87,7 +87,7 @@ function getStates() {
         url: '/members',
         views: {
           "details": {
-            template: require('expedition-detail-members.html'),
+            template: require('./expedition-detail-members.html'),
             // controller: "ExpeditionMembersController as vm"
           },
         },

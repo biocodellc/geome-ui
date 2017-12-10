@@ -2,10 +2,10 @@
     'use strict';
 
     angular.module('fims.projects')
-        .directive('editField', editField)
-        .directive('editableField', editableField);
+        // .directive('editField', editField)
+        // .directive('editableField', editableField);
 
-    editField.$inject = ['$uibTooltip', '$location', '$anchorScroll'];
+    // editField.$inject = ['$uibTooltip', '$location', '$anchorScroll'];
 
     function editField($uibTooltip, $location, $anchorScroll) {
         return {

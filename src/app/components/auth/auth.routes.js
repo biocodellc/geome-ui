@@ -1,4 +1,8 @@
+import LoginController from "./LoginController";
+
 const routing = ($transitions, routerHelper, UserService) => {
+  'ngInject';
+
   routerHelper.configureStates(getStates());
 
   $transitions.onBefore({}, _redirectIfLoginRequired, { priority: 100 });
@@ -34,7 +38,8 @@ function getStates() {
       config: {
         url: "/login",
         template: require("./login.html"),
-        controller: "LoginController as login",
+        controller: LoginController,
+        controllerAs: 'login',
         params: {
           nextState: null,
           nextStateParams: null,
@@ -43,7 +48,5 @@ function getStates() {
     },
   ];
 }
-
-routing.$inject = [ '$transitions', 'routerHelper', 'UserService' ];
 
 export default routing;

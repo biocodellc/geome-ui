@@ -6,9 +6,9 @@ export default class ExpeditionService {
     this.ProjectService = ProjectService;
     this.exception = exception;
     this.REST_ROOT = REST_ROOT;
-  }
 
-  getExpeditions = this.all; //TODO remove this
+    this.getExpeditions = this.all; //TODO remove this
+  }
 
   update(expedition) {
     var projectId = this.ProjectService.currentProject.projectId;

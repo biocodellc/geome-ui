@@ -166,7 +166,7 @@ function getStates() {
         url: '/metadata',
         views: {
           "objects": {
-            template: require('config/templates/config-metadata.tpl.html'),
+            template: require('./config/templates/config-metadata.tpl.html'),
             controller: "ConfigMetadataController as vm",
           },
         },
@@ -180,7 +180,7 @@ function getStates() {
         url: '/entities',
         views: {
           "objects": {
-            template: require('config/templates/entities.tpl.html'),
+            template: require('./config/templates/entities.tpl.html'),
             controller: "EntitiesController as vm",
           },
         },
@@ -192,7 +192,7 @@ function getStates() {
         url: '/add',
         views: {
           "objects@project.config": {
-            template: require('config/templates/add-entity.tpl.html'),
+            template: require('./config/templates/add-entity.tpl.html'),
             controller: "AddEntityController as vm",
           },
         },
@@ -210,7 +210,7 @@ function getStates() {
         },
         views: {
           "@project.config": {
-            template: require('config/templates/entity-detail.tpl.html'),
+            template: require('./config/templates/entity-detail.tpl.html'),
             controller: "EntityController as vm",
           },
         },
@@ -228,7 +228,7 @@ function getStates() {
         url: 'attributes',
         views: {
           "objects": {
-            template: require('config/templates/entity-attributes.tpl.html'),
+            template: require('./config/templates/entity-attributes.tpl.html'),
             controller: "EntityAttributesController as vm",
           },
         },
@@ -246,7 +246,7 @@ function getStates() {
         url: 'rules',
         views: {
           "objects": {
-            template: require('config/templates/entity-rules.tpl.html'),
+            template: require('./config/templates/entity-rules.tpl.html'),
             controller: "EntityRulesController as vm",
           },
         },
@@ -258,7 +258,7 @@ function getStates() {
         url: '/add',
         views: {
           "objects@project.config.entities.detail": {
-            template: require('config/templates/add-rule.tpl.html'),
+            template: require('./config/templates/add-rule.tpl.html'),
             controller: "AddRuleController as vm",
           },
         },
@@ -272,7 +272,7 @@ function getStates() {
         url: '/lists',
         views: {
           "objects": {
-            template: require('config/templates/lists.tpl.html'),
+            template: require('./config/templates/lists.tpl.html'),
             controller: "ListsController as vm",
           },
         },
@@ -288,7 +288,7 @@ function getStates() {
         },
         views: {
           "@project.config": {
-            template: require('config/templates/list-detail.tpl.html'),
+            template: require('./config/templates/list-detail.tpl.html'),
             controller: "ListController as vm",
           },
         },
@@ -308,7 +308,7 @@ function getStates() {
         url: '/add',
         views: {
           "objects@project.config": {
-            template: require('config/templates/add-list.tpl.html'),
+            template: require('./config/templates/add-list.tpl.html'),
             controller: "AddListController as vm",
           },
         },
@@ -475,7 +475,7 @@ function configExit(trans, config) {
     var $uibModal = trans.injector().get('$uibModal');
 
     var modal = $uibModal.open({
-      template: require('config/templates/unsaved-config-confirmation.tpl.html'),
+      template: require('./config/templates/unsaved-config-confirmation.tpl.html'),
       size: 'md',
       controller: configConfirmationController,
       controllerAs: 'vm',
@@ -496,7 +496,9 @@ function configConfirmationController($uibModalInstance) {
 }
 
 
-const routing = (routerHelper) => {
+const routing = ($transitions, routerHelper, ProjectService) => {
+  'ngInject';
+
   routerHelper.configureStates(getStates());
 
   $transitions.onBefore({}, function (trans) {
@@ -512,8 +514,6 @@ const routing = (routerHelper) => {
 
   // $transitions.onExit({ exiting: 'project.config' }, _configExit);
 };
-
-routing.$inject = [ '$transitions', 'routerHelper', 'ProjectService' ];
 
 
 export default routing;

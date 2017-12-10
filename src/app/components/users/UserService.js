@@ -1,7 +1,8 @@
 import User from './User';
 
-class UserService {
+export default class UserService {
   constructor($rootScope, $q, $http, $timeout, $state, exception, alerts, AuthService, REST_ROOT) {
+    'ngInject';
 
     this._loading = false;
     this.currentUser = undefined;
@@ -150,8 +151,3 @@ class UserService {
     this.$state.go("home");
   }
 }
-
-UserService.$inject = [ '$rootScope', '$q', '$http', '$timeout', '$state', 'exception', 'alerts', 'User',
-  'AuthService', 'REST_ROOT' ];
-
-export default UserService;

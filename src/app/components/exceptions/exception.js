@@ -1,16 +1,14 @@
-class exception {
-  constructor($q, alerts) {
-    this.q = $q;
+export default class exception {
+  constructor(alerts) {
+    'ngInject'
+
     this.alerts = alerts;
   }
 
   catcher(defaultMsg) {
-    return function (response) {
+    return (response) => {
       this.alerts.error(response.data.error || response.data.usrMessage || defaultMsg);
-      return this.q.reject(response);
+      return Promise.reject(response);
     }
   }
 }
-
-exception.$inject = [ '$q', 'alerts' ];
-export default exception;

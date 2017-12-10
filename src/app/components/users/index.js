@@ -1,6 +1,7 @@
 import angular from 'angular';
 
-import auth from '../auth';
+//TODO fix circular dependency auth -> user -> auth
+// import auth from '../auth';
 import exceptions from '../exceptions';
 import alerts from '../alerts';
 import compareTo from '../../directives/compareTo.directive';
@@ -15,9 +16,8 @@ function run(UserService) {
 
 run.$inject = [ 'UserService' ];
 
-export default angular.module('fims.users', [ auth, exceptions, alerts, compareTo ])
+export default angular.module('fims.users', [ exceptions, alerts, compareTo ])
   .run(run)
-  .config(routing)
+  .run(routing)
   .service('UserService', UserService)
-
   .name;

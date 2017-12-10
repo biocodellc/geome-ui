@@ -13,7 +13,7 @@ function getStates() {
       state: 'resetPass',
       config: {
         url: "/resetPass",
-        template: require('resetPass.html'),
+        template: require('./resetPass.html'),
         controller: ResetPassController,
         controllerAs: 'vm',
       },
@@ -22,7 +22,7 @@ function getStates() {
       state: 'reset',
       config: {
         url: "/reset",
-        template: require('reset.html')
+        template: require('./reset.html')
       },
     },
     {

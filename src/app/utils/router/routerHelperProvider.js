@@ -1,23 +1,25 @@
 class RouterHelper {
-  constructor($state, $stateProvider, $urlRouterProvider) {
+  constructor($state, $stateRegistry, $urlRouter) {
     this._hasOtherwise = false;
     this.$state = $state;
-    this.$stateProvider = $stateProvider;
-    this.$urlRouterProvider = $urlRouterProvider;
+    this.$stateRegistry = $stateRegistry;
+    this.$urlRouter = $urlRouter;
   }
 
   configureStates(states, otherwisePath) {
-    states.forEach(function (state) {
-      this.$stateProvider.state(state.state, state.config);
-    });
+    // TODO flatten state objects
+    states.forEach((state) => this.$stateRegistry.register(
+      Object.assign({ name: state.state }, state.config),
+    ));
+
     if (otherwisePath && !this._hasOtherwise) {
       this._hasOtherwise = true;
-      this.$urlRouterProvider.otherwise(otherwisePath);
+      this.$urlRouter.otherwise(otherwisePath);
     }
   }
 
   redirect(path, toState) {
-    this.$urlRouterProvider.when(path, toState);
+    this.$urlRouter.when(path, toState);
   }
 
   getStates() {
@@ -25,17 +27,15 @@ class RouterHelper {
   }
 }
 
-RouterHelper.$inject = [ '$state', '$stateProvider', '$urlRouterProvider' ];
+function routerHelperProvider($locationProvider, $urlMatcherFactoryProvider) {
+  'ngInject';
 
-const routerHelperProvider = ($locationProvider, $urlMatcherFactoryProvider) => {
-  this.$get = RouterHelper;
+  this.$get = /*NgInject*/ ($state, $stateRegistry, $urlRouter) => new RouterHelper($state, $stateRegistry, $urlRouter);
 
   $locationProvider.html5Mode(true);
 
   // make trailing / optional
   $urlMatcherFactoryProvider.strictMode(false);
-};
-
-routerHelperProvider.$inject = [ '$locationProvider', '$urlMatcherFactoryProvider' ];
+}
 
 export default routerHelperProvider;

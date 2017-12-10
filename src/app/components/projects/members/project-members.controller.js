@@ -1,4 +1,4 @@
-import modalTemplate from 'remove-member-confirmation.tpl.html';
+import modalTemplate from './remove-member-confirmation.tpl.html';
 
 export default class ProjectMembersController {
   constructor($scope, $state, $uibModal, UserService, ProjectMembersService, members) {

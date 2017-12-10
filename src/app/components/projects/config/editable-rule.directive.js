@@ -2,10 +2,10 @@
     'use strict';
 
     angular.module('fims.projects')
-        .directive('editRule', editRule)
-        .directive('editableRule', editableRule);
+        // .directive('editRule', editRule)
+        // .directive('editableRule', editableRule);
 
-    editRule.$inject = ['$uibTooltip'];
+    // editRule.$inject = ['$uibTooltip'];
 
     function editRule($uibTooltip) {
         return {

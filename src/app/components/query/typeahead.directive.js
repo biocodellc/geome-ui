@@ -149,7 +149,7 @@ const typeahead = () => ({
     expeditions: '=',
     selectedExpeditions: '=',
   },
-  controller: "TypeAheadController",
+  controller: TypeAheadController,
   controllerAs: "typeahead",
   templateUrl: require('./typeahead.html'),
   link: typeaheadLink,
@@ -160,10 +160,7 @@ const typeaheadItem = () => ({
   link: typeaheadItemLink,
 });
 
-const module = angular.module('fims.expeditionTypeahead', []);
-module.controller('TypeAheadController', TypeAheadController);
-
-export default {
-  typeahead: module.directive('typeahead', typeahead).name,
-  typeaheadItem: module.directive('typeaheadItem', typeaheadItem).name,
-}
+export default angular.module('fims.expeditionTypeahead', [])
+  .directive('typeahead', typeahead)
+  .directive('typeaheadItem', typeaheadItem)
+  .name;

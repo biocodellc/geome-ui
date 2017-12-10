@@ -2,10 +2,10 @@
     'use strict';
 
     angular.module('fims.projects')
-        .directive('editEntity', editEntity)
-        .directive('editableEntity', editableEntity);
+        // .directive('editEntity', editEntity)
+        // .directive('editableEntity', editableEntity);
 
-    editEntity.$inject = ['$location', '$anchorScroll', '$uibTooltip'];
+    // editEntity.$inject = ['$location', '$anchorScroll', '$uibTooltip'];
 
     function editEntity($location, $anchorScroll, $uibTooltip) {
         return {

@@ -6,7 +6,6 @@ import users from '../users';
 
 import AuthInterceptor from './AuthInterceptor';
 import AuthService from './AuthService';
-import LoginController from './LoginController';
 import routing from './auth.routes.js'
 
 const FOUR_HOURS = 1000 * 60 * 60 * 4;
@@ -19,10 +18,8 @@ config.$inject = [ '$httpProvider' ];
 
 export default angular.module('fims.auth', [ storage, users, alerts ])
   .config(config)
-  // .run(routing)
-  .config(routing)
+  .run(routing)
   .constant('AUTH_TIMEOUT', FOUR_HOURS)
-  .service('AuthInterceptor', AuthInterceptor)
   .service('AuthService', AuthService)
-  .controller("LoginController", LoginController)
+  .service('AuthInterceptor', AuthInterceptor)
   .name;

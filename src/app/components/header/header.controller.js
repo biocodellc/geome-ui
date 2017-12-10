@@ -1,24 +1,26 @@
-class HeaderController {
-  constructor($scope, $location, $window, $state, ProjectService, UserService) {
+export default class HeaderController {
+  constructor($scope, $location, $window, $state, ProjectService) {
+    'ngInject'
+
     this.projectSelectorOpen = false;
-    this.user = UserService.user;
+    // this.user = UserService.user;
     this.includePublicProjects = !(this.user);
     this.project = ProjectService.currentProject;
     this.projects = [];
-    this.setProject = ProjectService.set;
+    this.setProject = ProjectService.set.bind(ProjectService);
 
     this.scope = $scope;
     this.location = $location;
     this.window = $window;
     this.state = $state;
     this.projectService = ProjectService;
-    this.userService = UserService;
+    this.userService = null;//UserService;
 
     this._getProjects();
 
     this.scope.$watch(
       () => {
-        return this.userService.currentUser;
+        // return this.userService.currentUser;
       },
       (user) => {
         this.user = user;
@@ -63,5 +65,3 @@ class HeaderController {
       );
   }
 }
-
-HeaderController.$inject = [ '$scope', '$location', '$window', '$state', 'ProjectService', 'UserService' ];
