@@ -1,3 +1,5 @@
+import CLIENT_ID from './clientId';
+
 export default class AuthService {
   constructor($rootScope, $http, $q, $timeout, StorageService, AUTH_TIMEOUT, REST_ROOT, APP_ROOT) {
     'ngInject';
@@ -21,7 +23,7 @@ export default class AuthService {
 
   authenticate(username, password) {
     const data = {
-      client_id: client_id,
+      client_id: CLIENT_ID,
       redirect_uri: this.APP_ROOT + '/oauth',
       grant_type: 'password',
       username: username,
@@ -29,11 +31,10 @@ export default class AuthService {
     };
 
     return this.http.post(this.REST_ROOT + 'authenticationService/oauth/accessToken', data)
-      .then(function (response) {
-        this._authSuccess(response.data);
-      }, function (response) {
+      .then((response) => this._authSuccess(response.data))
+      .catch((response) => {
         this.clearTokens();
-        return this.q.reject(response);
+        return Promise.reject(response);
       });
   }
 
@@ -49,7 +50,7 @@ export default class AuthService {
     let refreshToken = this.storageService.get('refreshToken');
     if (refreshToken && this._checkAuthenticated() && !this._triedToRefresh) {
       return this.http.post(this.REST_ROOT + 'authenticationService/oauth/refresh', {
-          client_id: client_id,
+          client_id: CLIENT_ID,
           refresh_token: refreshToken,
 
         })

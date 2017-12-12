@@ -2,6 +2,11 @@ import angular from 'angular';
 import uirouter from '@uirouter/angularjs';
 import bootstrap from 'angular-ui-bootstrap';
 
+// todo remove the following and use only angular-ui-bootstrap
+import 'jquery-ui';
+import 'bootstrap-sass';
+
+
 // this loads the css for the app
 import '../style/app.scss';
 

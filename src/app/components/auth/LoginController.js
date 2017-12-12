@@ -1,5 +1,6 @@
 class LoginController {
   constructor($state, UserService, LoadingModal, exception, alerts) {
+    'ngInject';
     this.resetPass = false;
     this.credentials = {
       username: '',
@@ -14,20 +15,17 @@ class LoginController {
   }
 
   resetPassword() {
-    this.userService.sendResetPasswordToken(login.credentials.username)
-      .then(
-        function () {
-          this.alerts.success("Successfully sent reset password token. Check your email for further instructions.");
-        },
-        this.exception.catcher("Error sending reset password token"),
-      );
+    this.userService.sendResetPasswordToken(this.credentials.username)
+      .then(() =>
+          this.alerts.success("Successfully sent reset password token. Check your email for further instructions."))
+      .catch(this.exception.catcher("Error sending reset password token"));
   }
 
   submit() {
     this.alerts.removeTmp();
     this.loadingModal.open();
-    this.userService.signIn(login.credentials.username, login.credentials.password)
-      .then(function () {
+    this.userService.signIn(this.credentials.username, this.credentials.password)
+      .then(() => {
         const params = this.state.params;
         if (params.nextState && params.nextState !== "login") {
           return this.state.go(params.nextState, params.nextStateParams);
@@ -35,13 +33,8 @@ class LoginController {
           return this.state.go('home');
         }
       })
-      .finally(function () {
-          this.loadingModal.close();
-        },
-      );
+      .finally(() => this.loadingModal.close());
   }
 }
-
-LoginController.$inject = [ '$state', 'UserService', 'LoadingModal', 'exception', 'alerts' ];
 
 export default LoginController;

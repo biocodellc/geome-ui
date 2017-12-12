@@ -9,7 +9,7 @@ class LoadingModalService {
 
   close() {
     if (this._modalInstance) {
-      this._modalInstance.opened. finally(function() {
+      this._modalInstance.opened.finally(() => {
         this._modalInstance.close();
         this._modalInstance = undefined;
       });
@@ -19,8 +19,8 @@ class LoadingModalService {
   open() {
     if (!this._modalInstance) {
       this._modalInstance = this._uibModal.open({
-        templateUrl: require('./templates/loadingModal.html'),
-        windowTemplateUrl: require('./templates/loadingModalWindow.html'),
+        template: '<span us-spinner></span>',
+        windowTemplate: '<div uib-modal-transclude></div>',
         appendTo: angular.element(document.querySelector("#content")),
         size: 'sm',
         backdrop: true

@@ -49,10 +49,11 @@
         </div>
 
         <ul class="nav navbar-nav pull-right">
-            <li class="dropdown">
-                <a href="#" data-toggle="dropdown" class="dropdown-toggle"><i class="fa fa-cog fa-md"></i>
+            <li uib-dropdown class="dropdown">
+                <a href="#" uib-dropdown-toggle>
+                    <i class="fa fa-cog fa-md"></i>
                     <i class="fa fa-angle-down"></i></a>
-                <ul class="dropdown-menu dropdown-menu-right">
+                <ul uib-dropdown-menu class="dropdown-menu dropdown-menu-right">
                     <li><a ng-click="header.apidocs()"><i class="fa fa-code fa-fw"></i> Api Docs</a></li>
                     <li><a href="http://fims.readthedocs.org/en/stable/"><i class="fa fa-question"></i> Help</a></li>
                 </ul>
@@ -60,13 +61,13 @@
         </ul>
 
         <ul class="nav navbar-nav pull-right">
-            <li class="dropdown separator">
-                <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+            <li uib-dropdown class="dropdown separator">
+                <a href="#" uib-dropdown-toggle>
                     <span ng-show="header.user" style="padding-right: 5px;">hi, {{ header.user.username }}!</span>
                     <i class="fa fa-user-circle-o fa-lg"></i> <i class="fa fa-angle-down"></i>
                 </a>
 
-                <ul class="dropdown-menu dropdown-menu-right">
+                <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu>
                     <li ng-show="!header.user">
                         <a ng-click="header.login()"><i class="fa fa-sign-in fa-fw"></i> Sign In</a>
                     </li>
@@ -84,7 +85,7 @@
         <ul class="project-selector nav navbar-nav pull-right">
             <li uib-dropdown is-open="header.projectSelectorOpen"
                 auto-close="outsideClick" class="separator">
-                <a href="#" uib-dropdown-toggle ng-click="header.togle()">
+                <a href="#" uib-dropdown-toggle>
                     <span ng-show="header.project">{{ header.project.projectTitle }}</span>
                     <span ng-show="!header.project">Choose a Project</span>
                     <i class="fa fa-angle-down"></i>

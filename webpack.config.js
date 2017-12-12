@@ -92,8 +92,8 @@ module.exports = function makeWebpackConfig() {
       // Compiles ES6 and ES7 into ES5 code
       test: /\.js$/,
       use: [
-        { loader: 'ng-annotate-loader'},
-        { loader: 'babel-loader'},
+        { loader: 'ng-annotate-loader' },
+        { loader: 'babel-loader' },
       ],
       exclude: /node_modules/,
 
@@ -195,6 +195,13 @@ module.exports = function makeWebpackConfig() {
           plugins: [ autoprefixer ],
         },
       },
+    }),
+
+    // todo remove the following and use only angular-ui-bootstrap
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+      'window.jQuery': 'jquery',
     }),
   ];
 

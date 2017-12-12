@@ -1,3 +1,5 @@
+import FailModalController from "./FailModalController";
+
 class FailModalService {
   constructor($uibModal) {
     this.modalInstance = undefined;
@@ -8,7 +10,7 @@ class FailModalService {
     this.modalInstance = this.$uibModal.open({
       templateUrl: require('./templates/failModal.html'),
       size: 'md',
-      controller: 'FailModalCtrl',
+      controller: FailModalController,
       controllerAs: 'vm',
       windowClass: 'app-modal-window',
       backdrop: true,

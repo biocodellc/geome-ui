@@ -1,9 +1,9 @@
 export default class HeaderController {
-  constructor($scope, $location, $window, $state, ProjectService) {
+  constructor($scope, $location, $window, $state, UserService, ProjectService) {
     'ngInject'
 
     this.projectSelectorOpen = false;
-    // this.user = UserService.user;
+    this.user = UserService.user;
     this.includePublicProjects = !(this.user);
     this.project = ProjectService.currentProject;
     this.projects = [];
@@ -14,13 +14,13 @@ export default class HeaderController {
     this.window = $window;
     this.state = $state;
     this.projectService = ProjectService;
-    this.userService = null;//UserService;
+    this.userService = UserService;
 
     this._getProjects();
 
     this.scope.$watch(
       () => {
-        // return this.userService.currentUser;
+        return this.userService.currentUser;
       },
       (user) => {
         this.user = user;
@@ -39,10 +39,6 @@ export default class HeaderController {
         this._getProjects();
       }
     });
-  }
-
-  toggleProjectSelector() {
-    this.projectSelectorOpen = !this.projectSelectorOpen;
   }
 
   apidocs() {
