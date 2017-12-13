@@ -6,8 +6,8 @@ class TemplateController {
     this._templates = [];
 
     this.isAuthenticated = false;
-    this.template = DEFAULT_TEMPLATE;
-    this.templates = [ DEFAULT_TEMPLATE ];
+    this.template = Object.assign({}, DEFAULT_TEMPLATE);
+    this.templates = [ Object.assign({}, DEFAULT_TEMPLATE) ];
     this.sheetName = undefined;
     this.description = undefined;
     this.defAttribute = undefined;
@@ -66,13 +66,12 @@ class TemplateController {
     if (angular.equals(this.template, DEFAULT_TEMPLATE)) {
       this.selected = this.required.concat(this._config.suggestedAttributes(this.sheetName));
     } else {
-      this.selected = this.required;
+      this.selected = this.required.slice();
 
-      this.attributes.forEach((attribute) => {
-        if (this.template.attributeUris.includes(attribute.uri)) {
-          this.selected.push(attribute);
-        }
-      });
+      Object.values(this.attributes)
+        .reduce((result, attributes) => result.concat(attributes), [])
+        .filter(a => this.template.attributeUris.includes(a.uri))
+        .forEach(a => this.selected.push(a));
     }
   }
 

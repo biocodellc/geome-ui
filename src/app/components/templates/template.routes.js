@@ -1,3 +1,5 @@
+import TemplateController from "./TemplateController";
+
 const routing = (routerHelper) => {
   routerHelper.configureStates(getStates());
 };
@@ -10,7 +12,7 @@ function getStates() {
       config: {
         url: "/template",
         template: require('./templates.html'),
-        controller: "TemplateController",
+        controller: TemplateController,
         controllerAs: "vm",
         projectRequired: true,
       },

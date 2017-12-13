@@ -1,9 +1,9 @@
 class ProjectFactory {
-  constructor($http, $cacheFactory, $q, UserService, REST_ROOT) {
+  constructor($http, $cacheFactory, UserService, REST_ROOT) {
+    'ngInject';
     this.PROJECT_CACHE = $cacheFactory('projectOld');
     this.MEMBER_CACHE = $cacheFactory('project_members');
 
-    this.$q = $q;
     this.$http = $http;
     this.UserService = UserService;
     this.REST_ROOT = REST_ROOT;
@@ -50,7 +50,5 @@ class ProjectFactory {
     return this.$http.put(this.REST_ROOT + 'projects/' + projectId + '/members/' + username);
   }
 }
-
-ProjectFactory.$inject = ['$http', '$cacheFactory', '$q', 'UserService', 'REST_ROOT'];
 
 export default ProjectFactory;

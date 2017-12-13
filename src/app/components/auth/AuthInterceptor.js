@@ -1,8 +1,7 @@
 class AuthInterceptor {
-  constructor($q, $injector, $templateCache) {
+  constructor($injector, $templateCache) {
     'ngInject';
 
-    this.q = $q;
     this.injector = $injector;
     this.templateCache = $templateCache;
     this.triedToRefresh = false;
@@ -20,7 +19,7 @@ class AuthInterceptor {
       }
     }
     return config;
-  }
+  };
 
   responseError = (response) => {
     if (!this.triedToRefresh &&
@@ -30,21 +29,20 @@ class AuthInterceptor {
       const origRequestConfig = response.config;
       this.triedToRefresh = true;
 
-      return this.q.when(
-        AuthService.refreshAccessToken()
-          .then(
-            function () {
-              this.triedToRefresh = false;
-              const $http = this.injector.get("$http");
-              return $http(origRequestConfig);
-            }, function () {
-              this.triedToRefresh = false;
-              return this.state.go('login', { nextState: this.state.current.name, nextStateParams: this.state.params });
-            },
-          ));
+      return AuthService.refreshAccessToken()
+        .then(() => {
+          this.triedToRefresh = false;
+          const $http = this.injector.get("$http");
+          return $http(origRequestConfig);
+        })
+        .catch(() => {
+          this.triedToRefresh = false;
+          return this.state.go('login', { nextState: this.state.current.name, nextStateParams: this.state.params });
+        });
     }
-    return this.q.reject(response);
-  }
+
+    return Promise.reject(response);
+  };
 }
 
 export default AuthInterceptor;

@@ -34,7 +34,7 @@ export default class HeaderController {
     });
 
 
-    this.scope.$watch('this.includePublicProjects', (newVal, oldVal) => {
+    this.scope.$watch('header.includePublicProjects', (newVal, oldVal) => {
       if (newVal !== oldVal) {
         this._getProjects();
       }

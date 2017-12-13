@@ -1,7 +1,7 @@
 import CLIENT_ID from './clientId';
 
 export default class AuthService {
-  constructor($rootScope, $http, $q, $timeout, StorageService, AUTH_TIMEOUT, REST_ROOT, APP_ROOT) {
+  constructor($rootScope, $http, $timeout, StorageService, AUTH_TIMEOUT, REST_ROOT, APP_ROOT) {
     'ngInject';
 
     this._triedToRefresh = false;
@@ -13,7 +13,6 @@ export default class AuthService {
     this.AUTH_TIMEOUT = AUTH_TIMEOUT;
     this.REST_ROOT = REST_ROOT;
     this.http = $http;
-    this.q = $q;
     this.timeout = $timeout;
   }
 
@@ -54,18 +53,16 @@ export default class AuthService {
           refresh_token: refreshToken,
 
         })
-        .then(function (response) {
-            this._authSuccess(response.data);
-          },
-          function (response) {
+        .then(({ data }) => this._authSuccess(data))
+        .catch((response) => {
             this.rootScope.$broadcast('$userRefreshFailedEvent');
             this._triedToRefresh = true;
-            return this.q.reject(response);
+            return Promise.reject(response);
           });
     }
 
     this.rootScope.$broadcast('$userRefreshFailedEvent');
-    return this.q.reject();
+    return Promise.reject();
   }
 
   _resetAuthTimeout() {

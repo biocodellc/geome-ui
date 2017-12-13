@@ -1,11 +1,11 @@
 class ProjectService {
-  constructor($q, $rootScope, $cacheFactory, $http, $timeout, StorageService, exception, ProjectConfigService, REST_ROOT) {
+  constructor($rootScope, $cacheFactory, $http, $timeout, StorageService, exception, ProjectConfigService, REST_ROOT) {
+    'ngInject';
     this.PROJECT_CACHE = $cacheFactory('project');
 
     this._loading = false;
     this.currentProject = undefined;
 
-    this.$q = $q;
     this.$rootScope = $rootScope;
     this.$http = $http;
     this.$timeout = $timeout;
@@ -30,7 +30,7 @@ class ProjectService {
    */
   waitForProject() {
     if (this._loading) {
-      return this.$q((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         this.$rootScope.$on('$projectChangeEvent', function (event, project) {
           resolve(project);
         });
@@ -45,9 +45,9 @@ class ProjectService {
         }, 5000, false);
       });
     } else if (this.currentProject) {
-      return this.$q.when(this.currentProject);
+      return Promise.resolve(this.currentProject);
     } else {
-      return this.$q.reject();
+      return Promise.reject();
     }
   }
 
@@ -100,7 +100,7 @@ class ProjectService {
   }
 
   resolveProjectId() {
-    return this.$q((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       if (this.currentProject) {
         resolve(this.currentProject.projectId);
       } else {
@@ -110,8 +110,5 @@ class ProjectService {
   }
 
 }
-
-ProjectService.$inject = [ '$q', '$rootScope', '$cacheFactory', '$http', '$timeout', 'StorageService', 'exception',
-  'ProjectConfigService', 'REST_ROOT' ];
 
 export default ProjectService;

@@ -1,6 +1,6 @@
 class DataService {
-  constructor($q, $http, ProjectService, FileService, alerts, exception, REST_ROOT) {
-    this.q = $q;
+  constructor($http, ProjectService, FileService, alerts, exception, REST_ROOT) {
+    'ngInject';
     this.http = $http;
     this.projectService = ProjectService;
     this.fileService = FileService;
@@ -13,7 +13,7 @@ class DataService {
     let projectId = this.projectService.currentProject.projectId;
 
     if (!projectId) {
-      return this.q.reject({ data: { error: "No project is selected" } });
+      return Promise.reject({ data: { error: "No project is selected" } });
     }
 
     return this.http.get(this.REST_ROOT + 'data/export/' + projectId + '/' + expeditionCode)
@@ -29,5 +29,4 @@ class DataService {
   }
 }
 
-DataService.$inject = [ '$q', '$http', 'ProjectService', 'FileService', 'alerts', 'exception', 'REST_ROOT' ];
 export default DataService;

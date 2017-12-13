@@ -41,7 +41,7 @@ function showErrors($timeout, showErrorsConfig, $interpolate) {
     showSuccess = getShowSuccess(options);
     trigger = getTrigger(options);
     // modified by RJ Ewing to allow multiple inputs under the same show-errors directive
-    inputEls = el[0].querySelectorAll('.form-control[name], input[type=checkbox]');
+    const inputEls = el[0].querySelectorAll('.form-control[name], input[type=checkbox]');
     angular.forEach(inputEls, function (el) {
       inputEl = el;
 

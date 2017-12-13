@@ -15,22 +15,16 @@ class AttributeDefController {
     // });
   }
 
-  //TODO check if this works
-  $onChanges(changesObj) {
-    if (changesObj.attribute !== this.attribute) {
-      this._config = this.ProjectService.currentProject.config;
-      // this.attribute = this.$scope.$parent.this.defAttribute;
-      this.attribute = changesObj.attribute.currentValue;
-      // this.rules = this._config.attributeRules(this.$scope.$parent.this.sheetName, this.attribute);
-      this.rules = this._config.attributeRules(changesObj.sheetName.currentValue, this.attribute);
-    }
+  $onInit() {
+    this._config = this.ProjectService.currentProject.config;
   }
 
-  // init() {
-  //   this._config = this.ProjectService.currentProject.config;
-  //   this.attribute = this.$scope.$parent.this.defAttribute;
-  //   this.rules = this._config.attributeRules(this.$scope.$parent.this.sheetName, this.attribute);
-  // }
+  $onChanges({ attribute, sheetName }) {
+    //TODO check if this works when changing sheet
+    if (this.attribute) { //&& attribute.currentValue !== attribute.previousValue) {
+      this.rules = this._config.attributeRules(this.sheetName, this.attribute);
+    }
+  }
 
   getListFields(listName) {
     const list = this._config.getList(listName);

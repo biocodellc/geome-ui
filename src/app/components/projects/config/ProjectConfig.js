@@ -13,123 +13,94 @@ export default class ProjectConfig {
     // we don't want to compare the $worksheets variable when determining if 2 configs are the same
     // using angular.equals(); By prefixing the variable with "$", angular will ignore this property
     // during comparison
-    if (this.$worksheets) {
-      return this.$worksheets;
-    } else {
-      this.$worksheets = [];
-
-      var self = this;
-      angular.forEach(this.entities, function (entity) {
-        if (entity.worksheet && self.$worksheets.indexOf(entity.worksheet) === -1) {
-          self.$worksheets.push(entity.worksheet);
-        }
-      });
-
-      return this.$worksheets;
+    if (!this.$worksheets) {
+      const worksheets = new Set();
+      this.entities.filter(e => e.worksheet)
+        .forEach((e) => worksheets.add(e.worksheet));
+      this.$worksheets = Array.from(worksheets);
     }
+
+    return this.$worksheets;
   }
 
   attributesByGroup(sheetName) {
-    var attributes = {
-      'Default Group': [],
-    };
+    const defaultGroup = 'Default Group';
 
-    angular.forEach(this.entities, function (entity) {
-      if (entity.worksheet === sheetName) {
+    const attributes = {};
+    attributes[ defaultGroup ] = [];
 
-        angular.forEach(entity.attributes, function (attribute) {
+    this.entities.filter(entity => entity.worksheet === sheetName)
+      .forEach(e =>
+        e.attributes.forEach(attribute => {
+          const group = attribute.group || defaultGroup;
 
-          if (attribute.group) {
-            if (Object.keys(attributes).indexOf(attribute.group) === -1) {
-              attributes[ attribute.group ] = [];
-            }
-
-            attributes[ attribute.group ].push(attribute);
-
-          } else {
-            attributes[ 'Default Group' ].push(attribute);
+          if (!(group in attributes)) {
+            attributes[ group ] = [];
           }
-        })
-      }
-    });
+
+          attributes[ group ].push(attribute);
+        }),
+      );
 
     return attributes;
   }
 
   attributeRules(sheetName, attribute) {
-    var reservedKeys = [ 'name', 'level', 'listName' ];
-    var sheetRules = this.sheetRules(sheetName);
-    var attrRules = [];
+    const reservedKeys = [ 'name', 'level', 'listName' ];
+    const sheetRules = this.sheetRules(sheetName);
+    const attrRules = [];
 
-    angular.forEach(sheetRules, function (rule) {
-      angular.forEach(rule, function (val, key) {
-
+    sheetRules.forEach(rule =>
+      Object.keys(rule).forEach(k => {
         // if this is not a reservedKey, then check the val for the attribute.column
-        if (reservedKeys.indexOf(key) === -1) {
-          if ((angular.isArray(val) && val.indexOf(attribute.column) > -1)
-            || attribute.column === val) {
+        if (!reservedKeys.includes(k)) {
+          const val = rule[ k ];
+          if ((Array.isArray(val) && val.includes(attribute.column)) ||
+            attribute.column === val) {
             attrRules.push(rule);
           }
         }
-
-      });
-    });
+      }),
+    );
 
     return attrRules;
   }
 
+
   sheetRules(sheetName) {
-    var sheetRules = [];
-
-    angular.forEach(this.entities, function (entity) {
+    return this.entities.reduce((result, entity) => {
       if (entity.worksheet === sheetName) {
-        sheetRules = sheetRules.concat(entity.rules);
+        result.push(...entity.rules);
       }
-    });
 
-    return sheetRules;
+      return result;
+    }, []);
   }
 
   entityUniqueKey(conceptAlias) {
-
-    for (var i = 0; i < this.entities.length; i++) {
-      if (this.entities[ i ].conceptAlias === conceptAlias) {
-        return this.entities[ i ].uniqueKey;
-      }
-    }
+    const entity = this.entities.find(e => e.conceptAlias === conceptAlias);
+    return (entity) ? entity.uniqueKey : undefined;
   }
 
   getList(listName) {
-    for (var i = 0; i < this.lists.length; i++) {
-      if (this.lists[ i ].alias === listName) {
-        return this.lists[ i ];
-      }
-    }
-
-    return [];
+    const list = this.lists.find(l => l.alias === listName);
+    return (list) ? list : [];
   }
 
   getRule(conceptAlias, ruleName, level) {
-    var rule,
-      i,
-      entity = this._getEntity(conceptAlias);
+    const entity = this.entities.find(e => e.conceptAlias === conceptAlias);
 
     if (entity) {
-      for (i = 0; i < entity.rules.length; i++) {
-        rule = entity.rules[ i ];
+      let rule = entity.rules.find(r => r.name === ruleName && r.level === level);
 
-        if (rule.name === ruleName && rule.level === level) {
-          return rule;
-        }
+      if (!rule) {
+        rule = Rule.newRule(ruleName);
+        rule.level = level;
+        entity.rules.push(rule);
       }
-
-      rule = Rule.newRule(ruleName);
-      rule.level = level;
-      entity.rules.push(rule);
 
       return rule;
     }
-
   }
 
   requiredAttributes(sheetName) {
@@ -144,37 +115,16 @@ export default class ProjectConfig {
     return [ 'ERROR', 'WARNING' ];
   }
 
-  _getEntity(conceptAlias) {
-    for (var i = 0; i < this.entities.length; i++) {
-      if (this.entities[ i ].conceptAlias === conceptAlias) {
-        return this.entities[ i ];
-      }
-    }
-  }
-
   _requiredValueAttributes(sheetName, level) {
-    var attributes = [];
+    return this.entities.filter(e => e.worksheet === sheetName)
+      .map((e) => {
+        const requiredColumns = e.rules
+          .filter(r => r.name === 'RequiredValue' && r.level === level)
+          .map(r => r.columns)
+          .reduce((result, c) => result.concat(c), []);
 
-    angular.forEach(this.entities, function (entity) {
-      if (entity.worksheet === sheetName) {
-
-        var requiredColumns = [];
-
-        angular.forEach(entity.rules, function (rule) {
-          if (rule.name == 'RequiredValue' && rule.level === level) {
-            requiredColumns = requiredColumns.concat(rule.columns);
-          }
-        });
-
-        angular.forEach(entity.attributes, function (attribute) {
-          if (requiredColumns.indexOf(attribute.column) > -1) {
-            attributes.push(attribute);
-          }
-        });
-
-      }
-    });
-
-    return attributes;
+        return e.attributes.filter(a => requiredColumns.includes(a.column));
+      })
+      .reduce((result, attributes) => result.concat(attributes), []);
   }
 }

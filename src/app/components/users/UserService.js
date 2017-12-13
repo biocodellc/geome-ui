@@ -1,14 +1,13 @@
 import User from './User';
 
 export default class UserService {
-  constructor($rootScope, $q, $http, $timeout, $state, exception, alerts, AuthService, REST_ROOT) {
+  constructor($rootScope, $http, $timeout, $state, exception, alerts, AuthService, REST_ROOT) {
     'ngInject';
 
     this._loading = false;
     this.currentUser = undefined;
 
     this.$rootScope = $rootScope;
-    this.$q = $q;
     this.$http = $http;
     this.$timeout = $timeout;
     this.$state = $state;
@@ -45,8 +44,8 @@ export default class UserService {
    * the promise will resolve immediately. The promise will be rejected if there is no user loaded.
    */
   waitForUser() {
-    if (this_loading) {
-      return this.$q((resolve, reject) => {
+    if (this._loading) {
+      return new Promise((resolve, reject) => {
         this.$rootScope.$on('$userChangeEvent', function (event, user) {
           resolve(user);
         });
@@ -61,9 +60,9 @@ export default class UserService {
         }, 5000, false);
       });
     } else if (this.currentUser) {
-      return this.$q.when(this.currentUser);
+      return Promise.resolve(this.currentUser);
     } else {
-      return this.$q.reject();
+      return Promise.reject();
     }
   }
 
