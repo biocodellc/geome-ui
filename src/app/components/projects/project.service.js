@@ -13,15 +13,6 @@ class ProjectService {
     this.exception = exception;
     this.ProjectConfigService = ProjectConfigService;
     this.REST_ROOT = REST_ROOT;
-
-    $rootScope.$on("$logoutEvent", () => {
-      if (this.currentProject) {
-        const { projectId } = this.currentProject;
-        this.currentProject = undefined;
-        // this will set the project only if it is a public project
-        this.setFromId(projectId);
-      }
-    });
   }
 
   /**
@@ -52,6 +43,12 @@ class ProjectService {
   }
 
   set(project) {
+    if (!project) {
+      this.currentProject = undefined;
+      this.$rootScope.$broadcast('$projectChangeEvent', this.currentProject);
+      return;
+    }
+
     this._loading = true;
     this.ProjectConfigService.get(project.projectId)
       .then((config) => {

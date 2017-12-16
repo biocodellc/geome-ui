@@ -16,7 +16,7 @@ export default class UserService {
     this.AuthService = AuthService;
     this.REST_ROOT = REST_ROOT;
 
-    $rootScope.$on('$userRefreshFailedEvent', () => this.signOut());
+    $rootScope.$on('$userRefreshFailedEvent', () => this.signout());
     $rootScope.$on('$authTimeoutEvent', () => this._authTimeout());
   }
 
@@ -27,7 +27,7 @@ export default class UserService {
       .catch(this.exception.catcher("Error during authentication."));
   }
 
-  signOut() {
+  signout() {
     this.currentUser = undefined;
     this.AuthService.clearTokens();
     this.$rootScope.$broadcast('$logoutEvent');
@@ -145,7 +145,7 @@ export default class UserService {
   }
 
   _authTimeout() {
-    this.signOut();
+    this.signout();
     this.alerts.info("You have been signed out due to inactivity.");
     this.$state.go("home");
   }

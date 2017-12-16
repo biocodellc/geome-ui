@@ -1,11 +1,13 @@
-<fims-header ></fims-header>
+<fims-header
+        current-user="$ctrl.currentUser"
+        current-project="$ctrl.currentProject"
+        on-project-change="$ctrl.projectChanged(project)"
+        on-signout="$ctrl.signout()">
+</fims-header>
 
 <main class="main">
-  <alerts ></alerts>
-  <div class="content" id="content">
-    <div class="container-fluid" ui-view></div>
-  </div>
+    <alerts></alerts>
+    <div class="content" id="content">
+        <div class="container-fluid" ui-view></div>
+    </div>
 </main>
-<footer>
-  <a ng-href="{{app.url}}">Webpack Angular Starter</a>
-</footer>

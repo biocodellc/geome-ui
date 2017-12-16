@@ -62,22 +62,60 @@ const dependencies = [
   // lookup,
 ];
 
-let app = () => {
-  return {
-    template: require('./app.html'),
-    controller: AppCtrl,
-    controllerAs: 'app',
-  }
-};
-
 class AppCtrl {
-  constructor() {
-    this.url = 'https://github.com/preboot/angular-webpack';
+  constructor($scope, UserService, ProjectService) {
+    'ngInject';
+
+    this.currentUser = undefined;
+    this.currentProject = undefined;
+
+    this.ProjectService = ProjectService;
+    this.UserService = UserService;
+
+    $scope.$on('$projectChangeEvent', (event, project) => {
+      this.currentProject = project;
+    });
+
+    // TODO remove this
+    $scope.$on("$logoutEvent", () => {
+      this.currentUser = undefined;
+      if (this.currentProject && this.currentProject.public === false) {
+        ProjectService.set(undefined);
+      }
+    });
+
+    // TODO remove this
+    $scope.$on("$userChangeEvent", (user) => {
+      this.currentUser = user;
+    });
+
+    $scope.$watch(
+      () => UserService.currentUser,
+      (user) => {
+        this.currentUser = user;
+      },
+    );
+  }
+
+  projectChanged(project) {
+    // TODO change this to this.project = project once we remove currentProject from ProjectService
+    this.ProjectService.set(project);
+  }
+
+  signout() {
+    this.currentUser = undefined;
+    this.UserService.signout();
   }
 }
 
+const app = {
+  template: require('./app.html'),
+  controller: AppCtrl,
+};
+
+
 export default angular.module('biscicolApp', dependencies)
-  .directive('app', app)
+  .component('app', app)
   .run(run)
   //TODO figure out a better config system
   .constant("NAAN", "99999")
