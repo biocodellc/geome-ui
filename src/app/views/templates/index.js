@@ -1,8 +1,8 @@
 import angular from 'angular';
 
-import projects from '../projects';
-import files from '../files';
-import attributeDefinition from '../attribute-definition';
+import projects from '../../components/projects';
+import files from '../../components/files';
+import attributeDefinition from '../../components/attribute-definition';
 
 import routing from './template.routes';
 import TemplateService from "./TemplateService";

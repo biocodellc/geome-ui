@@ -18,6 +18,9 @@ import autofocus from './directives/autofocus.directive';
 import showErrors from './directives/showErrors.directive';
 import trustedHtml from './filters/html.filter';
 
+import home from './views/home';
+import templates from './views/templates';
+
 import alerts from './components/alerts';
 import auth from './components/auth';
 import data from './components/data';
@@ -26,13 +29,11 @@ import expeditions from './components/expeditions';
 import files from './components/files';
 import header from './components/header';
 import navigation from './components/navigation';
-import home from './components/home';
 // import lookup from './components/lookup';
 import modals from './components/modals';
 import projects from './components/projects';
 import query from './components/query';
 import storage from './components/storage';
-import templates from './components/templates';
 import users from './components/users';
 // import validation from './components/validation';
 
