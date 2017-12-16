@@ -5,6 +5,12 @@
         on-signout="$ctrl.signout()">
 </fims-header>
 
+<!-- Sidebar navigation -->
+<fims-navigation
+        current-project="$ctrl.currentProject"
+        current-user="$ctrl.currentUser">
+</fims-navigation>
+
 <main class="main">
     <alerts></alerts>
     <div class="content" id="content">

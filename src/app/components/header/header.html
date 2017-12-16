@@ -1,44 +1,6 @@
 <div>
 
-    <!-- Sidebar navigation -->
-    <nav class="side-nav navbar navbar-default">
-        <div class="section">
-            <h5 class="section-title">Main</h5>
-            <ul class="nav nav-stacked">
-                <li><a ui-sref="home"><i class="fa fa-home fa-fw"></i> Home</a></li>
-                <li><a ui-sref="template"
-                       ng-class="{disabled: !$ctrl.currentProject}"
-                       uib-tooltip="Select a project"
-                       tooltip-enable="!$ctrl.currentProject">
-                    <i class="fa fa-file-excel-o fa-fw"></i> Generate Template</a></li>
-                <li><a ui-sref="query"
-                       ng-class="{disabled: !$ctrl.currentProject}"
-                       uib-tooltip="Select a project"
-                       tooltip-enable="!$ctrl.currentProject">
-                    <i class="fa fa-search fa-fw"></i> View Data</a></li>
-                <li><a ui-sref="validate"
-                       ng-class="{disabled: !$ctrl.currentProject}"
-                       uib-tooltip="Select a project"
-                       tooltip-enable="!$ctrl.currentProject">
-                    <i class="fa fa-upload fa-fw"></i> Validate and Upload Data</a></li>
-            </ul>
-        </div>
 
-        <div class="section" ng-show="$ctrl.currentUser">
-            <h5 class="section-title">Admin</h5>
-            <ul class="nav nav-stacked">
-                <li><a ui-sref="expeditions.list"
-                       ng-class="{disabled: !$ctrl.currentProject}"
-                       uib-tooltip="Select a project"
-                       tooltip-enable="!$ctrl.currentProject">
-                    <i class="fa fa-cog fa-fw"></i> My Expeditions</a></li>
-                <li><a ui-sref="project"
-                       ng-show="$ctrl.currentUser.userId === $ctrl.currentProject.user.userId">
-                    <i class="fa fa-wrench fa-fw"></i> Project Settings</a></li>
-                <li><a ui-sref="profile"><i class="fa fa-user fa-fw"></i> User Profile</a></li>
-            </ul>
-        </div>
-    </nav>
     <!--/. Sidebar navigation -->
 
     <!-- Navbar -->
@@ -63,7 +25,8 @@
         <ul class="nav navbar-nav pull-right">
             <li uib-dropdown class="dropdown separator">
                 <a href="#" uib-dropdown-toggle>
-                    <span ng-show="$ctrl.currentUser" style="padding-right: 5px;">hi, {{ $ctrl.currentUser.username }}!</span>
+                    <span ng-show="$ctrl.currentUser"
+                          style="padding-right: 5px;">hi, {{ $ctrl.currentUser.username }}!</span>
                     <i class="fa fa-user-circle-o fa-lg"></i> <i class="fa fa-angle-down"></i>
                 </a>
 

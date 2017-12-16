@@ -25,6 +25,7 @@ import exceptions from './components/exceptions';
 import expeditions from './components/expeditions';
 import files from './components/files';
 import header from './components/header';
+import navigation from './components/navigation';
 import home from './components/home';
 // import lookup from './components/lookup';
 import modals from './components/modals';
@@ -47,6 +48,7 @@ const dependencies = [
   alerts,
   exceptions,
   header,
+  navigation,
   home,
   files,
   data,
