@@ -2,26 +2,26 @@
 
 <p>Click on "DEF" next to any of the headings to see the definition of the term.</p>
 
-<div ng-show="defVm.attribute">
+<div ng-show="$ctrl.attribute">
     <p>
-        <strong>Column Name: {{ defVm.attribute.column }}</strong>
+        <strong>Column Name: {{ $ctrl.attribute.column }}</strong>
         <br>
-        <span ng-show="defVm.attribute.defined_by">Defined By: <a href="{{ defVm.attribute.defined_by }}"
+        <span ng-show="$ctrl.attribute.defined_by">Defined By: <a href="{{ $ctrl.attribute.defined_by }}"
                                                                   target="_blank">{{
-        defVm.attribute.defined_by }}</a></span>
+        $ctrl.attribute.defined_by }}</a></span>
     </p>
 
     <p><strong>Definition</strong></p>
-    <p>{{ defVm.attribute.definition }}</p>
+    <p>{{ $ctrl.attribute.definition }}</p>
 
-    <div ng-show="defVm.rules.length > 0">
+    <div ng-show="$ctrl.rules.length > 0">
         <p><strong>Validation Rules</strong></p>
-        <ul class="list-unstyled" ng-repeat="rule in defVm.rules">
+        <ul class="list-unstyled" ng-repeat="rule in $ctrl.rules">
             <li><strong>Type:</strong> {{ rule.name }}</li>
             <li><strong>Level:</strong> {{ rule.level }}</li>
             <li ng-if="rule.listName"><strong>list:</strong>
                 <ul>
-                    <li ng-repeat="field in defVm.getListFields(rule.listName)">{{ field.value }}</li>
+                    <li ng-repeat="field in $ctrl.getListFields(rule.listName)">{{ field.value }}</li>
                 </ul>
             </li>
         </ul>

@@ -1,22 +1,15 @@
-class AttributeDefController {
-  constructor($scope, ProjectService) {
-    this._config = undefined;
+import angular from 'angular';
 
+
+class AttributeDefController {
+  constructor() {
+    this._config = undefined;
     this.attribute = undefined;
     this.rules = [];
-
-    this.$scope = $scope;
-    this.ProjectService = ProjectService;
-
-    // $scope.$watch('$parent.vm.defAttribute', (newVal, oldVal) => {
-    //   if (newVal !== oldVal) {
-    //     this.init();
-    //   }
-    // });
   }
 
   $onInit() {
-    this._config = this.ProjectService.currentProject.config;
+    this._config = this.currentProject.config;
   }
 
   $onChanges({ attribute, sheetName }) {
@@ -28,12 +21,21 @@ class AttributeDefController {
 
   getListFields(listName) {
     const list = this._config.getList(listName);
-
     return (list) ? list.field : [];
   }
 
 }
 
-AttributeDefController.$inject = [ '$scope', 'ProjectService' ];
+const attributeDefinition = {
+  template: require('./attribute-definition.html'),
+  controller: AttributeDefController,
+  bindings: {
+    attribute: "<",
+    sheetName: "<",
+    currentProject: "<",
+  },
+};
 
-export default AttributeDefController;
+export default angular.module('fims.attributeDefinition', [])
+  .component('fimsAttributeDefinition', attributeDefinition)
+  .name;

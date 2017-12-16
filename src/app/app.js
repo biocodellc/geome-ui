@@ -36,6 +36,7 @@ import templates from './components/templates';
 import users from './components/users';
 // import validation from './components/validation';
 
+import Exceptions from './utils/exceptions';
 
 const dependencies = [
   uirouter,
@@ -65,8 +66,14 @@ const dependencies = [
 ];
 
 class AppCtrl {
-  constructor($scope, UserService, ProjectService) {
+  constructor($scope, UserService, ProjectService, alerts) {
     'ngInject';
+
+    // attach global objects for easy access throughout app
+    // TODO refactor alerts to utils, removing angular module
+    // TODO not sure how I feel about this
+    const e = new Exceptions(alerts);
+    angular.catcher = e.catcher.bind(e);
 
     this.currentUser = undefined;
     this.currentProject = undefined;

@@ -14,6 +14,9 @@
 <main class="main">
     <alerts></alerts>
     <div class="content" id="content">
-        <div class="container-fluid" ui-view></div>
+        <div class="container-fluid" ui-view
+             current-project="$ctrl.currentProject"
+             current-user="$ctrl.currentUser">
+        </div>
     </div>
 </main>

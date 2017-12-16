@@ -489,8 +489,8 @@ function resolveList($transition$, $state, config) {
   }
 }
 
-function _checkProjectRequired(state) {
-  var s = state;
+function checkProjectRequired(state) {
+  let s = state;
 
   do {
     if (s.projectRequired) {
@@ -539,7 +539,7 @@ const routing = ($transitions, routerHelper, ProjectService) => {
 
   $transitions.onBefore({}, function (trans) {
     const to = trans.$to();
-    if (_checkProjectRequired(to)) {
+    if (checkProjectRequired(to)) {
       return ProjectService.waitForProject()
         .then(function () {
         }, function () {

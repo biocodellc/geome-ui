@@ -1,25 +1,18 @@
-import TemplateController from "./TemplateController";
-
-const routing = (routerHelper) => {
-  routerHelper.configureStates(getStates());
-};
-
-
 function getStates() {
   return [
     {
       state: 'template',
       config: {
         url: "/template",
-        template: require('./templates.html'),
-        controller: TemplateController,
-        controllerAs: "vm",
+        component: 'fimsTemplates',
         projectRequired: true,
       },
     },
   ];
 }
 
-routing.$inject = [ 'routerHelper' ];
+export default (routerHelper) => {
+  'ngInject';
+  routerHelper.configureStates(getStates());
+};
 
-export default routing;

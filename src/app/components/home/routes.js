@@ -1,19 +1,16 @@
-const routing = (routerHelper) => {
-  routerHelper.configureStates(getStates());
-};
-
 function getStates() {
   return [
     {
       state: 'home',
       config: {
         url: '/',
-        template: require('./home.html')
-      }
-    }
+        component: 'home',
+      },
+    },
   ];
 }
 
-routing.$inject = ['routerHelper'];
-
-export default routing;
+export default (routerHelper) => {
+  'ngInject';
+  routerHelper.configureStates(getStates());
+};

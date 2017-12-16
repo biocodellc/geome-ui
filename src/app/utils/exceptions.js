@@ -1,8 +1,5 @@
-// TODO remove this and user utils/exceptions and the global angular object
 export default class exception {
   constructor(alerts) {
-    'ngInject'
-
     this.alerts = alerts;
   }
 

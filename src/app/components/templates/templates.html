@@ -8,10 +8,10 @@
 
             <div class="col-sm-4">
                 <select class="form-control"
-                        ng-disabled="vm.worksheets.length <= 1"
-                        ng-model="vm.sheetName"
-                        ng-options="sheet for sheet in vm.worksheets"
-                        ng-change="vm.sheetChange()">
+                        ng-disabled="$ctrl.worksheets.length <= 1"
+                        ng-model="$ctrl.sheetName"
+                        ng-options="sheet for sheet in $ctrl.worksheets"
+                        ng-change="$ctrl.sheetChange()">
                 </select>
             </div>
         </div>
@@ -21,16 +21,16 @@
             <div class="col-sm-4">
                 <div class="input-group col-sm-12">
                     <select class="form-control"
-                            ng-disabled="vm.templates.length <= 1"
-                            ng-model="vm.template"
-                            ng-options="t as t.name for t in vm.templates track by t.name"
-                            ng-change="vm.templateChange()">
+                            ng-disabled="$ctrl.templates.length <= 1"
+                            ng-model="$ctrl.template"
+                            ng-options="t as t.name for t in $ctrl.templates track by t.name"
+                            ng-change="$ctrl.templateChange()">
                     </select>
 
-                    <div class="input-group-btn" ng-show="vm.canRemoveTemplate()">
+                    <div class="input-group-btn" ng-show="$ctrl.canRemoveTemplate()">
                         <button class="btn btn-danger"><i class="fa fa-trash fa-fw"></i></button>
                     </div>
-                    <!--<div class="input-group-btn" ng-show="vm.isAuthenticated">-->
+                    <!--<div class="input-group-btn" ng-show="$ctrl.isAuthenticated">-->
                     <!--<button class="btn btn-success"><i class="fa fa-check fa-fw"></i></button>-->
                     <!--</div>-->
                 </div>
@@ -38,7 +38,7 @@
         </div>
         <div class="form-group">
             <div class="col-sm-6">
-                <button type="button" ng-click="vm.generate()" class="btn btn-primary pull-right">Export Excel</button>
+                <button type="button" ng-click="$ctrl.generate()" class="btn btn-primary pull-right">Export Excel</button>
             </div>
         </div>
     </form>
@@ -47,16 +47,16 @@
 <div class="row">
 
     <div class="col-xs-6">
-        <uib-accordion close-others="false" ng-repeat="(group, attributes) in vm.attributes">
+        <uib-accordion close-others="false" ng-repeat="(group, attributes) in $ctrl.attributes">
             <div uib-accordion-group class="panel-default" heading="{{ group }}" is-open="true">
                 <div class="checkbox" ng-repeat="attribute in attributes">
                     <label>
                         <input type="checkbox"
-                               ng-disabled="vm.required.indexOf(attribute) > -1"
-                               ng-checked="vm.selected.indexOf(attribute) > -1"
-                               ng-click="vm.toggleSelected(attribute)"/>
+                               ng-disabled="$ctrl.required.indexOf(attribute) > -1"
+                               ng-checked="$ctrl.selected.indexOf(attribute) > -1"
+                               ng-click="$ctrl.toggleSelected(attribute)"/>
                         {{ attribute.column }}
-                        <a href="#" ng-click="vm.defAttribute = attribute">DEF</a>
+                        <a href="#" ng-click="$ctrl.defAttribute = attribute">DEF</a>
                     </label>
                 </div>
             </div>
@@ -64,9 +64,13 @@
     </div>
 
     <div class="col-xs-6">
-        <p>{{ vm.description }}</p>
+        <p>{{ $ctrl.description }}</p>
 
-        <attribute-definition attribute="vm.defAttribute" sheet-name="vm.sheetName" ></attribute-definition>
+        <fims-attribute-definition
+                current-project="$ctrl.currentProject"
+                attribute="$ctrl.defAttribute"
+                sheet-name="$ctrl.sheetName">
+        </fims-attribute-definition>
     </div>
 
 </div>
