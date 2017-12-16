@@ -16,8 +16,8 @@ export default class UserService {
     this.AuthService = AuthService;
     this.REST_ROOT = REST_ROOT;
 
-    $rootScope.$on('$userRefreshFailedEvent', this.signOut);
-    $rootScope.$on('$authTimeoutEvent', this._authTimeout);
+    $rootScope.$on('$userRefreshFailedEvent', () => this.signOut());
+    $rootScope.$on('$authTimeoutEvent', () => this._authTimeout());
   }
 
 

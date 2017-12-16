@@ -1,51 +1,3 @@
-export const AVAILABLE_RULES = [];
-// export const AVAILABLE_RULES = [
-//   new Rule({
-//     name: 'UniqueValue',
-//     column: undefined,
-//   }),
-//   new Rule({
-//     name: 'CompositeUniqueValue',
-//     columns: [],
-//   }),
-//   new Rule({
-//     name: 'RequiredValue',
-//     columns: [],
-//   }),
-//   new Rule({
-//     name: 'ControlledVocabulary',
-//     column: undefined,
-//     listName: undefined,
-//   }),
-//   new Rule({
-//     name: 'MinMaxNumber',
-//     minimumColumn: undefined,
-//     maximumColumn: undefined,
-//   }),
-//   new Rule({
-//     name: 'NumericRange',
-//     column: undefined,
-//     range: undefined,
-//   }),
-//   new Rule({
-//     name: 'RequiredValueInGroup',
-//     columns: [],
-//   }),
-//   new Rule({
-//     name: 'ValidForURI',
-//     column: undefined,
-//   }),
-//   new Rule({
-//     name: 'ValidURL',
-//     column: undefined,
-//   }),
-//   new Rule({
-//     name: 'RequireValueIfOtherColumn',
-//     column: undefined,
-//     otherColumn: undefined,
-//   }),
-// ];
-
 export default class Rule {
   constructor(props) {
     this.name = undefined;
@@ -70,3 +22,50 @@ export default class Rule {
     return Object.assign({}, AVAILABLE_RULES.find(r => r.name === name));
   }
 }
+
+export const AVAILABLE_RULES = [
+  new Rule({
+    name: 'UniqueValue',
+    column: undefined,
+  }),
+  new Rule({
+    name: 'CompositeUniqueValue',
+    columns: [],
+  }),
+  new Rule({
+    name: 'RequiredValue',
+    columns: [],
+  }),
+  new Rule({
+    name: 'ControlledVocabulary',
+    column: undefined,
+    listName: undefined,
+  }),
+  new Rule({
+    name: 'MinMaxNumber',
+    minimumColumn: undefined,
+    maximumColumn: undefined,
+  }),
+  new Rule({
+    name: 'NumericRange',
+    column: undefined,
+    range: undefined,
+  }),
+  new Rule({
+    name: 'RequiredValueInGroup',
+    columns: [],
+  }),
+  new Rule({
+    name: 'ValidForURI',
+    column: undefined,
+  }),
+  new Rule({
+    name: 'ValidURL',
+    column: undefined,
+  }),
+  new Rule({
+    name: 'RequireValueIfOtherColumn',
+    column: undefined,
+    otherColumn: undefined,
+  }),
+];

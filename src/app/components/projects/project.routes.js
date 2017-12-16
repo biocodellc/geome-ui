@@ -1,5 +1,24 @@
 import ProjectMembersController from "./members/project-members.controller";
 import ProjectMembersAddController from "./members/project-members-add.controller";
+import ExpeditionController from "../expeditions/expedition.controller";
+import ExpeditionSettingsController from "../expeditions/expedition-settings.controller";
+import ExpeditionResourcesController from "../expeditions/expedition-resources.controller";
+import ProjectController from "./project.controller";
+import ProjectSettingsController from "./project-settings.controller";
+import ProjectExpeditionsController from "./project-expeditions.controller";
+import ConfigController from "./config/config.controller";
+import ConfigMetadataController from "./config/config-metadata.controller";
+import EntitiesController from "./config/entities.controller";
+import EntityController from "./config/entity.controller";
+import AddEntityController from "./config/entity-add.controller";
+import EntityAttributesController from "./config/entity-attributes.controller";
+import EntityRulesController from "./config/entity-rules.controller";
+import ListsController from "./config/lists.controller";
+import ListController from "./config/list.controller";
+import AddListController from "./config/list-add.controller";
+import AddRuleController from "./config/rule-add.controller";
+
+const expeditionDetailTemplate = require('../expeditions/expedition-detail.html');
 
 function getStates() {
   return [
@@ -8,7 +27,8 @@ function getStates() {
       config: {
         url: '/project',
         template: require('./project.html'),
-        controller: "ProjectController as vm",
+        controller: ProjectController,
+        controllerAs: 'vm',
         redirectTo: "project.settings",
         onEnter: projectOnEnter,
         resolve: {
@@ -26,7 +46,8 @@ function getStates() {
         views: {
           "details": {
             template: require('./project-settings.html'),
-            controller: "ProjectSettingsController as vm",
+            controller: ProjectSettingsController,
+            controllerAs: 'vm',
           },
         },
       },
@@ -43,7 +64,8 @@ function getStates() {
         views: {
           "details": {
             template: require('./project-expeditions.html'),
-            controller: "ProjectExpeditionsController as vm",
+            controller: ProjectExpeditionsController,
+            controllerAs: 'vm',
           },
         },
         waitForResolves: true,
@@ -61,8 +83,9 @@ function getStates() {
         },
         views: {
           "@": {
-            template: '<div class="admin" ng-include="\'app/components/expeditions/expedition-detail.html\'"></div>',
-            controller: "ExpeditionController as vm",
+            template: `<div class="admin" >${expeditionDetailTemplate}</div>`,
+            controller: ExpeditionController,
+            controllerAs: 'vm',
           },
         },
         params: {
@@ -80,7 +103,8 @@ function getStates() {
         views: {
           "details": {
             template: require('../expeditions/expedition-detail-settings.html'),
-            controller: "ExpeditionSettingsController as vm",
+            controller: ExpeditionSettingsController,
+            controllerAs: 'vm',
           },
         },
       },
@@ -92,7 +116,8 @@ function getStates() {
         views: {
           "details": {
             template: require('../expeditions/expedition-detail-resources.html'),
-            controller: "ExpeditionResourcesController as vm",
+            controller: ExpeditionResourcesController,
+            controllerAs: 'vm',
           },
         },
       },
@@ -154,8 +179,9 @@ function getStates() {
         },
         views: {
           "details": {
-            template: require('./config/templates/config.tpl.html'),
-            controller: "ConfigController as vm",
+            template: require('./config/templates/config.html'),
+            controller: ConfigController,
+            controllerAs: 'vm',
           },
         },
       },
@@ -166,8 +192,9 @@ function getStates() {
         url: '/metadata',
         views: {
           "objects": {
-            template: require('./config/templates/config-metadata.tpl.html'),
-            controller: "ConfigMetadataController as vm",
+            template: require('./config/templates/config-metadata.html'),
+            controller: ConfigMetadataController,
+            controllerAs: 'vm',
           },
         },
       },
@@ -180,8 +207,9 @@ function getStates() {
         url: '/entities',
         views: {
           "objects": {
-            template: require('./config/templates/entities.tpl.html'),
-            controller: "EntitiesController as vm",
+            template: require('./config/templates/entities.html'),
+            controller: EntitiesController,
+            controllerAs: 'vm',
           },
         },
       },
@@ -192,8 +220,9 @@ function getStates() {
         url: '/add',
         views: {
           "objects@project.config": {
-            template: require('./config/templates/add-entity.tpl.html'),
-            controller: "AddEntityController as vm",
+            template: require('./config/templates/add-entity.html'),
+            controller: AddEntityController,
+            controllerAs: 'vm',
           },
         },
       },
@@ -210,8 +239,9 @@ function getStates() {
         },
         views: {
           "@project.config": {
-            template: require('./config/templates/entity-detail.tpl.html'),
-            controller: "EntityController as vm",
+            template: require('./config/templates/entity-detail.html'),
+            controller: EntityController,
+            controllerAs: 'vm',
           },
         },
         params: {
@@ -228,8 +258,9 @@ function getStates() {
         url: 'attributes',
         views: {
           "objects": {
-            template: require('./config/templates/entity-attributes.tpl.html'),
-            controller: "EntityAttributesController as vm",
+            template: require('./config/templates/entity-attributes.html'),
+            controller: EntityAttributesController,
+            controllerAs: 'vm',
           },
         },
         params: {
@@ -246,8 +277,9 @@ function getStates() {
         url: 'rules',
         views: {
           "objects": {
-            template: require('./config/templates/entity-rules.tpl.html'),
-            controller: "EntityRulesController as vm",
+            template: require('./config/templates/entity-rules.html'),
+            controller: EntityRulesController,
+            controllerAs: 'vm',
           },
         },
       },
@@ -258,8 +290,9 @@ function getStates() {
         url: '/add',
         views: {
           "objects@project.config.entities.detail": {
-            template: require('./config/templates/add-rule.tpl.html'),
-            controller: "AddRuleController as vm",
+            template: require('./config/templates/add-rule.html'),
+            controller: AddRuleController,
+            controllerAs: 'vm',
           },
         },
       },
@@ -272,8 +305,9 @@ function getStates() {
         url: '/lists',
         views: {
           "objects": {
-            template: require('./config/templates/lists.tpl.html'),
-            controller: "ListsController as vm",
+            template: require('./config/templates/lists.html'),
+            controller: ListsController,
+            controllerAs: 'vm',
           },
         },
       },
@@ -288,8 +322,9 @@ function getStates() {
         },
         views: {
           "@project.config": {
-            template: require('./config/templates/list-detail.tpl.html'),
-            controller: "ListController as vm",
+            template: require('./config/templates/list-detail.html'),
+            controller: ListController,
+            controllerAs: 'vm',
           },
         },
         params: {
@@ -308,8 +343,9 @@ function getStates() {
         url: '/add',
         views: {
           "objects@project.config": {
-            template: require('./config/templates/add-list.tpl.html'),
-            controller: "AddListController as vm",
+            template: require('./config/templates/add-list.html'),
+            controller: AddListController,
+            controller: ListController,
           },
         },
       },
@@ -475,7 +511,7 @@ function configExit(trans, config) {
     var $uibModal = trans.injector().get('$uibModal');
 
     var modal = $uibModal.open({
-      template: require('./config/templates/unsaved-config-confirmation.tpl.html'),
+      template: require('./config/templates/unsaved-config-confirmation.html'),
       size: 'md',
       controller: configConfirmationController,
       controllerAs: 'vm',

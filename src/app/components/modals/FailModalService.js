@@ -8,7 +8,7 @@ class FailModalService {
 
   open(title, message) {
     this.modalInstance = this.$uibModal.open({
-      templateUrl: require('./templates/failModal.html'),
+      template: require('./templates/failModal.html'),
       size: 'md',
       controller: FailModalController,
       controllerAs: 'vm',

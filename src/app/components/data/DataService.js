@@ -17,15 +17,14 @@ class DataService {
     }
 
     return this.http.get(this.REST_ROOT + 'data/export/' + projectId + '/' + expeditionCode)
-      .then(function (response) {
-          if (response.status === 204) {
-            this.alerts.info("No resources found");
-            return
-          }
-          return this.fileService.download(response.data.url)
-        },
-        this.exception.catcher("Failed to export data"),
-      );
+      .then((response) => {
+        if (response.status === 204) {
+          this.alerts.info("No resources found");
+          return
+        }
+        return this.fileService.download(response.data.url)
+      })
+      .catch(this.exception.catcher("Failed to export data"));
   }
 }
 

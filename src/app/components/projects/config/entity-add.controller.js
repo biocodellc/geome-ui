@@ -1,70 +1,53 @@
 import Rule from "./Rule";
 
-(function () {
-    'use strict';
+export default class AddEntityController {
+  constructor($state, config) {
+    'ngInject'
+    this.$state = $state;
+    this.config = config;
 
-    angular.module('fims.projects')
-        .controller('AddEntityController', AddEntityController);
+    this.isChild = false;
+    this.conceptAlias = undefined;
+    this.conceptURI = undefined;
+    this.parentEntity = undefined;
 
-    AddEntityController.$inject = ['$state', 'config'];
+    this.entities = config.entities.map(c => c.conceptAlias);
+  }
 
-    function AddEntityController($state, config) {
-        var vm = this;
+  add() {
+    const e = this.config.entities.find(e => e.conceptAlias.toLowerCase() === this.conceptAlias.toLowerCase());
 
-        vm.isChild = false;
-        vm.conceptAlias = undefined;
-        vm.conceptURI = undefined;
-        vm.parentEntity = undefined;
-        vm.entities = undefined;
-        vm.add = add;
-
-        init();
-
-        function init() {
-            vm.entities = [];
-
-            angular.forEach(config.entities, function(entity) {
-                vm.entities.push(entity.conceptAlias);
-            });
-        }
-
-        function add() {
-            for (var i = 0; i < config.entities.length; i++) {
-                if (config.entities[i].conceptAlias.toLowerCase() === vm.conceptAlias.toLowerCase()) {
-                    vm.addForm.conceptAlias.$setValidity("unique", false);
-                    return;
-                }
-            }
-
-            var entity = {
-                attributes: [],
-                rules: [],
-                conceptAlias: vm.conceptAlias.toLowerCase(),
-                parentEntity: vm.parentEntity,
-                conceptURI: vm.conceptURI,
-                editable: true,
-                isNew: true
-            };
-
-            if (vm.parentEntity) {
-                var rule = Rule.newRule("RequiredValue");
-                rule.level = 'ERROR';
-                var column = config.entityUniqueKey(vm.parentEntity);
-                rule.columns.push(column);
-
-                entity.attributes.push({
-                    column: column,
-                    datatype: 'STRING',
-                    group: 'Default',
-                });
-
-                entity.rules.push(rule);
-            }
-
-            config.entities.push(entity);
-
-            $state.go('^.detail.attributes', { alias: entity.conceptAlias, entity: entity, addAttribute: true });
-        }
+    if (e) {
+      this.addForm.conceptAlias.$setValidity("unique", false);
     }
 
-})();
+    const entity = {
+      attributes: [],
+      rules: [],
+      conceptAlias: this.conceptAlias.toLowerCase(),
+      parentEntity: this.parentEntity,
+      conceptURI: this.conceptURI,
+      editable: true,
+      isNew: true,
+    };
+
+    if (this.parentEntity) {
+      const rule = Rule.newRule("RequiredValue");
+      rule.level = 'ERROR';
+      const column = this.config.entityUniqueKey(this.parentEntity);
+      rule.columns.push(column);
+
+      entity.attributes.push({
+        column: column,
+        datatype: 'STRING',
+        group: 'Default',
+      });
+
+      this.entity.rules.push(rule);
+    }
+
+    this.config.entities.push(entity);
+
+    this.$state.go('^.detail.attributes', { alias: entity.conceptAlias, entity: entity, addAttribute: true });
+  }
+}

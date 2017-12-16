@@ -1,25 +1,15 @@
-(function () {
-    'use strict';
+export default class ListsController {
+  constructor($scope, $state, config) {
+    this.config = config;
 
-    angular.module('fims.projects')
-        .controller('ListsController', ListsController);
+    /**
+     * catch child emit event and rebroadcast to all children. This is the only way to broadcast to sibling elements
+     */
+    $scope.$on("$closeSiblingEditPopupEvent", function (event) {
+      event.stopPropagation();
+      $scope.$broadcast("$closeEditPopupEvent");
+    });
 
-    ListsController.$inject = ['$scope', '$state', 'config'];
-
-    function ListsController($scope, $state, config) {
-        var vm = this;
-        vm.config = config;
-
-        /**
-         * catch child emit event and rebroadcast to all children. This is the only way to broadcast to sibling elements
-         */
-        $scope.$on("$closeSiblingEditPopupEvent", function(event) {
-            event.stopPropagation();
-            $scope.$broadcast("$closeEditPopupEvent");
-        });
-
-        $scope.$on('$configAddEvent', function () {
-            $state.go('.add');
-        })
-    }
-})();
+    $scope.$on('$configAddEvent', () => $state.go('.add'));
+  }
+}

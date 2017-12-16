@@ -1,64 +1,40 @@
 import { AVAILABLE_RULES } from "./Rule";
 
-(function () {
-    'use strict';
+export default class AddRuleController {
+  constructor($state, alerts, config, entity) {
+    'ngInject'
+    this.$state = $state;
+    this.alerts = alerts;
+    this.entity = entity;
 
-    angular.module('fims.projects')
-        .controller('AddRuleController', AddRuleController);
+    this.availableRules = AVAILABLE_RULES;
+    this.rule = undefined;
+    this.levels = config.ruleLevels();
 
-    AddRuleController.$inject = ['$state', 'alerts', 'config', 'entity'];
+    this.lists = config.lists.map(l => l.alias);
 
-    function AddRuleController($state, alerts, config, entity) {
-        var vm = this;
+    this.columns = entity.attributes.map(a => a.column);
+  }
 
-        vm.availableRules = AVAILABLE_RULES;
-        vm.rule = undefined;
-        vm.levels = config.ruleLevels();
-        vm.add = add;
+  add() {
+    const metadata = this.rule.metadata();
+    const invalidMetadata = Object.keys(metadata).map(k =>
+      !metadata[ k ] || (Array.isArray(metadata[ k ]) && metadata[ k ].length === 0));
 
-        init();
+    if (invalidMetadata.length !== 0) {
+      const msg = invalidMetadata.length > 1 ? ' are all required' : ' is required';
 
-        function init() {
-            vm.lists = [];
-            angular.forEach(config.lists, function (list) {
-                vm.lists.push(list.alias);
-            });
-
-            vm.columns = [];
-            angular.forEach(entity.attributes, function (attribute) {
-                vm.columns.push(attribute.column);
-            });
-        }
-
-        function add() {
-            var invalidMetadata = [];
-
-            angular.forEach(vm.rule.metadata(), function(value, key) {
-                if (!value || (angular.isArray(value) && value.length === 0)) {
-                    invalidMetadata.push(key);
-                }
-            });
-
-            if (invalidMetadata.length !== 0) {
-                var msg;
-                if (invalidMetadata.length > 1) {
-                    msg = ' are all required';
-                } else {
-                    msg = ' is required';
-                }
-
-                alerts.error(invalidMetadata.join(', ') + msg);
-                return;
-            }
-            
-            if (entity.rules.indexOf(vm.rule) !== -1) {
-                alerts.error('That rule already exists.');
-            }
-
-            alerts.removeTmp();
-            entity.rules.push(vm.rule);
-            $state.go('^');
-        }
+      this.alerts.error(invalidMetadata.join(', ') + msg);
+      return;
     }
 
-})();
+    // TODO verify this works
+    if (this.entity.rules.includes(this.rule)) {
+      this.alerts.error('That rule already exists.');
+    }
+
+    this.alerts.removeTmp();
+    this.entity.rules.push(this.rule);
+    this.$state.go('^');
+  }
+}

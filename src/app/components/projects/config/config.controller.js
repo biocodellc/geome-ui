@@ -1,53 +1,47 @@
-(function () {
-    'use strict';
+import angular from 'angular';
 
-    angular.module('fims.projects')
-        .controller('ConfigController', ConfigController);
+export default class ConfigController {
+  constructor($scope, $state, project, ProjectConfigService, alerts, config) {
+    'ngInject'
+    this.$scope = $scope;
+    this.$state = $state;
+    this.project = project;
+    this.ProjectConfigService = ProjectConfigService;
+    this.alerts = alerts;
 
-    ConfigController.$inject = ['$scope', '$state', 'project', 'ProjectConfigService', 'alerts', 'config'];
+    this.addText = undefined;
+    this.config = config;
 
-    function ConfigController($scope, $state, project, ProjectConfigService, alerts, config) {
-        var vm = this;
+    $scope.$watch(() => $state.current.name, () => (name) => {
+      if (name === 'project.config.entities') {
+        this.addText = 'Entity';
+      } else if (name === 'project.config.lists') {
+        this.addText = 'List';
+      }
+    });
 
-        vm.add = add;
-        vm.save = save;
-        vm.addText = undefined;
-        vm.config = config;
+    $scope.$watch('vm.config', (newVal, oldVal) => {
+      if (!this.config.modified && !angular.equals(newVal, oldVal)) {
+        this.config.modified = true;
+      }
+    }, true);
+  }
 
-        function add() {
-            $scope.$broadcast('$configAddEvent');
-        }
+  add() {
+    this.$scope.$broadcast('$configAddEvent');
+  }
 
-        function save() {
-            alerts.removeTmp();
-            ProjectConfigService.save(vm.config, project.projectId)
-                .then(function(config) {
-                    project.config = config;
-                    alerts.success("Successfully updated project configuration!");
-                }, function (response) {
-                    if (response.status === 400) {
-                        angular.forEach(response.data.errors, function(error) {
-                            alerts.error(error);
-                        });
-                    }
-                });
-        }
+  save() {
+    this.alerts.removeTmp();
+    this.ProjectConfigService.save(this.config, project.projectId)
+      .then((config) => {
+        this.project.config = config;
+        this.alerts.success("Successfully updated project configuration!");
+      }).catch((response) => {
+      if (response.status === 400) {
+        response.data.errors.forEach(error => this.alerts.error(error));
+      }
+    });
+  }
 
-        $scope.$watch(function () {
-            return $state.current.name;
-        }, function (name) {
-            if (name === 'project.config.entities') {
-                vm.addText = 'Entity';
-            } else if (name === 'project.config.lists') {
-                vm.addText = 'List';
-            }
-        });
-
-        $scope.$watch('vm.config'
-        , function (newVal, oldVal) {
-            if (!vm.config.modified && !angular.equals(newVal, oldVal)) {
-                vm.config.modified = true;
-            }
-        }, true);
-    }
-})();
+}

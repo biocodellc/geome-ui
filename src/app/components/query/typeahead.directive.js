@@ -151,7 +151,7 @@ const typeahead = () => ({
   },
   controller: TypeAheadController,
   controllerAs: "typeahead",
-  templateUrl: require('./typeahead.html'),
+  template: require('./typeahead.html'),
   link: typeaheadLink,
 });
 

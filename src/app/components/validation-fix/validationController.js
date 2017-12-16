@@ -186,7 +186,7 @@
 
     function openResultsModal() {
       modalInstance = $uibModal.open({
-        templateUrl: 'app/components/validation/results/resultsModal.tpl.html',
+        template: require('./results/resultsModal.tpl.html'),
         size: 'md',
         controller: 'ResultsModalCtrl',
         controllerAs: 'vm',

@@ -1,14 +1,7 @@
-(function () {
-    'use strict';
+export default class ConfigMetadataController {
+  constructor(project) {
+    'ngInject'
 
-    angular.module('fims.projects')
-        .controller('ConfigMetadataController', ConfigMetadataController);
-
-    ConfigMetadataController.$inject = ['project'];
-
-    function ConfigMetadataController(project) {
-        var vm = this;
-
-        vm.config = project.config;
-    }
-})();
+    this.config = project.config;
+  }
+}

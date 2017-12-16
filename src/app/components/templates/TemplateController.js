@@ -24,7 +24,7 @@ class TemplateController {
 
     this.init();
 
-    $scope.$on('$projectChangeEvent', this.init);
+    $scope.$on('$projectChangeEvent', () => this.init());
   }
 
   init() {

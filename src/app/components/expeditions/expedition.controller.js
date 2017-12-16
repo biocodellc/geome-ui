@@ -5,11 +5,9 @@ export default class ExpeditionController {
 
     this.expedition = expedition;
     this.backState = backState;
-    this.export = exportData;
-
   }
 
   exportData() {
-    this.DataService.export(this.expedition.expeditionCode);
+    this.DataService.exportData(this.expedition.expeditionCode);
   }
 }

@@ -24,13 +24,6 @@ const routing = ($stateProvider, $urlRouterProvider, $urlMatcherFactoryProvider,
     //   controller: "CreatorCtrl as vm",
     //   loginRequired: true,
     // })
-    // .state('projects', {
-    //   url: "/secure/projects",
-    //   template: "app/components/projects/projects.html",
-    //   controller: "ProjectCtrl as vm",
-    //   projectRequired: true,
-    //   loginRequired: true,
-    // })
     .state('notFound', {
       url: '*path',
       template: require('partials/page-not-found.html'),

@@ -5,6 +5,7 @@ export default class ProjectMembersController {
     "ngInject";
 
     this.$uibModal = $uibModal;
+    this.$state = $state;
     this.ProjectMembersService = ProjectMembersService;
     this.orderByList = [ 'username', 'institution', 'email', 'firstName', 'lastName' ];
 

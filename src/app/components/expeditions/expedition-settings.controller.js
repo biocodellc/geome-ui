@@ -28,7 +28,7 @@ export default class ExpeditionSettingsController {
 
   deleteExpedition() {
     const modal = this.$uibModal.open({
-      templateUrl: require('./delete-confirmation.tpl.html'),
+      template: require('./delete-confirmation.tpl.html'),
       size: 'md',
       controller: DeleteConfirmationController,
       controllerAs: 'vm',

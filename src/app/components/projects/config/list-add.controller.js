@@ -1,34 +1,24 @@
-(function () {
-    'use strict';
+export default class AddListController {
+  constructor($state, config) {
+    this.$state = $state;
+    this.config = config;
 
-    angular.module('fims.projects')
-        .controller('AddListController', AddListController);
+    this.caseSensitive = false;
+    this.alias = undefined;
+  }
 
-    AddListController.$inject = ['$state', 'config'];
-
-    function AddListController($state, config) {
-        var vm = this;
-
-        vm.caseSensitive = false;
-        vm.alias = undefined;
-        vm.add = add;
-
-        function add() {
-            for (var i = 0; i < config.lists.length; i++) {
-                if (config.lists[i].alias === vm.alias) {
-                    vm.addForm.alias.$setValidity("unique", false);
-                    return;
-                }
-            }
-
-            config.lists.push({
-                fields: [],
-                alias: vm.alias,
-                caseInsensitive: !vm.caseSensitive,
-            });
-
-            $state.go('^.detail', {alias: vm.alias, addField: true});
-        }
+  add() {
+    const list = this.config.lists.find(l => l.alias === this.alias);
+    if (list) {
+      this.addForm.alias.$setValidity("unique", false);
     }
 
-})();
+    this.config.lists.push({
+      fields: [],
+      alias: this.alias,
+      caseInsensitive: !this.caseSensitive,
+    });
+
+    this.$state.go('^.detail', { alias: this.alias, addField: true });
+  }
+}

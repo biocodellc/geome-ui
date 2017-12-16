@@ -12,9 +12,6 @@ export default class ProjectMembersAddController {
 
     this.users = [];
     this.username = undefined;
-    this.removeAlerts = alerts.removeTmp;
-    this.inviteUser = inviteUser;
-    this.add = add;
 
     this._init();
   }
@@ -25,6 +22,10 @@ export default class ProjectMembersAddController {
         this._allUsers = users;
         this._filterUsers();
       });
+  }
+
+  removeAlerts() {
+    this.alerts.removeTmp();
   }
 
   add() {
@@ -56,7 +57,7 @@ export default class ProjectMembersAddController {
 
   _filterUsers() {
     this.users = this._allUsers
-      .filter(u => this.members.findIndex(m => u.username === m.username) > -1)
+      .filter(u => this.members.find(m => u.username === m.username) === undefined)
       .map(u => ({
         // only keep keys we are interested in. This allows us to use $ in the ui-select $filter to filter
         // users using the search term on all properties

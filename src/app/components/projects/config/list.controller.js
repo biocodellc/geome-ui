@@ -1,67 +1,58 @@
-(function () {
-    'use strict';
+import angular from 'angular';
 
-    angular.module('fims.projects')
-        .controller('ListController', ListController);
+export default class ListController {
+  constructor($scope, $state, project, config, list, ProjectConfigService, alerts) {
+    'ngInject'
+    this.$scope = $scope;
+    this.alerts = alerts;
+    this.ProjectConfigService = ProjectConfigService;
+    this.project = project;
 
-    ListController.$inject = ['$scope', '$state', 'project', 'config', 'list', 'ProjectConfigService', 'alerts'];
+    this.list = list;
+    this.config = config;
 
-    function ListController($scope, $state, project, config, list, ProjectConfigService, alerts) {
-        var vm = this;
-
-        vm.list = list;
-        vm.save = save;
-        vm.add = add;
-        vm.config = config;
-        vm.deleteField = deleteField;
-
-        init();
-
-        function init() {
-            if ($state.params.addField) {
-                add();
-            }
-        }
-
-        function save() {
-            alerts.removeTmp();
-            ProjectConfigService.save(vm.config, project.projectId)
-                .then(function (config) {
-                    project.config = config;
-                    alerts.success("Successfully updated project configuration!");
-                }, function (response) {
-                    if (response.status === 400) {
-                        angular.forEach(response.data.errors, function (error) {
-                            alerts.error(error);
-                        });
-                    }
-                });
-        }
-
-        function add() {
-            $scope.$broadcast("$closeEditPopupEvent");
-            vm.list.fields.push({
-                isNew: true
-            });
-        }
-
-        function deleteField(index) {
-            vm.list.fields.splice(index, 1);
-        }
-
-        /**
-         * catch child emit event and rebroadcast to all children. This is the only way to broadcast to sibling elements
-         */
-        $scope.$on("$closeSiblingEditPopupEvent", function (event) {
-            event.stopPropagation();
-            $scope.$broadcast("$closeEditPopupEvent");
-        });
-
-        $scope.$watch('vm.config',
-            function (newVal, oldVal) {
-                if (!config.modified && !angular.equals(newVal, oldVal)) {
-                    config.modified = true;
-                }
-            }, true);
+    if ($state.params.addField) {
+      this.add();
     }
-})();
+
+    /**
+     * catch child emit event and rebroadcast to all children. This is the only way to broadcast to sibling elements
+     */
+    $scope.$on("$closeSiblingEditPopupEvent", function (event) {
+      event.stopPropagation();
+      $scope.$broadcast("$closeEditPopupEvent");
+    });
+
+    $scope.$watch('this.config',
+      function (newVal, oldVal) {
+        if (!config.modified && !angular.equals(newVal, oldVal)) {
+          config.modified = true;
+        }
+      }, true)
+  }
+
+  save() {
+    this.alerts.removeTmp();
+    this.ProjectConfigService.save(this.config, this.project.projectId)
+      .then((config) => {
+        this.project.config = config;
+        this.alerts.success("Successfully updated project configuration!");
+      })
+      .catch((response) => {
+        if (response.status === 400) {
+          response.data.errors.forEach(error => this.alerts.error(error));
+        }
+      });
+  }
+
+  add() {
+    this.$scope.$broadcast("$closeEditPopupEvent");
+    this.list.fields.push({
+      isNew: true,
+    });
+  }
+
+  deleteField(index) {
+    this.list.fields.splice(index, 1);
+  }
+}

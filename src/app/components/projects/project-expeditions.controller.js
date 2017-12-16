@@ -8,12 +8,12 @@ class ProjectExpeditionsController {
   }
 
   exportData(expedition) {
-    this.DataService.export(expedition.expeditionCode);
+    this.DataService.exportData(expedition.expeditionCode);
   }
 
   deleteExpedition(expedition) {
     const modal = this.$uibModal.open({
-      templateUrl: require('../expeditions/delete-confirmation.tpl.html'),
+      template: require('../expeditions/delete-confirmation.tpl.html'),
       size: 'md',
       controller: DeleteConfirmationController,
       controllerAs: 'vm',
@@ -43,7 +43,6 @@ ProjectExpeditionsController.$inject = [ '$uibModal', 'ExpeditionService', 'Data
 
 export default ProjectExpeditionsController;
 
-// TODO might need to call .controller('DeleteConfirmationController', DeleteCon....
 class DeleteConfirmationController {
   constructor($uibModalInstance, expeditionCode) {
     this.expeditionCode = expeditionCode;
