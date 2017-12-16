@@ -2,8 +2,8 @@
     <div class="row">
         <div class="col-xs-12">
             <section class="heading">
-                <h3>{{ vm.project.projectTitle }}</h3>
-                <p><strong>Description: </strong> {{ vm.project.description }}</p>
+                <h3>{{ $ctrl.currentProject.projectTitle }}</h3>
+                <p><strong>Description: </strong> {{ $ctrl.currentProject.description }}</p>
             </section>
         </div>
     </div>
@@ -20,7 +20,10 @@
                 </ul>
 
                 <div class="row">
-                    <div ui-view="details" class="col-xs-12"></div>
+                    <div ui-view="details" class="col-xs-12"
+                         current-project="$ctrl.currentProject"
+                         on-project-update="$ctrl.handleProjectUpdate(project)">
+                    </div>
                 </div>
 
             </section>

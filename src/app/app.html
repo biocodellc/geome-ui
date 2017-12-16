@@ -1,7 +1,7 @@
 <fims-header
         current-user="$ctrl.currentUser"
         current-project="$ctrl.currentProject"
-        on-project-change="$ctrl.projectChanged(project)"
+        on-project-change="$ctrl.handleProjectChange(project)"
         on-signout="$ctrl.signout()">
 </fims-header>
 
@@ -16,7 +16,8 @@
     <div class="content" id="content">
         <div class="container-fluid" ui-view
              current-project="$ctrl.currentProject"
-             current-user="$ctrl.currentUser">
+             current-user="$ctrl.currentUser"
+             on-project-change="$ctrl.handleProjectChange(project)">
         </div>
     </div>
 </main>

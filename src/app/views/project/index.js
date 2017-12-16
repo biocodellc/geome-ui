@@ -6,7 +6,7 @@ import modal from 'angular-ui-bootstrap/src/modal';
 // then we use the angular module loader to list as a dependency
 import 'angular-drag-and-drop-lists';
 import router from '../../utils/router';
-import exceptions from '../exceptions';
+import exceptions from '../../components/exceptions';
 
 import routing from "./project.routes";
 import run from "./projects.run";
@@ -23,12 +23,53 @@ import { editableField, editField } from "./config/editable-field.directive";
 import { editableList, editList } from "./config/editable-list.directive";
 import { editableRule, editRule } from "./config/editable-rule.directive";
 
+import fimsProjectSettings from './project-settings';
+
+class ProjectCtrl {
+  constructor(ProjectService, alerts) {
+    'ngInject';
+    this.ProjectService = ProjectService;
+    this.alerts = alerts;
+  }
+
+  handleProjectUpdate(project) {
+    if (!angular.equals(this.currentProject, project)) {
+      this.ProjectService.update(project)
+        .then(({ data }) => {
+          this.alerts.success("Successfully updated!");
+          this.onProjectChange({ project: data });
+        });
+    } else {
+      this.alerts.success("Successfully updated!");
+    }
+  }
+
+}
+
+const fimsProject = {
+  template: require('./project.html'),
+  controller: ProjectCtrl,
+  bindings: {
+    currentProject: '<',
+    onProjectChange: '&',
+  },
+};
+
+const dependencies = [
+  modal,
+  router,
+  exceptions,
+  select,
+  'dndLists',
+  fimsProjectSettings,
+];
 
 //TODO finish the config dir refactor
-export default angular.module('fims.projects', [ modal, router, exceptions, select, 'dndLists' ])
+export default angular.module('fims.project', dependencies)
   .config(config)
   .run(run)
   .run(routing) // need to declare in run block. otherwise $transitions is not available
+  .component('fimsProject', fimsProject)
   .service('ProjectService', ProjectService)
   .service('ProjectFactory', ProjectFactory)
   .service('ProjectMembersService', ProjectMembersService)

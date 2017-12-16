@@ -1,6 +1,6 @@
 import angular from 'angular';
 
-import projects from '../../components/projects';
+import projects from '../project';
 import files from '../../components/files';
 import attributeDefinition from '../../components/attribute-definition';
 

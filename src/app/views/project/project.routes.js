@@ -1,10 +1,8 @@
 import ProjectMembersController from "./members/project-members.controller";
 import ProjectMembersAddController from "./members/project-members-add.controller";
-import ExpeditionController from "../expeditions/expedition.controller";
-import ExpeditionSettingsController from "../expeditions/expedition-settings.controller";
-import ExpeditionResourcesController from "../expeditions/expedition-resources.controller";
-import ProjectController from "./project.controller";
-import ProjectSettingsController from "./project-settings.controller";
+import ExpeditionController from "../../components/expeditions/expedition.controller";
+import ExpeditionSettingsController from "../../components/expeditions/expedition-settings.controller";
+import ExpeditionResourcesController from "../../components/expeditions/expedition-resources.controller";
 import ProjectExpeditionsController from "./project-expeditions.controller";
 import ConfigController from "./config/config.controller";
 import ConfigMetadataController from "./config/config-metadata.controller";
@@ -18,7 +16,7 @@ import ListController from "./config/list.controller";
 import AddListController from "./config/list-add.controller";
 import AddRuleController from "./config/rule-add.controller";
 
-const expeditionDetailTemplate = require('../expeditions/expedition-detail.html');
+const expeditionDetailTemplate = require('../../components/expeditions/expedition-detail.html');
 
 function getStates() {
   return [
@@ -26,30 +24,11 @@ function getStates() {
       state: 'project',
       config: {
         url: '/project',
-        template: require('./project.html'),
-        controller: ProjectController,
-        controllerAs: 'vm',
+        component: 'fimsProject',
         redirectTo: "project.settings",
         onEnter: projectOnEnter,
-        resolve: {
-          project: resolveProject,
-        },
         projectRequired: true,
         loginRequired: true,
-        waitForResolves: true,
-      },
-    },
-    {
-      state: 'project.settings',
-      config: {
-        url: '/settings',
-        views: {
-          "details": {
-            template: require('./project-settings.html'),
-            controller: ProjectSettingsController,
-            controllerAs: 'vm',
-          },
-        },
       },
     },
 
@@ -102,7 +81,7 @@ function getStates() {
         url: '/settings',
         views: {
           "details": {
-            template: require('../expeditions/expedition-detail-settings.html'),
+            template: require('../../components/expeditions/expedition-detail-settings.html'),
             controller: ExpeditionSettingsController,
             controllerAs: 'vm',
           },
@@ -115,7 +94,7 @@ function getStates() {
         url: '/resources',
         views: {
           "details": {
-            template: require('../expeditions/expedition-detail-resources.html'),
+            template: require('../../components/expeditions/expedition-detail-resources.html'),
             controller: ExpeditionResourcesController,
             controllerAs: 'vm',
           },
@@ -128,7 +107,7 @@ function getStates() {
         url: '/members',
         views: {
           "details": {
-            template: require('../expeditions/expedition-detail-members.html'),
+            template: require('../../components/expeditions/expedition-detail-members.html'),
             // controller: "ExpeditionMembersController as vm"
           },
         },
@@ -354,18 +333,6 @@ function getStates() {
   ];
 }
 
-resolveProject.$inject = [ '$state', 'ProjectService' ];
-
-function resolveProject($state, ProjectService) {
-  return ProjectService.waitForProject()
-    .then(function (project) {
-      return project;
-    }, function () {
-      return $state.go('home');
-    });
-
-}
-
 projectOnEnter.$inject = [ '$rootScope', '$state' ];
 
 function projectOnEnter($rootScope, $state) {
@@ -540,6 +507,7 @@ const routing = ($transitions, routerHelper, ProjectService) => {
   $transitions.onBefore({}, function (trans) {
     const to = trans.$to();
     if (checkProjectRequired(to)) {
+      //TODO fix this using currentProject on ui-view
       return ProjectService.waitForProject()
         .then(function () {
         }, function () {

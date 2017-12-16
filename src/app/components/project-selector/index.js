@@ -1,6 +1,6 @@
 import angular from 'angular';
 
-import projects from '../projects';
+import projects from '../../views/project';
 
 class ProjectSelectorController {
   constructor(ProjectService) {

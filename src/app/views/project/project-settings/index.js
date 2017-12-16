@@ -1,27 +1,8 @@
+import routing from "./routes";
+
 class ProjectSettingsController {
-  constructor($rootScope, alerts, ProjectService) {
-    this.project = ProjectService.currentProject;
-    this.editProject = Object.assign({}, this.project);
-
-    this.alerts = alerts;
-    this.ProjectService = ProjectService;
-
-    // $rootScope.$on('$projectChangeEvent', function(event, project) {
-    //     this.project =  project;
-    //     this.editProject = angular.copy(project);
-    // });
-  }
-
-  update() {
-    if (!angular.equals(this.project, this.editProject)) {
-      this.ProjectService.update(this.editProject)
-        .then((response) => {
-          this.alerts.success("Successfully updated!");
-          this.ProjectService.set(response.data);
-        });
-    } else {
-      this.alerts.success("Successfully updated!");
-    }
+  $onInit() {
+    this.project = Object.assign({}, this.currentProject);
   }
 
   //
@@ -60,6 +41,16 @@ class ProjectSettingsController {
   // }
 }
 
-ProjectSettingsController.$inject = [ '$rootScope', 'alerts', 'ProjectService' ];
+const fimsProjectSettings = {
+  template: require('./project-settings.html'),
+  controller: ProjectSettingsController,
+  bindings: {
+    currentProject: '<',
+    onProjectUpdate: '&',
+  }
+};
 
-export default ProjectSettingsController;
+export default angular.module('fims.projectSettings', [])
+  .run(routing)
+  .component('fimsProjectSettings', fimsProjectSettings)
+  .name;

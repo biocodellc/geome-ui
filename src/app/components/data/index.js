@@ -1,7 +1,7 @@
 import angular from 'angular';
 
 import exceptions from '../exceptions';
-import projects from '../projects';
+import projects from '../../views/project';
 import files from '../files';
 import DataService from "./DataService";
 

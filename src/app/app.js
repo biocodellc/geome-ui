@@ -20,6 +20,7 @@ import trustedHtml from './filters/html.filter';
 
 import home from './views/home';
 import templates from './views/templates';
+import project from './views/project';
 
 import alerts from './components/alerts';
 import auth from './components/auth';
@@ -31,7 +32,6 @@ import header from './components/header';
 import navigation from './components/navigation';
 // import lookup from './components/lookup';
 import modals from './components/modals';
-import projects from './components/projects';
 import query from './components/query';
 import storage from './components/storage';
 import users from './components/users';
@@ -59,7 +59,7 @@ const dependencies = [
   templates,
   expeditions,
   // validation,
-  projects,
+  project,
   users,
   modals,
   storage,
@@ -107,7 +107,7 @@ class AppCtrl {
     );
   }
 
-  projectChanged(project) {
+  handleProjectChange(project) {
     // TODO change this to this.project = project once we remove currentProject from ProjectService
     this.ProjectService.set(project);
   }

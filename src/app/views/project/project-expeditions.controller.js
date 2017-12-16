@@ -13,7 +13,7 @@ class ProjectExpeditionsController {
 
   deleteExpedition(expedition) {
     const modal = this.$uibModal.open({
-      template: require('../expeditions/delete-confirmation.tpl.html'),
+      template: require('../../components/expeditions/delete-confirmation.tpl.html'),
       size: 'md',
       controller: DeleteConfirmationController,
       controllerAs: 'vm',

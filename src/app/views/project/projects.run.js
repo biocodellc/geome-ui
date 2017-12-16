@@ -1,4 +1,4 @@
-function run($location, StorageService, ProjectService) {
+export default function run($location, StorageService, ProjectService) {
   "ngInject";
 
   let projectId = StorageService.get('projectId');
@@ -11,8 +11,3 @@ function run($location, StorageService, ProjectService) {
     ProjectService.setFromId(projectId);
   }
 }
-
-// run.$inject = [ '$location', 'StorageService', 'ProjectService' ];
-
-export default run;
-
