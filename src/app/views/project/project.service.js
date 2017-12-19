@@ -1,10 +1,10 @@
-class ProjectService {
+class Projects {
   constructor($rootScope, $cacheFactory, $http, $timeout, StorageService, exception, ProjectConfigService, REST_ROOT) {
     'ngInject';
-    this.PROJECT_CACHE = $cacheFactory('project');
+    this.PROJECT_CACHE = $cacheFactory('projects');
 
     this._loading = false;
-    this.currentProject = undefined;
+    this._currentProject = undefined;
 
     this.$rootScope = $rootScope;
     this.$http = $http;
@@ -13,6 +13,51 @@ class ProjectService {
     this.exception = exception;
     this.ProjectConfigService = ProjectConfigService;
     this.REST_ROOT = REST_ROOT;
+  }
+
+  currentProject() {
+    if (this._currentProject) {
+      return Object.assign({}, this._currentProject);
+    }
+
+    return undefined;
+  }
+
+  setCurrentProject(project) {
+    if (!project) {
+      this._currentProject = undefined;
+      this.$rootScope.$broadcast('$projectChangeEvent', this.currentProject());
+      return Promise.resolve(this._currentProject);
+    }
+
+    const setProjectConfig = () => {
+      if (project.config) {
+        return Promise.resolve();
+      }
+
+      this._loading = true;
+      return this.ProjectConfigService.get(project.projectId)
+        .then((config) => {
+          project.config = config;
+          this._loading = false;
+        })
+        .catch((response) => {
+          this._loading = false;
+          this.exception.catcher("Failed to load project configuration")(response);
+        });
+    };
+
+    return setProjectConfig()
+      .then(() => {
+        this.StorageService.set('projectId', project.projectId);
+
+        //TODO remove this
+        this.$rootScope.$broadcast('$projectChangeEvent', this.currentProject());
+
+        this._currentProject = project;
+        return this._currentProject;
+      })
+
   }
 
   /**
@@ -28,51 +73,33 @@ class ProjectService {
 
         // set a timeout in-case the project takes too long to load
         this.$timeout(() => {
-          if (this.currentProject) {
-            resolve(this.currentProject);
+          if (this._currentProject) {
+            resolve(this.currentProject());
           } else {
             reject();
           }
         }, 5000, false);
       });
-    } else if (this.currentProject) {
-      return Promise.resolve(this.currentProject);
+    } else if (this._currentProject) {
+      return Promise.resolve(this.currentProject());
     } else {
       return Promise.reject();
     }
   }
 
+  /**
+   * @deprecated
+   */
   set(project) {
-    if (!project) {
-      this.currentProject = undefined;
-      this.$rootScope.$broadcast('$projectChangeEvent', this.currentProject);
-      return;
-    }
-
-    this._loading = true;
-    this.ProjectConfigService.get(project.projectId)
-      .then((config) => {
-        this.currentProject.config = config;
-        this.StorageService.set('projectId', this.currentProject.projectId);
-        this.$rootScope.$broadcast('$projectChangeEvent', this.currentProject);
-        this._loading = false;
-      }, (response) => {
-        this._loading = false;
-        this.exception.catcher("Failed to load project configuration")(response);
-      });
-
-    this.currentProject = project;
+    this.setCurrentProject(project);
   }
 
   setFromId(projectId) {
     this._loading = true;
     return this.all(true)
-      .then((response) => {
-        const project = response.data.find(p => p.projectId === projectId);
-
-        if (project) {
-          this.set(project)
-        }
+      .then(({ data }) => {
+        const project = data.find(p => p.projectId === projectId);
+        return this.setCurrentProject(project);
       })
       .finally(() => {
         this._loading = false;
@@ -98,8 +125,8 @@ class ProjectService {
 
   resolveProjectId() {
     return new Promise((resolve, reject) => {
-      if (this.currentProject) {
-        resolve(this.currentProject.projectId);
+      if (this._currentProject) {
+        resolve(this._currentProject.projectId);
       } else {
         reject({ data: { error: "No project is selected" } });
       }
@@ -108,4 +135,4 @@ class ProjectService {
 
 }
 
-export default ProjectService;
+export default Projects;

@@ -96,10 +96,10 @@ function getStates() {
   ];
 }
 
-resolveExpeditions.$inject = [ '$state', 'ProjectService', 'ExpeditionService' ];
+resolveExpeditions.$inject = [ '$state', 'Projects', 'ExpeditionService' ];
 
-function resolveExpeditions($state, ProjectService, ExpeditionService) {
-  return ProjectService.waitForProject()
+function resolveExpeditions($state, Projects, ExpeditionService) {
+  return Projects.waitForProject()
     .then(function () {
       return ExpeditionService.userExpeditions(true)
         .then(function (response) {

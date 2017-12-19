@@ -1,9 +1,9 @@
 export default class ExpeditionService {
-  constructor($http, ProjectService, exception, REST_ROOT) {
+  constructor($http, Projects, exception, REST_ROOT) {
     'ngInject';
 
     this.$http = $http;
-    this.ProjectService = ProjectService;
+    this.Projects = Projects;
     this.exception = exception;
     this.REST_ROOT = REST_ROOT;
 
@@ -11,7 +11,7 @@ export default class ExpeditionService {
   }
 
   update(expedition) {
-    var projectId = this.ProjectService.currentProject.projectId;
+    var projectId = this.Projects.currentProject().projectId;
 
     if (!projectId) {
       return Promise.reject({ data: { error: "No project is selected" } });
@@ -27,7 +27,7 @@ export default class ExpeditionService {
   }
 
   deleteExpedition(expedition) {
-    var projectId = this.ProjectService.currentProject.projectId;
+    var projectId = this.Projects.currentProject().projectId;
 
     if (!projectId) {
       return Promise.reject({ data: { error: "No project is selected" } });
@@ -38,7 +38,7 @@ export default class ExpeditionService {
   }
 
   userExpeditions(includePrivate) {
-    var projectId = this.ProjectService.currentProject.projectId;
+    var projectId = this.Projects.currentProject().projectId;
 
     if (!projectId) {
       return Promise.reject({ data: { error: "No project is selected" } });
@@ -51,9 +51,7 @@ export default class ExpeditionService {
       .catch(this.exception.catcher("Failed to load your expeditions."));
   }
 
-  all() {
-    var projectId = this.ProjectService.currentProject.projectId;
-
+  all(projectId) {
     if (!projectId) {
       return Promise.reject({ data: { error: "No project is selected" } });
     }

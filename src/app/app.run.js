@@ -1,8 +1,8 @@
 import angular from 'angular';
 
-run.$inject = ['$http', '$rootScope', '$transitions', 'LoadingModal'];
-
 export default function run($http, $rootScope, $transitions, LoadingModal) {
+  'ngInject';
+
   $http.defaults.headers.common = {'Fims-App': 'Biscicol-Fims'};
 
   $rootScope.isEmpty = function (val) {

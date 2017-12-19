@@ -1,9 +1,5 @@
 import ProjectMembersController from "./members/project-members.controller";
 import ProjectMembersAddController from "./members/project-members-add.controller";
-import ExpeditionController from "../../components/expeditions/expedition.controller";
-import ExpeditionSettingsController from "../../components/expeditions/expedition-settings.controller";
-import ExpeditionResourcesController from "../../components/expeditions/expedition-resources.controller";
-import ProjectExpeditionsController from "./project-expeditions.controller";
 import ConfigController from "./config/config.controller";
 import ConfigMetadataController from "./config/config-metadata.controller";
 import EntitiesController from "./config/entities.controller";
@@ -16,7 +12,6 @@ import ListController from "./config/list.controller";
 import AddListController from "./config/list-add.controller";
 import AddRuleController from "./config/rule-add.controller";
 
-const expeditionDetailTemplate = require('../../components/expeditions/expedition-detail.html');
 
 function getStates() {
   return [
@@ -26,94 +21,13 @@ function getStates() {
         url: '/project',
         component: 'fimsProject',
         redirectTo: "project.settings",
-        onEnter: projectOnEnter,
+        resolve: {
+          currentProject: /*ngInject*/(Projects) => Projects.currentProject()
+        },
         projectRequired: true,
         loginRequired: true,
       },
     },
-
-    // Expeditions
-    {
-      state: 'project.expeditions',
-      config: {
-        url: '/expeditions',
-        resolve: {
-          expeditions: resolveExpeditions,
-        },
-        views: {
-          "details": {
-            template: require('./project-expeditions.html'),
-            controller: ProjectExpeditionsController,
-            controllerAs: 'vm',
-          },
-        },
-        waitForResolves: true,
-      },
-    },
-    {
-      state: 'project.expeditions.detail',
-      config: {
-        url: '/:id',
-        onEnter: expeditionDetailOnEnter,
-        redirectTo: "project.expeditions.detail.settings",
-        resolve: {
-          expedition: resolveExpedition,
-          backState: () => "project.expeditions",
-        },
-        views: {
-          "@": {
-            template: `<div class="admin" >${expeditionDetailTemplate}</div>`,
-            controller: ExpeditionController,
-            controllerAs: 'vm',
-          },
-        },
-        params: {
-          id: {
-            type: "int",
-          },
-          expedition: {},
-        },
-      },
-    },
-    {
-      state: 'project.expeditions.detail.settings',
-      config: {
-        url: '/settings',
-        views: {
-          "details": {
-            template: require('../../components/expeditions/expedition-detail-settings.html'),
-            controller: ExpeditionSettingsController,
-            controllerAs: 'vm',
-          },
-        },
-      },
-    },
-    {
-      state: 'project.expeditions.detail.resources',
-      config: {
-        url: '/resources',
-        views: {
-          "details": {
-            template: require('../../components/expeditions/expedition-detail-resources.html'),
-            controller: ExpeditionResourcesController,
-            controllerAs: 'vm',
-          },
-        },
-      },
-    },
-    {
-      state: 'project.expeditions.detail.members',
-      config: {
-        url: '/members',
-        views: {
-          "details": {
-            template: require('../../components/expeditions/expedition-detail-members.html'),
-            // controller: "ExpeditionMembersController as vm"
-          },
-        },
-      },
-    },
-    //- End Expeditions
 
     // Members
 
@@ -333,49 +247,6 @@ function getStates() {
   ];
 }
 
-projectOnEnter.$inject = [ '$rootScope', '$state' ];
-
-function projectOnEnter($rootScope, $state) {
-  $rootScope.$on('$projectChangeEvent', function () {
-    $state.reload();
-  });
-}
-
-resolveExpeditions.$inject = [ '$state', 'ExpeditionService' ];
-
-function resolveExpeditions($state, ExpeditionService) {
-
-  return ExpeditionService.all()
-    .then(function (response) {
-      return response.data;
-    }, function () {
-      return $state.go('project');
-    });
-}
-
-resolveExpedition.$inject = [ '$transition$', '$state', 'ExpeditionService' ];
-
-function resolveExpedition($transition$, $state, ExpeditionService) {
-  var expedition = $transition$.params().expedition;
-
-  if (expedition) {
-    return expedition;
-  } else {
-    return ExpeditionService.all()
-      .then(function (response) {
-        var expeditions = response.data;
-
-        for (var i = 0; i < expeditions.length; i++) {
-          if (expeditions[ i ].expeditionId === $transition$.params().id) {
-            return expeditions[ i ];
-          }
-        }
-
-        $state.go('project.expeditions');
-      });
-  }
-}
-
 resolveMembers.$inject = [ '$state', 'ProjectMembersService' ];
 
 function resolveMembers($state, ProjectMembersService) {
@@ -396,7 +267,7 @@ function expeditionDetailOnEnter($rootScope, $state) {
   });
 }
 
-resolveConfig.$inject = [ 'project' ];
+resolveConfig.$inject = [ 'currentProject' ];
 
 function resolveConfig(project) {
   return angular.copy(project.config);
@@ -456,19 +327,6 @@ function resolveList($transition$, $state, config) {
   }
 }
 
-function checkProjectRequired(state) {
-  let s = state;
-
-  do {
-    if (s.projectRequired) {
-      return true;
-    }
-    s = s.parent;
-  } while (s);
-
-  return false;
-}
-
 
 configExit.$inject = [ '$transition$', 'config' ];
 
@@ -499,22 +357,8 @@ function configConfirmationController($uibModalInstance) {
 }
 
 
-const routing = ($transitions, routerHelper, ProjectService) => {
-  'ngInject';
-
+const routing = (routerHelper) => {
   routerHelper.configureStates(getStates());
-
-  $transitions.onBefore({}, function (trans) {
-    const to = trans.$to();
-    if (checkProjectRequired(to)) {
-      //TODO fix this using currentProject on ui-view
-      return ProjectService.waitForProject()
-        .then(function () {
-        }, function () {
-          return trans.router.stateService.target('home');
-        });
-    }
-  });
 
   // $transitions.onExit({ exiting: 'project.config' }, _configExit);
 };

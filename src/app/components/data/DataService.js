@@ -1,8 +1,8 @@
 class DataService {
-  constructor($http, ProjectService, FileService, alerts, exception, REST_ROOT) {
+  constructor($http, Projects, FileService, alerts, exception, REST_ROOT) {
     'ngInject';
     this.http = $http;
-    this.projectService = ProjectService;
+    this.Projects = Projects;
     this.fileService = FileService;
     this.alerts = alerts;
     this.exception = exception;
@@ -10,7 +10,7 @@ class DataService {
   }
 
   exportData(expeditionCode) {
-    let projectId = this.projectService.currentProject.projectId;
+    let projectId = this.Projects.currentProject().projectId;
 
     if (!projectId) {
       return Promise.reject({ data: { error: "No project is selected" } });

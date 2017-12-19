@@ -20,7 +20,7 @@ import trustedHtml from './filters/html.filter';
 
 import home from './views/home';
 import templates from './views/templates';
-import project from './views/project';
+import project, { CACHED_PROJECT_EVENT } from './views/project';
 
 import alerts from './components/alerts';
 import auth from './components/auth';
@@ -67,7 +67,7 @@ const dependencies = [
 ];
 
 class AppCtrl {
-  constructor($scope, UserService, ProjectService, alerts) {
+  constructor($scope, $state, UserService, Projects, alerts) {
     'ngInject';
 
     // attach global objects for easy access throughout app
@@ -79,18 +79,16 @@ class AppCtrl {
     this.currentUser = undefined;
     this.currentProject = undefined;
 
-    this.ProjectService = ProjectService;
+    this.Projects = Projects;
     this.UserService = UserService;
-
-    $scope.$on('$projectChangeEvent', (event, project) => {
-      this.currentProject = project;
-    });
+    this.$state = $state;
+    this.$scope = $scope;
 
     // TODO remove this
     $scope.$on("$logoutEvent", () => {
       this.currentUser = undefined;
       if (this.currentProject && this.currentProject.public === false) {
-        ProjectService.set(undefined);
+        Projects.set(undefined);
       }
     });
 
@@ -107,9 +105,18 @@ class AppCtrl {
     );
   }
 
+  $onInit() {
+    // update if project has been loaded from session storage
+    this.$scope.$on(CACHED_PROJECT_EVENT, (event, project) => {
+      this.currentProject = project;
+    });
+  }
+
   handleProjectChange(project) {
-    // TODO change this to this.project = project once we remove currentProject from ProjectService
-    this.ProjectService.set(project);
+    this.Projects.setCurrentProject(project).then((p) => {
+      this.currentProject = p;
+      this.$state.reload();
+    });
   }
 
   signout() {

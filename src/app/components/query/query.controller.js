@@ -6,14 +6,14 @@ const DEFAULT_FILTER = {
 
 class QueryController {
 
-  constructor($scope, $http, LoadingModal, FailModalFactory, ProjectService, ExpeditionService, AuthService, FileService, exception, alerts, REST_ROOT) {
+  constructor($scope, $http, LoadingModal, FailModalFactory, Projects, ExpeditionService, AuthService, FileService, exception, alerts, REST_ROOT) {
     this.error = null;
     this.moreSearchOptions = false;
     this.filterOptions = [];
     this.filters = [];
     this.queryString = null;
     this.expeditions = [];
-    this.project = ProjectService.currentProject;
+    this.project = Projects.currentProject();
     this.selectedExpeditions = [];
     this.queryResults = null;
     this.queryInfo = {
@@ -219,7 +219,7 @@ QueryController.$inject = [
   '$http',
   'LoadingModal',
   'FailModalFactory',
-  'ProjectService',
+  'Projects',
   'ExpeditionService',
   'AuthService',
   'FileService',

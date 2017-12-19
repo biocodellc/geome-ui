@@ -23,7 +23,7 @@ class ProjectSettingsController {
   //
   //     modal.result.then(
   //         function() {
-  //             ProjectService.delete(this.expedition)
+  //             Projects.delete(this.expedition)
   //                 .then(function() {
   //                     $state.go('expeditions.list', {}, {reload:true, inherit: false});
   //                 });

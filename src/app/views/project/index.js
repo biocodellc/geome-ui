@@ -9,9 +9,10 @@ import router from '../../utils/router';
 import exceptions from '../../components/exceptions';
 
 import routing from "./project.routes";
+import requiresProject from './projectRequired.hook';
 import run from "./projects.run";
 import config from "./projects.config";
-import ProjectService from "./project.service";
+import Projects from "./project.service";
 import ProjectFactory from "./projectFactory";
 import ProjectMembersService from "./members/project-members.service";
 import ProjectConfigService from "./config/ProjectConfigService";
@@ -24,21 +25,26 @@ import { editableList, editList } from "./config/editable-list.directive";
 import { editableRule, editRule } from "./config/editable-rule.directive";
 
 import fimsProjectSettings from './project-settings';
+import fimsProjectExpeditions from './project-expeditions';
+
+export const CACHED_PROJECT_EVENT = '$cachedProjectEvent';
 
 class ProjectCtrl {
-  constructor(ProjectService, alerts) {
+  constructor($state, Projects, alerts) {
     'ngInject';
-    this.ProjectService = ProjectService;
+    this.$state = $state;
+    this.Projects = Projects;
     this.alerts = alerts;
   }
 
   handleProjectUpdate(project) {
     if (!angular.equals(this.currentProject, project)) {
-      this.ProjectService.update(project)
+      this.Projects.update(project)
         .then(({ data }) => {
           this.alerts.success("Successfully updated!");
-          this.onProjectChange({ project: data });
-        });
+          return this.Projects.setCurrentProject(data);
+        })
+        .then(() => this.$state.reload());
     } else {
       this.alerts.success("Successfully updated!");
     }
@@ -62,6 +68,7 @@ const dependencies = [
   select,
   'dndLists',
   fimsProjectSettings,
+  fimsProjectExpeditions
 ];
 
 //TODO finish the config dir refactor
@@ -69,8 +76,9 @@ export default angular.module('fims.project', dependencies)
   .config(config)
   .run(run)
   .run(routing) // need to declare in run block. otherwise $transitions is not available
+  .run(requiresProject)
   .component('fimsProject', fimsProject)
-  .service('ProjectService', ProjectService)
+  .service('Projects', Projects)
   .service('ProjectFactory', ProjectFactory)
   .service('ProjectMembersService', ProjectMembersService)
   .service('ProjectConfigService', ProjectConfigService)
