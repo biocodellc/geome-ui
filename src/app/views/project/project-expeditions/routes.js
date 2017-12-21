@@ -1,9 +1,3 @@
-import ExpeditionController from "../../../components/expeditions/expedition.controller";
-import ExpeditionSettingsController from "../../../components/expeditions/expedition-settings.controller";
-import ExpeditionResourcesController from "../../../components/expeditions/expedition-resources.controller";
-
-const expeditionDetailTemplate = require('../../../components/expeditions/expedition-detail.html');
-
 function getStates() {
   return [
     {
@@ -28,7 +22,6 @@ function getStates() {
       state: 'project.expeditions.detail',
       config: {
         url: '/:id',
-        // onEnter: expeditionDetailOnEnter,
         redirectTo: "project.expeditions.detail.settings",
         resolve: {
           expedition: /*ngInject*/ ($transition$, $state, expeditions) => {
@@ -50,10 +43,7 @@ function getStates() {
         },
         views: {
           "@": {
-            //TODO make this a component
-            template: `<div class="admin" >${expeditionDetailTemplate}</div>`,
-            controller: ExpeditionController,
-            controllerAs: 'vm',
+            component: 'fimsProjectExpedition',
           },
         },
         params: {
@@ -70,9 +60,7 @@ function getStates() {
         url: '/settings',
         views: {
           "details": {
-            template: require('../../../components/expeditions/expedition-detail-settings.html'),
-            controller: ExpeditionSettingsController,
-            controllerAs: 'vm',
+            component: 'fimsExpeditionSettings',
           },
         },
       },
@@ -83,9 +71,7 @@ function getStates() {
         url: '/resources',
         views: {
           "details": {
-            template: require('../../../components/expeditions/expedition-detail-resources.html'),
-            controller: ExpeditionResourcesController,
-            controllerAs: 'vm',
+            component: 'fimsExpeditionResources',
           },
         },
       },
@@ -96,7 +82,7 @@ function getStates() {
         url: '/members',
         views: {
           "details": {
-            template: require('../../../components/expeditions/expedition-detail-members.html'),
+            template: require('../../../components/expeditions/expedition-members.html'),
             // controller: "ExpeditionMembersController as vm"
           },
         },

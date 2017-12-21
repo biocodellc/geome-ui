@@ -1,8 +1,3 @@
-// angular.module('fims.projects')
-//     .factory('ProjectMembersService', ProjectMembersService);
-
-// ProjectMembersService.$inject = ['$http', 'Projects', 'exception', 'REST_ROOT'];
-
 export default class ProjectMembersService {
   constructor($http, Projects, exception, REST_ROOT) {
     "ngInject";

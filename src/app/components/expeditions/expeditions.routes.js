@@ -1,8 +1,3 @@
-import ExpeditionsController from "./expeditions.controller";
-import ExpeditionSettingsController from "./expedition-settings.controller";
-import ExpeditionController from "./expedition.controller";
-import ExpeditionResourcesController from "./expedition-resources.controller";
-
 function getStates() {
   return [
     {
@@ -11,7 +6,10 @@ function getStates() {
         abstract: true,
         template: '<div ui-view class="admin"></div>',
         resolve: {
-          expeditions: resolveExpeditions,
+          expeditions: ($state, Projects, ExpeditionService) => Projects.waitForProject()
+            .then(currentProject => ExpeditionService.userExpeditions(true)) // TODO pass in currentProject in userExpeditions
+            .then(({ data }) => data)
+            .catch(() => $state.go('home')),
         },
         params: {
           admin: {
@@ -27,26 +25,22 @@ function getStates() {
       state: 'expeditions.list',
       config: {
         url: '/expeditions',
-        template: require('./expeditions.html'),
-        onEnter: expeditionsOnEnter,
-        controller: ExpeditionsController,
-        controllerAs: 'vm',
+        component: 'fimsExpeditionsList',
       },
     },
     {
       state: 'expeditions.detail',
       config: {
         url: '/expeditions/:id',
-        template: require('./expedition-detail.html'),
-        onEnter: expeditionDetailOnEnter,
-        controller: ExpeditionController,
-        controllerAs: 'vm',
+        component: 'fimsExpedition',
         redirectTo: "expeditions.detail.settings",
         resolve: {
-          expedition: resolveExpedition,
-          backState: function () {
-            return "expeditions.list"
+          expedition: ($state, expeditions, $transition$) => {
+            const expedition = expeditions.find(e => e.expeditionId === $transition$.params().id);
+
+            return (expedition) ? expedition : $state.go('expeditions.list');
           },
+          backState: () => "expeditions.list",
         },
         params: {
           id: {
@@ -61,9 +55,7 @@ function getStates() {
         url: '/settings',
         views: {
           "details": {
-            template: require('./expedition-detail-settings.html'),
-            controller: ExpeditionSettingsController,
-            controllerAs: 'vm',
+            component: 'fimsExpeditionSettings',
           },
         },
       },
@@ -74,9 +66,7 @@ function getStates() {
         url: '/resources',
         views: {
           "details": {
-            template: require('./expedition-detail-resources.html'),
-            controller: ExpeditionResourcesController,
-            controllerAs: 'vm',
+            component: 'fimsExpeditionResources',
           },
         },
       },
@@ -87,7 +77,7 @@ function getStates() {
         url: '/members',
         views: {
           "details": {
-            template: require('./expedition-detail-members.html'),
+            template: require('./expedition-members.html'),
             // controller: "ExpeditionMembersController as vm"
           },
         },
@@ -96,49 +86,6 @@ function getStates() {
   ];
 }
 
-resolveExpeditions.$inject = [ '$state', 'Projects', 'ExpeditionService' ];
-
-function resolveExpeditions($state, Projects, ExpeditionService) {
-  return Projects.waitForProject()
-    .then(function () {
-      return ExpeditionService.userExpeditions(true)
-        .then(function (response) {
-          return response.data;
-        }, function () {
-          return $state.go('home');
-        })
-    }, function () {
-      return $state.go('home');
-    });
-}
-
-resolveExpedition.$inject = [ '$state', 'expeditions', '$transition$' ];
-
-function resolveExpedition($state, expeditions, $transition$) {
-  for (var i = 0; i < expeditions.length; i++) {
-    if (expeditions[ i ].expeditionId === $transition$.params().id) {
-      return expeditions[ i ];
-    }
-  }
-
-  $state.go('expeditions.list');
-}
-
-expeditionsOnEnter.$inject = [ '$rootScope', '$state' ];
-
-function expeditionsOnEnter($rootScope, $state) {
-  $rootScope.$on('$projectChangeEvent', function () {
-    $state.reload('expeditions');
-  });
-}
-
-expeditionDetailOnEnter.$inject = [ '$rootScope', '$state' ];
-
-function expeditionDetailOnEnter($rootScope, $state) {
-  $rootScope.$on('$projectChangeEvent', function () {
-    $state.go('expeditions.list', {}, { reload: true, inherit: false });
-  });
-}
 
 const routing = (routerHelper) => {
   'ngInject';

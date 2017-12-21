@@ -1,6 +1,7 @@
 <div class="row back">
     <div class="col-xs-12">
-        <a href ui-sref="project.members" ui-sref-opts="{reload:true}" ng-click="vm.removeAlerts()"> <i
+        <!--TODO may need to removeAlerts somehow-->
+        <a href ui-sref="project.members" ui-sref-opts="{reload:true}" ng-click="$ctrl.removeAlerts()"> <i
                 class="fa fa-chevron-left"></i> Members</a>
     </div>
 </div>
@@ -10,10 +11,11 @@
         <div class="col-xs-9 col-xm-8 col-md-7 col-lg-5">
             <label>User</label>
             <div class="input-group">
-                <ui-select ng-model="vm.username" tagging="vm.inviteUser" tagging-label="false">
+                <!--TODO this probably doesn't work-->
+                <ui-select ng-model="$ctrl.username" tagging="$ctrl.onInviteUser({ email: tag })" tagging-label="false">
                     <ui-select-match>{{ $select.selected.username }}</ui-select-match>
                     <ui-select-choices position="down"
-                                       repeat="u.username as u in vm.users | filter: { $: $select.search }">
+                                       repeat="u.username as u in $ctrl.users | filter: { $: $select.search }">
                         <div class="title" ng-bind-html="u.username | highlight: $select.search | trusted_html"></div>
                         <div class="info">
                             <ul class="list-inline">
@@ -30,8 +32,8 @@
                         </div>
                     </ui-select-choices>
                 </ui-select>
-                <span class="input-group-btn" ng-show="vm.username">
-                    <button class="btn btn-primary" ng-click="vm.add()">Add User</button>
+                <span class="input-group-btn" ng-show="$ctrl.username">
+                    <button class="btn btn-primary" ng-click="$ctrl.onAddMember({ username: $ctrl.username })">Add User</button>
             </span>
             </div>
             <p class="help-block">To add new user, enter their email and we will send them an invitation to create an

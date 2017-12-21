@@ -7,8 +7,24 @@ import modals from '../modals';
 import data from '../data';
 
 import ExpeditionService from "./expeditions.service";
+import fimsExpeditionsList from './expeditions-list.component';
+import fimsExpedition from './expedition.component';
+import fimsExpeditionSettings from './expedition-settings.component';
+import fimsExpeditionResources from './expedition-resources.component';
 
 
-export default angular.module('fims.expeditions', [ bootstrap, projects, modals, users, data ])
+const dependencies = [
+  bootstrap,
+  projects,
+  modals,
+  users,
+  data,
+  fimsExpeditionsList,
+  fimsExpedition,
+  fimsExpeditionSettings,
+  fimsExpeditionResources,
+];
+
+export default angular.module('fims.expeditions', dependencies)
   .service('ExpeditionService', ExpeditionService)
   .name;

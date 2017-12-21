@@ -2,7 +2,7 @@ import angular from 'angular';
 import select from 'ui-select';
 import modal from 'angular-ui-bootstrap/src/modal';
 
-// dndLists doesn't export anythin. we import here so webpack will bundle/load the file
+// dndLists doesn't export anything. we import here so webpack will bundle/load the file
 // then we use the angular module loader to list as a dependency
 import 'angular-drag-and-drop-lists';
 import router from '../../utils/router';
@@ -26,6 +26,7 @@ import { editableRule, editRule } from "./config/editable-rule.directive";
 
 import fimsProjectSettings from './project-settings';
 import fimsProjectExpeditions from './project-expeditions';
+import fimsProjectMembers from './members';
 
 export const CACHED_PROJECT_EVENT = '$cachedProjectEvent';
 
@@ -68,7 +69,8 @@ const dependencies = [
   select,
   'dndLists',
   fimsProjectSettings,
-  fimsProjectExpeditions
+  fimsProjectExpeditions,
+  fimsProjectMembers,
 ];
 
 //TODO finish the config dir refactor

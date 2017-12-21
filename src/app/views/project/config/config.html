@@ -9,20 +9,20 @@
                 </ul>
 
                 <ul class="actions pull-right">
-                    <li class="save-config" ng-show="vm.config.modified">
-                        <a href="#"  ng-click="vm.save()">
+                    <li class="save-config" ng-show="$ctrl.config.modified">
+                        <a href="#"  ng-click="$ctrl.save()">
                             <i class="fa fa-upload"></i> Save Config</a>
                     </li>
                     <li class="add">
-                        <a href ng-click="vm.add()">
-                            <i class="fa fa-plus fa-fw"></i> Add {{ vm.addText }}
+                        <a href ng-click="$ctrl.add()">
+                            <i class="fa fa-plus fa-fw"></i> Add {{ $ctrl.addText }}
                         </a>
                     </li>
                 </ul>
             </div>
         </div>
 
-        <div ui-view="objects"></div>
+        <div ui-view="objects" config="$ctrl.config"></div>
 
     </div>
 </div>

@@ -1,54 +1,13 @@
 import routing from "./routes";
-
-class DeleteConfirmationController {
-  constructor($uibModalInstance, expeditionCode) {
-    this.expeditionCode = expeditionCode;
-    this.delete = $uibModalInstance.close;
-    this.cancel = $uibModalInstance.dismiss;
-  }
-}
+import { FimsExpeditionController } from "../../../components/expeditions/FimsExpeditionController";
+import fimsExpeditions from "../../../components/expeditions";
+import fimsProjectExpedition from "../project-expedition";
 
 
-class ProjectExpeditionsController {
-  constructor($uibModal, $state, ExpeditionService, DataService) {
-    'ngInject';
-
-    this.$uibModal = $uibModal;
-    this.$state = $state;
-    this.ExpeditionService = ExpeditionService;
-    this.DataService = DataService;
-  }
-
-  exportData(expedition) {
-    this.DataService.exportData(expedition.expeditionCode);
-  }
-
+class ProjectExpeditionsController extends FimsExpeditionController {
   deleteExpedition(expedition) {
-    const modal = this.$uibModal.open({
-      template: require('../../../components/expeditions/delete-confirmation.tpl.html'),
-      size: 'md',
-      controller: DeleteConfirmationController,
-      controllerAs: 'vm',
-      windowClass: 'app-modal-window',
-      backdrop: 'static',
-      resolve: {
-        expeditionCode: () => expedition.expeditionCode,
-      },
-    });
-
-    modal.result.then(() =>
-      this.ExpeditionService.delete(expedition)
-        .then(() => this.$state.reload()),
-    );
+    super.deleteExpedition(expedition).then(() => this.$state.reload());
   }
-
-  _getExpeditions() {
-    this.ExpeditionService.all()
-      .then(({ data }) => {
-        this.expeditions = data
-      });
-  }
-
 }
 
 const fimsProjectExpeditions = {
@@ -59,7 +18,7 @@ const fimsProjectExpeditions = {
   },
 };
 
-export default angular.module('fims.projectExpeditions', [])
+export default angular.module('fims.projectExpeditions', [ fimsProjectExpedition, fimsExpeditions ])
   .run(routing)
   .component('fimsProjectExpeditions', fimsProjectExpeditions)
   .name;
