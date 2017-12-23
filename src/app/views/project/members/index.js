@@ -30,7 +30,7 @@ class ProjectMembersController {
   }
 
   isMemberEmail(email) {
-    return !(this.members.find(m => m.email === email));
+    return !!(this.members.find(m => m.email === email));
   }
 
   handleAddMember(username) {

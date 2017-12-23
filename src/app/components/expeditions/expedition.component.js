@@ -33,6 +33,7 @@ const fimsExpedition = {
   bindings: {
     backState: '<',
     expedition: '<',
+    currentProject: '<',
   },
 };
 

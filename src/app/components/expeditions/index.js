@@ -2,7 +2,6 @@ import angular from 'angular';
 import bootstrap from 'angular-ui-bootstrap';
 
 import users from '../users';
-import projects from '../../views/project';
 import modals from '../modals';
 import data from '../data';
 
@@ -15,7 +14,6 @@ import fimsExpeditionResources from './expedition-resources.component';
 
 const dependencies = [
   bootstrap,
-  projects,
   modals,
   users,
   data,

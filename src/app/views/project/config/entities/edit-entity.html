@@ -1,5 +1,5 @@
 <div>
-    <a class="edit-close" href="#"><i ng-click="vm.toggleEdit()" class="fa fa-times"></i></a>
+    <a class="edit-close" href="#"><i ng-click="$ctrl.onClose()" class="fa fa-times"></i></a>
     <div class="row">
         <div class="col-xs-12">
 
@@ -7,31 +7,31 @@
                 <div class="form-group">
                     <label class="control-label col-xs-3">Concept Alias</label>
                     <div class="col-xs-9">
-                        <input type="text" class="form-control" ng-disabled="!vm.entity.editable"
-                               ng-model="vm.entity.conceptAlias"/>
+                        <input type="text" class="form-control" ng-disabled="!$ctrl.entity.editable"
+                               ng-model="$ctrl.entity.conceptAlias"/>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="control-label col-xs-3">Unique Key Column</label>
                     <div class="col-xs-9">
-                        <input type="text" class="form-control" disabled ng-show="!vm.entity.editable"
-                               ng-model="vm.entity.uniqueKey"/>
-                        <select class="form-control" ng-options="column for column in vm.columns"
-                                ng-show="vm.entity.editable"
-                                ng-model="vm.entity.uniqueKey"></select>
-                        <p class="help-block" ng-show="vm.entity.editable">Once saved, this cannot be changed.</p>
+                        <input type="text" class="form-control" disabled ng-show="!$ctrl.entity.editable"
+                               ng-model="$ctrl.entity.uniqueKey"/>
+                        <select class="form-control" ng-options="column for column in $ctrl.columns"
+                                ng-show="$ctrl.entity.editable"
+                                ng-model="$ctrl.entity.uniqueKey"></select>
+                        <p class="help-block" ng-show="$ctrl.entity.editable">Once saved, this cannot be changed.</p>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="control-label col-xs-3">Worksheet</label>
                     <div class="col-xs-9">
-                        <ui-select ng-model="vm.entity.worksheet" tagging="vm.newWorksheet" tagging-label="false"
-                                   ng-disabled="!vm.entity.editable && !vm.entity.uniqueKey">
+                        <ui-select ng-model="$ctrl.entity.worksheet" tagging="$ctrl.newWorksheet" tagging-label="false"
+                                   ng-disabled="!$ctrl.entity.editable && !$ctrl.entity.uniqueKey">
                             <ui-select-match>{{ $select.selected }}</ui-select-match>
                             <ui-select-choices position="down"
-                                               repeat="worksheet in vm.existingWorksheets | filter: $select.search">
+                                               repeat="worksheet in $ctrl.existingWorksheets | filter: $select.search">
                                 <div ng-bind-html="worksheet | highlight: $select.search | trusted_html"></div>
                             </ui-select-choices>
                         </ui-select>
@@ -41,21 +41,21 @@
                 <div class="form-group">
                     <label class="control-label col-xs-3">Concept URI</label>
                     <div class="col-xs-9">
-                        <input type="text" class="form-control" ng-model="vm.entity.conceptURI"/>
+                        <input type="text" class="form-control" ng-model="$ctrl.entity.conceptURI"/>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="control-label col-xs-3">Concept Forwarding Address</label>
                     <div class="col-xs-9">
-                        <input type="text" class="form-control" ng-model="vm.entity.conceptForwardingAddress"/>
+                        <input type="text" class="form-control" ng-model="$ctrl.entity.conceptForwardingAddress"/>
                     </div>
                 </div>
 
-                <div class="form-group" ng-show="vm.entity.parentEntity">
+                <div class="form-group" ng-show="$ctrl.entity.parentEntity">
                     <label class="control-label col-xs-3">Parent Entity</label>
                     <div class="col-xs-9">
-                        <input type="text" class="form-control" disabled ng-model="vm.entity.parentEntity"/>
+                        <input type="text" class="form-control" disabled ng-model="$ctrl.entity.parentEntity"/>
                     </div>
                 </div>
 

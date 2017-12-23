@@ -23,6 +23,10 @@ export default class ProjectConfig {
     return this.$worksheets;
   }
 
+  addWorksheet(sheetName) {
+    this.worksheets().push(sheetName);
+  }
+
   attributesByGroup(sheetName) {
     const defaultGroup = 'Default Group';
 

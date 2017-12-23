@@ -1,11 +1,13 @@
 import Rule from "./Rule";
+import angular from "angular";
 
-export default class AddEntityController {
-  constructor($state, config) {
+class AddEntityController {
+  constructor($state) {
     'ngInject'
     this.$state = $state;
-    this.config = config;
+  }
 
+  $onInit() {
     this.isChild = false;
     this.conceptAlias = undefined;
     this.conceptURI = undefined;
@@ -51,3 +53,17 @@ export default class AddEntityController {
     this.$state.go('^.detail.attributes', { alias: entity.conceptAlias, entity: entity, addAttribute: true });
   }
 }
+
+const fimsProjectConfigEntityAdd = {
+  template: require('./add-entity.html'),
+  controller: AddEntityController,
+  bindings: {
+    entities: '<',
+    config: '<',
+    onAddEntity: '&',
+  },
+};
+
+export default angular.module('fims.projectConfigEntityAdd', [])
+  .component('fimsProjectConfigEntityAdd', fimsProjectConfigEntityAdd)
+  .name;

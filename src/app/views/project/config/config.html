@@ -3,13 +3,13 @@
         <div class="settings-bar">
             <div class="settings-bar-container">
                 <ul class="nav nav-pills pull-left">
-                    <li><a href ui-sref="project.config.entities" ui-sref-active="active">Entities</a></li>
-                    <li><a href ui-sref="project.config.lists" ui-sref-active="active">Lists</a></li>
-                    <li><a href ui-sref="project.config.metadata" ui-sref-active="active">Metadata</a></li>
+                    <li><a href ui-sref="^.entities" ui-sref-active="active">Entities</a></li>
+                    <li><a href ui-sref="^.lists" ui-sref-active="active">Lists</a></li>
+                    <li><a href ui-sref="^.metadata" ui-sref-active="active">Metadata</a></li>
                 </ul>
 
                 <ul class="actions pull-right">
-                    <li class="save-config" ng-show="$ctrl.config.modified">
+                    <li class="save-config" ng-show="$ctrl.showSave">
                         <a href="#"  ng-click="$ctrl.save()">
                             <i class="fa fa-upload"></i> Save Config</a>
                     </li>
@@ -22,7 +22,10 @@
             </div>
         </div>
 
-        <div ui-view="objects" config="$ctrl.config"></div>
+        <div ui-view="objects"
+             config="$ctrl.config"
+             on-update-entities="$ctrl.handleUpdateEntities(entities)">
+        </div>
 
     </div>
 </div>

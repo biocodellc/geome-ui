@@ -1,7 +1,7 @@
 import angular from "angular";
 
-export default class ExpeditionSettingsController {
-  $ngInit() {
+class ExpeditionSettingsController {
+  $onInit() {
     this.visibilities = [ "anyone", "project members", "expedition members" ];
     this.expedition = Object.assign({}, this.expedition);
   }

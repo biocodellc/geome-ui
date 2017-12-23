@@ -1,6 +1,11 @@
+self = undefined;
 class ProjectMembersAddController {
   $onInit() {
     this.username = undefined;
+  }
+
+  inviteUser(email) {
+    this.onInviteUser({ email: email});
   }
 }
 
@@ -16,6 +21,6 @@ const fimsProjectMembersAdd = {
   },
 };
 
-export default angular.module('fims.projectExpeditions', [])
+export default angular.module('fims.projectMembersAdd', [])
   .component('fimsProjectMembersAdd', fimsProjectMembersAdd)
   .name;

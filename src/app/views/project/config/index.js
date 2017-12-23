@@ -1,20 +1,23 @@
 import angular from 'angular';
-import routing from "./routes";
 
+import routing from "./routes";
 import fimsProjectConfigMetadata from './metadata';
 import fimsProjectConfigEntities from './entities';
 
+
 class ConfigController {
-  constructor($scope, $state, ProjectConfigService, alerts) {
+  constructor($scope, $state, $uibModal, ProjectConfigService, alerts) {
     'ngInject'
     this.$scope = $scope;
     this.$state = $state;
+    this.$uibModal = $uibModal;
     this.ProjectConfigService = ProjectConfigService;
     this.alerts = alerts;
 
   }
 
-  $ngInit() {
+  $onInit() {
+    this.showSave = false;
     this.addText = undefined;
     this.config = Object.assign({}, this.currentProject.config);
 
@@ -27,18 +30,21 @@ class ConfigController {
       }
     });
 
-    this.$scope.$watch('vm.config', (newVal, oldVal) => {
-      if (!this.config.modified && !angular.equals(newVal, oldVal)) {
-        this.config.modified = true;
-      }
+    this.$scope.$watch('vm.config', () => {
+      this.showSave = !angular.equals(this.currentProject.config, this.config);
     }, true);
+  }
+
+  handleUpdateEntities(entities) {
+    this.config.entities = entities;
+    this.showSave = !angular.equals(this.currentProject.config, this.config);
   }
 
   add() {
     if (this.$state.current.name === 'project.config.entities') {
       this.$state.go('project.config.entities.add');
     } else {
-      // this.$state.go('project.config.lists.add');
+      this.$state.go('project.config.lists.add');
     }
   }
 

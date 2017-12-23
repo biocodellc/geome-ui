@@ -25,16 +25,18 @@ function getStates() {
         component: 'fimsProjectMembersAdd',
         resolve: {
           users: /*ngInject*/ (UserService, members) => UserService.all()
-            .filter(u => members.find(m => u.username === m.username) === undefined)
-            .map(u => ({
-              // only keep keys we are interested in. This allows us to use $ in the ui-select $filter to filter
-              // users using the search term on all properties
-              username: u.username,
-              firstName: u.firstName,
-              lastName: u.lastName,
-              email: u.email,
-              institution: u.institution,
-            })),
+            .then(users => users
+              .filter(u => members.find(m => u.username === m.username) === undefined)
+              .map(u => ({
+                // only keep keys we are interested in. This allows us to use $ in the ui-select $filter to filter
+                // users using the search term on all properties
+                username: u.username,
+                firstName: u.firstName,
+                lastName: u.lastName,
+                email: u.email,
+                institution: u.institution,
+              })),
+            ),
         },
       },
     },

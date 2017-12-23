@@ -1,9 +1,6 @@
 import AddListController from "./list-add.controller";
 import EntityRulesController from "./entity-rules.controller";
 import ListController from "./list.controller";
-import ConfigMetadataController from "./config-metadata.controller";
-import EntitiesController from "./entities.controller";
-import AddEntityController from "./entity-add.controller";
 import EntityAttributesController from "./entity-attributes.controller";
 import EntityController from "./entity.controller";
 import AddRuleController from "./rule-add.controller";
@@ -17,9 +14,6 @@ function getStates() {
         url: '/config',
         redirectTo: 'project.config.entities',
         // onExit: configExit,
-        resolve: {
-          // currentProject: (currentProject) => currentProject,
-        },
         views: {
           "details": {
             component: 'fimsProjectConfig',
@@ -45,7 +39,7 @@ function getStates() {
       config: {
         url: '/entities',
         resolve: {
-          entities: (config) => Object.assign(config.entities),
+          // entities: (config) => Object.assign(config.entities),
         },
         views: {
           "objects": {
@@ -70,14 +64,14 @@ function getStates() {
       state: 'project.config.entities.detail',
       config: {
         url: '/:alias/',
-        onEnter: entitiesDetailOnEnter,
+        // onEnter: entitiesDetailOnEnter,
         redirectTo: "project.config.entities.detail.attributes",
         resolve: {
-          entity: resolveEntity,
+          // entity: resolveEntity,
         },
         views: {
           "@project.config": {
-            template: require('./config/templates/entity-detail.html'),
+            template: require('./templates/entity-detail.html'),
             controller: EntityController,
             controllerAs: 'vm',
           },
@@ -96,7 +90,7 @@ function getStates() {
         url: 'attributes',
         views: {
           "objects": {
-            template: require('./config/templates/entity-attributes.html'),
+            template: require('./templates/entity-attributes.html'),
             controller: EntityAttributesController,
             controllerAs: 'vm',
           },
@@ -115,7 +109,7 @@ function getStates() {
         url: 'rules',
         views: {
           "objects": {
-            template: require('./config/templates/entity-rules.html'),
+            template: require('./templates/entity-rules.html'),
             controller: EntityRulesController,
             controllerAs: 'vm',
           },
@@ -128,7 +122,7 @@ function getStates() {
         url: '/add',
         views: {
           "objects@project.config.entities.detail": {
-            template: require('./config/templates/add-rule.html'),
+            template: require('./templates/add-rule.html'),
             controller: AddRuleController,
             controllerAs: 'vm',
           },
@@ -143,7 +137,7 @@ function getStates() {
         url: '/lists',
         views: {
           "objects": {
-            template: require('./config/templates/lists.html'),
+            template: require('./templates/lists.html'),
             controller: ListsController,
             controllerAs: 'vm',
           },
@@ -154,13 +148,13 @@ function getStates() {
       state: 'project.config.lists.detail',
       config: {
         url: '/:alias/',
-        onEnter: listsDetailOnEnter,
+        // onEnter: listsDetailOnEnter,
         resolve: {
-          list: resolveList,
+          // list: resolveList,
         },
         views: {
           "@project.config": {
-            template: require('./config/templates/list-detail.html'),
+            template: require('./templates/list-detail.html'),
             controller: ListController,
             controllerAs: 'vm',
           },
@@ -181,7 +175,7 @@ function getStates() {
         url: '/add',
         views: {
           "objects@project.config": {
-            template: require('./config/templates/add-list.html'),
+            template: require('./templates/add-list.html'),
             controller: AddListController,
             controller: ListController,
           },

@@ -115,11 +115,9 @@ function configConfirmationController($uibModalInstance) {
 }
 
 
-const routing = (routerHelper) => {
+export default (routerHelper) => {
+  'ngInject';
   routerHelper.configureStates(getStates());
 
   // $transitions.onExit({ exiting: 'project.config' }, _configExit);
 };
-
-
-export default routing;

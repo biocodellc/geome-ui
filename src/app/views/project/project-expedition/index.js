@@ -2,7 +2,7 @@ import fimsExpedition from "../../../components/expeditions/expedition.component
 
 const fimsProjectExpedition = {
   template:
-    '<div class="admin">
+    `<div class="admin">
         <fims-expedition
             back-state="$ctrl.backState"
             expedition="$ctrl.expedition">

@@ -15,6 +15,7 @@ const fimsProjectExpeditions = {
   controller: ProjectExpeditionsController,
   bindings: {
     expeditions: '<',
+    currentProject: '<',
   },
 };
 

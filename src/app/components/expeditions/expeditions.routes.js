@@ -41,6 +41,7 @@ function getStates() {
             return (expedition) ? expedition : $state.go('expeditions.list');
           },
           backState: () => "expeditions.list",
+          currentProject: /*ngInject*/ (Projects) => Projects.currentProject(),
         },
         params: {
           id: {
