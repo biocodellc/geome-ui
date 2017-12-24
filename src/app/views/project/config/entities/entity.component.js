@@ -44,7 +44,7 @@ const fimsEntity = {
   bindings: {
     entity: '<',
     editing: '<',
-    index: '<',
+    worksheets: '<',
     onRemove: '&',
     onToggleEdit: '&',
     onUpdate: '&',

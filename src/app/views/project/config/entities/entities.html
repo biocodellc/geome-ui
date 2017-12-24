@@ -3,8 +3,7 @@
         <fims-entity
                 entity="entity"
                 editing="$index===$ctrl.editEntity"
-                index="$index"
-                config="$ctrl.config"
+                worksheets="$ctrl.config.worksheets()"
                 on-toggle-edit="$ctrl.handleToggleEdit($index)"
                 on-update="$ctrl.handleUpdateEntity($index, entity)"
                 on-remove="$ctrl.handleRemoveEntity(entity)"

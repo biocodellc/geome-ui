@@ -1,0 +1,44 @@
+<table class="table attributes-table">
+    <thead>
+        <th></th>
+        <th>Column</th>
+        <th>Group</th>
+        <th>Data Type</th>
+    </thead>
+
+    <tbody dnd-list="$ctrl.attributes" dnd-drop="$ctrl.dndDrop(index, item)">
+        <tr ng-repeat="attribute in $ctrl.attributes track by $index"
+            dnd-draggable="attribute"
+            dnd-dragstart="$ctrl.dndStart()"
+            id="attribute_{{ $index }}"
+            uib-popover-template="'editAttribute.html'"
+            popover-is-open="$index===$ctrl.editAttribute"
+            popover-placement="auto bottom"
+            popover-trigger="none"
+            popover-class="edit-popover">
+            <td class="row-actions">
+                <a href="#" uib-tooltip="click and drag to reorder attributes">
+                    <i class="fa fa-arrows fa-fw"></i>
+                </a>
+                <a href="#" ng-click="$ctrl.handleToggleEdit($index)"><i class="fa fa-pencil fa-fw"></i></a>
+                <a href="#" class="delete" ng-click="$ctrl.handleOnDelete($index)"><i
+                        class="fa fa-trash text-danger fa-fw"></i></a>
+            </td>
+            <td ng-click="$ctrl.handleToggleEdit($index)">{{ attribute.column }}</td>
+            <td ng-click="$ctrl.handleToggleEdit($index)">{{ attribute.group || 'Default' }}</td>
+            <td ng-click="$ctrl.handleToggleEdit($index)">{{ attribute.datatype }}</td>
+        </tr>
+        <!--define a custom <tr> placeholder -->
+        <tr class="dndPlaceholder">
+            <td colspan="4"></td>
+        </tr>
+    </tbody>
+</table>
+
+<script type="text/ng-template" id="editAttribute.html">
+    <fims-edit-attribute
+            attribute="attribute"
+            on-update="$ctrl.handleOnUpdate(attribute)"
+            on-close="$ctrl.handleToggleEdit($index)">
+    </fims-edit-attribute>
+</script>

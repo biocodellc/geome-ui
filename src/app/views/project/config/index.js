@@ -3,6 +3,7 @@ import angular from 'angular';
 import routing from "./routes";
 import fimsProjectConfigMetadata from './metadata';
 import fimsProjectConfigEntities from './entities';
+import fimsProjectConfigNavbar from './navbar.component';
 
 
 class ConfigController {
@@ -13,7 +14,6 @@ class ConfigController {
     this.$uibModal = $uibModal;
     this.ProjectConfigService = ProjectConfigService;
     this.alerts = alerts;
-
   }
 
   $onInit() {
@@ -29,10 +29,10 @@ class ConfigController {
         this.addText = 'List';
       }
     });
-
-    this.$scope.$watch('vm.config', () => {
-      this.showSave = !angular.equals(this.currentProject.config, this.config);
-    }, true);
+    //
+    // this.$scope.$watch('vm.config', () => {
+    //   this.showSave = !angular.equals(this.currentProject.config, this.config);
+    // }, true);
   }
 
   handleUpdateEntities(entities) {
@@ -40,7 +40,12 @@ class ConfigController {
     this.showSave = !angular.equals(this.currentProject.config, this.config);
   }
 
-  add() {
+  handleNewWorksheet(sheetName) {
+    this.config.addWorksheet(sheetName);
+    this.showSave = true;
+  }
+
+  handleOnAdd() {
     if (this.$state.current.name === 'project.config.entities') {
       this.$state.go('project.config.entities.add');
     } else {
@@ -48,7 +53,7 @@ class ConfigController {
     }
   }
 
-  save() {
+  handleOnSave() {
     this.alerts.removeTmp();
     this.ProjectConfigService.save(this.config, this.currentProject.projectId)
       .then((config) => {
@@ -68,6 +73,7 @@ const fimsProjectConfig = {
   controller: ConfigController,
   bindings: {
     currentProject: '<',
+    view: '<',
   },
 };
 
@@ -75,6 +81,7 @@ const fimsProjectConfig = {
 const dependencies = [
   fimsProjectConfigMetadata,
   fimsProjectConfigEntities,
+  fimsProjectConfigNavbar
 ];
 
 export default angular.module('fims.projectConfig', dependencies)

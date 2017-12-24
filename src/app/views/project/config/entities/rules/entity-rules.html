@@ -1,0 +1,16 @@
+<table class="table attributes-table">
+    <thead>
+        <th></th>
+        <th>Name</th>
+        <th>Level</th>
+        <th>Metadata</th>
+    </thead>
+
+    <tbody>
+        <tr ng-repeat="rule in $ctrl.rules track by $index"
+            editable-rule index="$index" rule="rule" config="$ctrl.config"
+            entity="$ctrl.entity"
+            on-delete="$ctrl.deleteRule(index)" id="rule_{{ $index }}">
+        </tr>
+    </tbody>
+</table>

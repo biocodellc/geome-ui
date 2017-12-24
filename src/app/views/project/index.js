@@ -19,7 +19,7 @@ import ProjectConfigService from "./config/ProjectConfigService";
 import editPopoverTemplate from "./config/edit-popover-template-popup.directive";
 import ruleMetadata from "./config/rule-metadata.directive";
 // import {  editEntity } from "./config/entities/editable-entity.directive";
-import { editableAttribute, editAttribute } from "./config/editable-attribute.directive";
+// import { editableAttribute, editAttribute } from "./config/editable-attribute.directive";
 import { editableField, editField } from "./config/editable-field.directive";
 import { editableList, editList } from "./config/editable-list.directive";
 import { editableRule, editRule } from "./config/editable-rule.directive";
@@ -90,8 +90,8 @@ export default angular.module('fims.project', dependencies)
   .directive('ruleMetadata', ruleMetadata)
   // .directive('editEntity', editEntity)
   // .directive('editableEntity', editableEntity)
-  .directive('editAttribute', editAttribute)
-  .directive('editableAttribute', editableAttribute)
+  // .directive('editAttribute', editAttribute)
+  // .directive('editableAttribute', editableAttribute)
   .directive('editField', editField)
   .directive('editableField', editableField)
   .directive('editList', editList)

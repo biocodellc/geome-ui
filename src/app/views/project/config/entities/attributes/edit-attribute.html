@@ -1,5 +1,5 @@
 <div>
-    <a class="edit-close" href="#"><i ng-click="vm.toggleEdit()" class="fa fa-times"></i></a>
+    <a class="edit-close" href="#"><i ng-click="$ctrl.onClose()" class="fa fa-times"></i></a>
     <div class="row">
         <div class="col-xs-12">
 
@@ -8,36 +8,36 @@
                     <label class="control-label col-xs-3">Column</label>
                     <div class="col-xs-9">
                         <input type="text" class="form-control" placeholder="New Attribute"
-                               ng-model="vm.attribute.column"/>
+                               ng-model="$ctrl.attribute.column"/>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="control-label col-xs-3">Group</label>
                     <div class="col-xs-9">
-                        <input type="text" class="form-control" ng-model="vm.attribute.group"/>
+                        <input type="text" class="form-control" ng-model="$ctrl.attribute.group"/>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="control-label col-xs-3">Defined By</label>
                     <div class="col-xs-9">
-                        <input type="text" class="form-control" ng-model="vm.attribute.defined_by"/>
+                        <input type="text" class="form-control" ng-model="$ctrl.attribute.defined_by"/>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="control-label col-xs-3">Data Type</label>
                     <div class="col-xs-9">
-                        <select class="form-control" ng-options="type for type in vm.datatypes"
-                                ng-model="vm.attribute.datatype"></select>
+                        <select class="form-control" ng-options="type for type in $ctrl.datatypes"
+                                ng-model="$ctrl.attribute.datatype"></select>
                     </div>
                 </div>
 
-                <div class="form-group" ng-show="vm.dataformatTypes.indexOf(vm.attribute.datatype) > -1">
+                <div class="form-group" ng-show="$ctrl.dataformatTypes.indexOf($ctrl.attribute.datatype) > -1">
                     <label class="control-label col-xs-3">Data Format</label>
                     <div class="col-xs-9">
-                        <input type="text" class="form-control" ng-model="vm.attribute.dataformat"
+                        <input type="text" class="form-control" ng-model="$ctrl.attribute.dataformat"
                                placeholder="YYYY-MM-DD hh:mm:sss, YYYY-MM-DD"/>
                         <span class="help-block">
                             This is required for DATE, DATETIME, and TIME datatypes. This is a , separated list of
@@ -49,22 +49,22 @@
                 <div class="form-group">
                     <label class="control-label col-xs-3">Definition</label>
                     <div class="col-xs-9">
-                        <textarea rows="3" class="form-control" ng-model="vm.attribute.definition"></textarea>
+                        <textarea rows="3" class="form-control" ng-model="$ctrl.attribute.definition"></textarea>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <div class="checkbox col-xs-offset-3 col-xs-9">
                         <label>
-                            <input type="checkbox" ng-model="vm.delimited"/> Delimited Column?
+                            <input type="checkbox" ng-model="$ctrl.delimited" ng-click="$ctrl.toggleDelimited()"/> Delimited Column?
                         </label>
                     </div>
                 </div>
 
-                <div class="form-group" ng-show="vm.delimited">
+                <div class="form-group" ng-show="$ctrl.delimited">
                     <label class="control-label col-xs-3">Delimiter</label>
                     <div class="col-xs-2">
-                        <input type="text" class="form-control" ng-model="vm.attribute.delimited_by"/>
+                        <input type="text" class="form-control" ng-model="$ctrl.attribute.delimited_by"/>
                     </div>
                 </div>
 

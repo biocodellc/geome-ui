@@ -1,6 +1,7 @@
 import angular from 'angular';
 
 import projectConfigEntity from './entity.component';
+import projectConfigEntityDetail from './entity-details.component';
 
 function _deleteConfirmationController($uibModalInstance) {
   'ngInject';
@@ -70,12 +71,6 @@ class EntitiesController {
     this.entities.splice($index, 1, entity);
     this.onUpdateEntities({ entities: this.entities });
   }
-
-  handleNewWorksheet(sheetName) {
-    // TODO does this work?
-    this.config.addWorksheet(sheetName);
-  }
-
 }
 
 
@@ -83,12 +78,12 @@ const fimsProjectConfigEntities = {
   template: require('./entities.html'),
   controller: EntitiesController,
   bindings: {
-    // entities: '<',
     config: '<',
     onUpdateEntities: '&',
+    onNewWorksheet: '&',
   },
 };
 
-export default angular.module('fims.projectConfigEntities', [ projectConfigEntity, ])
+export default angular.module('fims.projectConfigEntities', [ projectConfigEntity, projectConfigEntityDetail ])
   .component('fimsProjectConfigEntities', fimsProjectConfigEntities)
   .name;

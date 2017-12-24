@@ -1,8 +1,5 @@
 import AddListController from "./list-add.controller";
-import EntityRulesController from "./entity-rules.controller";
 import ListController from "./list.controller";
-import EntityAttributesController from "./entity-attributes.controller";
-import EntityController from "./entity.controller";
 import AddRuleController from "./rule-add.controller";
 import ListsController from "./lists.controller";
 
@@ -38,9 +35,6 @@ function getStates() {
       state: 'project.config.entities',
       config: {
         url: '/entities',
-        resolve: {
-          // entities: (config) => Object.assign(config.entities),
-        },
         views: {
           "objects": {
             component: 'fimsProjectConfigEntities',
@@ -67,13 +61,15 @@ function getStates() {
         // onEnter: entitiesDetailOnEnter,
         redirectTo: "project.config.entities.detail.attributes",
         resolve: {
-          // entity: resolveEntity,
+          entity: /*ngInject*/ ($transition$, currentProject) => {
+            const alias = $transition$.params('to').alias;
+            const e = currentProject.config.entities.find(e => e.conceptAlias === alias);
+            return Object.assign({}, e);
+          }
         },
         views: {
           "@project.config": {
-            template: require('./templates/entity-detail.html'),
-            controller: EntityController,
-            controllerAs: 'vm',
+            component: 'fimsEntityDetail',
           },
         },
         params: {
@@ -90,9 +86,7 @@ function getStates() {
         url: 'attributes',
         views: {
           "objects": {
-            template: require('./templates/entity-attributes.html'),
-            controller: EntityAttributesController,
-            controllerAs: 'vm',
+            component: 'fimsEntityAttributes',
           },
         },
         params: {
@@ -109,9 +103,7 @@ function getStates() {
         url: 'rules',
         views: {
           "objects": {
-            template: require('./templates/entity-rules.html'),
-            controller: EntityRulesController,
-            controllerAs: 'vm',
+            component: 'fimsEntityRules',
           },
         },
       },

@@ -44,7 +44,7 @@
     <script type="text/ng-template" id="editEntityPopover.html">
         <fims-edit-entity
             entity="$ctrl.entity"
-            existing-worksheets="$ctrl.worksheets()"
+            existing-worksheets="$ctrl.worksheets"
             on-update="$ctrl.handleOnUpdate(entity)"
             on-close="$ctrl.onToggleEdit()"
             on-new-worksheet="$ctrl.onNewWorksheet(sheetName)">
