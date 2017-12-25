@@ -1,0 +1,42 @@
+<form class="form-horizontal" name="$ctrl.ruleForm">
+    <div class="form-group">
+        <label class="control-label col-xs-3">Name</label>
+        <div class="col-xs-9">
+            <input type="text" class="form-control" disabled ng-model="$ctrl.rule.name"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-3">Level</label>
+        <div class="col-xs-9">
+            <select class="form-control" ng-model="$ctrl.rule.level" name="level"
+                    ng-options="level for level in $ctrl.levels"></select>
+        </div>
+    </div>
+
+    <div class="form-group" ng-repeat="(key, value) in $ctrl.rule.metadata()">
+        <fims-rule-metadata-list
+                ng-if="key === 'listName'"
+                key="key"
+                lists="$ctrl.lists"
+                rule="$ctrl.rule">
+        </fims-rule-metadata-list>
+        <fims-rule-metadata-columns
+                ng-if="key.toLowerCase().includes('column') && Array.isArray(value)"
+                key="key"
+                columns="$ctrl.columns"
+                rule="$ctrl.rule">
+        </fims-rule-metadata-columns>
+        <fims-rule-metadata-column
+                ng-if="key.toLowerCase().includes('column') && !Array.isArray(value)"
+                key="key"
+                columns="$ctrl.columns"
+                rule="$ctrl.rule">
+        </fims-rule-metadata-column>
+        <fims-rule-metadata-default
+                ng-if="key !== 'listName' && !key.toLowerCase().includes('column')"
+                key="key"
+                rule="$ctrl.rule">
+        </fims-rule-metadata-default>
+    </div>
+</form>

@@ -20,4 +20,8 @@
          on-delete-attribute="$ctrl.handleDeleteAttribute(index)"
          on-update-attributes="$ctrl.handleUpdateAttributes(attributes)">
     </div>
+    <div ui-view="add-rule"
+         on-add-rule="$ctrl.handleAddRule(rule)">
+    </div>
+
 </div>

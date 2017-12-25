@@ -1,6 +1,7 @@
 import angular from 'angular';
 
-import fimsEditRule from 'rule.component';
+import fimsEditRule from './rule.component';
+import fimsRuleAdd from './rule-add.component';
 
 
 class EntityRulesController {
@@ -36,6 +37,6 @@ const fimsEntityRules = {
   },
 };
 
-export default angular.module('fims.projectConfigEntityRules', [ fimsEditRule ])
+export default angular.module('fims.projectConfigEntityRules', [ fimsEditRule, fimsRuleAdd ])
   .component('fimsEntityRules', fimsEntityRules)
   .name;

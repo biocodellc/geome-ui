@@ -1,6 +1,6 @@
 import AddListController from "./list-add.controller";
 import ListController from "./list.controller";
-import AddRuleController from "./rule-add.controller";
+import AddRuleController from "./entities/rules/rule-add.component";
 import ListsController from "./lists.controller";
 
 function getStates() {
@@ -46,6 +46,9 @@ function getStates() {
       state: 'project.config.entities.add',
       config: {
         url: '/add',
+        resolve: {
+          entities: /*ngInject*/ (currentProject) => currentProject.config.entities.map(c => c.conceptAlias),
+        },
         views: {
           "objects@project.config": {
             component: 'fimsProjectConfigEntitiesAdd',
@@ -65,7 +68,7 @@ function getStates() {
             const alias = $transition$.params('to').alias;
             const e = currentProject.config.entities.find(e => e.conceptAlias === alias);
             return Object.assign({}, e);
-          }
+          },
         },
         views: {
           "@project.config": {
@@ -116,11 +119,13 @@ function getStates() {
       state: 'project.config.entities.detail.rules.add',
       config: {
         url: '/add',
+        resolve: {
+          lists: /*ngInject*/ (currentProject) => currentProject.config.lists.map(l => l.alias),
+          columns: /*ngInject*/ (entity) => entity.attributes.map(a => a.column),
+        },
         views: {
-          "objects@project.config.entities.detail": {
-            template: require('./templates/add-rule.html'),
-            controller: AddRuleController,
-            controllerAs: 'vm',
+          "add-rule@project.config.entities.detail": {
+            component: 'fimsProjectConfigRuleAdd',
           },
         },
       },

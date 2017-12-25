@@ -13,8 +13,6 @@ class EntityDetailController {
     this.ProjectConfigService = ProjectConfigService;
     this.alerts = alerts;
 
-    console.log($state.params);
-
     $scope.$watch(() => $state.current.name, (name) => {
       if (name === 'project.config.entities.detail.attributes') {
         this.addText = 'Attribute';
@@ -70,6 +68,29 @@ class EntityDetailController {
 
     const oldEntity = this.currentProject.config.entities.find(e => e.conceptAlias === this.entity.conceptAlias);
     this.showSave = !angular.equals(oldEntity, this.entity);
+  }
+
+  handleAddRule(rule) {
+    const metadata = rule.metadata();
+    const invalidMetadata = Object.keys(metadata).map(k =>
+      !metadata[ k ] || (Array.isArray(metadata[ k ]) && metadata[ k ].length === 0));
+
+    if (invalidMetadata.length !== 0) {
+      const msg = invalidMetadata.length > 1 ? ' are all required' : ' is required';
+
+      this.alerts.error(invalidMetadata.join(', ') + msg);
+      return;
+    }
+
+    // TODO verify this works
+    if (this.entity.rules.includes(rule)) {
+      this.alerts.error('That rule already exists.');
+      return;
+    }
+
+    this.alerts.removeTmp();
+    this.entity.rules.push(rule);
+    this.$state.go('^');
   }
 
   newAttribute() {

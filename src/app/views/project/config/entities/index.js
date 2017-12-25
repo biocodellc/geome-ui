@@ -2,6 +2,7 @@ import angular from 'angular';
 
 import projectConfigEntity from './entity.component';
 import projectConfigEntityDetail from './entity-details.component';
+import projectConfigEntityAdd from './entity-add.component';
 
 function _deleteConfirmationController($uibModalInstance) {
   'ngInject';
@@ -84,6 +85,6 @@ const fimsProjectConfigEntities = {
   },
 };
 
-export default angular.module('fims.projectConfigEntities', [ projectConfigEntity, projectConfigEntityDetail ])
+export default angular.module('fims.projectConfigEntities', [ projectConfigEntity, projectConfigEntityDetail, projectConfigEntityAdd ])
   .component('fimsProjectConfigEntities', fimsProjectConfigEntities)
   .name;

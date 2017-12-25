@@ -4,6 +4,7 @@ import routing from "./routes";
 import fimsProjectConfigMetadata from './metadata';
 import fimsProjectConfigEntities from './entities';
 import fimsProjectConfigNavbar from './navbar.component';
+import Rule from "./Rule";
 
 
 class ConfigController {
@@ -64,6 +65,27 @@ class ConfigController {
         response.data.errors.forEach(error => this.alerts.error(error));
       }
     });
+  }
+
+  handleOnAddEntity(entity) {
+    if (entity.parentEntity) {
+      const rule = Rule.newRule("RequiredValue");
+      rule.level = 'ERROR';
+      const column = this.config.entityUniqueKey(entity.parentEntity);
+      rule.columns.push(column);
+
+      entity.attributes.push({
+        column: column,
+        datatype: 'STRING',
+        group: 'Default',
+      });
+
+      entity.rules.push(rule);
+    }
+
+    this.config.entities.push(entity);
+
+    this.$state.go('^.detail.attributes', { alias: entity.conceptAlias, entity: entity, addAttribute: true });
   }
 
 }

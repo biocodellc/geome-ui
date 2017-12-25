@@ -1,15 +1,15 @@
 <div class="row">
     <div class="add-view col-xs-9 col-sm-8 col-md-7 col-lg-5">
-        <form name="vm.addForm" ng-submit="vm.add()">
+        <form name="$ctrl.addForm" ng-submit="$ctrl.add()">
             <div class="form-group" show-errors>
                 <label>Entity Name</label>
                 <input type="text" class="form-control" pattern="[a-zA-Z0-9_]+" required name="conceptAlias"
-                       ng-model="vm.conceptAlias"/>
+                       ng-model="$ctrl.conceptAlias"/>
                 <p class="help-block"
-                   ng-if="vm.addForm.conceptAlias.$error.pattern && vm.addForm.conceptAlias.$touched">
+                   ng-if="$ctrl.addForm.conceptAlias.$error.pattern && $ctrl.addForm.conceptAlias.$touched">
                     Must contain only numbers, letters, or underscores</p>
                 <p class="help-block"
-                   ng-if="vm.addForm.conceptAlias.$error.unique && vm.addForm.conceptAlias.$touched">
+                   ng-if="$ctrl.addForm.conceptAlias.$error.unique && $ctrl.addForm.conceptAlias.$touched">
                     Must be unique.</p>
                 <p class="help-block">This is how we will refer to this entity after creation. This is a
                     case-insensitive permanent name, and <strong>can not be changed</strong>.</p>
@@ -17,21 +17,21 @@
 
             <div class="form-group" show-errors>
                 <label>Concept URI</label>
-                <input type="text" class="form-control" required name="conceptURI" ng-model="vm.conceptURI"/>
+                <input type="text" class="form-control" required name="conceptURI" ng-model="$ctrl.conceptURI"/>
             </div>
 
             <div class="form-group">
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" ng-model="vm.isChild"/> is child entity?
+                        <input type="checkbox" ng-model="$ctrl.isChild"/> is child entity?
                     </label>
                 </div>
             </div>
 
-            <div class="form-group" ng-show="vm.isChild">
+            <div class="form-group" ng-show="$ctrl.isChild">
                 <label>Parent Entity</label>
-                <select class="form-control" ng-required="vm.isChild" ng-options="entity for entity in vm.entities"
-                        ng-model="vm.parentEntity"></select>
+                <select class="form-control" ng-required="$ctrl.isChild" ng-options="entity for entity in $ctrl.entities"
+                        ng-model="$ctrl.parentEntity"></select>
                 <p class="help-block">This is <strong>can not be changed</strong> after entity creation.</p>
             </div>
 
