@@ -17,12 +17,12 @@ import ProjectFactory from "./projectFactory";
 import ProjectMembersService from "./members/project-members.service";
 import ProjectConfigService from "./config/ProjectConfigService";
 import editPopoverTemplate from "./config/edit-popover-template-popup.directive";
-import ruleMetadata from "./config/rule-metadata.directive";
+import ruleMetadata from "./config/entities/rules/rule-metadata.component";
 // import {  editEntity } from "./config/entities/editable-entity.directive";
 // import { editableAttribute, editAttribute } from "./config/editable-attribute.directive";
 import { editableField, editField } from "./config/editable-field.directive";
 import { editableList, editList } from "./config/editable-list.directive";
-import { editableRule, editRule } from "./config/editable-rule.directive";
+import { editableRule, editRule } from "./config/entities/rules/editable-rule.directive";
 
 import fimsProjectSettings from './project-settings';
 import fimsProjectExpeditions from './project-expeditions';

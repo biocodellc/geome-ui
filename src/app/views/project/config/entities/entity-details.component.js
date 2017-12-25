@@ -43,8 +43,8 @@ class EntityDetailController {
   handleOnAdd() {
     if (this.$state.current.name === 'project.config.entities.detail.attributes') {
       this.newAttribute();
-    } else {
-      this.$scope.$broadcast('$entityAddEvent');
+    } else if (this.$state.current.name === 'project.config.entities.detail.rules') {
+      this.$state.go(".add");
     }
   }
 

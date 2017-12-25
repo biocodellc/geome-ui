@@ -115,10 +115,6 @@ export default class ProjectConfig {
     return this._requiredValueAttributes(sheetName, 'WARNING');
   }
 
-  ruleLevels() {
-    return [ 'ERROR', 'WARNING' ];
-  }
-
   _requiredValueAttributes(sheetName, level) {
     return this.entities.filter(e => e.worksheet === sheetName)
       .map((e) => {

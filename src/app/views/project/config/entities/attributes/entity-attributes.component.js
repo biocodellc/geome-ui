@@ -2,8 +2,23 @@ import angular from 'angular';
 
 
 class EntityAttributesController {
+  constructor($location, $anchorScroll) {
+    'ngInject';
+
+    this.$location = $location;
+    this.$anchorScroll = $anchorScroll;
+  }
+
   $onInit() {
     this.editAttribute = undefined;
+
+    const newAttributeIndex = this.attributes.findIndex(a => a.isNew);
+    if (newAttributeIndex > -1) {
+      this.editAttribute = newAttributeIndex;
+      this.$location.hash("attribute_" + newAttributeIndex);
+      this.$anchorScroll();
+      delete this.attributes[ newAttributeIndex ].isNew;
+    }
   }
 
   $onChanges(changesObj) {
@@ -44,13 +59,11 @@ class EntityAttributesController {
     } else {
       this.editAttribute = index;
     }
-    console.log(this.editAttribute);
   }
 
   handleOnDelete(index) {
-    console.log(index);
-    // this.attributes.splice(index, 1);
-    // this.onUpdateAttributes({ attributes: this.attributes });
+    this.attributes.splice(index, 1);
+    this.onUpdateAttributes({ attributes: this.attributes });
   }
 
   handleOnUpdate(attribute) {

@@ -69,3 +69,5 @@ export const AVAILABLE_RULES = [
     otherColumn: undefined,
   }),
 ];
+
+export const RULE_LEVELS = [ 'ERROR', 'WARNING' ];

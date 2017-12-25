@@ -1,4 +1,4 @@
-import { AVAILABLE_RULES } from "./Rule";
+import { AVAILABLE_RULES, RULE_LEVELS } from "./Rule";
 
 export default class AddRuleController {
   constructor($state, alerts, config, entity) {
@@ -9,7 +9,7 @@ export default class AddRuleController {
 
     this.availableRules = AVAILABLE_RULES;
     this.rule = undefined;
-    this.levels = config.ruleLevels();
+    this.levels = RULE_LEVELS;
 
     this.lists = config.lists.map(l => l.alias);
 

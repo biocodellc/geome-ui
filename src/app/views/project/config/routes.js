@@ -101,6 +101,10 @@ function getStates() {
       state: 'project.config.entities.detail.rules',
       config: {
         url: 'rules',
+        resolve: {
+          lists: /*ngInject*/ (currentProject) => currentProject.config.lists.map(l => l.alias),
+          columns: /*ngInject*/ (entity) => entity.attributes.map(a => a.column),
+        },
         views: {
           "objects": {
             component: 'fimsEntityRules',

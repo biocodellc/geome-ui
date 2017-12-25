@@ -13,7 +13,7 @@ export function editRule($uibTooltip) {
     bindToController: true,
     controller: _ruleController,
     controllerAs: 'vm',
-    template: require('./templates/rule.html'),
+    template: require('./rule.html'),
     compile: function (el, attrs) {
       var tooltipLink = $uibTooltip('editPopoverTemplate', 'editPopover', 'none', {
         useContentExp: true,
@@ -71,7 +71,7 @@ function _ruleController($scope, $uibModal) {
 
   function remove() {
     var modal = $uibModal.open({
-      template: require('./templates/delete-rule-confirmation.html'),
+      template: require('./delete-rule-confirmation.html'),
       size: 'md',
       controller: _deleteConfirmationController,
       controllerAs: 'vm',

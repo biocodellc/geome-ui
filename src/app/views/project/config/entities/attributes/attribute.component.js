@@ -6,7 +6,7 @@ class EditAttributeController {
     this.attribute = Object.assign({}, this.attribute);
     this.datatypes = [ 'STRING', 'INTEGER', 'FLOAT', 'DATE', 'DATETIME', 'TIME' ];
     this.dataformatTypes = [ 'DATE', 'DATETIME', 'TIME' ];
-    this.delimited = false;
+    this.delimited = !!(this.attribute.delimiter);
   }
 
   $onDestroy() {
@@ -31,29 +31,7 @@ const fimsAttributeEdit = {
   },
 };
 
-class AttributeController {
-  $onChanges(changesObj) {
-    console.log(changesObj);
-  }
-  handleOnUpdate(attribute) {
-    if (!angular.equals(this.attribute, attribute)) {
-      this.onUpdate({ attribute });
-    }
-  }
-}
-
-const fimsAttribute = {
-  template: require('./attribute.html'),
-  controller: AttributeController,
-  bindings: {
-    attribute: '<',
-    onDelete: '&',
-    onToggleEdit: '&',
-  },
-};
-
 
 export default angular.module('fims.projectConfigAttribute', [])
-  .component('fimsAttribute', fimsAttribute)
   .component('fimsEditAttribute', fimsAttributeEdit)
   .name;
