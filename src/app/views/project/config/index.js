@@ -3,6 +3,7 @@ import angular from 'angular';
 import routing from "./routes";
 import fimsProjectConfigMetadata from './metadata';
 import fimsProjectConfigEntities from './entities';
+import fimsProjectConfigLists from './lists';
 import fimsProjectConfigNavbar from './navbar.component';
 import Rule from "./Rule";
 
@@ -36,8 +37,17 @@ class ConfigController {
     // }, true);
   }
 
+  $onChanges(changesObj) {
+
+  }
+
   handleUpdateEntities(entities) {
     this.config.entities = entities;
+    this.showSave = !angular.equals(this.currentProject.config, this.config);
+  }
+
+  handleUpdateLists(lists) {
+    this.config.lists = lists;
     this.showSave = !angular.equals(this.currentProject.config, this.config);
   }
 
@@ -88,6 +98,11 @@ class ConfigController {
     this.$state.go('^.detail.attributes', { alias: entity.conceptAlias, entity: entity, addAttribute: true });
   }
 
+  handleOnAddList(list) {
+    this.config.lists.push(list);
+    this.$state.go('^.detail', { alias: list.alias, addField: true });
+  }
+
 }
 
 const fimsProjectConfig = {
@@ -103,6 +118,7 @@ const fimsProjectConfig = {
 const dependencies = [
   fimsProjectConfigMetadata,
   fimsProjectConfigEntities,
+  fimsProjectConfigLists,
   fimsProjectConfigNavbar
 ];
 

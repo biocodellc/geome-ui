@@ -1,0 +1,12 @@
+<div class="panel-danger">
+    <div class="modal-header panel-heading text-center">
+        <h3 class="modal-title">Warning!</h3>
+    </div>
+    <div class="modal-body" ng-bind-html="$ctrl.text | trusted_html">
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-danger" type="button" ng-click="$ctrl.delete()">DELETE</button>
+        <button class="btn btn-default" type="button" ng-click="$ctrl.cancel()">Cancel</button>
+    </div>
+</div>

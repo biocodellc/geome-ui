@@ -38,7 +38,7 @@
 <script type="text/ng-template" id="editAttribute.html">
     <fims-edit-attribute
             attribute="attribute"
-            on-update="$ctrl.handleOnUpdate(attribute)"
+            on-update="$ctrl.handleOnUpdate($index, attribute)"
             on-close="$ctrl.handleToggleEdit($index)">
     </fims-edit-attribute>
 </script>

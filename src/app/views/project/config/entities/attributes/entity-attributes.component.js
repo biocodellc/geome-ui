@@ -2,11 +2,12 @@ import angular from 'angular';
 
 
 class EntityAttributesController {
-  constructor($location, $anchorScroll) {
+  constructor($location, $anchorScroll, ConfirmationService) {
     'ngInject';
 
     this.$location = $location;
     this.$anchorScroll = $anchorScroll;
+    this.ConfirmationService = ConfirmationService;
   }
 
   $onInit() {
@@ -62,12 +63,18 @@ class EntityAttributesController {
   }
 
   handleOnDelete(index) {
-    this.attributes.splice(index, 1);
-    this.onUpdateAttributes({ attributes: this.attributes });
+    this.ConfirmationService.confirm(
+      `Are you sure you want to delete this attribute?
+        <strong>Any data for this attribute will no longer be accessible</strong>.`,
+      () => {
+        this.attributes.splice(index, 1);
+        this.onUpdateAttributes({ attributes: this.attributes });
+      });
   }
 
-  handleOnUpdate(attribute) {
-    console.log('update attribute', attribute);
+  handleOnUpdate(index, attribute) {
+    this.attributes.splice(index, 1, attribute);
+    this.onUpdateAttributes({ attributes: this.attributes });
   }
 }
 

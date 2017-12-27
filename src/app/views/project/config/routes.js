@@ -1,8 +1,3 @@
-import AddListController from "./list-add.controller";
-import ListController from "./list.controller";
-import AddRuleController from "./entities/rules/rule-add.component";
-import ListsController from "./lists.controller";
-
 function getStates() {
   return [
     {
@@ -136,11 +131,12 @@ function getStates() {
       state: 'project.config.lists',
       config: {
         url: '/lists',
+        resolve: {
+          lists: /*ngInject*/ (currentProject) => currentProject.config.lists,
+        },
         views: {
           "objects": {
-            template: require('./templates/lists.html'),
-            controller: ListsController,
-            controllerAs: 'vm',
+            component: 'fimsProjectConfigLists',
           },
         },
       },
@@ -149,15 +145,17 @@ function getStates() {
       state: 'project.config.lists.detail',
       config: {
         url: '/:alias/',
-        // onEnter: listsDetailOnEnter,
         resolve: {
-          // list: resolveList,
+          list: /*ngInject*/ ($transition$, currentProject) => {
+            const alias = $transition$.params('to').alias;
+            const l = currentProject.config.lists.find(l => l.alias === alias);
+            return Object.assign({}, l);
+          },
+
         },
         views: {
           "@project.config": {
-            template: require('./templates/list-detail.html'),
-            controller: ListController,
-            controllerAs: 'vm',
+            component: 'fimsListDetail',
           },
         },
         params: {
@@ -176,9 +174,7 @@ function getStates() {
         url: '/add',
         views: {
           "objects@project.config": {
-            template: require('./templates/add-list.html'),
-            controller: AddListController,
-            controller: ListController,
+            component: 'fimsAddList',
           },
         },
       },

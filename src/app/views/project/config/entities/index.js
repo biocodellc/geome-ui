@@ -1,23 +1,17 @@
 import angular from 'angular';
 
 import projectConfigEntity from './entity.component';
-import projectConfigEntityDetail from './entity-details.component';
+import projectConfigEntityDetail from './entity-detail.component';
 import projectConfigEntityAdd from './entity-add.component';
 
-function _deleteConfirmationController($uibModalInstance) {
-  'ngInject';
-  const vm = this;
-  vm.delete = $uibModalInstance.close;
-  vm.cancel = $uibModalInstance.dismiss;
-}
-
 class EntitiesController {
-  constructor($uibModal, $location, $anchorScroll) {
+  constructor($uibModal, $location, $anchorScroll, ConfirmationService) {
     'ngInject';
 
     this.$uibModal = $uibModal;
     this.$location = $location;
     this.$anchorScroll = $anchorScroll;
+    this.ConfirmationService = ConfirmationService;
   }
 
   $onInit() {
@@ -41,20 +35,15 @@ class EntitiesController {
   }
 
   handleRemoveEntity(entity) {
-    const modal = this.$uibModal.open({
-      template: require('./delete-entity-confirmation.html'),
-      size: 'md',
-      controller: _deleteConfirmationController,
-      controllerAs: 'vm',
-      windowClass: 'app-modal-window',
-      backdrop: 'static',
-    });
-
-    modal.result.then(() => {
-      const i = this.entities.indexOf(entity);
-      this.entities.splice(i, 1);
-      this.onUpdateEntities({ entities: this.entities });
-    });
+    this.ConfirmationService.confirm(
+      `Are you sure you want to delete this entity?
+        <strong>It is strongly recommended that you export your data first. All data associated with this attribute will
+            be lost.</strong>`,
+      () => {
+        const i = this.entities.indexOf(entity);
+        this.entities.splice(i, 1);
+        this.onUpdateEntities({ entities: this.entities });
+      });
   }
 
   handleUpdateEntity($index, entity) {

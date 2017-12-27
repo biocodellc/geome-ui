@@ -16,76 +16,6 @@ function getStates() {
   ];
 }
 
-
-expeditionDetailOnEnter.$inject = [ '$rootScope', '$state' ];
-
-function expeditionDetailOnEnter($rootScope, $state) {
-  $rootScope.$on('$projectChangeEvent', function () {
-    $state.go('project.expeditions', {}, { reload: true, inherit: false });
-  });
-}
-
-resolveConfig.$inject = [ 'currentProject' ];
-
-function resolveConfig(project) {
-  return angular.copy(project.config);
-}
-
-entitiesDetailOnEnter.$inject = [ '$rootScope', '$state' ];
-
-function entitiesDetailOnEnter($rootScope, $state) {
-  $rootScope.$on('$projectChangeEvent', function () {
-    $state.go('project.config.entities', {}, { reload: true, inherit: false });
-  });
-}
-
-resolveEntity.$inject = [ '$transition$', '$state', 'config' ];
-
-function resolveEntity($transition$, $state, config) {
-  var entity = $transition$.params().entity;
-
-  if (entity) {
-    return entity;
-  } else {
-    var entities = config.entities;
-    for (var i = 0; i < entities.length; i++) {
-      if (entities[ i ].conceptAlias === $transition$.params().alias) {
-        return entities[ i ];
-      }
-    }
-
-    return $state.go('project.config.entities');
-  }
-}
-
-listsDetailOnEnter.$inject = [ '$rootScope', '$state' ];
-
-function listsDetailOnEnter($rootScope, $state) {
-  $rootScope.$on('$projectChangeEvent', function () {
-    $state.go('project.config.lists', {}, { reload: true, inherit: false });
-  });
-}
-
-resolveList.$inject = [ '$transition$', '$state', 'config' ];
-
-function resolveList($transition$, $state, config) {
-  var list = $transition$.params().list;
-
-  if (list) {
-    return list;
-  } else {
-    var lists = config.lists;
-    for (var i = 0; i < lists.length; i++) {
-      if (lists[ i ].alias === $transition$.params().alias) {
-        return lists[ i ];
-      }
-    }
-
-    return $state.go('project.config.lists');
-  }
-}
-
-
 configExit.$inject = [ '$transition$', 'config' ];
 
 function configExit(trans, config) {
@@ -115,9 +45,21 @@ function configConfirmationController($uibModalInstance) {
 }
 
 
-export default (routerHelper) => {
+export default ($transitions, routerHelper, UserService, Projects) => {
   'ngInject';
   routerHelper.configureStates(getStates());
 
+  // We reload the state if the currentProject has changed.
+  // check that the currentUser is the admin of the project
+  // if not, redirect
+  $transitions.onBefore({ to: 'project.**' }, (trans) =>
+    Promise.all([ UserService.waitForUser(), Projects.waitForProject() ])
+      .then(([ user, project ]) => {
+        if (user.userId !== project.user.userId) {
+          return trans.router.stateService.target('home');
+        }
+      })
+      .catch(() => trans.router.stateService.target('home'))
+  );
   // $transitions.onExit({ exiting: 'project.config' }, _configExit);
 };

@@ -16,10 +16,7 @@ import Projects from "./project.service";
 import ProjectFactory from "./projectFactory";
 import ProjectMembersService from "./members/project-members.service";
 import ProjectConfigService from "./config/ProjectConfigService";
-import editPopoverTemplate from "./config/edit-popover-template-popup.directive";
-import ruleMetadata from "./config/entities/rules/rule-metadata.component";
-import { editableField, editField } from "./config/editable-field.directive";
-import { editableList, editList } from "./config/editable-list.directive";
+import confirmation from '../../utils/delete-confirmation';
 
 import fimsProjectSettings from './project-settings';
 import fimsProjectExpeditions from './project-expeditions';
@@ -66,6 +63,7 @@ const dependencies = [
   exceptions,
   select,
   'dndLists',
+  confirmation,
   fimsProjectSettings,
   fimsProjectExpeditions,
   fimsProjectMembers,
@@ -83,10 +81,4 @@ export default angular.module('fims.project', dependencies)
   .service('ProjectFactory', ProjectFactory)
   .service('ProjectMembersService', ProjectMembersService)
   .service('ProjectConfigService', ProjectConfigService)
-  .directive('editPopoverTemplatePopup', editPopoverTemplate)
-  .directive('ruleMetadata', ruleMetadata)
-  .directive('editField', editField)
-  .directive('editableField', editableField)
-  .directive('editList', editList)
-  .directive('editableList', editableList)
   .name;

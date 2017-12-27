@@ -1,0 +1,42 @@
+<li class="settings-list-item"
+    uib-popover-template="'editListPopover.html'"
+    popover-is-open="$ctrl.editing"
+    popover-placement="auto bottom"
+    popover-trigger="none"
+    popover-class="edit-popover">
+
+    <div class="row-actions">
+        <a href="#" ng-click="$ctrl.onToggleEdit()"><i class="fa fa-pencil fa-fw"></i></a>
+        <a href="#" ng-click="$ctrl.onRemove({ alias: $ctrl.list.alias })"><i class="fa fa-trash text-danger fa-fw"></i></a>
+    </div>
+
+    <div class="info">
+        <div class="row">
+            <div class="col-xs-12 col-lg-6">
+                <a ui-sref=".detail({ alias: $ctrl.list.alias, list: $ctrl.list })" href class="title">
+                    {{ $ctrl.list.alias }}
+                </a>
+                <ul class="list-unstyled pull-right">
+                    <li>
+                        <a href ui-sref=".detail({ alias: $ctrl.list.alias, list: $ctrl.list })">
+                            <span class="badge">{{ $ctrl.list.fields.length }}</span> Fields
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-xs-12">
+                <ul class="list-inline metadata" ng-click="$ctrl.onToggleEdit()">
+                    <li><strong>case-sensitive:</strong> {{ !$ctrl.list.caseInsensitive }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/ng-template" id="editListPopover.html">
+        <fims-edit-list
+                list="$ctrl.list"
+                on-update="$ctrl.handleOnUpdate(list)"
+                on-close="$ctrl.onToggleEdit()">
+        </fims-edit-list>
+    </script>
+</li>

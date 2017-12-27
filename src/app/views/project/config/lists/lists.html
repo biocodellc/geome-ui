@@ -1,0 +1,12 @@
+<ul class="settings-list lists">
+    <div ng-repeat="list in $ctrl.lists">
+        <fims-list
+                list="list"
+                id="list_{{ $index }}"
+                editing="$index===$ctrl.editList"
+                on-toggle-edit="$ctrl.handleToggleEdit($index)"
+                on-update="$ctrl.handleUpdateList($index, list)"
+                on-remove="$ctrl.handleRemoveList(alias)">
+        </fims-list>
+    </div>
+</ul>

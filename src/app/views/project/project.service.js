@@ -51,10 +51,11 @@ class Projects {
       .then(() => {
         this.StorageService.set('projectId', project.projectId);
 
+        this._currentProject = project;
+
         //TODO remove this
         this.$rootScope.$broadcast('$projectChangeEvent', this.currentProject());
 
-        this._currentProject = project;
         return this._currentProject;
       })
 

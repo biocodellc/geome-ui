@@ -61,11 +61,15 @@ class EntityDetailController {
 
   handleDeleteAttribute(index) {
     this.entity.attributes.splice(index, 1);
+    this.checkEdited();
   }
 
   handleUpdateAttributes(attributes) {
     this.entity.attributes = attributes;
+    this.checkEdited();
+  }
 
+  checkEdited() {
     const oldEntity = this.currentProject.config.entities.find(e => e.conceptAlias === this.entity.conceptAlias);
     this.showSave = !angular.equals(oldEntity, this.entity);
   }

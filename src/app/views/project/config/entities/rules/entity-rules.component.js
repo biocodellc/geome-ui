@@ -5,6 +5,11 @@ import fimsRuleAdd from './rule-add.component';
 
 
 class EntityRulesController {
+  constructor(ConfirmationService) {
+    'ngInject';
+    this.ConfirmationService = ConfirmationService;
+  }
+
   $onChanges(changesObj) {
     if (changesObj.rules) {
       this.rules = this.rules.slice();
@@ -12,8 +17,12 @@ class EntityRulesController {
   }
 
   handleOnDelete(index) {
-    this.rules.splice(index, 1);
-    this.onUpdateRules({ rules: this.rules });
+    this.ConfirmationService.confirm(
+      `Are you sure you want to delete this rule?`,
+      () => {
+        this.rules.splice(index, 1);
+        this.onUpdateRules({ rules: this.rules });
+      });
   }
 
   handleToggleEdit(index) {

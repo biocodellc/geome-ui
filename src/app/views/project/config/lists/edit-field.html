@@ -1,28 +1,28 @@
 <div>
-    <a class="edit-close" href="#"><i ng-click="vm.toggleEdit()" class="fa fa-times"></i></a>
+    <a class="edit-close" href="#"><i ng-click="$ctrl.onClose()" class="fa fa-times"></i></a>
     <div class="row">
         <div class="col-xs-12">
 
             <form class="form-horizontal">
-                <div class="form-group" ng-class="{ 'has-error': vm.duplicateValue }">
+                <div class="form-group" ng-class="{ 'has-error': $ctrl.duplicateValue }">
                     <label class="control-label col-xs-3">Value</label>
                     <div class="col-xs-9">
-                        <input type="text" class="form-control" ng-model="vm.field.value"/>
-                        <div class="help-block" ng-show="vm.duplicateValue">Another field with this value already exists.</div>
+                        <input type="text" class="form-control" ng-model="$ctrl.field.value" ng-change="$ctrl.validateValue()"/>
+                        <div class="help-block" ng-show="$ctrl.duplicateValue">Another field with this value already exists.</div>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="control-label col-xs-3">Defined By</label>
                     <div class="col-xs-9">
-                        <input type="text" class="form-control" ng-model="vm.field.defined_by"/>
+                        <input type="text" class="form-control" ng-model="$ctrl.field.defined_by"/>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="control-label col-xs-3">Definition</label>
                     <div class="col-xs-9">
-                        <textarea rows="3" class="form-control" ng-model="vm.field.definition"></textarea>
+                        <textarea rows="3" class="form-control" ng-model="$ctrl.field.definition"></textarea>
                     </div>
                 </div>
             </form>
