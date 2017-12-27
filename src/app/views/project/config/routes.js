@@ -18,7 +18,7 @@ function getStates() {
       config: {
         url: '/metadata',
         views: {
-          "objects": {
+          "metadata": {
             component: 'fimsProjectConfigMetadata',
           },
         },
@@ -31,7 +31,7 @@ function getStates() {
       config: {
         url: '/entities',
         views: {
-          "objects": {
+          "entities": {
             component: 'fimsProjectConfigEntities',
           },
         },
@@ -41,12 +41,9 @@ function getStates() {
       state: 'project.config.entities.add',
       config: {
         url: '/add',
-        resolve: {
-          entities: /*ngInject*/ (currentProject) => currentProject.config.entities.map(c => c.conceptAlias),
-        },
         views: {
-          "objects@project.config": {
-            component: 'fimsProjectConfigEntitiesAdd',
+          "add-entity@project.config": {
+            component: 'fimsProjectConfigEntityAdd',
           },
         },
       },
@@ -131,11 +128,8 @@ function getStates() {
       state: 'project.config.lists',
       config: {
         url: '/lists',
-        resolve: {
-          lists: /*ngInject*/ (currentProject) => currentProject.config.lists,
-        },
         views: {
-          "objects": {
+          "lists": {
             component: 'fimsProjectConfigLists',
           },
         },
@@ -173,7 +167,7 @@ function getStates() {
       config: {
         url: '/add',
         views: {
-          "objects@project.config": {
+          "add-list@project.config": {
             component: 'fimsAddList',
           },
         },

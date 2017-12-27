@@ -5,6 +5,7 @@ class EditEntityController {
   $onInit() {
     this.entity = Object.assign({}, this.entity);
     this.columns = this.entity.attributes.map(a => a.column);
+    console.log(this.existingWorksheets);
   }
 
   $onDestroy() {

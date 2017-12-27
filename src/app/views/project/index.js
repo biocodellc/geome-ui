@@ -1,5 +1,7 @@
 import angular from 'angular';
 import select from 'ui-select';
+import 'ui-select/dist/select.min.css';
+import sanitize from 'angular-sanitize';
 import modal from 'angular-ui-bootstrap/src/modal';
 
 // dndLists doesn't export anything. we import here so webpack will bundle/load the file
@@ -62,6 +64,7 @@ const dependencies = [
   router,
   exceptions,
   select,
+  sanitize,
   'dndLists',
   confirmation,
   fimsProjectSettings,

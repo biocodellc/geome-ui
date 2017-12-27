@@ -3,6 +3,7 @@ import angular from "angular";
 
 class AddEntityController {
   $onInit() {
+    this.entities = this.entities.map(c => c.conceptAlias);
     this.isChild = false;
     this.conceptAlias = undefined;
     this.conceptURI = undefined;
@@ -14,6 +15,7 @@ class AddEntityController {
 
     if (e) {
       this.addForm.conceptAlias.$setValidity("unique", false);
+      return;
     }
 
     this.onAddEntity({ entity: {

@@ -12,6 +12,7 @@ class AddListController {
 
     if (list) {
       this.addForm.alias.$setValidity("unique", false);
+      return;
     }
 
     this.onAddList({

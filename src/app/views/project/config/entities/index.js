@@ -2,7 +2,7 @@ import angular from 'angular';
 
 import projectConfigEntity from './entity.component';
 import projectConfigEntityDetail from './entity-detail.component';
-import projectConfigEntityAdd from './entity-add.component';
+import projectConfigEntityAdd from './add-entity.component';
 
 class EntitiesController {
   constructor($uibModal, $location, $anchorScroll, ConfirmationService) {

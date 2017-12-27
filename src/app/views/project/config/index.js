@@ -6,6 +6,7 @@ import fimsProjectConfigEntities from './entities';
 import fimsProjectConfigLists from './lists';
 import fimsProjectConfigNavbar from './navbar.component';
 import Rule from "./Rule";
+import ProjectConfig from "./ProjectConfig";
 
 
 class ConfigController {
@@ -21,7 +22,7 @@ class ConfigController {
   $onInit() {
     this.showSave = false;
     this.addText = undefined;
-    this.config = Object.assign({}, this.currentProject.config);
+    this.config = new ProjectConfig(this.currentProject.config);
 
     //TODO remove these watches
     this.$scope.$watch(() => this.$state.current.name, () => (name) => {
@@ -47,7 +48,15 @@ class ConfigController {
   }
 
   handleUpdateLists(lists) {
+    console.log('updating lists');
     this.config.lists = lists;
+    this.showSave = !angular.equals(this.currentProject.config, this.config);
+  }
+
+  handleUpdateMetadata(config) {
+    delete config.entities;
+    delete config.lists;
+    Object.assign(this.config, config);
     this.showSave = !angular.equals(this.currentProject.config, this.config);
   }
 

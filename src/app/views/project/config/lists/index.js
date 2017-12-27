@@ -13,6 +13,10 @@ class ListsController {
     this.ConfirmationService = ConfirmationService;
   }
 
+  $onInit() {
+    this.lists = this.lists.slice();
+  }
+
   handleToggleEdit(index) {
     if (this.editList === index) {
       delete this.editList;
