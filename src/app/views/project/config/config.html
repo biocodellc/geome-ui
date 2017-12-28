@@ -1,5 +1,10 @@
 <div class="settings">
-    <div ui-view>
+    <div ui-view="detail"
+         config="$ctrl.config"
+         show-save="$ctrl.showSave"
+         on-save="$ctrl.handleOnSave()"
+         on-update-entity="$ctrl.handleUpdateEntity(alias, entity)"
+         on-update-list="$ctrl.handleUpdateList(alias, list)">
         <fims-project-config-navbar
                 show-save="$ctrl.showSave"
                 on-save="$ctrl.handleOnSave()"
@@ -17,25 +22,16 @@
 
         <div ui-view="entities"
              config="$ctrl.config"
+             entities="$ctrl.config.entities"
+             on-add-entity="$ctrl.handleAddEntity(entity)"
              on-update-entities="$ctrl.handleUpdateEntities(entities)"
              on-new-worksheet="$ctrl.handleNewWorksheet(sheetName)">
-        </div>
-
-        <div ui-view="add-entity"
-             entities="$ctrl.config.entities"
-             on-add-entity="$ctrl.handleAddEntity(entity)">
         </div>
 
         <div ui-view="lists"
              lists="$ctrl.config.lists"
              on-update-lists="$ctrl.handleUpdateLists(lists)"
-             on-add-list="$ctrl.handleAddList(list)">
+             on-add-list="$ctrl.handleOnAddList(list)">
         </div>
-
-        <div ui-view="add-list"
-             lists="$ctrl.config.lists"
-             on-add-list="$ctrl.handleAddList(list)">
-        </div>
-
     </div>
 </div>

@@ -1,11 +1,12 @@
 import angular from 'angular';
 
-import fimsRuleEditForm from './edit-rule-form.component';
+import fimsEditRuleForm from './edit-rule-form.component';
+import Rule from "../../Rule";
 
 
 class EditRuleController {
   $onInit() {
-    this.rule = Object.assign({}, this.rule);
+    this.rule = new Rule(this.rule);
   }
 
   $onDestroy() {
@@ -13,18 +14,19 @@ class EditRuleController {
   }
 }
 
-const fimsRuleEdit = {
+const fimsEditRule = {
   template: require('./edit-rule.html'),
   controller: EditRuleController,
   bindings: {
     rule: '<',
     lists: '<',
     columns: '<',
+    onClose: '&',
     onUpdate: '&',
   },
 };
 
 
-export default angular.module('fims.projectConfigRule', [ fimsRuleEditForm ])
-  .component('fimsEditRule', fimsRuleEdit)
+export default angular.module('fims.projectConfigRule', [ fimsEditRuleForm ])
+  .component('fimsEditRule', fimsEditRule)
   .name;

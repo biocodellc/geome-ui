@@ -4,16 +4,14 @@ import fimsConfigNavbar from '../navbar.component';
 import fimsConfigField from './edit-field.component';
 
 export class ListDetailController {
-  constructor($state, ProjectConfigService, ConfirmationService, alerts) {
+  constructor(ConfirmationService) {
     'ngInject'
-    this.$state = $state;
-    this.alerts = alerts;
-    this.ProjectConfigService = ProjectConfigService;
     this.ConfirmationService = ConfirmationService;
   }
 
   $onInit() {
-    if (this.$state.params.addField) {
+    this.list = Object.assign({}, this.list);
+    if (this.addField) {
       this.newField();
     }
   }
@@ -22,22 +20,9 @@ export class ListDetailController {
     this.newField();
   }
 
-  handleOnSave() {
-    this.alerts.removeTmp();
-    this.ProjectConfigService.save(this.config, this.currentProject.projectId)
-      .then((config) => {
-        this.currentProject.config = config;
-        this.alerts.success("Successfully updated project configuration!");
-      }).catch((response) => {
-      if (response.status === 400) {
-        response.data.errors.forEach(error => this.alerts.error(error));
-      }
-    });
-  }
-
   handleOnUpdate(index, field) {
     this.list.fields.splice(index, 1, field);
-    this.checkEdited();
+    this.onUpdateList({ alias: this.list.alias, list: this.list });
   }
 
   handleOnDelete(index) {
@@ -45,7 +30,7 @@ export class ListDetailController {
       `Are you sure you want to delete this field? <strong>This will only take effect for new data.</strong>`,
       () => {
         this.list.fields.splice(index, 1);
-        this.checkEdited();
+        this.onUpdateList({ alias: this.list.alias, list: this.list });
       });
   }
 
@@ -57,16 +42,9 @@ export class ListDetailController {
     }
   }
 
-  checkEdited() {
-    const oldList = this.currentProject.config.lists.find(l => l.alias === this.list.alias);
-    this.showSave = !angular.equals(oldList, this.list);
-  }
-
   add() {
     delete this.editField;
-    this.list.fields.push({
-      isNew: true,
-    });
+    this.newField();
   }
 
   newField() {
@@ -82,7 +60,10 @@ const fimsListDetail = {
   controller: ListDetailController,
   bindings: {
     list: '<',
-    currentProject: '<',
+    showSave: '<',
+    addField: '<',
+    onSave: '&',
+    onUpdateList: '&',
   },
 };
 

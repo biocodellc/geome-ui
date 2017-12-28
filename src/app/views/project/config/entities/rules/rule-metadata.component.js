@@ -1,7 +1,7 @@
 import angular from 'angular';
 
 const openTemplate =
-  `<label class='control-label col-xs-3 text-capitalize'>{{ key }}</label>
+  `<label class='control-label col-xs-3 text-capitalize'>{{ $ctrl.key }}</label>
      <div class='col-xs-9'>`;
 
 const closeTemplate = `</div>`;
@@ -9,26 +9,26 @@ const closeTemplate = `</div>`;
 const listTemplate =
   openTemplate +
   `<select
-      required name='{{key}}' class='form-control'
-      ng-options='list for list in lists'
-      ng-model='rule[key]'>
+      required name='{{$ctrl.key}}' class='form-control'
+      ng-options='list for list in $ctrl.lists'
+      ng-model='$ctrl.rule[$ctrl.key]'>
   </select>` +
   closeTemplate;
 
 const columnTemplate =
   openTemplate +
   `<select
-      required name='{{key}}' class='form-control'
-      ng-options='column for column in columns'
-      ng-model='rule[key]'>
+      required name='{{$ctrl.key}}' class='form-control'
+      ng-options='column for column in $ctrl.columns'
+      ng-model='$ctrl.rule[$ctrl.key]'>
   </select>` +
   closeTemplate;
 
 const columnsTemplate =
   openTemplate +
-  `<ui-select required name='{{key}}' ng-model='rule[key]' multiple close-on-select='false'>
+  `<ui-select required name='{{$ctrl.key}}' ng-model='$ctrl.rule[$ctrl.key]' multiple close-on-select='false'>
       <ui-select-match>{{ $item }}</ui-select-match>
-      <ui-select-choices position='down' repeat='column in columns | filter: $select.search'>
+      <ui-select-choices position='down' repeat='column in $ctrl.columns | filter: $select.search'>
           <div ng-bind-html='column | highlight: $select.search | trusted_html'></div>
       </ui-select-choices>
   </ui-select>` +
@@ -37,9 +37,9 @@ const columnsTemplate =
 const defaultTemplate =
   openTemplate +
   `<input
-      required name='{{key}}' class='form-control'
+      required name='{{$ctrl.key}}' class='form-control'
       type='text'
-      ng-model='rule[key]'/>` +
+      ng-model='$ctrl.rule[$ctrl.key]'/>` +
   closeTemplate;
 
 const fimsRuleMetadataList = {

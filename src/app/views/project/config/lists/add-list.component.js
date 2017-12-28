@@ -15,11 +15,11 @@ class AddListController {
       return;
     }
 
-    this.onAddList({
+    this.onAddList({ list: {
       fields: [],
       alias: this.alias,
       caseInsensitive: !this.caseSensitive,
-    });
+    }});
   }
 }
 

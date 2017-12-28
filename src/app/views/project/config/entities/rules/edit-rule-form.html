@@ -22,13 +22,13 @@
                 rule="$ctrl.rule">
         </fims-rule-metadata-list>
         <fims-rule-metadata-columns
-                ng-if="key.toLowerCase().includes('column') && Array.isArray(value)"
+                ng-if="key.toLowerCase().includes('column') && $ctrl.isArray(value)"
                 key="key"
                 columns="$ctrl.columns"
                 rule="$ctrl.rule">
         </fims-rule-metadata-columns>
         <fims-rule-metadata-column
-                ng-if="key.toLowerCase().includes('column') && !Array.isArray(value)"
+                ng-if="key.toLowerCase().includes('column') && !$ctrl.isArray(value)"
                 key="key"
                 columns="$ctrl.columns"
                 rule="$ctrl.rule">

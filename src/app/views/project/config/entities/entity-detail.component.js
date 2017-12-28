@@ -6,11 +6,10 @@ import entityRules from './rules/entity-rules.component';
 
 
 class EntityDetailController {
-  constructor($scope, $state, ProjectConfigService, alerts) {
+  constructor($scope, $state, alerts) {
     'ngInject'
     this.$scope = $scope;
     this.$state = $state;
-    this.ProjectConfigService = ProjectConfigService;
     this.alerts = alerts;
 
     $scope.$watch(() => $state.current.name, (name) => {
@@ -20,18 +19,11 @@ class EntityDetailController {
         this.addText = 'Rule';
       }
     });
-
-    $scope.$watch('vm.config', (newVal, oldVal) => {
-      if (!this.config.modified && !angular.equals(newVal, oldVal)) {
-        this.config.modified = true;
-      }
-    }, true);
   }
 
   $onInit() {
-    this.config = Object.assign({}, this.currentProject.config);
-    this.showSave = false;
     this.addText = undefined;
+    this.entity = angular.copy(this.entity); // angular.copy performs a deep copy
 
     if (this.$state.params.addAttribute) {
       this.newAttribute();
@@ -46,37 +38,19 @@ class EntityDetailController {
     }
   }
 
-  handleOnSave() {
-    this.alerts.removeTmp();
-    this.ProjectConfigService.save(this.config, this.currentProject.projectId)
-      .then((config) => {
-        this.currentProject.config = config;
-        this.alerts.success("Successfully updated project configuration!");
-      }).catch((response) => {
-      if (response.status === 400) {
-        response.data.errors.forEach(error => this.alerts.error(error));
-      }
-    });
-  }
-
-  handleDeleteAttribute(index) {
-    this.entity.attributes.splice(index, 1);
-    this.checkEdited();
-  }
-
   handleUpdateAttributes(attributes) {
     this.entity.attributes = attributes;
-    this.checkEdited();
+    this.onUpdateEntity({ alias: this.entity.conceptAlias, entity: this.entity });
   }
 
-  checkEdited() {
-    const oldEntity = this.currentProject.config.entities.find(e => e.conceptAlias === this.entity.conceptAlias);
-    this.showSave = !angular.equals(oldEntity, this.entity);
+  handleUpdateRules(rules) {
+    this.entity.rules = rules;
+    this.onUpdateEntity({ alias: this.entity.conceptAlias, entity: this.entity });
   }
 
   handleAddRule(rule) {
     const metadata = rule.metadata();
-    const invalidMetadata = Object.keys(metadata).map(k =>
+    const invalidMetadata = Object.keys(metadata).filter(k =>
       !metadata[ k ] || (Array.isArray(metadata[ k ]) && metadata[ k ].length === 0));
 
     if (invalidMetadata.length !== 0) {
@@ -86,14 +60,14 @@ class EntityDetailController {
       return;
     }
 
-    // TODO verify this works
-    if (this.entity.rules.includes(rule)) {
+    if (this.entity.rules.find(r => angular.equals(r, rule))) {
       this.alerts.error('That rule already exists.');
       return;
     }
 
     this.alerts.removeTmp();
     this.entity.rules.push(rule);
+    this.onUpdateEntity({ alias: this.entity.conceptAlias, entity: this.entity });
     this.$state.go('^');
   }
 
@@ -110,8 +84,13 @@ const fimsEntityDetail = {
   template: require('./entity-detail.html'),
   controller: EntityDetailController,
   bindings: {
+    config: '<',
     entity: '<',
+    addText: '<',
+    showSave: '<',
     currentProject: '<',
+    onSave: '&',
+    onUpdateEntity: '&',
   },
 };
 

@@ -3,14 +3,18 @@ import angular from "angular";
 import { RULE_LEVELS } from "../../Rule";
 import fimsRuleMetadata from './rule-metadata.component';
 
+
 class EditRuleFormController {
   $onInit() {
     this.levels = RULE_LEVELS;
   }
+
+  isArray(val) {
+    return Array.isArray(val);
+  }
 }
 
-
-const fimsProjectConfigRuleEditForm = {
+const fimsEditRuleForm = {
   template: require('./edit-rule-form.html'),
   controller: EditRuleFormController,
   bindings: {
@@ -21,5 +25,5 @@ const fimsProjectConfigRuleEditForm = {
 };
 
 export default angular.module('fims.projectConfigRuleEditForm', [ fimsRuleMetadata ])
-  .component('fimsProjectConfigRuleEditForm', fimsProjectConfigRuleEditForm)
+  .component('fimsEditRuleForm', fimsEditRuleForm)
   .name;

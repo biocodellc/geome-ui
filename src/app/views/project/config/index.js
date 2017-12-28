@@ -25,17 +25,18 @@ class ConfigController {
     this.config = new ProjectConfig(this.currentProject.config);
 
     //TODO remove these watches
-    this.$scope.$watch(() => this.$state.current.name, () => (name) => {
-      if (name === 'project.config.entities') {
-        this.addText = 'Entity';
-      } else if (name === 'project.config.lists') {
-        this.addText = 'List';
+    this.$scope.$watch(() => this.$state.current.name, (name) => {
+      switch(name) {
+        case 'project.config.entities':
+          this.addText = 'Entity';
+          break;
+        case 'project.config.lists':
+          this.addText = 'List';
+          break;
+        default:
+          this.addText = undefined;
       }
     });
-    //
-    // this.$scope.$watch('vm.config', () => {
-    //   this.showSave = !angular.equals(this.currentProject.config, this.config);
-    // }, true);
   }
 
   $onChanges(changesObj) {
@@ -47,9 +48,20 @@ class ConfigController {
     this.showSave = !angular.equals(this.currentProject.config, this.config);
   }
 
+  handleUpdateEntity(alias, entity) {
+    const i = this.config.entities.findIndex(e => e.conceptAlias === alias);
+    this.config.entities.splice(i, 1, entity);
+    this.showSave = !angular.equals(this.currentProject.config, this.config);
+  }
+
   handleUpdateLists(lists) {
-    console.log('updating lists');
     this.config.lists = lists;
+    this.showSave = !angular.equals(this.currentProject.config, this.config);
+  }
+
+  handleUpdateList(alias, list) {
+    const i = this.config.lists.findIndex(l => l.alias === alias);
+    this.config.lists.splice(i, 1, list);
     this.showSave = !angular.equals(this.currentProject.config, this.config);
   }
 
@@ -108,8 +120,10 @@ class ConfigController {
   }
 
   handleOnAddList(list) {
-    this.config.lists.push(list);
-    this.$state.go('^.detail', { alias: list.alias, addField: true });
+    const lists = this.config.lists.slice();
+    lists.push(list);
+    this.handleUpdateLists(lists);
+    this.$state.go('^.detail', { alias: list.alias, list: list, addField: true });
   }
 
 }

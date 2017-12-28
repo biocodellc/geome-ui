@@ -1,7 +1,7 @@
 import angular from 'angular';
 
 import fimsEditRule from './rule.component';
-import fimsRuleAdd from './rule-add.component';
+import fimsRuleAdd from './add-rule.component';
 
 
 class EntityRulesController {
@@ -14,6 +14,12 @@ class EntityRulesController {
     if (changesObj.rules) {
       this.rules = this.rules.slice();
     }
+  }
+
+  handleOnUpdate(index, rule) {
+    this.rules.splice(index, 1, rule);
+    this.onUpdateRules({ rules: this.rules });
+
   }
 
   handleOnDelete(index) {
@@ -31,6 +37,10 @@ class EntityRulesController {
     } else {
       this.editRule = index;
     }
+  }
+
+  isArray(val) {
+    return Array.isArray(val);
   }
 }
 

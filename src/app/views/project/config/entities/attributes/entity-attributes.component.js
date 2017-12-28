@@ -84,7 +84,6 @@ const fimsEntityAttributes = {
   bindings: {
     attributes: '<',
     currentProject: '<',
-    onDeleteAttribute: '&',
     onUpdateAttributes: '&',
   },
 };

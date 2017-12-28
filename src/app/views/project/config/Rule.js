@@ -4,7 +4,6 @@ export default class Rule {
     this.level = 'WARNING';
 
     Object.assign(this, props);
-
   }
 
   metadata() {

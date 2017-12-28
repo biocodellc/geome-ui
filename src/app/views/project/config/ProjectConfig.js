@@ -4,6 +4,9 @@ export default class ProjectConfig {
   constructor(config) {
     Object.assign(this, config);
 
+    this.entities = this.entities.slice();
+    this.lists = this.lists.slice();
+
     this.entities.forEach((e) => {
       e.rules = e.rules.map(r => new Rule(r));
     });

@@ -19,14 +19,14 @@
                 <a href="#" class="delete" ng-click="$ctrl.handleOnDelete($index)"><i
                         class="fa fa-trash text-danger fa-fw"></i></a>
             </td>
-            <td ng-click="$ctrl.handleToggleEdit($index)">{{ $ctrl.rule.name }}</td>
-            <td ng-click="$ctrl.handleToggleEdit($index)">{{ $ctrl.rule.level }}</td>
+            <td ng-click="$ctrl.handleToggleEdit($index)">{{ rule.name }}</td>
+            <td ng-click="$ctrl.handleToggleEdit($index)">{{ rule.level }}</td>
             <td ng-click="$ctrl.handleToggleEdit($index)">
                 <ul class="list-inline">
-                    <li ng-repeat="(key, value) in $ctrl.rule.metadata()">
+                    <li ng-repeat="(key, value) in rule.metadata()">
                         <strong class="text-capitalize">{{ key }}:</strong>
-                        <span ng-if="Array.isArray(value)">{{ value.join(', ') }}</span>
-                        <span ng-if="!Array.isArray(value)">{{ value }}</span>
+                        <span ng-if="$ctrl.isArray(value)">{{ value.join(', ') }}</span>
+                        <span ng-if="!$ctrl.isArray(value)">{{ value }}</span>
                     </li>
                 </ul>
             </td>
@@ -35,11 +35,11 @@
 </table>
 
 <script type="text/ng-template" id="editRule.html">
-    <fims-edit-rule>
+    <fims-edit-rule
         rule="rule"
         lists="$ctrl.lists"
         columns="$ctrl.columns"
-        on-update="$ctrl.handleOnUpdate(rule)"
+        on-update="$ctrl.handleOnUpdate($index, rule)"
         on-close="$ctrl.handleToggleEdit($index)">
     </fims-edit-rule>
 </script>
