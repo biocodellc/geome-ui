@@ -5,7 +5,6 @@ function getStates() {
       config: {
         url: '/config',
         redirectTo: 'project.config.entities',
-        // onExit: configExit,
         views: {
           "details": {
             component: 'fimsProjectConfig',

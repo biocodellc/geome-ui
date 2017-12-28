@@ -1,6 +1,7 @@
 import angular from 'angular';
 
 import routing from "./routes";
+import confirmExit from './confirmExit.hook';
 import fimsProjectConfigMetadata from './metadata';
 import fimsProjectConfigEntities from './entities';
 import fimsProjectConfigLists from './lists';
@@ -8,6 +9,8 @@ import fimsProjectConfigNavbar from './navbar.component';
 import Rule from "./Rule";
 import ProjectConfig from "./ProjectConfig";
 
+
+// TODO abstract out another container so se don't have this weird ui-view thing going on?
 
 class ConfigController {
   constructor($scope, $state, $uibModal, ProjectConfigService, alerts) {
@@ -23,10 +26,15 @@ class ConfigController {
     this.showSave = false;
     this.addText = undefined;
     this.config = new ProjectConfig(this.currentProject.config);
+    this.projectConfigState = this.$state.get('project.config');
+
+    if (!this.projectConfigState.data) {
+      this.projectConfigState.data = {};
+    }
 
     //TODO remove these watches
     this.$scope.$watch(() => this.$state.current.name, (name) => {
-      switch(name) {
+      switch (name) {
         case 'project.config.entities':
           this.addText = 'Entity';
           break;
@@ -39,30 +47,38 @@ class ConfigController {
     });
   }
 
-  $onChanges(changesObj) {
-
+  updateStateDate() {
+    if (this.showSave) {
+      this.projectConfigState.data.config = this.config;
+    } else {
+      delete this.projectConfigState.data.config;
+    }
   }
 
   handleUpdateEntities(entities) {
     this.config.entities = entities;
     this.showSave = !angular.equals(this.currentProject.config, this.config);
+    this.updateStateDate();
   }
 
   handleUpdateEntity(alias, entity) {
     const i = this.config.entities.findIndex(e => e.conceptAlias === alias);
     this.config.entities.splice(i, 1, entity);
     this.showSave = !angular.equals(this.currentProject.config, this.config);
+    this.updateStateDate();
   }
 
   handleUpdateLists(lists) {
     this.config.lists = lists;
     this.showSave = !angular.equals(this.currentProject.config, this.config);
+    this.updateStateDate();
   }
 
   handleUpdateList(alias, list) {
     const i = this.config.lists.findIndex(l => l.alias === alias);
     this.config.lists.splice(i, 1, list);
     this.showSave = !angular.equals(this.currentProject.config, this.config);
+    this.updateStateDate();
   }
 
   handleUpdateMetadata(config) {
@@ -70,11 +86,13 @@ class ConfigController {
     delete config.lists;
     Object.assign(this.config, config);
     this.showSave = !angular.equals(this.currentProject.config, this.config);
+    this.updateStateDate();
   }
 
   handleNewWorksheet(sheetName) {
     this.config.addWorksheet(sheetName);
     this.showSave = true;
+    this.updateStateDate();
   }
 
   handleOnAdd() {
@@ -142,10 +160,11 @@ const dependencies = [
   fimsProjectConfigMetadata,
   fimsProjectConfigEntities,
   fimsProjectConfigLists,
-  fimsProjectConfigNavbar
+  fimsProjectConfigNavbar,
 ];
 
 export default angular.module('fims.projectConfig', dependencies)
   .run(routing)
+  .run(confirmExit)
   .component('fimsProjectConfig', fimsProjectConfig)
   .name;

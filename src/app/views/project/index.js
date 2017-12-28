@@ -12,6 +12,7 @@ import exceptions from '../../components/exceptions';
 
 import routing from "./project.routes";
 import requiresProject from './projectRequired.hook';
+import projectAdmin from './projectAdmin.hook'
 import run from "./projects.run";
 import config from "./projects.config";
 import Projects from "./project.service";
@@ -73,12 +74,12 @@ const dependencies = [
   fimsProjectConfig,
 ];
 
-//TODO finish the config dir refactor
 export default angular.module('fims.project', dependencies)
   .config(config)
   .run(run)
   .run(routing) // need to declare in run block. otherwise $transitions is not available
   .run(requiresProject)
+  .run(projectAdmin)
   .component('fimsProject', fimsProject)
   .service('Projects', Projects)
   .service('ProjectFactory', ProjectFactory)

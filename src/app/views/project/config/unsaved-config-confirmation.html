@@ -1,0 +1,15 @@
+<div class="panel-danger">
+    <div class="modal-header panel-heading text-center">
+        <h3 class="modal-title">Warning! Unsaved Changes</h3>
+    </div>
+    <div class="modal-body">
+        Are you sure you want to leave this page? <strong>Any unsaved changes to the project config will be
+        lost.</strong>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-danger" type="button" ng-click="vm.continue(false)">Continue</button>
+        <button class="btn btn-success" type="button" ng-click="vm.continue(true)">Save and Continue</button>
+        <button class="btn btn-default" type="button" ng-click="vm.cancel()">Cancel</button>
+    </div>
+</div>
