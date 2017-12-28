@@ -47,7 +47,7 @@ class ConfigController {
     });
   }
 
-  updateStateDate() {
+  updateStateData() {
     if (this.showSave) {
       this.projectConfigState.data.config = this.config;
     } else {
@@ -58,27 +58,27 @@ class ConfigController {
   handleUpdateEntities(entities) {
     this.config.entities = entities;
     this.showSave = !angular.equals(this.currentProject.config, this.config);
-    this.updateStateDate();
+    this.updateStateData();
   }
 
   handleUpdateEntity(alias, entity) {
     const i = this.config.entities.findIndex(e => e.conceptAlias === alias);
     this.config.entities.splice(i, 1, entity);
     this.showSave = !angular.equals(this.currentProject.config, this.config);
-    this.updateStateDate();
+    this.updateStateData();
   }
 
   handleUpdateLists(lists) {
     this.config.lists = lists;
     this.showSave = !angular.equals(this.currentProject.config, this.config);
-    this.updateStateDate();
+    this.updateStateData();
   }
 
   handleUpdateList(alias, list) {
     const i = this.config.lists.findIndex(l => l.alias === alias);
     this.config.lists.splice(i, 1, list);
     this.showSave = !angular.equals(this.currentProject.config, this.config);
-    this.updateStateDate();
+    this.updateStateData();
   }
 
   handleUpdateMetadata(config) {
@@ -86,13 +86,13 @@ class ConfigController {
     delete config.lists;
     Object.assign(this.config, config);
     this.showSave = !angular.equals(this.currentProject.config, this.config);
-    this.updateStateDate();
+    this.updateStateData();
   }
 
   handleNewWorksheet(sheetName) {
     this.config.addWorksheet(sheetName);
     this.showSave = true;
-    this.updateStateDate();
+    this.updateStateData();
   }
 
   handleOnAdd() {
@@ -109,6 +109,7 @@ class ConfigController {
       .then((config) => {
         this.currentProject.config = config;
         this.alerts.success("Successfully updated project configuration!");
+        this.updateStateData();
       }).catch((response) => {
       if (response.status === 400) {
         response.data.errors.forEach(error => this.alerts.error(error));

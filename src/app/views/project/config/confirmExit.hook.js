@@ -28,9 +28,12 @@ export default ($transitions, $state, $uibModal, Projects, ProjectConfigService,
         if (shouldSave) {
           return ProjectConfigService.save(state.data.config, Projects.currentProject().projectId)
             .then((config) => {
-              // TODO this doesn't appear to be returning the correct config object
-              console.log(config);
               Projects.currentProject().config = config;
+              // need to reload here so that project.config currentProject resolvable
+              // is reloaded. otherwise, when transitioning to another project state
+              // such as settings, the currentProject resolvable is cached and the latest
+              // config will not be displayed when going back to a project config state
+              $state.reload();
               alerts.success("Successfully updated project configuration!")
             })
             .catch((response) => {
