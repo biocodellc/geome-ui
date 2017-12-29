@@ -3,11 +3,10 @@ import ProjectConfig from "./ProjectConfig";
 
 
 class ConfigController {
-  constructor($state, ProjectConfigService, alerts) {
+  constructor($state, ProjectConfigService) {
     'ngInject'
     this.$state = $state;
     this.ProjectConfigService = ProjectConfigService;
-    this.alerts = alerts;
   }
 
   $onInit() {
@@ -69,15 +68,15 @@ class ConfigController {
   }
 
   handleOnSave() {
-    this.alerts.removeTmp();
+    angular.alerts.removeTmp();
     this.ProjectConfigService.save(this.config, this.currentProject.projectId)
       .then((config) => {
         this.currentProject.config = config;
-        this.alerts.success("Successfully updated project configuration!");
+        angular.alerts.success("Successfully updated project configuration!");
         this.updateStateData();
       }).catch((response) => {
       if (response.status === 400) {
-        response.data.errors.forEach(error => this.alerts.error(error));
+        response.data.errors.forEach(error => angular.alerts.error(error));
       }
     });
   }

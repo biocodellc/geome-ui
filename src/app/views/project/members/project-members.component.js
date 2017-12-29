@@ -1,12 +1,14 @@
+import angular from 'angular';
+
+
 class ProjectMembersController {
-  constructor($state, $uibModal, ProjectMembersService, UserService, alerts) {
+  constructor($state, $uibModal, ProjectMembersService, UserService) {
     "ngInject";
 
     this.$uibModal = $uibModal;
     this.$state = $state;
     this.ProjectMembersService = ProjectMembersService;
     this.UserService = UserService;
-    this.alerts = alerts;
   }
 
   $onInit() {
@@ -16,13 +18,13 @@ class ProjectMembersController {
 
   handleInviteUser(email) {
     if (this.isMemberEmail(email)) {
-      this.alerts.error('A user with the email is already a member of this project.');
+      angular.alerts.error('A user with the email is already a member of this project.');
       return;
     }
 
-    this.alerts.removeTmp();
+    angular.alerts.removeTmp();
     this.UserService.invite(email, this.currentProject.projectId)
-      .then(() => this.alerts.success(email + ' has been sent an invitation to create an account.'));
+      .then(() => angular.alerts.success(email + ' has been sent an invitation to create an account.'));
 
   }
 
@@ -31,11 +33,11 @@ class ProjectMembersController {
   }
 
   handleAddMember(username) {
-    this.alerts.removeTmp();
+    angular.alerts.removeTmp();
     this.ProjectMembersService.add(this.username)
       .then(() => {
         this.username = undefined;
-        this.alerts.success("Successfully added user");
+        angular.alerts.success("Successfully added user");
         this.$state.reload();
       });
   }

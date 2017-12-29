@@ -1,24 +1,23 @@
 import angular from "angular";
 import { FimsExpeditionController } from "./FimsExpeditionController";
 import dataService from '../../services/data.service';
+import expeditionService from '../../services/expeditions.service';
 
 export class ExpeditionController extends FimsExpeditionController {
-  constructor($state, ExpeditionService, DataService, alerts, $uibModal) {
+  constructor($state, ExpeditionService, DataService, $uibModal) {
     'ngInject';
     super($uibModal, $state, ExpeditionService, DataService);
-
-    this.alerts = alerts;
   }
 
   handleExpeditionUpdate(expedition) {
     if (!angular.equals(this.expedition, expedition)) {
       this.ExpeditionService.update(expedition)
         .then(() => {
-          this.alerts.success("Successfully updated!");
+          angular.alerts.success("Successfully updated!");
           this.$state.reload();
         });
     } else {
-      this.alerts.success("Successfully updated!");
+      angular.alerts.success("Successfully updated!");
     }
   }
 
@@ -38,6 +37,6 @@ const fimsExpedition = {
   },
 };
 
-export default angular.module('fims.fimsExpedition', [ dataService ])
+export default angular.module('fims.fimsExpedition', [ dataService, expeditionService ])
   .component('fimsExpedition', fimsExpedition)
   .name;

@@ -8,7 +8,7 @@ class Message {
   }
 }
 
-export default class Alerts {
+export default class {
   constructor() {
     this.alerts = [];
   }

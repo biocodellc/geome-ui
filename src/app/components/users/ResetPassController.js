@@ -1,11 +1,13 @@
+import angular from 'angular';
+
+
 class ResetPassController {
-  constructor($location, $sce, UserService, alerts) {
+  constructor($location, $sce, UserService) {
     this.resetToken = $location.search()[ 'resetToken' ];
     this.password = null;
 
     this.$sce = $sce;
     this.UserService = UserService;
-    this.alerts = alerts;
   }
 
   resetPassword() {
@@ -14,7 +16,7 @@ class ResetPassController {
       this.UserService.resetPassword(this.password, this.resetToken)
         .then(
           function () {
-            this.alerts.success(this.$sce.trustAsHtml("Successfully reset your password. Click <a ui-sref='login' href='/login' class='alert-link'>here</a> to login."));
+            angular.alerts.success(this.$sce.trustAsHtml("Successfully reset your password. Click <a ui-sref='login' href='/login' class='alert-link'>here</a> to login."));
           });
     }
   }

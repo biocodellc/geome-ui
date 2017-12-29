@@ -24,7 +24,7 @@ import templates from './views/templates';
 import project, { CACHED_PROJECT_EVENT } from './views/project';
 import projectsService from './services/projects.service';
 
-import alerts from './components/alerts';
+import app from './app.component';
 import auth from './components/auth';
 import expeditions from './views/expeditions/index';
 import header from './components/header';
@@ -32,11 +32,11 @@ import navigation from './components/navigation';
 // import lookup from './components/lookup';
 import modals from './components/modals';
 import query from './components/query';
-import storage from './components/storage';
 import users from './components/users';
 // import validation from './components/validation';
 
 import Exceptions from './utils/exceptions';
+import Alerts from "./utils/alerts";
 
 const dependencies = [
   uirouter,
@@ -46,7 +46,6 @@ const dependencies = [
   showErrors,
   trustedHtml,
   bootstrap,
-  alerts,
   projectsService,
   header,
   navigation,
@@ -60,74 +59,13 @@ const dependencies = [
   project,
   users,
   modals,
-  storage,
   // lookup,
 ];
 
-class AppCtrl {
-  constructor($scope, $state, UserService, ProjectService, alerts) {
-    'ngInject';
-
-    // attach global objects for easy access throughout app
-    // TODO refactor alerts to utils, removing angular module
-    // TODO not sure how I feel about this
-    const e = new Exceptions(alerts);
-    angular.catcher = e.catcher.bind(e);
-
-    this.currentUser = undefined;
-    this.currentProject = undefined;
-
-    this.ProjectService = ProjectService;
-    this.UserService = UserService;
-    this.$state = $state;
-    this.$scope = $scope;
-
-    // TODO remove this
-    $scope.$on("$logoutEvent", () => {
-      this.currentUser = undefined;
-      if (this.currentProject && this.currentProject.public === false) {
-        ProjectService.set(undefined);
-      }
-    });
-
-    // TODO remove this
-    $scope.$on("$userChangeEvent", (user) => {
-      this.currentUser = user;
-    });
-
-    $scope.$watch(
-      () => UserService.currentUser,
-      (user) => {
-        this.currentUser = user;
-      },
-    );
-  }
-
-  $onInit() {
-    // update if project has been loaded from session storage
-    this.$scope.$on(CACHED_PROJECT_EVENT, (event, project) => {
-      this.currentProject = project;
-    });
-  }
-
-  handleProjectChange(project) {
-    this.ProjectService.setCurrentProject(project).then((p) => {
-      this.currentProject = p;
-      this.$state.reload();
-    });
-  }
-
-  signout() {
-    this.currentUser = undefined;
-    this.UserService.signout();
-  }
-}
-
-const app = {
-  template: require('./app.html'),
-  controller: AppCtrl,
-};
-
+// attach global objects for easy access throughout app
+angular.alerts = new Alerts();
+const e = new Exceptions();
+angular.catcher = e.catcher.bind(e);
 
 export default angular.module('biscicolApp', dependencies)
   .component('app', app)

@@ -1,12 +1,17 @@
+import angular from 'angular';
+
+
 //TODO split a service out of this class
 const DEFAULT_FILTER = {
   column: null,
   value: null,
 };
 
-class QueryController {
+export default class QueryController {
 
-  constructor($scope, $http, LoadingModal, FailModalFactory, ProjectService, ExpeditionService, AuthService, FileService, alerts, REST_ROOT) {
+  constructor($scope, $http, LoadingModal, FailModalFactory, ProjectService, ExpeditionService, AuthService, FileService, REST_ROOT) {
+    'ngInject';
+
     this.error = null;
     this.moreSearchOptions = false;
     this.filterOptions = [];
@@ -24,27 +29,26 @@ class QueryController {
 
     this.$http = $http;
     this.LoadingModal = LoadingModal;
-    this.alerts = alerts;
     this.FailModalFactory = FailModalFactory;
     this.ExpeditionService = ExpeditionService;
     this.AuthService = AuthService;
     this.FileService = FileService;
     this.REST_ROOT = REST_ROOT;
 
-    $scope.$watch("querythis.project", (newVal, oldVal) => {
+    $scope.$watch("queryVm.project", (newVal, oldVal) => {
       if (newVal && newVal !== oldVal) {
         this.getExpeditions();
         this.getFilterOptions();
       }
     });
 
-    $scope.$watchCollection("querythis.selectedExpeditions", (newVal, oldVal) => {
+    $scope.$watchCollection("queryVm.selectedExpeditions", (newVal, oldVal) => {
       if (newVal && newVal != oldVal) {
         this.updateQueryString();
       }
     });
 
-    $scope.$watch("querythis.filters", (newVal, oldVal) => {
+    $scope.$watch("$ctrl.filters", (newVal, oldVal) => {
       if (newVal && newVal != oldVal) {
         this.updateQueryString();
       }
@@ -99,7 +103,7 @@ class QueryController {
 
     this.$http.post(this.REST_ROOT + "projects/query/excel", data).then((response) => {
       if (response.status === 204) {
-        this.alerts.info("No resources found for query");
+        angular.alerts.info("No resources found for query");
         return;
       }
 
@@ -118,7 +122,7 @@ class QueryController {
 
     this.$http.post(this.REST_ROOT + "projects/query/kml", data).then((response) => {
       if (response.status === 204) {
-        this.alerts.info("No resources found for query");
+        angular.alerts.info("No resources found for query");
         return;
       }
 
@@ -137,7 +141,7 @@ class QueryController {
 
     this.$http.post(this.REST_ROOT + "projects/query/csv", data).then((response) => {
       if (response.status === 204) {
-        this.alerts.info("No resources found for query");
+        angular.alerts.info("No resources found for query");
         return;
       }
 
@@ -212,17 +216,3 @@ class QueryController {
     this.queryString = q;
   }
 }
-
-QueryController.$inject = [
-  '$scope',
-  '$http',
-  'LoadingModal',
-  'FailModalFactory',
-  'ProjectService',
-  'ExpeditionService',
-  'AuthService',
-  'FileService',
-  'REST_ROOT',
-];
-
-export default QueryController;

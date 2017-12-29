@@ -1,15 +1,13 @@
-class AlertController {
-  constructor(alerts) {
-    'ngInject';
-    this.alerts = alerts;
-  }
+import angular from 'angular';
 
+
+class AlertController {
   getAlerts() {
-    return this.alerts.getAlerts();
+    return angular.alerts.getAlerts();
   }
 
   remove(alert) {
-    this.alerts.remove(alert);
+    angular.alerts.remove(alert);
   }
 }
 

@@ -1,7 +1,11 @@
-import CLIENT_ID from './clientId';
+import angular from "angular";
+
+import storageService from './storage.service';
+import CLIENT_ID from '../components/auth/clientId';
+
 
 //TODO cleanup this service
-export default class AuthService {
+class AuthService {
   constructor($rootScope, $http, $timeout, StorageService, AUTH_TIMEOUT, REST_ROOT, APP_ROOT) {
     'ngInject';
 
@@ -106,3 +110,7 @@ export default class AuthService {
     });
   }
 }
+
+export default angular.module('fims.authService', [ storageService ])
+  .service('AuthService', AuthService)
+  .name;

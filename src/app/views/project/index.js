@@ -9,6 +9,8 @@ import modal from 'angular-ui-bootstrap/src/modal';
 import 'angular-drag-and-drop-lists';
 import router from '../../utils/router';
 import projectsService from '../../services/projects.service';
+import storageService from '../../services/storage.service';
+import expeditionService from '../../services/expeditions.service';
 
 import routing from "./project.routes";
 import requiresProject from './projectRequired.hook';
@@ -32,6 +34,8 @@ const dependencies = [
   sanitize,
   'dndLists',
   projectsService,
+  expeditionService,
+  storageService,
   fimsProjectSettings,
   fimsProjectExpeditions,
   fimsProjectMembers,

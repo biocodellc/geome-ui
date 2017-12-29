@@ -1,12 +1,11 @@
-export default class {
-  constructor(alerts) {
-    this.alerts = alerts;
-  }
+import angular from 'angular';
 
+
+export default class {
   catcher(defaultMsg) {
     return (response) => {
       console.log(response);
-      this.alerts.error(response.data.error || response.data.usrMessage || defaultMsg);
+      angular.alerts.error(response.data.error || response.data.usrMessage || defaultMsg);
       return Promise.reject(response);
     }
   }

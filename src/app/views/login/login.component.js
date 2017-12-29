@@ -1,11 +1,13 @@
+import angular from 'angular';
+
+
 class LoginController {
-  constructor($state, UserService, LoadingModal, alerts) {
+  constructor($state, UserService, LoadingModal) {
     'ngInject';
 
     this.state = $state;
     this.userService = UserService;
     this.loadingModal = LoadingModal;
-    this.alerts = alerts;
   }
 
   $onInit() {
@@ -19,12 +21,12 @@ class LoginController {
   resetPassword() {
     this.userService.sendResetPasswordToken(this.credentials.username)
       .then(() =>
-        this.alerts.success("Successfully sent reset password token. Check your email for further instructions."))
+        angular.alerts.success("Successfully sent reset password token. Check your email for further instructions."))
       .catch(angular.catcher("Error sending reset password token"));
   }
 
   submit() {
-    this.alerts.removeTmp();
+    angular.alerts.removeTmp();
     this.loadingModal.open();
     this.userService.signIn(this.credentials.username, this.credentials.password)
       .then(() => {

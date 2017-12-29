@@ -1,4 +1,4 @@
-class AuthInterceptor {
+export default class AuthInterceptor {
   constructor($injector, $templateCache) {
     'ngInject';
 
@@ -45,5 +45,3 @@ class AuthInterceptor {
     return Promise.reject(response);
   };
 }
-
-export default AuthInterceptor;

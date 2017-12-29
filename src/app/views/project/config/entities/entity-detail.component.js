@@ -6,11 +6,10 @@ import entityRules from './rules/entity-rules.component';
 
 
 class EntityDetailController {
-  constructor($scope, $state, alerts) {
+  constructor($scope, $state) {
     'ngInject'
     this.$scope = $scope;
     this.$state = $state;
-    this.alerts = alerts;
 
     $scope.$watch(() => $state.current.name, (name) => {
       if (name === 'project.config.entities.detail.attributes') {
@@ -56,16 +55,16 @@ class EntityDetailController {
     if (invalidMetadata.length !== 0) {
       const msg = invalidMetadata.length > 1 ? ' are all required' : ' is required';
 
-      this.alerts.error(invalidMetadata.join(', ') + msg);
+      angular.alerts.error(invalidMetadata.join(', ') + msg);
       return;
     }
 
     if (this.entity.rules.find(r => angular.equals(r, rule))) {
-      this.alerts.error('That rule already exists.');
+      angular.alerts.error('That rule already exists.');
       return;
     }
 
-    this.alerts.removeTmp();
+    angular.alerts.removeTmp();
     this.entity.rules.push(rule);
     this.onUpdateEntity({ alias: this.entity.conceptAlias, entity: this.entity });
     this.$state.go('^');

@@ -1,23 +1,22 @@
 import angular from "angular";
 
 class ProjectCtrl {
-  constructor($state, ProjectService, alerts) {
+  constructor($state, ProjectService) {
     'ngInject';
     this.$state = $state;
     this.ProjectService = ProjectService;
-    this.alerts = alerts;
   }
 
   handleProjectUpdate(project) {
     if (!angular.equals(this.currentProject, project)) {
       this.ProjectService.update(project)
         .then(({ data }) => {
-          this.alerts.success("Successfully updated!");
+          angular.alerts.success("Successfully updated!");
           return this.ProjectService.setCurrentProject(data);
         })
         .then(() => this.$state.reload());
     } else {
-      this.alerts.success("Successfully updated!");
+      angular.alerts.success("Successfully updated!");
     }
   }
 

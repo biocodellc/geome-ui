@@ -1,8 +1,5 @@
 import QueryController from "./query.controller";
 
-const routing = (routerHelper) => {
-  routerHelper.configureStates(getStates());
-};
 
 function getStates() {
   return [
@@ -19,6 +16,8 @@ function getStates() {
   ];
 }
 
-routing.$inject = ['routerHelper'];
+export default (routerHelper) => {
+  'ngInject'
 
-export default routing;
+  routerHelper.configureStates(getStates());
+};

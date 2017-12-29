@@ -1,5 +1,7 @@
 import angular from "angular";
 
+import storageService from './storage.service';
+
 class ProjectService {
   constructor($rootScope, $cacheFactory, $http, $timeout, StorageService, ProjectConfigService, REST_ROOT) {
     'ngInject';
@@ -137,6 +139,6 @@ class ProjectService {
 
 }
 
-export default angular.module('fims.projectsService', [])
+export default angular.module('fims.projectsService', [ storageService ])
   .service('ProjectService', ProjectService)
   .name;

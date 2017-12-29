@@ -1,7 +1,8 @@
+import angular from 'angular';
 import User from './User';
 
 export default class UserService {
-  constructor($rootScope, $http, $timeout, $state, alerts, AuthService, REST_ROOT) {
+  constructor($rootScope, $http, $timeout, $state, AuthService, REST_ROOT) {
     'ngInject';
 
     this._loading = false;
@@ -11,7 +12,6 @@ export default class UserService {
     this.$http = $http;
     this.$timeout = $timeout;
     this.$state = $state;
-    this.alerts = alerts;
     this.AuthService = AuthService;
     this.REST_ROOT = REST_ROOT;
 
@@ -145,7 +145,7 @@ export default class UserService {
 
   _authTimeout() {
     this.signout();
-    this.alerts.info("You have been signed out due to inactivity.");
+    angular.alerts.info("You have been signed out due to inactivity.");
     this.$state.go("home");
   }
 }

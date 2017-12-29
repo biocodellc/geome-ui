@@ -1,8 +1,7 @@
 import angular from 'angular';
 
 //TODO fix circular dependency auth -> user -> auth
-// import auth from '../auth';
-import alerts from '../alerts';
+import authService from '../../services/auth.service';
 import compareTo from '../../directives/compareTo.directive';
 
 import routing from "./users.routes";
@@ -10,12 +9,11 @@ import UserService from "./UserService";
 
 
 function run(UserService) {
+  'ngInject';
   UserService.loadUserFromSession();
 }
 
-run.$inject = [ 'UserService' ];
-
-export default angular.module('fims.users', [ alerts, compareTo ])
+export default angular.module('fims.users', [ compareTo, authService ])
   .run(run)
   .run(routing)
   .service('UserService', UserService)

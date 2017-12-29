@@ -2,11 +2,6 @@ import ProfileController from "./ProfileController";
 import NewUserController from "./NewUserController";
 import ResetPassController from "./ResetPassController";
 
-const routing = (routerHelper) => {
-  routerHelper.configureStates(getStates());
-};
-
-
 function getStates() {
   return [
     {
@@ -22,7 +17,7 @@ function getStates() {
       state: 'reset',
       config: {
         url: "/reset",
-        template: require('./reset.html')
+        template: require('./reset.html'),
       },
     },
     {
@@ -47,6 +42,8 @@ function getStates() {
   ];
 }
 
-routing.$inject = [ 'routerHelper' ];
+export default (routerHelper) => {
+  'ngInject';
 
-export default routing;
+  routerHelper.configureStates(getStates());
+};

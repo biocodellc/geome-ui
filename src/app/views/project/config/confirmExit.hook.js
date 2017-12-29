@@ -1,3 +1,6 @@
+import angular from 'angular';
+
+
 function configConfirmationController($uibModalInstance) {
   'ngInject';
   var vm = this;
@@ -5,7 +8,7 @@ function configConfirmationController($uibModalInstance) {
   vm.cancel = $uibModalInstance.dismiss;
 }
 
-export default ($transitions, $state, $uibModal, ProjectService, ProjectConfigService, alerts) => {
+export default ($transitions, $state, $uibModal, ProjectService, ProjectConfigService) => {
   'ngInject';
 
   // If there are unsaved changes to the project configuration
@@ -34,13 +37,13 @@ export default ($transitions, $state, $uibModal, ProjectService, ProjectConfigSe
               // such as settings, the currentProject resolvable is cached and the latest
               // config will not be displayed when going back to a project config state
               $state.reload();
-              alerts.success("Successfully updated project configuration!")
+              angular.alerts.success("Successfully updated project configuration!")
             })
             .catch((response) => {
               if (response.status === 400) {
-                response.data.errors.forEach(error => this.alerts.error(error));
+                response.data.errors.forEach(error => angular.alerts.error(error));
               } else {
-                this.alerts.error("Error saving project configuration!");
+                angular.alerts.error("Error saving project configuration!");
               }
 
               return false;

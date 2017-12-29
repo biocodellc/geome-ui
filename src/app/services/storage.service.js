@@ -30,7 +30,7 @@ class StorageService {
 
 }
 
-StorageService.$inject = [ '$window' ];
-
-export default StorageService;
+export default angular.module('fims.storageService', [])
+  .service('StorageService', StorageService)
+  .name;
 

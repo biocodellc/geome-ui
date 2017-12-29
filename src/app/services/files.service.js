@@ -1,5 +1,5 @@
 import angular from "angular";
-import authService from '../components/auth/auth.service';
+import authService from './auth.service';
 
 
 class FileService {
@@ -29,7 +29,6 @@ class FileService {
 
 }
 
-// export default angular.module('fims.files', [ authService ])
-export default angular.module('fims.files', [ ])
+export default angular.module('fims.fileService', [ authService ])
   .service('FileService', FileService)
   .name;
