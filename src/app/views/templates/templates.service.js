@@ -1,8 +1,13 @@
+import angular from 'angular';
+import files from '../../services/files.service';
+
+
 class TemplateService {
-  constructor($http, FileService, exception, REST_ROOT) {
+  constructor($http, FileService, REST_ROOT) {
+    'ngInject';
+
     this.$http = $http;
     this.FileService = FileService;
-    this.exception = exception;
     this.REST_ROOT = REST_ROOT;
   }
 
@@ -16,10 +21,10 @@ class TemplateService {
         columns: columns,
       })
       .then(response => this.FileService.download(response.data.url))
-      .catch(this.exception.catcher("Failed to generate template"));
+      .catch(angular.catcher("Failed to generate template"));
   }
 }
 
-TemplateService.$inject = [ '$http', 'FileService', 'exception', 'REST_ROOT' ];
-
-export default TemplateService;
+export default angular.module('fims.templateService', [ files ])
+  .service('TemplateService', TemplateService)
+  .name;

@@ -21,7 +21,7 @@ class ProjectSettingsController {
   //
   //     modal.result.then(
   //         function() {
-  //             Projects.delete(this.expedition)
+  //             ProjectService.delete(this.expedition)
   //                 .then(function() {
   //                     $state.go('expeditions.list', {}, {reload:true, inherit: false});
   //                 });

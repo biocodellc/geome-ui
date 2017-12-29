@@ -1,12 +1,11 @@
 import ProjectConfig from "./ProjectConfig";
 
 export default class ProjectConfigService {
-  constructor($http, REST_ROOT, exception) {
+  constructor($http, REST_ROOT) {
     "ngInject";
 
     this.$http = $http;
     this.REST_ROOT = REST_ROOT;
-    this.exception = exception;
   }
 
 
@@ -25,7 +24,7 @@ export default class ProjectConfigService {
       .then(({ data }) => new ProjectConfig(data))
       .catch((response) => {
         if (response.status !== 400 || !response.data.errors) {
-          this.exception.catcher("Error updating config")(response);
+          angular.catcher("Error updating config")(response);
         }
         throw new Error(response);
       });

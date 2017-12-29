@@ -1,12 +1,12 @@
 import angular from 'angular';
 
-import projects from '../../views/project';
+import projectsService from '../../services/projects.service';
 
 class ProjectSelectorController {
-  constructor(Projects) {
+  constructor(ProjectService) {
     'ngInject';
 
-    this.Projects = Projects;
+    this.ProjectService = ProjectService;
   }
 
   $onInit() {
@@ -30,7 +30,7 @@ class ProjectSelectorController {
   filterProjects() {
     //TODO can we define a schema on the User?
     // then we can return the ids of the projects a user is a member of, and make this a dumb component, just filtering here which is faster
-    this.Projects.all(this.includePublicProjects)
+    this.ProjectService.all(this.includePublicProjects)
       .then(({ data }) => {
         //TODO if currentProject is not in filtered list & includePublicProjects === false,
         // make includePublicProjects === true
@@ -54,6 +54,6 @@ const projectSelector = {
   },
 };
 
-export default angular.module('fims.projectSelector', [ projects ])
+export default angular.module('fims.projectSelector', [ projectsService ])
   .component('projectSelector', projectSelector)
   .name;

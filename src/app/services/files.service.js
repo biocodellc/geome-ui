@@ -1,5 +1,10 @@
+import angular from "angular";
+import authService from '../components/auth/auth.service';
+
+
 class FileService {
   constructor($window, AuthService) {
+    'ngInject';
     this.window = $window;
     this.authService = AuthService;
   }
@@ -24,5 +29,7 @@ class FileService {
 
 }
 
-FileService.$inject = [ '$window', 'AuthService' ];
-export default FileService;
+// export default angular.module('fims.files', [ authService ])
+export default angular.module('fims.files', [ ])
+  .service('FileService', FileService)
+  .name;

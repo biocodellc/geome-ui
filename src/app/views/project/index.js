@@ -8,14 +8,13 @@ import modal from 'angular-ui-bootstrap/src/modal';
 // then we use the angular module loader to list as a dependency
 import 'angular-drag-and-drop-lists';
 import router from '../../utils/router';
-import exceptions from '../../components/exceptions';
+import projectsService from '../../services/projects.service';
 
 import routing from "./project.routes";
 import requiresProject from './projectRequired.hook';
 import projectAdmin from './projectAdmin.hook'
 import run from "./projects.run";
 import config from "./projects.config";
-import Projects from "./project.service";
 import ProjectFactory from "./projectFactory";
 
 import fimsProject from './project.component';
@@ -29,10 +28,10 @@ export const CACHED_PROJECT_EVENT = '$cachedProjectEvent';
 const dependencies = [
   modal,
   router,
-  exceptions,
   select,
   sanitize,
   'dndLists',
+  projectsService,
   fimsProjectSettings,
   fimsProjectExpeditions,
   fimsProjectMembers,
@@ -46,6 +45,5 @@ export default angular.module('fims.project', dependencies)
   .run(requiresProject)
   .run(projectAdmin)
   .component('fimsProject', fimsProject)
-  .service('Projects', Projects)
   .service('ProjectFactory', ProjectFactory)
   .name;

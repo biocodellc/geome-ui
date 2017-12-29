@@ -1,11 +1,10 @@
 class LoginController {
-  constructor($state, UserService, LoadingModal, exception, alerts) {
+  constructor($state, UserService, LoadingModal, alerts) {
     'ngInject';
 
     this.state = $state;
     this.userService = UserService;
     this.loadingModal = LoadingModal;
-    this.exception = exception;
     this.alerts = alerts;
   }
 
@@ -21,7 +20,7 @@ class LoginController {
     this.userService.sendResetPasswordToken(this.credentials.username)
       .then(() =>
         this.alerts.success("Successfully sent reset password token. Check your email for further instructions."))
-      .catch(this.exception.catcher("Error sending reset password token"));
+      .catch(angular.catcher("Error sending reset password token"));
   }
 
   submit() {

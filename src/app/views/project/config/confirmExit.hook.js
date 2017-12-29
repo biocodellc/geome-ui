@@ -5,7 +5,7 @@ function configConfirmationController($uibModalInstance) {
   vm.cancel = $uibModalInstance.dismiss;
 }
 
-export default ($transitions, $state, $uibModal, Projects, ProjectConfigService, alerts) => {
+export default ($transitions, $state, $uibModal, ProjectService, ProjectConfigService, alerts) => {
   'ngInject';
 
   // If there are unsaved changes to the project configuration
@@ -26,9 +26,9 @@ export default ($transitions, $state, $uibModal, Projects, ProjectConfigService,
       // TODO show a loading indicator when the config is being saved
       return modal.result.then(shouldSave => {
         if (shouldSave) {
-          return ProjectConfigService.save(state.data.config, Projects.currentProject().projectId)
+          return ProjectConfigService.save(state.data.config, ProjectService.currentProject().projectId)
             .then((config) => {
-              Projects.currentProject().config = config;
+              ProjectService.currentProject().config = config;
               // need to reload here so that project.config currentProject resolvable
               // is reloaded. otherwise, when transitioning to another project state
               // such as settings, the currentProject resolvable is cached and the latest

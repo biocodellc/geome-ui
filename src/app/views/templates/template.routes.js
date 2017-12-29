@@ -6,7 +6,7 @@ function getStates() {
         url: "/template",
         component: 'fimsTemplates',
         resolve: {
-          currentProject: /*ngInject*/ (Projects) => Projects.currentProject(),
+          currentProject: /*ngInject*/ (ProjectService) => ProjectService.currentProject(),
           currentUser: /*ngInject*/ (UserService) => UserService.currentUser,
         },
         projectRequired: true,

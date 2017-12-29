@@ -1,5 +1,7 @@
-class Projects {
-  constructor($rootScope, $cacheFactory, $http, $timeout, StorageService, exception, ProjectConfigService, REST_ROOT) {
+import angular from "angular";
+
+class ProjectService {
+  constructor($rootScope, $cacheFactory, $http, $timeout, StorageService, ProjectConfigService, REST_ROOT) {
     'ngInject';
     this.PROJECT_CACHE = $cacheFactory('projects');
 
@@ -10,7 +12,6 @@ class Projects {
     this.$http = $http;
     this.$timeout = $timeout;
     this.StorageService = StorageService;
-    this.exception = exception;
     this.ProjectConfigService = ProjectConfigService;
     this.REST_ROOT = REST_ROOT;
   }
@@ -43,7 +44,7 @@ class Projects {
         })
         .catch((response) => {
           this._loading = false;
-          this.exception.catcher("Failed to load project configuration")(response);
+          angular.catcher("Failed to load project configuration")(response);
         });
     };
 
@@ -109,7 +110,7 @@ class Projects {
 
   all(includePublic) {
     return this.$http.get(this.REST_ROOT + 'projects?includePublic=' + includePublic, { cache: this.PROJECT_CACHE })
-      .catch(this.exception.catcher("Failed to load projects"));
+      .catch(angular.catcher("Failed to load projects"));
   }
 
   update(project) {
@@ -120,7 +121,7 @@ class Projects {
         data: project,
         keepJson: true,
       })
-      .catch(this.exception.catcher("Failed to update the project."));
+      .catch(angular.catcher("Failed to update the project."));
 
   }
 
@@ -136,4 +137,6 @@ class Projects {
 
 }
 
-export default Projects;
+export default angular.module('fims.projectsService', [])
+  .service('ProjectService', ProjectService)
+  .name;

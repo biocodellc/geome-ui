@@ -9,7 +9,7 @@ function getStates() {
             ExpeditionService.all(currentProject.projectId)
               .then(response => response.data)
               .catch(() => $state.go('project')),
-          currentProject: /*ngInject*/ (Projects) => Projects.currentProject(),
+          currentProject: /*ngInject*/ (ProjectService) => ProjectService.currentProject(),
         },
         views: {
           "details": {

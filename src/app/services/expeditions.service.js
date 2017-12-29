@@ -1,17 +1,19 @@
-export default class ExpeditionService {
-  constructor($http, Projects, exception, REST_ROOT) {
+import angular from "angular";
+import projectsService from "./projects.service";
+
+class ExpeditionService {
+  constructor($http, ProjectService, REST_ROOT) {
     'ngInject';
 
     this.$http = $http;
-    this.Projects = Projects;
-    this.exception = exception;
+    this.ProjectService = ProjectService;
     this.REST_ROOT = REST_ROOT;
 
     this.getExpeditions = this.all; //TODO remove this
   }
 
   update(expedition) {
-    var projectId = this.Projects.currentProject().projectId;
+    var projectId = this.ProjectService.currentProject().projectId;
 
     if (!projectId) {
       return Promise.reject({ data: { error: "No project is selected" } });
@@ -23,22 +25,22 @@ export default class ExpeditionService {
         data: expedition,
         keepJson: true,
       })
-      .catch(this.exception.catcher("Failed to update the expedition."));
+      .catch(angular.catcher("Failed to update the expedition."));
   }
 
   deleteExpedition(expedition) {
-    var projectId = this.Projects.currentProject().projectId;
+    var projectId = this.ProjectService.currentProject().projectId;
 
     if (!projectId) {
       return Promise.reject({ data: { error: "No project is selected" } });
     }
 
     return this.$http.delete(this.REST_ROOT + 'projects/' + projectId + '/expeditions/' + expedition.expeditionCode)
-      .catch(this.exception.catcher("Failed to delete the expedition."));
+      .catch(angular.catcher("Failed to delete the expedition."));
   }
 
   userExpeditions(includePrivate) {
-    var projectId = this.Projects.currentProject().projectId;
+    var projectId = this.ProjectService.currentProject().projectId;
 
     if (!projectId) {
       return Promise.reject({ data: { error: "No project is selected" } });
@@ -48,7 +50,7 @@ export default class ExpeditionService {
       includePrivate = false;
     }
     return this.$http.get(this.REST_ROOT + 'projects/' + projectId + '/expeditions?user&includePrivate=' + includePrivate)
-      .catch(this.exception.catcher("Failed to load your expeditions."));
+      .catch(angular.catcher("Failed to load your expeditions."));
   }
 
   all(projectId) {
@@ -57,7 +59,7 @@ export default class ExpeditionService {
     }
 
     return this.$http.get(this.REST_ROOT + 'projects/' + projectId + '/expeditions')
-      .catch(this.exception.catcher("Failed to load project expeditions."));
+      .catch(angular.catcher("Failed to load project expeditions."));
   }
 
   getExpedition(projectId, expeditionCode) {
@@ -84,3 +86,7 @@ export default class ExpeditionService {
     });
   }
 }
+
+export default angular.module('fims.expeditionService', [ projectsService ])
+  .service('ExpeditionService', ExpeditionService)
+  .name;

@@ -22,13 +22,11 @@ import home from './views/home';
 import login from './views/login';
 import templates from './views/templates';
 import project, { CACHED_PROJECT_EVENT } from './views/project';
+import projectsService from './services/projects.service';
 
 import alerts from './components/alerts';
 import auth from './components/auth';
-import data from './components/data';
-import exceptions from './components/exceptions';
-import expeditions from './components/expeditions';
-import files from './components/files';
+import expeditions from './views/expeditions/index';
 import header from './components/header';
 import navigation from './components/navigation';
 // import lookup from './components/lookup';
@@ -49,13 +47,11 @@ const dependencies = [
   trustedHtml,
   bootstrap,
   alerts,
-  exceptions,
+  projectsService,
   header,
   navigation,
   home,
   login,
-  files,
-  data,
   query,
   auth,
   templates,
@@ -69,7 +65,7 @@ const dependencies = [
 ];
 
 class AppCtrl {
-  constructor($scope, $state, UserService, Projects, alerts) {
+  constructor($scope, $state, UserService, ProjectService, alerts) {
     'ngInject';
 
     // attach global objects for easy access throughout app
@@ -81,7 +77,7 @@ class AppCtrl {
     this.currentUser = undefined;
     this.currentProject = undefined;
 
-    this.Projects = Projects;
+    this.ProjectService = ProjectService;
     this.UserService = UserService;
     this.$state = $state;
     this.$scope = $scope;
@@ -90,7 +86,7 @@ class AppCtrl {
     $scope.$on("$logoutEvent", () => {
       this.currentUser = undefined;
       if (this.currentProject && this.currentProject.public === false) {
-        Projects.set(undefined);
+        ProjectService.set(undefined);
       }
     });
 
@@ -115,7 +111,7 @@ class AppCtrl {
   }
 
   handleProjectChange(project) {
-    this.Projects.setCurrentProject(project).then((p) => {
+    this.ProjectService.setCurrentProject(project).then((p) => {
       this.currentProject = p;
       this.$state.reload();
     });

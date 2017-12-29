@@ -6,14 +6,14 @@ const DEFAULT_FILTER = {
 
 class QueryController {
 
-  constructor($scope, $http, LoadingModal, FailModalFactory, Projects, ExpeditionService, AuthService, FileService, exception, alerts, REST_ROOT) {
+  constructor($scope, $http, LoadingModal, FailModalFactory, ProjectService, ExpeditionService, AuthService, FileService, alerts, REST_ROOT) {
     this.error = null;
     this.moreSearchOptions = false;
     this.filterOptions = [];
     this.filters = [];
     this.queryString = null;
     this.expeditions = [];
-    this.project = Projects.currentProject();
+    this.project = ProjectService.currentProject();
     this.selectedExpeditions = [];
     this.queryResults = null;
     this.queryInfo = {
@@ -29,7 +29,6 @@ class QueryController {
     this.ExpeditionService = ExpeditionService;
     this.AuthService = AuthService;
     this.FileService = FileService;
-    this.exception = exception;
     this.REST_ROOT = REST_ROOT;
 
     $scope.$watch("querythis.project", (newVal, oldVal) => {
@@ -106,7 +105,7 @@ class QueryController {
 
       return this.FileService.download(response.data.url);
 
-    }, this.exception.catcher("Failed to download query results as excel file"))
+    }, angular.catcher("Failed to download query results as excel file"))
   }
 
   downloadKml() {
@@ -125,7 +124,7 @@ class QueryController {
 
       return this.FileService.download(response.data.url);
 
-    }, this.exception.catcher("Failed to download query results as kml file"));
+    }, angular.catcher("Failed to download query results as kml file"));
   }
 
   downloadCsv() {
@@ -144,7 +143,7 @@ class QueryController {
 
       return this.FileService.download(response.data.url);
 
-    }, this.exception.catcher("Failed to download query results as csv file"));
+    }, angular.catcher("Failed to download query results as csv file"));
   }
 
   getExpeditions() {
@@ -219,11 +218,10 @@ QueryController.$inject = [
   '$http',
   'LoadingModal',
   'FailModalFactory',
-  'Projects',
+  'ProjectService',
   'ExpeditionService',
   'AuthService',
   'FileService',
-  'exception',
   'REST_ROOT',
 ];
 

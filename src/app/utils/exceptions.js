@@ -1,4 +1,4 @@
-export default class exception {
+export default class {
   constructor(alerts) {
     this.alerts = alerts;
   }

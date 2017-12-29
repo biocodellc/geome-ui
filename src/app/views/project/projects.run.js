@@ -1,6 +1,6 @@
 import { CACHED_PROJECT_EVENT } from "./index";
 
-export default function run($rootScope, $location, StorageService, Projects) {
+export default function run($rootScope, $location, StorageService, ProjectService) {
   "ngInject";
 
   let projectId = StorageService.get('projectId');
@@ -10,7 +10,7 @@ export default function run($rootScope, $location, StorageService, Projects) {
   }
 
   if (projectId) {
-    Projects.setFromId(projectId).then((p) => {
+    ProjectService.setFromId(projectId).then((p) => {
       $rootScope.$broadcast(CACHED_PROJECT_EVENT, p);
     });
   }

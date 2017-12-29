@@ -1,5 +1,6 @@
 import angular from "angular";
 import { FimsExpeditionController } from "./FimsExpeditionController";
+import dataService from '../../services/data.service';
 
 export class ExpeditionController extends FimsExpeditionController {
   constructor($state, ExpeditionService, DataService, alerts, $uibModal) {
@@ -37,6 +38,6 @@ const fimsExpedition = {
   },
 };
 
-export default angular.module('fims.fimsExpedition', [])
+export default angular.module('fims.fimsExpedition', [ dataService ])
   .component('fimsExpedition', fimsExpedition)
   .name;

@@ -1,10 +1,12 @@
-export default class DataService {
-  constructor($http, FileService, alerts, exception, REST_ROOT) {
+import angular from 'angular';
+import files from './files.service';
+
+class DataService {
+  constructor($http, FileService, alerts, REST_ROOT) {
     'ngInject';
     this.$http = $http;
     this.FileService = FileService;
     this.alerts = alerts;
-    this.exception = exception;
     this.REST_ROOT = REST_ROOT;
   }
 
@@ -21,6 +23,10 @@ export default class DataService {
         }
         return this.FileService.download(response.data.url)
       })
-      .catch(this.exception.catcher("Failed to export data"));
+      .catch(angular.catcher("Failed to export data"));
   }
 }
+
+export default angular.module('fims.data', [ files ])
+  .service('DataService', DataService)
+  .name;

@@ -1,7 +1,7 @@
 import User from './User';
 
 export default class UserService {
-  constructor($rootScope, $http, $timeout, $state, exception, alerts, AuthService, REST_ROOT) {
+  constructor($rootScope, $http, $timeout, $state, alerts, AuthService, REST_ROOT) {
     'ngInject';
 
     this._loading = false;
@@ -11,7 +11,6 @@ export default class UserService {
     this.$http = $http;
     this.$timeout = $timeout;
     this.$state = $state;
-    this.exception = exception;
     this.alerts = alerts;
     this.AuthService = AuthService;
     this.REST_ROOT = REST_ROOT;
@@ -24,7 +23,7 @@ export default class UserService {
   signIn(username, password) {
     return this.AuthService.authenticate(username, password)
       .then(() => this._fetchUser())
-      .catch(this.exception.catcher("Error during authentication."));
+      .catch(angular.catcher("Error during authentication."));
   }
 
   signout() {
@@ -69,13 +68,13 @@ export default class UserService {
   all() {
     return this.$http.get(this.REST_ROOT + 'users/')
       .then((response) => response.data.map(user => new User(user)))
-      .catch(this.exception.catcher("Error loading users."));
+      .catch(angular.catcher("Error loading users."));
   }
 
   get(username) {
     return this.$http.get(this.REST_ROOT + 'users/' + username)
       .then(({ data }) => new User(data))
-      .catch(this.exception.catcher("Error loading user."));
+      .catch(angular.catcher("Error loading user."));
   }
 
   create(inviteId, user) {
@@ -88,12 +87,12 @@ export default class UserService {
       },
     // need to authenticate so we can get an accessToken
     ).then(() => this.signIn(user.username, user.password))
-      .catch(this.exception.catcher("Error creating user."));
+      .catch(angular.catcher("Error creating user."));
   }
 
   invite(email, projectId) {
     return this.$http.post(this.REST_ROOT + 'users/invite', { email: email, projectId: projectId })
-      .catch(this.exception.catcher("Error inviting user."));
+      .catch(angular.catcher("Error inviting user."));
   }
 
   save(user) {
@@ -104,7 +103,7 @@ export default class UserService {
         data: user,
         keepJson: true,
       },
-    ).catch(this.exception.catcher("Error saving user."));
+    ).catch(angular.catcher("Error saving user."));
   }
 
   updatePassword(username, currentPassword, newPassword) {
@@ -112,12 +111,12 @@ export default class UserService {
         currentPassword: currentPassword,
         newPassword: newPassword,
       },
-    ).catch(this.exception.catcher("Error updating password."));
+    ).catch(angular.catcher("Error updating password."));
   }
 
   resetPassword(password, resetToken) {
     return this.$http.post(this.REST_ROOT + "users/resetPassword", { password: password, resetToken: resetToken })
-      .catch(this.exception.catcher("Failed to reset password."));
+      .catch(angular.catcher("Failed to reset password."));
   }
 
   sendResetPasswordToken(username) {
@@ -135,7 +134,7 @@ export default class UserService {
         }
       }, (response) => {
         this._loading = false;
-        this.exception.catcher("Failed to load user.")(response);
+        angular.catcher("Failed to load user.")(response);
       });
   }
 
