@@ -2,25 +2,17 @@ import angular from "angular";
 
 const DEFAULT_TEMPLATE = { name: 'DEFAULT' };
 
-class TemplateCtrl {
+class TemplateController {
   constructor(TemplateService) {
     'ngInject';
 
-    this._config = undefined;
-    this._templates = [];
+    this.TemplateService = TemplateService;
+  }
 
-    this.isAuthenticated = false;
+  $onInit() {
+    this._templates = [];
     this.template = Object.assign({}, DEFAULT_TEMPLATE);
     this.templates = [ Object.assign({}, DEFAULT_TEMPLATE) ];
-    this.sheetName = undefined;
-    this.description = undefined;
-    this.defAttribute = undefined;
-    this.required = [];
-    this.selected = [];
-    this.worksheets = [];
-    this.attributes = [];
-
-    this.TemplateService = TemplateService;
   }
 
   $onChanges(changesObj) {
@@ -31,12 +23,24 @@ class TemplateCtrl {
     if ('currentProject' in changesObj) {
       // TODO if not currentProject, redirect to home;
       this._config = this.currentProject.config;
-      this._getTemplates();
-      this._getWorksheets();
-      this._getAttributes();
+      this.getTemplates();
+      this.getWorksheets();
+      this.getAttributes();
       this.description = this.currentProject.description;
       this.defAttribute = undefined;
     }
+  }
+
+  selectAll() {
+    this.selected = Object.values(this.attributes).reduce((result, group) => result.concat(group), []);
+  }
+
+  selectNone() {
+    this.selected = this.required.slice();
+  }
+
+  saveConfig() {
+    //TODO finish this
   }
 
   toggleSelected(attribute) {
@@ -51,8 +55,8 @@ class TemplateCtrl {
   }
 
   sheetChange() {
-    this._getAttributes();
-    this._filterTemplates();
+    this.getAttributes();
+    this.filterTemplates();
     this.template = Object.assign({}, DEFAULT_TEMPLATE);
   }
 
@@ -80,33 +84,27 @@ class TemplateCtrl {
     this.TemplateService.generate(this.currentProject.projectId, this.sheetName, columns);
   }
 
-  _filterTemplates() {
-    this.templates = [ DEFAULT_TEMPLATE ];
-
-    this._templates.forEach((t) => {
-      if (t.sheetName === this.sheetName) {
-        this.templates.push(t);
-      }
-    })
-
+  filterTemplates() {
+    this.templates = this._templates.filter(t => t.sheetName === this.sheetName);
+    this.templates.splice(0, 1, DEFAULT_TEMPLATE);
   }
 
-  _getTemplates() {
+  getTemplates() {
     this.TemplateService.all(this.currentProject.projectId)
       .then((response) => {
         this._templates = response.data;
-        this._filterTemplates();
+        this.filterTemplates();
         this.templateChange();
       })
       .catch(angular.catcher("Failed to load templates"));
   }
 
-  _getAttributes() {
+  getAttributes() {
     this.attributes = this._config.attributesByGroup(this.sheetName);
     this.required = this._config.requiredAttributes(this.sheetName);
   }
 
-  _getWorksheets() {
+  getWorksheets() {
     this.worksheets = this._config.worksheets();
     this.sheetName = this.worksheets[ 0 ];
   }
@@ -115,7 +113,7 @@ class TemplateCtrl {
 
 export default {
   template: require('./templates.html'),
-  controller: TemplateCtrl,
+  controller: TemplateController,
   bindings: {
     currentUser: "<",
     currentProject: "<",

@@ -1,5 +1,6 @@
 import CLIENT_ID from './clientId';
 
+//TODO cleanup this service
 export default class AuthService {
   constructor($rootScope, $http, $timeout, StorageService, AUTH_TIMEOUT, REST_ROOT, APP_ROOT) {
     'ngInject';

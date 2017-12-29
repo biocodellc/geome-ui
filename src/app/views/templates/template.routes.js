@@ -5,6 +5,10 @@ function getStates() {
       config: {
         url: "/template",
         component: 'fimsTemplates',
+        resolve: {
+          currentProject: /*ngInject*/ (Projects) => Projects.currentProject(),
+          currentUser: /*ngInject*/ (UserService) => UserService.currentUser,
+        },
         projectRequired: true,
       },
     },
