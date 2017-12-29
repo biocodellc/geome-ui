@@ -1,5 +1,6 @@
-export default class AlertController {
+class AlertController {
   constructor(alerts) {
+    'ngInject';
     this.alerts = alerts;
   }
 
@@ -12,4 +13,7 @@ export default class AlertController {
   }
 }
 
-AlertController.$inject = [ 'alerts' ];
+export default {
+  template: require('./alerts.html'),
+  controller: AlertController,
+};

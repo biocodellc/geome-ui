@@ -1,25 +1,13 @@
-import routing from "./routes";
-import { FimsExpeditionController } from "../../../components/expeditions/FimsExpeditionController";
 import fimsExpeditions from "../../../components/expeditions";
-import fimsProjectExpedition from "../project-expedition";
+import fimsExpedition from "../../../components/expeditions/expedition.component";
+
+import routing from "./project-expeditions.routes";
+import fimsProjectExpeditions from './project-expeditions.component';
+import fimsProjectExpedition from "./project-expedition";
 
 
-class ProjectExpeditionsController extends FimsExpeditionController {
-  deleteExpedition(expedition) {
-    super.deleteExpedition(expedition).then(() => this.$state.reload());
-  }
-}
-
-const fimsProjectExpeditions = {
-  template: require('./project-expeditions.html'),
-  controller: ProjectExpeditionsController,
-  bindings: {
-    expeditions: '<',
-    currentProject: '<',
-  },
-};
-
-export default angular.module('fims.projectExpeditions', [ fimsProjectExpedition, fimsExpeditions ])
+export default angular.module('fims.projectExpeditions', [ fimsProjectExpedition, fimsExpeditions, fimsExpedition ])
   .run(routing)
   .component('fimsProjectExpeditions', fimsProjectExpeditions)
+  .component('fimsProjectExpedition', fimsProjectExpedition)
   .name;
