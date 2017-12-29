@@ -2,49 +2,26 @@ import angular from 'angular';
 
 import routing from "./routes";
 import confirmExit from './confirmExit.hook';
-import fimsProjectConfigMetadata from './metadata';
-import fimsProjectConfigEntities from './entities';
-import fimsProjectConfigLists from './lists';
-import fimsProjectConfigNavbar from './navbar.component';
-import Rule from "./Rule";
+import fimsProjectConfigOverview from './config-overview.component';
 import ProjectConfig from "./ProjectConfig";
 
 
-// TODO abstract out another container so se don't have this weird ui-view thing going on?
-
 class ConfigController {
-  constructor($scope, $state, $uibModal, ProjectConfigService, alerts) {
+  constructor($state, ProjectConfigService, alerts) {
     'ngInject'
-    this.$scope = $scope;
     this.$state = $state;
-    this.$uibModal = $uibModal;
     this.ProjectConfigService = ProjectConfigService;
     this.alerts = alerts;
   }
 
   $onInit() {
     this.showSave = false;
-    this.addText = undefined;
     this.config = new ProjectConfig(this.currentProject.config);
     this.projectConfigState = this.$state.get('project.config');
 
     if (!this.projectConfigState.data) {
       this.projectConfigState.data = {};
     }
-
-    //TODO remove these watches
-    this.$scope.$watch(() => this.$state.current.name, (name) => {
-      switch (name) {
-        case 'project.config.entities':
-          this.addText = 'Entity';
-          break;
-        case 'project.config.lists':
-          this.addText = 'List';
-          break;
-        default:
-          this.addText = undefined;
-      }
-    });
   }
 
   updateStateData() {
@@ -95,14 +72,6 @@ class ConfigController {
     this.updateStateData();
   }
 
-  handleOnAdd() {
-    if (this.$state.current.name === 'project.config.entities') {
-      this.$state.go('project.config.entities.add');
-    } else {
-      this.$state.go('project.config.lists.add');
-    }
-  }
-
   handleOnSave() {
     this.alerts.removeTmp();
     this.ProjectConfigService.save(this.config, this.currentProject.projectId)
@@ -116,35 +85,6 @@ class ConfigController {
       }
     });
   }
-
-  handleOnAddEntity(entity) {
-    if (entity.parentEntity) {
-      const rule = Rule.newRule("RequiredValue");
-      rule.level = 'ERROR';
-      const column = this.config.entityUniqueKey(entity.parentEntity);
-      rule.columns.push(column);
-
-      entity.attributes.push({
-        column: column,
-        datatype: 'STRING',
-        group: 'Default',
-      });
-
-      entity.rules.push(rule);
-    }
-
-    this.config.entities.push(entity);
-
-    this.$state.go('^.detail.attributes', { alias: entity.conceptAlias, entity: entity, addAttribute: true });
-  }
-
-  handleOnAddList(list) {
-    const lists = this.config.lists.slice();
-    lists.push(list);
-    this.handleUpdateLists(lists);
-    this.$state.go('^.detail', { alias: list.alias, list: list, addField: true });
-  }
-
 }
 
 const fimsProjectConfig = {
@@ -152,19 +92,10 @@ const fimsProjectConfig = {
   controller: ConfigController,
   bindings: {
     currentProject: '<',
-    view: '<',
   },
 };
 
-
-const dependencies = [
-  fimsProjectConfigMetadata,
-  fimsProjectConfigEntities,
-  fimsProjectConfigLists,
-  fimsProjectConfigNavbar,
-];
-
-export default angular.module('fims.projectConfig', dependencies)
+export default angular.module('fims.projectConfig', [ fimsProjectConfigOverview ])
   .run(routing)
   .run(confirmExit)
   .component('fimsProjectConfig', fimsProjectConfig)

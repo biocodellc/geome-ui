@@ -5,33 +5,15 @@
          on-save="$ctrl.handleOnSave()"
          on-update-entity="$ctrl.handleUpdateEntity(alias, entity)"
          on-update-list="$ctrl.handleUpdateList(alias, list)">
-        <fims-project-config-navbar
+        <!-- NOTE: this will be replaced when a route targets the 'detail' ui-view above -->
+        <fims-project-config-overview
+                config="$ctrl.config"
                 show-save="$ctrl.showSave"
                 on-save="$ctrl.handleOnSave()"
-                add-text="$ctrl.addText"
-                on-add="$ctrl.handleOnAdd()">
-            <li><a href ui-sref="^.entities" ui-sref-active="active">Entities</a></li>
-            <li><a href ui-sref="^.lists" ui-sref-active="active">Lists</a></li>
-            <li><a href ui-sref="^.metadata" ui-sref-active="active">Metadata</a></li>
-        </fims-project-config-navbar>
-
-        <div ui-view="metadata"
-             config="$ctrl.config"
-             on-update="$ctrl.handleUpdateMetadata(config)">
-        </div>
-
-        <div ui-view="entities"
-             config="$ctrl.config"
-             entities="$ctrl.config.entities"
-             on-add-entity="$ctrl.handleAddEntity(entity)"
-             on-update-entities="$ctrl.handleUpdateEntities(entities)"
-             on-new-worksheet="$ctrl.handleNewWorksheet(sheetName)">
-        </div>
-
-        <div ui-view="lists"
-             lists="$ctrl.config.lists"
-             on-update-lists="$ctrl.handleUpdateLists(lists)"
-             on-add-list="$ctrl.handleOnAddList(list)">
-        </div>
+                on-update-metadata="$ctrl.handleUpdateMetadata(config)"
+                on-new-worksheet="$ctrl.handleNewWorksheet(sheetName)"
+                on-update-entities="$ctrl.handleUpdateEntities(entities)"
+                on-update-lists="$ctrl.handleUpdateLists(lists)">
+        </fims-project-config-overview>
     </div>
 </div>
