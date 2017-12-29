@@ -19,6 +19,7 @@ import showErrors from './directives/showErrors.directive';
 import trustedHtml from './filters/html.filter';
 
 import home from './views/home';
+import login from './views/login';
 import templates from './views/templates';
 import project, { CACHED_PROJECT_EVENT } from './views/project';
 
@@ -52,6 +53,7 @@ const dependencies = [
   header,
   navigation,
   home,
+  login,
   files,
   data,
   query,
