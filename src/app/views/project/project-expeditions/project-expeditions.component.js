@@ -2,7 +2,7 @@ import { FimsExpeditionController } from "../../../components/expeditions/FimsEx
 
 class ProjectExpeditionsController extends FimsExpeditionController {
   deleteExpedition(expedition) {
-    super.deleteExpedition(expedition).then(() => this.$state.reload());
+    super.deleteExpedition(this.currentProject.projectId, expedition).then(() => this.$state.reload());
   }
 }
 

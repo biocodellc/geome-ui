@@ -1,20 +1,15 @@
 import angular from "angular";
-import projectsService from "./projects.service";
+
 
 class ExpeditionService {
-  constructor($http, ProjectService, REST_ROOT) {
+  constructor($http, REST_ROOT) {
     'ngInject';
 
     this.$http = $http;
-    this.ProjectService = ProjectService;
     this.REST_ROOT = REST_ROOT;
-
-    this.getExpeditions = this.all; //TODO remove this
   }
 
-  update(expedition) {
-    var projectId = this.ProjectService.currentProject().projectId;
-
+  update(projectId, expedition) {
     if (!projectId) {
       return Promise.reject({ data: { error: "No project is selected" } });
     }
@@ -28,9 +23,7 @@ class ExpeditionService {
       .catch(angular.catcher("Failed to update the expedition."));
   }
 
-  deleteExpedition(expedition) {
-    var projectId = this.ProjectService.currentProject().projectId;
-
+  deleteExpedition(projectId, expedition) {
     if (!projectId) {
       return Promise.reject({ data: { error: "No project is selected" } });
     }
@@ -39,9 +32,7 @@ class ExpeditionService {
       .catch(angular.catcher("Failed to delete the expedition."));
   }
 
-  userExpeditions(includePrivate) {
-    var projectId = this.ProjectService.currentProject().projectId;
-
+  userExpeditions(projectId, includePrivate) {
     if (!projectId) {
       return Promise.reject({ data: { error: "No project is selected" } });
     }
@@ -87,6 +78,6 @@ class ExpeditionService {
   }
 }
 
-export default angular.module('fims.expeditionService', [ projectsService ])
+export default angular.module('fims.expeditionService', [])
   .service('ExpeditionService', ExpeditionService)
   .name;

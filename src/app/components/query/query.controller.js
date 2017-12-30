@@ -151,7 +151,7 @@ export default class QueryController {
   }
 
   getExpeditions() {
-    this.ExpeditionService.getExpeditions(this.project.projectId).then((response) => {
+    this.ExpeditionService.all(this.project.projectId).then((response) => {
         this.selectedExpeditions = [];
         this.expeditions = [];
         response.data.forEach(expedition => this.expeditions.push(expedition.expeditionCode));

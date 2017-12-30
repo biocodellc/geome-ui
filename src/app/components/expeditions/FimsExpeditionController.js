@@ -11,7 +11,7 @@ export class FimsExpeditionController {
     this.DataService.exportData(projectId, expedition.expeditionCode);
   }
 
-  deleteExpedition(expedition) {
+  deleteExpedition(projectId, expedition) {
     const modal = this.$uibModal.open({
       template: require('./delete-confirmation.tpl.html'),
       size: 'md',
@@ -25,7 +25,7 @@ export class FimsExpeditionController {
     });
 
     return modal.result.then(() =>
-      this.ExpeditionService.delete(expedition)
+      this.ExpeditionService.delete(projectId, expedition)
     );
   }
 }

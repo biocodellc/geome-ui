@@ -13,12 +13,12 @@ export default function run($http, $timeout, $rootScope, $transitions, LoadingMo
   // before resolving the first route. This hook is only run on page load/refresh
   const deregister = $transitions.onBefore({}, function (trans) {
     return new Promise((resolve) => {
-      const timeoutId = setTimeout(() => {
+      const timeoutPromise = $timeout(() => {
         resolve(trans.router.stateService.go('home'));
       }, 5000); // timeout loading after 5 secs
 
       $rootScope.$on('$appInit', () => {
-        $timeout.cancel(timeoutId);
+        $timeout.cancel(timeoutPromise);
         deregister();
         resolve();
       });

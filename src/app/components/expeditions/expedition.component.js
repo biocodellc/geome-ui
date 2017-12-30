@@ -11,7 +11,7 @@ export class ExpeditionController extends FimsExpeditionController {
 
   handleExpeditionUpdate(expedition) {
     if (!angular.equals(this.expedition, expedition)) {
-      this.ExpeditionService.update(expedition)
+      this.ExpeditionService.update(this.currentProject.projectId, expedition)
         .then(() => {
           angular.alerts.success("Successfully updated!");
           this.$state.reload();
@@ -22,7 +22,7 @@ export class ExpeditionController extends FimsExpeditionController {
   }
 
   handleExpeditionDelete() {
-    super.deleteExpedition(this.expedition)
+    super.deleteExpedition(this.currentProject.projectId, this.expedition)
       .then(() => this.$state.go(this.backState, {}, { reload: true, inherit: false }));
   }
 }
