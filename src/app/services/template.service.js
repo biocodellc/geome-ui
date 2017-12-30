@@ -1,5 +1,5 @@
 import angular from 'angular';
-import fileService from '../../services/file.service';
+import fileService from './file.service';
 
 
 class TemplateService {

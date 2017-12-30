@@ -1,5 +1,6 @@
 const routing = ($stateProvider, $urlRouterProvider, $urlMatcherFactoryProvider, $locationProvider) => {
 
+  //todo clean this up
   $stateProvider
     // .state('validate', {
     //   url: "/validate",
@@ -26,7 +27,7 @@ const routing = ($stateProvider, $urlRouterProvider, $urlMatcherFactoryProvider,
     // })
     .state('notFound', {
       url: '*path',
-      template: require('partials/page-not-found.html'),
+      template: require('partials/page-not-found.html'), //todo move to component
     });
 
   // redirect all legacy route
