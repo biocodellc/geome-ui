@@ -1,6 +1,6 @@
 import angular from 'angular';
 
-import userService from '../../services/users.service';
+import userService from '../../services/user.service';
 import authService from '../../services/auth.service';
 
 import routing from './login.routes.js'

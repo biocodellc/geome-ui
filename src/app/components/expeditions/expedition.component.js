@@ -1,7 +1,7 @@
 import angular from "angular";
 import { FimsExpeditionController } from "./FimsExpeditionController";
 import dataService from '../../services/data.service';
-import expeditionService from '../../services/expeditions.service';
+import expeditionService from '../../services/expedition.service';
 
 export class ExpeditionController extends FimsExpeditionController {
   constructor($state, ExpeditionService, DataService, $uibModal) {

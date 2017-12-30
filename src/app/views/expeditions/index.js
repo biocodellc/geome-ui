@@ -5,7 +5,7 @@ import users from '../../components/users/index';
 import modals from '../../components/modals/index';
 
 import routing from './expeditions.routes';
-import projectsService from '../../services/projects.service';
+import projectService from '../../services/project.service';
 import fimsExpeditionsList from './expeditions-list.component';
 import fimsExpedition from '../../components/expeditions/expedition.component';
 import fimsExpeditionSettings from '../../components/expeditions/expedition-settings.component';
@@ -16,7 +16,7 @@ const dependencies = [
   bootstrap,
   modals,
   users,
-  projectsService,
+  projectService,
   fimsExpeditionsList,
   fimsExpedition,
   fimsExpeditionSettings,

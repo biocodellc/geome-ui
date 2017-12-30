@@ -1,5 +1,5 @@
 import angular from 'angular';
-import files from '../../services/files.service';
+import fileService from '../../services/file.service';
 
 
 class TemplateService {
@@ -25,6 +25,6 @@ class TemplateService {
   }
 }
 
-export default angular.module('fims.templateService', [ files ])
+export default angular.module('fims.templateService', [ fileService ])
   .service('TemplateService', TemplateService)
   .name;

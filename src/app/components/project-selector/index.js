@@ -1,9 +1,9 @@
 import angular from 'angular';
 
-import projectsService from '../../services/projects.service';
+import projectService from '../../services/project.service';
 import projectSelector from './projectSelector.component';
 
 
-export default angular.module('fims.projectSelector', [ projectsService ])
+export default angular.module('fims.projectSelector', [ projectService ])
   .component('projectSelector', projectSelector)
   .name;

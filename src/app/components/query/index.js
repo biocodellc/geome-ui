@@ -6,11 +6,11 @@ import '../../../vendor/scalyr';
 import modals from '../modals';
 import typeahead from './typeahead.directive';
 import routing from './query.routes'
-import files from '../../services/files.service';
+import fileService from '../../services/file.service';
 import authService from '../../services/auth.service';
-import projectsService from '../../services/projects.service';
-import expeditionService from '../../services/expeditions.service';
+import projectService from '../../services/project.service';
+import expeditionService from '../../services/expedition.service';
 
-export default angular.module('fims.query', [ modals, 'sly', typeahead, files, projectsService, authService, expeditionService ])
+export default angular.module('fims.query', [ modals, 'sly', typeahead, fileService, projectService, authService, expeditionService ])
   .run(routing) // need to declare in run block. otherwise $transitions is not available
   .name;

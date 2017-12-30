@@ -106,6 +106,6 @@ class ProjectService {
   }
 }
 
-export default angular.module('fims.projectsService', [ storageService ])
+export default angular.module('fims.projectService', [ storageService ])
   .service('ProjectService', ProjectService)
   .name;

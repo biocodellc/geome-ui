@@ -1,7 +1,7 @@
 import angular from 'angular';
 
 import authService from '../../services/auth.service';
-import userService from '../../services/users.service';
+import userService from '../../services/user.service';
 
 import AuthInterceptor from './auth.interceptor';
 import requiresLogin from './loginRequired.hook.js'

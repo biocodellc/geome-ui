@@ -1,5 +1,5 @@
 import angular from 'angular';
-import files from './files.service';
+import fileService from './file.service';
 
 class DataService {
   constructor($http, FileService, REST_ROOT) {
@@ -26,6 +26,6 @@ class DataService {
   }
 }
 
-export default angular.module('fims.data', [ files ])
+export default angular.module('fims.data', [ fileService ])
   .service('DataService', DataService)
   .name;

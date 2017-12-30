@@ -2,7 +2,7 @@ import angular from 'angular';
 
 import compareTo from '../../directives/compareTo.directive';
 import routing from "./users.routes";
-import userService from '../../services/users.service';
+import userService from '../../services/user.service';
 
 import profile from './profile.component';
 import newUser from './new-user.component';

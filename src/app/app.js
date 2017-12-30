@@ -21,9 +21,9 @@ import trustedHtml from './filters/html.filter';
 import home from './views/home';
 import login from './views/login';
 import templates from './views/templates';
-import project, { CACHED_PROJECT_EVENT } from './views/project';
-import projectsService from './services/projects.service';
-import userService from './services/users.service';
+import project from './views/project';
+import projectService from './services/project.service';
+import userService from './services/user.service';
 
 import app from './app.component';
 import auth from './components/auth';
@@ -48,7 +48,7 @@ const dependencies = [
   showErrors,
   trustedHtml,
   bootstrap,
-  projectsService,
+  projectService,
   userService,
   header,
   navigation,
