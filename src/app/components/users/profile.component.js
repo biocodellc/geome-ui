@@ -1,21 +1,23 @@
 import angular from 'angular';
 
 
-export default class ProfileController {
+class ProfileController {
   constructor(UserService) {
     'ngInject';
-
-    this.user = UserService.currentUser;
-    this.currentPassword = undefined;
-    this.newPassword = undefined;
-    this.verifyPassword = undefined;
 
     this.UserService = UserService;
   }
 
+  $onInit() {
+    this.user = Object.assign({}, this.currentUser);
+  }
+
   save() {
     this.UserService.save(this.user)
-      .then(() => angular.alerts.success("Successfully saved your profile!"));
+      .then(() => {
+        this.onUserChange({ user: this.user });
+        angular.alerts.success("Successfully saved your profile!")
+      });
   }
 
   updatePassword() {
@@ -28,3 +30,12 @@ export default class ProfileController {
       })
   }
 }
+
+export default {
+  template: require('./profile.html'),
+  controller: ProfileController,
+  bindings: {
+    currentUser: '<',
+    onUserChange: '&'
+  },
+};

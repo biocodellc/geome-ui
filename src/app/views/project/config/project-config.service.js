@@ -1,4 +1,4 @@
-import ProjectConfig from "./ProjectConfig";
+import ProjectConfig from "../../../models/ProjectConfig";
 
 export default class ProjectConfigService {
   constructor($http, REST_ROOT) {

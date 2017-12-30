@@ -6,9 +6,6 @@ function getStates() {
         url: '/project',
         component: 'fimsProject',
         redirectTo: "project.settings",
-        resolve: {
-          currentProject: /*ngInject*/ (ProjectService) => ProjectService.currentProject(),
-        },
         projectRequired: true,
         loginRequired: true,
       },

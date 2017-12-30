@@ -3,26 +3,27 @@ import angular from "angular";
 import storageService from './storage.service';
 import CLIENT_ID from '../components/auth/clientId';
 
+export const AUTH_ERROR_EVENT = '$authError';
 
-//TODO cleanup this service
+let triedToRefresh = false;
+let timeoutId = undefined;
+
 class AuthService {
-  constructor($rootScope, $http, $timeout, StorageService, AUTH_TIMEOUT, REST_ROOT, APP_ROOT) {
+  constructor($rootScope, $state, $http, $timeout, StorageService, AUTH_TIMEOUT, REST_ROOT, APP_ROOT) {
     'ngInject';
 
-    this._triedToRefresh = false;
-    this._authTimoutPromise = undefined;
-
-    this.rootScope = $rootScope;
-    this.storageService = StorageService;
+    this.$rootScope = $rootScope;
+    this.$state = $state;
+    this.StorageService = StorageService;
     this.APP_ROOT = APP_ROOT;
     this.AUTH_TIMEOUT = AUTH_TIMEOUT;
     this.REST_ROOT = REST_ROOT;
-    this.http = $http;
-    this.timeout = $timeout;
+    this.$http = $http;
+    this.$timeout = $timeout;
   }
 
   getAccessToken() {
-    return this.storageService.get('accessToken');
+    return this.StorageService.get('accessToken');
   }
 
   authenticate(username, password) {
@@ -34,8 +35,8 @@ class AuthService {
       password: password,
     };
 
-    return this.http.post(this.REST_ROOT + 'authenticationService/oauth/accessToken', data)
-      .then((response) => this._authSuccess(response.data))
+    return this.$http.post(this.REST_ROOT + 'authenticationService/oauth/accessToken', data)
+      .then(({ data }) => this._authSuccess(data, username))
       .catch((response) => {
         this.clearTokens();
         return Promise.reject(response);
@@ -43,7 +44,8 @@ class AuthService {
   }
 
   clearTokens() {
-    this.storageService.extend({
+    this.StorageService.extend({
+      username: undefined,
       accessToken: undefined,
       refreshToken: undefined,
       oAuthTimestamp: undefined,
@@ -51,39 +53,51 @@ class AuthService {
   }
 
   refreshAccessToken() {
-    let refreshToken = this.storageService.get('refreshToken');
-    if (refreshToken && this._checkAuthenticated() && !this._triedToRefresh) {
-      return this.http.post(this.REST_ROOT + 'authenticationService/oauth/refresh', {
+    let refreshToken = this.StorageService.get('refreshToken');
+    let username = this.StorageService.get('username');
+
+    if (refreshToken && this._checkAuthenticated() && !triedToRefresh) {
+      return this.$http.post(this.REST_ROOT + 'authenticationService/oauth/refresh', {
           client_id: CLIENT_ID,
           refresh_token: refreshToken,
-
         })
-        .then(({ data }) => this._authSuccess(data))
+        .then(({ data }) => this._authSuccess(data, username))
         .catch((response) => {
-            this.rootScope.$broadcast('$userRefreshFailedEvent');
-            this._triedToRefresh = true;
-            return Promise.reject(response);
-          });
+          this.$rootScope.$broadcast(AUTH_ERROR_EVENT);
+          this.clearTokens();
+          triedToRefresh = true;
+          return Promise.reject(response);
+        });
     }
 
-    this.rootScope.$broadcast('$userRefreshFailedEvent');
+    this.$rootScope.$broadcast(AUTH_ERROR_EVENT);
+    this.clearTokens();
     return Promise.reject();
   }
 
-  _resetAuthTimeout() {
-    if (this._authTimoutPromise) {
-      this.timeout.cancel(this._authTimoutPromise);
-    }
-
-    const signoutUser = () => this.rootScope.$broadcast('$authTimeoutEvent');
-
-    this._authTimoutPromise = this.timeout(signoutUser, this.AUTH_TIMEOUT);
+  _authSuccess(data, username) {
+    this.StorageService.extend({
+      username,
+      accessToken: data.access_token,
+      refreshToken: data.refresh_token,
+      oAuthTimestamp: new Date().getTime(),
+    });
+    this._resetAuthTimeout();
+    triedToRefresh = false;
   }
 
-  _authSuccess(data) {
-    this._setOAuthTokens(data.access_token, data.refresh_token);
-    this._resetAuthTimeout();
-    this._triedToRefresh = false;
+  _resetAuthTimeout() {
+    if (timeoutId) {
+      this.$timeout.cancel(timeoutId);
+    }
+
+    timeoutId = this.$timeout(() => {
+      this.$rootScope.$broadcast(AUTH_ERROR_EVENT);
+      this.clearTokens();
+      angular.alerts.info("You have been signed out due to inactivity.");
+      this.$state.go("home");
+
+    }, this.AUTH_TIMEOUT);
   }
 
   _checkAuthenticated() {
@@ -91,7 +105,7 @@ class AuthService {
   }
 
   _isTokenExpired() {
-    const oAuthTimestamp = this.storageService.get('oAuthTimestamp');
+    const oAuthTimestamp = this.StorageService.get('oAuthTimestamp');
     const now = new Date().getTime();
 
     if (now - oAuthTimestamp > this.AUTH_TIMEOUT) {
@@ -100,14 +114,6 @@ class AuthService {
     }
 
     return false;
-  }
-
-  _setOAuthTokens(accessToken, refreshToken) {
-    this.storageService.extend({
-      accessToken: accessToken,
-      refreshToken: refreshToken,
-      oAuthTimestamp: new Date().getTime(),
-    });
   }
 }
 

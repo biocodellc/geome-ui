@@ -6,8 +6,7 @@ function getStates() {
         abstract: true,
         template: '<div ui-view class="admin"></div>',
         resolve: {
-          expeditions: ($state, ProjectService, ExpeditionService) => ProjectService.waitForProject()
-            .then(currentProject => ExpeditionService.userExpeditions(true)) // TODO pass in currentProject in userExpeditions
+          expeditions: ($state, ExpeditionService) => ExpeditionService.userExpeditions(true) // TODO pass in currentProject in userExpeditions
             .then(({ data }) => data)
             .catch(() => $state.go('home')),
         },
@@ -41,7 +40,6 @@ function getStates() {
             return (expedition) ? expedition : $state.go('expeditions.list');
           },
           backState: () => "expeditions.list",
-          currentProject: /*ngInject*/ (ProjectService) => ProjectService.currentProject(),
         },
         params: {
           id: {

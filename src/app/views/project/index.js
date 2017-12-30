@@ -11,11 +11,11 @@ import router from '../../utils/router';
 import projectsService from '../../services/projects.service';
 import storageService from '../../services/storage.service';
 import expeditionService from '../../services/expeditions.service';
+import userService from '../../services/users.service';
 
 import routing from "./project.routes";
 import requiresProject from './projectRequired.hook';
 import projectAdmin from './projectAdmin.hook'
-import run from "./projects.run";
 import config from "./projects.config";
 import ProjectFactory from "./projectFactory";
 
@@ -35,6 +35,7 @@ const dependencies = [
   'dndLists',
   projectsService,
   expeditionService,
+  userService,
   storageService,
   fimsProjectSettings,
   fimsProjectExpeditions,
@@ -44,7 +45,6 @@ const dependencies = [
 
 export default angular.module('fims.project', dependencies)
   .config(config)
-  .run(run)
   .run(routing) // need to declare in run block. otherwise $transitions is not available
   .run(requiresProject)
   .run(projectAdmin)

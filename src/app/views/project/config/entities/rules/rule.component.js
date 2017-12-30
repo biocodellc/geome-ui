@@ -1,7 +1,7 @@
 import angular from 'angular';
 
 import fimsEditRuleForm from './edit-rule-form.component';
-import Rule from "../../Rule";
+import Rule from "../../../../../models/Rule";
 
 
 class EditRuleController {

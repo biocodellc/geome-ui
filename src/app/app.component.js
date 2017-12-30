@@ -1,7 +1,7 @@
-import { CACHED_PROJECT_EVENT } from "./views/project";
+import { AUTH_ERROR_EVENT } from "./services/auth.service";
 
 class AppCtrl {
-  constructor($scope, $state, UserService, ProjectService) {
+  constructor($rootScope, $state, UserService, ProjectService, AuthService, $location, StorageService) {
     'ngInject';
 
     this.currentUser = undefined;
@@ -9,35 +9,39 @@ class AppCtrl {
 
     this.ProjectService = ProjectService;
     this.UserService = UserService;
+    this.StorageService = StorageService;
+    this.AuthService = AuthService;
     this.$state = $state;
-    this.$scope = $scope;
+    this.$rootScope = $rootScope;
+    this.$location = $location;
 
-    // TODO remove this
-    $scope.$on("$logoutEvent", () => {
-      this.currentUser = undefined;
-      if (this.currentProject && this.currentProject.public === false) {
-        ProjectService.set(undefined);
-      }
-    });
-
-    // TODO remove this
-    $scope.$on("$userChangeEvent", (user) => {
-      this.currentUser = user;
-    });
-
-    $scope.$watch(
-      () => UserService.currentUser,
-      (user) => {
-        this.currentUser = user;
-      },
-    );
+    this.loadSession();
+    $rootScope.$on(AUTH_ERROR_EVENT, () => this.signout());
   }
 
-  $onInit() {
-    // update if project has been loaded from session storage
-    this.$scope.$on(CACHED_PROJECT_EVENT, (event, project) => {
-      this.currentProject = project;
-    });
+  loadSession() {
+    this.loading = true;
+    const projectId = this.$location.search()[ 'projectId' ];
+
+    const loadUser = () => {
+      if (this.AuthService.getAccessToken()) {
+        const username = this.StorageService.get('username');
+        return this.UserService.get(username);
+      }
+      return Promise.resolve();
+    };
+
+    Promise.all([ this.ProjectService.loadFromSession(projectId), loadUser() ])
+      .then(([ project, user ]) => {
+        this.currentProject = project;
+        this.ProjectService.setCurrentProject(project);
+
+        this.currentUser = user;
+        this.UserService.setCurrentUser(user);
+
+        this.loading = false;
+        this.$rootScope.$broadcast('$appInit');
+      });
   }
 
   handleProjectChange(project) {
@@ -47,9 +51,21 @@ class AppCtrl {
     });
   }
 
+  handleUserChange(user) {
+    this.currentUser = user;
+    this.UserService.setCurrentUser(user);
+    this.$state.reload();
+  }
+
   signout() {
     this.currentUser = undefined;
-    this.UserService.signout();
+    this.UserService.setCurrentUser();
+
+    if (this.currentProject && this.currentProject.public === false) {
+      this.currentProject = undefined;
+      this.ProjectService.setCurrentProject();
+    }
+    this.AuthService.clearTokens();
   }
 }
 

@@ -23,12 +23,14 @@ import login from './views/login';
 import templates from './views/templates';
 import project, { CACHED_PROJECT_EVENT } from './views/project';
 import projectsService from './services/projects.service';
+import userService from './services/users.service';
 
 import app from './app.component';
 import auth from './components/auth';
 import expeditions from './views/expeditions/index';
 import header from './components/header';
 import navigation from './components/navigation';
+import alerts from './components/alerts';
 // import lookup from './components/lookup';
 import modals from './components/modals';
 import query from './components/query';
@@ -47,8 +49,10 @@ const dependencies = [
   trustedHtml,
   bootstrap,
   projectsService,
+  userService,
   header,
   navigation,
+  alerts,
   home,
   login,
   query,

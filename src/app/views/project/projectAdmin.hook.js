@@ -5,7 +5,7 @@ export default ($transitions, UserService, ProjectService) => {
   // check that the currentUser is the admin of the project
   // if not, redirect
   $transitions.onBefore({ to: 'project.**' }, (trans) =>
-    Promise.all([ UserService.waitForUser(), ProjectService.waitForProject() ])
+    Promise.all([ UserService.currentUser(), ProjectService.currentProject() ])
       .then(([ user, project ]) => {
         if (user.userId !== project.user.userId) {
           return trans.router.stateService.target('home');

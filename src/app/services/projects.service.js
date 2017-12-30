@@ -2,15 +2,13 @@ import angular from "angular";
 
 import storageService from './storage.service';
 
+let currentProject = undefined;
+
 class ProjectService {
-  constructor($rootScope, $cacheFactory, $http, $timeout, StorageService, ProjectConfigService, REST_ROOT) {
+  constructor($cacheFactory, $http, $timeout, StorageService, ProjectConfigService, REST_ROOT) {
     'ngInject';
     this.PROJECT_CACHE = $cacheFactory('projects');
 
-    this._loading = false;
-    this._currentProject = undefined;
-
-    this.$rootScope = $rootScope;
     this.$http = $http;
     this.$timeout = $timeout;
     this.StorageService = StorageService;
@@ -18,96 +16,57 @@ class ProjectService {
     this.REST_ROOT = REST_ROOT;
   }
 
+  /**
+   * this should only be used in ui-router hooks
+   */
   currentProject() {
-    if (this._currentProject) {
-      return Object.assign({}, this._currentProject);
-    }
-
-    return undefined;
+    return currentProject;
   }
 
   setCurrentProject(project) {
     if (!project) {
-      this._currentProject = undefined;
-      this.$rootScope.$broadcast('$projectChangeEvent', this.currentProject());
-      return Promise.resolve(this._currentProject);
+      currentProject = undefined;
+      return Promise.resolve();
     }
 
-    const setProjectConfig = () => {
-      if (project.config) {
-        return Promise.resolve();
-      }
-
-      this._loading = true;
-      return this.ProjectConfigService.get(project.projectId)
-        .then((config) => {
-          project.config = config;
-          this._loading = false;
-        })
-        .catch((response) => {
-          this._loading = false;
-          angular.catcher("Failed to load project configuration")(response);
-        });
-    };
+    const setProjectConfig = () => (project.config) ? Promise.resolve(project) : this.get(project.projectId);
 
     return setProjectConfig()
-      .then(() => {
+      .then(p => {
         this.StorageService.set('projectId', project.projectId);
-
-        this._currentProject = project;
-
-        //TODO remove this
-        this.$rootScope.$broadcast('$projectChangeEvent', this.currentProject());
-
-        return this._currentProject;
-      })
-
+        currentProject = p;
+        return p;
+      });
   }
 
-  /**
-   * Returns a Promise that is resolved when the project loads, or after 5s. If the project is loaded,
-   * the promise will resolve immediately. The promise will be rejected if there is no project loaded.
-   */
-  waitForProject() {
-    if (this._loading) {
-      return new Promise((resolve, reject) => {
-        this.$rootScope.$on('$projectChangeEvent', function (event, project) {
-          resolve(project);
-        });
+  cacheProject(projectId) {
+    this.StorageService.set('projectId', projectId);
+  }
 
-        // set a timeout in-case the project takes too long to load
-        this.$timeout(() => {
-          if (this._currentProject) {
-            resolve(this.currentProject());
-          } else {
-            reject();
-          }
-        }, 5000, false);
-      });
-    } else if (this._currentProject) {
-      return Promise.resolve(this.currentProject());
-    } else {
-      return Promise.reject();
+  get(projectId, includeConfig = true) {
+    if (!projectId) {
+      return Promise.resolve();
     }
-  }
 
-  /**
-   * @deprecated
-   */
-  set(project) {
-    this.setCurrentProject(project);
-  }
-
-  setFromId(projectId) {
-    this._loading = true;
     return this.all(true)
-      .then(({ data }) => {
-        const project = data.find(p => p.projectId === projectId);
-        return this.setCurrentProject(project);
+      .then(({ data }) => data.find(p => p.projectId === projectId))
+      .then(project => {
+        if (!project) {
+          return;
+        }
+
+        if (!includeConfig) {
+          return project;
+        }
+
+        return this.ProjectConfigService.get(project.projectId)
+          .then((config) => {
+            project.config = config;
+            return project;
+          })
+          .catch(response => angular.catcher("Failed to load project configuration")(response))
       })
-      .finally(() => {
-        this._loading = false;
-      });
+      .catch(response => angular.catcher("Failed to project")(response))
   }
 
   all(includePublic) {
@@ -127,16 +86,24 @@ class ProjectService {
 
   }
 
+  //TODO remove this
   resolveProjectId() {
     return new Promise((resolve, reject) => {
-      if (this._currentProject) {
-        resolve(this._currentProject.projectId);
+      if (currentProject) {
+        resolve(currentProject.projectId);
       } else {
         reject({ data: { error: "No project is selected" } });
       }
     });
   }
 
+  loadFromSession(projectId) {
+    if (!projectId) {
+      projectId = this.StorageService.get('projectId');
+    }
+
+    return this.get(projectId);
+  }
 }
 
 export default angular.module('fims.projectsService', [ storageService ])

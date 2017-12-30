@@ -11,14 +11,13 @@ function checkProjectRequired(state) {
   return false;
 }
 
-export default ($transitions, ProjectService) => {
+export default ($rootScope, $transitions, ProjectService) => {
   'ngInject';
 
   $transitions.onBefore({}, function (trans) {
     const to = trans.$to();
-    if (checkProjectRequired(to)) {
-      return ProjectService.waitForProject()
-        .catch(() => trans.router.stateService.target('home'));
+    if (checkProjectRequired(to) && !ProjectService.currentProject()) {
+      return trans.router.stateService.target('home');
     }
   });
 }

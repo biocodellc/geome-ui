@@ -9,7 +9,7 @@ function getStates() {
             ProjectMembersService.all(currentProject.projectId)
               .then(({ data }) => data)
               .catch(() => $state.go('project')),
-          currentUser: /*ngInject*/ (UserService) => UserService.currentUser,
+          // currentUser: /*ngInject*/ (UserService) => UserService.currentUser,
         },
         views: {
           "details": {

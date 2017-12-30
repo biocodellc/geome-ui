@@ -1,7 +1,7 @@
 import angular from 'angular';
 
 import authService from '../../services/auth.service';
-import users from '../users';
+import userService from '../../services/users.service';
 
 import AuthInterceptor from './auth.interceptor';
 import requiresLogin from './loginRequired.hook.js'
@@ -13,7 +13,7 @@ const config = ($httpProvider) => {
   $httpProvider.interceptors.push('AuthInterceptor');
 };
 
-export default angular.module('fims.auth', [ users, authService ])
+export default angular.module('fims.auth', [ authService, userService ])
   .config(config)
   .run(requiresLogin)
   .constant('AUTH_TIMEOUT', FOUR_HOURS)

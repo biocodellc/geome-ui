@@ -1,5 +1,5 @@
 import angular from "angular";
-import ProjectConfig from "./ProjectConfig";
+import ProjectConfig from "../../../models/ProjectConfig";
 
 
 class ConfigController {

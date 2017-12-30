@@ -4,7 +4,7 @@ import fimsProjectConfigMetadata from './metadata';
 import fimsProjectConfigEntities from './entities';
 import fimsProjectConfigLists from './lists';
 import fimsProjectConfigNavbar from './navbar.component';
-import Rule from "./Rule";
+import Rule from "../../../models/Rule";
 
 
 class ConfigOverviewController {

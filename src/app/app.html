@@ -13,9 +13,14 @@
 
 <main class="main">
     <alerts></alerts>
-    <div class="content" id="content">
+    <div class="content" id="content" ng-if="!$ctrl.loading">
         <div class="container-fluid" ui-view
+             on-user-change="$ctrl.handleUserChange(user)"
+             current-project="$ctrl.currentProject"
              current-user="$ctrl.currentUser">
         </div>
+    </div>
+    <div ng-if="$ctrl.loading">
+        <span us-spinner></span>
     </div>
 </main>
