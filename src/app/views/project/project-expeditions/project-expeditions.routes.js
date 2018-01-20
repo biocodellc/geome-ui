@@ -5,8 +5,8 @@ function getStates() {
       config: {
         url: '/expeditions',
         resolve: {
-          expeditions: /*ngInject*/ ($state, currentProject, ExpeditionService) =>
-            ExpeditionService.all(currentProject.projectId)
+          expeditions: /*ngInject*/ ($state, ProjectService, ExpeditionService) =>
+            ExpeditionService.all(ProjectService.currentProject().projectId)
               .then(response => response.data)
               .catch(() => $state.go('project')),
         },

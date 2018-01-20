@@ -1,18 +1,19 @@
 import angular from "angular";
+import { EventEmitter } from 'events';
 
 import storageService from './storage.service';
 import CLIENT_ID from '../components/auth/clientId';
 
-export const AUTH_ERROR_EVENT = '$authError';
+export const AUTH_ERROR_EVENT = 'authError';
 
 let triedToRefresh = false;
 let timeoutId = undefined;
 
-class AuthService {
-  constructor($rootScope, $state, $http, $timeout, StorageService, AUTH_TIMEOUT, REST_ROOT, APP_ROOT) {
+class AuthService extends EventEmitter {
+  constructor($state, $http, $timeout, StorageService, AUTH_TIMEOUT, REST_ROOT, APP_ROOT) {
     'ngInject';
+    super();
 
-    this.$rootScope = $rootScope;
     this.$state = $state;
     this.StorageService = StorageService;
     this.APP_ROOT = APP_ROOT;
@@ -63,14 +64,14 @@ class AuthService {
         })
         .then(({ data }) => this._authSuccess(data, username))
         .catch((response) => {
-          this.$rootScope.$broadcast(AUTH_ERROR_EVENT);
+          this.$emit(AUTH_ERROR_EVENT);
           this.clearTokens();
           triedToRefresh = true;
           return Promise.reject(response);
         });
     }
 
-    this.$rootScope.$broadcast(AUTH_ERROR_EVENT);
+    this.emit(AUTH_ERROR_EVENT);
     this.clearTokens();
     return Promise.reject();
   }
@@ -92,7 +93,7 @@ class AuthService {
     }
 
     timeoutId = this.$timeout(() => {
-      this.$rootScope.$broadcast(AUTH_ERROR_EVENT);
+      this.emit(AUTH_ERROR_EVENT);
       this.clearTokens();
       angular.alerts.info("You have been signed out due to inactivity.");
       this.$state.go("home");

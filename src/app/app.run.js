@@ -1,6 +1,14 @@
 import angular from 'angular';
 
-export default function run($http, $timeout, $rootScope, $transitions, LoadingModal) {
+const loadSession = ($location, AuthService, StorageService, UserService, ProjectService) => {
+  const projectId = $location.search()[ 'projectId' ];
+  const loadUser = () => (AuthService.getAccessToken()) ? UserService.loadFromSession() : undefined;
+  return Promise.all([ ProjectService.loadFromSession(projectId), loadUser() ]);
+};
+
+
+export default function ($http, $timeout, $rootScope, $transitions,
+                          $location, AuthService, StorageService, UserService, ProjectService) {
   'ngInject';
 
   $http.defaults.headers.common = { 'Fims-App': 'Biscicol-Fims' };
@@ -14,28 +22,22 @@ export default function run($http, $timeout, $rootScope, $transitions, LoadingMo
   const deregister = $transitions.onBefore({}, function (trans) {
     return new Promise((resolve) => {
       const timeoutPromise = $timeout(() => {
+        deregister();
         resolve(trans.router.stateService.go('home'));
       }, 5000); // timeout loading after 5 secs
 
-      $rootScope.$on('$appInit', () => {
-        $timeout.cancel(timeoutPromise);
-        deregister();
-        resolve();
-      });
+      loadSession($location, AuthService, StorageService, UserService, ProjectService)
+        .then(([ project, user ]) => {
+          $timeout.cancel(timeoutPromise);
+          deregister();
+
+          // deregister before setting project & user b/c setting these will trigger a state
+          // reload, and we don't want to run this function again
+          ProjectService.setCurrentProject(project);
+          UserService.setCurrentUser(user);
+
+          resolve();
+        });
     });
   }, { priority: 1000 });
-
-  $transitions.onStart({}, function (trans) {
-    if (trans.$to().resolvables.length > 0) {
-      LoadingModal.open();
-    }
-  });
-
-  $transitions.onFinish({}, function () {
-    LoadingModal.close();
-  });
-
-  $transitions.onError({}, function () {
-    LoadingModal.close(true);
-  });
 }

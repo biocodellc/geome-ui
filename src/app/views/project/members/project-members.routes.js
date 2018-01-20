@@ -5,11 +5,10 @@ function getStates() {
       config: {
         url: '/members',
         resolve: {
-          members: /*ngInject*/ ($state, ProjectMembersService, currentProject) =>
-            ProjectMembersService.all(currentProject.projectId)
+          members: /*ngInject*/ ($state, ProjectMembersService, ProjectService) =>
+            ProjectMembersService.all(ProjectService.currentProject().projectId)
               .then(({ data }) => data)
               .catch(() => $state.go('project')),
-          // currentUser: /*ngInject*/ (UserService) => UserService.currentUser,
         },
         views: {
           "details": {

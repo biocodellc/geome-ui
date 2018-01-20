@@ -1,25 +1,27 @@
 import angular from 'angular';
+import { EventEmitter } from 'events';
 import User from '../models/User';
 
-let currentUser = undefined;
+export const USER_CHANGED_EVENT = 'userChanged';
 
-class UserService {
-  constructor($http, REST_ROOT) {
+let currentUser = undefined;
+class UserService extends EventEmitter {
+  constructor($http, StorageService, REST_ROOT) {
     'ngInject';
+    super();
 
     this.$http = $http;
+    this.StorageService = StorageService;
     this.REST_ROOT = REST_ROOT;
   }
 
-  /**
-   * this should only be used in ui-router hooks
-   */
   currentUser() {
     return currentUser;
   }
 
   setCurrentUser(user) {
     currentUser = (user) ? new User(user) : undefined;
+    this.emit(USER_CHANGED_EVENT, user);
     return currentUser;
   }
 
@@ -83,6 +85,11 @@ class UserService {
 
   sendResetPasswordToken(username) {
     return this.$http.get(this.REST_ROOT + "users/" + username + "/sendResetToken");
+  }
+
+  loadFromSession() {
+    const username = this.StorageService.get('username');
+    return this.get(username);
   }
 }
 

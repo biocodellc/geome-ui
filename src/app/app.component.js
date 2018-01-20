@@ -1,68 +1,53 @@
 import { AUTH_ERROR_EVENT } from "./services/auth.service";
+import { PROJECT_CHANGED_EVENT } from './services/project.service';
+import { USER_CHANGED_EVENT } from './services/user.service';
 
 class AppCtrl {
-  constructor($rootScope, $state, UserService, ProjectService, AuthService, $location, StorageService) {
+  constructor($state, $transitions, UserService, ProjectService, AuthService) {
     'ngInject';
-
-    this.currentUser = undefined;
-    this.currentProject = undefined;
 
     this.ProjectService = ProjectService;
     this.UserService = UserService;
-    this.StorageService = StorageService;
     this.AuthService = AuthService;
     this.$state = $state;
-    this.$rootScope = $rootScope;
-    this.$location = $location;
-
-    this.loadSession();
-    $rootScope.$on(AUTH_ERROR_EVENT, () => this.signout());
+    this.$transitions = $transitions;
   }
 
-  loadSession() {
+  $onInit() {
     this.loading = true;
-    const projectId = this.$location.search()[ 'projectId' ];
 
-    const loadUser = () => {
-      if (this.AuthService.getAccessToken()) {
-        const username = this.StorageService.get('username');
-        return this.UserService.get(username);
-      }
-      return Promise.resolve();
-    };
+    this.AuthService.on(AUTH_ERROR_EVENT, () => this.signout());
+    this.ProjectService.on(PROJECT_CHANGED_EVENT, p => {
+      this.currentProject = p;
+      if (!this.$state.current.abstract) this.$state.reload();
+    });
+    this.UserService.on(USER_CHANGED_EVENT, u => {
+      this.currentUser = u;
+      if (!this.$state.current.abstract) this.$state.reload();
+    });
 
-    Promise.all([ this.ProjectService.loadFromSession(projectId), loadUser() ])
-      .then(([ project, user ]) => {
-        this.currentProject = project;
-        this.ProjectService.setCurrentProject(project);
+    // show spinner on transitions
+    this.$transitions.onStart({}, (trans) => {
+      const hasResolvables = (s) => {
+        if (s.resolvables.length > 0) return true;
+        if (!s.parent) return false;
+        return hasResolvables(s.parent);
+      };
 
-        this.currentUser = user;
-        this.UserService.setCurrentUser(user);
-
-        this.loading = false;
-        this.$rootScope.$broadcast('$appInit');
-      });
+      if (hasResolvables(trans.$to())) this.loading = true;
+    });
+    this.$transitions.onFinish({}, () => { this.loading = false; });
+    this.$transitions.onError({}, () => { this.loading = false; });
   }
 
   handleProjectChange(project) {
-    this.ProjectService.setCurrentProject(project).then((p) => {
-      this.currentProject = p;
-      this.$state.reload();
-    });
-  }
-
-  handleUserChange(user) {
-    this.currentUser = user;
-    this.UserService.setCurrentUser(user);
-    this.$state.reload();
+    this.ProjectService.setCurrentProject(project);
   }
 
   signout() {
-    this.currentUser = undefined;
     this.UserService.setCurrentUser();
 
     if (this.currentProject && this.currentProject.public === false) {
-      this.currentProject = undefined;
       this.ProjectService.setCurrentProject();
     }
     this.AuthService.clearTokens();

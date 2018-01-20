@@ -1,12 +1,15 @@
 import angular from "angular";
+import { EventEmitter } from 'events';
 
 import storageService from './storage.service';
 
-let currentProject = undefined;
+export const PROJECT_CHANGED_EVENT = 'projectChanged';
 
-class ProjectService {
+let currentProject = undefined;
+class ProjectService extends EventEmitter {
   constructor($cacheFactory, $http, $timeout, StorageService, ProjectConfigService, REST_ROOT) {
     'ngInject';
+    super();
     this.PROJECT_CACHE = $cacheFactory('projects');
 
     this.$http = $http;
@@ -26,6 +29,7 @@ class ProjectService {
   setCurrentProject(project) {
     if (!project) {
       currentProject = undefined;
+      this.emit(PROJECT_CHANGED_EVENT, currentProject);
       return Promise.resolve();
     }
 
@@ -35,6 +39,7 @@ class ProjectService {
       .then(p => {
         this.StorageService.set('projectId', project.projectId);
         currentProject = p;
+        this.emit(PROJECT_CHANGED_EVENT, currentProject);
         return p;
       });
   }

@@ -15,7 +15,7 @@ class ProfileController {
   save() {
     this.UserService.save(this.user)
       .then(() => {
-        this.onUserChange({ user: this.user });
+        this.UserService.setCurrentUser(this.user);
         angular.alerts.success("Successfully saved your profile!")
       });
   }
@@ -36,6 +36,5 @@ export default {
   controller: ProfileController,
   bindings: {
     currentUser: '<',
-    onUserChange: '&'
   },
 };

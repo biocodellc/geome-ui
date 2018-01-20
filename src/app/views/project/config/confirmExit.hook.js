@@ -14,6 +14,7 @@ export default ($transitions, $state, $uibModal, ProjectService, ProjectConfigSe
   // If there are unsaved changes to the project configuration
   // ask the user if they would like to save before transitioning
   // to a new page
+  //TODO use https://ui-router.github.io/ng1/docs/latest/interfaces/ng1.ng1controller.html#uicanexit instead?
   $transitions.onExit({ exiting: 'project.config' }, () => {
     const state = $state.get('project.config');
     if (state.data && state.data.config) {

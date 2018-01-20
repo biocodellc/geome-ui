@@ -33,7 +33,7 @@ class LoginController {
     this.AuthService.authenticate(this.credentials.username, this.credentials.password)
       .then(() => this.UserService.get(this.credentials.username))
       .then((user) => {
-        this.onUserChange({ user });
+        this.UserService.setCurrentUser(user);
         const params = this.state.params;
         if (params.nextState && params.nextState !== "login") {
           return this.state.go(params.nextState, params.nextStateParams, { reload: true, inherit: false });
@@ -49,7 +49,4 @@ class LoginController {
 export default {
   template: require('./login.html'),
   controller: LoginController,
-  bindings: {
-    onUserChange: '&',
-  }
 };

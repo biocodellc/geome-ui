@@ -6,12 +6,14 @@ import bootstrap from 'angular-ui-bootstrap';
 import 'jquery-ui';
 import 'bootstrap-sass';
 
-
 // this loads the css for the app
 import '../style/app.scss';
 
+// use async functions w/ babel
+import "babel-polyfill";
+
 import run from './app.run';
-// import routing from './app.routes'
+import routing from './app.routes'
 import router from './utils/router';
 import postInterceptor from './postInterceptor';
 import autofocus from './directives/autofocus.directive';
@@ -22,6 +24,8 @@ import home from './views/home';
 import login from './views/login';
 import templates from './views/templates';
 import project from './views/project';
+// import validation from './views/validation';
+
 import projectService from './services/project.service';
 import userService from './services/user.service';
 
@@ -35,7 +39,6 @@ import alerts from './components/alerts';
 import modals from './components/modals';
 import query from './components/query';
 import users from './components/users';
-// import validation from './components/validation';
 
 import Exceptions from './utils/exceptions';
 import Alerts from "./utils/alerts";
@@ -73,6 +76,7 @@ angular.catcher = e.catcher.bind(e);
 
 export default angular.module('biscicolApp', dependencies)
   .component('app', app)
+  .run(routing)
   .run(run)
   //TODO figure out a better config system
   .constant("NAAN", "99999")
