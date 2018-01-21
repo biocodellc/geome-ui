@@ -1,0 +1,15 @@
+<p class="text-center">The validate option checks that all required fields are complete and that each
+    materialSampleID is unique</p>
+
+<form role="form" name="validateForm" class="form-horizontal" ng-submit="$ctrl.fimsMetadata && $ctrl.onValidate()">
+
+    <fims-metadata
+            fims-metadata="$ctrl.fimsMetadata"
+            required="false"
+            on-change="$ctrl.onMetadataChange({ fimsMetadata: fimsMetadata })">
+    </fims-metadata>
+
+    <div class="col-xs-1 col-xs-offset-9">
+        <button type="submit" class="btn btn-default">Validate</button>
+    </div>
+</form>

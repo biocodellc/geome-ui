@@ -1,0 +1,30 @@
+<div ng-repeat="(groupMessage, messagesArray) in $ctrl.messages" uib-accordion-group class="groupMessage">
+
+    <div>
+        <a role="button" data-toggle="collapse" href
+           aria-expanded="{{$ctrl.isOpen}}" aria-controls="{{::panelId}}" tabindex="0"
+           class="accordion-toggle"
+           ng-click="$ctrl.toggleOpen()"
+           uib-accordion-transclude="heading"
+           ng-disabled="$ctrl.isDisabled"
+           uib-tabindex-toggle>
+            <div uib-accordion-header ng-class="{'text-muted': $ctrl.isDisabled}">{{heading}}</div>
+        </a>
+
+        <div id="{{::panelId}}" aria-labelledby="{{::headingId}}" aria-hidden="{{!$ctrl.isOpen}}"
+             role="tabpanel" class="collapse" uib-collapse="!$ctrl.isOpen">
+
+            <div>
+                <!--{{ $ctrl.successfullyValidated = false;"" }}-->
+                <div uib-accordion-heading>
+                <span class="{{ $ctrl.class }}">{{ $ctrl.type }}:
+                    <span ng-bind-html="groupMessage | trusted_html"></span>
+                </span>
+                </div>
+                <div ng-repeat="message in messagesArray">{{ message }}</div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

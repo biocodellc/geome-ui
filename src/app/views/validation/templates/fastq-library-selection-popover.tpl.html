@@ -1,0 +1,16 @@
+<div>
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th>Selection</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="field in vm.fastqMetadataLists.librarySelection track by field.value">
+            <td>{{ ::field.value }}</td>
+            <td>{{ ::field.definition}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>

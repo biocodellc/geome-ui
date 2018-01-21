@@ -1,3 +1,4 @@
+// TODO migrate to mapping.js
 (function (undefined) {
     'use strict';
     // Check if dependencies are available.

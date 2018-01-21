@@ -1,0 +1,42 @@
+<div class="form-group" show-errors>
+    <label for="expeditionCode" class="col-xs-2 control-label">Expedition Name</label>
+    <div class="row col-xs-8">
+        <div class="col-xs-8" ng-show="!$ctrl.newExpedition">
+            <select id="expeditionCode" name="expeditionCode"
+                    ng-model="$ctrl.expeditionCode"
+                    ng-options="e.expeditionCode as e.expeditionTitle for e in $ctrl.userExpeditions | orderBy: 'expeditionTitle' track by e.expeditionId"
+                    required
+                    class="form-control col-xs-6">
+                <option value="">-- Select an Expedition --</option>
+            </select>
+        </div>
+        <div class="col-xs-8" ng-show="$ctrl.newExpedition">
+            <input type="text" class="form-control" name="newExpeditionCode"
+                   ng-model="$ctrl.expeditionCode"
+                   required ng-pattern=/^[a-zA-Z0-9_-]{4,50}$/ />
+        </div>
+        <label class="col-xs-3 checkbox-inline">
+            <input type="checkbox" name="newExpedition"
+                   ng-model="$ctrl.new"
+                   ng-model-options="{ getterSetter: true }"
+                   value="true"/>
+            New Expedition?
+        </label>
+        <div class="col-xs-12" ng-show="$ctrl.newExpedition">
+            <p class="help-block ignore-error">
+                We recommend that the expedition name be meaningful to the broader community so we
+                suggest this format "species/taxa_geographicscope_datatype"
+                (e.g., Lutjanuskasmia_frenchpoly_RADseq or Lutjanuskasmia_Hawaii_COI).
+            </p>
+            <p class="help-block"
+               ng-if="$ctrl.uploadForm.newExpeditionCode.$error.pattern && $ctrl.uploadForm.newExpeditionCode.$touched">
+                <b>Expedition
+                    Name</b> must contain only numbers, letters, or underscores and be 4 to 50
+                characters long</p>
+            <p class="help-block col-xs-12" style="padding-left:0px;"
+               ng-show="$ctrl.uploadForm.newExpeditionCode.$error.exists">
+                Expedition with that name already exists
+            </p>
+        </div>
+    </div>
+</div>

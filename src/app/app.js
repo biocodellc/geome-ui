@@ -24,14 +24,14 @@ import home from './views/home';
 import login from './views/login';
 import templates from './views/templates';
 import project from './views/project';
-// import validation from './views/validation';
+import expeditions from './views/expeditions';
+import validation from './views/validation';
 
 import projectService from './services/project.service';
 import userService from './services/user.service';
 
 import app from './app.component';
 import auth from './components/auth';
-import expeditions from './views/expeditions/index';
 import header from './components/header';
 import navigation from './components/navigation';
 import alerts from './components/alerts';
@@ -62,7 +62,7 @@ const dependencies = [
   auth,
   templates,
   expeditions,
-  // validation,
+  validation,
   project,
   users,
   modals,

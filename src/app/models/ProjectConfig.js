@@ -52,6 +52,11 @@ export default class ProjectConfig {
     return attributes;
   }
 
+  findAttributesByDefinition(sheetName, def) {
+    return this.entities.filter(entity => entity.worksheet === sheetName)
+      .map(e => e.attributes.filter(a => a.defined_by === def));
+  }
+
   attributeRules(sheetName, attribute) {
     const reservedKeys = [ 'name', 'level', 'listName' ];
     const sheetRules = this.sheetRules(sheetName);

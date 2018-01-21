@@ -1,0 +1,64 @@
+<form role="form" name="$ctrl.uploadForm" class="form-horizontal" novalidate ng-submit="$ctrl.upload()">
+    <fims-upload-datatypes
+            on-update="$ctrl.handleDatatypes(dataTypes)"
+            new-expedition="$ctrl.newExpedition">
+    </fims-upload-datatypes>
+
+
+    <fims-upload-expedition
+            new-expedition="$ctrl.newExpedition"
+            user-expeditions="$ctrl.userExpeditions"
+            on-new-expedition-change="$ctrl.handleNewExpeditionChange(newExpedition)"
+            on-change="$ctrl.handleExpeditionChange(expeditionCode)">
+    </fims-upload-expedition>
+
+
+    <div ng-show="$ctrl.dataTypes.fims">
+        <hr class="separator"/>
+        <fims-metadata
+                ng-show="$ctrl.dataTypes.fims"
+                fims-metadata="$ctrl.fimsMetadata"
+                required="$ctrl.dataTypes.fims"
+                on-change="$ctrl.onMetadataChange({ fimsMetadata: fimsMetadata })">
+        </fims-metadata>
+        <div class="form-group">
+            <div class="col-xs-offset-2" ng-show="$ctrl.verifyDataPoints"
+                 ng-class="$ctrl.coordinatesErrorClass">
+                <div class="col-xs-8 checkbox">
+                    <label>
+                        <input type="checkbox" name="coordinatesVerified"
+                               id="coordinates_verified" ng-model="$ctrl.coordinatesVerified"
+                               ng-click="$ctrl.checkCoordinatesVerified()"/>
+                        <span class="control-label">Please verify sample locations on the map below and then check this box</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group split-form" ng-show="$ctrl.dataTypes.fasta">
+        <fims-fasta-data
+                on-change="$ctrl.handleFastaDataChange(data)"
+                form="$ctrl.uploadForm"
+                config="$ctrl.currentProject.config"
+                data="$ctrl.fastaData">
+        </fims-fasta-data>
+    </div>
+
+    <div class="form-group split-form" ng-show="$ctrl.dataTypes.fastq">
+        <fims-fastq-data
+                on-change="$ctrl.handleFastaDataChange(data)"
+                form="$ctrl.uploadForm"
+                config="$ctrl.currentProject.config"
+                data="$ctrl.fastaData">
+        </fims-fastq-data>
+    </div>
+
+    <div class="form-group">
+        <div class="col-xs-1"
+             ng-class="{'col-xs-offset-7': $ctrl.dataTypes.fasta || $ctrl.dataTypes.fastq, 'col-xs-offset-9': !($ctrl.dataTypes.fasta || $ctrl.dataTypes.fastq)}">
+            <button type="submit" class="btn btn-primary pull-right">Upload</button>
+        </div>
+    </div>
+
+</form>

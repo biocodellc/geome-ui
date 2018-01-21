@@ -1,0 +1,55 @@
+<div ng-show="$ctrl.results.showValidationMessages">
+    <!-- project config validation messages -->
+    <div ng-show="$ctrl.results.validationMessages.config" ng-init="validateSuccess = true">
+
+        <div class="tab-content" ng-show="!$ctrl.isEmptyObject(sheetMessages.errors)">
+            <p><b>Invalid Project Configuration.</b><br>
+                <b>Please talk to your project administrator to fix the following error(s):</b></p>
+        </div>
+
+        <uib-accordion close-others="false">
+            <div role="tablist">
+
+                <fims-validaton-messages
+                        messages="$ctrl.results.validationMessages.config.errors"
+                        error="true">
+                </fims-validaton-messages>
+
+            </div>
+        </uib-accordion>
+    </div>
+
+    <!-- worksheet validation messages -->
+    <div ng-show="$ctrl.results.validationMessages.worksheets">
+        <div ng-repeat="(sheetName, sheetMessages) in $ctrl.results.validationMessages.worksheets">
+
+            <div class="tab-content" ng-show="!$ctrl.isEmptyObject(sheetMessages.errors)">
+                <p><b>Validation results on {{ sheetName }} worksheet.</b><br>
+                    <b>1 or more errors found. Must fix to continue. Click each message for details</b></p>
+            </div>
+            <div class="tab-content"
+                 ng-show="$ctrl.isEmptyObject(sheetMessages.errors) && !$ctrl.isEmptyObject(sheetMessages.warnings)">
+                <p><b>Validation results on {{ sheetName }} worksheet.</b><br>
+                    <b>1 or more warnings found. Click each message for details</b></p>
+            </div>
+
+            <uib-accordion close-others="false">
+                <div role="tablist">
+                    <fims-validation-messages
+                            messages="sheetMessages.errors"
+                            error="true">
+                    </fims-validation-messages>
+
+                    <fims-validation-messages
+                            messages="sheetMessages.warnings"
+                            error="false">
+                    </fims-validation-messages>
+                </div>
+            </uib-accordion>
+
+        </div>
+    </div>
+</div>
+
+<div ng-show="$ctrl.results.showUploadMessages" ng-bind-html="$ctrl.results.uploadMessage | trusted_html"></div>
+<div ng-show="$ctrl.results.showSuccessMessages" ng-bind-html="$ctrl.results.successMessage | trusted_html"></div>

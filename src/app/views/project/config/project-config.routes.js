@@ -54,7 +54,8 @@ function getStates() {
         url: '/:alias/',
         redirectTo: "project.config.entities.detail.attributes",
         resolve: {
-          entity: /*ngInject*/ ($transition$, $state, currentProject) => {
+          entity: /*ngInject*/ ($transition$, $state, ProjectService) => {
+            const currentProject = ProjectService.currentProject();
             let e = $transition$.params('to').entity;
 
             if (!e.conceptAlias) {
@@ -105,7 +106,7 @@ function getStates() {
       config: {
         url: 'rules',
         resolve: {
-          lists: /*ngInject*/ (currentProject) => currentProject.config.lists.map(l => l.alias),
+          lists: /*ngInject*/ (ProjectService) => ProjectService.currentProject().config.lists.map(l => l.alias),
           columns: /*ngInject*/ (entity) => entity.attributes.map(a => a.column),
         },
         views: {
@@ -119,10 +120,6 @@ function getStates() {
       state: 'project.config.entities.detail.rules.add',
       config: {
         url: '/add',
-        resolve: {
-          lists: /*ngInject*/ (currentProject) => currentProject.config.lists.map(l => l.alias),
-          columns: /*ngInject*/ (entity) => entity.attributes.map(a => a.column),
-        },
         views: {
           "rules@project.config.entities.detail": {
             component: 'fimsProjectConfigRuleAdd',
@@ -148,7 +145,8 @@ function getStates() {
       config: {
         url: '/:alias/',
         resolve: {
-          list: /*ngInject*/ ($transition$, $state, currentProject) => {
+          list: /*ngInject*/ ($transition$, $state, ProjectService) => {
+            const currentProject = ProjectService.currentProject();
             let l = $transition$.params('to').list;
 
             if (!l.alias) {
