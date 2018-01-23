@@ -7,7 +7,7 @@
                 <input type="file" style="display:none;" id="fimsData" name="fimsMetadata"
                        class="form-control"
                        ngf-select="$ctrl.handleSelect($files)"
-                       ngf-pattern="'.xls,.xlsx,.txt'"
+                       ngf-pattern="'.xls,.xlsx,.txt,.csv,.tsv'"
                        ng-required="$ctrl.required"
                        ngf-model-invalid="invalidFimsMetadataFile"
                        ng-model="$ctrl.selected"/>
@@ -17,6 +17,6 @@
                    readonly/>
         </div>
         <p class="help-block" ng-show="!$ctrl.valid">
-            File must have one of the following extensions: .xls, xlsx, or .txt</p>
+            File must have one of the following extensions: .xls, .xlsx, .csv, .tsv, or .txt</p>
     </div>
 </div>

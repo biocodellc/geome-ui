@@ -19,6 +19,7 @@ class UploadController {
   $onInit() {
     this.newExpedition = (this.userExpeditions.length === 0);
     this.fastaData = [];
+    this.dataTypes = {};
   }
 
   handleDatatypes(dataTypes) {

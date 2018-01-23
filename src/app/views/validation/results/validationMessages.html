@@ -1,30 +1,29 @@
-<div ng-repeat="(groupMessage, messagesArray) in $ctrl.messages" uib-accordion-group class="groupMessage">
+<!--we use template-url here to override the default uib-accordian-group template-->
+<div ng-repeat="group in $ctrl.messages track by group.groupMessage"
+     uib-accordion-group template-url="validation-messages-group.html" class="groupMessage">
+    <div uib-accordion-heading>
+        <span class="{{ $ctrl.class }}">{{ $ctrl.type }}: {{ group.groupMessage | trusted_html }}</span>
+    </div>
 
+    <div ng-repeat="m in group.messages track by $index">{{ m.message }}</div>
+</div>
+
+<!--NOTE: we can't user $ctrl in here b/c it doesn't have access to it, I think isOpen & toggleOpen is defined on the uib-accordian-group ctrl-->
+<script type="text/ng-template" id="validation-messages-group.html">
     <div>
         <a role="button" data-toggle="collapse" href
-           aria-expanded="{{$ctrl.isOpen}}" aria-controls="{{::panelId}}" tabindex="0"
+           aria-expanded="{{isOpen}}" aria-controls="{{::panelId}}" tabindex="0"
            class="accordion-toggle"
-           ng-click="$ctrl.toggleOpen()"
+           ng-click="toggleOpen()"
            uib-accordion-transclude="heading"
-           ng-disabled="$ctrl.isDisabled"
+           ng-disabled="isDisabled"
            uib-tabindex-toggle>
-            <div uib-accordion-header ng-class="{'text-muted': $ctrl.isDisabled}">{{heading}}</div>
+            <div uib-accordion-header ng-class="{'text-muted': isDisabled}">{{heading}}</div>
         </a>
 
-        <div id="{{::panelId}}" aria-labelledby="{{::headingId}}" aria-hidden="{{!$ctrl.isOpen}}"
-             role="tabpanel" class="collapse" uib-collapse="!$ctrl.isOpen">
-
-            <div>
-                <!--{{ $ctrl.successfullyValidated = false;"" }}-->
-                <div uib-accordion-heading>
-                <span class="{{ $ctrl.class }}">{{ $ctrl.type }}:
-                    <span ng-bind-html="groupMessage | trusted_html"></span>
-                </span>
-                </div>
-                <div ng-repeat="message in messagesArray">{{ message }}</div>
-
-            </div>
-
+        <div id="{{::panelId}}" aria-labelledby="{{::headingId}}" aria-hidden="{{!isOpen}}"
+             role="tabpanel" class="collapse" uib-collapse="!isOpen">
+            <div ng-transclude></div>
         </div>
     </div>
-</div>
+</script>

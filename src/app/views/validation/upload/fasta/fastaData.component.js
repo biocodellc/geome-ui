@@ -35,7 +35,7 @@ class FastaDataController {
       this.data = changesObj.data.currentValue.slice();
     }
 
-    if ('config' in changesObj) {
+    if ('config' in changesObj && changesObj.config.currentValue) {
       this.fastqMetadataLists = this.config.getList('fastqMetadata');
     }
   }

@@ -1,9 +1,10 @@
 class DataTypesController {
 
   $onInit() {
-    this.fims = false;
+    this.fims = true; // only temporary
     this.fasta = false;
     this.fastq = false;
+    this.datatypesChange(); // only temporary
   }
 
   datatypesChange() {

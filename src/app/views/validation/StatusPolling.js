@@ -37,7 +37,7 @@ export default class StatusPolling extends EventEmitter {
     }
 
 
-    this.$http.get(this.REST_ROOT + 'validate/status')
+    this.$http.get(this.REST_ROOT + 'data/status')
       .then(({ data }) => {
           //TODO fix this
           if (data.error && this.errorCnt >= 4) {// && !ResultsDataFactory.validationMessages) {

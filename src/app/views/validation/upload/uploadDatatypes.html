@@ -12,6 +12,7 @@
         <label class="checkbox-inline">
             <input type="checkbox" ng-model="$ctrl.fasta"
                    name="fastaData"
+                   disabled
                    ng-required="!$ctrl.fims && !$ctrl.fastq"
                    ng-click="$ctrl.fastq = false; $ctrl.datatypesChange()"/>
             Fasta
@@ -19,6 +20,7 @@
         <label class="checkbox-inline">
             <input type="checkbox" ng-model="$ctrl.fastq"
                    name="fastqData"
+                   disabled
                    ng-required="!$ctrl.fims && !$ctrl.fasta"
                    ng-click="$ctrl.fasta = false; $ctrl.datatypesChange()"/>
             Fastq

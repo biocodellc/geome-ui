@@ -13,7 +13,7 @@
   "homepage": "https://biscicol.org",
   "scripts": {
     "build": "rimraf dist && webpack --bail --progress --profile",
-    "server": "webpack-dev-server --history-api-fallback --inline --progress",
+    "server": "webpack-dev-server --history-api-fallback --no-inline --progress",
     "test": "karma start",
     "test-watch": "karma start --auto-watch --no-single-run",
     "start": "npm run server"
@@ -23,7 +23,7 @@
     "angular": "^1.6.7",
     "angular-drag-and-drop-lists": "^2.1.0",
     "angular-sanitize": "^1.6.8",
-    "angular-ui-bootstrap": "^1.3.2",
+    "angular-ui-bootstrap": "^2.5.6",
     "bootstrap-sass": "^3.3.1",
     "jquery": "^1.12.4",
     "jquery-ui": "^1.12.1",

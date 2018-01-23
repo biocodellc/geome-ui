@@ -1,18 +1,8 @@
-//TODO use componet close & dismiss
 class ResultsModalController {
-  constructor($uibModalInstance) {
-    'ngInject';
-
-    console.log(this);
-    this.$uibModalInstance = $uibModalInstance;
-  }
-
-  cancel() {
-    this.$uibModalInstance.dismiss('cancel');
-  }
-
-  close() {
-    this.$uibModalInstance.close();
+  $onInit() {
+    // we have to do the following b/c uibModal doesn't resolve correctly
+    this.results = this.resolve.results;
+    this.onContinue = this.resolve.onContinue;
   }
 }
 
@@ -20,7 +10,8 @@ export default {
   template: require('./resultsModal.html'),
   controller: ResultsModalController,
   bindings: {
-    results: '<',
-    onContinue: '&',
+    resolve: '<',
+    close: '&',
+    dismiss: '&',
   },
 };

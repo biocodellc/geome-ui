@@ -5,7 +5,7 @@ class FastqDataController {
       this.data = Object.assign({}, this.data);
     }
 
-    if ('config' in changesObj) {
+    if ('config' in changesObj && changesObj.config.currentValue) {
       this.fastqMetadataLists = this.config.getList('fastqMetadata');
     }
   }
