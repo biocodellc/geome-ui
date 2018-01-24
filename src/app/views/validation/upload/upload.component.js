@@ -1,4 +1,4 @@
-import angular from "angular";
+import { getFileExt } from "../../../utils/utils";
 
 const defaultFastqMetadata = {
   libraryLayout: null,
@@ -11,8 +11,9 @@ const defaultFastqMetadata = {
 };
 
 class UploadController {
-  constructor(ExpeditionService) {
+  constructor($scope, ExpeditionService) {
     'ngInject';
+    this.$scope = $scope;
     this.ExpeditionService = ExpeditionService;
   }
 
@@ -34,6 +35,10 @@ class UploadController {
     this.newExpedition = newExpedition;
   }
 
+  handleExpeditionChange(expeditionCode) {
+    this.expeditionCode = expeditionCode;
+  }
+
   handleFastaDataChange(data) {
     this.fastaData = data;
   }
@@ -42,21 +47,28 @@ class UploadController {
     this.$scope.$broadcast('show-errors-check-validity');
 
     const submitIfValid = () => {
-      if (!this.checkCoordinatesVerified() || this.uploadForm.$invalid) {
-        return;
-      }
+      // if (!this.checkCoordinatesVerified() || this.uploadForm.$invalid) {
+      //   return;
+      // }
 
       this.onUpload({ data: this.getUploadData() })
     };
 
     if (this.newExpedition) {
-      this.checkExpeditionExists({ expeditionCode: this.expeditionCode })
-        .then((exists) => {
-          (exists) ?
-            this.uploadForm.newExpeditionCode.$setValidity("exists", false) :
-            this.uploadForm.newExpeditionCode.$setValidity("exists", true);
+      this.ExpeditionService.create(
+        this.currentProject.projectId,
+        {
+          expeditionCode: this.expeditionCode,
+          expeditionTitle: `${this.expeditionCode} Dataset`,
+          visibility: 'anyone',
+          isPublic: true,
         })
-        .finally(() => submitIfValid());
+        .then(({ data }) => this.userExpeditions.push(data))
+        .then(submitIfValid)
+        .catch(response => {
+          // this.uploadForm.newExpeditionCode.$setValidity("exists", true)
+          console.error(response);
+        })
     } else {
       submitIfValid();
     }
@@ -76,12 +88,22 @@ class UploadController {
     const data = {
       expeditionCode: this.expeditionCode,
       upload: true,
-      public: true, //TODO allow a toggle? Actually we should remove this and require visiblity to be set via expedition page
-
+      reload: false,
     };
 
     if (this.dataTypes.fims) {
-      data.fimsMetadata = this.fimsMetadata;
+      if ([ 'xlsx', 'xls' ].includes(getFileExt(this.fimsMetadata.name))) {
+        data.workbooks = [ this.fimsMetadata ];
+      } else {
+        data.dataSourceMetadata = [ {
+          dataType: 'TABULAR',
+          filename: this.fimsMetadata.name,
+          metadata: {
+            sheetName: 'Samples' //TODO this needs to be dynamic, depending on the entity being validated
+          },
+        } ];
+        data.dataSourceFiles = [ this.fimsMetadata ];
+      }
     }
     if (this.dataTypes.fasta) {
       //TODO fix this
@@ -97,12 +119,6 @@ class UploadController {
     }
 
     return data;
-  }
-
-  checkExpeditionExists(expeditionCode) {
-    return this.ExpeditionService.getExpedition(this.currentProject.projectId, expeditionCode)
-      // if we get an expedition, then it already exists
-      .then(({ data }) => !!(data));
   }
 }
 

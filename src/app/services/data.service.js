@@ -38,10 +38,10 @@ class DataService {
    *                                                     file must have a corresponding metadata object
    * @param data.workbooks (optional) File  The excel workbook to validate. Either this or dataSourceFiles/Metadata must be
    * @param data.upload boolean  Is this data to be uploaded or only validated?
+   * @param data.reload boolean  Should we reload any parent entities or only this dataset?
    */
   validate(data) {
     if (data.dataSourceMetadata) {
-      // data.dataSourceMetadata = data.dataSourceMetadata.map(m => this.Upload.jsonBlob(m));
       data.dataSourceMetadata = this.Upload.jsonBlob(data.dataSourceMetadata);
     }
     return this.Upload.upload({
@@ -50,6 +50,11 @@ class DataService {
         arrayKey: '',
       })
       .catch(angular.catcher("Data validation failed"));
+  }
+
+  upload(uploadId) {
+    return this.$http.put(`${this.REST_ROOT}data/upload/${uploadId}`)
+      .catch(angular.catcher("Data upload failed"));
   }
 
   exportData(projectId, expeditionCode) {
@@ -62,6 +67,10 @@ class DataService {
         return this.FileService.download(response.data.url)
       })
       .catch(angular.catcher("Failed to export data"));
+  }
+
+  getNAAN() {
+    return this.$http.get(`${this.REST_ROOT}utils/getNAAN`);
   }
 }
 

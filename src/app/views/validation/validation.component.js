@@ -3,6 +3,7 @@ import XLSXReader from '../../utils/XLSXReader';
 
 import StatusPolling from "./StatusPolling";
 import detectBrowser from '../../utils/detectBrowser';
+import { getFileExt } from "../../utils/utils";
 
 const defaultResults = {
   validation: {},
@@ -19,23 +20,16 @@ const defaultResults = {
   showSuccessMessages: false,
 };
 
-const getExt = (filename) => {
-  const parts = filename.split('.');
-  return parts[ parts.length - 1 ] || undefined;
-};
-
 class ValidationController {
-  constructor($scope, $http, $window, $uibModal, DataService, Upload, ProjectConfigService, ExpeditionService, FailModalFactory, REST_ROOT, MAPBOX_TOKEN) {
+  constructor($scope, $http, $uibModal, DataService, REST_ROOT, MAPBOX_TOKEN) {
 
     this.$scope = $scope;
-    this.$http = $http;
     this.$uibModal = $uibModal;
     this.REST_ROOT = REST_ROOT;
-    this.ExpeditionService = ExpeditionService;
     this.DataService = DataService;
     let latestExpeditionCode = null;
-    let modalInstance = null;
 
+    // TODO this should go in the DataService class
     this.polling = new StatusPolling($http, REST_ROOT);
     //TODO find a better place for this
     this.polling.on('error', (err) => {
@@ -55,7 +49,8 @@ class ValidationController {
     this.showGenbankDownload = false;
     this.activeTab = 0;
 
-    $http.get(`${this.REST_ROOT}utils/getNAAN`).then(({ data }) => this.NAAN = data.naan);
+    DataService.getNAAN()
+      .then(({ data }) => this.NAAN = data.naan);
   }
 
   $onInit() {
@@ -79,68 +74,50 @@ class ValidationController {
     data.projectId = this.currentProject.projectId;
 
     return this.validateSubmit(data)
-      .then((response) => {
-        if (response.data.done) {
-          this.results.validation = response.data;
+      .then(({ data }) => {
+        if (data.isValid) {
+          this.continueUpload(data.id);
+        } else if (data.hasError) {
+          this.results.validation = data;
           this.results.showOkButton = true;
           this.results.showValidationMessages = true;
-        } else if (response.data.uploadUrl) {
-          if (response.data.uploadUrl) {
-            this.continueUpload(response.data.uploadUrl);
-          } else {
-            this.results.validationMessages = response.data;
-            this.results.showValidationMessages = true;
-            this.results.showStatus = false;
-            this.results.showContinueButton = true;
-            this.results.showCancelButton = true;
-            // if (!angular.equals(this.fastqMetadata, defaultFastqMetadata)) {
-            //   this.showGenbankDownload = true;
-            // }
-          }
         } else {
-          this.results.error = "Unexpected response from server. Please contact system admin.";
-          this.results.showOkButton = true;
+          this.results.validation = data;
+          this.results.showValidationMessages = true;
+          this.results.showStatus = false;
+          this.results.showContinueButton = true;
+          this.results.uploadId = data.id;
+          this.results.showCancelButton = true;
+          // if (!angular.equals(this.fastqMetadata, defaultFastqMetadata)) {
+          //   this.showGenbankDownload = true;
+          // }
         }
       });
   }
 
-  continueUpload() {
-    this.polling.startPolling();
+  continueUpload(uploadId) {
+    // this.polling.startPolling();
     this.results.showStatus = true;
-    return $http.get(REST_ROOT + "validate/continue?createExpedition=" + this.newExpedition).then(
-      function (response) {
-        if (response.data.error) {
-          this.results.error = response.data.error;
-        } else if (response.data.continue) {
-          this.results.uploadMessage = response.data.continue.message;
-          this.results.showOkButton = false;
-          this.results.showContinueButton = true;
-          this.results.showCancelButton = true;
-          this.results.showStatus = false;
-          this.results.showUploadMessages = true;
-        } else {
-          this.results.successMessage = response.data.done;
-          modalInstance.close();
+    return this.DataService.upload(uploadId)
+      .then(({ data }) => {
+          this.results.successMessage = data.message;
+          this.modalInstance.close();
+          console.log(this.expeditionCode);
           this.latestExpeditionCode = this.expeditionCode;
           // if (!angular.equals(this.fastqMetadata, defaultFastqMetadata)) {
           //   this.showGenbankDownload = true;
           // }
-          this.resetForm();
-        }
-
-      }, function (response) {
-        this.results = Object.assign({}, defaultResults);
-        this.results.error = response.data.error || response.data.usrMessage || "Server Error!";
-        this.results.showOkButton = true;
+          // this.resetForm();
+        // }
       })
-      .finally(
-        function () {
-          if (this.newExpedition) {
-            // getExpeditions();
-          }
-          this.polling.stopPolling();
-        },
-      );
+      .catch((response) => {
+        console.log('failed ->', response);
+        this.modalInstance.close();
+        // this.results = Object.assign({}, defaultResults);
+        this.results.error = response.data.message || response.data.error || response.data.usrMessage || "Server Error!";
+        // this.results.showOkButton = true;
+      })
+      // .finally(this.polling.stopPolling);
   }
 
   validateSubmit(data) {
@@ -156,7 +133,7 @@ class ValidationController {
         this.results.showOkButton = true;
         return response;
       })
-      .finally(() => this.polling.stopPolling());
+      // .finally(this.polling.stopPolling);
 
   }
 
@@ -168,7 +145,7 @@ class ValidationController {
       upload: false,
     };
 
-    if ([ 'xlsx', 'xls' ].includes(getExt(this.fimsMetadata.name))) {
+    if ([ 'xlsx', 'xls' ].includes(getFileExt(this.fimsMetadata.name))) {
       data.workbooks = [ this.fimsMetadata ];
     } else {
       data.dataSourceMetadata = [ {
@@ -196,7 +173,7 @@ class ValidationController {
       backdrop: 'static',
       resolve: {
         onContinue: () => () => {
-          this.continueUpload();
+          this.continueUpload(this.results.uploadId);
           this.results.showContinueButton = false;
           this.results.showCancelButton = false;
           this.results.showValidationMessages = false;
@@ -207,15 +184,15 @@ class ValidationController {
 
     this.modalInstance.result
       .finally(() => {
-          if (!this.results.error) {
-            this.activeTab = 2; // index 2 is the results tab
-          }
-          this.displayResults = true;
-          this.results.showStatus = false;
-          this.results.showValidationMessages = true;
-          this.results.showSuccessMessages = true;
-          this.results.showUploadMessages = false;
-        })
+        if (!this.results.error) {
+          this.activeTab = 2; // index 2 is the results tab
+        }
+        this.displayResults = true;
+        this.results.showStatus = false;
+        this.results.showValidationMessages = true;
+        this.results.showSuccessMessages = true;
+        this.results.showUploadMessages = false;
+      })
 
   }
 

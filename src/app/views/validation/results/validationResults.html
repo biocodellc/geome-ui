@@ -43,6 +43,7 @@
 </div>
 
 <div ng-show="$ctrl.results.showUploadMessages" ng-bind-html="$ctrl.results.uploadMessage | trusted_html"></div>
+<div ng-show="$ctrl.results.error" ng-bind-html="$ctrl.results.error| trusted_html"></div>
 <div ng-show="$ctrl.results.showSuccessMessages" ng-bind-html="$ctrl.results.successMessage | trusted_html"></div>
 
 <script type="text/ng-template" id="validation-result-messages.html">

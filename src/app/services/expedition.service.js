@@ -9,6 +9,16 @@ class ExpeditionService {
     this.REST_ROOT = REST_ROOT;
   }
 
+  create(projectId, expedition) {
+    return this.$http({
+        method: 'POST',
+        url: this.REST_ROOT + 'projects/' + projectId + '/expeditions/' + expedition.expeditionCode,
+        data: expedition,
+        keepJson: true,
+      })
+      .catch(angular.catcher("Failed to create the expedition."));
+  }
+
   update(projectId, expedition) {
     if (!projectId) {
       return Promise.reject({ data: { error: "No project is selected" } });
