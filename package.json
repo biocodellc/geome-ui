@@ -13,10 +13,14 @@
   "homepage": "https://biscicol.org",
   "scripts": {
     "build": "rimraf dist && webpack --bail --progress --profile",
-    "server": "webpack-dev-server --history-api-fallback --no-inline --progress",
+    "server": "webpack-dashboard -- webpack-dev-server -d --hot --watch",
     "test": "karma start",
     "test-watch": "karma start --auto-watch --no-single-run",
-    "start": "npm run server"
+    "start": "npm run server",
+    "eslint": "eslint src/**/**.js",
+    "eslint:fix": "eslint src/**/**.js --fix",
+    "prettier": "prettier src/**/**.js --single-quote --trailing-comma all -l",
+    "prettier:write": "prettier app/**/**.js --single-quote --trailing-comma all --write"
   },
   "dependencies": {
     "@uirouter/angularjs": "^1.0.4",
@@ -46,6 +50,11 @@
     "babel-preset-env": "^1.6.1",
     "copy-webpack-plugin": "4.0.1",
     "css-loader": "0.26.1",
+    "eslint": "^4.9.0",
+    "eslint-config-airbnb-base": "12.1.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-prettier": "^2.5.0",
     "extract-text-webpack-plugin": "2.0.0-beta.5",
     "file-loader": "^0.9.0",
     "html-webpack-plugin": "^2.7.1",
@@ -64,11 +73,13 @@
     "null-loader": "^0.1.1",
     "phantomjs-prebuilt": "^2.1.4",
     "postcss-loader": "1.2.2",
+    "prettier-eslint": "^8.8.1",
     "raw-loader": "^0.5.1",
     "rimraf": "^2.5.1",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.13.0",
     "webpack": "2.2.0",
+    "webpack-dashboard": "^1.1.1",
     "webpack-dev-server": "2.2.0"
   }
 }
