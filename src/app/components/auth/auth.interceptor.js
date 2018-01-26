@@ -8,7 +8,7 @@ export default class AuthInterceptor {
   }
 
   // angular only keeps reference of the methods, so we need to use arrow functions to keep 'this' context
-  request = (config) => {
+  request = config => {
     // only add query string if the request url isn't in the $templateCache
     if (this.templateCache.get(config.url) === undefined) {
       const AuthService = this.injector.get('AuthService');
@@ -21,9 +21,13 @@ export default class AuthInterceptor {
     return config;
   };
 
-  responseError = (response) => {
-    if (!this.triedToRefresh &&
-      (response.status === 401 || (response.status === 400 && response.data.usrMessage === 'invalid_grant' ))) {
+  responseError = response => {
+    if (
+      !this.triedToRefresh &&
+      (response.status === 401 ||
+        (response.status === 400 &&
+          response.data.usrMessage === 'invalid_grant'))
+    ) {
       const AuthService = this.injector.get('AuthService');
 
       const origRequestConfig = response.config;
@@ -32,13 +36,16 @@ export default class AuthInterceptor {
       return AuthService.refreshAccessToken()
         .then(() => {
           this.triedToRefresh = false;
-          const $http = this.injector.get("$http");
+          const $http = this.injector.get('$http');
           return $http(origRequestConfig);
         })
         .catch(() => {
           this.triedToRefresh = false;
-          const $state = this.injector.get("$state");
-          return $state.go('login', { nextState: $state.current.name, nextStateParams: $state.params });
+          const $state = this.injector.get('$state');
+          return $state.go('login', {
+            nextState: $state.current.name,
+            nextStateParams: $state.params,
+          });
         });
     }
 

@@ -8,10 +8,10 @@ export default class XLSXReader {
   intializeFromFile(obj, file, readCells, toJSON, handler) {
     const reader = new FileReader();
 
-    reader.onload = (e) => {
+    reader.onload = e => {
       const data = e.target.result;
       const workbook = xlsx.read(data, {
-        type: 'binary'
+        type: 'binary',
       });
 
       obj.sheets = this.parseWorkbook(workbook, readCells, toJSON);
@@ -44,12 +44,12 @@ export default class XLSXReader {
     const sheetData = [];
 
     if (readCells === true) {
-      _.forEachRight(_.range(range.s.r, range.e.r + 1), (row) => {
+      _.forEachRight(_.range(range.s.r, range.e.r + 1), row => {
         const rowData = [];
-        _.forEachRight(_.range(range.s.c, range.e.c + 1), (column) => {
+        _.forEachRight(_.range(range.s.c, range.e.c + 1), column => {
           const cellIndex = xlsx.utils.encode_cell({
-            'c': column,
-            'r': row
+            c: column,
+            r: row,
           });
           const cell = sheet[cellIndex];
           rowData[column] = cell ? cell.v : undefined;
@@ -59,17 +59,19 @@ export default class XLSXReader {
     }
 
     return {
-      'data': sheetData,
-      'name': sheet.name,
-      'col_size': range.e.c + 1,
-      'row_size': range.e.r + 1
-    }
+      data: sheetData,
+      name: sheet.name,
+      col_size: range.e.c + 1,
+      row_size: range.e.r + 1,
+    };
   }
 
   to_json(workbook) {
     const result = {};
-    workbook.SheetNames.forEach((sheetName) => {
-      const roa = xlsx.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+    workbook.SheetNames.forEach(sheetName => {
+      const roa = xlsx.utils.sheet_to_row_object_array(
+        workbook.Sheets[sheetName],
+      );
       if (roa.length > 0) {
         result[sheetName] = roa;
       }
@@ -78,32 +80,32 @@ export default class XLSXReader {
   }
 
   findCell(file, regEx, sheetName) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const reader = new FileReader();
 
-      reader.onload = function (e) {
+      reader.onload = function(e) {
         const data = e.target.result;
         const workbook = xlsx.read(data, {
-          type: 'binary'
+          type: 'binary',
         });
 
-        const sheet = workbook.Sheets[ sheetName ];
+        const sheet = workbook.Sheets[sheetName];
 
         if (!sheet || Object.keys(sheet).length === 0) {
           console.log("Workbook doesn't contain sheet: " + sheetName);
           return resolve(null);
         }
 
-        const range = xlsx.utils.decode_range(sheet[ '!ref' ]);
+        const range = xlsx.utils.decode_range(sheet['!ref']);
         let match;
-        _.range(range.s.r, range.e.r + 1).some((row) => {
-          _.range(range.s.c, range.e.c + 1).some((column) => {
+        _.range(range.s.r, range.e.r + 1).some(row => {
+          _.range(range.s.c, range.e.c + 1).some(column => {
             const cellIndex = xlsx.utils.encode_cell({
-              'c': column,
-              'r': row
+              c: column,
+              r: row,
             });
 
-            const cell = sheet[ cellIndex ];
+            const cell = sheet[cellIndex];
 
             if (cell && cell.v.match(regEx)) {
               match = cell.v;
@@ -119,6 +121,6 @@ export default class XLSXReader {
       };
 
       reader.readAsBinaryString(file);
-    })
+    });
   }
 }

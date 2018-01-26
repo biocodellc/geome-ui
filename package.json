@@ -13,14 +13,17 @@
   "homepage": "https://biscicol.org",
   "scripts": {
     "build": "rimraf dist && webpack --bail --progress --profile",
-    "server": "webpack-dashboard -- webpack-dev-server -d --hot --watch",
+    "server":
+      "webpack-dashboard -- webpack-dev-server --history-api-fallback -d --hot --watch",
     "test": "karma start",
     "test-watch": "karma start --auto-watch --no-single-run",
     "start": "npm run server",
     "eslint": "eslint 'src/app/**/*.js'",
     "eslint:fix": "eslint 'src/app/**/*.js' --fix",
-    "prettier": "prettier 'src/app/**/*.js' --single-quote --trailing-comma all -l",
-    "prettier:write": "prettier 'src/app/**/*.js' --single-quote --trailing-comma all --write"
+    "prettier":
+      "prettier 'src/app/**/*.js' --single-quote --trailing-comma all -l",
+    "prettier:write":
+      "prettier 'src/app/**/*.js' --single-quote --trailing-comma all --write"
   },
   "dependencies": {
     "@uirouter/angularjs": "^1.0.4",
