@@ -1,4 +1,4 @@
-import xlsx from 'xlsx';
+import xlsx from 'xlsx/dist/xlsx.core.min';
 import _ from 'lodash';
 
 export default class XLSXReader {

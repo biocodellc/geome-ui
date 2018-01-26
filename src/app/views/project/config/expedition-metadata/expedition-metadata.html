@@ -17,11 +17,11 @@
 
         <tbody>
             <tr ng-repeat="prop in $ctrl.properties track by $index"
-                id="prop_{{ $index }}" 
+                id="prop_{{ $index }}"
                 uib-popover-template="'editProp.html'"
                 popover-is-open="$index === $ctrl.editProp"
-                popover-placement="auto bottom" 
-                popover-trigger="none"
+                popover-placement="auto bottom"
+                popover-trigger="'none'"
                 popover-class="edit-popover">
                 <td class="row-actions">
                     <a href="#" ng-click="$ctrl.handleToggleEdit($index)">
