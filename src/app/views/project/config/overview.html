@@ -5,6 +5,7 @@
         on-add="$ctrl.handleOnAdd()">
     <li><a href ui-sref="^.entities" ui-sref-active="active">Entities</a></li>
     <li><a href ui-sref="^.lists" ui-sref-active="active">Lists</a></li>
+    <li><a href ui-sref="^.expeditionMetadata" ui-sref-active="active">Expedition Properties</a></li>
     <li><a href ui-sref="^.metadata" ui-sref-active="active">Metadata</a></li>
 </fims-project-config-navbar>
 
@@ -25,4 +26,9 @@
      lists="$ctrl.config.lists"
      on-update-lists="$ctrl.onUpdateLists({ lists: lists })"
      on-add-list="$ctrl.handleOnAddList(list)">
+</div>
+
+<div ui-view="expeditionMetadata"
+    properties="$ctrl.config.expeditionMetadataProperties"
+    on-update="$ctrl.handleOnUpdateExpeditionMetadata({ expeditionMetadata: expeditionMetadata })">
 </div>

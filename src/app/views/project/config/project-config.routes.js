@@ -23,6 +23,19 @@ function getStates() {
         },
       },
     },
+    
+    // ExpeditionMetadataProperties
+    {
+      state: 'project.config.expeditionMetadata',
+      config: {
+        url: '/expedition/properties/',
+        views: {
+          "expeditionMetadata": {
+            component: 'fimsExpeditionMetadataPropertiesList',
+          },
+        },
+      },
+    },
 
     // Entities
     {

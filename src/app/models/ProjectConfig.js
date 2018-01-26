@@ -6,6 +6,7 @@ export default class ProjectConfig {
 
     this.entities = this.entities.slice();
     this.lists = this.lists.slice();
+    this.expeditionMetadataProperties = this.expeditionMetadataProperties.slice();
 
     this.entities.forEach((e) => {
       e.rules = e.rules.map(r => new Rule(r));

@@ -38,7 +38,7 @@ class LoginController {
         if (params.nextState && params.nextState !== "login") {
           return this.state.go(params.nextState, params.nextStateParams, { reload: true, inherit: false });
         } else {
-          return this.state.go('home', { reload: true, inherit: false });
+          return this.state.go('home', {}, { reload: true, inherit: false });
         }
       })
       .catch(angular.catcher("Error during authentication."))

@@ -24,7 +24,6 @@ class EditFieldController {
   }
 }
 
-
 const fimsFieldEdit = {
   template: require('./edit-field.html'),
   controller: EditFieldController,
