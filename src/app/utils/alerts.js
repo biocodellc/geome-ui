@@ -34,7 +34,7 @@ export default class {
   }
 
   getAlerts() {
-    return this.alerts;//.slice();
+    return this.alerts; // .slice();
   }
 
   remove(alert) {

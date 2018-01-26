@@ -1,8 +1,7 @@
 import angular from 'angular';
 
 import fimsEditRuleForm from './edit-rule-form.component';
-import Rule from "../../../../../models/Rule";
-
+import Rule from '../../../../../models/Rule';
 
 class EditRuleController {
   $onInit() {
@@ -26,7 +25,6 @@ const fimsEditRule = {
   },
 };
 
-
-export default angular.module('fims.projectConfigRule', [ fimsEditRuleForm ])
-  .component('fimsEditRule', fimsEditRule)
-  .name;
+export default angular
+  .module('fims.projectConfigRule', [fimsEditRuleForm])
+  .component('fimsEditRule', fimsEditRule).name;

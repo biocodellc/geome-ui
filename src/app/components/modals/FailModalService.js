@@ -1,4 +1,4 @@
-import FailModalController from "./FailModalController";
+import FailModalController from './FailModalController';
 
 class FailModalService {
   constructor($uibModal) {
@@ -15,16 +15,14 @@ class FailModalService {
       windowClass: 'app-modal-window',
       backdrop: true,
       resolve: {
-        message: function() {
+        message() {
           return message;
         },
-        title: function() {
-          if (!title)
-            title = "Error";
+        title() {
+          if (!title) title = 'Error';
           return title;
-        }
-      }
-
+        },
+      },
     });
   }
 }

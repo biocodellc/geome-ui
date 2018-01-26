@@ -1,4 +1,4 @@
-import { getFileExt } from "../../../utils/utils";
+import { getFileExt } from '../../../utils/utils';
 
 const defaultFastqMetadata = {
   libraryLayout: null,
@@ -13,12 +13,13 @@ const defaultFastqMetadata = {
 class UploadController {
   constructor($scope, ExpeditionService) {
     'ngInject';
+
     this.$scope = $scope;
     this.ExpeditionService = ExpeditionService;
   }
 
   $onInit() {
-    this.newExpedition = (this.userExpeditions.length === 0);
+    this.newExpedition = this.userExpeditions.length === 0;
     this.fastaData = [];
     this.dataTypes = {};
   }
@@ -51,24 +52,22 @@ class UploadController {
       //   return;
       // }
 
-      this.onUpload({ data: this.getUploadData() })
+      this.onUpload({ data: this.getUploadData() });
     };
 
     if (this.newExpedition) {
-      this.ExpeditionService.create(
-        this.currentProject.projectId,
-        {
-          expeditionCode: this.expeditionCode,
-          expeditionTitle: `${this.expeditionCode} Dataset`,
-          visibility: 'anyone',
-          isPublic: true,
-        })
+      this.ExpeditionService.create(this.currentProject.projectId, {
+        expeditionCode: this.expeditionCode,
+        expeditionTitle: `${this.expeditionCode} Dataset`,
+        visibility: 'anyone',
+        isPublic: true,
+      })
         .then(({ data }) => this.userExpeditions.push(data))
         .then(submitIfValid)
         .catch(response => {
           // this.uploadForm.newExpeditionCode.$setValidity("exists", true)
           console.error(response);
-        })
+        });
     } else {
       submitIfValid();
     }
@@ -76,12 +75,11 @@ class UploadController {
 
   checkCoordinatesVerified() {
     if (this.verifyDataPoints && !this.coordinatesVerified) {
-      this.coordinatesErrorClass = "has-error";
+      this.coordinatesErrorClass = 'has-error';
       return false;
-    } else {
-      this.coordinatesErrorClass = null;
-      return true;
     }
+    this.coordinatesErrorClass = null;
+    return true;
   }
 
   getUploadData() {
@@ -92,21 +90,23 @@ class UploadController {
     };
 
     if (this.dataTypes.fims) {
-      if ([ 'xlsx', 'xls' ].includes(getFileExt(this.fimsMetadata.name))) {
-        data.workbooks = [ this.fimsMetadata ];
+      if (['xlsx', 'xls'].includes(getFileExt(this.fimsMetadata.name))) {
+        data.workbooks = [this.fimsMetadata];
       } else {
-        data.dataSourceMetadata = [ {
-          dataType: 'TABULAR',
-          filename: this.fimsMetadata.name,
-          metadata: {
-            sheetName: 'Samples' //TODO this needs to be dynamic, depending on the entity being validated
+        data.dataSourceMetadata = [
+          {
+            dataType: 'TABULAR',
+            filename: this.fimsMetadata.name,
+            metadata: {
+              sheetName: 'Samples', // TODO this needs to be dynamic, depending on the entity being validated
+            },
           },
-        } ];
-        data.dataSourceFiles = [ this.fimsMetadata ];
+        ];
+        data.dataSourceFiles = [this.fimsMetadata];
       }
     }
     if (this.dataTypes.fasta) {
-      //TODO fix this
+      // TODO fix this
       // data.fastaFiles = this.fastaData.files;
       // this.fastaData.forEach((data, index) => {
       //   data.filename = this.fastaFiles[ index ].name;
@@ -126,7 +126,7 @@ export default {
   template: require('./upload.html'),
   controller: UploadController,
   bindings: {
-    currentProject: "<",
+    currentProject: '<',
     fimsMetadata: '<',
     userExpeditions: '<',
     onMetadataChange: '&',

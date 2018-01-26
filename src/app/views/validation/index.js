@@ -13,8 +13,8 @@ import fimsFastaData from './upload/fasta/fastaData.component';
 import fimsFastqData from './upload/fastq/fastqData.component';
 import results from './results';
 
-
-export default angular.module('fims.validation', [ ngFileUpload, results ])
+export default angular
+  .module('fims.validation', [ngFileUpload, results])
   .run(routing)
   .component('fimsMetadata', fimsMetadata)
   .component('fimsValidation', fimsValidation)
@@ -23,5 +23,4 @@ export default angular.module('fims.validation', [ ngFileUpload, results ])
   .component('fimsUploadDatatypes', fimsUploadDatatypes)
   .component('fimsUploadExpedition', fimsUploadExpedition)
   .component('fimsFastaData', fimsFastaData)
-  .component('fimsFastqData', fimsFastqData)
-  .name;
+  .component('fimsFastqData', fimsFastqData).name;

@@ -5,7 +5,7 @@ import angularSpinner from '../../directives/angular-spinner.directive';
 import LoadingModalService from './LoadingModalService';
 import FailModalService from './FailModalService';
 
-export default angular.module('fims.modals', [ bootstrap, angularSpinner ])
+export default angular
+  .module('fims.modals', [bootstrap, angularSpinner])
   .service('LoadingModal', LoadingModalService)
-  .service('FailModalFactory', FailModalService) // TODO rename to FailModalService
-  .name;
+  .service('FailModalFactory', FailModalService).name; // TODO rename to FailModalService

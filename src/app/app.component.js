@@ -1,4 +1,4 @@
-import { AUTH_ERROR_EVENT } from "./services/auth.service";
+import { AUTH_ERROR_EVENT } from './services/auth.service';
 import { PROJECT_CHANGED_EVENT } from './services/project.service';
 import { USER_CHANGED_EVENT } from './services/user.service';
 
@@ -27,8 +27,8 @@ class AppCtrl {
     });
 
     // show spinner on transitions
-    this.$transitions.onStart({}, (trans) => {
-      const hasResolvables = (s) => {
+    this.$transitions.onStart({}, trans => {
+      const hasResolvables = s => {
         if (s.resolvables.length > 0) return true;
         if (!s.parent) return false;
         return hasResolvables(s.parent);
@@ -36,8 +36,12 @@ class AppCtrl {
 
       if (hasResolvables(trans.$to())) this.loading = true;
     });
-    this.$transitions.onFinish({}, () => { this.loading = false; });
-    this.$transitions.onError({}, () => { this.loading = false; });
+    this.$transitions.onFinish({}, () => {
+      this.loading = false;
+    });
+    this.$transitions.onError({}, () => {
+      this.loading = false;
+    });
   }
 
   handleProjectChange(project) {

@@ -1,6 +1,5 @@
 import angular from 'angular';
 
-
 class EditEntityController {
   $onInit() {
     this.entity = Object.assign({}, this.entity);
@@ -17,7 +16,6 @@ class EditEntityController {
     return sheetName;
   }
 }
-
 
 const fimsEntityEdit = {
   template: require('./edit-entity.html'),
@@ -53,8 +51,7 @@ const fimsEntity = {
   },
 };
 
-
-export default angular.module('fims.projectConfigEntity', [])
+export default angular
+  .module('fims.projectConfigEntity', [])
   .component('fimsEntity', fimsEntity)
-  .component('fimsEditEntity', fimsEntityEdit)
-  .name;
+  .component('fimsEditEntity', fimsEntityEdit).name;

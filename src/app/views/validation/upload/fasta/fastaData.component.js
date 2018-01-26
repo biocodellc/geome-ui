@@ -20,11 +20,12 @@ const POPOVER_TEMPLATE = `
 class FastaDataController {
   constructor($templateCache) {
     'ngInject';
+
     $templateCache.put('fastaData.popover.html', POPOVER_TEMPLATE);
   }
 
   $onInit() {
-    this.data = (this.data) ? this.data.slice() : [];
+    this.data = this.data ? this.data.slice() : [];
     if (this.data.length === 0) {
       this.addData();
     }
@@ -66,4 +67,4 @@ export default {
     config: '<',
     onChange: '&',
   },
-}
+};

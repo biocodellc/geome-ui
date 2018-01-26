@@ -5,7 +5,7 @@ class ProjectMembersAddController {
   }
 
   inviteUser(email) {
-    this.onInviteUser({ email: email});
+    this.onInviteUser({ email });
   }
 }
 
@@ -21,6 +21,6 @@ const fimsProjectMembersAdd = {
   },
 };
 
-export default angular.module('fims.projectMembersAdd', [])
-  .component('fimsProjectMembersAdd', fimsProjectMembersAdd)
-  .name;
+export default angular
+  .module('fims.projectMembersAdd', [])
+  .component('fimsProjectMembersAdd', fimsProjectMembersAdd).name;

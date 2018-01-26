@@ -14,9 +14,9 @@ class EntitiesController {
     const newEntityIndex = this.entities.findIndex(e => e.isNew);
     if (newEntityIndex > -1) {
       this.editEntity = newEntityIndex;
-      this.$location.hash("entity_" + newEntityIndex);
+      this.$location.hash(`entity_${newEntityIndex}`);
       this.$anchorScroll();
-      delete this.entities[ newEntityIndex ].isNew;
+      delete this.entities[newEntityIndex].isNew;
     }
   }
 
@@ -37,15 +37,20 @@ class EntitiesController {
         const i = this.entities.indexOf(entity);
         this.entities.splice(i, 1);
         this.onUpdateEntities({ entities: this.entities });
-      });
+      },
+    );
   }
 
   handleUpdateEntity($index, entity) {
-    const oldEntity = this.entities[ $index ];
+    const oldEntity = this.entities[$index];
 
     const { uniqueKey } = entity;
     if (oldEntity.uniqueKey !== uniqueKey) {
-      const rule = this.config.getRule(entity.conceptAlias, 'RequiredValue', 'ERROR');
+      const rule = this.config.getRule(
+        entity.conceptAlias,
+        'RequiredValue',
+        'ERROR',
+      );
 
       if (rule.columns.includes(uniqueKey)) {
         rule.columns.push(uniqueKey);

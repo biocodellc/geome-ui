@@ -1,7 +1,7 @@
 import angular from 'angular';
 
-import routerHelperProvider from "./routerHelperProvider";
+import routerHelperProvider from './routerHelperProvider';
 
-export default angular.module('fims.router', [])
-  .provider('routerHelper', routerHelperProvider)
-  .name;
+export default angular
+  .module('fims.router', [])
+  .provider('routerHelper', routerHelperProvider).name;

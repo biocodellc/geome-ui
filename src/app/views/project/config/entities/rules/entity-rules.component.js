@@ -3,10 +3,10 @@ import angular from 'angular';
 import fimsEditRule from './rule.component';
 import fimsRuleAdd from './add-rule.component';
 
-
 class EntityRulesController {
   constructor(ConfirmationService) {
     'ngInject';
+
     this.ConfirmationService = ConfirmationService;
   }
 
@@ -19,7 +19,6 @@ class EntityRulesController {
   handleOnUpdate(index, rule) {
     this.rules.splice(index, 1, rule);
     this.onUpdateRules({ rules: this.rules });
-
   }
 
   handleOnDelete(index) {
@@ -28,7 +27,8 @@ class EntityRulesController {
       () => {
         this.rules.splice(index, 1);
         this.onUpdateRules({ rules: this.rules });
-      });
+      },
+    );
   }
 
   handleToggleEdit(index) {
@@ -56,6 +56,6 @@ const fimsEntityRules = {
   },
 };
 
-export default angular.module('fims.projectConfigEntityRules', [ fimsEditRule, fimsRuleAdd ])
-  .component('fimsEntityRules', fimsEntityRules)
-  .name;
+export default angular
+  .module('fims.projectConfigEntityRules', [fimsEditRule, fimsRuleAdd])
+  .component('fimsEntityRules', fimsEntityRules).name;

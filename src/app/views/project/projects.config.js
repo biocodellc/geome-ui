@@ -1,5 +1,5 @@
-export default function ($uibTooltipProvider) {
-  "ngInject";
+export default function($uibTooltipProvider) {
+  'ngInject';
 
-  $uibTooltipProvider.setTriggers({ 'none': 'outsideClick' });
+  $uibTooltipProvider.setTriggers({ none: 'outsideClick' });
 }

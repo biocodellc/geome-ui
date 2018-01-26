@@ -1,4 +1,4 @@
-import angular from "angular";
+import angular from 'angular';
 
 const fimsExpeditionsList = {
   template: require('./expeditions.html'),
@@ -7,6 +7,6 @@ const fimsExpeditionsList = {
   },
 };
 
-export default angular.module('fims.fimsExpeditionsList', [])
-  .component('fimsExpeditionsList', fimsExpeditionsList)
-  .name;
+export default angular
+  .module('fims.fimsExpeditionsList', [])
+  .component('fimsExpeditionsList', fimsExpeditionsList).name;

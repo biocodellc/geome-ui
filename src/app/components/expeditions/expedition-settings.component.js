@@ -1,12 +1,11 @@
-import angular from "angular";
+import angular from 'angular';
 
 class ExpeditionSettingsController {
   $onInit() {
-    this.visibilities = [ "anyone", "project members", "expedition members" ];
+    this.visibilities = ['anyone', 'project members', 'expedition members'];
     this.expedition = Object.assign({}, this.expedition);
   }
 }
-
 
 const fimsExpeditionSettings = {
   template: require('./expedition-settings.html'),
@@ -20,6 +19,6 @@ const fimsExpeditionSettings = {
   },
 };
 
-export default angular.module('fims.fimsExpeditionSettings', [])
-  .component('fimsExpeditionSettings', fimsExpeditionSettings)
-  .name;
+export default angular
+  .module('fims.fimsExpeditionSettings', [])
+  .component('fimsExpeditionSettings', fimsExpeditionSettings).name;

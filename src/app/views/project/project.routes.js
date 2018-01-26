@@ -5,7 +5,7 @@ function getStates() {
       config: {
         url: '/project',
         component: 'fimsProject',
-        redirectTo: "project.settings",
+        redirectTo: 'project.settings',
         projectRequired: true,
         loginRequired: true,
       },
@@ -15,5 +15,6 @@ function getStates() {
 
 export default ($transitions, routerHelper) => {
   'ngInject';
+
   routerHelper.configureStates(getStates());
 };

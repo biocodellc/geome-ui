@@ -1,8 +1,7 @@
-import angular from "angular";
+import angular from 'angular';
 
-import { RULE_LEVELS } from "../../../../../models/Rule";
+import { RULE_LEVELS } from '../../../../../models/Rule';
 import fimsRuleMetadata from './rule-metadata.component';
-
 
 class EditRuleFormController {
   $onInit() {
@@ -18,12 +17,12 @@ const fimsEditRuleForm = {
   template: require('./edit-rule-form.html'),
   controller: EditRuleFormController,
   bindings: {
-    rule: '<', //TODO fix this, as we are editing the parent components data
+    rule: '<', // TODO fix this, as we are editing the parent components data
     lists: '<',
     columns: '<',
   },
 };
 
-export default angular.module('fims.projectConfigRuleEditForm', [ fimsRuleMetadata ])
-  .component('fimsEditRuleForm', fimsEditRuleForm)
-  .name;
+export default angular
+  .module('fims.projectConfigRuleEditForm', [fimsRuleMetadata])
+  .component('fimsEditRuleForm', fimsEditRuleForm).name;

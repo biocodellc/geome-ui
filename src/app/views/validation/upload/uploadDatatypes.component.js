@@ -1,5 +1,4 @@
 class DataTypesController {
-
   $onInit() {
     this.fims = true; // only temporary
     this.fasta = false;
@@ -16,7 +15,6 @@ class DataTypesController {
       },
     });
   }
-
 }
 
 export default {

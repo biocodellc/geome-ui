@@ -1,6 +1,5 @@
 import angular from 'angular';
 
-
 class AlertController {
   getAlerts() {
     return angular.alerts.getAlerts();

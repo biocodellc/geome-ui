@@ -17,10 +17,10 @@
     "test": "karma start",
     "test-watch": "karma start --auto-watch --no-single-run",
     "start": "npm run server",
-    "eslint": "eslint src/**/**.js",
-    "eslint:fix": "eslint src/**/**.js --fix",
-    "prettier": "prettier src/**/**.js --single-quote --trailing-comma all -l",
-    "prettier:write": "prettier app/**/**.js --single-quote --trailing-comma all --write"
+    "eslint": "eslint 'src/app/**/*.js'",
+    "eslint:fix": "eslint 'src/app/**/*.js' --fix",
+    "prettier": "prettier 'src/app/**/*.js' --single-quote --trailing-comma all -l",
+    "prettier:write": "prettier 'src/app/**/*.js' --single-quote --trailing-comma all --write"
   },
   "dependencies": {
     "@uirouter/angularjs": "^1.0.4",

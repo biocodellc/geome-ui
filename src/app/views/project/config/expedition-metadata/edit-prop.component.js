@@ -1,4 +1,4 @@
-import angular from "angular";
+import angular from 'angular';
 
 class EditPropController {
   $onInit() {
@@ -20,16 +20,16 @@ class EditPropController {
 }
 
 const fimsEditProp = {
-  template: require("./edit-prop.html"),
+  template: require('./edit-prop.html'),
   controller: EditPropController,
   bindings: {
-    prop: "<",
-    properties: "<",
-    onUpdate: "&",
-    onClose: "&"
-  }
+    prop: '<',
+    properties: '<',
+    onUpdate: '&',
+    onClose: '&',
+  },
 };
 
 export default angular
-  .module("fims.projectConfigEditProp", [])
-  .component("fimsEditProp", fimsEditProp).name;
+  .module('fims.projectConfigEditProp', [])
+  .component('fimsEditProp', fimsEditProp).name;

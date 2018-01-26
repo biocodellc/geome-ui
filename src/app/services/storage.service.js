@@ -7,30 +7,28 @@ class StorageService {
     this.storage = {};
 
     this.window = $window;
-    if (angular.isDefined(this.window.sessionStorage[ STORAGE_KEY ])) {
-      this.storage = JSON.parse(this.window.sessionStorage[ STORAGE_KEY ]);
+    if (angular.isDefined(this.window.sessionStorage[STORAGE_KEY])) {
+      this.storage = JSON.parse(this.window.sessionStorage[STORAGE_KEY]);
     }
   }
 
   get(key) {
-    return this.storage[ key ];
+    return this.storage[key];
   }
 
   set(key, val) {
-    this.storage[ key ] = val;
+    this.storage[key] = val;
 
-    this.window.sessionStorage[ STORAGE_KEY ] = JSON.stringify(this.storage);
+    this.window.sessionStorage[STORAGE_KEY] = JSON.stringify(this.storage);
   }
 
   extend(obj) {
     angular.extend(this.storage, obj);
 
-    this.window.sessionStorage[ STORAGE_KEY ] = JSON.stringify(this.storage);
+    this.window.sessionStorage[STORAGE_KEY] = JSON.stringify(this.storage);
   }
-
 }
 
-export default angular.module('fims.storageService', [])
-  .service('StorageService', StorageService)
-  .name;
-
+export default angular
+  .module('fims.storageService', [])
+  .service('StorageService', StorageService).name;

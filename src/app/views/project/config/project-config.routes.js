@@ -6,7 +6,7 @@ function getStates() {
         url: '/config',
         redirectTo: 'project.config.entities',
         views: {
-          "details": {
+          details: {
             component: 'fimsProjectConfig',
           },
         },
@@ -17,20 +17,20 @@ function getStates() {
       config: {
         url: '/metadata',
         views: {
-          "metadata": {
+          metadata: {
             component: 'fimsProjectConfigMetadata',
           },
         },
       },
     },
-    
+
     // ExpeditionMetadataProperties
     {
       state: 'project.config.expeditionMetadata',
       config: {
         url: '/expedition/properties/',
         views: {
-          "expeditionMetadata": {
+          expeditionMetadata: {
             component: 'fimsExpeditionMetadataPropertiesList',
           },
         },
@@ -43,7 +43,7 @@ function getStates() {
       config: {
         url: '/entities',
         views: {
-          "entities": {
+          entities: {
             component: 'fimsProjectConfigEntities',
           },
         },
@@ -54,7 +54,7 @@ function getStates() {
       config: {
         url: '/add',
         views: {
-          "entities@project.config": {
+          'entities@project.config': {
             component: 'fimsProjectConfigEntityAdd',
           },
         },
@@ -65,15 +65,17 @@ function getStates() {
       state: 'project.config.entities.detail',
       config: {
         url: '/:alias/',
-        redirectTo: "project.config.entities.detail.attributes",
+        redirectTo: 'project.config.entities.detail.attributes',
         resolve: {
-          entity: /*ngInject*/ ($transition$, $state, ProjectService) => {
+          entity: /* ngInject */ ($transition$, $state, ProjectService) => {
             const currentProject = ProjectService.currentProject();
             let e = $transition$.params('to').entity;
 
             if (!e.conceptAlias) {
               const alias = $transition$.params('to').alias;
-              e = currentProject.config.entities.find(e => e.conceptAlias === alias);
+              e = currentProject.config.entities.find(
+                e => e.conceptAlias === alias,
+              );
             }
 
             if (!e) {
@@ -84,13 +86,13 @@ function getStates() {
           },
         },
         views: {
-          "detail@project.config": {
+          'detail@project.config': {
             component: 'fimsEntityDetail',
           },
         },
         params: {
           alias: {
-            type: "string",
+            type: 'string',
           },
           entity: {},
         },
@@ -102,13 +104,13 @@ function getStates() {
       config: {
         url: 'attributes',
         views: {
-          "attributes": {
+          attributes: {
             component: 'fimsEntityAttributes',
           },
         },
         params: {
           addAttribute: {
-            type: "bool",
+            type: 'bool',
           },
         },
       },
@@ -119,11 +121,13 @@ function getStates() {
       config: {
         url: 'rules',
         resolve: {
-          lists: /*ngInject*/ (ProjectService) => ProjectService.currentProject().config.lists.map(l => l.alias),
-          columns: /*ngInject*/ (entity) => entity.attributes.map(a => a.column),
+          lists: /* ngInject */ ProjectService =>
+            ProjectService.currentProject().config.lists.map(l => l.alias),
+          columns: /* ngInject */ entity =>
+            entity.attributes.map(a => a.column),
         },
         views: {
-          "rules": {
+          rules: {
             component: 'fimsEntityRules',
           },
         },
@@ -134,20 +138,20 @@ function getStates() {
       config: {
         url: '/add',
         views: {
-          "rules@project.config.entities.detail": {
+          'rules@project.config.entities.detail': {
             component: 'fimsProjectConfigRuleAdd',
           },
         },
       },
     },
-    //- End Entities
+    // - End Entities
 
     {
       state: 'project.config.lists',
       config: {
         url: '/lists',
         views: {
-          "lists": {
+          lists: {
             component: 'fimsProjectConfigLists',
           },
         },
@@ -158,7 +162,7 @@ function getStates() {
       config: {
         url: '/:alias/',
         resolve: {
-          list: /*ngInject*/ ($transition$, $state, ProjectService) => {
+          list: /* ngInject */ ($transition$, $state, ProjectService) => {
             const currentProject = ProjectService.currentProject();
             let l = $transition$.params('to').list;
 
@@ -173,19 +177,20 @@ function getStates() {
 
             return l;
           },
-          addField: /*ngInject*/ ($transition$) => $transition$.params('to').addField,
+          addField: /* ngInject */ $transition$ =>
+            $transition$.params('to').addField,
         },
         views: {
-          "detail@project.config": {
+          'detail@project.config': {
             component: 'fimsListDetail',
           },
         },
         params: {
           alias: {
-            type: "string",
+            type: 'string',
           },
           addField: {
-            type: "bool",
+            type: 'bool',
           },
           list: {},
         },
@@ -196,16 +201,17 @@ function getStates() {
       config: {
         url: '/add',
         views: {
-          "lists@project.config": {
+          'lists@project.config': {
             component: 'fimsAddList',
           },
         },
       },
     },
-  ]
+  ];
 }
 
-export default (routerHelper) => {
+export default routerHelper => {
   'ngInject';
+
   routerHelper.configureStates(getStates());
 };

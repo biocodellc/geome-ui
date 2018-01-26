@@ -1,6 +1,6 @@
-import { AVAILABLE_RULES, RULE_LEVELS } from "../../../../../models/Rule";
-import angular from "angular";
-import Rule from "../../../../../models/Rule";
+import { AVAILABLE_RULES, RULE_LEVELS } from '../../../../../models/Rule';
+import angular from 'angular';
+import Rule from '../../../../../models/Rule';
 
 class AddRuleController {
   $onInit() {
@@ -9,7 +9,6 @@ class AddRuleController {
     this.levels = RULE_LEVELS;
   }
 }
-
 
 const fimsProjectConfigRuleAdd = {
   template: require('./add-rule.html'),
@@ -21,6 +20,6 @@ const fimsProjectConfigRuleAdd = {
   },
 };
 
-export default angular.module('fims.projectConfigRuleAdd', [])
-  .component('fimsProjectConfigRuleAdd', fimsProjectConfigRuleAdd)
-  .name;
+export default angular
+  .module('fims.projectConfigRuleAdd', [])
+  .component('fimsProjectConfigRuleAdd', fimsProjectConfigRuleAdd).name;

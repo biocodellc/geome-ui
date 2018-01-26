@@ -13,7 +13,7 @@ export default class StatusPolling extends EventEmitter {
   startPolling() {
     this.poll = true;
     // give a chance for upload to start
-    setTimeout(this.pollStatus, 500)
+    setTimeout(this.pollStatus, 500);
   }
 
   stopPolling() {
@@ -30,32 +30,30 @@ export default class StatusPolling extends EventEmitter {
   */
   pollStatus() {
     // check if UploadisInProgress in case the user is uploading a large file or has a slow connection.
-    //TODO fix this
-    if (this.errorCnt >= 5) {// && !Upload.isUploadInProgress()) {
+    // TODO fix this
+    if (this.errorCnt >= 5) {
+      // && !Upload.isUploadInProgress()) {
       this.stopPolling();
       return;
     }
 
+    this.$http.get(`${this.REST_ROOT}data/status`).then(({ data }) => {
+      // TODO fix this
+      if (data.error && this.errorCnt >= 4) {
+        // && !ResultsDataFactory.validationMessages) {
+        this.emit('error', data.error);
+        this.errorCnt++;
+      } else if (data.error) {
+        this.errorCnt++;
+      } else {
+        this.emit('status', data.status);
+        this.errorCnt = 0;
+      }
 
-    this.$http.get(this.REST_ROOT + 'data/status')
-      .then(({ data }) => {
-          //TODO fix this
-          if (data.error && this.errorCnt >= 4) {// && !ResultsDataFactory.validationMessages) {
-            this.emit('error', data.error);
-            this.errorCnt++;
-          } else if (data.error) {
-            this.errorCnt++;
-          } else {
-            this.emit('status', data.status);
-            this.errorCnt = 0;
-          }
-
-          // wait 1 second before polling again
-          if (this.poll) {
-            this.pollingTimeoutId = setTimeout(this.pollStatus, 1000);
-          }
-        },
-      )
+      // wait 1 second before polling again
+      if (this.poll) {
+        this.pollingTimeoutId = setTimeout(this.pollStatus, 1000);
+      }
+    });
   }
 }
-

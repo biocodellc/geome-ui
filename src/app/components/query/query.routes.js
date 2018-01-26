@@ -1,5 +1,4 @@
-import QueryController from "./query.controller";
-
+import QueryController from './query.controller';
 
 function getStates() {
   return [
@@ -9,15 +8,15 @@ function getStates() {
         url: '/query',
         template: require('./query.html'),
         controller: QueryController,
-        controllerA: "queryVm",
+        controllerA: 'queryVm',
         projectRequired: true,
-      }
-    }
+      },
+    },
   ];
 }
 
-export default (routerHelper) => {
-  'ngInject'
+export default routerHelper => {
+  'ngInject';
 
   routerHelper.configureStates(getStates());
 };

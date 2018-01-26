@@ -5,16 +5,17 @@ function getStates() {
       config: {
         url: '/settings',
         views: {
-          "details": {
+          details: {
             component: 'fimsProjectSettings',
           },
         },
       },
     },
-  ]
+  ];
 }
 
-export default (routerHelper) => {
+export default routerHelper => {
   'ngInject';
+
   routerHelper.configureStates(getStates());
 };

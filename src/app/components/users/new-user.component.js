@@ -17,7 +17,7 @@ class NewUserController {
   save() {
     this.LoadingModal.open();
     this.UserService.create(this.$state.params.id, this.user)
-      .then((user) => this.AuthService.authenticate(user.username, user.password))
+      .then(user => this.AuthService.authenticate(user.username, user.password))
       .then(() => $state.go('home'))
       .finally(() => this.LoadingModal.close());
   }

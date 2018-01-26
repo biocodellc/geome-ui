@@ -5,12 +5,20 @@ import '../../../vendor/scalyr';
 
 import modals from '../modals';
 import typeahead from './typeahead.directive';
-import routing from './query.routes'
+import routing from './query.routes';
 import fileService from '../../services/file.service';
 import authService from '../../services/auth.service';
 import projectService from '../../services/project.service';
 import expeditionService from '../../services/expedition.service';
 
-export default angular.module('fims.query', [ modals, 'sly', typeahead, fileService, projectService, authService, expeditionService ])
-  .run(routing) // need to declare in run block. otherwise $transitions is not available
-  .name;
+export default angular
+  .module('fims.query', [
+    modals,
+    'sly',
+    typeahead,
+    fileService,
+    projectService,
+    authService,
+    expeditionService,
+  ])
+  .run(routing).name; // need to declare in run block. otherwise $transitions is not available

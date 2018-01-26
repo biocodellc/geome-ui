@@ -1,4 +1,4 @@
-//TODO finish this
+// TODO finish this
 class FastqDataController {
   $onChanges(changesObj) {
     if ('data' in changesObj) {
@@ -24,4 +24,4 @@ export default {
     config: '<',
     onChange: '&',
   },
-}
+};

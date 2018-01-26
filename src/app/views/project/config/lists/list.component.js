@@ -1,6 +1,5 @@
 import angular from 'angular';
 
-
 class EditListController {
   $onInit() {
     this.list = Object.assign({}, this.list);
@@ -15,7 +14,9 @@ class EditListController {
   }
 
   validateValue() {
-    const duplicates = this.lists.map(l => l.alias).filter(alias => this.list.alias === alias);
+    const duplicates = this.lists
+      .map(l => l.alias)
+      .filter(alias => this.list.alias === alias);
     this.duplicateValue = duplicates.length > 0;
   }
 }
@@ -51,8 +52,7 @@ const fimsList = {
   },
 };
 
-
-export default angular.module('fims.projectConfigList', [])
+export default angular
+  .module('fims.projectConfigList', [])
   .component('fimsList', fimsList)
-  .component('fimsEditList', fimsListEdit)
-  .name;
+  .component('fimsEditList', fimsListEdit).name;

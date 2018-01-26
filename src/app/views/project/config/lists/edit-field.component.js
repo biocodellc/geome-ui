@@ -1,6 +1,5 @@
 import angular from 'angular';
 
-
 class EditFieldController {
   $onInit() {
     this.field = Object.assign({}, this.field);
@@ -14,11 +13,13 @@ class EditFieldController {
   }
 
   validateValue() {
-    const val = (this.caseInsensitive) ? this.field.value.toLowerCase() : this.field.value;
+    const val = this.caseInsensitive
+      ? this.field.value.toLowerCase()
+      : this.field.value;
 
-    const duplicates = this.fields.map(f => (this.caseInsensitive) ? f.value.toLowerCase() : f.value)
+    const duplicates = this.fields
+      .map(f => (this.caseInsensitive ? f.value.toLowerCase() : f.value))
       .filter(v => v === val);
-
 
     this.duplicateValue = duplicates.length > 0;
   }
@@ -35,7 +36,6 @@ const fimsFieldEdit = {
   },
 };
 
-
-export default angular.module('fims.projectConfigField', [])
-  .component('fimsEditField', fimsFieldEdit)
-  .name;
+export default angular
+  .module('fims.projectConfigField', [])
+  .component('fimsEditField', fimsFieldEdit).name;

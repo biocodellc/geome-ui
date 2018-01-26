@@ -3,7 +3,7 @@ function getStates() {
     {
       state: 'template',
       config: {
-        url: "/template",
+        url: '/template',
         component: 'fimsTemplates',
         projectRequired: true,
       },
@@ -11,8 +11,8 @@ function getStates() {
   ];
 }
 
-export default (routerHelper) => {
+export default routerHelper => {
   'ngInject';
+
   routerHelper.configureStates(getStates());
 };
-

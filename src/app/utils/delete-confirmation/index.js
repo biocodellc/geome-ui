@@ -1,9 +1,9 @@
 import angular from 'angular';
 
-
 class DeleteConfirmationController {
   constructor($uibModalInstance, text) {
     'ngInject';
+
     this.$uibModalInstance = $uibModalInstance;
     this.text = text;
   }
@@ -20,6 +20,7 @@ class DeleteConfirmationController {
 class ConfirmationService {
   constructor($uibModal) {
     'ngInject';
+
     this.$uibModal = $uibModal;
   }
 
@@ -40,6 +41,6 @@ class ConfirmationService {
   }
 }
 
-export default angular.module('fimsDeleteConfirmation', [])
-  .service('ConfirmationService', ConfirmationService)
-  .name;
+export default angular
+  .module('fimsDeleteConfirmation', [])
+  .service('ConfirmationService', ConfirmationService).name;

@@ -6,18 +6,17 @@ const compareTo = () => ({
   scope: {
     compareTo: '=compareTo',
   },
-  link: function (scope, elm, attr, ngModel) {
-    ngModel.$validators.compareTo = function (modelValue) {
+  link(scope, elm, attr, ngModel) {
+    ngModel.$validators.compareTo = function(modelValue) {
       return modelValue === scope.compareTo;
     };
 
-    scope.$watch("compareTo", function () {
+    scope.$watch('compareTo', () => {
       ngModel.$validate();
     });
   },
-
 });
 
-export default angular.module('fims.compareTo', [])
-  .directive("compareTo", compareTo)
-  .name;
+export default angular
+  .module('fims.compareTo', [])
+  .directive('compareTo', compareTo).name;

@@ -1,7 +1,6 @@
 import angular from 'angular';
 
 class LoadingModalService {
-
   constructor($uibModal) {
     this._modalInstance = undefined;
     this._uibModal = $uibModal;
@@ -21,13 +20,12 @@ class LoadingModalService {
       this._modalInstance = this._uibModal.open({
         template: '<span us-spinner></span>',
         windowTemplate: '<div uib-modal-transclude></div>',
-        appendTo: angular.element(document.querySelector("#content")),
+        appendTo: angular.element(document.querySelector('#content')),
         size: 'sm',
-        backdrop: true
+        backdrop: true,
       });
     }
   }
-
 }
 
 LoadingModalService.$inject = ['$uibModal'];

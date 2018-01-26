@@ -1,33 +1,55 @@
 import angular from 'angular';
 
-const loadSession = ($location, AuthService, StorageService, UserService, ProjectService) => {
-  const projectId = $location.search()[ 'projectId' ];
-  const loadUser = () => (AuthService.getAccessToken()) ? UserService.loadFromSession() : undefined;
-  return Promise.all([ ProjectService.loadFromSession(projectId), loadUser() ]);
+const loadSession = (
+  $location,
+  AuthService,
+  StorageService,
+  UserService,
+  ProjectService,
+) => {
+  const projectId = $location.search().projectId;
+  const loadUser = () =>
+    AuthService.getAccessToken() ? UserService.loadFromSession() : undefined;
+  return Promise.all([ProjectService.loadFromSession(projectId), loadUser()]);
 };
 
-
-export default function ($http, $timeout, $rootScope, $transitions,
-                          $location, AuthService, StorageService, UserService, ProjectService) {
+export default function(
+  $http,
+  $timeout,
+  $rootScope,
+  $transitions,
+  $location,
+  AuthService,
+  StorageService,
+  UserService,
+  ProjectService,
+) {
   'ngInject';
 
   $http.defaults.headers.common = { 'Fims-App': 'Biscicol-Fims' };
 
-  $rootScope.isEmpty = function (val) {
+  $rootScope.isEmpty = function(val) {
     return angular.equals({}, val);
   };
 
   // this will wait for the currentProject & currentUser to be loaded from the session
   // before resolving the first route. This hook is only run on page load/refresh
-  const deregister = $transitions.onBefore({}, function (trans) {
-    return new Promise((resolve) => {
-      const timeoutPromise = $timeout(() => {
-        deregister();
-        resolve(trans.router.stateService.go('home'));
-      }, 5000); // timeout loading after 5 secs
+  const deregister = $transitions.onBefore(
+    {},
+    trans =>
+      new Promise(resolve => {
+        const timeoutPromise = $timeout(() => {
+          deregister();
+          resolve(trans.router.stateService.go('home'));
+        }, 5000); // timeout loading after 5 secs
 
-      loadSession($location, AuthService, StorageService, UserService, ProjectService)
-        .then(([ project, user ]) => {
+        loadSession(
+          $location,
+          AuthService,
+          StorageService,
+          UserService,
+          ProjectService,
+        ).then(([project, user]) => {
           $timeout.cancel(timeoutPromise);
           deregister();
 
@@ -38,6 +60,7 @@ export default function ($http, $timeout, $rootScope, $transitions,
 
           resolve();
         });
-    });
-  }, { priority: 1000 });
+      }),
+    { priority: 1000 },
+  );
 }

@@ -1,5 +1,4 @@
-import angular from "angular";
-
+import angular from 'angular';
 
 class AddListController {
   $onInit() {
@@ -11,15 +10,17 @@ class AddListController {
     const list = this.lists.find(l => l.alias === this.alias);
 
     if (list) {
-      this.addForm.alias.$setValidity("unique", false);
+      this.addForm.alias.$setValidity('unique', false);
       return;
     }
 
-    this.onAddList({ list: {
-      fields: [],
-      alias: this.alias,
-      caseInsensitive: !this.caseSensitive,
-    }});
+    this.onAddList({
+      list: {
+        fields: [],
+        alias: this.alias,
+        caseInsensitive: !this.caseSensitive,
+      },
+    });
   }
 }
 
@@ -32,6 +33,6 @@ const fimsAddList = {
   },
 };
 
-export default angular.module('fims.projectConfigAddList', [])
-  .component('fimsAddList', fimsAddList)
-  .name;
+export default angular
+  .module('fims.projectConfigAddList', [])
+  .component('fimsAddList', fimsAddList).name;

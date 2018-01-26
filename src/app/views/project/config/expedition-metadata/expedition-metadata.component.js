@@ -1,6 +1,7 @@
 export class ExpeditionMetadataController {
   constructor(ConfirmationService) {
     'ngInject';
+
     this.ConfirmationService = ConfirmationService;
   }
 
@@ -8,7 +9,10 @@ export class ExpeditionMetadataController {
     if ('properties' in changesObj) {
       this.properties = changesObj.properties.currentValue.slice();
 
-      if (this.properties.length > 0 && this.properties[this.properties.length - 1].isNew) {
+      if (
+        this.properties.length > 0 &&
+        this.properties[this.properties.length - 1].isNew
+      ) {
         this.editProp = this.properties.length - 1;
       }
     }
@@ -25,7 +29,8 @@ export class ExpeditionMetadataController {
       () => {
         this.properties.splice(index, 1);
         this.onUpdate({ expeditionMetadata: this.properties });
-      });
+      },
+    );
   }
 
   handleToggleEdit(index) {

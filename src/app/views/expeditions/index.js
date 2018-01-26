@@ -11,7 +11,6 @@ import fimsExpedition from '../../components/expeditions/expedition.component';
 import fimsExpeditionSettings from '../../components/expeditions/expedition-settings.component';
 import fimsExpeditionResources from '../../components/expeditions/expedition-resources.component';
 
-
 const dependencies = [
   bootstrap,
   modals,
@@ -23,6 +22,5 @@ const dependencies = [
   fimsExpeditionResources,
 ];
 
-export default angular.module('fims.expeditions', dependencies)
-  .run(routing)
+export default angular.module('fims.expeditions', dependencies).run(routing)
   .name;

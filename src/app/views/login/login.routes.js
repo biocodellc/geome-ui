@@ -3,7 +3,7 @@ function getStates() {
     {
       state: 'login',
       config: {
-        url: "/login",
+        url: '/login',
         component: 'fimsLogin',
         params: {
           nextState: null,
@@ -16,5 +16,6 @@ function getStates() {
 
 export default ($transitions, routerHelper) => {
   'ngInject';
+
   routerHelper.configureStates(getStates());
 };

@@ -1,6 +1,5 @@
 import angular from 'angular';
 
-
 class EntityAttributesController {
   constructor($location, $anchorScroll, ConfirmationService) {
     'ngInject';
@@ -16,9 +15,9 @@ class EntityAttributesController {
     const newAttributeIndex = this.attributes.findIndex(a => a.isNew);
     if (newAttributeIndex > -1) {
       this.editAttribute = newAttributeIndex;
-      this.$location.hash("attribute_" + newAttributeIndex);
+      this.$location.hash(`attribute_${newAttributeIndex}`);
       this.$anchorScroll();
-      delete this.attributes[ newAttributeIndex ].isNew;
+      delete this.attributes[newAttributeIndex].isNew;
     }
   }
 
@@ -29,10 +28,12 @@ class EntityAttributesController {
   }
 
   dndDrop(index, item) {
-    const currentIndex = this.attributes.findIndex(a => angular.equals(a, item));
+    const currentIndex = this.attributes.findIndex(a =>
+      angular.equals(a, item),
+    );
 
     // drag to the same place
-    if (index === currentIndex || index === (currentIndex + 1)) {
+    if (index === currentIndex || index === currentIndex + 1) {
       return false;
     }
 
@@ -69,7 +70,8 @@ class EntityAttributesController {
       () => {
         this.attributes.splice(index, 1);
         this.onUpdateAttributes({ attributes: this.attributes });
-      });
+      },
+    );
   }
 
   handleOnUpdate(index, attribute) {
@@ -88,6 +90,6 @@ const fimsEntityAttributes = {
   },
 };
 
-export default angular.module('fims.projectConfigEntityAttributes', [])
-  .component('fimsEntityAttributes', fimsEntityAttributes)
-  .name;
+export default angular
+  .module('fims.projectConfigEntityAttributes', [])
+  .component('fimsEntityAttributes', fimsEntityAttributes).name;

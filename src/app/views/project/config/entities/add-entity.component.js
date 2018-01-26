@@ -1,5 +1,4 @@
-import angular from "angular";
-
+import angular from 'angular';
 
 class AddEntityController {
   $onInit() {
@@ -11,22 +10,26 @@ class AddEntityController {
   }
 
   add() {
-    const e = this.entities.find(alias => alias.toLowerCase() === this.conceptAlias.toLowerCase());
+    const e = this.entities.find(
+      alias => alias.toLowerCase() === this.conceptAlias.toLowerCase(),
+    );
 
     if (e) {
-      this.addForm.conceptAlias.$setValidity("unique", false);
+      this.addForm.conceptAlias.$setValidity('unique', false);
       return;
     }
 
-    this.onAddEntity({ entity: {
-      attributes: [],
-      rules: [],
-      conceptAlias: this.conceptAlias.toLowerCase(),
-      parentEntity: this.parentEntity,
-      conceptURI: this.conceptURI,
-      editable: true,
-      isNew: true,
-    }});
+    this.onAddEntity({
+      entity: {
+        attributes: [],
+        rules: [],
+        conceptAlias: this.conceptAlias.toLowerCase(),
+        parentEntity: this.parentEntity,
+        conceptURI: this.conceptURI,
+        editable: true,
+        isNew: true,
+      },
+    });
   }
 }
 
@@ -39,6 +42,6 @@ const fimsProjectConfigEntityAdd = {
   },
 };
 
-export default angular.module('fims.projectConfigEntityAdd', [])
-  .component('fimsProjectConfigEntityAdd', fimsProjectConfigEntityAdd)
-  .name;
+export default angular
+  .module('fims.projectConfigEntityAdd', [])
+  .component('fimsProjectConfigEntityAdd', fimsProjectConfigEntityAdd).name;

@@ -10,7 +10,8 @@ function getStates() {
   ];
 }
 
-export default (routerHelper) => {
+export default routerHelper => {
   'ngInject';
+
   routerHelper.configureStates(getStates());
 };

@@ -3,6 +3,6 @@ export default {
   bindings: {
     fimsMetadata: '<',
     onMetadataChange: '&',
-    onValidate: "&",
+    onValidate: '&',
   },
-}
+};

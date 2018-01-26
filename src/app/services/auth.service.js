@@ -1,4 +1,4 @@
-import angular from "angular";
+import angular from 'angular';
 import { EventEmitter } from 'events';
 
 import storageService from './storage.service';
@@ -7,11 +7,20 @@ import CLIENT_ID from '../components/auth/clientId';
 export const AUTH_ERROR_EVENT = 'authError';
 
 let triedToRefresh = false;
-let timeoutId = undefined;
+let timeoutId;
 
 class AuthService extends EventEmitter {
-  constructor($state, $http, $timeout, StorageService, AUTH_TIMEOUT, REST_ROOT, APP_ROOT) {
+  constructor(
+    $state,
+    $http,
+    $timeout,
+    StorageService,
+    AUTH_TIMEOUT,
+    REST_ROOT,
+    APP_ROOT,
+  ) {
     'ngInject';
+
     super();
 
     this.$state = $state;
@@ -30,15 +39,16 @@ class AuthService extends EventEmitter {
   authenticate(username, password) {
     const data = {
       client_id: CLIENT_ID,
-      redirect_uri: this.APP_ROOT + '/oauth',
+      redirect_uri: `${this.APP_ROOT}/oauth`,
       grant_type: 'password',
-      username: username,
-      password: password,
+      username,
+      password,
     };
 
-    return this.$http.post(this.REST_ROOT + 'authenticationService/oauth/accessToken', data)
+    return this.$http
+      .post(`${this.REST_ROOT}authenticationService/oauth/accessToken`, data)
       .then(({ data }) => this._authSuccess(data, username))
-      .catch((response) => {
+      .catch(response => {
         this.clearTokens();
         return Promise.reject(response);
       });
@@ -54,16 +64,17 @@ class AuthService extends EventEmitter {
   }
 
   refreshAccessToken() {
-    let refreshToken = this.StorageService.get('refreshToken');
-    let username = this.StorageService.get('username');
+    const refreshToken = this.StorageService.get('refreshToken');
+    const username = this.StorageService.get('username');
 
     if (refreshToken && this._checkAuthenticated() && !triedToRefresh) {
-      return this.$http.post(this.REST_ROOT + 'authenticationService/oauth/refresh', {
+      return this.$http
+        .post(`${this.REST_ROOT}authenticationService/oauth/refresh`, {
           client_id: CLIENT_ID,
           refresh_token: refreshToken,
         })
         .then(({ data }) => this._authSuccess(data, username))
-        .catch((response) => {
+        .catch(response => {
           this.$emit(AUTH_ERROR_EVENT);
           this.clearTokens();
           triedToRefresh = true;
@@ -95,9 +106,8 @@ class AuthService extends EventEmitter {
     timeoutId = this.$timeout(() => {
       this.emit(AUTH_ERROR_EVENT);
       this.clearTokens();
-      angular.alerts.info("You have been signed out due to inactivity.");
-      this.$state.go("home");
-
+      angular.alerts.info('You have been signed out due to inactivity.');
+      this.$state.go('home');
     }, this.AUTH_TIMEOUT);
   }
 
@@ -118,6 +128,6 @@ class AuthService extends EventEmitter {
   }
 }
 
-export default angular.module('fims.authService', [ storageService ])
-  .service('AuthService', AuthService)
-  .name;
+export default angular
+  .module('fims.authService', [storageService])
+  .service('AuthService', AuthService).name;

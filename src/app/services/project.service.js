@@ -1,14 +1,22 @@
-import angular from "angular";
+import angular from 'angular';
 import { EventEmitter } from 'events';
 
 import storageService from './storage.service';
 
 export const PROJECT_CHANGED_EVENT = 'projectChanged';
 
-let currentProject = undefined;
+let currentProject;
 class ProjectService extends EventEmitter {
-  constructor($cacheFactory, $http, $timeout, StorageService, ProjectConfigService, REST_ROOT) {
+  constructor(
+    $cacheFactory,
+    $http,
+    $timeout,
+    StorageService,
+    ProjectConfigService,
+    REST_ROOT,
+  ) {
     'ngInject';
+
     super();
     this.PROJECT_CACHE = $cacheFactory('projects');
 
@@ -33,15 +41,15 @@ class ProjectService extends EventEmitter {
       return Promise.resolve();
     }
 
-    const setProjectConfig = () => (project.config) ? Promise.resolve(project) : this.get(project.projectId);
+    const setProjectConfig = () =>
+      project.config ? Promise.resolve(project) : this.get(project.projectId);
 
-    return setProjectConfig()
-      .then(p => {
-        this.StorageService.set('projectId', project.projectId);
-        currentProject = p;
-        this.emit(PROJECT_CHANGED_EVENT, currentProject);
-        return p;
-      });
+    return setProjectConfig().then(p => {
+      this.StorageService.set('projectId', project.projectId);
+      currentProject = p;
+      this.emit(PROJECT_CHANGED_EVENT, currentProject);
+      return p;
+    });
   }
 
   cacheProject(projectId) {
@@ -65,39 +73,42 @@ class ProjectService extends EventEmitter {
         }
 
         return this.ProjectConfigService.get(project.projectId)
-          .then((config) => {
+          .then(config => {
             project.config = config;
             return project;
           })
-          .catch(response => angular.catcher("Failed to load project configuration")(response))
+          .catch(response =>
+            angular.catcher('Failed to load project configuration')(response),
+          );
       })
-      .catch(response => angular.catcher("Failed to project")(response))
+      .catch(response => angular.catcher('Failed to project')(response));
   }
 
   all(includePublic) {
-    return this.$http.get(this.REST_ROOT + 'projects?includePublic=' + includePublic, { cache: this.PROJECT_CACHE })
-      .catch(angular.catcher("Failed to load projects"));
+    return this.$http
+      .get(`${this.REST_ROOT}projects?includePublic=${includePublic}`, {
+        cache: this.PROJECT_CACHE,
+      })
+      .catch(angular.catcher('Failed to load projects'));
   }
 
   update(project) {
     this.PROJECT_CACHE.removeAll();
     return this.$http({
-        method: 'PUT',
-        url: this.REST_ROOT + 'projects/' + project.projectId,
-        data: project,
-        keepJson: true,
-      })
-      .catch(angular.catcher("Failed to update the project."));
-
+      method: 'PUT',
+      url: `${this.REST_ROOT}projects/${project.projectId}`,
+      data: project,
+      keepJson: true,
+    }).catch(angular.catcher('Failed to update the project.'));
   }
 
-  //TODO remove this
+  // TODO remove this
   resolveProjectId() {
     return new Promise((resolve, reject) => {
       if (currentProject) {
         resolve(currentProject.projectId);
       } else {
-        reject({ data: { error: "No project is selected" } });
+        reject({ data: { error: 'No project is selected' } });
       }
     });
   }
@@ -111,6 +122,6 @@ class ProjectService extends EventEmitter {
   }
 }
 
-export default angular.module('fims.projectService', [ storageService ])
-  .service('ProjectService', ProjectService)
-  .name;
+export default angular
+  .module('fims.projectService', [storageService])
+  .service('ProjectService', ProjectService).name;

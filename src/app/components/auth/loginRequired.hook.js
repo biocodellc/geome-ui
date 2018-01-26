@@ -14,10 +14,17 @@ function checkLoginRequired(state) {
 export default ($transitions, UserService) => {
   'ngInject';
 
-  $transitions.onBefore({}, (trans) => {
-    const to = trans.$to();
-    if (checkLoginRequired(to) && !UserService.currentUser()) {
-      return trans.router.stateService.target('login', { nextState: to.name, nextStateParams: to.params });
-    }
-  }, { priority: 100 });
-}
+  $transitions.onBefore(
+    {},
+    trans => {
+      const to = trans.$to();
+      if (checkLoginRequired(to) && !UserService.currentUser()) {
+        return trans.router.stateService.target('login', {
+          nextState: to.name,
+          nextStateParams: to.params,
+        });
+      }
+    },
+    { priority: 100 },
+  );
+};

@@ -4,6 +4,7 @@ import fileService from './file.service';
 class DataService {
   constructor($http, Upload, FileService, REST_ROOT) {
     'ngInject';
+
     this.$http = $http;
     this.Upload = Upload;
     this.FileService = FileService;
@@ -45,28 +46,29 @@ class DataService {
       data.dataSourceMetadata = this.Upload.jsonBlob(data.dataSourceMetadata);
     }
     return this.Upload.upload({
-        url: `${this.REST_ROOT}data/validate`,
-        data,
-        arrayKey: '',
-      })
-      .catch(angular.catcher("Data validation failed"));
+      url: `${this.REST_ROOT}data/validate`,
+      data,
+      arrayKey: '',
+    }).catch(angular.catcher('Data validation failed'));
   }
 
   upload(uploadId) {
-    return this.$http.put(`${this.REST_ROOT}data/upload/${uploadId}`)
-      .catch(angular.catcher("Data upload failed"));
+    return this.$http
+      .put(`${this.REST_ROOT}data/upload/${uploadId}`)
+      .catch(angular.catcher('Data upload failed'));
   }
 
   exportData(projectId, expeditionCode) {
-    return this.$http.get(this.REST_ROOT + 'data/export/' + projectId + '/' + expeditionCode)
-      .then((response) => {
+    return this.$http
+      .get(`${this.REST_ROOT}data/export/${projectId}/${expeditionCode}`)
+      .then(response => {
         if (response.status === 204) {
-          angular.alerts.info("No resources found");
-          return
+          angular.alerts.info('No resources found');
+          return;
         }
-        return this.FileService.download(response.data.url)
+        return this.FileService.download(response.data.url);
       })
-      .catch(angular.catcher("Failed to export data"));
+      .catch(angular.catcher('Failed to export data'));
   }
 
   getNAAN() {
@@ -74,6 +76,6 @@ class DataService {
   }
 }
 
-export default angular.module('fims.data', [ fileService ])
-  .service('DataService', DataService)
-  .name;
+export default angular
+  .module('fims.data', [fileService])
+  .service('DataService', DataService).name;

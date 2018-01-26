@@ -3,21 +3,21 @@ function getStates() {
     {
       state: 'resetPass',
       config: {
-        url: "/resetPass",
+        url: '/resetPass',
         component: 'fimsResetPass',
       },
     },
     {
       state: 'create',
       config: {
-        url: "/user/create?id&email",
+        url: '/user/create?id&email',
         component: 'fimsNewUser',
       },
     },
     {
       state: 'profile',
       config: {
-        url: "/user/profile",
+        url: '/user/profile',
         component: 'fimsProfile',
         loginRequired: true,
       },
@@ -25,7 +25,7 @@ function getStates() {
   ];
 }
 
-export default (routerHelper) => {
+export default routerHelper => {
   'ngInject';
 
   routerHelper.configureStates(getStates());

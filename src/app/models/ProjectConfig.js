@@ -1,4 +1,4 @@
-import Rule from "./Rule";
+import Rule from './Rule';
 
 export default class ProjectConfig {
   constructor(config) {
@@ -8,7 +8,7 @@ export default class ProjectConfig {
     this.lists = this.lists.slice();
     this.expeditionMetadataProperties = this.expeditionMetadataProperties.slice();
 
-    this.entities.forEach((e) => {
+    this.entities.forEach(e => {
       e.rules = e.rules.map(r => new Rule(r));
     });
   }
@@ -19,8 +19,9 @@ export default class ProjectConfig {
     // during comparison
     if (!this.$worksheets) {
       const worksheets = new Set();
-      this.entities.filter(e => e.worksheet)
-        .forEach((e) => worksheets.add(e.worksheet));
+      this.entities
+        .filter(e => e.worksheet)
+        .forEach(e => worksheets.add(e.worksheet));
       this.$worksheets = Array.from(worksheets);
     }
 
@@ -35,31 +36,31 @@ export default class ProjectConfig {
     const defaultGroup = 'Default Group';
 
     const attributes = {};
-    attributes[ defaultGroup ] = [];
+    attributes[defaultGroup] = [];
 
-    this.entities.filter(entity => entity.worksheet === sheetName)
-      .forEach(e =>
-        e.attributes.forEach(attribute => {
-          const group = attribute.group || defaultGroup;
+    this.entities.filter(entity => entity.worksheet === sheetName).forEach(e =>
+      e.attributes.forEach(attribute => {
+        const group = attribute.group || defaultGroup;
 
-          if (!(group in attributes)) {
-            attributes[ group ] = [];
-          }
+        if (!(group in attributes)) {
+          attributes[group] = [];
+        }
 
-          attributes[ group ].push(attribute);
-        }),
-      );
+        attributes[group].push(attribute);
+      }),
+    );
 
     return attributes;
   }
 
   findAttributesByDefinition(sheetName, def) {
-    return this.entities.filter(entity => entity.worksheet === sheetName)
+    return this.entities
+      .filter(entity => entity.worksheet === sheetName)
       .map(e => e.attributes.filter(a => a.defined_by === def));
   }
 
   attributeRules(sheetName, attribute) {
-    const reservedKeys = [ 'name', 'level', 'listName' ];
+    const reservedKeys = ['name', 'level', 'listName'];
     const sheetRules = this.sheetRules(sheetName);
     const attrRules = [];
 
@@ -67,9 +68,11 @@ export default class ProjectConfig {
       Object.keys(rule).forEach(k => {
         // if this is not a reservedKey, then check the val for the attribute.column
         if (!reservedKeys.includes(k)) {
-          const val = rule[ k ];
-          if ((Array.isArray(val) && val.includes(attribute.column)) ||
-            attribute.column === val) {
+          const val = rule[k];
+          if (
+            (Array.isArray(val) && val.includes(attribute.column)) ||
+            attribute.column === val
+          ) {
             attrRules.push(rule);
           }
         }
@@ -78,7 +81,6 @@ export default class ProjectConfig {
 
     return attrRules;
   }
-
 
   sheetRules(sheetName) {
     return this.entities.reduce((result, entity) => {
@@ -92,19 +94,21 @@ export default class ProjectConfig {
 
   entityUniqueKey(conceptAlias) {
     const entity = this.entities.find(e => e.conceptAlias === conceptAlias);
-    return (entity) ? entity.uniqueKey : undefined;
+    return entity ? entity.uniqueKey : undefined;
   }
 
   getList(listName) {
     const list = this.lists.find(l => l.alias === listName);
-    return (list) ? list : [];
+    return list || [];
   }
 
   getRule(conceptAlias, ruleName, level) {
     const entity = this.entities.find(e => e.conceptAlias === conceptAlias);
 
     if (entity) {
-      let rule = entity.rules.find(r => r.name === ruleName && r.level === level);
+      let rule = entity.rules.find(
+        r => r.name === ruleName && r.level === level,
+      );
 
       if (!rule) {
         rule = Rule.newRule(ruleName);
@@ -125,8 +129,9 @@ export default class ProjectConfig {
   }
 
   _requiredValueAttributes(sheetName, level) {
-    return this.entities.filter(e => e.worksheet === sheetName)
-      .map((e) => {
+    return this.entities
+      .filter(e => e.worksheet === sheetName)
+      .map(e => {
         const requiredColumns = e.rules
           .filter(r => r.name === 'RequiredValue' && r.level === level)
           .map(r => r.columns)

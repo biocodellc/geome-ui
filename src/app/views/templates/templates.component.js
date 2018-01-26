@@ -1,4 +1,4 @@
-import angular from "angular";
+import angular from 'angular';
 
 const DEFAULT_TEMPLATE = { name: 'DEFAULT' };
 
@@ -12,12 +12,12 @@ class TemplateController {
   $onInit() {
     this._templates = [];
     this.template = Object.assign({}, DEFAULT_TEMPLATE);
-    this.templates = [ Object.assign({}, DEFAULT_TEMPLATE) ];
+    this.templates = [Object.assign({}, DEFAULT_TEMPLATE)];
   }
 
   $onChanges(changesObj) {
     if ('currentUser' in changesObj) {
-      this.isAuthenticated = !!(this.currentUser);
+      this.isAuthenticated = !!this.currentUser;
     }
 
     if ('currentProject' in changesObj) {
@@ -32,7 +32,10 @@ class TemplateController {
   }
 
   selectAll() {
-    this.selected = Object.values(this.attributes).reduce((result, group) => result.concat(group), []);
+    this.selected = Object.values(this.attributes).reduce(
+      (result, group) => result.concat(group),
+      [],
+    );
   }
 
   selectNone() {
@@ -40,7 +43,7 @@ class TemplateController {
   }
 
   saveConfig() {
-    //TODO finish this
+    // TODO finish this
   }
 
   toggleSelected(attribute) {
@@ -62,7 +65,9 @@ class TemplateController {
 
   templateChange() {
     if (angular.equals(this.template, DEFAULT_TEMPLATE)) {
-      this.selected = this.required.concat(this._config.suggestedAttributes(this.sheetName));
+      this.selected = this.required.concat(
+        this._config.suggestedAttributes(this.sheetName),
+      );
     } else {
       this.selected = this.required.slice();
 
@@ -74,29 +79,38 @@ class TemplateController {
   }
 
   canRemoveTemplate() {
-    return this.template && !angular.equals(this.template, DEFAULT_TEMPLATE) &&
-      this.template.user.userId === this.currentUser.userId;
+    return (
+      this.template &&
+      !angular.equals(this.template, DEFAULT_TEMPLATE) &&
+      this.template.user.userId === this.currentUser.userId
+    );
   }
 
   generate() {
     const columns = this.selected.map(attribute => attribute.column);
 
-    this.TemplateService.generate(this.currentProject.projectId, this.sheetName, columns);
+    this.TemplateService.generate(
+      this.currentProject.projectId,
+      this.sheetName,
+      columns,
+    );
   }
 
   filterTemplates() {
-    this.templates = this._templates.filter(t => t.sheetName === this.sheetName);
+    this.templates = this._templates.filter(
+      t => t.sheetName === this.sheetName,
+    );
     this.templates.splice(0, 1, DEFAULT_TEMPLATE);
   }
 
   getTemplates() {
     this.TemplateService.all(this.currentProject.projectId)
-      .then((response) => {
+      .then(response => {
         this._templates = response.data;
         this.filterTemplates();
         this.templateChange();
       })
-      .catch(angular.catcher("Failed to load templates"));
+      .catch(angular.catcher('Failed to load templates'));
   }
 
   getAttributes() {
@@ -106,16 +120,15 @@ class TemplateController {
 
   getWorksheets() {
     this.worksheets = this._config.worksheets();
-    this.sheetName = this.worksheets[ 0 ];
+    this.sheetName = this.worksheets[0];
   }
 }
-
 
 export default {
   template: require('./templates.html'),
   controller: TemplateController,
   bindings: {
-    currentUser: "<",
-    currentProject: "<",
+    currentUser: '<',
+    currentProject: '<',
   },
 };

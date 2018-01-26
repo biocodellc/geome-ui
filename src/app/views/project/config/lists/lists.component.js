@@ -25,7 +25,8 @@ class ListsController {
         const i = this.lists.findIndex(l => l.alias === alias);
         this.lists.splice(i, 1);
         this.onUpdateLists({ lists: this.lists });
-      });
+      },
+    );
   }
 
   handleUpdateList($index, list) {

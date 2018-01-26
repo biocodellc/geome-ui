@@ -11,7 +11,12 @@ class ResultsController {
       return;
     }
     // TODO use file service & another service for generateSraFiles?
-    this.$window.open(`${this.REST_ROOT}projects/${this.projectId}/expeditions/${this.expeditionCode}/generateSraFiles`, "_self");
+    this.$window.open(
+      `${this.REST_ROOT}projects/${this.projectId}/expeditions/${
+        this.expeditionCode
+      }/generateSraFiles`,
+      '_self',
+    );
   }
 }
 

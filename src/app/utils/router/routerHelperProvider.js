@@ -8,9 +8,11 @@ class RouterHelper {
 
   configureStates(states, otherwisePath) {
     // TODO flatten state objects
-    states.forEach((state) => this.$stateRegistry.register(
-      Object.assign({ name: state.state }, state.config),
-    ));
+    states.forEach(state =>
+      this.$stateRegistry.register(
+        Object.assign({ name: state.state }, state.config),
+      ),
+    );
 
     if (otherwisePath && !this._hasOtherwise) {
       this._hasOtherwise = true;
@@ -30,7 +32,8 @@ class RouterHelper {
 function routerHelperProvider($locationProvider, $urlMatcherFactoryProvider) {
   'ngInject';
 
-  this.$get = /*NgInject*/ ($state, $stateRegistry, $urlRouter) => new RouterHelper($state, $stateRegistry, $urlRouter);
+  this.$get = /* NgInject */ ($state, $stateRegistry, $urlRouter) =>
+    new RouterHelper($state, $stateRegistry, $urlRouter);
 
   $locationProvider.html5Mode(true);
 

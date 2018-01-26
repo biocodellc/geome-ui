@@ -25,7 +25,7 @@ export class FimsExpeditionController {
     });
 
     return modal.result.then(() =>
-      this.ExpeditionService.delete(projectId, expedition)
+      this.ExpeditionService.delete(projectId, expedition),
     );
   }
 }
@@ -33,6 +33,7 @@ export class FimsExpeditionController {
 class DeleteConfirmationController {
   constructor($uibModalInstance, expeditionCode) {
     'ngInject';
+
     this.expeditionCode = expeditionCode;
     this.delete = $uibModalInstance.close;
     this.cancel = $uibModalInstance.dismiss;

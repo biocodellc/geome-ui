@@ -1,5 +1,4 @@
-import angular from "angular";
-
+import angular from 'angular';
 
 const fimsProjectConfigNavbar = {
   template: require('./navbar.html'),
@@ -12,6 +11,6 @@ const fimsProjectConfigNavbar = {
   },
 };
 
-export default angular.module('fims.projectConfigNavbar', [])
-  .component('fimsProjectConfigNavbar', fimsProjectConfigNavbar)
-  .name;
+export default angular
+  .module('fims.projectConfigNavbar', [])
+  .component('fimsProjectConfigNavbar', fimsProjectConfigNavbar).name;

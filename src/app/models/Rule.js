@@ -7,14 +7,13 @@ export default class Rule {
   }
 
   metadata() {
-    return Object.keys(this)
-      .reduce((result, k) => {
-        if (![ 'name', 'level' ].includes(k)) {
-          result[ k ] = this[ k ];
-        }
+    return Object.keys(this).reduce((result, k) => {
+      if (!['name', 'level'].includes(k)) {
+        result[k] = this[k];
+      }
 
-        return result;
-      }, {});
+      return result;
+    }, {});
   }
 
   static newRule(name) {
@@ -69,4 +68,4 @@ export const AVAILABLE_RULES = [
   }),
 ];
 
-export const RULE_LEVELS = [ 'ERROR', 'WARNING' ];
+export const RULE_LEVELS = ['ERROR', 'WARNING'];

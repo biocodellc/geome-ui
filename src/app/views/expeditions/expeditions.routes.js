@@ -6,14 +6,21 @@ function getStates() {
         abstract: true,
         template: '<div ui-view class="admin"></div>',
         resolve: {
-          expeditions: /*ngInject*/ ($state, ExpeditionService, ProjectService) => {
-            return ExpeditionService.userExpeditions(ProjectService.currentProject().projectId, true)
+          expeditions: /* ngInject */ (
+            $state,
+            ExpeditionService,
+            ProjectService,
+          ) =>
+            ExpeditionService.userExpeditions(
+              ProjectService.currentProject().projectId,
+              true,
+            )
               .then(({ data }) => data)
-              .catch(() => $state.go('home'))},
+              .catch(() => $state.go('home')),
         },
         params: {
           admin: {
-            type: "bool",
+            type: 'bool',
             value: false,
           },
         },
@@ -33,18 +40,20 @@ function getStates() {
       config: {
         url: '/expeditions/:id',
         component: 'fimsExpedition',
-        redirectTo: "expeditions.detail.settings",
+        redirectTo: 'expeditions.detail.settings',
         resolve: {
           expedition: ($state, expeditions, $transition$) => {
-            const expedition = expeditions.find(e => e.expeditionId === $transition$.params().id);
+            const expedition = expeditions.find(
+              e => e.expeditionId === $transition$.params().id,
+            );
 
-            return (expedition) ? expedition : $state.go('expeditions.list');
+            return expedition || $state.go('expeditions.list');
           },
-          backState: () => "expeditions.list",
+          backState: () => 'expeditions.list',
         },
         params: {
           id: {
-            type: "int",
+            type: 'int',
           },
         },
       },
@@ -54,7 +63,7 @@ function getStates() {
       config: {
         url: '/settings',
         views: {
-          "details": {
+          details: {
             component: 'fimsExpeditionSettings',
           },
         },
@@ -65,7 +74,7 @@ function getStates() {
       config: {
         url: '/resources',
         views: {
-          "details": {
+          details: {
             component: 'fimsExpeditionResources',
           },
         },
@@ -76,7 +85,7 @@ function getStates() {
       config: {
         url: '/members',
         views: {
-          "details": {
+          details: {
             template: require('../../components/expeditions/expedition-members.html'),
             // controller: "ExpeditionMembersController as vm"
           },
@@ -86,8 +95,7 @@ function getStates() {
   ];
 }
 
-
-export default (routerHelper) => {
+export default routerHelper => {
   'ngInject';
 
   routerHelper.configureStates(getStates());

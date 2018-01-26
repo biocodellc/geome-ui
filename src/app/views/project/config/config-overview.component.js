@@ -1,15 +1,16 @@
-import angular from "angular";
+import angular from 'angular';
 
-import fimsProjectConfigMetadata from "./metadata";
-import fimsProjectConfigEntities from "./entities";
-import fimsProjectConfigLists from "./lists";
-import fimsProjectConfigExpeditionMetadata from "./expedition-metadata";
-import fimsProjectConfigNavbar from "./navbar.component";
-import Rule from "../../../models/Rule";
+import fimsProjectConfigMetadata from './metadata';
+import fimsProjectConfigEntities from './entities';
+import fimsProjectConfigLists from './lists';
+import fimsProjectConfigExpeditionMetadata from './expedition-metadata';
+import fimsProjectConfigNavbar from './navbar.component';
+import Rule from '../../../models/Rule';
 
 class ConfigOverviewController {
   constructor($scope, $state) {
-    "ngInject";
+    'ngInject';
+
     this.$scope = $scope;
     this.$state = $state;
   }
@@ -17,57 +18,57 @@ class ConfigOverviewController {
   $onInit() {
     this.addText = undefined;
 
-    //TODO remove this watch
+    // TODO remove this watch
     this.$scope.$watch(
       () => this.$state.current.name,
       name => {
         switch (name) {
-          case "project.config.entities":
-            this.addText = "Entity";
+          case 'project.config.entities':
+            this.addText = 'Entity';
             break;
-          case "project.config.lists":
-            this.addText = "List";
+          case 'project.config.lists':
+            this.addText = 'List';
             break;
-          case "project.config.expeditionMetadata":
-            this.addText = "Property";
+          case 'project.config.expeditionMetadata':
+            this.addText = 'Property';
             break;
           default:
             this.addText = undefined;
         }
-      }
+      },
     );
   }
 
   handleOnAdd() {
-    if (this.$state.current.name === "project.config.entities") {
-      this.$state.go("project.config.entities.add");
-    } else if (this.$state.current.name === "project.config.lists") {
-      this.$state.go("project.config.lists.add");
+    if (this.$state.current.name === 'project.config.entities') {
+      this.$state.go('project.config.entities.add');
+    } else if (this.$state.current.name === 'project.config.lists') {
+      this.$state.go('project.config.lists.add');
     } else {
       // we need to get a new array for ui-router to know to update the binding
       this.config.expeditionMetadataProperties = this.config.expeditionMetadataProperties.concat(
         [
           {
-            name: "",
+            name: '',
             required: false,
-            isNew: true
-          }
-        ]
+            isNew: true,
+          },
+        ],
       );
     }
   }
 
   handleOnAddEntity(entity) {
     if (entity.parentEntity) {
-      const rule = Rule.newRule("RequiredValue");
-      rule.level = "ERROR";
+      const rule = Rule.newRule('RequiredValue');
+      rule.level = 'ERROR';
       const column = this.config.entityUniqueKey(entity.parentEntity);
       rule.columns.push(column);
 
       entity.attributes.push({
-        column: column,
-        datatype: "STRING",
-        group: "Default"
+        column,
+        datatype: 'STRING',
+        group: 'Default',
       });
 
       entity.rules.push(rule);
@@ -77,10 +78,10 @@ class ConfigOverviewController {
     entities.push(entity);
 
     this.onUpdateEntities({ entities });
-    this.$state.go("^.detail.attributes", {
+    this.$state.go('^.detail.attributes', {
       alias: entity.conceptAlias,
-      entity: entity,
-      addAttribute: true
+      entity,
+      addAttribute: true,
     });
   }
 
@@ -88,10 +89,10 @@ class ConfigOverviewController {
     const lists = this.config.lists.slice();
     lists.push(list);
     this.onUpdateLists({ lists });
-    this.$state.go("^.detail", {
+    this.$state.go('^.detail', {
       alias: list.alias,
-      list: list,
-      addField: true
+      list,
+      addField: true,
     });
   }
 
@@ -102,18 +103,18 @@ class ConfigOverviewController {
 }
 
 const fimsProjectConfigOverview = {
-  template: require("./overview.html"),
+  template: require('./overview.html'),
   controller: ConfigOverviewController,
   bindings: {
-    config: "<",
-    showSave: "<",
-    onSave: "&",
-    onUpdateMetadata: "&",
-    onUpdateExpeditionMetadata: "&",
-    onNewWorksheet: "&",
-    onUpdateEntities: "&",
-    onUpdateLists: "&"
-  }
+    config: '<',
+    showSave: '<',
+    onSave: '&',
+    onUpdateMetadata: '&',
+    onUpdateExpeditionMetadata: '&',
+    onNewWorksheet: '&',
+    onUpdateEntities: '&',
+    onUpdateLists: '&',
+  },
 };
 
 const dependencies = [
@@ -121,9 +122,9 @@ const dependencies = [
   fimsProjectConfigEntities,
   fimsProjectConfigLists,
   fimsProjectConfigExpeditionMetadata,
-  fimsProjectConfigNavbar
+  fimsProjectConfigNavbar,
 ];
 
 export default angular
-  .module("fims.projectConfigOverview", dependencies)
-  .component("fimsProjectConfigOverview", fimsProjectConfigOverview).name;
+  .module('fims.projectConfigOverview', dependencies)
+  .component('fimsProjectConfigOverview', fimsProjectConfigOverview).name;

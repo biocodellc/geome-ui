@@ -1,9 +1,8 @@
 import angular from 'angular';
 
-
 class ProjectMembersController {
   constructor($state, $uibModal, ProjectMembersService, UserService) {
-    "ngInject";
+    'ngInject';
 
     this.$uibModal = $uibModal;
     this.$state = $state;
@@ -12,34 +11,43 @@ class ProjectMembersController {
   }
 
   $onInit() {
-    this.orderByList = [ 'username', 'institution', 'email', 'firstName', 'lastName' ];
-    this.orderBy = this.orderByList[ 0 ];
+    this.orderByList = [
+      'username',
+      'institution',
+      'email',
+      'firstName',
+      'lastName',
+    ];
+    this.orderBy = this.orderByList[0];
   }
 
   handleInviteUser(email) {
     if (this.isMemberEmail(email)) {
-      angular.alerts.error('A user with the email is already a member of this project.');
+      angular.alerts.error(
+        'A user with the email is already a member of this project.',
+      );
       return;
     }
 
     angular.alerts.removeTmp();
-    this.UserService.invite(email, this.currentProject.projectId)
-      .then(() => angular.alerts.success(email + ' has been sent an invitation to create an account.'));
-
+    this.UserService.invite(email, this.currentProject.projectId).then(() =>
+      angular.alerts.success(
+        `${email} has been sent an invitation to create an account.`,
+      ),
+    );
   }
 
   isMemberEmail(email) {
-    return !!(this.members.find(m => m.email === email));
+    return !!this.members.find(m => m.email === email);
   }
 
   handleAddMember(username) {
     angular.alerts.removeTmp();
-    this.ProjectMembersService.add(this.username)
-      .then(() => {
-        this.username = undefined;
-        angular.alerts.success("Successfully added user");
-        this.$state.reload();
-      });
+    this.ProjectMembersService.add(this.username).then(() => {
+      this.username = undefined;
+      angular.alerts.success('Successfully added user');
+      this.$state.reload();
+    });
   }
 
   remove(user) {
@@ -51,22 +59,23 @@ class ProjectMembersController {
       windowClass: 'app-modal-window',
       backdrop: 'static',
       resolve: {
-        username: function () {
+        username() {
           return user.username;
         },
       },
     });
 
     modal.result.then(() =>
-      this.ProjectMembersService.remove(user.username)
-        .then(() => this.$state.reload()),
+      this.ProjectMembersService.remove(user.username).then(() =>
+        this.$state.reload(),
+      ),
     );
   }
 }
 
 class RemoveMemberConfirmationController {
   constructor($uibModalInstance, username) {
-    "ngInject";
+    'ngInject';
 
     this.username = username;
     this.remove = $uibModalInstance.close;

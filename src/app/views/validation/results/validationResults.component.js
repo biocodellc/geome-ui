@@ -8,6 +8,6 @@ export default {
   template: require('./validationResults.html'),
   controller: ValidationResultsController,
   bindings: {
-    results: "<",
+    results: '<',
   },
 };

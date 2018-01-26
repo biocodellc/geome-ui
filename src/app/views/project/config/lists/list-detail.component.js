@@ -1,11 +1,12 @@
-import angular from "angular";
+import angular from 'angular';
 
 import fimsConfigNavbar from '../navbar.component';
 import fimsConfigField from './edit-field.component';
 
 export class ListDetailController {
   constructor(ConfirmationService) {
-    'ngInject'
+    'ngInject';
+
     this.ConfirmationService = ConfirmationService;
   }
 
@@ -31,7 +32,8 @@ export class ListDetailController {
       () => {
         this.list.fields.splice(index, 1);
         this.onUpdateList({ alias: this.list.alias, list: this.list });
-      });
+      },
+    );
   }
 
   handleToggleEdit(index) {
@@ -67,6 +69,6 @@ const fimsListDetail = {
   },
 };
 
-export default angular.module('fims.projectConfigListDetail', [ fimsConfigNavbar, fimsConfigField ])
-  .component('fimsListDetail', fimsListDetail)
-  .name;
+export default angular
+  .module('fims.projectConfigListDetail', [fimsConfigNavbar, fimsConfigField])
+  .component('fimsListDetail', fimsListDetail).name;

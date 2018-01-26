@@ -1,7 +1,7 @@
 class ResultMessagesController {
   $onInit() {
-    this.type = (this.error) ? "Error" : "Warning";
-    this.class = (this.error) ? "Error" : "Warning";
+    this.type = this.error ? 'Error' : 'Warning';
+    this.class = this.error ? 'Error' : 'Warning';
   }
 }
 

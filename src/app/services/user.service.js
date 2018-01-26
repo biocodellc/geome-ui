@@ -4,10 +4,11 @@ import User from '../models/User';
 
 export const USER_CHANGED_EVENT = 'userChanged';
 
-let currentUser = undefined;
+let currentUser;
 class UserService extends EventEmitter {
   constructor($http, StorageService, REST_ROOT) {
     'ngInject';
+
     super();
 
     this.$http = $http;
@@ -20,71 +21,78 @@ class UserService extends EventEmitter {
   }
 
   setCurrentUser(user) {
-    currentUser = (user) ? new User(user) : undefined;
+    currentUser = user ? new User(user) : undefined;
     this.emit(USER_CHANGED_EVENT, user);
     return currentUser;
   }
 
   all() {
-    return this.$http.get(this.REST_ROOT + 'users/')
-      .then((response) => response.data.map(user => new User(user)))
-      .catch(angular.catcher("Error loading users."));
+    return this.$http
+      .get(`${this.REST_ROOT}users/`)
+      .then(response => response.data.map(user => new User(user)))
+      .catch(angular.catcher('Error loading users.'));
   }
 
   get(username) {
-    return this.$http.get(this.REST_ROOT + 'users/' + username)
-      .then((response) => {
+    return this.$http
+      .get(`${this.REST_ROOT}users/${username}`)
+      .then(response => {
         if (response.status === 204) {
           return;
         }
 
         return new User(response.data);
       })
-      .catch(angular.catcher("Error loading user."));
+      .catch(angular.catcher('Error loading user.'));
   }
 
   create(inviteId, user) {
-    return this.$http(
-      {
-        method: 'POST',
-        url: this.REST_ROOT + 'users?id=' + inviteId,
-        data: user,
-        keepJson: true,
-      })
-      .catch(angular.catcher("Error creating user."));
+    return this.$http({
+      method: 'POST',
+      url: `${this.REST_ROOT}users?id=${inviteId}`,
+      data: user,
+      keepJson: true,
+    }).catch(angular.catcher('Error creating user.'));
   }
 
   invite(email, projectId) {
-    return this.$http.post(this.REST_ROOT + 'users/invite', { email: email, projectId: projectId })
-      .catch(angular.catcher("Error inviting user."));
+    return this.$http
+      .post(`${this.REST_ROOT}users/invite`, {
+        email,
+        projectId,
+      })
+      .catch(angular.catcher('Error inviting user.'));
   }
 
   save(user) {
-    return this.$http(
-      {
-        method: 'PUT',
-        url: this.REST_ROOT + 'users/' + user.username,
-        data: user,
-        keepJson: true,
-      },
-    ).catch(angular.catcher("Error saving user."));
+    return this.$http({
+      method: 'PUT',
+      url: `${this.REST_ROOT}users/${user.username}`,
+      data: user,
+      keepJson: true,
+    }).catch(angular.catcher('Error saving user.'));
   }
 
   updatePassword(username, currentPassword, newPassword) {
-    return this.$http.put(this.REST_ROOT + 'users/' + username + '/password', {
-        currentPassword: currentPassword,
-        newPassword: newPassword,
-      },
-    ).catch(angular.catcher("Error updating password."));
+    return this.$http
+      .put(`${this.REST_ROOT}users/${username}/password`, {
+        currentPassword,
+        newPassword,
+      })
+      .catch(angular.catcher('Error updating password.'));
   }
 
   resetPassword(password, resetToken) {
-    return this.$http.post(this.REST_ROOT + "users/resetPassword", { password: password, resetToken: resetToken })
-      .catch(angular.catcher("Failed to reset password."));
+    return this.$http
+      .post(`${this.REST_ROOT}users/resetPassword`, {
+        password,
+        resetToken,
+      })
+      .catch(angular.catcher('Failed to reset password.'));
   }
 
   sendResetPasswordToken(username) {
-    return this.$http.get(this.REST_ROOT + "users/" + username + "/sendResetToken");
+    return this.$http.get(`${this.REST_ROOT}users/${username}/sendResetToken`);
   }
 
   loadFromSession() {
@@ -93,6 +101,6 @@ class UserService extends EventEmitter {
   }
 }
 
-export default angular.module('fims.userService', [])
-  .service('UserService', UserService)
-  .name;
+export default angular
+  .module('fims.userService', [])
+  .service('UserService', UserService).name;

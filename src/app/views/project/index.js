@@ -13,11 +13,11 @@ import storageService from '../../services/storage.service';
 import expeditionService from '../../services/expedition.service';
 import userService from '../../services/user.service';
 
-import routing from "./project.routes";
+import routing from './project.routes';
 import requiresProject from './projectRequired.hook';
-import projectAdmin from './projectAdmin.hook'
-import config from "./projects.config";
-import ProjectFactory from "./projectFactory";
+import projectAdmin from './projectAdmin.hook';
+import config from './projects.config';
+import ProjectFactory from './projectFactory';
 
 import fimsProject from './project.component';
 import fimsProjectSettings from './project-settings';
@@ -41,11 +41,11 @@ const dependencies = [
   fimsProjectConfig,
 ];
 
-export default angular.module('fims.project', dependencies)
+export default angular
+  .module('fims.project', dependencies)
   .config(config)
   .run(routing) // need to declare in run block. otherwise $transitions is not available
   .run(requiresProject)
   .run(projectAdmin)
   .component('fimsProject', fimsProject)
-  .service('ProjectFactory', ProjectFactory)
-  .name;
+  .service('ProjectFactory', ProjectFactory).name;

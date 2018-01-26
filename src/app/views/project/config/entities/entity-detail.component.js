@@ -4,20 +4,23 @@ import entityAttributes from './attributes/entity-attributes.component';
 import fimsAttribute from './attributes/attribute.component';
 import entityRules from './rules/entity-rules.component';
 
-
 class EntityDetailController {
   constructor($scope, $state) {
-    'ngInject'
+    'ngInject';
+
     this.$scope = $scope;
     this.$state = $state;
 
-    $scope.$watch(() => $state.current.name, (name) => {
-      if (name === 'project.config.entities.detail.attributes') {
-        this.addText = 'Attribute';
-      } else if (name === 'project.config.entities.detail.rules') {
-        this.addText = 'Rule';
-      }
-    });
+    $scope.$watch(
+      () => $state.current.name,
+      name => {
+        if (name === 'project.config.entities.detail.attributes') {
+          this.addText = 'Attribute';
+        } else if (name === 'project.config.entities.detail.rules') {
+          this.addText = 'Rule';
+        }
+      },
+    );
   }
 
   $onInit() {
@@ -30,30 +33,44 @@ class EntityDetailController {
   }
 
   handleOnAdd() {
-    if (this.$state.current.name === 'project.config.entities.detail.attributes') {
+    if (
+      this.$state.current.name === 'project.config.entities.detail.attributes'
+    ) {
       this.newAttribute();
-    } else if (this.$state.current.name === 'project.config.entities.detail.rules') {
-      this.$state.go(".add");
+    } else if (
+      this.$state.current.name === 'project.config.entities.detail.rules'
+    ) {
+      this.$state.go('.add');
     }
   }
 
   handleUpdateAttributes(attributes) {
     this.entity.attributes = attributes;
-    this.onUpdateEntity({ alias: this.entity.conceptAlias, entity: this.entity });
+    this.onUpdateEntity({
+      alias: this.entity.conceptAlias,
+      entity: this.entity,
+    });
   }
 
   handleUpdateRules(rules) {
     this.entity.rules = rules;
-    this.onUpdateEntity({ alias: this.entity.conceptAlias, entity: this.entity });
+    this.onUpdateEntity({
+      alias: this.entity.conceptAlias,
+      entity: this.entity,
+    });
   }
 
   handleAddRule(rule) {
     const metadata = rule.metadata();
-    const invalidMetadata = Object.keys(metadata).filter(k =>
-      !metadata[ k ] || (Array.isArray(metadata[ k ]) && metadata[ k ].length === 0));
+    const invalidMetadata = Object.keys(metadata).filter(
+      k =>
+        !metadata[k] ||
+        (Array.isArray(metadata[k]) && metadata[k].length === 0),
+    );
 
     if (invalidMetadata.length !== 0) {
-      const msg = invalidMetadata.length > 1 ? ' are all required' : ' is required';
+      const msg =
+        invalidMetadata.length > 1 ? ' are all required' : ' is required';
 
       angular.alerts.error(invalidMetadata.join(', ') + msg);
       return;
@@ -66,7 +83,10 @@ class EntityDetailController {
 
     angular.alerts.removeTmp();
     this.entity.rules.push(rule);
-    this.onUpdateEntity({ alias: this.entity.conceptAlias, entity: this.entity });
+    this.onUpdateEntity({
+      alias: this.entity.conceptAlias,
+      entity: this.entity,
+    });
     this.$state.go('^');
   }
 
@@ -93,12 +113,8 @@ const fimsEntityDetail = {
   },
 };
 
-const dependencies = [
-  entityAttributes,
-  fimsAttribute,
-  entityRules,
-];
+const dependencies = [entityAttributes, fimsAttribute, entityRules];
 
-export default angular.module('fims.projectConfigEntityDetail', dependencies)
-  .component('fimsEntityDetail', fimsEntityDetail)
-  .name;
+export default angular
+  .module('fims.projectConfigEntityDetail', dependencies)
+  .component('fimsEntityDetail', fimsEntityDetail).name;

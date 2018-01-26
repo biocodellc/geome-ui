@@ -11,17 +11,17 @@ import angular from 'angular';
  * License: MIT
  */
 
-const autofocus = ($timeout) => ({
+const autofocus = $timeout => ({
   restrict: 'A',
-  link: function ($scope, $element) {
-    $timeout(function () {
-      $element[ 0 ].focus();
+  link($scope, $element) {
+    $timeout(() => {
+      $element[0].focus();
     });
   },
 });
 
-autofocus.$inject = [ '$timeout' ];
+autofocus.$inject = ['$timeout'];
 
-export default angular.module('utils.autofocus', [])
-  .directive('autofocus', autofocus)
-  .name;
+export default angular
+  .module('utils.autofocus', [])
+  .directive('autofocus', autofocus).name;
