@@ -1,5 +1,7 @@
 import { getFileExt } from '../../../utils/utils';
 
+const template = require('./upload.html');
+
 const defaultFastqMetadata = {
   libraryLayout: null,
   libraryStrategy: null,
@@ -11,17 +13,21 @@ const defaultFastqMetadata = {
 };
 
 class UploadController {
-  constructor($scope, ExpeditionService) {
+  constructor($scope, $uibModal) {
     'ngInject';
 
     this.$scope = $scope;
-    this.ExpeditionService = ExpeditionService;
+    this.$uibModal = $uibModal;
   }
 
   $onInit() {
-    this.newExpedition = this.userExpeditions.length === 0;
     this.fastaData = [];
     this.dataTypes = {};
+    this.userExpeditions.splice(0, 0, {
+      expeditionId: 0,
+      expeditionCode: 'CREATE',
+      expeditionTitle: '-- Create an Expedition --',
+    });
   }
 
   handleDatatypes(dataTypes) {
@@ -32,12 +38,33 @@ class UploadController {
     this.dataTypes = dataTypes;
   }
 
-  handleNewExpeditionChange(newExpedition) {
-    this.newExpedition = newExpedition;
-  }
+  // handleNewExpeditionChange(newExpedition) {
+  // this.newExpedition = newExpedition;
+  // }
 
   handleExpeditionChange(expeditionCode) {
-    this.expeditionCode = expeditionCode;
+    if (expeditionCode === 'CREATE') {
+      const modalInstance = this.$uibModal.open({
+        component: 'fimsCreateExpeditionModal',
+        size: 'md',
+        windowClass: 'app-modal-window',
+        backdrop: 'static',
+        resolve: {
+          metadataProperties: () =>
+            this.currentProject.config.expeditionMetadataProperties,
+          projectId: () => this.currentProject.projectId,
+        },
+      });
+      modalInstance.close(expedition => {
+        this.userExpeditions.push(expedition);
+        this.expeditionCode = expedition.expeditionCode;
+      });
+      modalInstance.dismiss(() => {
+        this.expeditionCode = '';
+      });
+    } else {
+      this.expeditionCode = expeditionCode;
+    }
   }
 
   handleFastaDataChange(data) {
@@ -47,30 +74,12 @@ class UploadController {
   upload() {
     this.$scope.$broadcast('show-errors-check-validity');
 
-    const submitIfValid = () => {
-      // if (!this.checkCoordinatesVerified() || this.uploadForm.$invalid) {
-      //   return;
-      // }
+    // const submitIfValid = () => {
+    // if (!this.checkCoordinatesVerified() || this.uploadForm.$invalid) {
+    //   return;
+    // }
 
-      this.onUpload({ data: this.getUploadData() });
-    };
-
-    if (this.newExpedition) {
-      this.ExpeditionService.create(this.currentProject.projectId, {
-        expeditionCode: this.expeditionCode,
-        expeditionTitle: `${this.expeditionCode} Dataset`,
-        visibility: 'anyone',
-        isPublic: true,
-      })
-        .then(({ data }) => this.userExpeditions.push(data))
-        .then(submitIfValid)
-        .catch(response => {
-          // this.uploadForm.newExpeditionCode.$setValidity("exists", true)
-          console.error(response);
-        });
-    } else {
-      submitIfValid();
-    }
+    this.onUpload({ data: this.getUploadData() });
   }
 
   checkCoordinatesVerified() {
@@ -114,8 +123,8 @@ class UploadController {
       // data.fastaData = Upload.jsonBlob(this.fastaData);
     }
     if (this.dataTypes.fastq) {
-      data.fastqMetadata = Upload.jsonBlob(this.fastqMetadata);
-      data.fastqFilenames = this.fastqFilenames;
+      // data.fastqMetadata = Upload.jsonBlob(this.fastqMetadata);
+      // data.fastqFilenames = this.fastqFilenames;
     }
 
     return data;
@@ -123,7 +132,7 @@ class UploadController {
 }
 
 export default {
-  template: require('./upload.html'),
+  template,
   controller: UploadController,
   bindings: {
     currentProject: '<',

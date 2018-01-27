@@ -1,0 +1,41 @@
+<div class="modal-header">
+  <h3 class="modal-title">New Expedition</h3>
+</div>
+<div class="modal-body">
+  <form role="form" name="$ctrl.form" show-errors>
+
+    <div class="form-group" show-errors>
+      <label for="expeditionTitle">Expedition Title</label>
+      <input type="text" class="form-control" name="expeditionTitle" required ng-model="$ctrl.expedition.expeditionTitle"></input>
+    </div>
+
+    <div class="form-group" show-errors>
+      <label for="expeditionCode">Expedition Code</label>
+      <input type="text" class="form-control" name="expeditionCode" required ng-model="$ctrl.expedition.expeditionCode"
+        ng-click="$ctrl.form.expeditionCode.$error.exists = false" ng-pattern=/^[a-zA-Z0-9_-]{4,50}$/></input>
+
+      <p class="help-block" ng-if="$ctrl.form.expeditionCode.$error.pattern && $ctrl.form.expeditionCode.$touched">
+        <b>Expedition Name</b> must contain only numbers, letters, or underscores and be 4 to 50 characters
+        long
+      </p>
+
+      <p class="help-block col-xs-12" style="padding-left:0px;" ng-show="$ctrl.form.expeditionCode.$error.exists">
+        Expedition with that name already exists
+      </p>
+    </div>
+
+    <div class="form-group clearfix">
+      <label>Visibility</label>
+      <select ng-model="$ctrl.expedition.visibility" class="form-control" required ng-options="v for v in $ctrl.visibilities"></select>
+    </div>
+
+    <div class="form-group" ng-repeat="p in $ctrl.metadataProperties" show-errors>
+      <label for="expedition{{p.name}}">{{p.name}}</label>
+      <input type="text" class="form-control" name="expedition{{p.name}}" ng-required="{{p.required}}" ng-model="$ctrl.expedition.metadata[p.name]"></input>
+    </div>
+
+  </form>
+  <div class="modal-footer">
+    <button class="btn btn-success" type="button" ng-click="$ctrl.submit()">Create</button>
+    <button class="btn btn-danger" type="button" ng-click="$ctrl.dismiss()">Cancel</button>
+  </div>

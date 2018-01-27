@@ -1,5 +1,7 @@
 import angular from 'angular';
 
+const template = require('./edit-prop.html');
+
 class EditPropController {
   $onInit() {
     this.prop = Object.assign({}, this.prop);
@@ -20,7 +22,7 @@ class EditPropController {
 }
 
 const fimsEditProp = {
-  template: require('./edit-prop.html'),
+  template,
   controller: EditPropController,
   bindings: {
     prop: '<',

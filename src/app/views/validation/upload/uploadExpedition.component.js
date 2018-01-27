@@ -1,22 +1,9 @@
-class ExpeditionController {
-  new(val) {
-    const set = () => {
-      delete this.expeditionCode;
-      this.onNewExpeditionChange({ newExpedition: val });
-      return true;
-    };
-
-    return arguments.length ? set() : this.newExpedition;
-  }
-}
+const template = require('./uploadExpedition.html');
 
 export default {
-  template: require('./uploadExpedition.html'),
-  controller: ExpeditionController,
+  template,
   bindings: {
-    newExpedition: '<',
     userExpeditions: '<',
-    onNewExpeditionChange: '&',
     onChange: '&',
   },
 };

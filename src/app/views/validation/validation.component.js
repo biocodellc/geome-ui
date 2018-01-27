@@ -5,6 +5,8 @@ import StatusPolling from './StatusPolling';
 import detectBrowser from '../../utils/detectBrowser';
 import { getFileExt } from '../../utils/utils';
 
+const template = require('./validation.html');
+
 const defaultResults = {
   validation: {},
   error: '',
@@ -48,7 +50,9 @@ class ValidationController {
     this.showGenbankDownload = false;
     this.activeTab = 0;
 
-    DataService.getNAAN().then(({ data }) => (this.NAAN = data.naan));
+    DataService.getNAAN().then(({ data }) => {
+      this.NAAN = data.naan;
+    });
   }
 
   $onInit() {
@@ -218,10 +222,10 @@ class ValidationController {
       this.parseSpreadsheet('~naan=[0-9]+~', 'Instructions').then(naan => {
         if (this.NAAN && naan && naan > 0) {
           if (naan !== this.NAAN) {
-            const message = `Spreadsheet appears to have been created using a different FIMS/BCID system. 
-                 Spreadsheet says NAAN = ${naan} 
-                 System says NAAN = ${this.NAAN} 
-                 Proceed only if you are SURE that this spreadsheet is being called. 
+            const message = `Spreadsheet appears to have been created using a different FIMS/BCID system.
+                 Spreadsheet says NAAN = ${naan}
+                 System says NAAN = ${this.NAAN}
+                 Proceed only if you are SURE that this spreadsheet is being called.
                  Otherwise, re-load the proper FIMS system or re-generate your spreadsheet template.`;
             angular.alerts.error(message);
           }
@@ -265,7 +269,7 @@ class ValidationController {
 }
 
 export default {
-  template: require('./validation.html'),
+  template,
   controller: ValidationController,
   bindings: {
     currentUser: '<',

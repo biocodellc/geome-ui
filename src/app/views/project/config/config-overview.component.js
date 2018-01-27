@@ -7,6 +7,8 @@ import fimsProjectConfigExpeditionMetadata from './expedition-metadata';
 import fimsProjectConfigNavbar from './navbar.component';
 import Rule from '../../../models/Rule';
 
+const template = require('./overview.html');
+
 class ConfigOverviewController {
   constructor($scope, $state) {
     'ngInject';
@@ -103,7 +105,7 @@ class ConfigOverviewController {
 }
 
 const fimsProjectConfigOverview = {
-  template: require('./overview.html'),
+  template,
   controller: ConfigOverviewController,
   bindings: {
     config: '<',

@@ -1,3 +1,5 @@
+const template = require('./expedition-metadata.html');
+
 export class ExpeditionMetadataController {
   constructor(ConfirmationService) {
     'ngInject';
@@ -43,7 +45,7 @@ export class ExpeditionMetadataController {
 }
 
 export default {
-  template: require('./expedition-metadata.html'),
+  template,
   controller: ExpeditionMetadataController,
   bindings: {
     properties: '<',

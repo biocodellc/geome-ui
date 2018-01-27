@@ -1,14 +1,18 @@
 import angular from 'angular';
 
+import visibilities from './ExpeditionVisibilities';
+
+const template = require('./expedition-settings.html');
+
 class ExpeditionSettingsController {
   $onInit() {
-    this.visibilities = ['anyone', 'project members', 'expedition members'];
+    this.visibilities = visibilities;
     this.expedition = Object.assign({}, this.expedition);
   }
 }
 
 const fimsExpeditionSettings = {
-  template: require('./expedition-settings.html'),
+  template,
   controller: ExpeditionSettingsController,
   bindings: {
     backState: '<',
