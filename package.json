@@ -13,20 +13,16 @@
   "homepage": "https://biscicol.org",
   "scripts": {
     "build": "rimraf dist && webpack --bail --progress --profile",
-    "server:dashboard":
-      "webpack-dashboard -- webpack-dev-server --history-api-fallback -d",
-    "server":
-      "webpack-dev-server --history-api-fallback -d",
+    "server:dashboard": "webpack-dashboard -- webpack-dev-server --history-api-fallback -d",
+    "server": "webpack-dev-server --history-api-fallback",
     "test": "karma start",
     "test-watch": "karma start --auto-watch --no-single-run",
     "start:dashboard": "npm run server:dashboard",
     "start": "npm run server",
     "eslint": "eslint 'src/app/**/*.js'",
     "eslint:fix": "eslint 'src/app/**/*.js' --fix",
-    "prettier":
-      "prettier 'src/app/**/*.js' --single-quote --trailing-comma all -l",
-    "prettier:write":
-      "prettier 'src/app/**/*.js' --single-quote --trailing-comma all --write"
+    "prettier": "prettier 'src/app/**/*.js' --single-quote --trailing-comma all -l",
+    "prettier:write": "prettier 'src/app/**/*.js' --single-quote --trailing-comma all --write"
   },
   "dependencies": {
     "@uirouter/angularjs": "^1.0.4",
@@ -51,6 +47,7 @@
     "autoprefixer": "^6.0.3",
     "babel-core": "^6.2.1",
     "babel-loader": "^6.2.0",
+    "babel-plugin-angularjs-annotate": "^0.8.2",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
@@ -73,7 +70,6 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-spec-reporter": "0.0.26",
     "karma-webpack": "2.0.1",
-    "ng-annotate-loader": "^0.6.1",
     "node-libs-browser": "2.0.0",
     "node-sass": "^4.7.2",
     "null-loader": "^0.1.1",
