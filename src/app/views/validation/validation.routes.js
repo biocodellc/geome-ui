@@ -9,7 +9,7 @@ function getStates() {
         component: 'fimsValidation',
         projectRequired: true,
         resolve: {
-          userExpeditions: /* ngInject */ (
+          userExpeditions: /* @ngInject */ (
             ExpeditionService,
             ProjectService,
             UserService,

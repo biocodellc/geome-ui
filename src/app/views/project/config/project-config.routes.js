@@ -67,7 +67,7 @@ function getStates() {
         url: '/:alias/',
         redirectTo: 'project.config.entities.detail.attributes',
         resolve: {
-          entity: /* ngInject */ ($transition$, $state, ProjectService) => {
+          entity: /* @ngInject */ ($transition$, $state, ProjectService) => {
             const currentProject = ProjectService.currentProject();
             let e = $transition$.params('to').entity;
 
@@ -121,9 +121,9 @@ function getStates() {
       config: {
         url: 'rules',
         resolve: {
-          lists: /* ngInject */ ProjectService =>
+          lists: /* @ngInject */ ProjectService =>
             ProjectService.currentProject().config.lists.map(l => l.alias),
-          columns: /* ngInject */ entity =>
+          columns: /* @ngInject */ entity =>
             entity.attributes.map(a => a.column),
         },
         views: {
@@ -162,7 +162,7 @@ function getStates() {
       config: {
         url: '/:alias/',
         resolve: {
-          list: /* ngInject */ ($transition$, $state, ProjectService) => {
+          list: /* @ngInject */ ($transition$, $state, ProjectService) => {
             const currentProject = ProjectService.currentProject();
             let l = $transition$.params('to').list;
 
@@ -177,7 +177,7 @@ function getStates() {
 
             return l;
           },
-          addField: /* ngInject */ $transition$ =>
+          addField: /* @ngInject */ $transition$ =>
             $transition$.params('to').addField,
         },
         views: {

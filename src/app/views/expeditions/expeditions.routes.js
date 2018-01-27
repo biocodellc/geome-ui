@@ -6,7 +6,7 @@ function getStates() {
         abstract: true,
         template: '<div ui-view class="admin"></div>',
         resolve: {
-          expeditions: /* ngInject */ (
+          expeditions: /* @ngInject */ (
             $state,
             ExpeditionService,
             ProjectService,
@@ -42,7 +42,7 @@ function getStates() {
         component: 'fimsExpedition',
         redirectTo: 'expeditions.detail.settings',
         resolve: {
-          expedition: ($state, expeditions, $transition$) => {
+          expedition: /* @ngInject */ ($state, expeditions, $transition$) => {
             const expedition = expeditions.find(
               e => e.expeditionId === $transition$.params().id,
             );

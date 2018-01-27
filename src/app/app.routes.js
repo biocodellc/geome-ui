@@ -22,23 +22,23 @@ export default routerHelper => {
   // forward query params
   routerHelper.redirect(
     '/lookup.jsp',
-    /* ngInject */ ($state, $location) =>
+    /* @ngInject */ ($state, $location) =>
       $state.go('lookup', $location.search()),
   );
   routerHelper.redirect(
     '/query.jsp',
-    /* ngInject */ ($state, $location) =>
+    /* @ngInject */ ($state, $location) =>
       $state.go('query', $location.search()),
   );
   routerHelper.redirect('/reset.jsp', 'reset');
   routerHelper.redirect(
     '/resetPass.jsp',
-    /* ngInject */ ($state, $location) =>
+    /* @ngInject */ ($state, $location) =>
       $state.go('resetPass', $location.search()),
   );
   routerHelper.redirect(
     '/templates.jsp',
-    /* ngInject */ ($state, $location) =>
+    /* @ngInject */ ($state, $location) =>
       $state.go('templates', $location.search()),
   );
   routerHelper.redirect('/secure/bcidCreator.jsp', 'creator');

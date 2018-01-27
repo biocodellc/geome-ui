@@ -5,7 +5,7 @@ function getStates() {
       config: {
         url: '/expeditions',
         resolve: {
-          expeditions: /* ngInject */ (
+          expeditions: /* @ngInject */ (
             $state,
             ProjectService,
             ExpeditionService,
@@ -27,7 +27,7 @@ function getStates() {
         url: '/:id',
         redirectTo: 'project.expeditions.detail.settings',
         resolve: {
-          expedition: /* ngInject */ ($transition$, $state, expeditions) => {
+          expedition: /* @ngInject */ ($transition$, $state, expeditions) => {
             let expedition = $transition$.params().expedition;
             if (expedition) {
               return expedition;

@@ -32,7 +32,7 @@ class RouterHelper {
 function routerHelperProvider($locationProvider, $urlMatcherFactoryProvider) {
   'ngInject';
 
-  this.$get = /* NgInject */ ($state, $stateRegistry, $urlRouter) =>
+  this.$get = /* @ngInject */ ($state, $stateRegistry, $urlRouter) =>
     new RouterHelper($state, $stateRegistry, $urlRouter);
 
   $locationProvider.html5Mode(true);

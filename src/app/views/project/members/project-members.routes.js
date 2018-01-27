@@ -5,7 +5,7 @@ function getStates() {
       config: {
         url: '/members',
         resolve: {
-          members: /* ngInject */ (
+          members: /* @ngInject */ (
             $state,
             ProjectMembersService,
             ProjectService,
@@ -27,7 +27,7 @@ function getStates() {
         url: '/add',
         component: 'fimsProjectMembersAdd',
         resolve: {
-          users: /* ngInject */ (UserService, members) =>
+          users: /* @ngInject */ (UserService, members) =>
             UserService.all().then(users =>
               users
                 .filter(
