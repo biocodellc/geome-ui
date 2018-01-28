@@ -1,65 +1,79 @@
 <div class="settings">
-    <form>
-        <fieldset>
-            <div class="form-group clearfix">
-                <div class="col-xs-9">
-                    <label>Title</label>
-                    <input type="text" required class="form-control" ng-model="$ctrl.expedition.expeditionTitle"/>
-                </div>
-            </div>
-
-            <div class="form-group clearfix">
-                <div class="col-xs-3">
-                    <label>Visibility</label>
-                    <select ng-model="$ctrl.expedition.visibility" class="form-control" required
-                            ng-options="v for v in $ctrl.visibilities"></select>
-                </div>
-            </div>
-        </fieldset>
-
-        <!--<fieldset>-->
-        <!--<legend>Visibility</legend>-->
-
-        <!--<div class="col-xs-9">-->
-        <!--<div class="form-group">-->
-        <!--<label>Project Members</label>-->
-        <!--<div class="checkbox">-->
-        <!--<label><input type="checkbox"> <span class="help-block">If this is checked, the expedition data will be-->
-        <!--visible to all project members</span></label>-->
-        <!--</div>-->
-        <!--</div>-->
-
-        <!--<div class="form-group" ng-show="$ctrl.publicProject">-->
-        <!--<label>Anonymous Users</label>-->
-        <!--<div class="checkbox">-->
-        <!--<label><input type="checkbox"> <span class="help-block">If this is checked, the expedition data will be-->
-        <!--visible to anyone</span></label>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</fieldset>-->
-
-        <fieldset>
-            <div class="form-group clearfix">
-                <div class="col-xs-12">
-                    <button class="btn btn-primary" ng-click="$ctrl.onUpdate({ expedition: this.expedition })">Save</button>
-                </div>
-            </div>
-        </fieldset>
-    </form>
-
-    <div class="panel panel-danger">
-        <div class="panel-body vertical-align">
-            <div class="col-xs-9">
-                <p><strong>Delete this expedition</strong></p>
-                <p class="small"><span class="text-danger">Warning! This will delete all records associated with this
-                    expeditions.</span> Please <a href ng-click="$ctrl.onExportData()">export your data</a> before deleting this expedition.</p>
-            </div>
-            <div class="col-xs-3">
-                <div>
-                    <button class="btn btn-danger pull-right" ng-click="$ctrl.onDelete()">Delete</button>
-                </div>
-            </div>
+  <form>
+    <fieldset>
+      <div class="form-group clearfix">
+        <div class="col-xs-9">
+          <label>Title</label>
+          <input type="text" required class="form-control" ng-model="$ctrl.expedition.expeditionTitle" />
         </div>
+      </div>
+
+      <div class="form-group clearfix">
+        <div class="col-xs-4">
+          <label>Visibility</label>
+          <select ng-model="$ctrl.expedition.visibility" class="form-control" required ng-options="v for v in $ctrl.visibilities"></select>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset ng-show="$ctrl.hasMetadata">
+      <div class="form-group clearfix" ng-repeat="p in $ctrl.currentProject.config.expeditionMetadataProperties"
+        show-errors>
+        <div class="col-xs-9">
+          <label for="expedition{{p.name}}">{{p.name}}</label>
+          <input type="text" class="form-control" name="expedition{{p.name}}" ng-required="{{p.required}}" ng-model="$ctrl.expedition.metadata[p.name]"></input>
+        </div>
+      </div>
+
+    </fieldset>
+
+    <!--<fieldset>-->
+    <!--<legend>Visibility</legend>-->
+
+    <!--<div class="col-xs-9">-->
+    <!--<div class="form-group">-->
+    <!--<label>Project Members</label>-->
+    <!--<div class="checkbox">-->
+    <!--<label><input type="checkbox"> <span class="help-block">If this is checked, the expedition data will be-->
+    <!--visible to all project members</span></label>-->
+    <!--</div>-->
+    <!--</div>-->
+
+    <!--<div class="form-group" ng-show="$ctrl.publicProject">-->
+    <!--<label>Anonymous Users</label>-->
+    <!--<div class="checkbox">-->
+    <!--<label><input type="checkbox"> <span class="help-block">If this is checked, the expedition data will be-->
+    <!--visible to anyone</span></label>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</fieldset>-->
+
+    <fieldset>
+      <div class="form-group clearfix">
+        <div class="col-xs-12">
+          <button class="btn btn-primary" ng-click="$ctrl.onUpdate({ expedition: this.expedition })">Save</button>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+  <div class="panel panel-danger">
+    <div class="panel-body vertical-align">
+      <div class="col-xs-9">
+        <p>
+          <strong>Delete this expedition</strong>
+        </p>
+        <p class="small">
+          <span class="text-danger">Warning! This will delete all records associated with this expeditions.
+          </span> Please
+          <a href ng-click="$ctrl.onExportData()">export your data</a> before deleting this expedition.</p>
+      </div>
+      <div class="col-xs-3">
+        <div>
+          <button class="btn btn-danger pull-right" ng-click="$ctrl.onDelete()">Delete</button>
+        </div>
+      </div>
     </div>
+  </div>
 </div>

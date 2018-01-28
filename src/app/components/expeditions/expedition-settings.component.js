@@ -8,6 +8,9 @@ class ExpeditionSettingsController {
   $onInit() {
     this.visibilities = visibilities;
     this.expedition = Object.assign({}, this.expedition);
+    this.hasMetadata =
+      Object.keys(this.currentProject.config.expeditionMetadataProperties)
+        .length > 0;
   }
 }
 
@@ -17,6 +20,7 @@ const fimsExpeditionSettings = {
   bindings: {
     backState: '<',
     expedition: '<',
+    currentProject: '<',
     onUpdate: '&',
     onDelete: '&',
     onExportData: '&',

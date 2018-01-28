@@ -1,10 +1,13 @@
+const expeditionMembersTemplate = require('../../components/expeditions/expedition-members.html');
+
 function getStates() {
   return [
     {
       state: 'expeditions',
       config: {
         abstract: true,
-        template: '<div ui-view class="admin"></div>',
+        template:
+          '<div ui-view class="admin" current-project="$ctrl.currentProject"></div>',
         resolve: {
           expeditions: /* @ngInject */ (
             $state,
@@ -86,7 +89,7 @@ function getStates() {
         url: '/members',
         views: {
           details: {
-            template: require('../../components/expeditions/expedition-members.html'),
+            template: expeditionMembersTemplate,
             // controller: "ExpeditionMembersController as vm"
           },
         },

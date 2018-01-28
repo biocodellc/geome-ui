@@ -3,6 +3,8 @@ import { FimsExpeditionController } from './FimsExpeditionController';
 import dataService from '../../services/data.service';
 import expeditionService from '../../services/expedition.service';
 
+const template = require('./expedition.html');
+
 export class ExpeditionController extends FimsExpeditionController {
   constructor($state, ExpeditionService, DataService, $uibModal) {
     'ngInject';
@@ -34,7 +36,7 @@ export class ExpeditionController extends FimsExpeditionController {
 }
 
 const fimsExpedition = {
-  template: require('./expedition.html'),
+  template,
   controller: ExpeditionController,
   bindings: {
     backState: '<',

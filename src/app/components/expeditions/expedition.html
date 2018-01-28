@@ -1,62 +1,75 @@
 <div class="row back">
-    <div class="col-xs-12">
-        <a href ui-sref="{{ $ctrl.backState }}"> <i class="fa fa-chevron-left"></i> Expeditions</a>
-    </div>
+  <div class="col-xs-12">
+    <a href ui-sref="{{ $ctrl.backState }}">
+      <i class="fa fa-chevron-left"></i> Expeditions</a>
+  </div>
 </div>
 
 <div class="row">
-    <div class="col-xs-12">
-        <section class="heading">
-            <h3>{{ $ctrl.expedition.expeditionTitle }}</h3>
-            <p><strong>Expedition Code: </strong> {{ $ctrl.expedition.expeditionCode }}</p>
-            <p><strong>Identifier: </strong> <a href="http://n2t.net/{{$ctrl.expedition.identifier}}">http://n2t.net/{{
-                $ctrl.expedition.identifier }}</a></p>
-        </section>
-    </div>
+  <div class="col-xs-12">
+    <section class="heading">
+      <h3>{{ $ctrl.expedition.expeditionTitle }}</h3>
+      <p>
+        <strong>Expedition Code: </strong> {{ $ctrl.expedition.expeditionCode }}</p>
+      <p>
+        <strong>Identifier: </strong>
+        <a href="http://n2t.net/{{$ctrl.expedition.identifier}}">http://n2t.net/{{ $ctrl.expedition.identifier }}</a>
+      </p>
+    </section>
+  </div>
 </div>
 
 <div class="row">
-    <div class="col-xs-9">
-        <section>
-            <div class="row">
-                <div class="col-xs-12">
-                    <ul class="nav nav-pills">
-                        <li ui-sref-active="active"><a href ui-sref=".settings" ui-sref-active="active">Settings</a>
-                        </li>
-                        <li ui-sref-active="active"><a href ui-sref=".resources"
-                                                       ui-sref-active="active">Resources</a>
-                        </li>
-                        <li><a href ui-sref=".members" ui-sref-active="active">Members</a></li>
-                    </ul>
-                </div>
-            </div>
+  <div class="col-xs-9">
+    <section>
+      <div class="row">
+        <div class="col-xs-12">
+          <ul class="nav nav-pills">
+            <li ui-sref-active="active">
+              <a href ui-sref=".settings" ui-sref-active="active">Settings</a>
+            </li>
+          <li ui-sref-active="active" ng-show="$ctrl.hasMetadata">
+              <a href ui-sref=".metadata" ui-sref-active="active">Metadata</a>
+            </li>
+            <li ui-sref-active="active">
+              <a href ui-sref=".resources" ui-sref-active="active">Resources</a>
+            </li>
+            <li>
+              <a href ui-sref=".members" ui-sref-active="active">Members</a>
+            </li>
+          </ul>
+        </div>
+      </div>
 
-            <div class="row">
-                <div class="col-xs-12" ui-view="details"
-                     on-update="$ctrl.handleExpeditionUpdate(expedition)"
-                     on-export-data="$ctrl.exportData()"
-                     on-delete="$ctrl.handleExpeditionDelete(expedition)">
-                </div>
-            </div>
+      <div class="row">
+        <div class="col-xs-12" ui-view="details" on-update="$ctrl.handleExpeditionUpdate(expedition)" on-export-data="$ctrl.exportData()"
+          current-project="$ctrl.currentProject" on-delete="$ctrl.handleExpeditionDelete(expedition)">
+        </div>
+      </div>
 
-        </section>
-    </div>
+    </section>
+  </div>
 
-    <div class="col-xs-3 right-column">
-        <section>
-            <div class="list-group">
-                <a class="list-group-item" href ui-sref="query">
-                    <strong>View Data <i class="fa fa-map-marker fa-fw pull-right"></i></strong>
-                </a>
-                <a class="list-group-item" href ui-sref="validate">
-                    <strong>Upload Data <i class="fa fa-upload fa-fw pull-right"></i></strong>
-                </a>
-                <a class="list-group-item" href="#" ng-click="$ctrl.exportData($ctrl.currentProject.projectId, $ctrl.expedition)">
-                    <strong>Export Data <i class="fa fa-download fa-fw pull-right"></i></strong>
-                </a>
-            </div>
-        </section>
-    </div>
+  <div class="col-xs-3 right-column">
+    <section>
+      <div class="list-group">
+        <a class="list-group-item" href ui-sref="query">
+          <strong>View Data
+            <i class="fa fa-map-marker fa-fw pull-right"></i>
+          </strong>
+        </a>
+        <a class="list-group-item" href ui-sref="validate">
+          <strong>Upload Data
+            <i class="fa fa-upload fa-fw pull-right"></i>
+          </strong>
+        </a>
+        <a class="list-group-item" href="#" ng-click="$ctrl.exportData($ctrl.currentProject.projectId, $ctrl.expedition)">
+          <strong>Export Data
+            <i class="fa fa-download fa-fw pull-right"></i>
+          </strong>
+        </a>
+      </div>
+    </section>
+  </div>
 
 </div>
-
