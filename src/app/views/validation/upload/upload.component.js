@@ -24,7 +24,6 @@ class UploadController {
     this.fastaData = [];
     this.dataTypes = {};
     this.userExpeditions.splice(0, 0, {
-      expeditionId: 0,
       expeditionCode: 'CREATE',
       expeditionTitle: '-- Create an Expedition --',
     });
@@ -37,10 +36,6 @@ class UploadController {
 
     this.dataTypes = dataTypes;
   }
-
-  // handleNewExpeditionChange(newExpedition) {
-  // this.newExpedition = newExpedition;
-  // }
 
   handleExpeditionChange(expeditionCode) {
     if (expeditionCode === 'CREATE') {
@@ -57,15 +52,14 @@ class UploadController {
           },
         })
         .result.then(expedition => {
-          this.userExpeditions.push(expedition);
+          this.userExpeditions = this.userExpeditions.concat([expedition]);
           this.expeditionCode = expedition.expeditionCode;
         })
         .catch(() => {
           this.expeditionCode = undefined;
         });
-    } else {
-      this.expeditionCode = expeditionCode;
     }
+    this.expeditionCode = expeditionCode;
   }
 
   handleFastaDataChange(data) {
