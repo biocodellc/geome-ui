@@ -50,7 +50,11 @@ function getStates() {
               e => e.expeditionId === $transition$.params().id,
             );
 
-            return expedition || $state.go('expeditions.list');
+            // need to reload to show correct expedition list when we change project
+            // while viewing the expedition detail.
+            return (
+              expedition || $state.go('expeditions.list', {}, { reload: true })
+            );
           },
           backState: () => 'expeditions.list',
         },
