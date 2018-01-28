@@ -1,3 +1,5 @@
+const template = require('./home.html');
+
 export default {
-  template: require('./home.html'),
+  template,
 };

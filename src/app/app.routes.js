@@ -1,12 +1,5 @@
 function getStates() {
   return [
-    // {
-    //   state: 'notFound',
-    //   config: {
-    //     url: '*path',
-    //     template: require('partials/page-not-found.html'), //todo move to component
-    //   },
-    // },
   ];
 }
 
@@ -53,6 +46,12 @@ export default routerHelper => {
 //   controller: "ValidationController as vm",
 //   projectRequired: true,
 //   loginRequired: true,
+// })
+// .state('bcidMetadata', {
+//     url: "/bcids/metadata/*ark",
+//     templateUrl: "app/components/bcids/metadata.html",
+//     controller: "MetadataCtrl as vm",
+//     parent: "main"
 // })
 // .state('lookup', {
 //   url: "/lookup?id",

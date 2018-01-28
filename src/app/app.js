@@ -21,6 +21,8 @@ import showErrors from './directives/showErrors.directive';
 import trustedHtml from './filters/html.filter';
 
 import home from './views/home';
+// import notFound from './views/not-found';
+import contact from './views/contact';
 import login from './views/login';
 import templates from './views/templates';
 import project from './views/project';
@@ -57,6 +59,8 @@ const dependencies = [
   navigation,
   alerts,
   home,
+  contact,
+  // notFound,
   login,
   query,
   auth,
