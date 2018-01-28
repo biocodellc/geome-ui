@@ -14,7 +14,7 @@
   "scripts": {
     "build": "rimraf dist && webpack --bail --progress --profile",
     "server:dashboard": "webpack-dashboard -- webpack-dev-server --history-api-fallback -d",
-    "server": "webpack-dev-server --history-api-fallback",
+    "server": "webpack-dev-server --history-api-fallback -d",
     "test": "karma start",
     "test-watch": "karma start --auto-watch --no-single-run",
     "start:dashboard": "npm run server:dashboard",

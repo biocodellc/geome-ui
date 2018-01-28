@@ -1,3 +1,5 @@
+const template = require('./projectSelector.html');
+
 class ProjectSelectorController {
   constructor(ProjectService) {
     'ngInject';
@@ -8,19 +10,20 @@ class ProjectSelectorController {
   $onInit() {
     this.projects = [];
     this.isOpen = false;
-    this.includePublicProjects = false;
-    this.filterProjects();
   }
 
   $onChanges(changesObj) {
+    let filterProjects = false;
     if ('isAuthenticated' in changesObj) {
       this.includePublicProjects = !this.isAuthenticated;
-      this.filterProjects();
+      filterProjects = true;
     }
 
     if (changesObj.currentProject) {
-      this.filterProjects();
+      filterProjects = true;
     }
+
+    if (filterProjects) this.filterProjects();
   }
 
   filterProjects() {
@@ -40,7 +43,7 @@ class ProjectSelectorController {
 }
 
 export default {
-  template: require('./projectSelector.html'),
+  template,
   controller: ProjectSelectorController,
   bindings: {
     currentProject: '<',

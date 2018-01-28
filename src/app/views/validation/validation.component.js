@@ -24,6 +24,8 @@ const defaultResults = {
 
 class ValidationController {
   constructor($scope, $http, $uibModal, DataService, REST_ROOT, MAPBOX_TOKEN) {
+    'ngInject';
+
     this.$scope = $scope;
     this.$uibModal = $uibModal;
     this.REST_ROOT = REST_ROOT;

@@ -2,7 +2,7 @@
   <h3 class="modal-title">New Expedition</h3>
 </div>
 <div class="modal-body">
-  <form role="form" name="$ctrl.form" show-errors>
+  <form role="form" name="$ctrl.form">
 
     <div class="form-group" show-errors>
       <label for="expeditionTitle">Expedition Title</label>
@@ -12,14 +12,14 @@
     <div class="form-group" show-errors>
       <label for="expeditionCode">Expedition Code</label>
       <input type="text" class="form-control" name="expeditionCode" required ng-model="$ctrl.expedition.expeditionCode"
-        ng-click="$ctrl.form.expeditionCode.$error.exists = false" ng-pattern=/^[a-zA-Z0-9_-]{4,50}$/></input>
+        ng-change="$ctrl.expeditionCodeChanged()" ng-pattern=/^[a-zA-Z0-9_-]{4,50}$/></input>
 
       <p class="help-block" ng-if="$ctrl.form.expeditionCode.$error.pattern && $ctrl.form.expeditionCode.$touched">
         <b>Expedition Name</b> must contain only numbers, letters, or underscores and be 4 to 50 characters
         long
       </p>
 
-      <p class="help-block col-xs-12" style="padding-left:0px;" ng-show="$ctrl.form.expeditionCode.$error.exists">
+      <p class="help-block col-xs-12" style="padding-left:0px;" ng-show="$ctrl.form.expeditionCode.$error.exists !== undefined">
         Expedition with that name already exists
       </p>
     </div>

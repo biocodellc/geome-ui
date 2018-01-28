@@ -64,22 +64,13 @@ class ProjectService extends EventEmitter {
     return this.all(true)
       .then(({ data }) => data.find(p => p.projectId === projectId))
       .then(project => {
-        if (!project) {
-          return;
-        }
-
-        if (!includeConfig) {
+        if (!project || !includeConfig) {
           return project;
         }
 
         return this.ProjectConfigService.get(project.projectId)
-          .then(config => {
-            project.config = config;
-            return project;
-          })
-          .catch(response =>
-            angular.catcher('Failed to load project configuration')(response),
-          );
+          .then(config => Object.assign({}, project, { config }))
+          .catch(angular.catcher('Failed to load project configuration'));
       })
       .catch(response => angular.catcher('Failed to project')(response));
   }

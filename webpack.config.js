@@ -97,6 +97,9 @@ module.exports = (function makeWebpackConfig() {
         // Reference: https://github.com/babel/babel-loader
         // Transpile .js files using babel-loader
         // Compiles ES6 and ES7 into ES5 code
+        // NOTICE: babel-loader must be the first loader. Otherwise
+        // the sourceMappings will be incorrect, preventing breakpoints from being set in
+        // certain situations
         test: /\.js$/,
         use: [{ loader: 'babel-loader' }],
         exclude: /node_modules/,

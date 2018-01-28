@@ -44,24 +44,25 @@ class UploadController {
 
   handleExpeditionChange(expeditionCode) {
     if (expeditionCode === 'CREATE') {
-      const modalInstance = this.$uibModal.open({
-        component: 'fimsCreateExpeditionModal',
-        size: 'md',
-        windowClass: 'app-modal-window',
-        backdrop: 'static',
-        resolve: {
-          metadataProperties: () =>
-            this.currentProject.config.expeditionMetadataProperties,
-          projectId: () => this.currentProject.projectId,
-        },
-      });
-      modalInstance.close(expedition => {
-        this.userExpeditions.push(expedition);
-        this.expeditionCode = expedition.expeditionCode;
-      });
-      modalInstance.dismiss(() => {
-        this.expeditionCode = '';
-      });
+      this.$uibModal
+        .open({
+          component: 'fimsCreateExpeditionModal',
+          size: 'md',
+          windowClass: 'app-modal-window',
+          backdrop: 'static',
+          resolve: {
+            metadataProperties: () =>
+              this.currentProject.config.expeditionMetadataProperties,
+            projectId: () => this.currentProject.projectId,
+          },
+        })
+        .result.then(expedition => {
+          this.userExpeditions.push(expedition);
+          this.expeditionCode = expedition.expeditionCode;
+        })
+        .catch(() => {
+          this.expeditionCode = undefined;
+        });
     } else {
       this.expeditionCode = expeditionCode;
     }

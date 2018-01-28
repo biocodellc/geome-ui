@@ -23,16 +23,29 @@ class CreateExpeditionModalController {
     };
   }
 
+  expeditionCodeChanged() {
+    if (
+      this.invalidExpeditionCode &&
+      this.expedition.expeditionCode === this.invalidExpeditionCode
+    ) {
+      this.form.expeditionCode.$setValidity('exists', false);
+    } else if (this.form.expeditionCode.$error.exists) {
+      this.form.expeditionCode.$setValidity('exists', true);
+    }
+  }
+
   submit() {
-    // this.$scope.$broadcast('show-errors-check-validity');
+    this.$scope.$broadcast('show-errors-check-validity');
 
     if (this.form.$invalid) return;
 
     this.ExpeditionService.create(this.resolve.projectId, this.expedition)
-      .then(({ data }) => this.close(data))
+      .then(({ data }) => this.close({ $value: data }))
       .catch(response => {
-        this.form.expeditionCode.$setValidity('exists', true);
-        console.error(response);
+        if (response.status === 400) {
+          this.form.expeditionCode.$setValidity('exists', false);
+          this.invalidExpeditionCode = this.expedition.expeditionCode;
+        }
       });
   }
 }
