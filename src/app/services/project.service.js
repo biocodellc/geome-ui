@@ -4,10 +4,7 @@ import { EventEmitter } from 'events';
 import storageService from './storage.service';
 
 import config from '../utils/config';
-const { restRoot, naan } = config;
-
-console.log(config);
-console.log('naan ->', naan, restRoot);
+const { restRoot } = config;
 
 export const PROJECT_CHANGED_EVENT = 'projectChanged';
 

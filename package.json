@@ -13,6 +13,7 @@
   "homepage": "https://biscicol.org",
   "scripts": {
     "build": "rimraf dist && webpack --bail --progress --profile",
+    "buildtest": "webpack --bail --progress --profile",
     "server:dashboard": "webpack-dashboard -- webpack-dev-server --history-api-fallback -d",
     "server": "webpack-dev-server --history-api-fallback -d",
     "test": "karma start",
