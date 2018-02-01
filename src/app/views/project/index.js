@@ -17,7 +17,6 @@ import routing from './project.routes';
 import requiresProject from './projectRequired.hook';
 import projectAdmin from './projectAdmin.hook';
 import config from './projects.config';
-import ProjectFactory from './projectFactory';
 
 import fimsProject from './project.component';
 import fimsProjectSettings from './project-settings';
@@ -47,5 +46,4 @@ export default angular
   .run(routing) // need to declare in run block. otherwise $transitions is not available
   .run(requiresProject)
   .run(projectAdmin)
-  .component('fimsProject', fimsProject)
-  .service('ProjectFactory', ProjectFactory).name;
+  .component('fimsProject', fimsProject).name;

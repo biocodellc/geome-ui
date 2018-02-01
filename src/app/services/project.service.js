@@ -3,6 +3,12 @@ import { EventEmitter } from 'events';
 
 import storageService from './storage.service';
 
+import config from '../utils/config';
+const { restRoot, naan } = config;
+
+console.log(config);
+console.log('naan ->', naan, restRoot);
+
 export const PROJECT_CHANGED_EVENT = 'projectChanged';
 
 let currentProject;
@@ -13,7 +19,6 @@ class ProjectService extends EventEmitter {
     $timeout,
     StorageService,
     ProjectConfigService,
-    REST_ROOT,
   ) {
     'ngInject';
 
@@ -24,7 +29,6 @@ class ProjectService extends EventEmitter {
     this.$timeout = $timeout;
     this.StorageService = StorageService;
     this.ProjectConfigService = ProjectConfigService;
-    this.REST_ROOT = REST_ROOT;
   }
 
   /**
@@ -77,7 +81,7 @@ class ProjectService extends EventEmitter {
 
   all(includePublic) {
     return this.$http
-      .get(`${this.REST_ROOT}projects?includePublic=${includePublic}`, {
+      .get(`${restRoot}projects?includePublic=${includePublic}`, {
         cache: this.PROJECT_CACHE,
       })
       .catch(angular.catcher('Failed to load projects'));
@@ -87,7 +91,7 @@ class ProjectService extends EventEmitter {
     this.PROJECT_CACHE.removeAll();
     return this.$http({
       method: 'PUT',
-      url: `${this.REST_ROOT}projects/${project.projectId}`,
+      url: `${restRoot}projects/${project.projectId}`,
       data: project,
       keepJson: true,
     }).catch(angular.catcher('Failed to update the project.'));

@@ -1,5 +1,8 @@
 import angular from 'angular';
 
+import config from '../../utils/config';
+const { restRoot } = config;
+
 // TODO split a service out of this class
 const DEFAULT_FILTER = {
   column: null,
@@ -16,7 +19,6 @@ export default class QueryController {
     ExpeditionService,
     AuthService,
     FileService,
-    REST_ROOT,
   ) {
     'ngInject';
 
@@ -41,7 +43,6 @@ export default class QueryController {
     this.ExpeditionService = ExpeditionService;
     this.AuthService = AuthService;
     this.FileService = FileService;
-    this.REST_ROOT = REST_ROOT;
 
     $scope.$watch('queryVm.project', (newVal, oldVal) => {
       if (newVal && newVal !== oldVal) {
@@ -81,7 +82,7 @@ export default class QueryController {
 
     this.$http
       .post(
-        `${REST_ROOT}projects/query/json/?limit=50&page=${this.currentPage -
+        `${restRoot}projects/query/json/?limit=50&page=${this.currentPage -
           1}`,
         data,
       )
@@ -122,7 +123,7 @@ export default class QueryController {
     };
 
     this.$http
-      .post(`${this.REST_ROOT}projects/query/excel`, data)
+      .post(`${restRoot}projects/query/excel`, data)
       .then(response => {
         if (response.status === 204) {
           angular.alerts.info('No resources found for query');
@@ -140,7 +141,7 @@ export default class QueryController {
     };
 
     this.$http
-      .post(`${this.REST_ROOT}projects/query/kml`, data)
+      .post(`${restRoot}projects/query/kml`, data)
       .then(response => {
         if (response.status === 204) {
           angular.alerts.info('No resources found for query');
@@ -158,7 +159,7 @@ export default class QueryController {
     };
 
     this.$http
-      .post(`${this.REST_ROOT}projects/query/csv`, data)
+      .post(`${restRoot}projects/query/csv`, data)
       .then(response => {
         if (response.status === 204) {
           angular.alerts.info('No resources found for query');
@@ -186,7 +187,7 @@ export default class QueryController {
 
   getFilterOptions() {
     this.$http
-      .get(`${this.REST_ROOT}projects/${this.project.projectId}/filterOptions`)
+      .get(`${restRoot}projects/${this.project.projectId}/filterOptions`)
       .then(
         response => {
           Object.assign(this.filterOptions, response.data);

@@ -1,17 +1,19 @@
 import angular from 'angular';
 
+import config from '../utils/config';
+const { restRoot } = config;
+
 class ExpeditionService {
-  constructor($http, REST_ROOT) {
+  constructor($http) {
     'ngInject';
 
     this.$http = $http;
-    this.REST_ROOT = REST_ROOT;
   }
 
   create(projectId, expedition) {
     return this.$http({
       method: 'POST',
-      url: `${this.REST_ROOT}projects/${projectId}/expeditions/${
+      url: `${restRoot}projects/${projectId}/expeditions/${
         expedition.expeditionCode
       }`,
       data: expedition,
@@ -26,7 +28,7 @@ class ExpeditionService {
 
     return this.$http({
       method: 'PUT',
-      url: `${this.REST_ROOT}projects/${projectId}/expeditions/${
+      url: `${restRoot}projects/${projectId}/expeditions/${
         expedition.expeditionCode
       }`,
       data: expedition,
@@ -41,7 +43,7 @@ class ExpeditionService {
 
     return this.$http
       .delete(
-        `${this.REST_ROOT}projects/${projectId}/expeditions/${
+        `${restRoot}projects/${projectId}/expeditions/${
           expedition.expeditionCode
         }`,
       )
@@ -59,7 +61,7 @@ class ExpeditionService {
     return this.$http
       .get(
         `${
-          this.REST_ROOT
+          restRoot
         }projects/${projectId}/expeditions?user&includePrivate=${includePrivate}`,
       )
       .catch(angular.catcher('Failed to load your expeditions.'));
@@ -71,13 +73,13 @@ class ExpeditionService {
     }
 
     return this.$http
-      .get(`${this.REST_ROOT}projects/${projectId}/expeditions`)
+      .get(`${restRoot}projects/${projectId}/expeditions`)
       .catch(angular.catcher('Failed to load project expeditions.'));
   }
 
   getExpedition(projectId, expeditionCode) {
     return this.$http.get(
-      `${this.REST_ROOT}projects/${projectId}/expeditions/${expeditionCode}`,
+      `${restRoot}projects/${projectId}/expeditions/${expeditionCode}`,
     );
   }
 
@@ -87,21 +89,21 @@ class ExpeditionService {
     }
     return this.$http.get(
       `${
-        this.REST_ROOT
+        restRoot
       }projects/${projectId}/expeditions?user&includePrivate=${includePrivate}`,
     );
   }
 
   getExpeditionsForAdmin(projectId) {
     return this.$http.get(
-      `${this.REST_ROOT}projects/${projectId}/expeditions?admin`,
+      `${restRoot}projects/${projectId}/expeditions?admin`,
     );
   }
 
   updateExpeditions(projectId, expeditions) {
     return this.$http({
       method: 'PUT',
-      url: `${this.REST_ROOT}projects/${projectId}/expeditions`,
+      url: `${restRoot}projects/${projectId}/expeditions`,
       data: expeditions,
       keepJson: true,
     });

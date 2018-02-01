@@ -2,18 +2,20 @@ import angular from 'angular';
 import { EventEmitter } from 'events';
 import User from '../models/User';
 
+import config from '../utils/config';
+const { restRoot } = config;
+
 export const USER_CHANGED_EVENT = 'userChanged';
 
 let currentUser;
 class UserService extends EventEmitter {
-  constructor($http, StorageService, REST_ROOT) {
+  constructor($http, StorageService) {
     'ngInject';
 
     super();
 
     this.$http = $http;
     this.StorageService = StorageService;
-    this.REST_ROOT = REST_ROOT;
   }
 
   currentUser() {
@@ -28,14 +30,14 @@ class UserService extends EventEmitter {
 
   all() {
     return this.$http
-      .get(`${this.REST_ROOT}users/`)
+      .get(`${restRoot}users/`)
       .then(response => response.data.map(user => new User(user)))
       .catch(angular.catcher('Error loading users.'));
   }
 
   get(username) {
     return this.$http
-      .get(`${this.REST_ROOT}users/${username}`)
+      .get(`${restRoot}users/${username}`)
       .then(response => {
         if (response.status === 204) {
           return;
@@ -49,7 +51,7 @@ class UserService extends EventEmitter {
   create(inviteId, user) {
     return this.$http({
       method: 'POST',
-      url: `${this.REST_ROOT}users?id=${inviteId}`,
+      url: `${restRoot}users?id=${inviteId}`,
       data: user,
       keepJson: true,
     }).catch(angular.catcher('Error creating user.'));
@@ -57,7 +59,7 @@ class UserService extends EventEmitter {
 
   invite(email, projectId) {
     return this.$http
-      .post(`${this.REST_ROOT}users/invite`, {
+      .post(`${restRoot}users/invite`, {
         email,
         projectId,
       })
@@ -67,7 +69,7 @@ class UserService extends EventEmitter {
   save(user) {
     return this.$http({
       method: 'PUT',
-      url: `${this.REST_ROOT}users/${user.username}`,
+      url: `${restRoot}users/${user.username}`,
       data: user,
       keepJson: true,
     }).catch(angular.catcher('Error saving user.'));
@@ -75,7 +77,7 @@ class UserService extends EventEmitter {
 
   updatePassword(username, currentPassword, newPassword) {
     return this.$http
-      .put(`${this.REST_ROOT}users/${username}/password`, {
+      .put(`${restRoot}users/${username}/password`, {
         currentPassword,
         newPassword,
       })
@@ -84,7 +86,7 @@ class UserService extends EventEmitter {
 
   resetPassword(password, resetToken) {
     return this.$http
-      .post(`${this.REST_ROOT}users/resetPassword`, {
+      .post(`${restRoot}users/resetPassword`, {
         password,
         resetToken,
       })
@@ -92,7 +94,7 @@ class UserService extends EventEmitter {
   }
 
   sendResetPasswordToken(username) {
-    return this.$http.get(`${this.REST_ROOT}users/${username}/sendResetToken`);
+    return this.$http.get(`${restRoot}users/${username}/sendResetToken`);
   }
 
   loadFromSession() {

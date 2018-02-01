@@ -1,10 +1,14 @@
+import angular from 'angular';
+
+import config from '../../utils/config';
+const { resolverRoot } = config;
+
 angular
   .module('fims.lookup')
 
   .factory('LookupFactory', [
     '$http',
-    'ID_REST_ROOT',
-    function($http, ID_REST_ROOT) {
+    function($http) {
       const identifier = 'ark:/21547/R2';
 
       const lookupFactory = {
@@ -17,11 +21,11 @@ angular
       return lookupFactory;
 
       function fetchMetadata() {
-        return $http.get(`${ID_REST_ROOT}metadata/${lookupFactory.identifier}`);
+        return $http.get(`${resolverRoot}metadata/${lookupFactory.identifier}`);
       }
 
       function submitForm() {
-        return $http.get(ID_REST_ROOT + lookupFactory.identifier, {
+        return $http.get(resolverRoot + lookupFactory.identifier, {
           headers: { Accept: 'application/json' },
         });
       }

@@ -1,9 +1,15 @@
+import angular from 'angular';
+
+import config from '../../../utils/config';
+const { restRoot } = config;
+
+const template = require('./results.html');
+
 class ResultsController {
-  constructor($window, REST_ROOT) {
+  constructor($window) {
     'ngInject';
 
     this.$window = $window;
-    this.REST_ROOT = REST_ROOT;
   }
 
   downloadFastqFiles() {
@@ -12,7 +18,7 @@ class ResultsController {
     }
     // TODO use file service & another service for generateSraFiles?
     this.$window.open(
-      `${this.REST_ROOT}projects/${this.projectId}/expeditions/${
+      `${restRoot}projects/${this.projectId}/expeditions/${
         this.expeditionCode
       }/generateSraFiles`,
       '_self',
@@ -21,7 +27,7 @@ class ResultsController {
 }
 
 export default {
-  template: require('./results.html'),
+  template,
   controller: ResultsController,
   bindings: {
     results: '<',

@@ -1,22 +1,24 @@
 import angular from 'angular';
 import fileService from './file.service';
 
+import config from '../utils/config';
+const { restRoot } = config;
+
 class TemplateService {
-  constructor($http, FileService, REST_ROOT) {
+  constructor($http, FileService) {
     'ngInject';
 
     this.$http = $http;
     this.FileService = FileService;
-    this.REST_ROOT = REST_ROOT;
   }
 
   all(projectId) {
-    return this.$http.get(`${this.REST_ROOT}projects/${projectId}/templates`);
+    return this.$http.get(`${restRoot}projects/${projectId}/templates`);
   }
 
   generate(projectId, sheetName, columns) {
     return this.$http
-      .post(`${this.REST_ROOT}projects/${projectId}/templates/generate`, {
+      .post(`${restRoot}projects/${projectId}/templates/generate`, {
         sheetName,
         columns,
       })

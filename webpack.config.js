@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 
 // Modules
 const webpack = require('webpack');
@@ -169,6 +170,27 @@ module.exports = (function makeWebpackConfig() {
         loader: 'raw-loader',
       },
     ],
+  };
+
+  // creates an alias "config" that we can use to import a config file
+  // dependent on the current NODE_ENV
+  console.log(__dirname, process.env.NODE_ENV);
+
+  const fallbackConfig = fs.existsSync(
+    path.join(__dirname, 'config', 'local.js'),
+  )
+    ? 'local'
+    : 'default';
+  console.log(fallbackConfig);
+
+  config.resolve = {
+    alias: {
+      config: path.join(
+        __dirname,
+        'config',
+        process.env.NODE_ENV ? process.env.NODE_ENV : fallbackConfig,
+      ),
+    },
   };
 
   // ISTANBUL LOADER

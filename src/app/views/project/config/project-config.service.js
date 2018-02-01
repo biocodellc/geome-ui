@@ -1,23 +1,26 @@
+import angular from 'angular';
 import ProjectConfig from '../../../models/ProjectConfig';
 
+import config from '../../../utils/config';
+const { restRoot } = config;
+
 export default class ProjectConfigService {
-  constructor($http, REST_ROOT) {
+  constructor($http) {
     'ngInject';
 
     this.$http = $http;
-    this.REST_ROOT = REST_ROOT;
   }
 
   get(projectId) {
     return this.$http
-      .get(`${this.REST_ROOT}projects/${projectId}/config`)
+      .get(`${restRoot}projects/${projectId}/config`)
       .then(({ data }) => new ProjectConfig(data));
   }
 
   save(config, projectId) {
     return this.$http({
       method: 'PUT',
-      url: `${this.REST_ROOT}projects/${projectId}/config`,
+      url: `${restRoot}projects/${projectId}/config`,
       data: config,
       keepJson: true,
     })

@@ -1,10 +1,10 @@
 import { EventEmitter } from 'events';
 
 export default class StatusPolling extends EventEmitter {
-  constructor($http, REST_ROOT) {
+  constructor($http, restRoot) {
     super();
     this.$http = $http;
-    this.REST_ROOT = REST_ROOT;
+    this.restRoot = restRoot;
 
     this.errorCnt = 0;
     this.poll = false;
@@ -37,7 +37,7 @@ export default class StatusPolling extends EventEmitter {
       return;
     }
 
-    this.$http.get(`${this.REST_ROOT}data/status`).then(({ data }) => {
+    this.$http.get(`${this.restRoot}data/status`).then(({ data }) => {
       // TODO fix this
       if (data.error && this.errorCnt >= 4) {
         // && !ResultsDataFactory.validationMessages) {

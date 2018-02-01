@@ -82,11 +82,4 @@ export default angular
   .module('biscicolApp', dependencies)
   .component('app', app)
   .run(routing)
-  .run(run)
-  // TODO figure out a better config system
-  .constant('NAAN', '99999')
-  .constant('REST_ROOT', 'http://localhost:8080/biocode-fims/rest/v2/')
-  .constant('ID_REST_ROOT', 'http://localhost:8080/id/v2/')
-  // When changing this, also need to change <base> tag in index.html
-  .constant('APP_ROOT', '/')
-  .constant('MAPBOX_TOKEN', '{mapboxToken}').name;
+  .run(run);

@@ -1,3 +1,8 @@
+import angular from 'angular';
+
+import config from '../../utils/config';
+const { restRoot } = config;
+
 angular
   .module('fims.lookup')
 
@@ -7,8 +12,7 @@ angular
     '$http',
     '$stateParams',
     'LookupFactory',
-    'REST_ROOT',
-    function($state, $scope, $http, $stateParams, LookupFactory, REST_ROOT) {
+    function($state, $scope, $http, $stateParams, LookupFactory) {
       const DATASET_TYPE = 'http://purl.org/dc/dcmitype/Dataset';
 
       const vm = this;
@@ -41,7 +45,7 @@ angular
             (data, status, headers, config) => {
               angular.extend(metadata, data.data);
               if (vm.metadata['rdf:type'].value == DATASET_TYPE) {
-                metadata.download = `${REST_ROOT}bcids/dataset/${
+                metadata.download = `${restRoot}bcids/dataset/${
                   vm.identifier
                 }`;
               }

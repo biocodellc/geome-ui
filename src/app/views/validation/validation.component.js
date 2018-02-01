@@ -5,6 +5,9 @@ import StatusPolling from './StatusPolling';
 import detectBrowser from '../../utils/detectBrowser';
 import { getFileExt } from '../../utils/utils';
 
+import config from '../../utils/config';
+const { naan, restRoot, mapboxToken } = config;
+
 const template = require('./validation.html');
 
 const defaultResults = {
@@ -23,17 +26,16 @@ const defaultResults = {
 };
 
 class ValidationController {
-  constructor($scope, $http, $uibModal, DataService, REST_ROOT, MAPBOX_TOKEN) {
+  constructor($scope, $http, $uibModal, DataService) {
     'ngInject';
 
     this.$scope = $scope;
     this.$uibModal = $uibModal;
-    this.REST_ROOT = REST_ROOT;
     this.DataService = DataService;
     const latestExpeditionCode = null;
 
     // TODO this should go in the DataService class
-    this.polling = new StatusPolling($http, REST_ROOT);
+    this.polling = new StatusPolling($http, restRoot);
     // TODO find a better place for this
     this.polling.on('error', err => {
       this.results.error = err;
@@ -51,10 +53,6 @@ class ValidationController {
     this.coordinatesErrorClass = null;
     this.showGenbankDownload = false;
     this.activeTab = 0;
-
-    DataService.getNAAN().then(({ data }) => {
-      this.NAAN = data.naan;
-    });
   }
 
   $onInit() {
@@ -221,12 +219,12 @@ class ValidationController {
 
     if (this.fimsMetadata) {
       // Check NAAN
-      this.parseSpreadsheet('~naan=[0-9]+~', 'Instructions').then(naan => {
-        if (this.NAAN && naan && naan > 0) {
-          if (naan !== this.NAAN) {
+      this.parseSpreadsheet('~naan=[0-9]+~', 'Instructions').then(n => {
+        if (naan && n && n > 0) {
+          if (n !== naan) {
             const message = `Spreadsheet appears to have been created using a different FIMS/BCID system.
-                 Spreadsheet says NAAN = ${naan}
-                 System says NAAN = ${this.NAAN}
+                 Spreadsheet says NAAN = ${n}
+                 System says NAAN = ${naan}
                  Proceed only if you are SURE that this spreadsheet is being called.
                  Otherwise, re-load the proper FIMS system or re-generate your spreadsheet template.`;
             angular.alerts.error(message);
@@ -234,7 +232,7 @@ class ValidationController {
         }
       });
 
-      // generateMap('map', this.currentProject.projectId, this.fimsMetadata, MAPBOX_TOKEN).then(
+      // generateMap('map', this.currentProject.projectId, this.fimsMetadata, mapboxToken).then(
       //   function () {
       //     this.verifyDataPoints = true;
       //   }, function () {
