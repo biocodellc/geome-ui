@@ -1,0 +1,31 @@
+<div ng-controller="QueryTableController as queryTableVm">
+  <div class="help-block" ng-show="!$ctrl.queryResults.isSet">Click
+    <strong>Search</strong> on sidebar to display query results
+  </div>
+
+  <div ng-show="$ctrl.queryResults.isSet">
+
+    <table class="table table-condensed table-striped table-hover text-nowrap">
+      <thead>
+        <tr class="text-capitalize">
+          <th sly-repeat="column in $ctrl.tableColumns">{{ column }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr sly-repeat="resource in $ctrl.tableData" ng-click="$ctrl.detailView(resource)">
+          <td uib-popover-html="value | trusted_html" popover-enable="value.length > 35" popover-trigger="mouseenter"
+            ng-class="{hideOverflow: value.length > 35}" popover-placement="bottom" popover-append-to-body="true"
+            sly-repeat="value in resource" ng-bind-html="value | trusted_html">
+          </td>
+        </tr>
+        <tr ng-show="$ctrl.queryResults.totalElements == 0" class="h4">
+          <td class="text-primary" colspan="100">No Samples Found</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="text-center" ng-show="$ctrl.queryResults.totalElements > 0">
+      <ul uib-pagination total-items="$ctrl.queryResults.totalElements" ng-model="$ctrl.currentPage" ng-change="$ctrl.updatePage()"
+        max-size="10" force-ellipses="true" boundary-link-numbers="true" items-per-page="$ctrl.pageSize"></ul>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,103 @@
+<div class="query-bar">
+
+  <!-- alerts -->
+  <div class="alerts row">
+    <div class="col-xs-12">
+      <div class="alert alert-info alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        Data is subject to our data usage policy found
+        <a target="_blank" href="http://diversityindopacific.net/data-usage-agreement/">here</a>
+      </div>
+
+      <div ng-repeat="alert in $ctrl.alerts.getAlerts()" class="alert alert-{{alert.level}} alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" ng-click="$ctrl.alerts.remove(alert)" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        {{ alert.msg }}
+      </div>
+    </div>
+  </div>
+
+  <div class="actions clearfix">
+    <!-- query view toggle -->
+    <div class="btn-group btn-group-sm pull-right query-view-toggle">
+      <button type="button" ng-click="$ctrl.toggleMap(true)" ng-class="{'disabled': $ctrl.showMap}" class="btn btn-default">Map
+      </button>
+      <button type="button" ng-click="$ctrl.toggleMap(false)" ng-class="{'disabled': !$ctrl.showMap}" class="btn btn-default">Table
+      </button>
+    </div>
+
+    <!-- download menu -->
+    <div ng-show="$ctrl.queryResults.isSet" class="btn-group btn-group-sm pull-right download-btn">
+      <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">Download
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+          <a href="#" ng-click="$ctrl.downloadCsv()">CSV</a>
+        </li>
+        <li>
+          <a href="#" ng-click="$ctrl.downloadKml()">KML</a>
+        </li>
+        <li>
+          <a href="#" ng-click="$ctrl.downloadFasta()">Fasta</a>
+        </li>
+        <li>
+          <a href="#" ng-show="$ctrl.hasFastqData()" ng-click="$ctrl.downloadFastq()">Fastq</a>
+        </li>
+        <li>
+          <a href="#" ng-show="$ctrl.selectedExpeditions.length === 1" ng-click="$ctrl.downloadExcel()">Excel Template
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+
+</div>
+
+<div class="query-page fill-screen">
+  <!-- sidebar-->
+  <fims-query-form ng-show="$ctrl.showSidebar" params="$ctrl.params" query-results="$ctrl.results" query-map="$ctrl.queryMap"
+    expeditions="$ctrl.expeditions" markers="$ctrl.markers" filter-options="$ctrl.filterOptions" class="sidebar"></fims-query-form>
+
+  <!-- sidebar toggle -->
+  <div class="sidebar-toggle">
+    <button class="btn btn-default" ng-click="$ctrl.toggleSidebar">
+      <span class="glyphicon" uib-tooltip="{{ $ctrl.sidebarToggleToolTip }}" tooltip-placement="right" ng-class="{'glyphicon-chevron-left': $ctrl.showSidebar, 'glyphicon-chevron-right': !$ctrl.showSidebar}"></span>
+    </button>
+  </div>
+
+  <!-- main content-->
+  <div class="query-content">
+
+    <div class="center-spinner" us-spinner="" spinner-key="query-spinner"></div>
+
+    <!-- map -->
+    <fims-map ng-show="$ctrl.showMap" map-instance="$ctrl.queryMap" refresh-size="$ctrl.invalidSize" class="angular-leaflet-map"></fims-map>
+
+
+    <!-- table -->
+    <div ng-show="!$ctrl.showMap" class="query-table" ng-class="{'full-page-query-table': !$ctrl.showSidebar}"
+      ng-include="'app/components/query/queryTable.html'"></div>
+
+  </div>
+</div>
+<!--<h3 class="page-header">Query</h3>-->
+<!--<p>Data is subject to our data usage policy found-->
+<!--<a target="_blank" href="http://diversityindopacific.net/data-usage-agreement/">here</a></p>-->
+
+<!--<p>Using this tool you can search the GeOMe database. You can filter your results by expedition and on any of the-->
+<!--FIMS fields by clicking "More search options". The results of your search can be downloaded as a comma delimited-->
+<!--text file (.csv), Google Earth kml file. The Fasta download option will download a zip file containing the Fims-->
+<!--Metadata and a fasta files containing any associated fastaSequences in your query results. If you are querying-->
+<!--only-->
+<!--1 expedition, then you can also download the results as and Excel spreadsheet template (.xlsx).-->
+
+<!--</p>-->
+<!--<p>-->
+<!--<em>Note:</em> Although you can filter your results on the fastaSequence.marker and/or fastaSequence.sequence-->
+<!--fields, those fields will only appear in the results when you click the "Fasta" download option.-->
+<!--</p>-->

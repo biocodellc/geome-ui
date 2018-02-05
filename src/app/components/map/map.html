@@ -1,0 +1,9 @@
+<div class="angular-leaflet-map" ng-attr-id="{{ $ctrl.mapId }}">
+  <div class="leaflet-top leaflet-right">
+    <div class="btn-group leaflet-control leaflet-bar btn-group-sm">
+      <button type="button" class="btn btn-default" ng-class="{disabled: $ctrl.tiles === 'map'}" ng-click="$ctrl.toggleMapView('map')">Map</button>
+      <button type="button" class="btn btn-default" ng-class="{disabled: $ctrl.tiles === 'sat'}" ng-click="$ctrl.toggleMapView('sat')">Satellite</button>
+      <button type="button" class="btn btn-default" ng-class="{disabled: $ctrl.tiles === 'usgs'}" ng-click="$ctrl.toggleMapView('usgs')">USGS</button>
+    </div>
+  </div>
+</div>

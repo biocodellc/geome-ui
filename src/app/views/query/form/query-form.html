@@ -1,0 +1,170 @@
+<div class="col-xs-12">
+  <form method="POST" name="queryForm">
+
+    <div class="form-group" style="margin-bottom: 0">
+      <input type="text" placeholder="Query String..." ng-model="$ctrl.params.queryString" class="form-control"
+      />
+      <a class="help-block text-right" href="#" ng-click="$ctrl.moreSearchOptions = !$ctrl.moreSearchOptions">
+        More search options</a>
+    </div>
+
+    <div ng-show="$ctrl.moreSearchOptions">
+
+      <div class="form-group">
+        <a href="#" ng-click="$ctrl.showMap = !$ctrl.showMap">
+          <label class="control-label">Map</label>
+        </a>
+        <div class="filters" ng-show="$ctrl.showMap">
+          <label class="checkbox-inline">
+            <input type="checkbox" ng-model="$ctrl.params.isMappable" name="isMappable"> is Mappable
+          </label>
+          <label class="checkbox-inline">
+            <input type="checkbox" ng-model="$ctrl.params.coordinateUncertaintyInMeters" name="coordinateUncertaintyInMeters"> has coordinateUncertaintyInMeters
+          </label>
+          <label class="checkbox-inline">
+            <input type="checkbox" ng-model="$ctrl.params.hasPermitInfo" name="hasPermitInfo"> has permitInformation
+          </label>
+          <div class="row">
+            <div class="col-xs-3">
+              <label class="control-label small">BoundingBox: </label>
+            </div>
+
+            <div class="col-xs-9">
+              <div class="col-xs-9" ng-show="$ctrl.params.bounds">
+                <label class="small">northEast:</label>
+                <span> [{{$ctrl.params.bounds.northEast.lat | number:2 }}, {{$ctrl.params.bounds.northEast.lng
+                  | number:2 }}]</span>
+                <label class="small">southWest:</label>
+                <span> [{{$ctrl.params.bounds.southWest.lat | number:2 }}, {{$ctrl.params.bounds.southWest.lng
+                  | number:2 }}]</span>
+              </div>
+              <button type="button" class="btn btn-default btn-xs btn-primary" ng-class="{'active': $ctrl.drawing}"
+                ng-show="!$ctrl.params.bounds" ng-click="$ctrl.drawBounds()">Draw
+              </button>
+              <button type="button" class="btn btn-default btn-xs btn-danger" ng-show="$ctrl.params.bounds" ng-click="$ctrl.clearBounds()">Clear
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <a href="#" ng-click="$ctrl.showSequences = !$ctrl.showSequences">
+          <label class="control-label">Sequences</label>
+        </a>
+        <div class="filters" ng-show="$ctrl.showSequences">
+          <label class="checkbox-inline">
+            <input type="checkbox" ng-model="$ctrl.params.hasSRAAccessions" name="hasSraAccessions"> has NCBI Sequence Read Archive Accession Numbers
+          </label>
+          <div class="row" id="marker-query">
+            <div class="col-xs-2">
+              <label class="control-label small">marker</label>
+            </div>
+            <div class="col-xs-6">
+              <select ng-model="$ctrl.params.marker" ng-options="::marker.value for marker in $ctrl.markers" class="form-control input-sm">
+                <option value="">-- Select a Sequence Marker --</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group dwc-terms">
+        <a href="#" ng-click="$ctrl.showDWC = !$ctrl.showDWC">
+          <label class="control-label">Darwin Core Terms</label>
+        </a>
+        <div class="row filters" ng-show="$ctrl.showDWC">
+          <div class="col-xs-6">
+            <input ng-model="$ctrl.params.genus" class="form-control input-sm" type="text" placeholder="Genus" />
+            <input ng-model="$ctrl.params.country" class="form-control input-sm" type="text" placeholder="Country"
+            />
+          </div>
+          <div class="col-xs-6">
+            <input ng-model="$ctrl.params.family" class="form-control input-sm" type="text" placeholder="Family"
+            />
+            <input ng-model="$ctrl.params.locality" class="form-control input-sm" type="text" placeholder="Locality"
+            />
+          </div>
+          <div class="col-xs-12">
+            <input ng-model="$ctrl.params.species" class="form-control input-sm" type="text" placeholder="Species"
+            />
+          </div>
+          <div class="col-xs-12">
+            <span class="control-label">yearCollected</span>
+            <div class="col-xs-4">
+              <input ng-model="$ctrl.params.fromYear" type="text" placeholder="YYYY" class="form-control input-sm"
+              />
+            </div>
+            <span class="control-label">to</span>
+            <div class="col-xs-4">
+              <input ng-model="$ctrl.params.toYear" type="text" placeholder="YYYY" class="form-control input-sm" />
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="form-group expedition-filter">
+        <a href="#" ng-click="$ctrl.showExpeditions = !$ctrl.showExpeditions">
+          <label class="control-label">Expeditions</label>
+        </a>
+        <typeahead ng-show="$ctrl.showExpeditions" class="typeahead" expeditions="$ctrl.expeditions" selected-expeditions="$ctrl.params.expeditions"></typeahead>
+      </div>
+
+      <div class="form-group row">
+        <div class="column-filters-header clearfix">
+          <div class="col-xs-4">
+            <a href="#" ng-click="$ctrl.showFilters = !$ctrl.showFilters">
+              <label class="control-label">Column Filters</label>
+            </a>
+          </div>
+          <div class="col-xs-4">
+            <button type="button" class="center-block btn btn-default btn-xs" ng-show="$ctrl.showFilters" ng-click="$ctrl.addFilter()">
+              <span class="glyphicon glyphicon-plus small"></span> Add Filter
+            </button>
+          </div>
+          <div class="col-xs-4"></div>
+        </div>
+
+        <div class="col-xs-12 filters column-filter" ng-show="$ctrl.showFilters" ng-repeat="filter in $ctrl.params.filters track by $index">
+          <div class="col-xs-5">
+            <ui-select ng-model="filter.field" refresh="$ctrl.params.filters[$index].value=null && $ctrl.params.filters[$index].type=EQUALS">
+              <ui-select-match>{{$select.selected.displayName}}</ui-select-match>
+              <ui-select-choices repeat="f.displayName as f in ($ctrl.filterOptions | filter: {displayName: $select.search} | filter: {group: '!hidden'}) track by $index"
+                position="up" group-by="'group'">
+                <div ng-bind-html="f.displayName | highlight: $select.search | trusted_html"></div>
+              </ui-select-choices>
+            </ui-select>
+            <!--<select ng-model="filter.field"-->
+            <!--ng-change="$ctrl.params.filters[$index].value=null && $ctrl.params.filters[$index].type=EQUALS"-->
+            <!--ng-options="f.field as f.displayName for f in ::$ctrl.filterOptions"-->
+            <!--class="form-control input-sm"-->
+            <!--&gt;</select>-->
+          </div>
+          <div class="col-xs-2 filter-query-select">
+            <select ng-model="filter.type" class="form-control input-sm" ng-options="type as (type | queryTypeDisplay) for type in $ctrl.getTypes($index)"></select>
+          </div>
+          <div class="col-xs-5">
+            <div ng-show="filter.type != 'EXISTS'">
+              <input ng-show="!$ctrl.getList($index)" type="text" class="form-control input-sm" ng-model="filter.value"
+              />
+
+              <select ng-show="$ctrl.getList($index)" class="form-control input-sm" ng-options="field for field in $ctrl.getList($index)"
+                ng-model="filter.value">
+                <option value="">-- Choose value --</option>
+              </select>
+            </div>
+          </div>
+          <button type="button" class="btn btn-danger btn-xs filter-remove-btn" ng-click="$ctrl.removeFilter($index)">
+            <span class="glyphicon glyphicon-remove"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <button type="submit" ng-click="$ctrl.queryJson()" class="btn pull-right btn-primary">
+        <span class="glyphicon glyphicon-search"></span> Search
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,3 +1,4 @@
+// TODO: update this to be a component
 class TypeAheadController {
   constructor() {
     this.isVisible = false;
