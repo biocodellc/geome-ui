@@ -1,3 +1,5 @@
+import Map from '../../components/map/map';
+
 export default class QueryMap extends Map {
   constructor($state, latColumn, lngColumn) {
     super(latColumn, lngColumn);
@@ -5,7 +7,7 @@ export default class QueryMap extends Map {
   }
 
   setMarkers(data) {
-    return super.setMarkers(data, this.generatePopupContent);
+    return super.setMarkers(data, this.generatePopupContent.bind(this));
   }
 
   generatePopupContent({ bcid, genus, species, locality, country }) {

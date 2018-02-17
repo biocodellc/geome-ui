@@ -7,9 +7,7 @@ export default class QueryResults {
   }
 
   update(data) {
-    // TODO: check data object type
-    console.log(data);
-    this.data = this.data.concat(data);
+    this.data = this.data.concat(data.data);
     this.isSet = true;
   }
 

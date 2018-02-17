@@ -53,11 +53,11 @@ export default class Map {
    * @param popupContentCallback the function to call to populate the popup box content. Will be passed the current resource
    */
   setMarkers(data, popupContentCallback) {
-    this.clearMap();
+    this._clearMap();
 
     data.forEach(resource => {
       const lat = resource[this.latColumn];
-      const lng = leaflet.Utileaflet.wrapNum(
+      const lng = leaflet.Util.wrapNum(
         resource[this.lngColumn],
         [0, 360],
         true,

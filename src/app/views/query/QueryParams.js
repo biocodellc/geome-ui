@@ -33,94 +33,110 @@ export default class QueryParams {
   constructor() {
     this.expeditions = [];
     this.filters = [];
-    Object.extend(this, defaultParams);
+    Object.assign(this, defaultParams);
   }
 
   buildQuery(source) {
     const builder = new QueryBuilder();
 
-    this.expeditions.forEach(e => {
-      builder.add(`expedition:${e}`);
-    });
+    if (this.expeditions.length > 0) {
+      builder.add(`_expeditions_:[${this.expeditions}]`);
+    }
 
     this.filters.forEach(filter => {
       if (filter.value || filter.type === QueryType.EXISTS) {
+        if (builder.queryString.length > 0) {
+          builder.add('and');
+        }
         switch (QueryType) {
           case QueryType.EXISTS:
-            builder.add(`+_exists_:${filter.field}`);
+            builder.add(`_exists_:${filter.field}`);
             break;
           case QueryType.EQ:
-            builder.add(`+${filter.field}:"${filter.value}"`);
+            builder.add(`${filter.field} = "${filter.value}"`);
             break;
           case QueryType.LT:
-            builder.add(`+${filter.field}:<${filter.value}`);
+            builder.add(`${filter.field} < ${filter.value}`);
             break;
           case QueryType.LTE:
-            builder.add(`+${filter.field}:<=${filter.value}`);
+            builder.add(`${filter.field} <= ${filter.value}`);
             break;
           case QueryType.GT:
-            builder.add(`+${filter.field}:>${filter.value}`);
+            builder.add(`${filter.field} > ${filter.value}`);
             break;
           case QueryType.GTE:
-            builder.add(`+${filter.field}:>=${filter.value}`);
+            builder.add(`${filter.field} >= ${filter.value}`);
             break;
           default:
-            builder.add(`+${filter.field}:${filter.value}`);
+            builder.add(`${filter.field} = ${filter.value}`);
             break;
         }
       }
     });
 
     if (this.queryString) {
+      if (builder.queryString.length > 0) builder.add('and');
       builder.add(this.queryString);
     }
 
     if (this.marker) {
-      builder.add(`+fastaSequence.marker:"${this.marker.value}"`);
+      if (builder.queryString.length > 0) builder.add('and');
+      builder.add(`fastaSequence.marker = "${this.marker.value}"`);
     }
 
     if (this.hasSRAAccessions) {
-      builder.add('+_exists_:fastqMetadata.bioSample');
+      if (builder.queryString.length > 0) builder.add('and');
+      builder.add('_exists_:fastqMetadata.bioSample');
     }
 
     if (this.country) {
-      builder.add(`+country:${this.country}`);
+      if (builder.queryString.length > 0) builder.add('and');
+      builder.add(`country = ${this.country}`);
     }
 
     if (this.genus) {
-      builder.add(`+genus:${this.genus}`);
+      if (builder.queryString.length > 0) builder.add('and');
+      builder.add(`genus = ${this.genus}`);
     }
 
     if (this.locality) {
-      builder.add(`+locality:${this.locality}`);
+      if (builder.queryString.length > 0) builder.add('and');
+      builder.add(`locality = ${this.locality}`);
     }
 
     if (this.family) {
-      builder.add(`+family:${this.family}`);
+      if (builder.queryString.length > 0) builder.add('and');
+      builder.add(`family = ${this.family}`);
     }
 
     if (this.species) {
-      builder.add(`+species:${this.species}`);
+      if (builder.queryString.length > 0) builder.add('and');
+      builder.add(`species = ${this.species}`);
     }
 
     if (this.fromYear) {
-      builder.add(`+yearCollected:>=${this.fromYear}`);
+      if (builder.queryString.length > 0) builder.add('and');
+      builder.add(`yearCollected >= ${this.fromYear}`);
     }
 
     if (this.toYear) {
-      builder.add(`+yearCollected:<=${this.toYear}`);
+      if (builder.queryString.length > 0) builder.add('and');
+      builder.add(`yearCollected <= ${this.toYear}`);
     }
 
     if (this.isMappable) {
-      builder.add('+_exists_:decimalLongitude +_exists_:decimalLatitude');
+      if (builder.queryString.length > 0) builder.add('and');
+      builder.add('_exists_:decimalLongitude and _exists_:decimalLatitude');
     }
 
     if (this.hasCoordinateUncertaintyInMeters) {
-      builder.add('+_exists_:coordinateUncertaintyInMeters');
+      if (builder.queryString.length > 0) builder.add('and');
+      builder.add('_exists_:coordinateUncertaintyInMeters');
     }
 
     if (this.hasPermitInfo) {
-      builder.add('+_exists_:permitInformation');
+      if (builder.queryString.length > 0) builder.add('and');
+      builder.add('_exists_:permitInformation');
     }
 
     // TODO: fix this b/c it isn't necessarily only geome anymore
@@ -129,23 +145,25 @@ export default class QueryParams {
       const sw = this.bounds.southWest;
 
       if (ne.lng > sw.lng) {
-        builder.add(`+decimalLongitude:>=${escapeNum(sw.lng)}`);
-        builder.add(`+decimalLongitude:<=${escapeNum(ne.lng)}`);
+        if (builder.queryString.length > 0) builder.add('and');
+        builder.add(`decimalLongitude >= ${escapeNum(sw.lng)}`);
+        builder.add(`and decimalLongitude <= ${escapeNum(ne.lng)}`);
       } else {
+        if (builder.queryString.length > 0) builder.add('and');
         builder.add(
-          `+((+decimalLongitude:>=${escapeNum(
+          `((decimalLongitude >= ${escapeNum(
             sw.lng,
-          )} +decimalLongitude:<=180)`,
+          )} and decimalLongitude <= 180)`,
         );
         builder.add(
-          `(+decimalLongitude:<=${escapeNum(
+          `or (decimalLongitude <= ${escapeNum(
             ne.lng,
-          )} +decimalLongitude:>=\\-180))`,
+          )} or decimalLongitude >= \\-180))`,
         );
       }
-
-      builder.add(`+decimalLatitude:<=${escapeNum(ne.lat)}`, QueryType.LTE);
-      builder.add(`+decimalLatitude:>=${escapeNum(sw.lat)}`, QueryType.GTE);
+      if (builder.queryString.length > 0) builder.add('and');
+      builder.add(`decimalLatitude <= ${escapeNum(ne.lat)}`, QueryType.LTE);
+      builder.add(`and decimalLatitude >= ${escapeNum(sw.lat)}`, QueryType.GTE);
     }
 
     builder.setSource(source);
@@ -153,7 +171,7 @@ export default class QueryParams {
   }
 
   clear() {
-    Object.extend(this, defaultParams);
+    Object.assign(this, defaultParams);
     this.expeditions = [];
     this.filters = [];
   }

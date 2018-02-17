@@ -60,8 +60,9 @@
 
 <div class="query-page fill-screen">
   <!-- sidebar-->
-  <fims-query-form ng-show="$ctrl.showSidebar" params="$ctrl.params" query-results="$ctrl.results" query-map="$ctrl.queryMap"
-    expeditions="$ctrl.expeditions" markers="$ctrl.markers" filter-options="$ctrl.filterOptions" class="sidebar"></fims-query-form>
+  <fims-query-form ng-show="$ctrl.showSidebar" params="$ctrl.params" on-new-results="$ctrl.handleNewResults(results)"
+    query-map="$ctrl.queryMap" current-project="$ctrl.currentProject" expeditions="$ctrl.expeditions" markers="$ctrl.markers"
+    filter-options="$ctrl.filterOptions" class="sidebar"></fims-query-form>
 
   <!-- sidebar toggle -->
   <div class="sidebar-toggle">
@@ -80,8 +81,8 @@
 
 
     <!-- table -->
-    <div ng-show="!$ctrl.showMap" class="query-table" ng-class="{'full-page-query-table': !$ctrl.showSidebar}"
-      ng-include="'app/components/query/queryTable.html'"></div>
+    <fims-query-table ng-show="!$ctrl.showMap" class="query-table" ng-class="{'full-page-query-table': !$ctrl.showSidebar}"
+      results="$ctrl.results"></fims-query-table>
 
   </div>
 </div>

@@ -13,16 +13,17 @@ class QueryService {
     this.AuthService = AuthService;
   }
 
-  queryJson(query, page, limit) {
+  queryJson(query, projectId, page, limit) {
     angular.alerts.removeTmp();
 
     return this.$http({
       method: 'GET',
-      url: `${restRoot}projects/query/json/?limit=${limit}&page=${page}`,
+      url: `${restRoot}projects/query/json/?limit=${limit}&page=${page}&projectId=${projectId}`,
       params: query,
       keepJson: true,
     }).then(response => {
       const results = {
+        page: 0,
         size: 0,
         totalElements: 0,
         data: [],
@@ -30,6 +31,7 @@ class QueryService {
 
       if (response.data) {
         results.size = response.data.size;
+        results.page = response.data.number;
 
         // TODO: I think we can remove this b/c we aren't using es anymore
         // if (response.data.totalElements > 10000) {
@@ -105,5 +107,5 @@ class QueryService {
 }
 
 export default angular
-  .module('fims.queryService', [authService])
+  .module('fims.QueryService', [authService])
   .service('QueryService', QueryService).name;

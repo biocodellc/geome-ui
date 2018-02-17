@@ -33,10 +33,11 @@ class QueryTableController {
   }
 
   updatePage() {
+    if (!this.results) return;
     const start = (this.currentPage - 1) * this.pageSize;
     const end = start + this.pageSize;
 
-    const data = this.queryResults.data.slice(start, end);
+    const data = this.results.data.slice(start, end);
 
     this.prepareTableData(data);
   }
@@ -63,6 +64,6 @@ export default {
   template,
   controller: QueryTableController,
   bindings: {
-    queryResults: '<',
+    results: '<',
   },
 };

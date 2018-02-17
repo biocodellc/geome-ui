@@ -9,11 +9,11 @@ function getStates() {
         component: 'fimsQuery',
         projectRequired: true,
         resolve: {
-          expeditions: /* ngInject */ (ProjectService, ExpeditionService) =>
-            ExpeditionService.all(ProjectService.currentProject()),
-          markers: /* ngInject */ ProjectService =>
+          expeditions: /* @ngInject */ (ProjectService, ExpeditionService) =>
+            ExpeditionService.all(ProjectService.currentProject().projectId),
+          markers: /* @ngInject */ ProjectService =>
             ProjectService.currentProject().config.getList('markers') || [],
-          filterOptions: /* ngInject */ ProjectService => [], // TODO: implement me
+          filterOptions: /* @ngInject */ ProjectService => [], // TODO: implement me
         },
       },
     },
@@ -25,12 +25,12 @@ function getStates() {
         url: '/sample/*bcid',
         component: 'fimsQueryDetail',
         resolve: {
-          sample: /* ngInject */ (queryService, $stateParams, $state) => {
+          sample: /* @ngInject */ (ProjectService, QueryService, $stateParams, $state) => {
             const builder = new QueryBuilder();
             builder.add(`bcid:"${$stateParams.bcid}"`);
 
-            return queryService
-              .queryJson(builder.build(), 0, 1)
+            return QueryService
+              .queryJson(builder.build(), ProjectService.currentProject().projectId, 0, 1)
               .then(response => {
                 if (response.data.length === 0) {
                   throw new Error(response);

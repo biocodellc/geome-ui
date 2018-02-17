@@ -28,6 +28,7 @@ import templates from './views/templates';
 import project from './views/project';
 import expeditions from './views/expeditions';
 import validation from './views/validation';
+import query from './views/query';
 
 import projectService from './services/project.service';
 import userService from './services/user.service';
@@ -39,7 +40,6 @@ import navigation from './components/navigation';
 import alerts from './components/alerts';
 // import lookup from './components/lookup';
 import modals from './components/modals';
-import query from './components/query';
 import users from './components/users';
 
 import Exceptions from './utils/exceptions';

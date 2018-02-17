@@ -4,7 +4,7 @@ import angular from 'angular';
 import '../../../vendor/scalyr';
 
 import router from '../../utils/router';
-import queryService from '../../services/query.service';
+import QueryService from '../../services/query.service';
 import projectService from '../../services/project.service';
 
 import routing from './query.routes';
@@ -17,7 +17,7 @@ import fimsQueryTable from './table/query-table.component';
 
 // angular.module('fims.query', ['fims.modals', 'fims.projects', 'fims.map', 'fims.alerts', 'fims.exception',
 // 'fims.auth', 'sly', 'ui.select']);
-const dependencies = ['sly', router, queryService, projectService, typeahead];
+const dependencies = ['sly', router, QueryService, projectService, typeahead];
 
 export default angular
   .module('fims.query', dependencies)

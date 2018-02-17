@@ -22,11 +22,11 @@ const defaultFilter = {
 };
 
 class QueryFormController {
-  constructor($timeout, queryService, usSpinnerService) {
+  constructor($timeout, QueryService, usSpinnerService) {
     'ngInject';
 
     this.$timeout = $timeout;
-    this.queryService = queryService;
+    this.QueryService = QueryService;
     this.usSpinnerService = usSpinnerService;
   }
 
@@ -61,16 +61,20 @@ class QueryFormController {
     // TODO: make this a loading bool & use us-spinner directive
     this.usSpinnerService.spin('query-spinner');
 
-    this.queryService
-      .queryJson(this.build(SOURCE.join()), 0, 10000)
-      .then(data => {
-        this.queryResults.update(data);
+    this.QueryService.queryJson(
+      this.params.buildQuery(SOURCE.join()),
+      this.currentProject.projectId,
+      0,
+      10000,
+    )
+      .then(results => {
+        this.onNewResults({ results });
         this.queryMap.clearBounds();
-        this.queryMap.setMarkers(this.queryResults.data);
+        // this.queryMap.setMarkers(this.queryResults.data); TODO: fix this
       })
       .catch(response => {
         angular.exception.catcher('Failed to load query results')(response);
-        this.queryResults.isSet = false;
+        this.onNewResults({ results: undefined });
       })
       .finally(() => {
         this.usSpinnerService.stop('query-spinner');
@@ -117,10 +121,11 @@ export default {
   controller: QueryFormController,
   bindings: {
     params: '<',
-    queryResults: '<',
     queryMap: '<',
     expeditions: '<', // list of expeditionCodes
+    currentProject: '<',
     markers: '<',
     filterOptions: '<',
+    onNewResults: '&',
   },
 };
