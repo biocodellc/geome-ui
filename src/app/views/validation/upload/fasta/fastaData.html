@@ -20,7 +20,7 @@
                            ng-value="$ctrl.data[$index].file.name || invalidFastaFile_{{$index}}.name" readonly/>
                 </div>
                 <p class="help-block small col-sm-offset-3" ng-show="$ctrl.form.fasta_{{$index}}.$error.pattern">
-                    File must have one of the following extensions: .fa, .mpfa, .fna, .fsa, .fas, .fasta or .txt</p>
+                    File must have one of the following extensions: .fa, .mpfa, .fna, .fsa, .fas, or .fasta</p>
             </div>
         </div>
 
@@ -28,7 +28,7 @@
             <label for="fastaMarker" class="col-sm-3 control-label">Marker</label>
             <div class="col-sm-9">
                 <select class="form-control" id="fastaMarker" name="fastaMarker_{{$index}}"
-                        ng-model="$ctrl.data[$index].metadata.marker"
+                        ng-model="$ctrl.data[$index].marker"
                         ng-change="$ctrl.dataChanged()"
                         required
                         ng-options="marker.value as marker.value for marker in $ctrl.markers">

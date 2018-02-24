@@ -1,3 +1,5 @@
+const template = require('./fastaData.html');
+
 const POPOVER_TEMPLATE = `
 <div>
     <table class="table table-condensed">
@@ -37,7 +39,7 @@ class FastaDataController {
     }
 
     if ('config' in changesObj && changesObj.config.currentValue) {
-      this.fastqMetadataLists = this.config.getList('fastqMetadata');
+      this.markers = this.config.getList('markers').fields || [];
     }
   }
 
@@ -49,7 +51,7 @@ class FastaDataController {
   addData() {
     this.data.push({
       file: undefined,
-      metadata: { marker: undefined },
+      marker: undefined,
     });
   }
 
@@ -59,7 +61,7 @@ class FastaDataController {
 }
 
 export default {
-  template: require('./fastaData.html'),
+  template,
   controller: FastaDataController,
   bindings: {
     data: '<',

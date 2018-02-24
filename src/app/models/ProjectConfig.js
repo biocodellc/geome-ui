@@ -99,7 +99,7 @@ export default class ProjectConfig {
 
   getList(listName) {
     const list = this.lists.find(l => l.alias === listName);
-    return list || [];
+    return list || {};
   }
 
   getRule(conceptAlias, ruleName, level) {

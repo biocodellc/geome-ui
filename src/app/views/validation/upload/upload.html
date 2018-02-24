@@ -1,7 +1,8 @@
 <form role="form" name="$ctrl.uploadForm" class="form-horizontal" novalidate ng-submit="$ctrl.upload()">
     <fims-upload-datatypes
             on-update="$ctrl.handleDatatypes(dataTypes)"
-            new-expedition="$ctrl.newExpedition">
+            new-expedition="$ctrl.newExpedition"
+            config="$ctrl.currentProject.config">
     </fims-upload-datatypes>
 
 

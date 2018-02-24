@@ -91,31 +91,38 @@ class UploadController {
       expeditionCode: this.expeditionCode,
       upload: true,
       reload: false,
+      dataSourceMetadata: [],
+      dataSourceFiles: [],
     };
 
     if (this.dataTypes.fims) {
       if (['xlsx', 'xls'].includes(getFileExt(this.fimsMetadata.name))) {
         data.workbooks = [this.fimsMetadata];
       } else {
-        data.dataSourceMetadata = [
-          {
-            dataType: 'TABULAR',
-            filename: this.fimsMetadata.name,
-            metadata: {
-              sheetName: 'Samples', // TODO this needs to be dynamic, depending on the entity being validated
-            },
+        data.dataSourceMetadata.push({
+          dataType: 'TABULAR',
+          filename: this.fimsMetadata.name,
+          metadata: {
+            sheetName: 'Samples', // TODO this needs to be dynamic, depending on the entity being validated
           },
-        ];
-        data.dataSourceFiles = [this.fimsMetadata];
+        });
+        data.dataSourceFiles.push(this.fimsMetadata);
       }
     }
     if (this.dataTypes.fasta) {
-      // TODO fix this
-      // data.fastaFiles = this.fastaData.files;
-      // this.fastaData.forEach((data, index) => {
-      //   data.filename = this.fastaFiles[ index ].name;
-      // });
-      // data.fastaData = Upload.jsonBlob(this.fastaData);
+      this.fastaData.forEach(fd => {
+        data.dataSourceMetadata.push({
+          dataType: 'FASTA',
+          filename: fd.file.name,
+          metadata: {
+            conceptAlias: this.currentProject.config.entities.find(
+              e => e.type === 'Fasta',
+            ).conceptAlias, // TODO this needs to be dynamic
+            marker: fd.marker,
+          },
+        });
+        data.dataSourceFiles.push(fd.file);
+      });
     }
     if (this.dataTypes.fastq) {
       // data.fastqMetadata = Upload.jsonBlob(this.fastqMetadata);
