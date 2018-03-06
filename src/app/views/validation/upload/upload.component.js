@@ -90,7 +90,7 @@ class UploadController {
     const data = {
       expeditionCode: this.expeditionCode,
       upload: true,
-      reload: false,
+      reloadWorkbooks: true,
       dataSourceMetadata: [],
       dataSourceFiles: [],
     };
@@ -102,6 +102,7 @@ class UploadController {
         data.dataSourceMetadata.push({
           dataType: 'TABULAR',
           filename: this.fimsMetadata.name,
+          reload: true,
           metadata: {
             sheetName: 'Samples', // TODO this needs to be dynamic, depending on the entity being validated
           },
@@ -114,6 +115,7 @@ class UploadController {
         data.dataSourceMetadata.push({
           dataType: 'FASTA',
           filename: fd.file.name,
+          reload: false,
           metadata: {
             conceptAlias: this.currentProject.config.entities.find(
               e => e.type === 'Fasta',

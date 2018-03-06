@@ -25,6 +25,7 @@ class DataService {
    * {
    *   dataType: <string>, the DataReaderType to use to read the file. supported types are ['TABULAR']
    *   filename: <string>, the name of the file in dataSourceFiles this metadata represents.
+   *   reload: <boolean>, Remove any existing records not included in this upload. Note: some entities prevent reloads and will ignore this value
    *   metadata: {
    *     key: value, // metadata required for the specific DataReader. TODO insert a link to the docs on this
    *     ...,
@@ -41,7 +42,8 @@ class DataService {
    *                                                     file must have a corresponding metadata object
    * @param data.workbooks (optional) File  The excel workbook to validate. Either this or dataSourceFiles/Metadata must be
    * @param data.upload boolean  Is this data to be uploaded or only validated?
-   * @param data.reload boolean  Should we reload any parent entities or only this dataset?
+   * @param data.reloadWorkbooks boolean  Remove any existing records not included in this upload. This only applies to
+   *                                      data.workbooks Note: some entities prevent reloads and will ignore this value
    */
   validate(data) {
     if (data.dataSourceMetadata) {

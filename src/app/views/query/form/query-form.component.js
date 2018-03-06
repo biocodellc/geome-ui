@@ -64,6 +64,7 @@ class QueryFormController {
     this.QueryService.queryJson(
       this.params.buildQuery(SOURCE.join()),
       this.currentProject.projectId,
+      this.currentProject.config.entities[0].conceptAlias,
       0,
       10000,
     )

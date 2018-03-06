@@ -13,12 +13,12 @@ class QueryService {
     this.AuthService = AuthService;
   }
 
-  queryJson(query, projectId, page, limit) {
+  queryJson(query, projectId, entity, page, limit) {
     angular.alerts.removeTmp();
 
     return this.$http({
       method: 'GET',
-      url: `${restRoot}projects/query/json/?limit=${limit}&page=${page}&projectId=${projectId}`,
+      url: `${restRoot}projects/${projectId}/query/json/${entity}?limit=${limit}&page=${page}`,
       params: query,
       keepJson: true,
     }).then(response => {
@@ -53,30 +53,30 @@ class QueryService {
     });
   }
 
-  downloadExcel(query) {
-    this.download('excel', query);
+  downloadExcel(query, projectId, entity) {
+    this.download('excel', query, projectId, entity);
   }
 
-  downloadKml(query) {
-    this.download('kml', query);
+  downloadKml(query, projectId, entity) {
+    this.download('kml', query, projectId, entity);
   }
 
-  downloadCsv(query) {
-    this.download('csv', query);
+  downloadCsv(query, projectId, entity) {
+    this.download('csv', query, projectId, entity);
   }
 
-  downloadFasta(query) {
-    this.download('fasta', query);
+  downloadFasta(query, projectId, entity) {
+    this.download('fasta', query, projectId, entity);
   }
 
-  downloadFastq(query) {
-    this.download('fastq', query);
+  downloadFastq(query, projectId, entity) {
+    this.download('fastq', query, projectId, entity);
   }
 
-  download(path, query) {
+  download(path, query, projectId, entity) {
     return this.$http({
       method: 'GET',
-      url: `${restRoot}projects/query/${path}`,
+      url: `${restRoot}projects/${projectId}/query/${entity}/${path}`,
       params: query,
       keepJson: true,
     })

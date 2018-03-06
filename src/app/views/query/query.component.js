@@ -30,23 +30,32 @@ class QueryController {
   }
 
   downloadExcel() {
-    this.QueryService.downloadExcel(this.queryParams.build());
+    this.QueryService.downloadExcel(
+      this.queryParams.build(),
+      this.currentProject.config.entities[0].conceptAlias,
+    );
   }
 
   downloadCsv() {
-    this.QueryService.downloadCsv(this.queryParams.build());
+    this.QueryService.downloadCsv(
+      this.queryParams.build(),
+      this.currentProject.config.entities[0].conceptAlias,
+    );
   }
 
   downloadKml() {
-    this.QueryService.downloadKml(this.queryParams.build());
+    this.QueryService.downloadKml(
+      this.queryParams.build(),
+      this.currentProject.config.entities[0].conceptAlias,
+    );
   }
 
   downloadFasta() {
-    this.QueryService.downloadFasta(this.queryParams.build());
+    this.QueryService.downloadFasta(this.queryParams.build(), 'fastaSequence');
   }
 
   downloadFastq() {
-    this.QueryService.downloadFastq(this.queryParams.build());
+    this.QueryService.downloadFastq(this.queryParams.build(), 'fastqMetadata');
   }
 
   hasFastqData() {

@@ -22,15 +22,25 @@ function getStates() {
     {
       state: 'sample',
       config: {
-        url: '/sample/*bcid',
+        url: '/{entity}/*bcid',
         component: 'fimsQueryDetail',
         resolve: {
-          sample: /* @ngInject */ (ProjectService, QueryService, $stateParams, $state) => {
+          sample: /* @ngInject */ (
+            ProjectService,
+            QueryService,
+            $stateParams,
+            $state,
+          ) => {
             const builder = new QueryBuilder();
             builder.add(`bcid:"${$stateParams.bcid}"`);
 
-            return QueryService
-              .queryJson(builder.build(), ProjectService.currentProject().projectId, 0, 1)
+            return QueryService.queryJson(
+              builder.build(),
+              ProjectService.currentProject().projectId,
+              $stateParams.entity,
+              0,
+              1,
+            )
               .then(response => {
                 if (response.data.length === 0) {
                   throw new Error(response);
