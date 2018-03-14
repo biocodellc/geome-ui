@@ -1,5 +1,7 @@
 import angular from 'angular';
 
+const template = require('./login.html');
+
 class LoginController {
   constructor($state, UserService, AuthService, LoadingModal) {
     'ngInject';
@@ -38,14 +40,15 @@ class LoginController {
       .then(() => this.UserService.get(this.credentials.username))
       .then(user => {
         this.UserService.setCurrentUser(user);
-        const params = this.state.params;
+        const { params } = this.state;
         if (params.nextState && params.nextState !== 'login') {
-          return this.state.go(params.nextState, params.nextStateParams, {
+          this.state.go(params.nextState, params.nextStateParams, {
             reload: true,
             inherit: false,
           });
+          return;
         }
-        return this.state.go('home', {}, { reload: true, inherit: false });
+        this.state.go('home', {}, { reload: true, inherit: false });
       })
       .catch(angular.catcher('Error during authentication.'))
       .finally(() => this.loadingModal.close());
@@ -53,6 +56,6 @@ class LoginController {
 }
 
 export default {
-  template: require('./login.html'),
+  template,
   controller: LoginController,
 };

@@ -42,7 +42,7 @@ export default class AuthInterceptor {
         .catch(() => {
           this.triedToRefresh = false;
           const $state = this.injector.get('$state');
-          return $state.go('login', {
+          return $state.target('login', {
             nextState: $state.current.name,
             nextStateParams: $state.params,
           });

@@ -1,4 +1,5 @@
-// TODO finish this
+const template = require('./fastqData.html');
+
 class FastqDataController {
   $onChanges(changesObj) {
     if ('data' in changesObj) {
@@ -6,7 +7,25 @@ class FastqDataController {
     }
 
     if ('config' in changesObj && changesObj.config.currentValue) {
-      this.fastqMetadataLists = this.config.getList('fastqMetadata');
+      this.libraryStrategies = this.config
+        .getList('libraryStrategy')
+        .fields.map(f => f.value);
+      this.librarySources = this.config
+        .getList('librarySource')
+        .fields.map(f => f.value);
+      this.librarySelections = this.config
+        .getList('librarySelection')
+        .fields.map(f => f.value);
+      this.platforms = {};
+
+      this.platforms = this.config
+        .getList('platform')
+        .fields.reduce((val, f) => {
+          val[f.value] = this.config
+            .getList(f.value)
+            .fields.map(field => field.value);
+          return val;
+        }, {});
     }
   }
 
@@ -16,7 +35,7 @@ class FastqDataController {
 }
 
 export default {
-  template: require('./fastqData.html'),
+  template,
   controller: FastqDataController,
   bindings: {
     data: '<',

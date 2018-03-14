@@ -13,7 +13,7 @@
     </fims-upload-expedition>
 
 
-    <div ng-show="$ctrl.dataTypes.fims">
+    <div ng-if="$ctrl.dataTypes.fims">
         <hr class="separator"/>
         <fims-metadata
                 ng-show="$ctrl.dataTypes.fims"
@@ -36,7 +36,7 @@
         </div>
     </div>
 
-    <div class="form-group split-form" ng-show="$ctrl.dataTypes.fasta">
+    <div class="form-group split-form" ng-if="$ctrl.dataTypes.fasta">
         <fims-fasta-data
                 on-change="$ctrl.handleFastaDataChange(data)"
                 form="$ctrl.uploadForm"
@@ -45,9 +45,9 @@
         </fims-fasta-data>
     </div>
 
-    <div class="form-group split-form" ng-show="$ctrl.dataTypes.fastq">
+    <div class="form-group split-form" ng-if="$ctrl.dataTypes.fastq">
         <fims-fastq-data
-                on-change="$ctrl.handleFastaDataChange(data)"
+                on-change="$ctrl.handleFastqDataChange(data)"
                 form="$ctrl.uploadForm"
                 config="$ctrl.currentProject.config"
                 data="$ctrl.fastaData">

@@ -68,7 +68,7 @@ class DataService {
       .then(response => {
         if (response.status === 204) {
           angular.alerts.info('No resources found');
-          return;
+          return Promise.resolve();
         }
         return this.FileService.download(response.data.url);
       })

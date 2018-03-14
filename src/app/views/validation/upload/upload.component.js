@@ -66,13 +66,17 @@ class UploadController {
     this.fastaData = data;
   }
 
+  handleFastqDataChange(data) {
+    this.fastqMetadata = data;
+  }
+
   upload() {
     this.$scope.$broadcast('show-errors-check-validity');
 
-    // const submitIfValid = () => {
     // if (!this.checkCoordinatesVerified() || this.uploadForm.$invalid) {
-    //   return;
-    // }
+    if (this.uploadForm.$invalid) {
+      return;
+    }
 
     this.onUpload({ data: this.getUploadData() });
   }
@@ -119,7 +123,7 @@ class UploadController {
           metadata: {
             conceptAlias: this.currentProject.config.entities.find(
               e => e.type === 'Fasta',
-            ).conceptAlias, // TODO this needs to be dynamic
+            ).conceptAlias, // TODO this needs to be dynamically choosen by the user
             marker: fd.marker,
           },
         });
@@ -127,8 +131,24 @@ class UploadController {
       });
     }
     if (this.dataTypes.fastq) {
-      // data.fastqMetadata = Upload.jsonBlob(this.fastqMetadata);
-      // data.fastqFilenames = this.fastqFilenames;
+      data.dataSourceMetadata.push({
+        dataType: 'FASTQ',
+        filename: this.fastqMetadata.file.name,
+        reload: false,
+        metadata: {
+          conceptAlias: this.currentProject.config.entities.find(
+            e => e.type === 'Fastq',
+          ).conceptAlias, // TODO this needs to be dynamically choosen by the user
+          libraryLayout: this.fastqMetadata.libraryLayout,
+          libraryStrategy: this.fastqMetadata.libraryStrategy,
+          librarySource: this.fastqMetadata.librarySource,
+          librarySelection: this.fastqMetadata.librarySelection,
+          platform: this.fastqMetadata.platform,
+          designDescription: this.fastqMetadata.designDescription,
+          instrumentModel: this.fastqMetadata.instrumentModel,
+        },
+      });
+      data.dataSourceFiles.push(this.fastqMetadata.file);
     }
 
     return data;

@@ -12,6 +12,7 @@ class DataTypesController {
   $onChanges(changesObj) {
     if ('config' in changesObj && changesObj.config.currentValue) {
       this.fastaEnabled = this.config.entities.some(e => e.type === 'Fasta');
+      this.fastqEnabled = this.config.entities.some(e => e.type === 'Fastq');
     }
   }
 

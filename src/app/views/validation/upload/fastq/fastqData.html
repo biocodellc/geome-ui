@@ -1,207 +1,152 @@
-<hr class="separator"/>
+<hr class="separator" />
 <div class="col-sm-8">
-    <div class="form-group" show-errors="{trigger: 'change'}">
-        <label for="fastq" class="col-sm-3 control-label">FASTQ Filenames</label>
-        <div class="col-sm-9">
-            <div class="input-group">
-                <label class="input-group-btn">
-                    <span class="btn btn-default form-control">Browse &hellip;</span>
-                    <input type="file" style="display:none;" id="fastq" name="fastqFilenames"
-                           class="form-control"
-                           ngf-select
-                           ngf-model-invalid="invalidFastqFile"
-                           ngf-pattern="'.txt'"
-                           required
-                           ng-model="$ctrl.data.file"/>
-                </label>
-                <input type="text" class="form-control"
-                       ng-value="$ctrl.data.file.name || invalidFastqFile.name"
-                       readonly/>
-            </div>
-            <p class="small help-block">Upload your list of fastq filenames (1 per line) here</p>
-            <p class="small help-block col-sm-offset-3"
-               ng-show="$ctrl.form.fastqFileNames.$error.pattern">
-                File must be a .txt file</p>
-        </div>
-        <a class="help-link" href="#"
-           uib-popover-template="'app/components/validation/templates/fastqFilenamesPopover.tpl.html'"
-           popover-title="Ex. file contents"
-           popover-placement="right">
-            <span class="glyphicon glyphicon-question-sign glyphicon-help"></span>
-        </a>
+  <div class="form-group" show-errors="{trigger: 'change'}">
+    <label for="fastq" class="col-sm-3 control-label">FASTQ Filenames</label>
+    <div class="col-sm-9">
+      <div class="input-group">
+        <label class="input-group-btn">
+          <span class="btn btn-default form-control">Browse &hellip;</span>
+          <input type="file" style="display:none;" id="fastq" name="fastqFilenames" class="form-control" ngf-select
+            ngf-model-invalid="invalidFastqFile" ngf-pattern="'.txt'" required ng-model="$ctrl.data.file"
+            ng-change="$ctrl.dataChanged()" />
+        </label>
+        <input type="text" class="form-control" ng-value="$ctrl.data.file.name || invalidFastqFile.name" readonly/>
+      </div>
+      <p class="small help-block">Upload your list of fastq filenames (1 per line) here</p>
+      <p class="small help-block col-sm-offset-3" ng-show="$ctrl.form.fastqFileNames.$error.pattern">
+        File must be a .txt file</p>
     </div>
+    <a class="help-link" href="#" uib-popover-template="'app/components/validation/templates/fastqFilenamesPopover.tpl.html'"
+      popover-title="Ex. file contents" popover-placement="right">
+      <span class="glyphicon glyphicon-question-sign glyphicon-help"></span>
+    </a>
+  </div>
 
-    <div class="form-group" show-errors="">
-        <label class="col-sm-3 control-label">Library Layout</label>
-        <div class="col-sm-9 split-form-group-col">
-            <div class="col-sm-6">
-                <div class="input-group">
-                                        <span class="input-group-addon"><input type="radio"
-                                                                               ng-model="$ctrl.fastqMetadata.libraryLayout"
-                                                                               ng-required="$ctrl.dataTypes.fastq && !$ctrl.fastqMetadata.libraryLayout"
-                                                                               name="single"
-                                                                               value="single"/></span>
-                    <input type="text" class="form-control" value="Single End" name="single"
-                           style="background-color: #fff;" readonly/>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <div class="input-group">
-                                        <span class="input-group-addon"><input type="radio"
-                                                                               ng-model="$ctrl.fastqMetadata.libraryLayout"
-                                                                               ng-required="$ctrl.dataTypes.fastq && !$ctrl.fastqMetadata.libraryLayout"
-                                                                               name="paired"
-                                                                               value="paired"/></span>
-                    <input type="text" class="form-control" value="Paired End" name="paired"
-                           style="background-color: #fff;" readonly/>
-                </div>
-            </div>
+  <div class="form-group" show-errors="">
+    <label class="col-sm-3 control-label">Library Layout</label>
+    <div class="col-sm-9 split-form-group-col">
+      <div class="col-sm-6">
+        <div class="input-group">
+          <span class="input-group-addon">
+            <input type="radio" ng-model="$ctrl.data.libraryLayout" ng-required="!$ctrl.data.libraryLayout" name="single"
+              ng-change="$ctrl.dataChanged()" value="single" />
+          </span>
+          <input type="text" class="form-control" value="Single End" name="single" style="background-color: #fff;"
+            readonly/>
         </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="input-group">
+          <span class="input-group-addon">
+            <input type="radio" ng-model="$ctrl.data.libraryLayout" ng-required="!$ctrl.fastqMetadata.libraryLayout"
+              ng-change="$ctrl.dataChanged()" name="paired" value="paired" />
+          </span>
+          <input type="text" class="form-control" value="Paired End" name="paired" style="background-color: #fff;"
+            readonly/>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <div class="form-group" show-errors>
-        <label for="libraryStrategy" class="col-sm-3 control-label">Library Strategy</label>
-        <div class="col-sm-9 pull-left">
-            <select class="form-control" name="libraryStrategy"
-                    ng-show="$ctrl.data.metadata.libraryStrategy"
-                    ng-model="$ctrl.data.metadata.libraryStrategy"
-                    ng-options="strategy.value as strategy.value for strategy in $ctrl.fastqMetadataLists.libraryStrategy"
-                    required/>
-                <option value="">-- Select a Library Strategy --</option>
-            </select>
-            <input type="text" class="form-control" id="libraryStrategy"
-                   name="libraryStrategyManual"
-                   ng-show="!$ctrl.fastqMetadataLists.libraryStrategy"
-                   ng-model="$ctrl.data.metadata.libraryStrategy"
-                   required/>
-            <p class="small help-block">
-                For instance if uploading using RADSeq data this is likely to be “WGS”
-            </p>
-        </div>
-        <a class="help-link" href="#"
-           uib-popover-template="'app/components/validation/templates/fastq-library-strategy-popover.tpl.html'"
-           popover-placement="bottom">
-            <span class="glyphicon glyphicon-question-sign glyphicon-help"></span>
-        </a>
+  <div class="form-group" show-errors>
+    <label for="libraryStrategy" class="col-sm-3 control-label">Library Strategy</label>
+    <div class="col-sm-9 pull-left">
+      <select class="form-control" name="libraryStrategy" ng-model="$ctrl.data.libraryStrategy" ng-options="strategy for strategy in $ctrl.libraryStrategies"
+        ng-change="$ctrl.dataChanged()" required>
+        <option value="">-- Select a Library Strategy --</option>
+      </select>
+      <p class="small help-block">
+        For instance if uploading using RADSeq data this is likely to be “WGS”
+      </p>
     </div>
+    <a class="help-link" href="#" uib-popover-template="'app/components/validation/templates/fastq-library-strategy-popover.tpl.html'"
+      popover-placement="bottom">
+      <span class="glyphicon glyphicon-question-sign glyphicon-help"></span>
+    </a>
+  </div>
 
-    <div class="form-group" show-errors>
-        <label for="librarySource" class="col-sm-3 control-label">Library Source</label>
-        <div class="col-sm-9">
-            <select class="form-control" name="librarySource"
-                    ng-show="$ctrl.fastqMetadataLists.librarySource"
-                    ng-model="$ctrl.data.metadata.librarySource"
-                    ng-options="source.value as source.value for source in $ctrl.fastqMetadataLists.librarySource"
-                    required/>
-                <option value="">-- Select a Library Source --</option>
-            </select>
-            <input type="text" class="form-control" id="librarySource"
-                   name="librarySourceManual"
-                   ng-show="!$ctrl.fastqMetadataLists.librarySource"
-                   ng-model="$ctrl.data.metadata.librarySource"
-                   required/>
-        </div>
-        <a class="help-link" href="#"
-           uib-popover-template="'app/components/validation/templates/fastq-library-source-popover.tpl.html'"
-           popover-placement="bottom">
-            <span class="glyphicon glyphicon-question-sign glyphicon-help"></span>
-        </a>
+  <div class="form-group" show-errors>
+    <label for="librarySource" class="col-sm-3 control-label">Library Source</label>
+    <div class="col-sm-9">
+      <select class="form-control" name="librarySource" ng-model="$ctrl.data.librarySource" ng-options="source for source in $ctrl.librarySources"
+        ng-change="$ctrl.dataChanged()" required>
+        <option value="">-- Select a Library Source --</option>
+      </select>
     </div>
+    <a class="help-link" href="#" uib-popover-template="'app/components/validation/templates/fastq-library-source-popover.tpl.html'"
+      popover-placement="bottom">
+      <span class="glyphicon glyphicon-question-sign glyphicon-help"></span>
+    </a>
+  </div>
 
-    <div class="form-group" show-errors>
-        <label for="librarySelection" class="col-sm-3 control-label">Library Selection</label>
-        <div class="col-sm-9">
-            <select class="form-control" name="librarySelection"
-                    ng-show="$ctrl.fastqMetadataLists.librarySelection"
-                    ng-model="$ctrl.data.metadata.librarySelection"
-                    ng-options="selection.value as selection.value for selection in $ctrl.fastqMetadataLists.librarySelection"
-                    required/>
-                <option value="">-- Select a Library Selection --</option>
-            </select>
-            <input type="text" class="form-control" id="librarySelection"
-                   ng-show="!$ctrl.fastqMetadataLists.librarySelection"
-                   name="librarySelectionManual"
-                   ng-model="$ctrl.data.metadata.librarySelection"
-                   required/>
-            <p class="small help-block">
-                For instance if uploading using RADSeq data this is likely to be “Reduced
-                Representation”
-            </p>
-        </div>
-        <a class="help-link" href="#"
-           uib-popover-template="'app/components/validation/templates/fastq-library-selection-popover.tpl.html'"
-           popover-placement="bottom">
-            <span class="glyphicon glyphicon-question-sign glyphicon-help"></span>
-        </a>
+  <div class="form-group" show-errors>
+    <label for="librarySelection" class="col-sm-3 control-label">Library Selection</label>
+    <div class="col-sm-9">
+      <select class="form-control" name="librarySelection" ng-model="$ctrl.data.librarySelection" ng-options="selection for selection in $ctrl.librarySelections"
+        ng-change="$ctrl.dataChanged()" required>
+        <option value="">-- Select a Library Selection --</option>
+      </select>
+      <p class="small help-block">
+        For instance if uploading using RADSeq data this is likely to be “Reduced Representation”
+      </p>
     </div>
+    <a class="help-link" href="#" uib-popover-template="'app/components/validation/templates/fastq-library-selection-popover.tpl.html'"
+      popover-placement="bottom">
+      <span class="glyphicon glyphicon-question-sign glyphicon-help"></span>
+    </a>
+  </div>
 
-    <div class="form-group" show-errors>
-        <label for="platform" class="col-sm-3 control-label">Platform</label>
-        <div class="col-sm-9">
-            <select class="form-control" name="platform"
-                    ng-show="$ctrl.fastqMetadataLists.platform"
-                    ng-model="$ctrl.data.metadata.platform"
-                    ng-options="platform as platform for (platform, list) in $ctrl.fastqMetadataLists.platform"
-                    required/>
-                <option value="">-- Select a Platform --</option>
-            </select>
-            <input type="text" class="form-control" id="platform" name="platformManual"
-                   ng-show="!$ctrl.fastqMetadataLists.platform"
-                   ng-model="$ctrl.data.metadata.platform"
-                   required/>
-        </div>
+  <div class="form-group" show-errors>
+    <label for="platform" class="col-sm-3 control-label">Platform</label>
+    <div class="col-sm-9">
+      <select class="form-control" name="platform" ng-model="$ctrl.data.platform" ng-options="platform as platform for (platform, list) in $ctrl.platforms"
+        ng-change="$ctrl.dataChanged()" required>
+        <option value="">-- Select a Platform --</option>
+      </select>
     </div>
+  </div>
 
-    <div class="form-group" show-errors>
-        <label for="instrumentModel" class="col-sm-3 control-label">Instrument Model</label>
-        <div class="col-sm-9">
-            <select class="form-control" name="instrumentModel"
-                    ng-show="$ctrl.fastqMetadataLists.platform[$ctrl.fastqMetadata.platform]"
-                    ng-model="$ctrl.data.metadata.instrumentModel"
-                    ng-options="instrumentModel for instrumentModel in $ctrl.fastqMetadataLists.platform[$ctrl.data.metadata.platform]"
-                    required/>
-                <option value="">-- Select an Instrument Model --</option>
-            </select>
-            <input type="text" class="form-control" id="instrumentModel"
-                   name="instrumentModelManual"
-                   ng-show="!$ctrl.fastqMetadataLists.platform[$ctrl.data.metadata.platform]"
-                   ng-model="$ctrl.data.metadata.instrumentModel"
-                   required/>
-        </div>
+  <div class="form-group" show-errors>
+    <label for="instrumentModel" class="col-sm-3 control-label">Instrument Model</label>
+    <div class="col-sm-9">
+      <select class="form-control" name="instrumentModel" ng-model="$ctrl.data.instrumentModel" ng-options="instrumentModel for instrumentModel in $ctrl.platforms[$ctrl.data.platform]"
+        ng-change="$ctrl.dataChanged()" required>
+        <option value="">-- Select an Instrument Model --</option>
+      </select>
     </div>
+  </div>
 
-    <div class="form-group" show-errors>
-        <label for="designDescription" class="col-sm-3 control-label">Protocol citation or
-            website</label>
-        <div class="col-sm-9">
-            <input type="text" class="form-control" id="designDescription"
-                   name="designDescription" ng-model="$ctrl.data.metadata.designDescription"
-                   required/>
-        </div>
+  <div class="form-group" show-errors>
+    <label for="designDescription" class="col-sm-3 control-label">Protocol citation or website
+    </label>
+    <div class="col-sm-9">
+      <input type="text" class="form-control" id="designDescription" name="designDescription" ng-model="$ctrl.data.designDescription"
+        ng-change="$ctrl.dataChanged()" required/>
     </div>
+  </div>
 </div>
 
 <div class="col-sm-4">
-    <ul>
-        <li class="list-unstyled big"><strong>Instructions:</strong></li>
-        <li>GeOMe will accept single and paired end read data</li>
-        <li>Each fastq file should contain reads from a single individual</li>
-        <li>Names of fastq files must match the materialsampleIDs in the metadata file up to the
-            file extension (e.g., R1.fq.gz, .1.fq, etc)
-        </li>
-        <li>The actual fastq sequence files will not be uploaded here and stored on the GeOMe
-            system. Instead the metadata file will be uploaded and stored here.
-        </li>
-        <li>For validation purposes a text file of the fastq file names (one name per line and
-            including the file extension) will be uploaded here. If you are uploading PE data
-            there should be two file names per sample. This process ensures that required fields
-            are complete, that each materialsampleID is unique, and that the materialsampleIDs
-            match the fastq file names.
-        </li>
-        <li>Once uploading is complete the GeOMe system will produce two files (SRA metadata and
-            BioSample attributes files) that will ease the upload process to NCBI’s Sequence Read
-            Archive (SRA). When these files are downloaded a set of simple instructions are included that will speed
-            your SRA submission.
-        </li>
-    </ul>
+  <ul>
+    <li class="list-unstyled big">
+      <strong>Instructions:</strong>
+    </li>
+    <li>GeOMe will accept single and paired end read data</li>
+    <li>Each fastq file should contain reads from a single individual</li>
+    <li>Names of fastq files must match the materialsampleIDs in the metadata file up to the file extension
+      (e.g., R1.fq.gz, .1.fq, etc)
+    </li>
+    <li>The actual fastq sequence files will not be uploaded here and stored on the GeOMe system. Instead
+      the metadata file will be uploaded and stored here.
+    </li>
+    <li>For validation purposes a text file of the fastq file names (one name per line and including the
+      file extension) will be uploaded here. If you are uploading PE data there should be two file names
+      per sample. This process ensures that required fields are complete, that each materialsampleID
+      is unique, and that the materialsampleIDs match the fastq file names.
+    </li>
+    <li>Once uploading is complete the GeOMe system will produce two files (SRA metadata and BioSample attributes
+      files) that will ease the upload process to NCBI’s Sequence Read Archive (SRA). When these files
+      are downloaded a set of simple instructions are included that will speed your SRA submission.
+    </li>
+  </ul>
 </div>

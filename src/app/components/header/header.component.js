@@ -1,3 +1,5 @@
+const template = require('./header.html');
+
 class HeaderController {
   constructor($location, $window, $state) {
     'ngInject';
@@ -24,7 +26,7 @@ class HeaderController {
 }
 
 export default {
-  template: require('./header.html'),
+  template,
   controller: HeaderController,
   bindings: {
     currentUser: '<',
