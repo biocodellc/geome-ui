@@ -2,3 +2,4 @@ node_modules/
 dist/
 coverage/
 config/local.js
+yarn-error.log
