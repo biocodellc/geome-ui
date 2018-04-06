@@ -3,22 +3,9 @@ import uirouter from '@uirouter/angularjs';
 import bootstrap from 'angular-ui-bootstrap';
 import ngMaterial from 'angular-material';
 
+
 // todo remove the following and use only angular-ui-bootstrap
 import 'jquery-ui';
-
-// Leaflet
-import 'leaflet/dist/leaflet.css';
-import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
-import 'leaflet.markercluster/dist/MarkerCluster.css';
-
-// use async functions w/ babel
-import 'babel-polyfill';
-
-// import 'angular-material/angular-material.min.css';
-// import 'leaflet/dist/leaflet.css';
-// import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
-// import 'leaflet.markercluster/dist/MarkerCluster.css';
-// import 'bootstrap-sass';
 
 // this loads the css for the app
 import '../style/app.scss';

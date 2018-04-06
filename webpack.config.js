@@ -3,7 +3,6 @@ const fs = require('fs');
 
 // Modules
 const webpack = require('webpack');
-const autoprefixer = require('autoprefixer');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -25,6 +24,32 @@ function root(args) {
   return path.join(...[__dirname].concat(args));
 }
 
+const css = (extend = []) => {
+  if (isTest) return ['null-loader'];
+
+  // Reference: https://github.com/postcss/postcss-loader
+  // Postprocess your css with PostCSS plugins
+  // Reference: https://github.com/webpack-contrib/mini-css-extract-plugin
+  // Extract css files in production builds
+  //
+  // Reference: https://github.com/webpack/style-loader
+  // Use style-loader in development.
+  return [
+    isProd
+      ? MiniCssExtractPlugin.loader
+      : { loader: 'style-loader', options: { sourceMap: true } },
+    isProd
+      ? 'css-loader'
+      : {
+          loader: 'css-loader',
+          options: { sourceMap: true, importLoaders: 1 },
+        },
+    isProd
+      ? 'postcss-loader'
+      : { loader: 'postcss-loader', options: { sourceMap: true } },
+  ].concat(extend);
+};
+
 module.exports = (function makeWebpackConfig() {
   /**
    * Config
@@ -45,7 +70,7 @@ module.exports = (function makeWebpackConfig() {
   config.entry = isTest
     ? void 0
     : {
-        app: './src/app/app.js',
+        app: ['babel-polyfill', './src/app/app.js'],
       };
 
   /**
@@ -62,6 +87,7 @@ module.exports = (function makeWebpackConfig() {
 
         // Output path from the view of the page
         // Uses webpack-dev-server in development
+        // publicPath: isProd ? '/' : `http://0.0.0.0:${PORT}/`,
         publicPath: isProd ? '/' : `http://localhost:${PORT}/`,
 
         // Filename for entry points
@@ -72,7 +98,7 @@ module.exports = (function makeWebpackConfig() {
         // Only adds hash in build mode
         chunkFilename: isProd ? '[name].[hash].js' : '[name].bundle.js',
 
-        pathinfo: true,
+        // pathinfo: true,
       };
 
   /**
@@ -99,50 +125,27 @@ module.exports = (function makeWebpackConfig() {
       },
       {
         // support for .scss files
-        // use 'null' loader in test mode (https://github.com/webpack/null-loader)
-        // all css in src/style will be bundled in an external css file
+        // all sass not in src/app will be bundled in an external css file
         test: /\.(scss|sass)$/,
-        // exclude: root('src', 'app'),
-        use: isTest
-          ? ['null-loader']
-          : [
-              MiniCssExtractPlugin.loader,
-              // fallbackLoader: 'style-loader',
-              // loader: [
-              { loader: 'css-loader', options: { sourceMap: true } },
-              { loader: 'postcss-loader', options: { sourceMap: true } },
-              { loader: 'sass-loader', options: { sourceMap: true } },
-            ],
+        exclude: root('src', 'app'),
+        use: css([
+          isProd
+            ? 'sass-loader'
+            : { loader: 'sass-loader', options: { sourceMap: true } },
+        ]),
       },
       {
-        // all css required in src/app files will be merged in js files
+        // all sass required in src/app files will be merged in js files
         test: /\.(scss|sass)$/,
-        exclude: root('src', 'style'),
+        include: root('src', 'app'),
         loader: 'raw-loader!postcss-loader!sass-loader',
       },
       {
         // CSS LOADER
         // Reference: https://github.com/webpack/css-loader
         // Allow loading css through js
-        //
-        // Reference: https://github.com/postcss/postcss-loader
-        // Postprocess your css with PostCSS plugins
         test: /\.css$/,
-        // Reference: https://github.com/webpack-contrib/mini-css-extract-plugin
-        // Extract css files in production builds
-        //
-        // Reference: https://github.com/webpack/style-loader
-        // Use style-loader in development.
-
-        use: isTest
-          ? ['null-loader']
-          : [
-              MiniCssExtractPlugin.loader,
-              // fallbackLoader: 'style-loader',
-              // loader: [
-              { loader: 'css-loader', query: { sourceMap: true } },
-              { loader: 'postcss-loader' },
-            ],
+        use: css(),
       },
       {
         // ASSET LOADER
@@ -204,7 +207,6 @@ module.exports = (function makeWebpackConfig() {
    * Add vendor prefixes to your css
    */
   // NOTE: This is now handled in the `postcss.config.js`
-  //       webpack2 has some issues, making the config file necessary
 
   /**
    * Plugins
@@ -212,15 +214,6 @@ module.exports = (function makeWebpackConfig() {
    * List: http://webpack.github.io/docs/list-of-plugins.html
    */
   config.plugins = [
-    new webpack.LoaderOptionsPlugin({
-      test: /\.scss$/i,
-      options: {
-        postcss: {
-          plugins: [autoprefixer],
-        },
-      },
-    }),
-
     // todo remove the following and use only angular-ui-bootstrap
     new webpack.ProvidePlugin({
       $: 'jquery',
@@ -240,15 +233,6 @@ module.exports = (function makeWebpackConfig() {
         template: './src/public/index.html',
         inject: 'body',
       }),
-
-      // Reference: https://github.com/webpack-contrib/mini-css-extract-plugin
-      // Extract css files
-      // Disabled when in test mode or not in build mode
-      new MiniCssExtractPlugin({
-        filename: 'css/[name].css',
-        disable: !isProd,
-        allChunks: true,
-      }),
     );
   }
 
@@ -263,41 +247,41 @@ module.exports = (function makeWebpackConfig() {
     config.devtool = 'source-map';
   } else {
     config.devtool = 'cheap-module-source-map';
-    // config.devtool = false;
-    // config.plugins.push(
-    //   new webpack.SourceMapDevToolPlugin({
-    //     exclude: ['vendors.bundle.js'],
-    //     columns: false,
-    //   }),
-    // );
+    // config.devtool = 'eval-source-map';
   }
 
-  // configure optimizations
-  config.optimization = {
-    splitChunks: {
-      cacheGroups: {
-        // create a seperate bundle for node_modules
-        vendors: {
-          name: 'vendors',
-          test: /[\\/]node_modules|(src\/vendor)[\\/]/,
-          chunks: 'all',
-          reuseExistingChunk: true,
+  if (isProd) {
+    // configure optimizations
+    config.optimization = {
+      splitChunks: {
+        cacheGroups: {
+          // create a seperate bundle for node_modules
+          vendors: {
+            name: 'vendors',
+            test: /[\\/]node_modules|(src\/vendor)[\\/]/,
+            chunks: 'all',
+            reuseExistingChunk: true,
+          },
+          // Extract css to single file https://github.com/webpack-contrib/mini-css-extract-plugin#extracting-all-css-in-a-single-file
+          styles: {
+            name: 'styles',
+            test: /\.css$/,
+            chunks: 'all',
+            enforce: true,
+          },
         },
       },
-    },
-  };
-
-  if (isProd) {
-    // Extract css to single file https://github.com/webpack-contrib/mini-css-extract-plugin#extracting-all-css-in-a-single-file
-    config.optimization.splitChunks.cacheGroups.styles = {
-      name: 'styles',
-      test: /\.css$/,
-      chunks: 'all',
-      enforce: true,
     };
 
     // Add build specific plugins
     config.plugins.push(
+      // Reference: https://github.com/webpack-contrib/mini-css-extract-plugin
+      // Extract css files
+      new MiniCssExtractPlugin({
+        filename: 'css/[name].css',
+        allChunks: true,
+      }),
+
       // Copy assets from the public folder
       // Reference: https://github.com/kevlened/copy-webpack-plugin
       new CopyWebpackPlugin([
@@ -318,6 +302,8 @@ module.exports = (function makeWebpackConfig() {
     historyApiFallback: true,
     // hot: true,
     // stats: 'minimal',
+    // host: '0.0.0.0',
+    // host: 'localhost',
     port: PORT,
   };
 
