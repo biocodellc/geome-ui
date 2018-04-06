@@ -40,8 +40,10 @@ export default function(
       new Promise(resolve => {
         const timeoutPromise = $timeout(() => {
           deregister();
-          resolve(trans.router.stateService.go('home'));
-        }, 5000); // timeout loading after 5 secs
+          resolve(trans.router.stateService.go('about'));
+        // }, 5000); // timeout loading after 5 secs
+        // TODO: something here breaks navigation when this timeout occurs
+        }, 10000); // timeout loading after 10 secs
 
         loadSession(
           $location,
@@ -53,6 +55,7 @@ export default function(
           $timeout.cancel(timeoutPromise);
           deregister();
 
+          console.log(project);
           // deregister before setting project & user b/c setting these will trigger a state
           // reload, and we don't want to run this function again
           ProjectService.setCurrentProject(project);

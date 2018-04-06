@@ -4,6 +4,7 @@
 @import "variables";
 
 // Bootstrap Framework.
+// @import "node_modules/bootstrap/scss/bootstrap";
 $icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
 @import "~bootstrap-sass/assets/stylesheets/bootstrap-sprockets";
 @import "~bootstrap-sass/assets/stylesheets/bootstrap";
@@ -11,6 +12,9 @@ $icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
 // Font Awesome
 $fa-font-path: "../fonts/fa";
 @import 'font-awesome/font-awesome';
+
+// Material-Design
+@import "~angular-material/angular-material";
 
 // Bootswatch Flatly Theme
 @import "bootswatch";

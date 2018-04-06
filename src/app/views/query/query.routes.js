@@ -5,16 +5,21 @@ function getStates() {
     {
       state: 'query',
       config: {
+        // parent: 'fullPageView',
         url: '/query',
         component: 'fimsQuery',
-        projectRequired: true,
         resolve: {
-          expeditions: /* @ngInject */ (ProjectService, ExpeditionService) =>
-            ExpeditionService.all(ProjectService.currentProject().projectId),
-          markers: /* @ngInject */ ProjectService =>
-            ProjectService.currentProject().config.getList('markers') || [],
-          filterOptions: /* @ngInject */ ProjectService => [], // TODO: implement me
+          layout: () => 'column',
+          layoutFill: () => '',
         },
+        // projectRequired: true,
+        // resolve: {
+        //   expeditions: /* @ngInject */ (ProjectService, ExpeditionService) =>
+        //     ExpeditionService.all(ProjectService.currentProject().projectId),
+        //   markers: /* @ngInject */ ProjectService =>
+        //     ProjectService.currentProject().config.getList('markers') || [],
+        //   filterOptions: /* @ngInject */ ProjectService => [], // TODO: implement me
+        // },
       },
     },
 

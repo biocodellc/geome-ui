@@ -71,20 +71,9 @@ module.exports = (function makeWebpackConfig() {
         // Filename for non-entry points
         // Only adds hash in build mode
         chunkFilename: isProd ? '[name].[hash].js' : '[name].bundle.js',
-      };
 
-  /**
-   * Devtool
-   * Reference: http://webpack.github.io/docs/configuration.html#devtool
-   * Type of sourcemap to use per build type
-   */
-  if (isTest) {
-    config.devtool = 'inline-source-map';
-  } else if (isProd) {
-    config.devtool = 'source-map';
-  } else {
-    config.devtool = 'cheap-module-source-map';
-  }
+        pathinfo: true,
+      };
 
   /**
    * Loaders
@@ -263,30 +252,52 @@ module.exports = (function makeWebpackConfig() {
     );
   }
 
-  // configure optimizations
-  // Extract css to single file https://github.com/webpack-contrib/mini-css-extract-plugin#extracting-all-css-in-a-single-file
-  if (isProd) {
-    config.optimization = {
-      splitChunks: {
-        cacheGroups: {
-          styles: {
-            name: 'styles',
-            test: /\.css$/,
-            chunks: 'all',
-            enforce: true,
-          },
-        },
-      },
-    };
+  /**
+   * Devtool
+   * Reference: http://webpack.github.io/docs/configuration.html#devtool
+   * Type of sourcemap to use per build type
+   */
+  if (isTest) {
+    config.devtool = 'inline-source-map';
+  } else if (isProd) {
+    config.devtool = 'source-map';
+  } else {
+    config.devtool = 'cheap-module-source-map';
+    // config.devtool = false;
+    // config.plugins.push(
+    //   new webpack.SourceMapDevToolPlugin({
+    //     exclude: ['vendors.bundle.js'],
+    //     columns: false,
+    //   }),
+    // );
   }
 
-  // Add build specific plugins
-  if (isProd) {
-    config.plugins.push(
-      // Reference: http://webpack.github.io/docs/list-of-plugins.html#dedupeplugin
-      // Dedupe modules in the output
-      // new webpack.optimize.DedupePlugin(),
+  // configure optimizations
+  config.optimization = {
+    splitChunks: {
+      cacheGroups: {
+        // create a seperate bundle for node_modules
+        vendors: {
+          name: 'vendors',
+          test: /[\\/]node_modules|(src\/vendor)[\\/]/,
+          chunks: 'all',
+          reuseExistingChunk: true,
+        },
+      },
+    },
+  };
 
+  if (isProd) {
+    // Extract css to single file https://github.com/webpack-contrib/mini-css-extract-plugin#extracting-all-css-in-a-single-file
+    config.optimization.splitChunks.cacheGroups.styles = {
+      name: 'styles',
+      test: /\.css$/,
+      chunks: 'all',
+      enforce: true,
+    };
+
+    // Add build specific plugins
+    config.plugins.push(
       // Copy assets from the public folder
       // Reference: https://github.com/kevlened/copy-webpack-plugin
       new CopyWebpackPlugin([
@@ -305,7 +316,7 @@ module.exports = (function makeWebpackConfig() {
   config.devServer = {
     contentBase: './src/public',
     historyApiFallback: true,
-    hot: true,
+    // hot: true,
     // stats: 'minimal',
     port: PORT,
   };

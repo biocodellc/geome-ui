@@ -3,6 +3,7 @@ function getStates() {
     {
       state: 'login',
       config: {
+        parent: 'containerPageView',
         url: '/login',
         component: 'fimsLogin',
         params: {

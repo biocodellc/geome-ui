@@ -1,25 +1,46 @@
-<fims-header
-        current-user="$ctrl.currentUser"
-        current-project="$ctrl.currentProject"
-        on-project-change="$ctrl.handleProjectChange(project)"
-        on-signout="$ctrl.signout()">
-</fims-header>
+<md-content layout-fill>
+  <!-- <fims-header show-project-selector="$ctrl.projectView" current-user="$ctrl.currentUser" current-project="$ctrl.currentProject" -->
+  <fims-header show-project-selector="true" current-user="$ctrl.currentUser" current-project="$ctrl.currentProject"
+    on-project-change="$ctrl.handleProjectChange(project)" on-signout="$ctrl.signout()">
+  </fims-header>
 
-<!-- Sidebar navigation -->
-<fims-navigation
-        current-project="$ctrl.currentProject"
-        current-user="$ctrl.currentUser">
-</fims-navigation>
+  <div ng-show="$ctrl.projectView">
+    <!-- Sidebar navigation -->
+    <fims-navigation current-project="$ctrl.currentProject" current-user="$ctrl.currentUser">
+    </fims-navigation>
 
-<main class="main">
-    <alerts></alerts>
-    <div class="content" id="content">
-        <div class="container-fluid" ui-view ng-show="!$ctrl.loading"
-             current-project="$ctrl.currentProject"
-             current-user="$ctrl.currentUser">
+    <main class="main">
+      <alerts></alerts>
+      <div class="content" id="content">
+        <div class="container-fluid" ui-view ng-show="!$ctrl.loading" current-project="$ctrl.currentProject"
+          current-user="$ctrl.currentUser">
         </div>
         <div ng-show="$ctrl.loading">
-            <span us-spinner></span>
+          <span us-spinner></span>
         </div>
+      </div>
+    </main>
+  </div>
+
+  <div layout-fill ng-show="!$ctrl.projectView">
+    <div ng-show="$ctrl.loading">
+      <span us-spinner></span>
     </div>
-</main>
+
+    <main layout-fill ng-show="!$ctrl.loading">
+      <alerts></alerts>
+      <!-- <md-content ui-view layout-fill current-project="$ctrl.currentProject" current-user="$ctrl.currentUser"></md-content> -->
+      <div ui-view layout-fill current-project="$ctrl.currentProject" current-user="$ctrl.currentUser"></div>
+      <!-- <div class="full-page">
+      <uiview name="fullPage" class="full-page-content container-fluid" />
+    </div> -->
+      <!-- <div class="main"> -->
+      <!-- <div class="content"> -->
+      <!-- <div ui-view class="container" current-project="$ctrl.currentProject" current-user="$ctrl.currentUser" -->
+      <!-- /> -->
+      <!-- <uiview class="container-fluid" current-project="$ctrl.currentProject" current-user="$ctrl.currentUser"
+      /> -->
+      <!-- </div> -->
+    </main>
+  </div>
+</md-content>

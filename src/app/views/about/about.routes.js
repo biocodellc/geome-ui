@@ -1,12 +1,11 @@
 function getStates() {
   return [
     {
-      state: 'template',
+      state: 'about',
       config: {
-        parent: 'projectView',
-        url: '/template',
-        component: 'fimsTemplates',
-        // projectRequired: true,
+        parent: 'containerPageView',
+        url: '/',
+        component: 'about',
       },
     },
   ];

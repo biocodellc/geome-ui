@@ -5,6 +5,7 @@ function getStates() {
     {
       state: 'validate',
       config: {
+        parent: 'projectView',
         url: '/validate',
         component: 'fimsValidation',
         projectRequired: true,

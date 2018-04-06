@@ -85,5 +85,8 @@ export default {
     expeditions: '<',
     markers: '<',
     filterOptions: '<',
+    layout: '@',
+    layoutFill: '@',
+    // flex: '@',
   },
 };

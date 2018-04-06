@@ -1,67 +1,74 @@
 // Brand/project name
 
-.navbar-brand {
-  position: relative;
-}
+// .navbar {
+//   border-radius: 0;
+//   margin-bottom: 0;
 
-.navbar {
-  border-radius: 0;
-  margin-bottom: 0;
+//   project-selector {
+//     display: block;
+//     text-align: center;
+//     line-height: 0;
 
-  .project-selector {
+//     > * {
+//       line-height: $line-height-base;
+//     }
+//   }
+//   .project-selector {
+//     float: none;
+//     display: inline-block;
 
-    .dropdown-toggle {
-      font-size: $font-size-large;
-    }
+//     .dropdown-toggle {
+//       font-size: $font-size-large;
+//     }
 
-    .dropdown-menu {
-      max-height: calc(100vh - #{$navbar-height});
-      overflow-y: auto;
+//     .dropdown-menu {
+//       max-height: calc(100vh - #{$navbar-height});
+//       overflow-y: auto;
 
-      .section-title {
-        font-weight: 700;
-        padding: 3px 20px 0;
-      }
+//       .section-title {
+//         font-weight: 700;
+//         padding: 3px 20px 0;
+//       }
 
-      > li > a {
-        padding: 7px 20px;
-      }
+//       > li > a {
+//         padding: 7px 20px;
+//       }
 
-      .fa {
-        color: $brand-success;
-      }
-    }
+//       .fa {
+//         color: $brand-success;
+//       }
+//     }
 
-    .include-public {
-      input[type="checkbox"] {
-        margin: 5px 0 0;
-      }
+//     .include-public {
+//       input[type="checkbox"] {
+//         margin: 5px 0 0;
+//       }
 
-      label {
-        font-weight: 300;
-        font-size: 10px;
-        margin-right: 5px;
-      }
-    }
-  }
+//       label {
+//         font-weight: 300;
+//         font-size: 10px;
+//         margin-right: 5px;
+//       }
+//     }
+//   }
 
-  .separator:after {
-    content: '';
-    position: absolute;
-    background: $gray-light;
-    height: 70%;
-    top: 12.5%;
-    width: 1px;
-    right: 1px;
+//   .separator:after {
+//     content: '';
+//     position: absolute;
+//     background: $gray-light;
+//     height: 70%;
+//     top: 12.5%;
+//     width: 1px;
+//     right: 1px;
 
-  }
-}
+//   }
+// }
 
-.nav {
-  .fa {
-    padding-right: 3px;
-  }
-}
+// .nav {
+//   .fa {
+//     padding-right: 3px;
+//   }
+// }
 
 .side-nav-divider {
   content: '';

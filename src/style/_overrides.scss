@@ -5,61 +5,6 @@
   display: none !important;
 }
 
-@font-face {
-  font-family: 'Roboto';
-  src: url('../fonts/roboto/Roboto-Bold.woff') format('woff'),
-  url('../fonts/roboto/Roboto-Bold.woff2') format('woff2');
-  font-weight: bold;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Roboto';
-  src: url('../fonts/roboto/Roboto-Medium.woff') format('woff'),
-  url('../fonts/roboto/Roboto-Medium.woff2') format('woff2');
-  font-weight: 500;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Roboto';
-  src: url('../fonts/roboto/Roboto-Regular.woff') format('woff'),
-  url('../fonts/roboto/Roboto-Regular.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Roboto';
-  src: url('../fonts/roboto/Roboto-Light.woff') format('woff'),
-  url('../fonts/roboto/Roboto-Light.woff2') format('woff2');
-  font-weight: 300;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Roboto';
-  src: url('../fonts/roboto/Roboto-Thin.woff') format('woff'),
-  url('../fonts/roboto/Roboto-Thin.woff2') format('woff2');
-  font-weight: 100;
-  font-style: normal;
-}
-
-// font-awesome
-.fa-sm {
-  font-size: .75em;
-}
-
-.fa-md {
-  line-height: .75em;
-  vertical-align: -15%;
-  font-size: 1.25em;
-}
-
-.fa-lg {
-  font-size: 1.5em;
-}
-
 .dropdown-menu a {
   .fa {
     padding-right: 8px;
@@ -70,34 +15,81 @@
   }
 }
 
-body {
-  height: 100vh;
-  overflow: hidden;
+// body {
+//   height: 100vh;
+//   overflow: hidden; //TODO: move to projectView?
+// }
+
+
+
+
+//project-selector
+md-checkbox.include-public {
+  min-width: 12px;
+  min-height: 12px;
+  padding-left: 8px;
+  margin-left: 32px;
+
+  @include checkbox-container('.md-checked', 12px, 12px);
+
+  .md-container {
+    width: 12px;
+    height: 12px;
+
+    .md-icon {
+      width: 12px;
+      height: 12px;
+    }
+  }
+
+  .md-label {
+    margin-left: 8px;
+    font-size: 10px;
+  }
 }
 
-// grid
-.vertical-align {
-  display: flex;
-  flex-direction: row;
-}
 
-.vertical-align > [class^="col-"],
-.vertical-align > [class*=" col-"] {
-  display: flex;
-  align-items: center; /* Align the flex-items vertically */
-  justify-content: center; /* Optional, to align inner flex-items horizontally within the column  */
-  flex-flow: row wrap;
-}
 
-.vertical-align > [class^="col-"] > *,
-.vertical-align > [class*=" col-"] > * {
-  width: 100%;
-}
 
-.col-centered {
-  float: none;
-  margin: 0 auto;
-}
+
+
+// md-icon[md-font-icon] {
+    // height: auto;
+// }
+
+// .md-button > .md-icon {
+  // display: inline-block;
+// }
+
+// full page view
+// .full-page {
+//   min-height: calc(100vh - #{$navbar-height});
+// }
+
+// // query page
+// .query-page {
+//   flex: 1;
+//   display: flex;
+// }
+
+
+// :host {
+//   display: flex;
+// }
+
+// .query-content {
+  // z-index: 10;
+//   flex: 2 1;
+  // overflow-x: auto;
+//   display: flex;
+//   flex-direction: column;
+//   position: relative;
+// }
+
+// .angular-leaflet-map {
+//   display: flex;
+//   flex: 1 1;
+// }
 
 // main view
 

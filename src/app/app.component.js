@@ -2,6 +2,8 @@ import { AUTH_ERROR_EVENT } from './services/auth.service';
 import { PROJECT_CHANGED_EVENT } from './services/project.service';
 import { USER_CHANGED_EVENT } from './services/user.service';
 
+const template = require('./app.html');
+
 class AppCtrl {
   constructor($state, $transitions, UserService, ProjectService, AuthService) {
     'ngInject';
@@ -11,6 +13,7 @@ class AppCtrl {
     this.AuthService = AuthService;
     this.$state = $state;
     this.$transitions = $transitions;
+    this.projectView = false;
   }
 
   $onInit() {
@@ -42,6 +45,9 @@ class AppCtrl {
     this.$transitions.onError({}, () => {
       this.loading = false;
     });
+    this.$transitions.onSuccess({}, transition => {
+      this.projectView = transition.$to().parent === 'projectView';
+    });
   }
 
   handleProjectChange(project) {
@@ -59,6 +65,6 @@ class AppCtrl {
 }
 
 export default {
-  template: require('./app.html'),
+  template,
   controller: AppCtrl,
 };

@@ -1,56 +1,84 @@
-<div>
+<!-- Navbar -->
+<md-toolbar layout="row" layout-align="start center" class="md-menu-toolbar" md-whiteframe="1">
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-default">
+  <a class="brand" ui-sref="about">
+    <img src="img/geome-logo.png" alt="geome-db" />
+  </a>
+  <md-divider></md-divider>
 
-        <div class="navbar-header">
-            <a class="navbar-brand separator" ui-sref="home">Biocode-Fims</a>
-        </div>
+  <project-selector flex layout="row" layout-align="center center" ng-if="$ctrl.showProjectSelector" is-authenticated="!!($ctrl.currentUser)"
+    current-project="$ctrl.currentProject" on-change="$ctrl.onProjectChange({ project: project })">
+  </project-selector>
 
-        <ul class="nav navbar-nav pull-right">
-            <li uib-dropdown class="dropdown">
-                <a href="#" uib-dropdown-toggle>
-                    <i class="fa fa-cog fa-md"></i>
-                    <i class="fa fa-angle-down"></i></a>
-                <ul uib-dropdown-menu class="dropdown-menu dropdown-menu-right">
-                    <li><a ng-click="$ctrl.apidocs()"><i class="fa fa-code fa-fw"></i> Api Docs</a></li>
-                    <li><a href="http://fims.readthedocs.org/en/stable/"><i class="fa fa-question"></i> Help</a></li>
-                </ul>
-            </li>
-        </ul>
+  <md-button ui-sref="about">About</md-button>
+  <md-button ui-sref="query">Query</md-button>
+  <md-button ui-sref="workbench">Workbench</md-button>
 
-        <ul class="nav navbar-nav pull-right">
-            <li uib-dropdown class="dropdown separator">
-                <a href="#" uib-dropdown-toggle>
-                    <span ng-show="$ctrl.currentUser"
-                          style="padding-right: 5px;">hi, {{ $ctrl.currentUser.username }}!</span>
-                    <i class="fa fa-user-circle-o fa-lg"></i> <i class="fa fa-angle-down"></i>
-                </a>
+  <md-divider></md-divider>
 
-                <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu>
-                    <li ng-show="!$ctrl.currentUser">
-                        <a ng-click="$ctrl.login()"><i class="fa fa-sign-in fa-fw"></i> Sign In</a>
-                    </li>
-                    <li ng-show="$ctrl.currentUser">
-                        <a ui-sref="profile"><i class="fa fa-user fa-fw"></i> User Profile</a>
-                    </li>
-                    <li ng-show="$ctrl.currentUser" role="separator" class="divider"></li>
-                    <li ng-show="$ctrl.currentUser">
-                        <a ng-click="$ctrl.onSignout()" ui-sref="home"><i class="fa fa-sign-out fa-fw"></i> Sign Out</a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
+  <md-menu md-position-mode="right bottom" md-offset="0 12">
+    <md-button aria-label="Open user profile menu" class="md-icon-button md-primary" ng-click="console.log($mdMenu); $mdMenu.open($event)">
+      <span ng-show="$ctrl.currentUser" style="padding-right: 5px;">hi, {{ $ctrl.currentUser.username }}!</span>
+      <md-icon md-font-icon="fa fa-user-circle-o fa-md"></md-icon>
+      <md-icon md-font-icon="fa fa-angle-down fa-sm"></md-icon>
+    </md-button>
+    <md-menu-content width="4" class="md-menu-bar-menu md-dense">
+      <md-menu-item ng-show="!$ctrl.currentUser">
+        <md-button ng-click="$ctrl.login()">
+          <md-icon md-font-icon="fa fa-sign-in fa-fw"></md-icon>
+          Sign In
+        </md-button>
+      </md-menu-item>
+      <md-menu-item ng-show="$ctrl.currentUser">
+        <md-button ui-sref="profile">
+          <md-icon md-font-icon="fa fa-user fa-fw"></md-icon>
+          User Profile
+        </md-button>
+      </md-menu-item>
+      <md-menu-divider ng-show="$ctrl.currentUser"></md-menu-divider>
+      <md-menu-item ng-show="$ctrl.currentUser">
+        <md-button ng-click="$ctrl.onSignout()" ui-sref="home">
+          <md-icon md-font-icon="fa fa-sign-out fa-fw"></md-icon>
+          Sign Out
+        </md-button>
+      </md-menu-item>
+    </md-menu-content>
+  </md-menu>
 
-        <project-selector
-                is-authenticated="!!($ctrl.currentUser)"
-                current-project="$ctrl.currentProject"
-                on-change="$ctrl.onProjectChange({ project: project })">
-        </project-selector>
+  <md-divider></md-divider>
 
-    </nav>
-    <!--<li><a ui-sref="lookup" class='enabled'>ID Lookup</a></li>-->
-    <!--<li ng-show="!$ctrl.currentUser"><a href='#' class='disabled'>BCID Creator</a></li>-->
-    <!--<li ng-show="$ctrl.currentUser"><a ui-sref="creator" class='enabled'>BCID Creator</a></li>-->
+  <md-menu md-position-mode="right bottom" md-offset="0 12">
+    <md-button aria-label="Open user profile menu" class="md-icon-button md-primary" ng-click="$mdMenu.open($event)">
+      <md-icon md-font-icon="fa fa-cog fa-md"></md-icon>
+      <md-icon md-font-icon="fa fa-angle-down fa-sm"></md-icon>
+    </md-button>
+    <md-menu-content width="4" class="md-menu-bar-menu md-dense">
+      <md-menu-item>
+        <md-button ng-click="$ctrl.apidocs()">
+          <md-icon md-font-icon="fa fa-code fa-fw"></md-icon>
+          Api Docs
+        </md-button>
+      </md-menu-item>
+      <md-menu-item>
+        <md-button ng-href="http://fims.readthedocs.org/en/stable/">
+          <md-icon md-font-icon="fa fa-question fa-fw"></md-icon>
+          Help
+        </md-button>
+      </md-menu-item>
+      <md-menu-divider></md-menu-divider>
+      <md-menu-item>
+        <md-button ui-sref="contact">
+          <md-icon md-font-icon="fa fa-envelope-o fa-fw"></md-icon>
+          Contact Us
+        </md-button>
+      </md-menu-item>
+    </md-menu-content>
+  </md-menu>
 
-</div>
+</md-toolbar>
+
+<!-- </div> -->
+<!-- </nav> -->
+<!--<li><a ui-sref="lookup" class='enabled'>ID Lookup</a></li>-->
+<!--<li ng-show="!$ctrl.currentUser"><a href='#' class='disabled'>BCID Creator</a></li>-->
+<!--<li ng-show="$ctrl.currentUser"><a ui-sref="creator" class='enabled'>BCID Creator</a></li>-->

@@ -1,36 +1,32 @@
 <div class="query-bar">
 
   <!-- alerts -->
-  <div class="alerts row">
-    <div class="col-xs-12">
-      <div class="alert alert-info alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        Data is subject to our data usage policy found
-        <a target="_blank" href="http://diversityindopacific.net/data-usage-agreement/">here</a>
-      </div>
+  <div class="alerts">
+    <div class="alert alert-info alert-dismissable">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      Data is subject to our data usage policy found
+      <a target="_blank" href="http://diversityindopacific.net/data-usage-agreement/">here</a>
+    </div>
 
-      <div ng-repeat="alert in $ctrl.alerts.getAlerts()" class="alert alert-{{alert.level}} alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert" ng-click="$ctrl.alerts.remove(alert)" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        {{ alert.msg }}
-      </div>
+    <div ng-repeat="alert in $ctrl.alerts.getAlerts()" class="alert alert-{{alert.level}} alert-dismissable">
+      <button type="button" class="close" data-dismiss="alert" ng-click="$ctrl.alerts.remove(alert)" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      {{ alert.msg }}
     </div>
   </div>
 
-  <div class="actions clearfix">
+  <div class="actions" layout="row" layout-align="end center">
     <!-- query view toggle -->
-    <div class="btn-group btn-group-sm pull-right query-view-toggle">
-      <button type="button" ng-click="$ctrl.toggleMap(true)" ng-class="{'disabled': $ctrl.showMap}" class="btn btn-default">Map
-      </button>
-      <button type="button" ng-click="$ctrl.toggleMap(false)" ng-class="{'disabled': !$ctrl.showMap}" class="btn btn-default">Table
-      </button>
+    <div class="md-dense" layout="row" layout-align="center center">
+      <md-button ng-click="$ctrl.toggleMap(true)" ng-disabled="$ctrl.showMap" class="groupX left md-raised">Map</md-button>
+      <md-button ng-click="$ctrl.toggleMap(false)" ng-disabled="!$ctrl.showMap" class="groupX right md-raised">Table</md-button>
     </div>
 
     <!-- download menu -->
-    <div ng-show="$ctrl.queryResults.isSet" class="btn-group btn-group-sm pull-right download-btn">
+    <div ng-show="$ctrl.queryResults.isSet" class="btn-group btn-group-sm download-btn">
       <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">Download
         <span class="caret"></span>
       </button>
@@ -58,26 +54,31 @@
 
 </div>
 
-<div class="query-page fill-screen">
+<div layout="row" flex class="query-page">
   <!-- sidebar-->
-  <fims-query-form ng-show="$ctrl.showSidebar" params="$ctrl.params" on-new-results="$ctrl.handleNewResults(results)"
-    query-map="$ctrl.queryMap" current-project="$ctrl.currentProject" expeditions="$ctrl.expeditions" markers="$ctrl.markers"
-    filter-options="$ctrl.filterOptions" class="sidebar"></fims-query-form>
+  <md-sidenav flex="33" class="md-sidenav-left sidebar" md-disable-backdrop md-whiteframe="4" md-is-locked-open="$ctrl.showSidebar">
+    <fims-query-form flex="33" params="$ctrl.params" on-new-results="$ctrl.handleNewResults(results)" query-map="$ctrl.queryMap"
+      current-project="$ctrl.currentProject" expeditions="$ctrl.expeditions" markers="$ctrl.markers" filter-options="$ctrl.filterOptions"
+      layout-padding></fims-query-form>
+  </md-sidenav>
 
   <!-- sidebar toggle -->
   <div class="sidebar-toggle">
-    <button class="btn btn-default" ng-click="$ctrl.toggleSidebar">
-      <span class="glyphicon" uib-tooltip="{{ $ctrl.sidebarToggleToolTip }}" tooltip-placement="right" ng-class="{'glyphicon-chevron-left': $ctrl.showSidebar, 'glyphicon-chevron-right': !$ctrl.showSidebar}"></span>
-    </button>
+    <md-button class="md-raised" ng-click="$ctrl.toggleSidebar()">
+      <md-tooltip md-direction="right">{{ $ctrl.sidebarToggleToolTip }}</md-tooltip>
+      <md-icon md-font-icon="fa {{ ($ctrl.showSidebar) ? 'fa-chevron-left' : 'fa-chevron-right' }}"></md-icon>
+      <!-- <md-icon md-font-icon="fa {{ if ($ctrl.showSidebar) ? 'fa-chevron-left' : 'fa-chevron-right' }}"></md-icon> -->
+    </md-button>
   </div>
 
   <!-- main content-->
-  <div class="query-content">
+  <div flex layout="column" class="query-content">
 
     <div class="center-spinner" us-spinner="" spinner-key="query-spinner"></div>
 
     <!-- map -->
-    <fims-map ng-show="$ctrl.showMap" map-instance="$ctrl.queryMap" refresh-size="$ctrl.invalidSize" class="angular-leaflet-map"></fims-map>
+    <fims-map ng-show="$ctrl.showMap" flex layout="row" map-instance="$ctrl.queryMap" refresh-size="$ctrl.invalidSize"
+      class="angular-leaflet-map"></fims-map>
 
 
     <!-- table -->
@@ -86,6 +87,7 @@
 
   </div>
 </div>
+<!-- </div> -->
 <!--<h3 class="page-header">Query</h3>-->
 <!--<p>Data is subject to our data usage policy found-->
 <!--<a target="_blank" href="http://diversityindopacific.net/data-usage-agreement/">here</a></p>-->

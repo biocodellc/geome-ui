@@ -3,6 +3,7 @@ function getStates() {
     {
       state: 'project',
       config: {
+        parent: 'projectView',
         url: '/project',
         component: 'fimsProject',
         redirectTo: 'project.settings',

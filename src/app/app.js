@@ -1,18 +1,30 @@
 import angular from 'angular';
 import uirouter from '@uirouter/angularjs';
 import bootstrap from 'angular-ui-bootstrap';
+import ngMaterial from 'angular-material';
 
 // todo remove the following and use only angular-ui-bootstrap
 import 'jquery-ui';
-import 'bootstrap-sass';
 
-// this loads the css for the app
-import '../style/app.scss';
+// Leaflet
+import 'leaflet/dist/leaflet.css';
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
 
 // use async functions w/ babel
 import 'babel-polyfill';
 
+// import 'angular-material/angular-material.min.css';
+// import 'leaflet/dist/leaflet.css';
+// import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
+// import 'leaflet.markercluster/dist/MarkerCluster.css';
+// import 'bootstrap-sass';
+
+// this loads the css for the app
+import '../style/app.scss';
+
 import run from './app.run';
+import theme from './app.theme';
 import routing from './app.routes';
 import router from './utils/router';
 import postInterceptor from './postInterceptor';
@@ -20,7 +32,9 @@ import autofocus from './directives/autofocus.directive';
 import showErrors from './directives/showErrors.directive';
 import trustedHtml from './filters/html.filter';
 
-import home from './views/home';
+import about from './views/about';
+import fullPage from './components/full-page';
+import containerPage from './components/container-page';
 // import notFound from './views/not-found';
 import contact from './views/contact';
 import login from './views/login';
@@ -53,12 +67,15 @@ const dependencies = [
   showErrors,
   trustedHtml,
   bootstrap,
+  ngMaterial,
   projectService,
   userService,
+  fullPage,
+  containerPage,
   header,
   navigation,
   alerts,
-  home,
+  about,
   contact,
   // notFound,
   login,
@@ -82,4 +99,5 @@ export default angular
   .module('biscicolApp', dependencies)
   .component('app', app)
   .run(routing)
-  .run(run);
+  .run(run)
+  .config(theme);
