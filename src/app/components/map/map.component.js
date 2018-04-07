@@ -16,15 +16,6 @@ class MapController {
     }, 0);
   }
 
-  $onChanges(changesObj) {
-    if ('refreshSize' in changesObj && this.refreshSize) {
-      this.$timeout(() => {
-        this.mapInstance.refreshSize();
-        this.refreshSize = false;
-      });
-    }
-  }
-
   toggleMapView(tiles) {
     this.tiles = tiles;
     if (this.tiles === 'map') {
@@ -42,6 +33,5 @@ export default {
   controller: MapController,
   bindings: {
     mapInstance: '<',
-    refreshSize: '<',
   },
 };

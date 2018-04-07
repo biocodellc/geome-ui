@@ -67,3 +67,75 @@
     }
   }
 }
+
+.query-form {
+  section {
+    margin-bottom: $layout-gutter-width / 2;
+
+    .md-form-group {
+      margin-bottom: 0;
+    }
+
+    > a:focus,
+    > a:hover {
+      text-decoration: none;
+    }
+  }
+
+  .md-input-container-dense {
+    md-input-container {
+      margin: 0;
+      margin-top: 5px;
+
+      .md-errors-spacer {
+        min-height: 0;
+      }
+    }
+  }
+
+  .sequences {
+    @extend .md-input-container-dense;
+  }
+
+  .dwc-terms {
+    @extend .md-input-container-dense;
+
+    .md-form-group > div:first-of-type {
+      margin-top: 3px;
+    }
+
+    md-input-container.md-input-focused label:not(.md-container-ignore),
+    md-input-container.md-input-has-value label:not(.md-container-ignore) {
+      bottom: 75%;
+    }
+  }
+
+  .expeditions {
+    md-chips {
+      margin-top: 0;
+    }
+  }
+
+  md-checkbox {
+    margin-bottom: 4px;
+
+    .md-label {
+      margin-left: 22px;
+    }
+  }
+
+  .project-selector {
+    margin: 10px 0;
+
+    .md-button {
+      margin-left: 0;
+      padding-left: 0;
+      text-transform: none;
+      color: grey;
+      font-size: 18px;
+      line-height: 18px;
+      font-weight: 600;
+      border-radius: 35%;
+    }
+  }
+}

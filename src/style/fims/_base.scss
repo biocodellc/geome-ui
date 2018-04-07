@@ -73,6 +73,15 @@
 }
 
 .md-button {
+
+  &.md-button-sm {
+    min-height: 0;
+    min-width:0;
+    font-size: 13px;
+    line-height: 13px;
+    padding: 8px;
+  }
+
   &.left {
     border-radius: $button-border-radius 0 0 $button-border-radius;
   }
@@ -98,6 +107,10 @@
 // General
 //////////
 
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
+}
+
 .wrapper {
   margin-bottom: 40px;
 }
@@ -120,4 +133,27 @@ md-menu-content.md-menu-bar-menu.md-dense a.md-button {
 
 .text-upper {
   text-transform: uppercase;
+}
+
+.bold {
+  font-weight: 600;
+}
+
+
+md-checkbox.small {
+  min-width: 12px;
+  min-height: 12px;
+
+  @include checkbox-container('.md-checked', 12px, 12px);
+  @extend .layout-row;
+
+  .md-container {
+    width: 12px;
+    height: 12px;
+
+    .md-icon {
+      width: 12px;
+      height: 12px;
+    }
+  }
 }

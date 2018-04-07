@@ -1,9 +1,7 @@
 /**
  * Document-wide styles.
  **/
-[ng\:cloak], [ng-cloak], .ng-cloak {
-  display: none !important;
-}
+
 
 .dropdown-menu a {
   .fa {
@@ -14,82 +12,6 @@
     padding-left: 8px;
   }
 }
-
-// body {
-//   height: 100vh;
-//   overflow: hidden; //TODO: move to projectView?
-// }
-
-
-
-
-//project-selector
-md-checkbox.include-public {
-  min-width: 12px;
-  min-height: 12px;
-  padding-left: 8px;
-  margin-left: 32px;
-
-  @include checkbox-container('.md-checked', 12px, 12px);
-
-  .md-container {
-    width: 12px;
-    height: 12px;
-
-    .md-icon {
-      width: 12px;
-      height: 12px;
-    }
-  }
-
-  .md-label {
-    margin-left: 8px;
-    font-size: 10px;
-  }
-}
-
-
-
-
-
-
-// md-icon[md-font-icon] {
-    // height: auto;
-// }
-
-// .md-button > .md-icon {
-  // display: inline-block;
-// }
-
-// full page view
-// .full-page {
-//   min-height: calc(100vh - #{$navbar-height});
-// }
-
-// // query page
-// .query-page {
-//   flex: 1;
-//   display: flex;
-// }
-
-
-// :host {
-//   display: flex;
-// }
-
-// .query-content {
-  // z-index: 10;
-//   flex: 2 1;
-  // overflow-x: auto;
-//   display: flex;
-//   flex-direction: column;
-//   position: relative;
-// }
-
-// .angular-leaflet-map {
-//   display: flex;
-//   flex: 1 1;
-// }
 
 // main view
 
@@ -112,9 +34,6 @@ md-checkbox.include-public {
     }
   }
 
-  //@media (min-width: $grid-float-breakpoint-max) {
-  //  padding-left: 0;
-  //}
 }
 
 .content {

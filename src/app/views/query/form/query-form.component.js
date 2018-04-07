@@ -31,7 +31,9 @@ class QueryFormController {
   }
 
   $onInit() {
-    this.addFilter();
+    // this.addFilter();
+
+    this.hasFastqEntity = false;
 
     // view toggles
     this.moreSearchOptions = false;
@@ -43,6 +45,14 @@ class QueryFormController {
     this.showFilters = true;
 
     this.drawing = false;
+  }
+
+  $onChanges(changesObj) {
+    if ('currentProject' in changesObj && this.currentProject) {
+      // const { config } = this.currentProject;
+      // this.markers = config.getList('markers');
+      // this.hasFastqEntity = config.entities.some(e => e.type === 'Fastq');
+    }
   }
 
   addFilter() {
@@ -104,7 +114,7 @@ class QueryFormController {
   drawBounds() {
     this.drawing = true;
     this.queryMap.drawBounds(bounds => {
-      this.queryParams.bounds = bounds;
+      this.params.bounds = bounds;
       this.$timeout(() => {
         this.drawing = false;
       });
@@ -113,7 +123,18 @@ class QueryFormController {
 
   clearBounds() {
     this.queryMap.clearBounds();
-    this.queryParams.bounds = null;
+    this.params.bounds = null;
+  }
+
+  filterExpeditions(query) {
+    return this.expeditions.filter(e => {
+      return !this.params.expeditions.includes(e.expeditionCode)
+        && (!query || e.expeditionTitle.contains(query))
+    })
+  }
+
+  transformChip(chip) {
+    return chip.expeditionCode;
   }
 }
 
@@ -124,9 +145,9 @@ export default {
     params: '<',
     queryMap: '<',
     expeditions: '<', // list of expeditionCodes
+    currentUser: '<',
     currentProject: '<',
-    markers: '<',
-    filterOptions: '<',
+    onProjectChange: '&',
     onNewResults: '&',
   },
 };

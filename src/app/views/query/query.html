@@ -56,9 +56,11 @@
 
 <div layout="row" flex class="query-page">
   <!-- sidebar-->
-  <md-sidenav flex="33" class="md-sidenav-left sidebar" md-disable-backdrop md-whiteframe="4" md-is-locked-open="$ctrl.showSidebar">
-    <fims-query-form flex="33" params="$ctrl.params" on-new-results="$ctrl.handleNewResults(results)" query-map="$ctrl.queryMap"
-      current-project="$ctrl.currentProject" expeditions="$ctrl.expeditions" markers="$ctrl.markers" filter-options="$ctrl.filterOptions"
+  <md-sidenav flex="33" class="md-sidenav-left sidebar" md-component-id='left' md-disable-backdrop md-is-locked-open="$ctrl.showSidebar"
+    md-whiteframe="4">
+    <fims-query-form params="$ctrl.params" on-new-results="$ctrl.handleNewResults(results)" query-map="$ctrl.queryMap"
+      class="query-form" current-project="$ctrl.currentProject" expeditions="$ctrl.expeditions" markers="$ctrl.markers"
+      filter-options="$ctrl.filterOptions" current-user="$ctrl.currentUser" on-project-change="$ctrl.handleProjectChange(project)"
       layout-padding></fims-query-form>
   </md-sidenav>
 
@@ -67,7 +69,6 @@
     <md-button class="md-raised" ng-click="$ctrl.toggleSidebar()">
       <md-tooltip md-direction="right">{{ $ctrl.sidebarToggleToolTip }}</md-tooltip>
       <md-icon md-font-icon="fa {{ ($ctrl.showSidebar) ? 'fa-chevron-left' : 'fa-chevron-right' }}"></md-icon>
-      <!-- <md-icon md-font-icon="fa {{ if ($ctrl.showSidebar) ? 'fa-chevron-left' : 'fa-chevron-right' }}"></md-icon> -->
     </md-button>
   </div>
 
@@ -77,8 +78,7 @@
     <div class="center-spinner" us-spinner="" spinner-key="query-spinner"></div>
 
     <!-- map -->
-    <fims-map ng-show="$ctrl.showMap" flex layout="row" map-instance="$ctrl.queryMap" refresh-size="$ctrl.invalidSize"
-      class="angular-leaflet-map"></fims-map>
+    <fims-map ng-show="$ctrl.showMap" flex layout="row" map-instance="$ctrl.queryMap"></fims-map>
 
 
     <!-- table -->

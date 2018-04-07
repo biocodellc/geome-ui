@@ -35,18 +35,16 @@ const css = (extend = []) => {
   // Reference: https://github.com/webpack/style-loader
   // Use style-loader in development.
   return [
-    isProd
-      ? MiniCssExtractPlugin.loader
-      : { loader: 'style-loader', options: { sourceMap: true } },
+    isProd ? MiniCssExtractPlugin.loader : 'style-loader',
     isProd
       ? 'css-loader'
       : {
           loader: 'css-loader',
-          options: { sourceMap: true, importLoaders: 1 },
+          options: { sourceMap: false, importLoaders: 1 },
         },
     isProd
       ? 'postcss-loader'
-      : { loader: 'postcss-loader', options: { sourceMap: true } },
+      : { loader: 'postcss-loader', options: { sourceMap: false } },
   ].concat(extend);
 };
 
@@ -58,8 +56,7 @@ module.exports = (function makeWebpackConfig() {
    */
   const config = {};
 
-  if (isProd) config.mode = 'production';
-  else config.mode = 'development';
+  config.mode = isProd ? 'production' : 'development';
 
   /**
    * Entry
@@ -98,7 +95,7 @@ module.exports = (function makeWebpackConfig() {
         // Only adds hash in build mode
         chunkFilename: isProd ? '[name].[hash].js' : '[name].bundle.js',
 
-        // pathinfo: true,
+        pathinfo: !isProd,
       };
 
   /**
@@ -131,7 +128,10 @@ module.exports = (function makeWebpackConfig() {
         use: css([
           isProd
             ? 'sass-loader'
-            : { loader: 'sass-loader', options: { sourceMap: true } },
+            : {
+                loader: 'sass-loader',
+                options: { sourceComments: true },
+              },
         ]),
       },
       {
@@ -214,14 +214,17 @@ module.exports = (function makeWebpackConfig() {
    * List: http://webpack.github.io/docs/list-of-plugins.html
    */
   config.plugins = [
-    // todo remove the following and use only angular-ui-bootstrap
+    // todo remove the jquery and use only angular-ui-bootstrap
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
       'window.jQuery': 'jquery',
+      L: 'leaflet',
     }),
 
     new DashboardPlugin(), // webpack-dashboard
+
+    new webpack.HotModuleReplacementPlugin(),
   ];
 
   // Skip rendering index.html in test mode
@@ -302,8 +305,6 @@ module.exports = (function makeWebpackConfig() {
     historyApiFallback: true,
     // hot: true,
     // stats: 'minimal',
-    // host: '0.0.0.0',
-    // host: 'localhost',
     port: PORT,
   };
 

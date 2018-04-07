@@ -4,11 +4,13 @@ import QueryParams from './QueryParams';
 const template = require('./query.html');
 
 class QueryController {
-  constructor($state, QueryService) {
+  constructor($state, $timeout, QueryService, ExpeditionService) {
     'ngInject';
 
     this.$state = $state;
+    this.$timeout = $timeout;
     this.QueryService = QueryService;
+    this.ExpeditionService = ExpeditionService;
   }
 
   $onInit() {
@@ -22,7 +24,6 @@ class QueryController {
     this.showSidebar = true;
     this.showMap = true;
     this.sidebarToggleToolTip = 'hide sidebar';
-    this.invalidSize = false;
   }
 
   handleNewResults(results) {
@@ -68,12 +69,23 @@ class QueryController {
       ? 'hide sidebar'
       : 'show sidebar';
 
-    this.invalidSize = true;
+    this.resizeMap();
   }
 
   toggleMap(show) {
-    this.invalidSize = this.showMap !== show;
+    if (this.showMap !== show) this.resizeMap();
     this.showMap = show;
+  }
+
+  resizeMap() {
+    this.$timeout(() => this.queryMap.refreshSize(), 500);
+  }
+
+  handleProjectChange(project) {
+    this.currentProject = project;
+    this.ExpeditionService.all(project.projectId).then(expeditions => {
+      this.expeditions = expeditions.data;
+    });
   }
 }
 
@@ -81,12 +93,8 @@ export default {
   template,
   controller: QueryController,
   bindings: {
-    currentProject: '<',
-    expeditions: '<',
-    markers: '<',
-    filterOptions: '<',
+    currentUser: '<',
     layout: '@',
     layoutFill: '@',
-    // flex: '@',
   },
 };

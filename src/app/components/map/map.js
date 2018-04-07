@@ -1,3 +1,10 @@
+import 'leaflet-draw';
+import 'leaflet.markercluster';
+import 'leaflet-draw/dist/leaflet.draw.css';
+import 'leaflet/dist/leaflet.css';
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
+
 import leaflet from 'leaflet';
 import config from '../../utils/config';
 
@@ -43,7 +50,7 @@ export default class Map {
       { layers: 0, maxZoom: 8 },
     );
 
-    this.clusterLayer = leaflet.markerClusterGroup({ chunkedLoading: true });
+    this.clusterLayer = new L.MarkerClusterGroup({ chunkedLoading: true });
   }
 
   /**
@@ -118,7 +125,8 @@ export default class Map {
   }
 
   drawBounds(createCallback) {
-    new leaflet.Draw.Rectangle(this.map, {}).enable();
+    // leaflet-draw only attaches to global L, not sure how to import directly
+    new L.Draw.Rectangle(this.map, {}).enable();
 
     this.map.on(leaflet.Draw.Event.CREATED, e => {
       this.boundingBox = e.layer;

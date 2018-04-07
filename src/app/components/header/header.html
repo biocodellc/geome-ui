@@ -6,8 +6,9 @@
   </a>
   <md-divider></md-divider>
 
-  <project-selector flex layout="row" layout-align="center center" ng-if="$ctrl.showProjectSelector" is-authenticated="!!($ctrl.currentUser)"
-    current-project="$ctrl.currentProject" on-change="$ctrl.onProjectChange({ project: project })">
+  <div flex ng-show="!$ctrl.showProjectSelector"></div>
+  <project-selector flex layout="row" layout-align="center center" ng-show="$ctrl.showProjectSelector" is-authenticated="!!($ctrl.currentUser)"
+    current-project="$ctrl.currentProject" on-change="$ctrl.onProjectChange({ project: project })" offset="0 12" button-class="md-primary">
   </project-selector>
 
   <md-button ui-sref="about">About</md-button>

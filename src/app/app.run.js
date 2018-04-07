@@ -43,6 +43,7 @@ export default function(
           resolve(trans.router.stateService.go('about'));
         // }, 5000); // timeout loading after 5 secs
         // TODO: something here breaks navigation when this timeout occurs
+        //https://stackoverflow.com/questions/42659302/angular-ui-router-1-0-0rc-transition-superseded-on-a-redirect/44654316#44654316
         }, 10000); // timeout loading after 10 secs
 
         loadSession(

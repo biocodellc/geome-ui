@@ -1,3 +1,5 @@
+import '../../../style/fims/_projectSelector.scss';
+
 const template = require('./projectSelector.html');
 
 class ProjectSelectorController {
@@ -46,6 +48,8 @@ export default {
   template,
   controller: ProjectSelectorController,
   bindings: {
+    offset: '@',
+    buttonClass: '@',
     currentProject: '<',
     onChange: '&',
     isAuthenticated: '<',

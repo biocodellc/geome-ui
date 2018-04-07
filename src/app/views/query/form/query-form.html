@@ -1,6 +1,9 @@
 <form method="POST" name="queryForm" layout="column">
 
-  <md-input-container>
+  <project-selector layout="row" layout-align="center" is-authenticated="!!($ctrl.currentUser)" current-project="$ctrl.currentProject"
+    on-change="$ctrl.onProjectChange({ project: project })"></project-selector>
+
+  <md-input-container ng-show="$ctrl.currentProject">
     <input type="text" placeholder="Query String..." ng-model="$ctrl.params.queryString" />
     <a class="hint-right text-upper" href="#" ng-click="$ctrl.moreSearchOptions = !$ctrl.moreSearchOptions">
       More search options</a>
@@ -8,106 +11,114 @@
 
   <div ng-show="$ctrl.moreSearchOptions">
 
-    <div class="form-group">
-      <a href="#" ng-click="$ctrl.showMap = !$ctrl.showMap">
-        <label class="control-label">Map</label>
-      </a>
-      <div class="filters" ng-show="$ctrl.showMap">
-        <label class="checkbox-inline">
-          <input type="checkbox" ng-model="$ctrl.params.isMappable" name="isMappable"> is Mappable
-        </label>
-        <label class="checkbox-inline">
-          <input type="checkbox" ng-model="$ctrl.params.coordinateUncertaintyInMeters" name="coordinateUncertaintyInMeters"> has coordinateUncertaintyInMeters
-        </label>
-        <label class="checkbox-inline">
-          <input type="checkbox" ng-model="$ctrl.params.hasPermitInfo" name="hasPermitInfo"> has permitInformation
-        </label>
-        <div class="row">
-          <div class="col-xs-3">
-            <label class="control-label small">BoundingBox: </label>
+    <section>
+      <a href="#" ng-click="$ctrl.showMap = !$ctrl.showMap" class="md-subhead bold">Map</a>
+      <div class="md-form-group" ng-show="$ctrl.showMap" layout="column" layout-margin>
+        <div layout="row" layout-wrap>
+          <md-checkbox class="small" ng-model="$ctrl.params.isMappable" name="isMappable"> is Mappable</md-checkbox>
+          <md-checkbox class="small" ng-model="$ctrl.params.coordinateUncertaintyInMeters" name="coordinateUncertaintyInMeters">
+            has coordinateUncertaintyInMeters</md-checkbox>
+          <md-checkbox class="small" ng-model="$ctrl.params.hasPermitInfo" name="hasPermitInfo"> has permitInfo</md-checkbox>
+        </div>
+        <div layout="row">
+          <div flex="25">
+            <p class="small bold">BoundingBox: </p>
           </div>
 
-          <div class="col-xs-9">
-            <div class="col-xs-9" ng-show="$ctrl.params.bounds">
-              <label class="small">northEast:</label>
-              <span> [{{$ctrl.params.bounds.northEast.lat | number:2 }}, {{$ctrl.params.bounds.northEast.lng
-                | number:2 }}]</span>
-              <label class="small">southWest:</label>
-              <span> [{{$ctrl.params.bounds.southWest.lat | number:2 }}, {{$ctrl.params.bounds.southWest.lng
-                | number:2 }}]</span>
+          <div flex layout="row" layout-align="center center" ng-show="$ctrl.params.bounds">
+            <div flex="66" layout="column">
+              <div>
+                <span class="small bold">northEast:</span>
+                <span class="small"> [{{$ctrl.params.bounds.northEast.lat | number:2 }}, {{$ctrl.params.bounds.northEast.lng
+                  | number:2 }}]</span>
+              </div>
+              <div>
+                <span class="small bold">southWest:</span>
+                <span class="small"> [{{$ctrl.params.bounds.southWest.lat | number:2 }}, {{$ctrl.params.bounds.southWest.lng
+                  | number:2 }}]</span>
+              </div>
             </div>
-            <button type="button" class="btn btn-default btn-xs btn-primary" ng-class="{'active': $ctrl.drawing}"
-              ng-show="!$ctrl.params.bounds" ng-click="$ctrl.drawBounds()">Draw
-            </button>
-            <button type="button" class="btn btn-default btn-xs btn-danger" ng-show="$ctrl.params.bounds" ng-click="$ctrl.clearBounds()">Clear
-            </button>
+            <md-button class="md-raised md-warn md-hue-2 md-button-sm" ng-click="$ctrl.clearBounds()">Clear</md-button>
           </div>
+          <md-button class="md-raised md-primary md-button-sm" ng-class="{'active': $ctrl.drawing}" ng-show="!$ctrl.params.bounds"
+            ng-click="$ctrl.drawBounds()">Draw</md-button>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="form-group">
-      <a href="#" ng-click="$ctrl.showSequences = !$ctrl.showSequences">
-        <label class="control-label">Sequences</label>
-      </a>
-      <div class="filters" ng-show="$ctrl.showSequences">
-        <label class="checkbox-inline">
-          <input type="checkbox" ng-model="$ctrl.params.hasSRAAccessions" name="hasSraAccessions"> has NCBI Sequence Read Archive Accession Numbers
-        </label>
-        <div class="row" id="marker-query">
-          <div class="col-xs-2">
-            <label class="control-label small">marker</label>
-          </div>
-          <div class="col-xs-6">
-            <select ng-model="$ctrl.params.marker" ng-options="::marker.value for marker in $ctrl.markers" class="form-control input-sm">
-              <option value="">-- Select a Sequence Marker --</option>
-            </select>
-          </div>
+    <section class="sequences" ng-show="$ctrl.hasFastqEntity || $ctrl.markers">
+      <a href="#" ng-click="$ctrl.showSequences = !$ctrl.showSequences" class="md-subhead bold">Sequences</a>
+      <div class="md-form-group" ng-show="$ctrl.showSequences" layout="column" layout-margin>
+        <div layout="row" ng-show="$ctrl.hasFastqEntity">
+          <md-checkbox class="small" ng-model="$ctrl.params.hasSRAAccessions" name="hasSraAccessions"> has NCBI Sequence Read Archive Accession Numbers</md-checkbox>
+        </div>
+        <div layout="row" ng-show="$ctrl.markers">
+          <md-input-container flex="80">
+            <label>marker</label>
+            <md-select ng-model="$ctrl.params.marker">
+              <md-option>-- Select a Sequence Marker --</md-option>
+              <md-option ng-value="marker.value" ng-repeat="marker in $ctrl.markers track by marker.value">{{marker.value}}</md-option>
+            </md-select>
+          </md-input-container>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="form-group dwc-terms">
-      <a href="#" ng-click="$ctrl.showDWC = !$ctrl.showDWC">
-        <label class="control-label">Darwin Core Terms</label>
-      </a>
-      <div class="row filters" ng-show="$ctrl.showDWC">
-        <div class="col-xs-6">
-          <input ng-model="$ctrl.params.genus" class="form-control input-sm" type="text" placeholder="Genus" />
-          <input ng-model="$ctrl.params.country" class="form-control input-sm" type="text" placeholder="Country"
-          />
+    <section class="dwc-terms">
+      <a href="#" ng-click="$ctrl.showDWC = !$ctrl.showDWC" class="md-subhead bold"> Darwin Core Terms</a>
+      <div class="md-form-group" ng-show="$ctrl.showDWC" layout="column" layout-margin>
+        <div layout="row">
+          <md-input-container flex="50">
+            <input ng-model="$ctrl.params.genus" type="text" placeholder="Genus" />
+          </md-input-container>
+          <md-input-container flex="50">
+            <input ng-model="$ctrl.params.country" type="text" placeholder="Country" />
+          </md-input-container>
         </div>
-        <div class="col-xs-6">
-          <input ng-model="$ctrl.params.family" class="form-control input-sm" type="text" placeholder="Family"
-          />
-          <input ng-model="$ctrl.params.locality" class="form-control input-sm" type="text" placeholder="Locality"
-          />
+        <div layout="row">
+          <md-input-container flex="50">
+            <input ng-model="$ctrl.params.family" type="text" placeholder="Family" />
+          </md-input-container>
+          <md-input-container flex="50">
+            <input ng-model="$ctrl.params.locality" type="text" placeholder="Locality" />
+          </md-input-container>
         </div>
-        <div class="col-xs-12">
-          <input ng-model="$ctrl.params.species" class="form-control input-sm" type="text" placeholder="Species"
-          />
+        <div layout="row">
+          <md-input-container flex>
+            <input ng-model="$ctrl.params.species" type="text" placeholder="Species" />
+          </md-input-container>
         </div>
-        <div class="col-xs-12">
-          <span class="control-label">yearCollected</span>
-          <div class="col-xs-4">
-            <input ng-model="$ctrl.params.fromYear" type="text" placeholder="YYYY" class="form-control input-sm"
-            />
-          </div>
-          <span class="control-label">to</span>
-          <div class="col-xs-4">
-            <input ng-model="$ctrl.params.toYear" type="text" placeholder="YYYY" class="form-control input-sm" />
-          </div>
+        <div layout="row" layout-align="start center">
+          <span flex="30" class="small">yearCollected</span>
+          <md-input-container md-no-float flex="15">
+            <input ng-model="$ctrl.params.fromYear" type="text" placeholder="YYYY" />
+          </md-input-container>
+          <span flex="10" class="small" style="text-align: center;">to</span>
+          <md-input-container md-no-float flex="15">
+            <input ng-model="$ctrl.params.toYear" type="text" placeholder="YYYY" />
+          </md-input-container>
         </div>
-
       </div>
-    </div>
-    <div class="form-group expedition-filter">
-      <a href="#" ng-click="$ctrl.showExpeditions = !$ctrl.showExpeditions">
-        <label class="control-label">Expeditions</label>
-      </a>
-      <typeahead ng-show="$ctrl.showExpeditions" class="typeahead" expeditions="$ctrl.expeditions" selected-expeditions="$ctrl.params.expeditions"></typeahead>
-    </div>
+    </section>
 
+    <section class="expeditions">
+      <a href="#" ng-click="$ctrl.showExpeditions = !$ctrl.showExpeditions" class="md-subhead bold">Expeditions</a>
+      <div class="md-form-group" ng-show="$ctrl.showExpeditions" layout="column" layout-margin>
+        <md-chips ng-model="$ctrl.params.expeditions" md-autocomplete-snap md-require-match md-transform-chip="$ctrl.transformChip($chip)">
+          <md-autocomplete md-selected-item="$ctrl.selectedItem" md-trim="false" md-search-text="$ctrl.searchText" md-items="item in $ctrl.filterExpeditions($ctrl.searchText)">
+            md-item-text="item" placeholder="Expedition Name ...">
+            <span md-highlight-text="$ctrl.searchText">{{item}}</span>
+          </md-autocomplete>
+          <md-chip-template>
+            <span>
+              <strong>{{$chip}}</strong>
+            </span>
+          </md-chip-template>
+        </md-chips>
+      </div>
+    </section>
+
+    // TODO: finish me
     <div class="form-group row">
       <div class="column-filters-header clearfix">
         <div class="col-xs-4">
@@ -160,7 +171,8 @@
   </div>
 
   <div layout="row" layout-align="end center">
-    <md-button type="submit" ng-click="$ctrl.queryJson()" class="md-raised">
+    <md-button type="submit" ng-click="$ctrl.currentProject ? $ctrl.queryJson() : '';" class="md-raised">
+      <md-tooltip ng-show="!$ctrl.currentProject" md-direction="top">Select a project</md-tooltip>
       <span class="fa fa-search"></span> Search
     </md-button>
   </div>

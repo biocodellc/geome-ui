@@ -1,10 +1,9 @@
-<md-content layout-fill>
-  <!-- <fims-header show-project-selector="$ctrl.projectView" current-user="$ctrl.currentUser" current-project="$ctrl.currentProject" -->
-  <fims-header show-project-selector="true" current-user="$ctrl.currentUser" current-project="$ctrl.currentProject"
+<md-content layout="column" layout-fill>
+  <fims-header show-project-selector="$ctrl.projectView" current-user="$ctrl.currentUser" current-project="$ctrl.currentProject"
     on-project-change="$ctrl.handleProjectChange(project)" on-signout="$ctrl.signout()">
   </fims-header>
 
-  <div ng-show="$ctrl.projectView">
+  <div flex ng-show="$ctrl.projectView">
     <!-- Sidebar navigation -->
     <fims-navigation current-project="$ctrl.currentProject" current-user="$ctrl.currentUser">
     </fims-navigation>
@@ -22,25 +21,14 @@
     </main>
   </div>
 
-  <div layout-fill ng-show="!$ctrl.projectView">
-    <div ng-show="$ctrl.loading">
-      <span us-spinner></span>
+  <div flex ng-show="!$ctrl.projectView">
+    <div layout="row" layout-fill layout-sm="column" ng-show="$ctrl.loading" layout-align="center center">
+      <md-progress-circular md-mode="indeterminate"></md-progress-circular>
     </div>
 
     <main layout-fill ng-show="!$ctrl.loading">
       <alerts></alerts>
-      <!-- <md-content ui-view layout-fill current-project="$ctrl.currentProject" current-user="$ctrl.currentUser"></md-content> -->
       <div ui-view layout-fill current-project="$ctrl.currentProject" current-user="$ctrl.currentUser"></div>
-      <!-- <div class="full-page">
-      <uiview name="fullPage" class="full-page-content container-fluid" />
-    </div> -->
-      <!-- <div class="main"> -->
-      <!-- <div class="content"> -->
-      <!-- <div ui-view class="container" current-project="$ctrl.currentProject" current-user="$ctrl.currentUser" -->
-      <!-- /> -->
-      <!-- <uiview class="container-fluid" current-project="$ctrl.currentProject" current-user="$ctrl.currentUser"
-      /> -->
-      <!-- </div> -->
     </main>
   </div>
 </md-content>
