@@ -55,12 +55,13 @@ class QueryFormController {
   $onChanges(changesObj) {
     if ('currentProject' in changesObj && this.currentProject) {
       const { config } = this.currentProject;
-      this.markers = config.getList('markers');
-      // this.hasFastqEntity = config.entities.some(e => e.type === 'Fastq');
-      this.hasFastqEntity = true;
-      this.generateFilterOptions();
+      const list = config.getList('markers');
 
-      if (this.params.filters.length === 0) this.addFilter();
+      this.markers = list ? list.fields : [];
+      this.hasFastqEntity = config.entities.some(e => e.type === 'Fastq');
+
+      this.generateFilterOptions();
+      // if (this.params.filters.length === 0) this.addFilter();
     }
 
     if (
@@ -85,7 +86,7 @@ class QueryFormController {
   }
 
   queryJson() {
-    this.toggleLoading(true);
+    this.toggleLoading({ val: true });
 
     this.QueryService.queryJson(
       this.params.buildQuery(SOURCE.join()),
@@ -100,11 +101,11 @@ class QueryFormController {
         // this.queryMap.setMarkers(this.queryResults.data); TODO: fix this
       })
       .catch(response => {
-        angular.exception.catcher('Failed to load query results')(response);
+        angular.catcher('Failed to load query results')(response);
         this.onNewResults({ results: undefined });
       })
       .finally(() => {
-        this.toggleLoading(false);
+        this.toggleLoading({ val: false });
       });
   }
 

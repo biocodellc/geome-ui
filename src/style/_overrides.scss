@@ -55,14 +55,6 @@
 
 // alerts
 
-.alerts {
-  .alert {
-    text-align: center;
-    border-radius: 0;
-    margin-bottom: 0;
-  }
-}
-
 .alert-error {
   @extend .alert-danger;
 }

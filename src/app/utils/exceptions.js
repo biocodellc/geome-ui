@@ -5,7 +5,9 @@ export default class {
     return response => {
       console.error(response);
       angular.alerts.error(
-        response.data.error || response.data.usrMessage || defaultMsg,
+        response.data
+          ? response.data.error || response.data.usrMessage
+          : defaultMsg,
       );
       return Promise.reject(response);
     };

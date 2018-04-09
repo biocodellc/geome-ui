@@ -183,7 +183,12 @@
 
   md-optgroup {
     label {
+      @extend .bold;
       padding-bottom: 4px;
+    }
+
+    md-divider {
+      margin-top: 4px;
     }
   }
 

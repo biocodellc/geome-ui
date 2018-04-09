@@ -16,9 +16,10 @@ class QueryService {
   queryJson(query, projectId, entity, page, limit) {
     angular.alerts.removeTmp();
 
+    // TODO: update to only return specified source columns
     return this.$http({
       method: 'GET',
-      url: `${restRoot}projects/${projectId}/query/json/${entity}?limit=${limit}&page=${page}`,
+      url: `${restRoot}projects/${projectId}/query/${entity}/json?limit=${limit}&page=${page}`,
       params: query,
       keepJson: true,
     }).then(response => {
