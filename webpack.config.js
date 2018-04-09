@@ -6,7 +6,6 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const DashboardPlugin = require('webpack-dashboard/plugin');
 
 /**
  * Env
@@ -117,8 +116,15 @@ module.exports = (function makeWebpackConfig() {
         // the sourceMappings will be incorrect, preventing breakpoints from being set in
         // certain situations
         test: /\.js$/,
-        use: [{ loader: 'babel-loader' }],
-        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'babel-loader',
+          },
+        ],
+        include: [
+          path.resolve(__dirname, 'src', 'app'),
+          path.resolve(__dirname, 'config'),
+        ],
       },
       {
         // support for .scss files
@@ -221,8 +227,6 @@ module.exports = (function makeWebpackConfig() {
       'window.jQuery': 'jquery',
       L: 'leaflet',
     }),
-
-    new DashboardPlugin(), // webpack-dashboard
 
     new webpack.HotModuleReplacementPlugin(),
   ];

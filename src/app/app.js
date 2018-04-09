@@ -3,12 +3,12 @@ import uirouter from '@uirouter/angularjs';
 import bootstrap from 'angular-ui-bootstrap';
 import ngMaterial from 'angular-material';
 
-
 // todo remove the following and use only angular-ui-bootstrap
 import 'jquery-ui';
 
 // this loads the css for the app
 import '../style/app.scss';
+import '../style/bootstrap.scss';
 
 import run from './app.run';
 import theme from './app.theme';

@@ -13,11 +13,9 @@
   "homepage": "https://biscicol.org",
   "scripts": {
     "build": "rimraf dist && webpack --bail --progress --profile",
-    "server:dashboard": "webpack-dashboard -- webpack-dev-server",
     "server": "webpack-dev-server",
     "test": "karma start",
     "test-watch": "karma start --auto-watch --no-single-run",
-    "start:dashboard": "npm run server:dashboard",
     "start": "npm run server",
     "eslint": "eslint 'src/app/**/*.js'",
     "eslint:fix": "eslint 'src/app/**/*.js' --fix",
@@ -86,7 +84,6 @@
     "style-loader": "^0.20.3",
     "webpack": "^4.4.1",
     "webpack-cli": "^2.0.13",
-    "webpack-dashboard": "^1.1.1",
     "webpack-dev-server": "^3.1.1"
   }
 }
