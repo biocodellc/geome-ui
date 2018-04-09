@@ -16,23 +16,28 @@ const SOURCE = [
 ];
 
 const defaultFilter = {
-  field: null,
+  column: null,
   type: null,
   value: null,
 };
 
+const queryTypes = {
+  string: ['=', 'like', 'has'],
+  float: ['=', '<', '<=', '>', '>=', 'has'],
+  datetime: ['=', '<', '<=', '>', '>=', 'has'],
+  date: ['=', '<', '<=', '>', '>=', 'has'],
+  integer: ['=', '<', '<=', '>', '>=', 'has'],
+};
+
 class QueryFormController {
-  constructor($timeout, QueryService, usSpinnerService) {
+  constructor($timeout, QueryService) {
     'ngInject';
 
     this.$timeout = $timeout;
     this.QueryService = QueryService;
-    this.usSpinnerService = usSpinnerService;
   }
 
   $onInit() {
-    // this.addFilter();
-
     this.hasFastqEntity = false;
 
     // view toggles
@@ -49,27 +54,38 @@ class QueryFormController {
 
   $onChanges(changesObj) {
     if ('currentProject' in changesObj && this.currentProject) {
-      // const { config } = this.currentProject;
-      // this.markers = config.getList('markers');
+      const { config } = this.currentProject;
+      this.markers = config.getList('markers');
       // this.hasFastqEntity = config.entities.some(e => e.type === 'Fastq');
+      this.hasFastqEntity = true;
+      this.generateFilterOptions();
+
+      if (this.params.filters.length === 0) this.addFilter();
+    }
+
+    if (
+      'expeditions' in changesObj &&
+      this.expeditions &&
+      this.expeditions.length > 0
+    ) {
+      this.expeditions.sort((a, b) => {
+        if (a.expeditionTitle < b.expeditionTitle) return -1;
+        if (a.expeditionTitle > b.expeditionTitle) return 1;
+        return 0;
+      });
     }
   }
 
   addFilter() {
     const filter = Object.assign({}, defaultFilter, {
-      field: this.filterOptions[0].displayName,
-      type: this.filterOptions[0].queryTypes[0],
+      column: this.filterOptions[0].column,
+      type: this.getQueryTypes(this.filterOptions[0].column)[0],
     });
     this.params.filters.push(filter);
   }
 
-  removeFilter(index) {
-    this.params.filters.splice(index, 1);
-  }
-
   queryJson() {
-    // TODO: make this a loading bool & use us-spinner directive
-    this.usSpinnerService.spin('query-spinner');
+    this.toggleLoading(true);
 
     this.QueryService.queryJson(
       this.params.buildQuery(SOURCE.join()),
@@ -88,27 +104,13 @@ class QueryFormController {
         this.onNewResults({ results: undefined });
       })
       .finally(() => {
-        this.usSpinnerService.stop('query-spinner');
+        this.toggleLoading(false);
       });
   }
 
-  getFilterList(filterIndex) {
-    const { field } = this.params.filters[filterIndex];
-    const opt = this.filterOptions.findOne(o => o.displayName === field);
-    return opt && opt.list.length > 0 ? opt.list : null;
-  }
-
-  getQueryTypes(filterIndex) {
-    const filter = this.params.filters[filterIndex];
-    const opt = this.filterOptions.findOne(o => o.displayName === filter.field);
-
-    return opt ? opt.queryTypes : null;
-  }
-
-  resetFilter(filterIndex) {
-    const filter = this.params.filters[filterIndex];
-    filter.value = null;
-    filter.type = 'EQUALS';
+  getQueryTypes(column) {
+    const opt = this.filterOptions.find(o => o.column === column);
+    return opt ? queryTypes[opt.datatype.toLowerCase()] : [];
   }
 
   drawBounds() {
@@ -127,14 +129,30 @@ class QueryFormController {
   }
 
   filterExpeditions(query) {
-    return this.expeditions.filter(e => {
-      return !this.params.expeditions.includes(e.expeditionCode)
-        && (!query || e.expeditionTitle.contains(query))
-    })
+    return this.expeditions.filter(
+      e =>
+        !this.params.expeditions.includes(e) &&
+        (!query ||
+          e.expeditionTitle.toLowerCase().includes(query.toLowerCase())),
+    );
   }
 
-  transformChip(chip) {
-    return chip.expeditionCode;
+  generateFilterOptions() {
+    const { config } = this.currentProject;
+    this.filterOptions = config.entities[0].attributes.map(a => ({
+      group: a.group || 'Default Group',
+      column: a.column,
+      datatype: a.datatype,
+      list: config.findListForColumn(config.entities[0], a.column),
+    }));
+    this.filterOptionsGroups = config.entities[0].attributes.reduce(
+      (val, a) => {
+        const g = a.group || 'Default Group';
+        if (!val.includes(g)) val.push(g);
+        return val;
+      },
+      [],
+    );
   }
 }
 
@@ -144,10 +162,11 @@ export default {
   bindings: {
     params: '<',
     queryMap: '<',
-    expeditions: '<', // list of expeditionCodes
+    expeditions: '<', // list of expeditions
     currentUser: '<',
     currentProject: '<',
     onProjectChange: '&',
     onNewResults: '&',
+    toggleLoading: '&',
   },
 };

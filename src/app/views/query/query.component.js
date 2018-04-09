@@ -4,13 +4,20 @@ import QueryParams from './QueryParams';
 const template = require('./query.html');
 
 class QueryController {
-  constructor($state, $timeout, QueryService, ExpeditionService) {
+  constructor(
+    $state,
+    $timeout,
+    QueryService,
+    ExpeditionService,
+    ProjectService,
+  ) {
     'ngInject';
 
     this.$state = $state;
     this.$timeout = $timeout;
     this.QueryService = QueryService;
     this.ExpeditionService = ExpeditionService;
+    this.ProjectService = ProjectService;
   }
 
   $onInit() {
@@ -23,6 +30,7 @@ class QueryController {
 
     this.showSidebar = true;
     this.showMap = true;
+    this.loading = false;
     this.sidebarToggleToolTip = 'hide sidebar';
   }
 
@@ -82,10 +90,22 @@ class QueryController {
   }
 
   handleProjectChange(project) {
-    this.currentProject = project;
+    if (!project.config) {
+      this.toggleLoading(true);
+      this.ProjectService.get(project.projectId).then(p => {
+        this.currentProject = p;
+        this.toggleLoading(false);
+      });
+    } else {
+      this.currentProject = project;
+    }
     this.ExpeditionService.all(project.projectId).then(expeditions => {
       this.expeditions = expeditions.data;
     });
+  }
+
+  toggleLoading(val) {
+    this.loading = val;
   }
 }
 

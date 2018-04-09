@@ -11,9 +11,6 @@ function getStates() {
           layout: () => 'column',
           layoutFill: () => '',
         },
-        // resolve: {
-        //   filterOptions: /* @ngInject */ ProjectService => [], // TODO: implement me
-        // },
       },
     },
 

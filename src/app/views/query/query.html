@@ -61,7 +61,7 @@
     <fims-query-form params="$ctrl.params" on-new-results="$ctrl.handleNewResults(results)" query-map="$ctrl.queryMap"
       class="query-form" current-project="$ctrl.currentProject" expeditions="$ctrl.expeditions" markers="$ctrl.markers"
       filter-options="$ctrl.filterOptions" current-user="$ctrl.currentUser" on-project-change="$ctrl.handleProjectChange(project)"
-      layout-padding></fims-query-form>
+      toggle-loading="$ctrl.toggleLoading(val)" layout-padding></fims-query-form>
   </md-sidenav>
 
   <!-- sidebar toggle -->
@@ -74,6 +74,8 @@
 
   <!-- main content-->
   <div flex layout="column" class="query-content">
+
+    <md-progress-circular ng-show="$ctrl.loading" md-mode="indeterminate"></md-progress-circular>
 
     <div class="center-spinner" us-spinner="" spinner-key="query-spinner"></div>
 

@@ -59,6 +59,13 @@ export default class ProjectConfig {
       .map(e => e.attributes.filter(a => a.defined_by === def));
   }
 
+  findListForColumn(entity, column) {
+    const r = entity.rules.some(
+      rule => rule.name === 'ControlledVocabulary' && rule.column === column,
+    );
+    return r ? this.getList(r.listName) : undefined;
+  }
+
   attributeRules(sheetName, attribute) {
     const reservedKeys = ['name', 'level', 'listName'];
     const sheetRules = this.sheetRules(sheetName);

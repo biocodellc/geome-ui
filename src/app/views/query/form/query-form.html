@@ -11,6 +11,25 @@
 
   <div ng-show="$ctrl.moreSearchOptions">
 
+    <section class="expeditions">
+      <a href="#" ng-click="$ctrl.showExpeditions = !$ctrl.showExpeditions" class="md-subhead bold">Expeditions</a>
+      <div class="md-form-group" ng-show="$ctrl.showExpeditions" layout="column" layout-margin>
+        <md-chips ng-model="$ctrl.params.expeditions" md-require-match>
+          <md-autocomplete md-selected-item="$ctrl.selectedItem" md-no-cache md-autocomplete-snap="width" md-search-text="$ctrl.searchText"
+            md-items="item in $ctrl.filterExpeditions($ctrl.searchText)" md-item-text="item.expeditionTitle"
+            md-dropdown-position="bottom" md-min-length="0" placeholder="Expedition Name ...">
+            <span md-highlight-text="$ctrl.searchText" md-highlight-flags="i">{{item.expeditionTitle}}</span>
+          </md-autocomplete>
+          <md-chip-template>
+            <span>
+              <strong ng-if="$chip.expeditionTitle.includes($chip.expeditionCode)">{{$chip.expeditionTitle}}</strong>
+              <strong ng-if="!$chip.expeditionTitle.includes($chip.expeditionCode)">{{$chip.expeditionCode}}::{{$chip.expeditionTitle}}</strong>
+            </span>
+          </md-chip-template>
+        </md-chips>
+      </div>
+    </section>
+
     <section>
       <a href="#" ng-click="$ctrl.showMap = !$ctrl.showMap" class="md-subhead bold">Map</a>
       <div class="md-form-group" ng-show="$ctrl.showMap" layout="column" layout-margin>
@@ -55,7 +74,7 @@
         <div layout="row" ng-show="$ctrl.markers">
           <md-input-container flex="80">
             <label>marker</label>
-            <md-select ng-model="$ctrl.params.marker">
+            <md-select ng-model="$ctrl.params.marker" md-container-class="query-form">
               <md-option>-- Select a Sequence Marker --</md-option>
               <md-option ng-value="marker.value" ng-repeat="marker in $ctrl.markers track by marker.value">{{marker.value}}</md-option>
             </md-select>
@@ -65,7 +84,7 @@
     </section>
 
     <section class="dwc-terms">
-      <a href="#" ng-click="$ctrl.showDWC = !$ctrl.showDWC" class="md-subhead bold"> Darwin Core Terms</a>
+      <a href="#" ng-click="$ctrl.showDWC = !$ctrl.showDWC" class="md-subhead bold">Darwin Core Terms</a>
       <div class="md-form-group" ng-show="$ctrl.showDWC" layout="column" layout-margin>
         <div layout="row">
           <md-input-container flex="50">
@@ -101,83 +120,52 @@
       </div>
     </section>
 
-    <section class="expeditions">
-      <a href="#" ng-click="$ctrl.showExpeditions = !$ctrl.showExpeditions" class="md-subhead bold">Expeditions</a>
-      <div class="md-form-group" ng-show="$ctrl.showExpeditions" layout="column" layout-margin>
-        <md-chips ng-model="$ctrl.params.expeditions" md-autocomplete-snap md-require-match md-transform-chip="$ctrl.transformChip($chip)">
-          <md-autocomplete md-selected-item="$ctrl.selectedItem" md-trim="false" md-search-text="$ctrl.searchText" md-items="item in $ctrl.filterExpeditions($ctrl.searchText)">
-            md-item-text="item" placeholder="Expedition Name ...">
-            <span md-highlight-text="$ctrl.searchText">{{item}}</span>
-          </md-autocomplete>
-          <md-chip-template>
-            <span>
-              <strong>{{$chip}}</strong>
-            </span>
+    <section class="filters" layout="column">
+      <a href="#" flex="30" ng-click="$ctrl.showFilters = !$ctrl.showFilters" class="md-subhead bold">Column Filters</a>
+      <div class="md-form-group" ng-show="$ctrl.showFilters" layout="column" layout-margin>
+        <md-chips ng-model="$ctrl.params.filters" readonly="true" md-removable="true" md-transform-chip="$ctrl.transformChip($chip)">
+          <md-chip-template layout="row">
+            <div flex="40" class="filter-select">
+              <md-select ng-model="$chip.column" md-container-class="query-form">
+                <md-optgroup label="{{group}}" ng-repeat="group in $ctrl.filterOptionsGroups">
+                  <md-option ng-value="opt.column" ng-repeat="opt in $ctrl.filterOptions | filter: {group: group} | filter: {group: '!hidden'} track by opt.column">{{opt.column}}</md-option>
+                </md-optgroup>
+              </md-select>
+            </div>
+            <div flex="15" class="filter-select">
+              <md-select ng-model="$chip.type" ng-model-options="{trackBy: '$value'}" md-container-class="query-form">
+                <md-option ng-value="t" ng-repeat="t in $ctrl.getQueryTypes($chip.column)">{{t}}</md-option>
+              </md-select>
+            </div>
+            <div flex="45">
+              <div ng-show="$chip.type !== 'has'">
+                <md-input-container ng-show="!$chip.list">
+                  <input type="text" ng-model="$chip.value" />
+                </md-input-container>
+
+                <md-select ng-model="$chip.value" ng-show="$chip.list" md-container-class="query-form">
+                  <md-option>-- Choose value --</md-option>
+                  <md-option ng-value="item" ng-repeat="item in $chip.list track by item">{{item}}</md-option>
+                </md-select>
+
+                <!-- <md-datepicker ng-show="$chip.datatype === 'date'" ng-model="$chip.value" md-placeholder="Enter date"></md-datepicker> -->
+              </div>
+
+            </div>
           </md-chip-template>
         </md-chips>
+        <div layout="row" layout-align="center center" class="filter-button">
+          <md-button class="md-accent md-raised md-button-sm" ng-show="$ctrl.showFilters" ng-click="$ctrl.addFilter()">
+            <span class="fa fa-plus"></span> Add Filter</md-button>
+        </div>
       </div>
     </section>
 
-    // TODO: finish me
-    <div class="form-group row">
-      <div class="column-filters-header clearfix">
-        <div class="col-xs-4">
-          <a href="#" ng-click="$ctrl.showFilters = !$ctrl.showFilters">
-            <label class="control-label">Column Filters</label>
-          </a>
-        </div>
-        <div class="col-xs-4">
-          <button type="button" class="center-block btn btn-default btn-xs" ng-show="$ctrl.showFilters" ng-click="$ctrl.addFilter()">
-            <span class="glyphicon glyphicon-plus small"></span> Add Filter
-          </button>
-        </div>
-        <div class="col-xs-4"></div>
-      </div>
-
-      <div class="col-xs-12 filters column-filter" ng-show="$ctrl.showFilters" ng-repeat="filter in $ctrl.params.filters track by $index">
-        <div class="col-xs-5">
-          <ui-select ng-model="filter.field" refresh="$ctrl.params.filters[$index].value=null && $ctrl.params.filters[$index].type=EQUALS">
-            <ui-select-match>{{$select.selected.displayName}}</ui-select-match>
-            <ui-select-choices repeat="f.displayName as f in ($ctrl.filterOptions | filter: {displayName: $select.search} | filter: {group: '!hidden'}) track by $index"
-              position="up" group-by="'group'">
-              <div ng-bind-html="f.displayName | highlight: $select.search | trusted_html"></div>
-            </ui-select-choices>
-          </ui-select>
-          <!--<select ng-model="filter.field"-->
-          <!--ng-change="$ctrl.params.filters[$index].value=null && $ctrl.params.filters[$index].type=EQUALS"-->
-          <!--ng-options="f.field as f.displayName for f in ::$ctrl.filterOptions"-->
-          <!--class="form-control input-sm"-->
-          <!--&gt;</select>-->
-        </div>
-        <div class="col-xs-2 filter-query-select">
-          <select ng-model="filter.type" class="form-control input-sm" ng-options="type as (type | queryTypeDisplay) for type in $ctrl.getTypes($index)"></select>
-        </div>
-        <div class="col-xs-5">
-          <div ng-show="filter.type != 'EXISTS'">
-            <input ng-show="!$ctrl.getList($index)" type="text" class="form-control input-sm" ng-model="filter.value"
-            />
-
-            <select ng-show="$ctrl.getList($index)" class="form-control input-sm" ng-options="field for field in $ctrl.getList($index)"
-              ng-model="filter.value">
-              <option value="">-- Choose value --</option>
-            </select>
-          </div>
-        </div>
-        <button type="button" class="btn btn-danger btn-xs filter-remove-btn" ng-click="$ctrl.removeFilter($index)">
-          <span class="fa fa-remove"></span>
-        </button>
-      </div>
+    <div layout="row" layout-align="end center">
+      <md-button type="submit" ng-click="$ctrl.currentProject ? $ctrl.queryJson() : '';" class="md-raised">
+        <md-tooltip ng-show="!$ctrl.currentProject" md-direction="top">Select a project</md-tooltip>
+        <span class="fa fa-search"></span> Search
+      </md-button>
     </div>
-  </div>
-
-  <div layout="row" layout-align="end center">
-    <md-button type="submit" ng-click="$ctrl.currentProject ? $ctrl.queryJson() : '';" class="md-raised">
-      <md-tooltip ng-show="!$ctrl.currentProject" md-direction="top">Select a project</md-tooltip>
-      <span class="fa fa-search"></span> Search
-    </md-button>
-  </div>
-  <!-- <div class="form-group"> -->
-  <!-- <button type="submit" ng-click="$ctrl.queryJson()" class="btn pull-right btn-primary"> -->
-  <!-- </button> -->
   </div>
 </form>

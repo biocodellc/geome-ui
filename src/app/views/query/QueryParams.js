@@ -1,15 +1,5 @@
 import { QueryBuilder } from './Query';
 
-const QueryType = {
-  FUZZY: 1,
-  LT: 2,
-  LTE: 3,
-  GT: 4,
-  GTE: 5,
-  EQ: 6,
-  EXISTS: 7,
-};
-
 const defaultParams = {
   queryString: null,
   marker: null,
@@ -40,36 +30,30 @@ export default class QueryParams {
     const builder = new QueryBuilder();
 
     if (this.expeditions.length > 0) {
-      builder.add(`_expeditions_:[${this.expeditions}]`);
+      builder.add(
+        `_expeditions_:[${this.expeditions.map(e => e.expeditionCode)}]`,
+      );
     }
 
     this.filters.forEach(filter => {
-      if (filter.value || filter.type === QueryType.EXISTS) {
+      if (filter.value || filter.type === 'has') {
         if (builder.queryString.length > 0) {
           builder.add('and');
         }
-        switch (QueryType) {
-          case QueryType.EXISTS:
+
+        switch (filter.type) {
+          case 'has':
             builder.add(`_exists_:${filter.field}`);
             break;
-          case QueryType.EQ:
-            builder.add(`${filter.field} = "${filter.value}"`);
+          case 'fuzzy':
+            builder.add(`${filter.field}:${filter.value}`);
             break;
-          case QueryType.LT:
-            builder.add(`${filter.field} < ${filter.value}`);
-            break;
-          case QueryType.LTE:
-            builder.add(`${filter.field} <= ${filter.value}`);
-            break;
-          case QueryType.GT:
-            builder.add(`${filter.field} > ${filter.value}`);
-            break;
-          case QueryType.GTE:
-            builder.add(`${filter.field} >= ${filter.value}`);
+          case 'like':
+            if (!filter.value.includes('%')) filter.value = `%${filter.value}%`;
+            builder.add(`${filter.field}::${filter.value}`);
             break;
           default:
-            builder.add(`${filter.field} = ${filter.value}`);
-            break;
+            builder.add(`${filter.field} ${filter.type} ${filter.value}`);
         }
       }
     });
@@ -162,8 +146,8 @@ export default class QueryParams {
         );
       }
       if (builder.queryString.length > 0) builder.add('and');
-      builder.add(`decimalLatitude <= ${escapeNum(ne.lat)}`, QueryType.LTE);
-      builder.add(`and decimalLatitude >= ${escapeNum(sw.lat)}`, QueryType.GTE);
+      builder.add(`decimalLatitude <= ${escapeNum(ne.lat)}`);
+      builder.add(`and decimalLatitude >= ${escapeNum(sw.lat)}`);
     }
 
     builder.setSource(source);
