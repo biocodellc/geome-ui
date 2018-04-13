@@ -41,9 +41,9 @@ export default function(
         const timeoutPromise = $timeout(() => {
           deregister();
           resolve(trans.router.stateService.go('about'));
-        // }, 5000); // timeout loading after 5 secs
-        // TODO: something here breaks navigation when this timeout occurs
-        //https://stackoverflow.com/questions/42659302/angular-ui-router-1-0-0rc-transition-superseded-on-a-redirect/44654316#44654316
+          // }, 5000); // timeout loading after 5 secs
+          // TODO: something here breaks navigation when this timeout occurs
+          // https://stackoverflow.com/questions/42659302/angular-ui-router-1-0-0rc-transition-superseded-on-a-redirect/44654316#44654316
         }, 10000); // timeout loading after 10 secs
 
         loadSession(
@@ -56,7 +56,6 @@ export default function(
           $timeout.cancel(timeoutPromise);
           deregister();
 
-          console.log(project);
           // deregister before setting project & user b/c setting these will trigger a state
           // reload, and we don't want to run this function again
           ProjectService.setCurrentProject(project);

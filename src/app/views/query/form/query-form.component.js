@@ -98,7 +98,7 @@ class QueryFormController {
       .then(results => {
         this.onNewResults({ results });
         this.queryMap.clearBounds();
-        // this.queryMap.setMarkers(this.queryResults.data); TODO: fix this
+        this.queryMap.setMarkers(results.data);
       })
       .catch(response => {
         angular.catcher('Failed to load query results')(response);

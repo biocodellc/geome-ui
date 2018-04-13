@@ -5,8 +5,19 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 
-import leaflet from 'leaflet';
+import L from 'leaflet';
 import config from '../../utils/config';
+
+// workaround for webpack messing up asset urls
+// https://github.com/PaulLeCam/react-leaflet/issues/255#issuecomment-269750542
+// https://github.com/Leaflet/Leaflet/issues/4968
+delete L.Icon.Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+});
 
 const { mapboxToken } = config;
 
@@ -21,7 +32,7 @@ export default class Map {
    * @param mapId the id of the the div container for the map
    */
   init(mapId) {
-    this.map = leaflet.map(mapId, {
+    this.map = L.map(mapId, {
       center: [0, 0],
       zoom: 1,
       closePopupOnClick: false,
@@ -32,7 +43,7 @@ export default class Map {
     const z = this.map.getBoundsZoom([[90, -180], [-90, 180]], true);
     this.map.setZoom(z);
 
-    this.mapTiles = leaflet.tileLayer(
+    this.mapTiles = L.tileLayer(
       'https://api.mapbox.com/v4/mapbox.outdoors/{z}/{x}/{y}.png?access_token={access_token}',
       { access_token: mapboxToken },
     );
@@ -40,12 +51,12 @@ export default class Map {
     this.mapTiles.addTo(this.map);
     this.base = this.mapTiles;
 
-    this.satelliteTiles = leaflet.tileLayer(
+    this.satelliteTiles = L.tileLayer(
       'https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token={access_token}',
       { access_token: mapboxToken },
     );
 
-    this.usgsTiles = leaflet.tileLayer.wms(
+    this.usgsTiles = L.tileLayer.wms(
       'https://basemap.nationalmap.gov/arcgis/services/USGSImageryOnly/MapServer/WMSServer',
       { layers: 0, maxZoom: 8 },
     );
@@ -64,13 +75,11 @@ export default class Map {
 
     data.forEach(resource => {
       const lat = resource[this.latColumn];
-      const lng = leaflet.Util.wrapNum(
-        resource[this.lngColumn],
-        [0, 360],
-        true,
-      ); // center on pacific ocean
+      const lng = L.Util.wrapNum(resource[this.lngColumn], [0, 360], true); // center on pacific ocean
 
-      const marker = leaflet.marker([lat, lng]);
+      if (isNaN(lat) || isNaN(lng)) return;
+
+      const marker = L.marker([lat, lng]);
 
       if (typeof popupContentCallback === 'function') {
         marker.bindPopup(popupContentCallback(resource));
@@ -81,10 +90,7 @@ export default class Map {
 
     this.clusterLayer.addLayers(this.markers);
 
-    this.map
-      .addLayer(this.clusterLayer)
-      .setMinZoom(1)
-      .spin(false);
+    this.map.addLayer(this.clusterLayer).setMinZoom(1);
 
     if (this.markers.length > 0) {
       this.map.fitBounds(this.clusterLayer.getBounds(), {
@@ -92,7 +98,7 @@ export default class Map {
       });
     }
 
-    this.map.on('move', this.updateMarkerLocations.bind(this));
+    this.map.on('move', this._updateMarkerLocations.bind(this));
 
     this.map.on('dragstart', () => {
       const centerLng = this.map.getCenter().lng;
@@ -128,7 +134,7 @@ export default class Map {
     // leaflet-draw only attaches to global L, not sure how to import directly
     new L.Draw.Rectangle(this.map, {}).enable();
 
-    this.map.on(leaflet.Draw.Event.CREATED, e => {
+    this.map.on(L.Draw.Event.CREATED, e => {
       this.boundingBox = e.layer;
       this.map.addLayer(this.boundingBox);
       const ne = e.layer
@@ -146,19 +152,19 @@ export default class Map {
       });
     });
 
-    this.map.on(leaflet.Draw.Event.DRAWSTOP, () => {
+    this.map.on(L.Draw.Event.DRAWSTOP, () => {
       if (!this.boundingBox) {
-        this.map.off(leaflet.Draw.Event.CREATED);
+        this.map.off(L.Draw.Event.CREATED);
         createCallback();
       }
-      this.map.off(leaflet.Draw.Event.DRAWSTOP);
+      this.map.off(L.Draw.Event.DRAWSTOP);
     });
   }
 
   clearBounds() {
     if (this.boundingBox) {
       this.map.removeLayer(this.boundingBox);
-      this.map.off(leaflet.Draw.Event.CREATED);
+      this.map.off(L.Draw.Event.CREATED);
       this.boundingBox = null;
     }
   }
@@ -189,14 +195,14 @@ export default class Map {
       if (latlng.lng < centerLng) {
         // marker is W of center
         if (centerLng - 180 > latlng.lng) {
-          const mCopy = leaflet.marker([latlng.lat, latlng.lng + 360]);
+          const mCopy = L.marker([latlng.lat, latlng.lng + 360]);
           mCopy.bindPopup(m.getPopup());
           updatedMarkers.push(mCopy);
           originalMarkers.push(m);
         }
         // marker is E of center
       } else if (centerLng + 180 < latlng.lng) {
-        const mCopy = leaflet.marker([latlng.lat, latlng.lng - 360]);
+        const mCopy = L.marker([latlng.lat, latlng.lng - 360]);
         mCopy.bindPopup(m.getPopup());
         updatedMarkers.push(mCopy);
         originalMarkers.push(m);

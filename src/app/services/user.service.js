@@ -3,6 +3,7 @@ import { EventEmitter } from 'events';
 import User from '../models/User';
 
 import config from '../utils/config';
+
 const { restRoot } = config;
 
 export const USER_CHANGED_EVENT = 'userChanged';
@@ -39,7 +40,11 @@ class UserService extends EventEmitter {
     return this.$http
       .get(`${restRoot}users/${username}`)
       .then(response => {
-        if (response.status === 204) {
+        // bug in angular ui router??? When app.run.js loadSession calls this,
+        // and the auth request fails b/c accessToken has expired, a TargetState
+        // object is passed here instead of $http response
+        // if !response.status assume the request failed
+        if (!response.status || response.status === 204) {
           return;
         }
 

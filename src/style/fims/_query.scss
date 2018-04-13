@@ -54,7 +54,8 @@
       min-width: 40px;
       // border-left: 1px solid #fff;
       border-radius: 0 6px 6px 0;
-      background-color: #fff;
+      // background-color: #fff;
+      background-color: rgba(255, 255, 255, .5);
       z-index: 60;
 
       &.md-raised:not([disabled]) {
