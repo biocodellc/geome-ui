@@ -25,9 +25,11 @@
     padding: $layout-gutter-width / 4 $layout-gutter-width / 2;
 
     .md-dense > .md-button {
-      // min-height:  26px;
-      // line-height: 26px;
       min-width: 70px;
+
+      .download-button {
+        min-width: 40px;
+      }
 
       &.md-raised[disabled] {
         @extend .md-raised-disabled;
@@ -35,6 +37,12 @@
     }
 
   }
+}
+
+$query-form-toggle-width: 40px;
+
+.full-page-query-table {
+  padding-left: $query-form-toggle-width;
 }
 
 .sidebar {
@@ -50,11 +58,9 @@
       height: 40px;
       margin-top: -20px;
       margin-left: 0;
-      width: 40px;
-      min-width: 40px;
-      // border-left: 1px solid #fff;
+      width: $query-form-toggle-width;
+      min-width: $query-form-toggle-width;
       border-radius: 0 6px 6px 0;
-      // background-color: #fff;
       background-color: rgba(255, 255, 255, .5);
       z-index: 60;
 

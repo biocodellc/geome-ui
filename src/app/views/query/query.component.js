@@ -39,34 +39,52 @@ class QueryController {
   }
 
   downloadExcel() {
+    this.loading = true;
     this.QueryService.downloadExcel(
-      this.queryParams.build(),
+      this.params.buildQuery(),
+      this.currentProject.projectId,
       this.currentProject.config.entities[0].conceptAlias,
-    );
+    ).finally(() => (this.loading = false));
   }
 
   downloadCsv() {
+    this.loading = true;
     this.QueryService.downloadCsv(
-      this.queryParams.build(),
+      this.params.buildQuery(),
+      this.currentProject.projectId,
       this.currentProject.config.entities[0].conceptAlias,
-    );
+    ).finally(() => (this.loading = false));
   }
 
   downloadKml() {
+    this.loading = true;
     this.QueryService.downloadKml(
-      this.queryParams.build(),
+      this.params.buildQuery(),
+      this.currentProject.projectId,
       this.currentProject.config.entities[0].conceptAlias,
-    );
+    ).finally(() => (this.loading = false));
   }
 
   downloadFasta() {
-    this.QueryService.downloadFasta(this.queryParams.build(), 'fastaSequence');
+    this.loading = true;
+    this.QueryService.downloadFasta(
+      this.params.buildQuery(),
+      this.currentProject.projectId,
+      'fastaSequence',
+    ).finally(() => (this.loading = false));
   }
 
   downloadFastq() {
-    this.QueryService.downloadFastq(this.queryParams.build(), 'fastqMetadata');
+    this.loading = true;
+    this.QueryService.downloadFastq(
+      this.params.buildQuery(),
+      this.currentProject.projectId,
+      'fastqMetadata',
+    ).finally(() => (this.loading = false));
   }
 
+  // TODO: have query results return this as well. requires updating PostgresRecordRepository in backend
+  // to support sql pagination & sorting
   hasFastqData() {
     return this.results && this.results.data.some(d => d.fastqMetadata);
   }

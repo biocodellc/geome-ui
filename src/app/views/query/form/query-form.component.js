@@ -3,15 +3,15 @@ import angular from 'angular';
 const template = require('./query-form.html');
 
 const SOURCE = [
-  'urn:principalInvestigator',
-  'urn:materialSampleID',
-  'urn:locality',
-  'urn:country',
-  'urn:decimalLatitude',
-  'urn:decimalLongitude',
-  'urn:genus',
-  'urn:species',
-  'fastqMetadata',
+  'principalInvestigator',
+  'materialSampleID',
+  'locality',
+  'country',
+  'decimalLatitude',
+  'decimalLongitude',
+  'genus',
+  'species',
+  // 'fastqMetadata',
   'bcid',
 ];
 

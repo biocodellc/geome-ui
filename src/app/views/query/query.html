@@ -19,39 +19,38 @@
   </div>
 
   <div class="actions" layout="row" layout-align="end center">
+    <!-- download menu -->
+    <md-menu ng-show="$ctrl.results" class="md-dense" md-position-mode="target-right target">
+      <md-button aria-label="Open query download menu" ng-click="$mdMenu.open($event)" class="md-primary md-raised download-button">
+        <!-- Download -->
+        <md-icon md-font-icon="fa fa-download fa-xs"></md-icon>
+      </md-button>
+      <md-menu-content width="2" class="md-dense download-menu-content">
+        <md-menu-item>
+          <md-button ng-click="$ctrl.downloadCsv()">CSV</md-button>
+        </md-menu-item>
+        <md-menu-item>
+          <md-button ng-click="$ctrl.downloadKml()">KML</md-button>
+        </md-menu-item>
+        <md-menu-item>
+          <md-button ng-click="$ctrl.downloadFasta()">Fasta</md-button>
+        </md-menu-item>
+        <md-menu-item ng-show="$ctrl.hasFastqData()">
+          <md-button ng-click="$ctrl.downloadFastq()">Fastq</md-button>
+        </md-menu-item>
+        <md-menu-item ng-show="$ctrl.selectedExpeditions.length === 1">
+          <md-button ng-click="$ctrl.downloadExcel()">Excel Template</md-button>
+        </md-menu-item>
+      </md-menu-content>
+    </md-menu>
+
     <!-- query view toggle -->
     <div class="md-dense" layout="row" layout-align="center center">
       <md-button ng-click="$ctrl.toggleMap(true)" ng-disabled="$ctrl.showMap" class="groupX left md-raised">Map</md-button>
       <md-button ng-click="$ctrl.toggleMap(false)" ng-disabled="!$ctrl.showMap" class="groupX right md-raised">Table</md-button>
     </div>
 
-    <!-- download menu -->
-    <div ng-show="$ctrl.queryResults.isSet" class="btn-group btn-group-sm download-btn">
-      <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">Download
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu">
-        <li>
-          <a href="#" ng-click="$ctrl.downloadCsv()">CSV</a>
-        </li>
-        <li>
-          <a href="#" ng-click="$ctrl.downloadKml()">KML</a>
-        </li>
-        <li>
-          <a href="#" ng-click="$ctrl.downloadFasta()">Fasta</a>
-        </li>
-        <li>
-          <a href="#" ng-show="$ctrl.hasFastqData()" ng-click="$ctrl.downloadFastq()">Fastq</a>
-        </li>
-        <li>
-          <a href="#" ng-show="$ctrl.selectedExpeditions.length === 1" ng-click="$ctrl.downloadExcel()">Excel Template
-          </a>
-        </li>
-      </ul>
-    </div>
   </div>
-
-
 </div>
 
 <div layout="row" flex class="query-page">
@@ -91,20 +90,3 @@
 
   </div>
 </div>
-<!-- </div> -->
-<!--<h3 class="page-header">Query</h3>-->
-<!--<p>Data is subject to our data usage policy found-->
-<!--<a target="_blank" href="http://diversityindopacific.net/data-usage-agreement/">here</a></p>-->
-
-<!--<p>Using this tool you can search the GeOMe database. You can filter your results by expedition and on any of the-->
-<!--FIMS fields by clicking "More search options". The results of your search can be downloaded as a comma delimited-->
-<!--text file (.csv), Google Earth kml file. The Fasta download option will download a zip file containing the Fims-->
-<!--Metadata and a fasta files containing any associated fastaSequences in your query results. If you are querying-->
-<!--only-->
-<!--1 expedition, then you can also download the results as and Excel spreadsheet template (.xlsx).-->
-
-<!--</p>-->
-<!--<p>-->
-<!--<em>Note:</em> Although you can filter your results on the fastaSequence.marker and/or fastaSequence.sequence-->
-<!--fields, those fields will only appear in the results when you click the "Fasta" download option.-->
-<!--</p>-->

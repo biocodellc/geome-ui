@@ -16,7 +16,6 @@ class QueryService {
   queryJson(query, projectId, entity, page, limit) {
     angular.alerts.removeTmp();
 
-    // TODO: update to only return specified source columns
     return this.$http({
       method: 'GET',
       url: `${restRoot}projects/${projectId}/query/${entity}/json?limit=${limit}&page=${page}`,
@@ -55,23 +54,23 @@ class QueryService {
   }
 
   downloadExcel(query, projectId, entity) {
-    this.download('excel', query, projectId, entity);
+    return this.download('excel', query, projectId, entity);
   }
 
   downloadKml(query, projectId, entity) {
-    this.download('kml', query, projectId, entity);
+    return this.download('kml', query, projectId, entity);
   }
 
   downloadCsv(query, projectId, entity) {
-    this.download('csv', query, projectId, entity);
+    return this.download('csv', query, projectId, entity);
   }
 
   downloadFasta(query, projectId, entity) {
-    this.download('fasta', query, projectId, entity);
+    return this.download('fasta', query, projectId, entity);
   }
 
   downloadFastq(query, projectId, entity) {
-    this.download('fastq', query, projectId, entity);
+    return this.download('fastq', query, projectId, entity);
   }
 
   download(path, query, projectId, entity) {
@@ -103,7 +102,7 @@ class QueryService {
 
         this.$window.open(url, '_self');
       })
-      .catch(angular.exception.catcher('Failed downloading file!'));
+      .catch(angular.catcher('Failed downloading file!'));
   }
 }
 
