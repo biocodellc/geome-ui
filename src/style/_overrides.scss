@@ -74,11 +74,6 @@ a {
 $adminnav-border-bottom: 1px solid $gray-light;
 
 .admin {
-  background-color: hsla(0, 0%, 98%, 1);
-  margin: -30px -25px - ($grid-gutter-width / 2);
-  padding: 30px 25px + ($grid-gutter-width / 2);
-  flex-grow: 1;
-
   section {
     background-color: #fff;
     border: 1px solid hsla(184, 6%, 85%, 1);

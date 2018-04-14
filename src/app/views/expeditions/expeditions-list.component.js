@@ -1,7 +1,9 @@
 import angular from 'angular';
 
+const template = require('./expeditions.html');
+
 const fimsExpeditionsList = {
-  template: require('./expeditions.html'),
+  template,
   bindings: {
     expeditions: '<',
   },

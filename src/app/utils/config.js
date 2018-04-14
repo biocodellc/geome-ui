@@ -13,4 +13,6 @@
 import config from 'config';
 import defaultConfig from '../../../config/default';
 
+if (process.env.MAPBOX_TOKEN) config.mapboxToken = process.env.MAPBOX_TOKEN;
+
 export default Object.assign({}, defaultConfig, config);

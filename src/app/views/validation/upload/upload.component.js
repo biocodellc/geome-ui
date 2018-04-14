@@ -23,10 +23,10 @@ class UploadController {
   $onInit() {
     this.fastaData = [];
     this.dataTypes = {};
-    this.userExpeditions.splice(0, 0, {
-      expeditionCode: 'CREATE',
-      expeditionTitle: '-- Create an Expedition --',
-    });
+    // this.userExpeditions.splice(0, 0, {
+    // expeditionCode: 'CREATE',
+    // expeditionTitle: '-- Create an Expedition --',
+    // });
   }
 
   handleDatatypes(dataTypes) {
