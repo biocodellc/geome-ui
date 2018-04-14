@@ -19,7 +19,7 @@
 
   <md-menu md-position-mode="right bottom" md-offset="0 12">
     <md-button aria-label="Open user profile menu" class="md-icon-button md-primary" ng-click="console.log($mdMenu); $mdMenu.open($event)">
-      <span ng-show="$ctrl.currentUser" style="padding-right: 5px;">hi, {{ $ctrl.currentUser.username }}!</span>
+      <span ng-show="$ctrl.currentUser" style="padding-right: 5px;text-transform: none">HI, {{ $ctrl.currentUser.username }}!</span>
       <md-icon md-font-icon="fa fa-user-circle-o fa-md"></md-icon>
       <md-icon md-font-icon="fa fa-angle-down fa-sm"></md-icon>
     </md-button>

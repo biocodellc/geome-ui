@@ -4,12 +4,9 @@ function getStates() {
       state: 'projectView',
       config: {
         url: '/workbench',
+        template:
+          '<ui-view current-project="$ctrl.currentProject" current-user="$ctrl.currentUser"/>',
         abstract: true,
-        resolve: {
-          // currentProject: /* @ngInject */ ProjectService =>
-          // ProjectService.currentProject(),
-          // currentUser: /* @ngInject */ UserService => UserService.currentUser(),
-        },
       },
     },
     {

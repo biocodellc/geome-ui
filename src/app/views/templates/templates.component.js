@@ -5,10 +5,11 @@ const template = require('./templates.html');
 const DEFAULT_TEMPLATE = { name: 'DEFAULT' };
 
 class TemplateController {
-  constructor(TemplateService) {
+  constructor($anchorScroll, TemplateService) {
     'ngInject';
 
     this.TemplateService = TemplateService;
+    this.$anchorScroll = $anchorScroll;
   }
 
   $onInit() {
@@ -123,6 +124,11 @@ class TemplateController {
   getWorksheets() {
     this.worksheets = this._config.worksheets();
     this.sheetName = this.worksheets[0];
+  }
+
+  define(attribute) {
+    this.defAttribute = attribute;
+    this.$anchorScroll('definition'); // scroll to definition
   }
 }
 

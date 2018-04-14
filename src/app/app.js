@@ -7,8 +7,8 @@ import ngMaterial from 'angular-material';
 import 'jquery-ui';
 
 // this loads the css for the app
-import '../style/app.scss';
 import '../style/bootstrap.scss';
+import '../style/app.scss';
 
 import run from './app.run';
 import theme from './app.theme';

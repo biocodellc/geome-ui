@@ -114,7 +114,7 @@
   margin-bottom: 40px;
 }
 
-md-content {
+body > app > md-content {
   background-color: #fff;
 }
 
@@ -134,10 +134,24 @@ md-menu-content.md-menu-bar-menu.md-dense a.md-button {
   text-transform: uppercase;
 }
 
-.bold {
-  font-weight: 600;
+.text-center {
+  text-align: center
 }
 
+.bold {
+  font-weight: 700;
+}
+
+// page header
+
+.page-header {
+  margin: 0 0 35px 0;
+  border-bottom: none;
+  // padding-bottom: 0;
+
+  @extend .text-center;
+  @extend .layout-padding;
+}
 
 md-checkbox.small {
   min-width: 12px;
@@ -169,4 +183,16 @@ md-checkbox.small {
     padding-top: 8px;
     padding-bottom: 8px;
   }
+}
+
+
+// TODO: remove when we remove bootstrap
+//////////////////////
+// bootstrap overrides
+//////////////////////
+
+.row,
+.form-horizontal .form-group {
+  margin-left: 0px;
+  margin-right: 0px;
 }
