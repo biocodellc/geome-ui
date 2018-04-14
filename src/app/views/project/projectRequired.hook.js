@@ -1,4 +1,4 @@
-function checkProjectRequired(state) {
+export function checkProjectRequired(state) {
   let s = state;
 
   do {

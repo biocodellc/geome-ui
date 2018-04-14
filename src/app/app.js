@@ -42,9 +42,11 @@ import alerts from './components/alerts';
 // import lookup from './components/lookup';
 import modals from './components/modals';
 import users from './components/users';
+import projectSelectorDialog from './components/project-selector-dialog';
 
 import Exceptions from './utils/exceptions';
 import Alerts from './utils/alerts';
+import projectViewHook from './projectView.hook';
 
 const dependencies = [
   uirouter,
@@ -73,6 +75,7 @@ const dependencies = [
   validation,
   project,
   users,
+  projectSelectorDialog,
   modals,
   // lookup,
 ];
@@ -87,4 +90,5 @@ export default angular
   .component('app', app)
   .run(routing)
   .run(run)
+  .run(projectViewHook)
   .config(theme);

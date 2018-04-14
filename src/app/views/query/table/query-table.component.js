@@ -25,7 +25,6 @@ class QueryTableController {
   }
 
   $onChanges(changesObj) {
-    console.log(changesObj);
     if ('results' in changesObj) {
       this.currentPage = 1;
       this.updatePage();

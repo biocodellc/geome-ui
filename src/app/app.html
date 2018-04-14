@@ -11,11 +11,12 @@
     <main class="main">
       <alerts></alerts>
       <div class="content" id="content">
+        <div layout="row" layout-fill layout-sm="column" ng-show="$ctrl.loading" layout-align="center center">
+          <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+        </div>
+
         <div class="container-fluid" ui-view ng-show="!$ctrl.loading" current-project="$ctrl.currentProject"
           current-user="$ctrl.currentUser">
-        </div>
-        <div ng-show="$ctrl.loading">
-          <span us-spinner></span>
         </div>
       </div>
     </main>

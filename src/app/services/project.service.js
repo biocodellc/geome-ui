@@ -2,8 +2,8 @@ import angular from 'angular';
 import { EventEmitter } from 'events';
 
 import storageService from './storage.service';
-
 import config from '../utils/config';
+
 const { restRoot } = config;
 
 export const PROJECT_CHANGED_EVENT = 'projectChanged';

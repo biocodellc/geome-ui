@@ -5,7 +5,7 @@ function getStates() {
     {
       state: 'query',
       config: {
-        url: '/query',
+        url: '/',
         component: 'fimsQuery',
         resolve: {
           layout: () => 'column',
