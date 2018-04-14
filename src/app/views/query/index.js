@@ -9,23 +9,13 @@ import projectService from '../../services/project.service';
 
 import routing from './query.routes';
 
-import typeahead from './typeahead.directive';
 import fimsMap from '../../components/map';
 import fimsQuery from './query.component';
 import fimsQueryForm from './form/query-form.component';
 import fimsQueryDetail from './detail/query-detail.component';
 import fimsQueryTable from './table/query-table.component';
 
-// angular.module('fims.query', ['fims.modals', 'fims.projects', 'fims.map', 'fims.alerts', 'fims.exception',
-// 'fims.auth', 'sly', 'ui.select']);
-const dependencies = [
-  'sly',
-  router,
-  QueryService,
-  projectService,
-  typeahead,
-  fimsMap,
-];
+const dependencies = ['sly', router, QueryService, projectService, fimsMap];
 
 export default angular
   .module('fims.query', dependencies)

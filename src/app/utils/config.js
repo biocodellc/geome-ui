@@ -13,9 +13,8 @@
 import config from 'config';
 import defaultConfig from '../../../config/default';
 
-const { MAPBOX_TOKEN, FIMS_CLIENT_ID } = process.env;
-
-if (MAPBOX_TOKEN) config.mapboxToken = MAPBOX_TOKEN;
-if (FIMS_CLIENT_ID) config.fimsClientId = FIMS_CLIENT_ID;
+if (process.env.MAPBOX_TOKEN) config.mapboxToken = process.env.MAPBOX_TOKEN;
+if (process.env.FIMS_CLIENT_ID)
+  config.fimsClientId = process.env.FIMS_CLIENT_ID;
 
 export default Object.assign({}, defaultConfig, config);

@@ -94,17 +94,6 @@ class ProjectService extends EventEmitter {
     }).catch(angular.catcher('Failed to update the project.'));
   }
 
-  // TODO remove this
-  resolveProjectId() {
-    return new Promise((resolve, reject) => {
-      if (currentProject) {
-        resolve(currentProject.projectId);
-      } else {
-        reject({ data: { error: 'No project is selected' } });
-      }
-    });
-  }
-
   loadFromSession(projectId) {
     if (!projectId) {
       projectId = this.StorageService.get('projectId');

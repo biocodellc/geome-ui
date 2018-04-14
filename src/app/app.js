@@ -21,7 +21,7 @@ import trustedHtml from './filters/html.filter';
 
 import about from './views/about';
 import containerPage from './components/container-page';
-// import notFound from './views/not-found';
+import notFound from './views/not-found';
 import contact from './views/contact';
 import login from './views/login';
 import templates from './views/templates';
@@ -64,7 +64,7 @@ const dependencies = [
   alerts,
   about,
   contact,
-  // notFound,
+  notFound,
   login,
   query,
   auth,

@@ -240,7 +240,10 @@ module.exports = (function makeWebpackConfig() {
         template: './src/public/index.html',
         inject: 'body',
       }),
-      new webpack.EnvironmentPlugin(['MAPBOX_TOKEN', 'FIMS_CLIENT_ID']),
+      new webpack.EnvironmentPlugin({
+        MAPBOX_TOKEN: null,
+        FIMS_CLIENT_ID: null,
+      }),
     );
   }
 
