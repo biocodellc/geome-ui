@@ -2,11 +2,10 @@ import angular from 'angular';
 import { EventEmitter } from 'events';
 
 import storageService from './storage.service';
-import CLIENT_ID from '../components/auth/clientId';
 
 import config from '../utils/config';
 
-const { restRoot, appRoot, authTimeout } = config;
+const { restRoot, appRoot, authTimeout, fimsClientId } = config;
 
 export const AUTH_ERROR_EVENT = 'authError';
 
@@ -31,7 +30,7 @@ class AuthService extends EventEmitter {
 
   authenticate(username, password) {
     const data = {
-      client_id: CLIENT_ID,
+      client_id: fimsClientId,
       redirect_uri: `${appRoot}/oauth`,
       grant_type: 'password',
       username,
@@ -63,7 +62,7 @@ class AuthService extends EventEmitter {
     if (refreshToken && this._checkAuthenticated() && !triedToRefresh) {
       return this.$http
         .post(`${restRoot}authenticationService/oauth/refresh`, {
-          client_id: CLIENT_ID,
+          client_id: fimsClientId,
           refresh_token: refreshToken,
         })
         .then(({ data }) => this._authSuccess(data, username))

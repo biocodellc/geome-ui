@@ -57,34 +57,3 @@ export default routerHelper => {
   routerHelper.redirect('/secure/profile.jsp', 'profile');
   routerHelper.redirect('/secure/projects.jsp', 'projects');
 };
-
-// TODO clean up
-// .state('validate', {
-//   url: "/validate",
-//   templateUrl: "app/components/validation/validation.html",
-//   controller: "ValidationController as vm",
-//   projectRequired: true,
-//   loginRequired: true,
-// })
-// .state('bcidMetadata', {
-//     url: "/bcids/metadata/*ark",
-//     templateUrl: "app/components/bcids/metadata.html",
-//     controller: "MetadataCtrl as vm",
-//     parent: "main"
-// })
-// .state('lookup', {
-//   url: "/lookup?id",
-//   templateUrl: "app/components/lookup/lookup.html",
-//   controller: "LookupCtrl as vm",
-// })
-// .state('lookup.metadata', {
-//   url: "/metadata/*ark",
-//   templateUrl: "app/components/lookup/lookup.metadata.html",
-//   controller: "LookupMetadataCtrl as vm",
-// })
-// .state('creator', {
-//   url: "/bcidCreator",
-//   templateUrl: "app/components/creator/bcidCreator.jsp",
-//   controller: "CreatorCtrl as vm",
-//   loginRequired: true,
-// })
