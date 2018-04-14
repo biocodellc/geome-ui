@@ -1,3 +1,5 @@
+const template = require('./attribute-definition.html');
+
 class AttributeDefController {
   constructor() {
     this._config = undefined;
@@ -24,7 +26,7 @@ class AttributeDefController {
 }
 
 export default {
-  template: require('./attribute-definition.html'),
+  template,
   controller: AttributeDefController,
   bindings: {
     attribute: '<',

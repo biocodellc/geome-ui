@@ -1,0 +1,14 @@
+fims-navigation {
+
+  md-sidenav {
+    padding-top: 20px;
+  }
+
+  md-list {
+    margin-bottom: $layout-gutter-width / 2;
+
+    .md-subheader {
+      font-weight: 600;
+    }
+  }
+}

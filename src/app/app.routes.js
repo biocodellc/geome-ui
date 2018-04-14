@@ -5,16 +5,13 @@ function getStates() {
       config: {
         url: '/workbench',
         abstract: true,
-        // redirectTo: 'template', // TODO change this to a dashboard page
+        resolve: {
+          // currentProject: /* @ngInject */ ProjectService =>
+          // ProjectService.currentProject(),
+          // currentUser: /* @ngInject */ UserService => UserService.currentUser(),
+        },
       },
     },
-    // {
-    //   state: 'fullPageView',
-    //   config: {
-    //     component: 'fimsFullPage',
-    //     abstract: true,
-    //   },
-    // },
     {
       state: 'containerPageView',
       config: {

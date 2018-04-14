@@ -66,40 +66,39 @@
 
 // btn groups https://material.angularjs.org/latest/CSS/button#grouping-with-css-overrides
 .groupX {
-    margin-right: 0;
-    margin-left: 0;
-    text-transform: none;
-    // min-width:100px;
-}
+  margin-right: 0;
+  margin-left: 0;
+  text-transform: none;
 
-.md-button {
+  &.md-button {
 
-  &.md-button-sm {
-    min-height: 0;
-    min-width:0;
-    font-size: 13px;
-    line-height: 13px;
-    padding: 8px;
-  }
+    &.md-button-sm {
+      min-height: 0;
+      min-width:0;
+      font-size: 13px;
+      line-height: 13px;
+      padding: 8px;
+    }
 
-  &.left {
-    border-radius: $button-border-radius 0 0 $button-border-radius;
-  }
+    &.left {
+      border-radius: $button-border-radius 0 0 $button-border-radius;
+    }
 
-  &.middle {
-    border-radius: 0;
-    border-left: 1px solid rgba(230, 230, 230, 0.96);
-    border-right: 1px solid rgba(230, 230, 230, 0.96);
-  }
+    &.middle {
+      border-radius: 0;
+      border-left: 1px solid rgba(230, 230, 230, 0.96);
+      border-right: 1px solid rgba(230, 230, 230, 0.96);
+    }
 
-  &.right {
-    border-radius: 0 $button-border-radius $button-border-radius 0;
-  }
+    &.right {
+      border-radius: 0 $button-border-radius $button-border-radius 0;
+    }
 
-  &:not([disabled]):hover {
-    background-color: rgba(193, 193, 193, 0.96);
-    color: rgba(44, 65, 164, 0.96);
-    transition: 0.3s;
+    &:not([disabled]):hover {
+      background-color: rgba(193, 193, 193, 0.96);
+      color: rgba(44, 65, 164, 0.96);
+      transition: 0.3s;
+    }
   }
 }
 

@@ -1,5 +1,16 @@
+const template = require('./navigation.html');
+
+class NavigationController {
+  constructor($state) {
+    'ngInject';
+
+    this.$state = $state;
+  }
+}
+
 export default {
-  template: require('./navigation.html'),
+  template,
+  controller: NavigationController,
   bindings: {
     currentUser: '<',
     currentProject: '<',

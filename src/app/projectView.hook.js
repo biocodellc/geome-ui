@@ -1,4 +1,3 @@
-import angular from 'angular';
 import { EventEmitter } from 'events';
 
 export const LOADING_PROJECT_EVENT = 'loading_project';

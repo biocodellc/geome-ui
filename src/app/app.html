@@ -3,26 +3,23 @@
     on-project-change="$ctrl.handleProjectChange(project)" on-signout="$ctrl.signout()">
   </fims-header>
 
-  <div flex ng-show="$ctrl.projectView">
+  <div flex layout="row" ng-if="$ctrl.projectView">
     <!-- Sidebar navigation -->
-    <fims-navigation current-project="$ctrl.currentProject" current-user="$ctrl.currentUser">
-    </fims-navigation>
+    <fims-navigation layout="column" current-project="$ctrl.currentProject" current-user="$ctrl.currentUser"></fims-navigation>
 
-    <main class="main">
-      <alerts></alerts>
-      <div class="content" id="content">
-        <div layout="row" layout-fill layout-sm="column" ng-show="$ctrl.loading" layout-align="center center">
-          <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-        </div>
-
-        <div class="container-fluid" ui-view ng-show="!$ctrl.loading" current-project="$ctrl.currentProject"
-          current-user="$ctrl.currentUser">
-        </div>
+    <md-content flex layout-fill>
+      <div layout="row" layout-fill layout-sm="column" ng-show="$ctrl.loading" layout-align="center center">
+        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
       </div>
-    </main>
+
+      <main ng-show="!$ctrl.loading">
+        <alerts></alerts>
+        <div class="project-view" ui-view current-project="$ctrl.currentProject" current-user="$ctrl.currentUser"></div>
+      </main>
+    </md-content>
   </div>
 
-  <div flex ng-show="!$ctrl.projectView">
+  <div flex ng-if="!$ctrl.projectView">
     <div layout="row" layout-fill layout-sm="column" ng-show="$ctrl.loading" layout-align="center center">
       <md-progress-circular md-mode="indeterminate"></md-progress-circular>
     </div>

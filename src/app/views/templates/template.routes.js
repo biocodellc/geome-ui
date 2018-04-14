@@ -6,7 +6,6 @@ function getStates() {
         parent: 'projectView',
         url: '/template',
         component: 'fimsTemplates',
-        // projectRequired: true,
       },
     },
   ];

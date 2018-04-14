@@ -17,6 +17,7 @@ function getStates() {
     {
       state: 'profile',
       config: {
+        parent: 'projectView',
         url: '/user/profile',
         component: 'fimsProfile',
         loginRequired: true,

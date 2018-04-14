@@ -44,14 +44,17 @@ class QueryTableController {
   detailView(resource) {
     const bcidIndex = this.tableColumns.indexOf('bcid');
     this.$window.open(
-      this.$state.href('sample', { bcid: resource[bcidIndex] }),
+      this.$state.href('sample', {
+        entity: 'Resource', // TODO don't hardcode this
+        bcid: resource[bcidIndex],
+      }),
     );
   }
 
   /*
-         transform the data into an array so we can use sly-repeat to display it. sly-repeat bypasses the $watches
-         greatly improving the performance of sizable tables
-         */
+  transform the data into an array so we can use sly-repeat to display it. sly-repeat bypasses the $watches
+  greatly improving the performance of sizable tables
+  */
   prepareTableData(data) {
     this.tableData = data.map(resource =>
       this.tableColumns.map(key => resource[key]),

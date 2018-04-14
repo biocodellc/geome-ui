@@ -20,7 +20,6 @@ import showErrors from './directives/showErrors.directive';
 import trustedHtml from './filters/html.filter';
 
 import about from './views/about';
-import fullPage from './components/full-page';
 import containerPage from './components/container-page';
 // import notFound from './views/not-found';
 import contact from './views/contact';
@@ -59,7 +58,6 @@ const dependencies = [
   ngMaterial,
   projectService,
   userService,
-  fullPage,
   containerPage,
   header,
   navigation,

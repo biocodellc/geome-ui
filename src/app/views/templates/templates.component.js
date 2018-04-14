@@ -1,5 +1,7 @@
 import angular from 'angular';
 
+const template = require('./templates.html');
+
 const DEFAULT_TEMPLATE = { name: 'DEFAULT' };
 
 class TemplateController {
@@ -125,7 +127,7 @@ class TemplateController {
 }
 
 export default {
-  template: require('./templates.html'),
+  template,
   controller: TemplateController,
   bindings: {
     currentUser: '<',
