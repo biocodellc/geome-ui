@@ -1,0 +1,3 @@
+# file used to configure netlify redirects
+# https://www.netlify.com/docs/redirects/#history-pushstate-and-single-page-apps
+/*    /index.html   200
