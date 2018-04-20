@@ -34,6 +34,7 @@ class ProjectSelectorController {
     this.ProjectService.all(this.includePublicProjects).then(({ data }) => {
       if (
         !this.includePublicProjects &&
+        this.currentProject &&
         !data.find(p => p.projectId === this.currentProject.projectId)
       ) {
         this.includePublicProjects = true;

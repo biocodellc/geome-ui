@@ -48,7 +48,7 @@ class LoginController {
           });
           return;
         }
-        this.state.go('home', {}, { reload: true, inherit: false });
+        this.state.go('about', {}, { reload: true, inherit: false });
       })
       .catch(angular.catcher('Error during authentication.'))
       .finally(() => this.loadingModal.close());

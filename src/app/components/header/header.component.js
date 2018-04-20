@@ -14,7 +14,7 @@ class HeaderController {
       this.$location.path(),
       '/apidocs/current/service.json',
     );
-    this.$window.location = `http://biscicol.org/apidocs?url=${url}`;
+    this.$window.location = `https://api.biocode-fims.org/apidocs/https://biscicol.org/apidocs?url=${url}`;
   }
 
   login() {
