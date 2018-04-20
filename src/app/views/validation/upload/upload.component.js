@@ -13,20 +13,23 @@ const defaultFastqMetadata = {
 };
 
 class UploadController {
-  constructor($scope, $uibModal) {
+  constructor($scope, $uibModal, $mdDialog) {
     'ngInject';
 
     this.$scope = $scope;
     this.$uibModal = $uibModal;
+    this.$mdDialog = $mdDialog;
   }
 
   $onInit() {
     this.fastaData = [];
     this.dataTypes = {};
-    // this.userExpeditions.splice(0, 0, {
-    // expeditionCode: 'CREATE',
-    // expeditionTitle: '-- Create an Expedition --',
-    // });
+  }
+
+  $onChanges(changesObj) {
+    if (this.fimsMetadata && 'fimsMetadata' in changesObj) {
+      this.verifyCoordinates();
+    }
   }
 
   handleDatatypes(dataTypes) {
@@ -152,6 +155,19 @@ class UploadController {
     }
 
     return data;
+  }
+
+  verifyCoordinates() {
+    const LAT_COL_DEF = 'http://rs.tdwg.org/dwc/terms/decimalLatitude';
+    const LON_COL_DEF = 'http://rs.tdwg.org/dwc/terms/decimalLongitude';
+
+    const latColumn = this.currentProject.config.findAttributesByDefinition(
+      LAT_COL_DEF,
+    )[0];
+    const longColumn = this.currentProject.config.findAttributesByDefinition(
+      LON_COL_DEF,
+    )[0];
+    const uniqueKey = this.currentProject.config.entities[0].uniqueKey;
   }
 }
 

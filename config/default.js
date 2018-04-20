@@ -1,6 +1,5 @@
 export default {
   naan: 99999,
-  // restRoot: 'https://localhost:8080/biocode-fims/rest/v2/',
   restRoot: 'https://api.biocode-fims.org/biocode-fims/rest/v2/',
   resolverRoot: 'http://localhost:8080/id/v2/',
   appRoot: '/', // When changing this, also need to change <base> tag in index.html
