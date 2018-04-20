@@ -1,64 +1,7 @@
 /**
  * Document-wide styles.
  **/
-[ng\:cloak], [ng-cloak], .ng-cloak {
-  display: none !important;
-}
 
-@font-face {
-  font-family: 'Roboto';
-  src: url('../fonts/roboto/Roboto-Bold.woff') format('woff'),
-  url('../fonts/roboto/Roboto-Bold.woff2') format('woff2');
-  font-weight: bold;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Roboto';
-  src: url('../fonts/roboto/Roboto-Medium.woff') format('woff'),
-  url('../fonts/roboto/Roboto-Medium.woff2') format('woff2');
-  font-weight: 500;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Roboto';
-  src: url('../fonts/roboto/Roboto-Regular.woff') format('woff'),
-  url('../fonts/roboto/Roboto-Regular.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Roboto';
-  src: url('../fonts/roboto/Roboto-Light.woff') format('woff'),
-  url('../fonts/roboto/Roboto-Light.woff2') format('woff2');
-  font-weight: 300;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Roboto';
-  src: url('../fonts/roboto/Roboto-Thin.woff') format('woff'),
-  url('../fonts/roboto/Roboto-Thin.woff2') format('woff2');
-  font-weight: 100;
-  font-style: normal;
-}
-
-// font-awesome
-.fa-sm {
-  font-size: .75em;
-}
-
-.fa-md {
-  line-height: .75em;
-  vertical-align: -15%;
-  font-size: 1.25em;
-}
-
-.fa-lg {
-  font-size: 1.5em;
-}
 
 .dropdown-menu a {
   .fa {
@@ -68,35 +11,6 @@
   .fa-after {
     padding-left: 8px;
   }
-}
-
-body {
-  height: 100vh;
-  overflow: hidden;
-}
-
-// grid
-.vertical-align {
-  display: flex;
-  flex-direction: row;
-}
-
-.vertical-align > [class^="col-"],
-.vertical-align > [class*=" col-"] {
-  display: flex;
-  align-items: center; /* Align the flex-items vertically */
-  justify-content: center; /* Optional, to align inner flex-items horizontally within the column  */
-  flex-flow: row wrap;
-}
-
-.vertical-align > [class^="col-"] > *,
-.vertical-align > [class*=" col-"] > * {
-  width: 100%;
-}
-
-.col-centered {
-  float: none;
-  margin: 0 auto;
 }
 
 // main view
@@ -120,9 +34,6 @@ body {
     }
   }
 
-  //@media (min-width: $grid-float-breakpoint-max) {
-  //  padding-left: 0;
-  //}
 }
 
 .content {
@@ -144,25 +55,10 @@ body {
 
 // alerts
 
-.alerts {
-  .alert {
-    text-align: center;
-    border-radius: 0;
-    margin-bottom: 0;
-  }
-}
-
 .alert-error {
   @extend .alert-danger;
 }
 
-// page header
-
-.page-header {
-  margin-top: 0;
-  margin-bottom: 35px;
-  text-align: center
-}
 
 // links
 
@@ -178,11 +74,6 @@ a {
 $adminnav-border-bottom: 1px solid $gray-light;
 
 .admin {
-  background-color: hsla(0, 0%, 98%, 1);
-  margin: -30px -25px - ($grid-gutter-width / 2);
-  padding: 30px 25px + ($grid-gutter-width / 2);
-  flex-grow: 1;
-
   section {
     background-color: #fff;
     border: 1px solid hsla(184, 6%, 85%, 1);

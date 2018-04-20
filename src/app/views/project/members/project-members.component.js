@@ -1,5 +1,8 @@
 import angular from 'angular';
 
+const template = require('./project-members.html');
+const removeTemplate = require('./remove-member-confirmation.tpl.html');
+
 class ProjectMembersController {
   constructor($state, $uibModal, ProjectMembersService, UserService) {
     'ngInject';
@@ -43,7 +46,10 @@ class ProjectMembersController {
 
   handleAddMember(username) {
     angular.alerts.removeTmp();
-    this.ProjectMembersService.add(this.username).then(() => {
+    this.ProjectMembersService.add(
+      this.currentProject.projectId,
+      this.username,
+    ).then(() => {
       this.username = undefined;
       angular.alerts.success('Successfully added user');
       this.$state.reload();
@@ -52,7 +58,7 @@ class ProjectMembersController {
 
   remove(user) {
     const modal = this.$uibModal.open({
-      template: require('./remove-member-confirmation.tpl.html'),
+      template: removeTemplate,
       size: 'md',
       controller: RemoveMemberConfirmationController,
       controllerAs: 'vm',
@@ -66,9 +72,10 @@ class ProjectMembersController {
     });
 
     modal.result.then(() =>
-      this.ProjectMembersService.remove(user.username).then(() =>
-        this.$state.reload(),
-      ),
+      this.ProjectMembersService.remove(
+        this.currentProject.projectId,
+        user.username,
+      ).then(() => this.$state.reload()),
     );
   }
 }
@@ -84,10 +91,11 @@ class RemoveMemberConfirmationController {
 }
 
 export default {
-  template: require('./project-members.html'),
+  template,
   controller: ProjectMembersController,
   bindings: {
     members: '<',
     currentUser: '<',
+    currentProject: '<',
   },
 };

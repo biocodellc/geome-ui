@@ -3,6 +3,7 @@ function getStates() {
     {
       state: 'contact',
       config: {
+        parent: 'containerPageView',
         url: '/contact',
         component: 'contact',
       },

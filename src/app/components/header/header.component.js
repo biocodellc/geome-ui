@@ -1,18 +1,11 @@
+const template = require('./header.html');
+
 class HeaderController {
-  constructor($location, $window, $state) {
+  constructor($location, $state) {
     'ngInject';
 
     this.$location = $location;
-    this.$window = $window;
     this.$state = $state;
-  }
-
-  apidocs() {
-    const url = this.$location.$$absUrl.replace(
-      this.$location.path(),
-      '/apidocs/current/service.json',
-    );
-    this.$window.location = `http://biscicol.org/apidocs?url=${url}`;
   }
 
   login() {
@@ -24,12 +17,13 @@ class HeaderController {
 }
 
 export default {
-  template: require('./header.html'),
+  template,
   controller: HeaderController,
   bindings: {
     currentUser: '<',
     currentProject: '<',
     onProjectChange: '&',
     onSignout: '&',
+    showProjectSelector: '<',
   },
 };

@@ -1,22 +1,15 @@
-// styles in src/style directory are applied to the whole page
+// Roboto font
+@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic");
 
 // Default variables.
 @import "variables";
-
-// Bootstrap Framework.
-$icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap-sprockets";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap";
 
 // Font Awesome
 $fa-font-path: "../fonts/fa";
 @import 'font-awesome/font-awesome';
 
-// Bootswatch Flatly Theme
-@import "bootswatch";
+// Material-Design
+@import "~angular-material/angular-material.scss";
 
 // Fims Overrides
 @import "fims/fims";
-
-// Base-theme overrides.
-@import 'overrides';

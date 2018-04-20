@@ -1,3 +1,5 @@
+import '../../../style/fims/_projectSelector.scss';
+
 const template = require('./projectSelector.html');
 
 class ProjectSelectorController {
@@ -30,8 +32,15 @@ class ProjectSelectorController {
     // TODO can we define a schema on the User?
     // then we can return the ids of the projects a user is a member of, and make this a dumb component, just filtering here which is faster
     this.ProjectService.all(this.includePublicProjects).then(({ data }) => {
-      // TODO if currentProject is not in filtered list & includePublicProjects === false,
-      // make includePublicProjects === true
+      if (
+        !this.includePublicProjects &&
+        this.currentProject &&
+        !data.find(p => p.projectId === this.currentProject.projectId)
+      ) {
+        this.includePublicProjects = true;
+        this.filterProjects();
+        return;
+      }
       this.projects = data;
     });
   }
@@ -46,6 +55,8 @@ export default {
   template,
   controller: ProjectSelectorController,
   bindings: {
+    offset: '@',
+    buttonClass: '@',
     currentProject: '<',
     onChange: '&',
     isAuthenticated: '<',

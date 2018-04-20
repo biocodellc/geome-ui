@@ -3,11 +3,9 @@ const fs = require('fs');
 
 // Modules
 const webpack = require('webpack');
-const autoprefixer = require('autoprefixer');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const DashboardPlugin = require('webpack-dashboard/plugin');
 
 /**
  * Env
@@ -25,6 +23,30 @@ function root(args) {
   return path.join(...[__dirname].concat(args));
 }
 
+const css = (extend = []) => {
+  if (isTest) return ['null-loader'];
+
+  // Reference: https://github.com/postcss/postcss-loader
+  // Postprocess your css with PostCSS plugins
+  // Reference: https://github.com/webpack-contrib/mini-css-extract-plugin
+  // Extract css files in production builds
+  //
+  // Reference: https://github.com/webpack/style-loader
+  // Use style-loader in development.
+  return [
+    isProd ? MiniCssExtractPlugin.loader : 'style-loader',
+    isProd
+      ? 'css-loader'
+      : {
+          loader: 'css-loader',
+          options: { sourceMap: false, importLoaders: 1 },
+        },
+    isProd
+      ? 'postcss-loader'
+      : { loader: 'postcss-loader', options: { sourceMap: false } },
+  ].concat(extend);
+};
+
 module.exports = (function makeWebpackConfig() {
   /**
    * Config
@@ -32,6 +54,8 @@ module.exports = (function makeWebpackConfig() {
    * This is the object where all configuration gets set
    */
   const config = {};
+
+  config.mode = isProd ? 'production' : 'development';
 
   /**
    * Entry
@@ -42,7 +66,7 @@ module.exports = (function makeWebpackConfig() {
   config.entry = isTest
     ? void 0
     : {
-        app: './src/app/app.js',
+        app: ['babel-polyfill', './src/app/app.js'],
       };
 
   /**
@@ -59,6 +83,7 @@ module.exports = (function makeWebpackConfig() {
 
         // Output path from the view of the page
         // Uses webpack-dev-server in development
+        // publicPath: isProd ? '/' : `http://0.0.0.0:${PORT}/`,
         publicPath: isProd ? '/' : `http://localhost:${PORT}/`,
 
         // Filename for entry points
@@ -68,20 +93,9 @@ module.exports = (function makeWebpackConfig() {
         // Filename for non-entry points
         // Only adds hash in build mode
         chunkFilename: isProd ? '[name].[hash].js' : '[name].bundle.js',
-      };
 
-  /**
-   * Devtool
-   * Reference: http://webpack.github.io/docs/configuration.html#devtool
-   * Type of sourcemap to use per build type
-   */
-  if (isTest) {
-    config.devtool = 'inline-source-map';
-  } else if (isProd) {
-    config.devtool = 'source-map';
-  } else {
-    config.devtool = 'cheap-module-source-map';
-  }
+        pathinfo: !isProd,
+      };
 
   /**
    * Loaders
@@ -102,55 +116,42 @@ module.exports = (function makeWebpackConfig() {
         // the sourceMappings will be incorrect, preventing breakpoints from being set in
         // certain situations
         test: /\.js$/,
-        use: [{ loader: 'babel-loader' }],
-        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'babel-loader',
+          },
+        ],
+        include: [
+          path.resolve(__dirname, 'src', 'app'),
+          path.resolve(__dirname, 'config'),
+        ],
       },
       {
         // support for .scss files
-        // use 'null' loader in test mode (https://github.com/webpack/null-loader)
-        // all css in src/style will be bundled in an external css file
+        // all sass not in src/app will be bundled in an external css file
         test: /\.(scss|sass)$/,
-        // exclude: root('src', 'app'),
-        loader: isTest
-          ? 'null-loader'
-          : ExtractTextPlugin.extract({
-              fallbackLoader: 'style-loader',
-              loader: [
-                { loader: 'css-loader', options: { sourceMap: true } },
-                { loader: 'postcss-loader' },
-                { loader: 'sass-loader', options: { sourceMap: true } },
-              ],
-            }),
+        exclude: root('src', 'app'),
+        use: css([
+          isProd
+            ? 'sass-loader'
+            : {
+                loader: 'sass-loader',
+                options: { sourceComments: true },
+              },
+        ]),
       },
       {
-        // all css required in src/app files will be merged in js files
+        // all sass required in src/app files will be merged in js files
         test: /\.(scss|sass)$/,
-        exclude: root('src', 'style'),
+        include: root('src', 'app'),
         loader: 'raw-loader!postcss-loader!sass-loader',
       },
       {
         // CSS LOADER
         // Reference: https://github.com/webpack/css-loader
         // Allow loading css through js
-        //
-        // Reference: https://github.com/postcss/postcss-loader
-        // Postprocess your css with PostCSS plugins
         test: /\.css$/,
-        // Reference: https://github.com/webpack/extract-text-webpack-plugin
-        // Extract css files in production builds
-        //
-        // Reference: https://github.com/webpack/style-loader
-        // Use style-loader in development.
-
-        loader: isTest
-          ? 'null-loader'
-          : ExtractTextPlugin.extract({
-              fallbackLoader: 'style-loader',
-              loader: [
-                { loader: 'css-loader', query: { sourceMap: true } },
-                { loader: 'postcss-loader' },
-              ],
-            }),
+        use: css(),
       },
       {
         // ASSET LOADER
@@ -212,7 +213,6 @@ module.exports = (function makeWebpackConfig() {
    * Add vendor prefixes to your css
    */
   // NOTE: This is now handled in the `postcss.config.js`
-  //       webpack2 has some issues, making the config file necessary
 
   /**
    * Plugins
@@ -220,23 +220,15 @@ module.exports = (function makeWebpackConfig() {
    * List: http://webpack.github.io/docs/list-of-plugins.html
    */
   config.plugins = [
-    new webpack.LoaderOptionsPlugin({
-      test: /\.scss$/i,
-      options: {
-        postcss: {
-          plugins: [autoprefixer],
-        },
-      },
-    }),
-
-    // todo remove the following and use only angular-ui-bootstrap
+    // todo remove the jquery and use only angular-ui-bootstrap
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
       'window.jQuery': 'jquery',
+      L: 'leaflet',
     }),
 
-    new DashboardPlugin(), // webpack-dashboard
+    new webpack.HotModuleReplacementPlugin(),
   ];
 
   // Skip rendering index.html in test mode
@@ -248,32 +240,58 @@ module.exports = (function makeWebpackConfig() {
         template: './src/public/index.html',
         inject: 'body',
       }),
-
-      // Reference: https://github.com/webpack/extract-text-webpack-plugin
-      // Extract css files
-      // Disabled when in test mode or not in build mode
-      new ExtractTextPlugin({
-        filename: 'css/[name].css',
-        disable: !isProd,
-        allChunks: true,
+      new webpack.EnvironmentPlugin({
+        MAPBOX_TOKEN: null,
+        FIMS_CLIENT_ID: null,
       }),
     );
   }
 
-  // Add build specific plugins
+  /**
+   * Devtool
+   * Reference: http://webpack.github.io/docs/configuration.html#devtool
+   * Type of sourcemap to use per build type
+   */
+  if (isTest) {
+    config.devtool = 'inline-source-map';
+  } else if (isProd) {
+    config.devtool = 'source-map';
+  } else {
+    config.devtool = 'cheap-module-source-map';
+    // config.devtool = 'eval-source-map';
+  }
+
   if (isProd) {
+    // configure optimizations
+    config.optimization = {
+      splitChunks: {
+        cacheGroups: {
+          // create a seperate bundle for node_modules
+          vendors: {
+            name: 'vendors',
+            test: /[\\/]node_modules|(src\/vendor)[\\/]/,
+            chunks: 'all',
+            reuseExistingChunk: true,
+          },
+          // Extract css to single file https://github.com/webpack-contrib/mini-css-extract-plugin#extracting-all-css-in-a-single-file
+          styles: {
+            name: 'styles',
+            test: /\.css$/,
+            chunks: 'all',
+            enforce: true,
+          },
+        },
+      },
+    };
+
+    // Add build specific plugins
     config.plugins.push(
-      // Reference: http://webpack.github.io/docs/list-of-plugins.html#noerrorsplugin
-      // Only emit files when there are no errors
-      new webpack.NoEmitOnErrorsPlugin(),
-
-      // Reference: http://webpack.github.io/docs/list-of-plugins.html#dedupeplugin
-      // Dedupe modules in the output
-      // new webpack.optimize.DedupePlugin(),
-
-      // Reference: http://webpack.github.io/docs/list-of-plugins.html#uglifyjsplugin
-      // Minify all javascript, switch loaders to minimizing mode
-      new webpack.optimize.UglifyJsPlugin(),
+      // Reference: https://github.com/webpack-contrib/mini-css-extract-plugin
+      // Extract css files
+      new MiniCssExtractPlugin({
+        filename: 'css/[name].css',
+        allChunks: true,
+      }),
 
       // Copy assets from the public folder
       // Reference: https://github.com/kevlened/copy-webpack-plugin
@@ -292,7 +310,9 @@ module.exports = (function makeWebpackConfig() {
    */
   config.devServer = {
     contentBase: './src/public',
-    stats: 'minimal',
+    historyApiFallback: true,
+    // hot: true,
+    // stats: 'minimal',
     port: PORT,
   };
 

@@ -1,7 +1,8 @@
 <form role="form" name="$ctrl.uploadForm" class="form-horizontal" novalidate ng-submit="$ctrl.upload()">
     <fims-upload-datatypes
             on-update="$ctrl.handleDatatypes(dataTypes)"
-            new-expedition="$ctrl.newExpedition">
+            new-expedition="$ctrl.newExpedition"
+            config="$ctrl.currentProject.config">
     </fims-upload-datatypes>
 
 
@@ -12,7 +13,7 @@
     </fims-upload-expedition>
 
 
-    <div ng-show="$ctrl.dataTypes.fims">
+    <div ng-if="$ctrl.dataTypes.fims">
         <hr class="separator"/>
         <fims-metadata
                 ng-show="$ctrl.dataTypes.fims"
@@ -35,7 +36,7 @@
         </div>
     </div>
 
-    <div class="form-group split-form" ng-show="$ctrl.dataTypes.fasta">
+    <div class="form-group split-form" ng-if="$ctrl.dataTypes.fasta">
         <fims-fasta-data
                 on-change="$ctrl.handleFastaDataChange(data)"
                 form="$ctrl.uploadForm"
@@ -44,9 +45,9 @@
         </fims-fasta-data>
     </div>
 
-    <div class="form-group split-form" ng-show="$ctrl.dataTypes.fastq">
+    <div class="form-group split-form" ng-if="$ctrl.dataTypes.fastq">
         <fims-fastq-data
-                on-change="$ctrl.handleFastaDataChange(data)"
+                on-change="$ctrl.handleFastqDataChange(data)"
                 form="$ctrl.uploadForm"
                 config="$ctrl.currentProject.config"
                 data="$ctrl.fastaData">
@@ -56,7 +57,7 @@
     <div class="form-group">
         <div class="col-xs-1"
              ng-class="{'col-xs-offset-7': $ctrl.dataTypes.fasta || $ctrl.dataTypes.fastq, 'col-xs-offset-9': !($ctrl.dataTypes.fasta || $ctrl.dataTypes.fastq)}">
-            <button type="submit" class="btn btn-primary pull-right">Upload</button>
+            <button type="submit" class="md-button md-raised md-primary pull-right">Upload</button>
         </div>
     </div>
 

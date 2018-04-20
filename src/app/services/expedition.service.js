@@ -1,6 +1,7 @@
 import angular from 'angular';
 
 import config from '../utils/config';
+
 const { restRoot } = config;
 
 class ExpeditionService {
@@ -60,9 +61,7 @@ class ExpeditionService {
     }
     return this.$http
       .get(
-        `${
-          restRoot
-        }projects/${projectId}/expeditions?user&includePrivate=${includePrivate}`,
+        `${restRoot}projects/${projectId}/expeditions?user&includePrivate=${includePrivate}`,
       )
       .catch(angular.catcher('Failed to load your expeditions.'));
   }
@@ -88,16 +87,12 @@ class ExpeditionService {
       includePrivate = false;
     }
     return this.$http.get(
-      `${
-        restRoot
-      }projects/${projectId}/expeditions?user&includePrivate=${includePrivate}`,
+      `${restRoot}projects/${projectId}/expeditions?user&includePrivate=${includePrivate}`,
     );
   }
 
   getExpeditionsForAdmin(projectId) {
-    return this.$http.get(
-      `${restRoot}projects/${projectId}/expeditions?admin`,
-    );
+    return this.$http.get(`${restRoot}projects/${projectId}/expeditions?admin`);
   }
 
   updateExpeditions(projectId, expeditions) {

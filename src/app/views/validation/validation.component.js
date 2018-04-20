@@ -25,6 +25,17 @@ const defaultResults = {
   showSuccessMessages: false,
 };
 
+const checkBrowser = () => {
+  const { browser, version } = detectBrowser();
+
+  if (browser === 'Explorer' && version <= 9) {
+    angular.alerts.warn(
+      `NOTE: Your browser only supports the Template Generator and not the Validation Component.
+         Use IE 11, or a recent version of Chrome, Firefox, or Safari to run data validation.`,
+    );
+  }
+};
+
 class ValidationController {
   constructor($scope, $http, $uibModal, DataService) {
     'ngInject';
@@ -58,24 +69,15 @@ class ValidationController {
   $onInit() {
     this.results = Object.assign({}, defaultResults);
 
-    this.checkBrowser();
+    checkBrowser();
   }
 
-  checkBrowser() {
-    const { browser, version } = detectBrowser();
+  handleUpload(uploadData) {
+    const { projectId } = this.currentProject;
 
-    if (browser === 'Explorer' && version <= 9) {
-      angular.alerts.warn(
-        `NOTE: Your browser only supports the Template Generator and not the Validation Component.
-         Use IE 11, or a recent version of Chrome, Firefox, or Safari to run data validation.`,
-      );
-    }
-  }
-
-  handleUpload(data) {
-    data.projectId = this.currentProject.projectId;
-
-    return this.validateSubmit(data).then(({ data }) => {
+    return this.validateSubmit(
+      Object.assign({}, uploadData, { projectId }),
+    ).then(({ data }) => {
       if (data.isValid) {
         this.continueUpload(data.id);
       } else if (data.hasError) {
@@ -155,6 +157,7 @@ class ValidationController {
         {
           dataType: 'TABULAR',
           filename: this.fimsMetadata.name,
+          reload: true,
           metadata: {
             sheetName: 'Samples', // TODO this needs to be dynamic, depending on the entity being validated
           },
@@ -257,11 +260,11 @@ class ValidationController {
           match =>
             match
               ? match
-                  .toString()
-                  .split('=')[1]
-                  .slice(0, -1)
+                .toString()
+                .split('=')[1]
+                .slice(0, -1)
               : match,
-        );
+      );
     }
 
     return Promise.resolve();

@@ -1,5 +1,7 @@
 import angular from 'angular';
 
+const template = require('./project.html');
+
 class ProjectCtrl {
   constructor($state, ProjectService) {
     'ngInject';
@@ -23,7 +25,7 @@ class ProjectCtrl {
 }
 
 export default {
-  template: require('./project.html'),
+  template,
   controller: ProjectCtrl,
   bindings: {
     currentProject: '<',

@@ -1,0 +1,198 @@
+@mixin layout-align-divider-fix() {
+
+  // Fix md-divider when layout-align directive is used on parent
+  // ------------------------------
+
+  $name: 'layout-align';
+
+  .#{$name},
+  .#{$name}-start,
+  .#{$name}-start-start,
+  .#{$name}-start-center,
+  .#{$name}-start-end,
+  .#{$name}-start-stretch,
+  .#{$name}-center,          
+  .#{$name}-center-start,
+  .#{$name}-center-center,
+  .#{$name}-center-end,
+  .#{$name}-center-stretch,
+  .#{$name}-end,
+  .#{$name}-end-start,
+  .#{$name}-end-center,
+  .#{$name}-end-end,
+  .#{$name}-end-stretch,
+  .#{$name}-space-around,
+  .#{$name}-space-around-center,
+  .#{$name}-space-around-start,
+  .#{$name}-space-around-end,
+  .#{$name}-space-around-stretch,
+  .#{$name}-space-between,
+  .#{$name}-space-between-center,
+  .#{$name}-space-between-start,
+  .#{$name}-space-between-end,
+  .#{$name}-space-between-stretch
+  {
+    md-divider {
+      align-self: normal;
+    }
+  }
+}
+
+@include layout-align-divider-fix();
+
+//////////////
+// Font Awesome
+//////////////
+
+.fa-xs {
+  font-size: 18px;
+}
+
+.fa-sm {
+  font-size: 24px;
+}
+
+.fa-md {
+  font-size: 36px;
+}
+
+.fa-lg {
+  font-size: 48px;
+}
+
+///////////
+// buttons
+///////////
+
+// btn groups https://material.angularjs.org/latest/CSS/button#grouping-with-css-overrides
+.groupX {
+  margin-right: 0;
+  margin-left: 0;
+  text-transform: none;
+
+  &.md-button {
+
+    &.md-button-sm {
+      min-height: 0;
+      min-width:0;
+      font-size: 13px;
+      line-height: 13px;
+      padding: 8px;
+    }
+
+    &.left {
+      border-radius: $button-border-radius 0 0 $button-border-radius;
+    }
+
+    &.middle {
+      border-radius: 0;
+      border-left: 1px solid rgba(230, 230, 230, 0.96);
+      border-right: 1px solid rgba(230, 230, 230, 0.96);
+    }
+
+    &.right {
+      border-radius: 0 $button-border-radius $button-border-radius 0;
+    }
+
+    &:not([disabled]):hover {
+      background-color: rgba(193, 193, 193, 0.96);
+      color: rgba(44, 65, 164, 0.96);
+      transition: 0.3s;
+    }
+  }
+}
+
+//////////
+// General
+//////////
+
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
+}
+
+.wrapper {
+  margin-bottom: 40px;
+}
+
+body > app > md-content {
+  background-color: #fff;
+}
+
+md-menu-content.md-menu-bar-menu.md-dense a.md-button {
+  padding-top: inherit;
+}
+
+.margin-bottom {
+  margin-bottom: 24px;
+}
+
+.success {
+  color: #388e3c;
+}
+
+.text-upper {
+  text-transform: uppercase;
+}
+
+.text-center {
+  text-align: center
+}
+
+.bold {
+  font-weight: 700;
+}
+
+// page header
+
+.page-header {
+  margin: 0 0 35px 0;
+  border-bottom: none;
+  // padding-bottom: 0;
+
+  @extend .text-center;
+  @extend .layout-padding;
+}
+
+md-checkbox.small {
+  min-width: 12px;
+  min-height: 12px;
+
+  @include checkbox-container('.md-checked', 12px, 12px);
+  @extend .layout-row;
+
+  .md-container {
+    width: 12px;
+    height: 12px;
+
+    .md-icon {
+      width: 12px;
+      height: 12px;
+    }
+  }
+}
+
+/////////
+// alerts
+/////////
+
+.alerts {
+  .alert {
+    text-align: center;
+    border-radius: 0;
+    margin-bottom: 0;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+}
+
+
+// TODO: remove when we remove bootstrap
+//////////////////////
+// bootstrap overrides
+//////////////////////
+
+.row,
+.form-horizontal .form-group {
+  margin-left: 0px;
+  margin-right: 0px;
+}

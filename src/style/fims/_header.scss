@@ -1,0 +1,27 @@
+fims-header {
+  z-index: 61;
+
+  a.md-button {
+    font-weight: 400;
+  }
+
+  .md-button.md-icon-button {
+    width: auto;
+
+    md-icon {
+      display: inline-block;
+    }
+  }
+
+  .brand {
+    margin: $layout-gutter-width / 2;
+
+    img {
+      height: $brand-img-height;
+    }
+  }
+
+  md-divider {
+    margin: 8px 0;
+  }
+}

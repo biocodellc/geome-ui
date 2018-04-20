@@ -1,27 +1,25 @@
-<ul class="project-selector nav navbar-nav pull-right">
-    <li uib-dropdown is-open="$ctrl.isOpen"
-        auto-close="outsideClick" class="separator">
-        <a href="#" uib-dropdown-toggle>
-            <span ng-show="$ctrl.currentProject">{{ $ctrl.currentProject.projectTitle }}</span>
-            <span ng-show="!$ctrl.currentProject">Choose a Project</span>
-            <i class="fa fa-angle-down"></i>
-        </a>
-        <ul uib-dropdown-menu class="dropdown-menu dropdown-menu-right separator">
-            <li class="section-title clearfix">Switch Project
-                <span class="include-public pull-right" ng-show="$ctrl.isAuthenticated">
-                            <label>include public</label>
-                            <input type="checkbox" class="pull-right"
-                                   ng-change="$ctrl.filterProjects()"
-                                   ng-model="$ctrl.includePublicProjects"/>
-                        </span>
-            </li>
-            <li class="divider"></li>
-            <li ng-repeat="project in $ctrl.projects track by project.projectId">
-                <a href='#' ng-click="$ctrl.change(project)">
-                    {{ ::project.projectTitle }} <i ng-show="$ctrl.currentProject.projectId === project.projectId"
-                                                    class="fa fa-check fa-after"></i>
-                </a>
-            </li>
-        </ul>
-    </li>
-</ul>
+<md-menu md-position-mode="left bottom" md-offset="{{ $ctrl.offset }}" class="project-selector">
+  <md-button class="md-icon-button {{ $ctrl.buttonClass }}" ng-click="$mdMenu.open($event)">
+    <span ng-show="$ctrl.currentProject">{{ $ctrl.currentProject.projectTitle }}</span>
+    <span ng-show="!$ctrl.currentProject">Choose a Project</span>
+    <md-icon md-font-icon="fa fa-angle-down fa-sm"></md-icon>
+  </md-button>
+  <md-menu-content width="4" class="md-menu-bar-menu md-dense">
+    <md-menu-item>
+      <span layout="row" layout-align="center center">
+        Switch Project
+        <md-checkbox class="small include-public" ng-change="$ctrl.filterProjects()" ng-model="$ctrl.includePublicProjects"
+          ng-show="$ctrl.isAuthenticated">
+          include public
+        </md-checkbox>
+      </span>
+    </md-menu-item>
+    <md-menu-divider></md-menu-divider>
+    <md-menu-item ng-repeat="project in $ctrl.projects track by project.projectId">
+      <md-button ng-click="$ctrl.change(project)">
+        {{ ::project.projectTitle }}
+        <md-icon ng-show="$ctrl.currentProject.projectId === project.projectId" md-font-icon="fa fa-check success fa-fw"></md-icon>
+      </md-button>
+    </md-menu-item>
+  </md-menu-content>
+</md-menu>

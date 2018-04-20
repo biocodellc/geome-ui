@@ -1,0 +1,138 @@
+<div>
+  <h3 class="md-headline">
+    Genomic Observatories MetaDatabase (GeOMe)
+  </h3>
+  <md-divider class="margin-bottom"></md-divider>
+
+  <div layout="row" layout-align="center center">
+    <div flex>
+      <p>
+        <strong>Get started by watching our instructional videos:</strong>
+        <ul>
+          <li>
+            <a href="https://www.youtube.com/watch?v=GgPsFnoinZc">
+              <u>Uploading metatadata to GeOMe</u>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/watch?v=GgPsFnoinZc">
+              <u>Downloading data from GeOMe</u>
+            </a>
+          </li>
+        </ul>
+      </p>
+      <p>
+        The Genomic Observatories Meta-Database (GeOMe) is a web-based database which captures metadata on biological
+        samples, used for biodiversity inventories, population studies, and environmental metagenomics.
+        GeOMe assigns persistent identifiers for all samples and sampling events and specifies the set
+        of metadata attributes which satisfy the requirements of the
+        <a href="https://gigascience.biomedcentral.com/articles/10.1186/2047-217X-3-2">genomic observatories model</a>, including capturing the who, what, where, and when associated
+        with all samples. GeOMe provides instant feedback to users on the quality of their data and packages
+        data for further analysis for use in a laboratory information system (LIMS) using the
+        <a href="http://software.mooreabiocode.org/">Biocode LIMS plugin</a>. GeOMe also packages FASTQ submissions for easy delivery to the Sequence
+        Read Archive (
+        <a href="#whyfastq">Why only FASTQ and not VCF or other formats?</a>)
+      </p>
+      <p>
+        GeOMe is supported by a grant from the National Science Foundation (
+        <a href="https://nsf.gov/awardsearch/showAward?AWD_ID=1457848">DEB 1457848</a>)
+      </p>
+      <p style="margin-top:20px;">Data is subject to our data usage policy found
+        <a target="_blank" href="http://diversityindopacific.net/data-usage-agreement/">here</a>
+      </p>
+    </div>
+
+    <div flex>
+      <img id='workflowImage' class="img-responsive" style="max-height: 350px;" src='docs/geomeWorkflow.png'>
+    </div>
+  </div>
+</div>
+
+<div>
+  <h3 class="md-headline">Search and Download Data</h3>
+  <md-divider class="margin-bottom"></md-divider>
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/rdoP7xqDyhQ" frameborder="0" allowfullscreen></iframe>
+</div>
+
+<div>
+  <h3 class="md-headline">Upload Metadata</h3>
+  <md-divider class="margin-bottom"></md-divider>
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/GgPsFnoinZc" frameborder="0" allowfullscreen></iframe>
+</div>
+
+<div>
+  <h3 class="md-headline">Users can upload two types of data (under "tools" tab)</h3>
+  <md-divider class="margin-bottom"></md-divider>
+  <p>To upload data users much have an account. If you don't have one please send an email with you name,
+    title and affiliation to
+    <a href="mailto:geome.database@gmail.com">geome.database@gmail.com</a>
+  </p>
+  <ol>
+    <li>Published
+      <u>Sanger sequence data</u> and the associated metadata (fasta format)</li>
+    <li>
+      Metadata associated with
+      <u>next-generation sequence data</u> (fastq format)
+      <ul>
+        <li>In the process of uploading the metadata for your next-generation sequence data we create two
+          files:
+        </li>
+        <ol>
+          <li>the SRA metadata file</li>
+          <li>the BioSample datasheet</li>
+        </ol>
+
+      </ul>
+    </li>
+  </ol>
+  <p>
+    <strong>This will make uploading your data to Genbank's Sequence Read Archive (SRA) database faster and easier
+    </strong>.</p>
+  <p>
+    <small>* Note we are not currently accepting microsatellite datasets</small>
+  </p>
+</div>
+
+<div>
+  <h3 class="md-headline">What you need to do before you upload data</h3>
+  <md-divider class="margin-bottom"></md-divider>
+  <ul>
+    <li>
+      Generate a template (under “tools” tab) for your metadata
+      <ul>
+        <li>
+          This option allows the user to create an excel file to store the metadata associated with each of their
+          samples.
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<h3 class="md-headline">Query GeOMe using "R"</h3>
+<md-divider class="margin-bottom"></md-divider>
+<p>You can query datasets that have been loaded to the GeOMe database using our
+  <a href="https://github.com/DIPnet/fimsR-access">R package</a>
+</p>
+
+<div>
+  <h3 id="whyfastq" class="md-headline">Why do we require FASTQ submissions for next generation sequence data?</h3>
+  <md-divider class="margin-bottom"></md-divider>
+  <p>GeOMe accepts FASTQ submissions because we want to archive unmanipulated sequence data that are free
+    of filtering biases. By doing this we are reducing ascertainment bias (a site that is not a SNP in
+    your dataset may be a SNP when combined with data from a different population). We are also avoiding
+    the subjective choices that go into calling SNPs, such as thresholds for trimming, filtering, coverage
+    and likelihood. Our objective is for future users of your data to be able to make these choices in
+    the context of their own question and dataset.
+  </p>
+</div>
+
+<div>
+  <p>
+    <i>Development of GeOMe has been supported by the
+      <a href='https://www.moore.org/article-detail?newsUrlName=ambitious-project-to-create-genetic-catalog-of-a-model-ecosystem-gets-$5-2-million-from-the-gordon-and-betty-moore-foundation'>Gordon and Betty Moore Foundation</a>, the
+      <a href='https://bnhm.berkeley.edu/'>Berkeley Natural History Museums</a>, and the National Science Foundation (
+      <a href='https://www.nsf.gov/awardsearch/showAward?AWD_ID=0956426&HistoricalAwards=false'>DEB-0956426</a> and
+      <a href='https://nsf.gov/awardsearch/showAward?AWD_ID=1457848'>DEB-1457848</a>)</i>
+  </p>
+</div>

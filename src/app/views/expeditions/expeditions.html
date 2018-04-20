@@ -1,23 +1,21 @@
-<div class="row">
-    <div class="col-xs-12">
-        <div class="list-group">
-            <a class="list-group-item clearfix" ng-repeat="expedition in $ctrl.expeditions" href
-               ui-sref="expeditions.detail({ id: expedition.expeditionId })">
-                <div class="col-xs-6">
-                    <h4 class="list-group-item-heading">{{ expedition.expeditionTitle }}</h5>
-                        <strong>Code:</strong> {{ expedition.expeditionCode}}
-                    </h4>
-                </div>
-                <div class="col-xs-6">
-                    <ul class="list-unstyled">
-                        <li><strong>Identifier: </strong>http://n2t.net/{{ expedition.identifier }}</li>
-                        <li><strong>Visibility: </strong>
-                            {{ expedition.visibility }}
-                        </li>
-                    </ul>
-                </div>
-            </a>
-        </div>
-    </div>
-</div>
-
+<md-card class="list-group">
+    <md-card-content>
+        <a class="list-group-item clearfix" ng-repeat="expedition in $ctrl.expeditions" href ui-sref="expeditions.detail({ id: expedition.expeditionId })">
+            <div class="col-xs-6">
+                <h4 class="list-group-item-heading">{{ expedition.expeditionTitle }}</h5>
+                    <strong>Code:</strong> {{ expedition.expeditionCode}}
+                </h4>
+            </div>
+            <div class="col-xs-6">
+                <ul class="list-unstyled">
+                    <li>
+                        <strong>Identifier: </strong>http://n2t.net/{{ expedition.identifier }}</li>
+                    <li>
+                        <strong>Visibility: </strong>
+                        {{ expedition.visibility }}
+                    </li>
+                </ul>
+            </div>
+        </a>
+    </md-card-content>
+</md-card>

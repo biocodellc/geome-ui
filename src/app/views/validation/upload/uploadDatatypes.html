@@ -1,33 +1,20 @@
-<div class="form-group" show-errors
-     ng-class="{'has-error': $ctrl.newExpedition && !$ctrl.fims}">
-    <label class="col-xs-2 control-label">Data Type(s)</label>
-    <div class="col-xs-8">
-        <label class="checkbox-inline">
-            <input type="checkbox" ng-model="$ctrl.fims"
-                   name="fimsData"
-                   ng-required="$ctrl.newExpedition || (!$ctrl.fasta && !$ctrl.fastq)"
-                   ng-click="$ctrl.datatypesChange()"/>
-            Metadata
-        </label>
-        <label class="checkbox-inline">
-            <input type="checkbox" ng-model="$ctrl.fasta"
-                   name="fastaData"
-                   disabled
-                   ng-required="!$ctrl.fims && !$ctrl.fastq"
-                   ng-click="$ctrl.fastq = false; $ctrl.datatypesChange()"/>
-            Fasta
-        </label>
-        <label class="checkbox-inline">
-            <input type="checkbox" ng-model="$ctrl.fastq"
-                   name="fastqData"
-                   disabled
-                   ng-required="!$ctrl.fims && !$ctrl.fasta"
-                   ng-click="$ctrl.fasta = false; $ctrl.datatypesChange()"/>
-            Fastq
-        </label>
-        <p class="help-block col-xs-12" style="padding-left:0px;"
-           ng-show="$ctrl.newExpedition && !$ctrl.fims">
-            Metadata is required if you are creating a new expedition.
-        </p>
-    </div>
+<div class="form-group" show-errors ng-if="$ctrl.fastaEnabled || $ctrl.fastqEnabled" ng-class="{'has-error': $ctrl.newExpedition && !$ctrl.fims}">
+  <label class="col-xs-2 control-label">Data Type(s)</label>
+  <div class="col-xs-8">
+    <label class="checkbox-inline">
+      <input type="checkbox" ng-model="$ctrl.fims" name="fimsData" ng-required="$ctrl.newExpedition || (!$ctrl.dataTypeSelected)"
+        ng-click="$ctrl.datatypesChange()" /> Metadata
+    </label>
+    <label class="checkbox-inline">
+      <input type="checkbox" ng-model="$ctrl.fasta" name="fastaData" ng-if="$ctrl.fastaEnabled" ng-required="!$ctrl.dataTypeSelected"
+        ng-click="$ctrl.datatypesChange()" /> Fasta
+    </label>
+    <label class="checkbox-inline">
+      <input type="checkbox" ng-model="$ctrl.fastq" name="fastqData" ng-if="$ctrl.fastqEnabled" ng-required="!$ctrl.dataTypeSelected"
+        ng-click="$ctrl.datatypesChange()" /> Fastq
+    </label>
+    <p class="help-block col-xs-12" style="padding-left:0px;" ng-show="$ctrl.newExpedition && !$ctrl.fims">
+      Metadata is required if you are creating a new expedition.
+    </p>
+  </div>
 </div>

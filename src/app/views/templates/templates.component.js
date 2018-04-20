@@ -1,12 +1,15 @@
 import angular from 'angular';
 
+const template = require('./templates.html');
+
 const DEFAULT_TEMPLATE = { name: 'DEFAULT' };
 
 class TemplateController {
-  constructor(TemplateService) {
+  constructor($anchorScroll, TemplateService) {
     'ngInject';
 
     this.TemplateService = TemplateService;
+    this.$anchorScroll = $anchorScroll;
   }
 
   $onInit() {
@@ -20,7 +23,11 @@ class TemplateController {
       this.isAuthenticated = !!this.currentUser;
     }
 
-    if ('currentProject' in changesObj) {
+    if (
+      this.currentProject &&
+      'currentProject' in changesObj &&
+      changesObj.currentProject.previousValue !== this.currentProject
+    ) {
       // TODO if not currentProject, redirect to home;
       this._config = this.currentProject.config;
       this.getTemplates();
@@ -122,10 +129,15 @@ class TemplateController {
     this.worksheets = this._config.worksheets();
     this.sheetName = this.worksheets[0];
   }
+
+  define(attribute) {
+    this.defAttribute = attribute;
+    this.$anchorScroll('definition'); // scroll to definition
+  }
 }
 
 export default {
-  template: require('./templates.html'),
+  template,
   controller: TemplateController,
   bindings: {
     currentUser: '<',

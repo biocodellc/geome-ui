@@ -20,7 +20,7 @@ class LoadingModalService {
       this._modalInstance = this._uibModal.open({
         template: '<span us-spinner></span>',
         windowTemplate: '<div uib-modal-transclude></div>',
-        appendTo: angular.element(document.querySelector('#content')),
+        appendTo: angular.element(document.querySelector('app')),
         size: 'sm',
         backdrop: true,
       });

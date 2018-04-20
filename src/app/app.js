@@ -1,18 +1,17 @@
 import angular from 'angular';
 import uirouter from '@uirouter/angularjs';
 import bootstrap from 'angular-ui-bootstrap';
+import ngMaterial from 'angular-material';
 
 // todo remove the following and use only angular-ui-bootstrap
 import 'jquery-ui';
-import 'bootstrap-sass';
 
 // this loads the css for the app
+import '../style/bootstrap.scss';
 import '../style/app.scss';
 
-// use async functions w/ babel
-import 'babel-polyfill';
-
 import run from './app.run';
+import theme from './app.theme';
 import routing from './app.routes';
 import router from './utils/router';
 import postInterceptor from './postInterceptor';
@@ -20,14 +19,16 @@ import autofocus from './directives/autofocus.directive';
 import showErrors from './directives/showErrors.directive';
 import trustedHtml from './filters/html.filter';
 
-import home from './views/home';
-// import notFound from './views/not-found';
+import about from './views/about';
+import containerPage from './components/container-page';
+import notFound from './views/not-found';
 import contact from './views/contact';
 import login from './views/login';
 import templates from './views/templates';
 import project from './views/project';
 import expeditions from './views/expeditions';
 import validation from './views/validation';
+import query from './views/query';
 
 import projectService from './services/project.service';
 import userService from './services/user.service';
@@ -39,11 +40,12 @@ import navigation from './components/navigation';
 import alerts from './components/alerts';
 // import lookup from './components/lookup';
 import modals from './components/modals';
-import query from './components/query';
 import users from './components/users';
+import projectSelectorDialog from './components/project-selector-dialog';
 
 import Exceptions from './utils/exceptions';
 import Alerts from './utils/alerts';
+import projectViewHook from './projectView.hook';
 
 const dependencies = [
   uirouter,
@@ -53,14 +55,16 @@ const dependencies = [
   showErrors,
   trustedHtml,
   bootstrap,
+  ngMaterial,
   projectService,
   userService,
+  containerPage,
   header,
   navigation,
   alerts,
-  home,
+  about,
   contact,
-  // notFound,
+  notFound,
   login,
   query,
   auth,
@@ -69,6 +73,7 @@ const dependencies = [
   validation,
   project,
   users,
+  projectSelectorDialog,
   modals,
   // lookup,
 ];
@@ -82,4 +87,6 @@ export default angular
   .module('biscicolApp', dependencies)
   .component('app', app)
   .run(routing)
-  .run(run);
+  .run(run)
+  .run(projectViewHook)
+  .config(theme);

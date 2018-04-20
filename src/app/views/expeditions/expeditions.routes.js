@@ -5,6 +5,7 @@ function getStates() {
     {
       state: 'expeditions',
       config: {
+        parent: 'projectView',
         abstract: true,
         template:
           '<div ui-view class="admin" current-project="$ctrl.currentProject"></div>',

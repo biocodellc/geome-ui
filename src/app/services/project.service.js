@@ -2,8 +2,8 @@ import angular from 'angular';
 import { EventEmitter } from 'events';
 
 import storageService from './storage.service';
-
 import config from '../utils/config';
+
 const { restRoot } = config;
 
 export const PROJECT_CHANGED_EVENT = 'projectChanged';
@@ -92,17 +92,6 @@ class ProjectService extends EventEmitter {
       data: project,
       keepJson: true,
     }).catch(angular.catcher('Failed to update the project.'));
-  }
-
-  // TODO remove this
-  resolveProjectId() {
-    return new Promise((resolve, reject) => {
-      if (currentProject) {
-        resolve(currentProject.projectId);
-      } else {
-        reject({ data: { error: 'No project is selected' } });
-      }
-    });
   }
 
   loadFromSession(projectId) {

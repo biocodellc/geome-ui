@@ -2,10 +2,10 @@ import angular from 'angular';
 import { EventEmitter } from 'events';
 
 import storageService from './storage.service';
-import CLIENT_ID from '../components/auth/clientId';
 
 import config from '../utils/config';
-const { restRoot, appRoot } = config;
+
+const { restRoot, appRoot, authTimeout, fimsClientId } = config;
 
 export const AUTH_ERROR_EVENT = 'authError';
 
@@ -13,20 +13,13 @@ let triedToRefresh = false;
 let timeoutId;
 
 class AuthService extends EventEmitter {
-  constructor(
-    $state,
-    $http,
-    $timeout,
-    StorageService,
-    AUTH_TIMEOUT,
-  ) {
+  constructor($state, $http, $timeout, StorageService) {
     'ngInject';
 
     super();
 
     this.$state = $state;
     this.StorageService = StorageService;
-    this.AUTH_TIMEOUT = AUTH_TIMEOUT;
     this.$http = $http;
     this.$timeout = $timeout;
   }
@@ -37,7 +30,7 @@ class AuthService extends EventEmitter {
 
   authenticate(username, password) {
     const data = {
-      client_id: CLIENT_ID,
+      client_id: fimsClientId,
       redirect_uri: `${appRoot}/oauth`,
       grant_type: 'password',
       username,
@@ -69,7 +62,7 @@ class AuthService extends EventEmitter {
     if (refreshToken && this._checkAuthenticated() && !triedToRefresh) {
       return this.$http
         .post(`${restRoot}authenticationService/oauth/refresh`, {
-          client_id: CLIENT_ID,
+          client_id: fimsClientId,
           refresh_token: refreshToken,
         })
         .then(({ data }) => this._authSuccess(data, username))
@@ -107,7 +100,7 @@ class AuthService extends EventEmitter {
       this.clearTokens();
       angular.alerts.info('You have been signed out due to inactivity.');
       this.$state.go('home');
-    }, this.AUTH_TIMEOUT);
+    }, authTimeout);
   }
 
   _checkAuthenticated() {
@@ -118,7 +111,7 @@ class AuthService extends EventEmitter {
     const oAuthTimestamp = this.StorageService.get('oAuthTimestamp');
     const now = new Date().getTime();
 
-    if (now - oAuthTimestamp > this.AUTH_TIMEOUT) {
+    if (now - oAuthTimestamp > authTimeout) {
       this.clearTokens();
       return true;
     }
