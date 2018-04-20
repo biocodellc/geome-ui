@@ -36,14 +36,15 @@ export default function(
   // before resolving the first route. This hook is only run on page load/refresh
   const deregister = $transitions.onBefore(
     {},
-    trans =>
-      new Promise(resolve => {
+    trans => {
+      let hasTimedOut = false;
+
+      return new Promise(resolve => {
         const timeoutPromise = $timeout(() => {
+          hasTimedOut = true;
           deregister();
-          resolve(trans.router.stateService.go('about'));
-          // }, 5000); // timeout loading after 5 secs
-          // TODO: something here breaks navigation when this timeout occurs
-          // https://stackoverflow.com/questions/42659302/angular-ui-router-1-0-0rc-transition-superseded-on-a-redirect/44654316#44654316
+          console.log('loadingSession timed out, redirecting to home page');
+          resolve(trans.router.stateService.target('about'));
         }, 10000); // timeout loading after 10 secs
 
         loadSession(
@@ -53,17 +54,20 @@ export default function(
           UserService,
           ProjectService,
         ).then(([project, user]) => {
-          $timeout.cancel(timeoutPromise);
-          deregister();
+          if (!hasTimedOut) {
+            $timeout.cancel(timeoutPromise);
+            deregister();
+          }
 
           // deregister before setting project & user b/c setting these will trigger a state
           // reload, and we don't want to run this function again
           ProjectService.setCurrentProject(project);
           UserService.setCurrentUser(user);
 
-          resolve();
+          if (!hasTimedOut) resolve();
         });
-      }),
+      });
+    },
     { priority: 1000 },
   );
 }
