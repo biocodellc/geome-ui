@@ -1,6 +1,8 @@
 import angular from 'angular';
 import ProjectConfig from '../../../models/ProjectConfig';
 
+const template = require('./config.html');
+
 class ConfigController {
   constructor($state, ProjectConfigService) {
     'ngInject';
@@ -74,6 +76,7 @@ class ConfigController {
       .then(config => {
         this.currentProject.config = config;
         angular.alerts.success('Successfully updated project configuration!');
+        this.config = new ProjectConfig(config);
         this.updateStateData();
       })
       .catch(response => {
@@ -85,7 +88,7 @@ class ConfigController {
 }
 
 export default {
-  template: require('./config.html'),
+  template,
   controller: ConfigController,
   bindings: {
     currentProject: '<',

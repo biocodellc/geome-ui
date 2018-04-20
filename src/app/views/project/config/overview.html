@@ -17,7 +17,7 @@
 <div ui-view="entities"
      config="$ctrl.config"
      entities="$ctrl.config.entities"
-     on-add-entity="$ctrl.handleAddEntity(entity)"
+     on-add-entity="$ctrl.handleOnAddEntity(entity)"
      on-update-entities="$ctrl.onUpdateEntities({ entities: entities })"
      on-new-worksheet="$ctrl.onNewWorksheet({ sheetName: sheetName })">
 </div>

@@ -4,6 +4,8 @@ import entityAttributes from './attributes/entity-attributes.component';
 import fimsAttribute from './attributes/attribute.component';
 import entityRules from './rules/entity-rules.component';
 
+const template = require('./entity-detail.html');
+
 class EntityDetailController {
   constructor($scope, $state) {
     'ngInject';
@@ -91,7 +93,7 @@ class EntityDetailController {
   }
 
   newAttribute() {
-    this.entity.attributes.push({
+    this.entity.attributes = this.entity.attributes.concat({
       datatype: 'STRING',
       group: 'Default',
       isNew: true,
@@ -100,7 +102,7 @@ class EntityDetailController {
 }
 
 const fimsEntityDetail = {
-  template: require('./entity-detail.html'),
+  template,
   controller: EntityDetailController,
   bindings: {
     config: '<',
