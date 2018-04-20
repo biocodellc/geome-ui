@@ -1,20 +1,11 @@
 const template = require('./header.html');
 
 class HeaderController {
-  constructor($location, $window, $state) {
+  constructor($location, $state) {
     'ngInject';
 
     this.$location = $location;
-    this.$window = $window;
     this.$state = $state;
-  }
-
-  apidocs() {
-    const url = this.$location.$$absUrl.replace(
-      this.$location.path(),
-      '/apidocs/current/service.json',
-    );
-    this.$window.location = `https://api.biocode-fims.org/apidocs/https://biscicol.org/apidocs?url=${url}`;
   }
 
   login() {

@@ -23,7 +23,11 @@ class TemplateController {
       this.isAuthenticated = !!this.currentUser;
     }
 
-    if ('currentProject' in changesObj) {
+    if (
+      this.currentProject &&
+      'currentProject' in changesObj &&
+      changesObj.currentProject.previousValue !== this.currentProject
+    ) {
       // TODO if not currentProject, redirect to home;
       this._config = this.currentProject.config;
       this.getTemplates();

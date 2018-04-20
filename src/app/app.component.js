@@ -32,7 +32,6 @@ class AppCtrl {
     });
     this.UserService.on(USER_CHANGED_EVENT, u => {
       this.currentUser = u;
-      // if (!this.$state.current.abstract) this.$state.reload();
       const { current } = this.$state;
       if (!current.abstract && current.name !== 'login') this.$state.reload();
     });
