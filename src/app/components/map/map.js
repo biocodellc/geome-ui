@@ -77,7 +77,7 @@ export default class Map {
       const lat = resource[this.latColumn];
       const lng = L.Util.wrapNum(resource[this.lngColumn], [0, 360], true); // center on pacific ocean
 
-      if (isNaN(lat) || isNaN(lng)) return;
+      if (Number.isNaN(lat) || Number.isNaN(lng)) return;
 
       const marker = L.marker([lat, lng]);
 
@@ -92,7 +92,7 @@ export default class Map {
 
     this.map.addLayer(this.clusterLayer).setMinZoom(1);
 
-    if (this.markers.length > 0) {
+    if (this.markers.length > 0 && this.clusterLayer.getBounds().isValid()) {
       this.map.fitBounds(this.clusterLayer.getBounds(), {
         padding: [30, 30],
       });
