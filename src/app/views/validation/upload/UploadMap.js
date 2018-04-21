@@ -1,22 +1,51 @@
 import Map from '../../../components/map/map';
 
-// TODO finish this
 export default class UploadMap extends Map {
-  constructor(config, entity) {
-    // super(latColumn, lngColumn);
-    // this.$state = $state;
+  constructor(latColumn, lngColumn, uniqueKey) {
+    super(latColumn, lngColumn);
+    this.uniqueKey = uniqueKey;
+
+    if (!this.latColumn || !this.lngColumn)
+      throw new Error('latColumn & lngColumn are both required');
   }
 
-  generatePopupContent({ bcid, genus, species, locality, country }) {
-    return (
-      `<strong>GUID</strong>:  ${bcid}<br>` +
-      `<strong>Genus</strong>:  ${genus}<br>` +
-      `<strong>Species</strong>:  ${species}<br>` +
-      `<strong>Locality, Country</strong>:  ${locality}, ${country}<br>` +
-      `<a href='${this.$state.href('sample', {
-        entity: 'Resource', // TODO don't hardcode this
-        bcid,
-      })}' target='_blank'>Sample details</a>`
+  init(mapId) {
+    super.init(mapId, {
+      scrollWheelZoom: false,
+    });
+  }
+
+  setMarkers(samples) {
+    const transformedData = [];
+
+    samples.forEach((s, i) => {
+      const exists = transformedData.find(
+        d =>
+          d[this.latColumn] === s[this.latColumn] &&
+          d[this.lngColumn] === s[this.lngColumn],
+      );
+
+      if (exists) {
+        exists.description += `, ${this.uniqueKey}: ${
+          s[this.uniqueKey]
+        } (Row ${i + 1})`;
+      } else {
+        const d = {
+          description: `${this.uniqueKey}: ${s[this.uniqueKey]} (Row ${i + 1})`,
+        };
+        d[this.latColumn] = s[this.latColumn];
+        d[this.lngColumn] = s[this.lngColumn];
+        transformedData.push(d);
+      }
+    });
+    return super.setMarkers(
+      transformedData,
+      this.generatePopupContent.bind(this),
+      { maxHeight: 20 },
     );
+  }
+
+  generatePopupContent({ description }) {
+    return description;
   }
 }

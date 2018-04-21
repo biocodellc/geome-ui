@@ -1,12 +1,13 @@
 import angular from 'angular';
-import XLSXReader from '../../utils/XLSXReader';
+import { findExcelCell, isExcelFile } from '../../utils/tabReader';
 
 import StatusPolling from './StatusPolling';
 import detectBrowser from '../../utils/detectBrowser';
 import { getFileExt } from '../../utils/utils';
 
 import config from '../../utils/config';
-const { naan, restRoot, mapboxToken } = config;
+
+const { naan, restRoot } = config;
 
 const template = require('./validation.html');
 
@@ -234,36 +235,19 @@ class ValidationController {
           }
         }
       });
-
-      // generateMap('map', this.currentProject.projectId, this.fimsMetadata, mapboxToken).then(
-      //   function () {
-      //     this.verifyDataPoints = true;
-      //   }, function () {
-      //     this.verifyDataPoints = false;
-      //   }).always(function () {
-      //   // this is a hack since we are using jQuery for generateMap
-      //   this.$scope.$apply();
-      // });
-    } else {
-      this.verifyDataPoints = false;
-      this.coordinatesVerified = false;
     }
   }
 
   parseSpreadsheet(regExpression, sheetName) {
-    const splitFileName = this.fimsMetadata.name.split('.');
-
-    if (XLSXReader.exts.includes(splitFileName[splitFileName.length - 1])) {
-      return new XLSXReader()
-        .findCell(this.fimsMetadata, regExpression, sheetName)
-        .then(
-          match =>
-            match
-              ? match
+    if (isExcelFile(this.fimsMetadata)) {
+      return findExcelCell(this.fimsMetadata, regExpression, sheetName).then(
+        match =>
+          match
+            ? match
                 .toString()
                 .split('=')[1]
                 .slice(0, -1)
-              : match,
+            : match,
       );
     }
 

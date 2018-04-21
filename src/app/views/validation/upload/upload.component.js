@@ -1,4 +1,6 @@
+import angular from 'angular';
 import { getFileExt } from '../../../utils/utils';
+import { workbookToJson } from '../../../utils/tabReader';
 
 const template = require('./upload.html');
 
@@ -27,8 +29,10 @@ class UploadController {
   }
 
   $onChanges(changesObj) {
-    if (this.fimsMetadata && 'fimsMetadata' in changesObj) {
-      this.verifyCoordinates();
+    if ('fimsMetadata' in changesObj) {
+      if (this.fimsMetadata) this.verifyCoordinates();
+      this.verifySampleLocations = !!this.fimsMetadata;
+      this.sampleLocationsVerified = false;
     }
   }
 
@@ -76,8 +80,7 @@ class UploadController {
   upload() {
     this.$scope.$broadcast('show-errors-check-validity');
 
-    // if (!this.checkCoordinatesVerified() || this.uploadForm.$invalid) {
-    if (this.uploadForm.$invalid) {
+    if (!this.checkCoordinatesVerified() || this.uploadForm.$invalid) {
       return;
     }
 
@@ -85,11 +88,13 @@ class UploadController {
   }
 
   checkCoordinatesVerified() {
-    if (this.verifyDataPoints && !this.coordinatesVerified) {
-      this.coordinatesErrorClass = 'has-error';
+    if (
+      this.fimsMetadata &&
+      this.verifySampleLocations &&
+      !this.sampleLocationsVerified
+    ) {
       return false;
     }
-    this.coordinatesErrorClass = null;
     return true;
   }
 
@@ -161,13 +166,57 @@ class UploadController {
     const LAT_COL_DEF = 'http://rs.tdwg.org/dwc/terms/decimalLatitude';
     const LON_COL_DEF = 'http://rs.tdwg.org/dwc/terms/decimalLongitude';
 
-    const latColumn = this.currentProject.config.findAttributesByDefinition(
+    const { config } = this.currentProject;
+    const sampleEntity = config.entities.find(
+      e => e.conceptAlias === 'Resource',
+    );
+    const { worksheet } = sampleEntity;
+    const latColumn = config.findAttributesByDefinition(
+      worksheet,
       LAT_COL_DEF,
-    )[0];
-    const longColumn = this.currentProject.config.findAttributesByDefinition(
+    )[0].column;
+    const lngColumn = config.findAttributesByDefinition(
+      worksheet,
       LON_COL_DEF,
-    )[0];
-    const uniqueKey = this.currentProject.config.entities[0].uniqueKey;
+    )[0].column;
+
+    workbookToJson(this.fimsMetadata)
+      .then(
+        workbook => (workbook.isExcel ? workbook[worksheet] : workbook.default),
+      )
+      .then(data => {
+        if (data.length === 0) {
+          angular.alerts.warn(
+            'Failed to find lat/long coordinates for your samples',
+          );
+          return undefined;
+        }
+
+        const scope = Object.assign(this.$scope.$new(true), {
+          data,
+          latColumn,
+          lngColumn,
+          uniqueKey: sampleEntity.uniqueKey,
+        });
+
+        return this.$mdDialog.show({
+          template:
+            '<upload-map-dialog layout="column" unique-key="uniqueKey" lat-column="latColumn" lng-column="lngColumn" data="data"></upload-map-dialog>',
+          scope,
+        });
+      })
+      .then(() => {
+        // TODO need to scope.apply or wrap in timeout
+        this.sampleLocationsVerified = true;
+      })
+      .catch(e => {
+        if (e) {
+          angular.catcher('Failed to load samples map')(e);
+          this.verifySampleLocations = false;
+        }
+
+        this.sampleLocationsVerified = false;
+      });
   }
 }
 

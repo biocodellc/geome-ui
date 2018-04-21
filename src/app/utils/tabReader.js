@@ -1,4 +1,5 @@
-import xlsx from 'xlsx/dist/xlsx.core.min';
+import Papa from 'papaparse';
+import xlsx from 'xlsx';
 import _ from 'lodash';
 
 const EXTS = ['xls', 'xlsx', 'xlsxm', 'xlsb', 'ods'];
@@ -49,26 +50,44 @@ const parseSheet = (sheet, readCells) => {
   };
 };
 
-export const workbookToJson = file =>
-  workbookFromFile(file).then(workbook => {
-    const result = {};
-    workbook.SheetNames.forEach(sheetName => {
-      const roa = xlsx.utils.sheet_to_row_object_array(
-        workbook.Sheets[sheetName],
-      );
-      if (roa.length > 0) {
-        result[sheetName] = roa;
-      }
-    });
-    return result;
-  });
-
 export const isExcelFile = file => {
   const splitFileName = file.name.split('.');
   return EXTS.includes(splitFileName.pop());
 };
 
-export const findCell = (file, regEx, sheetName) =>
+export const workbookToJson = file => {
+  if (isExcelFile(file)) {
+    return workbookFromFile(file).then(workbook => {
+      const result = {
+        isExcel: true,
+      };
+      workbook.SheetNames.forEach(sheetName => {
+        const roa = xlsx.utils.sheet_to_row_object_array(
+          workbook.Sheets[sheetName],
+        );
+        if (roa.length > 0) {
+          result[sheetName] = roa;
+        }
+      });
+      return result;
+    });
+  }
+  return new Promise((resolve, reject) => {
+    Papa.parse(file, {
+      header: true,
+      complete: results => {
+        if (results.meta.aborted) {
+          reject(results.errors);
+          return;
+        }
+
+        resolve(Object.assign({ isExcel: false, default: results.data }));
+      },
+    });
+  });
+};
+
+export const findExcelCell = (file, regEx, sheetName) =>
   workbookFromFile(file).then(workbook => {
     const sheet = workbook.Sheets[sheetName];
 
