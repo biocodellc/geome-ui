@@ -199,23 +199,22 @@ class UploadController {
           uniqueKey: sampleEntity.uniqueKey,
         });
 
-        return this.$mdDialog.show({
-          template:
-            '<upload-map-dialog layout="column" unique-key="uniqueKey" lat-column="latColumn" lng-column="lngColumn" data="data"></upload-map-dialog>',
-          scope,
-        });
-      })
-      .then(() => {
-        // TODO need to scope.apply or wrap in timeout
-        this.sampleLocationsVerified = true;
+        return this.$mdDialog
+          .show({
+            template:
+              '<upload-map-dialog layout="column" unique-key="uniqueKey" lat-column="latColumn" lng-column="lngColumn" data="data"></upload-map-dialog>',
+            scope,
+          })
+          .then(() => {
+            this.sampleLocationsVerified = true;
+          })
+          .catch(() => {
+            this.sampleLocationsVerified = false;
+          });
       })
       .catch(e => {
-        if (e) {
-          angular.catcher('Failed to load samples map')(e);
-          this.verifySampleLocations = false;
-        }
-
-        this.sampleLocationsVerified = false;
+        angular.catcher('Failed to load samples map')(e);
+        this.verifySampleLocations = false;
       });
   }
 }
