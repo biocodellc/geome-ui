@@ -18,37 +18,23 @@ function getStates() {
     {
       state: 'sample',
       config: {
-        url: '/{entity}/*bcid',
+        parent: 'containerPageView',
+        url: '/record/*bcid',
         component: 'fimsQueryDetail',
         resolve: {
-          sample: /* @ngInject */ (
-            ProjectService,
-            QueryService,
-            $stateParams,
-            $state,
-          ) => {
-            const builder = new QueryBuilder();
-            builder.add(`bcid:"${$stateParams.bcid}"`);
-
-            return QueryService.queryJson(
-              builder.build(),
-              ProjectService.currentProject().projectId,
-              $stateParams.entity,
-              0,
-              1,
-            )
+          sample: /* @ngInject */ (RecordService, $stateParams, $state) =>
+            RecordService.get($stateParams.bcid)
               .then(response => {
-                if (response.data.length === 0) {
-                  throw new Error(response);
+                if (response.status === 204) {
+                  $state.go('notFound', { path: '404' });
                 }
 
-                return response.data[0];
+                return response.data;
               })
               .catch(() =>
                 // exception.catcher("Failed to load sample detail")(response);
                 $state.go('notFound', { path: '404' }),
-              );
-          },
+              ),
         },
       },
     },

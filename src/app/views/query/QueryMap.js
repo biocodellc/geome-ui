@@ -17,7 +17,6 @@ export default class QueryMap extends Map {
       `<strong>Species</strong>:  ${species}<br>` +
       `<strong>Locality, Country</strong>:  ${locality}, ${country}<br>` +
       `<a href='${this.$state.href('sample', {
-        entity: 'Resource', // TODO don't hardcode this
         bcid,
       })}' target='_blank'>Sample details</a>`
     );

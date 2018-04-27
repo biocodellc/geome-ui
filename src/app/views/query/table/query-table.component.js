@@ -45,7 +45,6 @@ class QueryTableController {
     const bcidIndex = this.tableColumns.indexOf('bcid');
     this.$window.open(
       this.$state.href('sample', {
-        entity: 'Resource', // TODO don't hardcode this
         bcid: resource[bcidIndex],
       }),
     );

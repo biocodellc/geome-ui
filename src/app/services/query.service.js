@@ -18,7 +18,7 @@ class QueryService {
 
     return this.$http({
       method: 'GET',
-      url: `${restRoot}projects/${projectId}/query/${entity}/json?limit=${limit}&page=${page}`,
+      url: `${restRoot}records/${projectId}/${entity}/json?limit=${limit}&page=${page}`,
       params: query,
       keepJson: true,
     }).then(response => {
@@ -76,7 +76,7 @@ class QueryService {
   download(path, query, projectId, entity) {
     return this.$http({
       method: 'GET',
-      url: `${restRoot}projects/${projectId}/query/${entity}/${path}`,
+      url: `${restRoot}records/${projectId}/${entity}/${path}`,
       params: query,
       keepJson: true,
     })
