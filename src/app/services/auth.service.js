@@ -38,7 +38,7 @@ class AuthService extends EventEmitter {
     };
 
     return this.$http
-      .post(`${restRoot}authenticationService/oauth/accessToken`, data)
+      .post(`${restRoot}oauth/accessToken`, data)
       .then(({ data }) => this._authSuccess(data, username))
       .catch(response => {
         this.clearTokens();
@@ -61,7 +61,7 @@ class AuthService extends EventEmitter {
 
     if (refreshToken && this._checkAuthenticated() && !triedToRefresh) {
       return this.$http
-        .post(`${restRoot}authenticationService/oauth/refresh`, {
+        .post(`${restRoot}oauth/refresh`, {
           client_id: fimsClientId,
           refresh_token: refreshToken,
         })

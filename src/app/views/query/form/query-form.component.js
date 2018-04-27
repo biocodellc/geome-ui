@@ -88,9 +88,10 @@ class QueryFormController {
   queryJson() {
     this.toggleLoading({ val: true });
 
+    const { projectId } = this.currentProject;
+
     this.QueryService.queryJson(
-      this.params.buildQuery(SOURCE.join()),
-      this.currentProject.projectId,
+      this.params.buildQuery(projectId, SOURCE.join()),
       this.currentProject.config.entities[0].conceptAlias,
       0,
       10000,

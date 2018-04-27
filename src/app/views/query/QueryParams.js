@@ -26,7 +26,7 @@ export default class QueryParams {
     Object.assign(this, defaultParams);
   }
 
-  buildQuery(source) {
+  buildQuery(projectId, source) {
     const builder = new QueryBuilder();
 
     if (this.expeditions.length > 0) {
@@ -151,6 +151,7 @@ export default class QueryParams {
     }
 
     builder.setSource(source);
+    builder.setProjectId(projectId);
     return builder.build();
   }
 

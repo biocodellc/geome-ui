@@ -1,5 +1,3 @@
-import { QueryBuilder } from './Query';
-
 function getStates() {
   return [
     {

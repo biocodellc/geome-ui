@@ -40,45 +40,45 @@ class QueryController {
 
   downloadExcel() {
     this.loading = true;
+    const { projectId } = this.currentProject;
     this.QueryService.downloadExcel(
-      this.params.buildQuery(),
-      this.currentProject.projectId,
+      this.params.buildQuery(projectId),
       this.currentProject.config.entities[0].conceptAlias,
     ).finally(() => (this.loading = false));
   }
 
   downloadCsv() {
     this.loading = true;
+    const { projectId } = this.currentProject;
     this.QueryService.downloadCsv(
-      this.params.buildQuery(),
-      this.currentProject.projectId,
+      this.params.buildQuery(projectId),
       this.currentProject.config.entities[0].conceptAlias,
     ).finally(() => (this.loading = false));
   }
 
   downloadKml() {
     this.loading = true;
+    const { projectId } = this.currentProject;
     this.QueryService.downloadKml(
-      this.params.buildQuery(),
-      this.currentProject.projectId,
+      this.params.buildQuery(projectId),
       this.currentProject.config.entities[0].conceptAlias,
     ).finally(() => (this.loading = false));
   }
 
   downloadFasta() {
     this.loading = true;
+    const { projectId } = this.currentProject;
     this.QueryService.downloadFasta(
-      this.params.buildQuery(),
-      this.currentProject.projectId,
+      this.params.buildQuery(projectId),
       'fastaSequence',
     ).finally(() => (this.loading = false));
   }
 
   downloadFastq() {
     this.loading = true;
+    const { projectId } = this.currentProject;
     this.QueryService.downloadFastq(
-      this.params.buildQuery(),
-      this.currentProject.projectId,
+      this.params.buildQuery(projectId),
       'fastqMetadata',
     ).finally(() => (this.loading = false));
   }

@@ -99,7 +99,7 @@ class UserService extends EventEmitter {
   }
 
   sendResetPasswordToken(username) {
-    return this.$http.get(`${restRoot}users/${username}/sendResetToken`);
+    return this.$http.post(`${restRoot}users/${username}/sendResetToken`);
   }
 
   loadFromSession() {
