@@ -1,3 +1,3 @@
 export default {
-  restRoot: 'https://api.develop.geome-db.org/',
+  restRoot: 'https://api.develop.geome-db.org/rest/',
 };
