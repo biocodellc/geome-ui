@@ -80,7 +80,7 @@ class TemplateController {
 
       Object.values(this.attributes)
         .reduce((result, attributes) => result.concat(attributes), [])
-        .filter(a => this.template.attributeUris.includes(a.uri))
+        .filter(a => this.template.columns.includes(a.column))
         .forEach(a => this.selected.push(a));
     }
   }
