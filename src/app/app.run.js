@@ -26,11 +26,7 @@ export default function(
 ) {
   'ngInject';
 
-  $http.defaults.headers.common = { 'Fims-App': 'Biscicol-Fims' };
-
-  $rootScope.isEmpty = function(val) {
-    return angular.equals({}, val);
-  };
+  $http.defaults.headers.common = { 'Fims-App': 'GeOMe-db' };
 
   // this will wait for the currentProject & currentUser to be loaded from the session
   // before resolving the first route. This hook is only run on page load/refresh

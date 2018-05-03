@@ -1,19 +1,17 @@
 import angular from 'angular';
 import { findExcelCell, isExcelFile } from '../../utils/tabReader';
 
-import StatusPolling from './StatusPolling';
 import detectBrowser from '../../utils/detectBrowser';
 import { getFileExt } from '../../utils/utils';
 
 import config from '../../utils/config';
 
-const { naan, restRoot } = config;
+const { naan } = config;
 
 const template = require('./validation.html');
 
 const defaultResults = {
   validation: {},
-  error: '',
   status: '',
   uploadMessage: '',
   successMessage: '',
@@ -38,25 +36,14 @@ const checkBrowser = () => {
 };
 
 class ValidationController {
-  constructor($scope, $http, $uibModal, DataService) {
+  constructor($scope, $interval, $uibModal, DataService) {
     'ngInject';
 
     this.$scope = $scope;
     this.$uibModal = $uibModal;
     this.DataService = DataService;
+    this.$interval = $interval;
     const latestExpeditionCode = null;
-
-    // TODO this should go in the DataService class
-    this.polling = new StatusPolling($http, restRoot);
-    // TODO find a better place for this
-    this.polling.on('error', err => {
-      this.results.error = err;
-      this.results.showOkButton = true;
-    });
-    this.polling.on('status', status => {
-      this.results.status = status;
-      this.results.error = null;
-    });
 
     this.fimsMetadata = null;
     this.verifyDataPoints = false;
@@ -78,13 +65,15 @@ class ValidationController {
 
     return this.validateSubmit(
       Object.assign({}, uploadData, { projectId }),
-    ).then(({ data }) => {
+    ).then(data => {
+      if (!data) return;
+
       if (data.isValid) {
         this.continueUpload(data.id);
       } else if (data.hasError) {
         this.results.validation = data;
+        if (!data.exception) this.results.showValidationMessages = true;
         this.results.showOkButton = true;
-        this.results.showValidationMessages = true;
       } else {
         this.results.validation = data;
         this.results.showValidationMessages = true;
@@ -118,29 +107,40 @@ class ValidationController {
         console.log('failed ->', response);
         this.modalInstance.close();
         // this.results = Object.assign({}, defaultResults);
-        this.results.error =
+        this.results.validation.error =
           response.data.message ||
           response.data.error ||
           response.data.usrMessage ||
           'Server Error!';
         // this.results.showOkButton = true;
       });
-    // .finally(this.polling.stopPolling);
   }
 
   validateSubmit(data) {
     this.results = Object.assign({}, defaultResults);
     this.showGenbankDownload = false;
-    // start polling here, since firefox support for progress events doesn't seem to be very good
-    // this.polling.startPolling();
     this.results.showStatus = true;
     this.openResultsModal();
-    return this.DataService.validate(data).catch(response => {
-      this.results.error = response.data.usrMessage || 'Server Error!';
-      this.results.showOkButton = true;
-      return response;
-    });
-    // .finally(this.polling.stopPolling);
+    return this.DataService.validate(data)
+      .then(
+        response =>
+          new Promise(resolve => {
+            const listener = this.DataService.validationStatus(
+              response.data.id,
+            );
+
+            listener.on('status', status => {
+              this.results.status = status;
+              this.results.validation.error = null;
+            });
+            listener.on('result', resolve);
+          }),
+      )
+      .catch(response => {
+        this.results.validation.error =
+          response.data.usrMessage || 'Server Error!';
+        this.results.showOkButton = true;
+      });
   }
 
   // TODO should this be moved to the validate component?
@@ -167,8 +167,8 @@ class ValidationController {
       data.dataSourceFiles = [this.fimsMetadata];
     }
 
-    this.validateSubmit(data).then(response => {
-      this.results.validation = response.data;
+    this.validateSubmit(data).then(data => {
+      this.results.validation = data;
       this.modalInstance.close();
     });
   }

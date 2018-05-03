@@ -1,5 +1,7 @@
+const template = require('./validate.html');
+
 export default {
-  template: require('./validate.html'),
+  template,
   bindings: {
     fimsMetadata: '<',
     onMetadataChange: '&',

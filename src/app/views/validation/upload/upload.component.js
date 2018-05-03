@@ -30,9 +30,12 @@ class UploadController {
 
   $onChanges(changesObj) {
     if ('fimsMetadata' in changesObj) {
-      if (this.fimsMetadata) this.verifyCoordinates();
+      if (this.fimsMetadata && this.isVisible) this.verifyCoordinates();
       this.verifySampleLocations = !!this.fimsMetadata;
       this.sampleLocationsVerified = false;
+    } else if ('isVisible' in changesObj) {
+      if (this.fimsMetadata && this.isVisible && !this.sampleLocationsVerified)
+        this.verifyCoordinates();
     }
   }
 
@@ -214,7 +217,10 @@ class UploadController {
       })
       .catch(e => {
         angular.catcher('Failed to load samples map')(e);
-        this.verifySampleLocations = false;
+        // need to apply here b/c FileReader isn't an angular object
+        this.$scope.$apply(() => {
+          this.verifySampleLocations = false;
+        });
       });
   }
 }
@@ -223,6 +229,7 @@ export default {
   template,
   controller: UploadController,
   bindings: {
+    isVisible: '<',
     currentProject: '<',
     fimsMetadata: '<',
     userExpeditions: '<',

@@ -11,10 +11,14 @@ const workbookFromFile = file =>
 
       reader.onload = e => {
         const data = e.target.result;
-        const workbook = xlsx.read(data, {
-          type: 'binary',
-        });
-        resolve(workbook);
+        try {
+          const workbook = xlsx.read(data, {
+            type: 'binary',
+          });
+          resolve(workbook);
+        } catch (err) {
+          reject(err);
+        }
       };
 
       reader.readAsBinaryString(file);

@@ -8,7 +8,7 @@
     <div ng-repeat="m in group.messages track by $index">{{ m.message }}</div>
 </div>
 
-<!--NOTE: we can't user $ctrl in here b/c it doesn't have access to it, I think isOpen & toggleOpen is defined on the uib-accordian-group ctrl-->
+<!--NOTE: we can't user $ctrl in here b/c it doesn't have access to it, I think isOpen & toggleOpen are defined on the uib-accordian-group ctrl-->
 <script type="text/ng-template" id="validation-messages-group.html">
     <div>
         <a role="button" data-toggle="collapse" href

@@ -1,3 +1,5 @@
+const template = require('./resultsModal.html');
+
 class ResultsModalController {
   $onInit() {
     // we have to do the following b/c uibModal doesn't resolve correctly
@@ -7,7 +9,7 @@ class ResultsModalController {
 }
 
 export default {
-  template: require('./resultsModal.html'),
+  template,
   controller: ResultsModalController,
   bindings: {
     resolve: '<',
