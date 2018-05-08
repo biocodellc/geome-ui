@@ -31,33 +31,33 @@ class DashboardController {
   }
 
   downloadCsv(expeditionCode) {
-    this.loading = true;
+    this.loadingExpedition = expeditionCode;
     this.QueryService.downloadCsv(
       this.getQuery(expeditionCode),
       'Resource',
-    ).finally(() => (this.loading = false));
+    ).finally(() => (this.loadingExpedition = undefined));
   }
 
   downloadFasta(expeditionCode) {
-    this.loading = true;
+    this.loadingExpedition = expeditionCode;
     this.QueryService.downloadFasta(
       this.getQuery(expeditionCode),
       'fastaSequence',
-    ).finally(() => (this.loading = false));
+    ).finally(() => (this.loadingExpedition = undefined));
   }
 
   getQuery(expeditionCode) {
     const params = new QueryParams();
-    params.expeditions.push(expeditionCode);
-    return params.buildQuery(this.currentPage.projectId);
+    params.expeditions.push({ expeditionCode });
+    return params.buildQuery(this.currentProject.projectId);
   }
 
   downloadFastq(expeditionCode) {
-    this.loading = true;
+    this.loadingExpedition = expeditionCode;
     this.DataService.generateSraData(
       this.currentProject.projectId,
       expeditionCode,
-    ).finally(() => (this.loading = false));
+    ).finally(() => (this.loadingExpedition = undefined));
   }
 
   pageChanged() {
