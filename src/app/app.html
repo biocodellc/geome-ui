@@ -7,14 +7,14 @@
     <!-- Sidebar navigation -->
     <fims-navigation layout="column" current-project="$ctrl.currentProject" current-user="$ctrl.currentUser"></fims-navigation>
 
-    <md-content flex layout-fill>
+    <md-content flex layout-fill layout="row">
       <div layout="row" layout-fill layout-sm="column" ng-show="$ctrl.loading" layout-align="center center">
         <md-progress-circular md-mode="indeterminate"></md-progress-circular>
       </div>
 
-      <main ng-show="!$ctrl.loading">
+      <main ng-show="!$ctrl.loading" flex layout="row">
         <alerts></alerts>
-        <div class="project-view" ui-view current-project="$ctrl.currentProject" current-user="$ctrl.currentUser"></div>
+        <div class="project-view layout-fill" layout="row" flex ui-view current-project="$ctrl.currentProject" current-user="$ctrl.currentUser"></div>
       </main>
     </md-content>
   </div>

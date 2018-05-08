@@ -5,7 +5,7 @@ function getStates() {
       config: {
         url: '/workbench',
         template:
-          '<ui-view current-project="$ctrl.currentProject" current-user="$ctrl.currentUser"/>',
+          '<ui-view layout="column" class="layout-fill" current-project="$ctrl.currentProject" current-user="$ctrl.currentUser"/>',
         abstract: true,
       },
     },

@@ -8,10 +8,15 @@
 .project-view {
   padding: 30px 25px; // when changing this, update.project-view-white
 
+  ui-view > * {
+    flex: 1;
+  }
+
   fims-dashboard,
   fims-validation,
   fims-templates {
     @extend .project-view-white;
+    // flex: 1;
   }
 
 }
