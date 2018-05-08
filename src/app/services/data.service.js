@@ -100,6 +100,21 @@ class DataService {
       })
       .catch(angular.catcher('Failed to export data'));
   }
+
+  generateSraData(projectId, expeditionCode) {
+    return this.$http
+      .get(
+        `${restRoot}projects/${projectId}/expeditions/${expeditionCode}/generateSraFiles`,
+      )
+      .then(response => {
+        if (response.status === 204) {
+          angular.alerts.info('No Fastq records found.');
+          return Promise.resolve();
+        }
+        return this.FileService.download(response.data.url);
+      })
+      .catch(angular.catcher('Failed to generate SRA files'));
+  }
 }
 
 export default angular

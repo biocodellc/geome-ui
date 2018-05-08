@@ -2,7 +2,6 @@ import angular from 'angular';
 import { findExcelCell, isExcelFile } from '../../utils/tabReader';
 
 import detectBrowser from '../../utils/detectBrowser';
-import { getFileExt } from '../../utils/utils';
 
 import config from '../../utils/config';
 
@@ -43,13 +42,10 @@ class ValidationController {
     this.$uibModal = $uibModal;
     this.DataService = DataService;
     this.$interval = $interval;
-    const latestExpeditionCode = null;
 
-    this.fimsMetadata = null;
-    this.verifyDataPoints = false;
-    this.coordinatesVerified = false;
+    this.fimsMetadata = undefined;
+    this.latestExpeditionCode = undefined;
     this.displayResults = false;
-    this.coordinatesErrorClass = null;
     this.showGenbankDownload = false;
     this.activeTab = 0;
   }
@@ -60,13 +56,26 @@ class ValidationController {
     checkBrowser();
   }
 
+  validate(data) {
+    this.validateSubmit(
+      Object.assign({}, data, {
+        projectId: this.currentProject.projectId,
+        expeditionCode: this.expeditionCode,
+        upload: false,
+      }),
+    ).then(resp => {
+      this.results.validation = resp;
+      this.modalInstance.close();
+    });
+  }
+
   handleUpload(uploadData) {
     const { projectId } = this.currentProject;
 
     return this.validateSubmit(
       Object.assign({}, uploadData, { projectId }),
     ).then(data => {
-      if (!data) return;
+      if (!data) return false;
 
       if (data.isValid) {
         this.continueUpload(data.id);
@@ -74,52 +83,51 @@ class ValidationController {
         this.results.validation = data;
         if (!data.exception) this.results.showValidationMessages = true;
         this.results.showOkButton = true;
-      } else {
-        this.results.validation = data;
-        this.results.showValidationMessages = true;
-        this.results.showStatus = false;
-        this.results.showContinueButton = true;
-        this.results.uploadId = data.id;
-        this.results.showCancelButton = true;
-        // if (!angular.equals(this.fastqMetadata, defaultFastqMetadata)) {
-        //   this.showGenbankDownload = true;
-        // }
+        return false;
       }
+
+      Object.assign(this.results, {
+        validation: data,
+        showValidationMessages: true,
+        showStatus: false,
+        showContinueButton: true,
+        uploadId: data.id,
+        showCancelButton: true,
+      });
+
+      return this.modalInstance.result.then(success => {
+        if (success) {
+          this.latestExpeditionCode = uploadData.expeditionCode;
+          if (uploadData.dataSourceMetadata.find(m => m.dataType === 'FASTQ')) {
+            this.showGenbankDownload = true;
+          }
+        }
+        return success;
+      });
     });
   }
 
   continueUpload(uploadId) {
-    // this.polling.startPolling();
     this.results.showStatus = true;
     return this.DataService.upload(uploadId)
       .then(({ data }) => {
         this.results.successMessage = data.message;
-        this.modalInstance.close();
-        console.log(this.expeditionCode);
-        this.latestExpeditionCode = this.expeditionCode;
-        // if (!angular.equals(this.fastqMetadata, defaultFastqMetadata)) {
-        //   this.showGenbankDownload = true;
-        // }
-        // this.resetForm();
-        // }
+        this.modalInstance.close(true);
       })
       .catch(response => {
         console.log('failed ->', response);
-        this.modalInstance.close();
-        // this.results = Object.assign({}, defaultResults);
+        this.modalInstance.close(false);
         this.results.validation.error =
           response.data.message ||
           response.data.error ||
           response.data.usrMessage ||
           'Server Error!';
-        // this.results.showOkButton = true;
       });
   }
 
   validateSubmit(data) {
-    this.results = Object.assign({}, defaultResults);
-    this.showGenbankDownload = false;
-    this.results.showStatus = true;
+    // Clear the results
+    this.results = Object.assign({}, defaultResults, { showStatus: true });
     this.openResultsModal();
     return this.DataService.validate(data)
       .then(
@@ -143,36 +151,6 @@ class ValidationController {
       });
   }
 
-  // TODO should this be moved to the validate component?
-  validate() {
-    const data = {
-      projectId: this.currentProject.projectId,
-      expeditionCode: this.expeditionCode,
-      upload: false,
-    };
-
-    if (['xlsx', 'xls'].includes(getFileExt(this.fimsMetadata.name))) {
-      data.workbooks = [this.fimsMetadata];
-    } else {
-      data.dataSourceMetadata = [
-        {
-          dataType: 'TABULAR',
-          filename: this.fimsMetadata.name,
-          reload: true,
-          metadata: {
-            sheetName: 'Samples', // TODO this needs to be dynamic, depending on the entity being validated
-          },
-        },
-      ];
-      data.dataSourceFiles = [this.fimsMetadata];
-    }
-
-    this.validateSubmit(data).then(data => {
-      this.results.validation = data;
-      this.modalInstance.close();
-    });
-  }
-
   openResultsModal() {
     this.modalInstance = this.$uibModal.open({
       component: 'fimsResultsModal',
@@ -181,7 +159,7 @@ class ValidationController {
       backdrop: 'static',
       resolve: {
         onContinue: () => () => {
-          this.continueUpload(this.results.uploadId);
+          this.continuePromise = this.continueUpload(this.results.uploadId);
           this.results.showContinueButton = false;
           this.results.showCancelButton = false;
           this.results.showValidationMessages = false;
@@ -202,24 +180,8 @@ class ValidationController {
     });
   }
 
-  // TODO move this to uploads?
-  resetForm() {
-    this.fimsMetadata = null;
-    this.fastaFiles = [];
-    this.fastaData = [];
-    this.fastaCnt = [0];
-    this.fastqFilenames = null;
-    // angular.copy(defaultFastqMetadata, this.fastqMetadata);
-    this.expeditionCode = null;
-    this.verifyDataPoints = false;
-    this.coordinatesVerified = false;
-    this.$scope.$broadcast('show-errors-reset');
-  }
-
   fimsMetadataChange(fimsMetadata) {
     this.fimsMetadata = fimsMetadata;
-    // Clear the results
-    this.results = Object.assign({}, defaultResults);
 
     if (this.fimsMetadata) {
       // Check NAAN

@@ -1,38 +1,25 @@
 <div ng-show="$ctrl.results.showValidationMessages">
-    <!-- project config validation messages -->
-    <!--<div ng-show="$ctrl.results.validationMessages.config" ng-init="validateSuccess = true">-->
-
-    <!--<div class="tab-content" ng-show="!$ctrl.isEmptyObject(sheetMessages.errors)">-->
-    <!--<p><b>Invalid Project Configuration.</b><br>-->
-    <!--<b>Please talk to your project administrator to fix the following error(s):</b></p>-->
-    <!--</div>-->
-
-    <!--<uib-accordion close-others="false">-->
-    <!--<div role="tablist">-->
-
-    <!--<fims-validaton-messages-->
-    <!--messages="$ctrl.results.validationMessages.config.errors"-->
-    <!--error="true">-->
-    <!--</fims-validaton-messages>-->
-
-    <!--</div>-->
-    <!--</uib-accordion>-->
-    <!--</div>-->
-
     <!-- worksheet validation messages -->
-    <!--<div ng-show="$ctrl.results.validationMessages.worksheets">-->
     <div>
         <div ng-repeat="entityResults in $ctrl.results.validation.messages track by entityResults.entity">
 
             <div class="tab-content" ng-show="entityResults.errors.length > 0">
-                <p><b>Validation results on {{ entityResults.sheetName }} worksheet, for entity: {{ entityResults.entity
-                    }}.</b><br>
-                    <b>1 or more errors found. Must fix to continue. Click each message for details</b></p>
+                <p>
+                    <b>Validation results on {{ entityResults.sheetName }} worksheet, for entity: {{ entityResults.entity
+                        }}.
+                    </b>
+                    <br>
+                    <b>1 or more errors found. Must fix to continue. Click each message for details</b>
+                </p>
             </div>
             <div class="tab-content" ng-show="entityResults.errors.length === 0 && entityResults.warnings.length > 0">
-                <p><b>Validation results on {{ entityResults.sheetName }} worksheet, for entity: {{ entityResults.entity
-                    }}.</b><br>
-                    <b>1 or more warnings found. Click each message for details</b></p>
+                <p>
+                    <b>Validation results on {{ entityResults.sheetName }} worksheet, for entity: {{ entityResults.entity
+                        }}.
+                    </b>
+                    <br>
+                    <b>1 or more warnings found. Click each message for details</b>
+                </p>
             </div>
 
             <!--we use template-url here to override the default uib-accordian template-->
@@ -42,9 +29,9 @@
     </div>
 </div>
 
-<div ng-show="$ctrl.results.showUploadMessages" ng-bind-html="$ctrl.results.uploadMessage | trusted_html"></div>
-<div ng-show="$ctrl.results.validation.exception" ng-bind-html="$ctrl.results.validation.exception | trusted_html"></div>
-<div ng-show="$ctrl.results.showSuccessMessages" ng-bind-html="$ctrl.results.successMessage | trusted_html"></div>
+<div ng-show="$ctrl.results.showUploadMessages"><p>{{$ctrl.results.uploadMessage | trusted_html}}</p></div>
+<div ng-show="$ctrl.results.validation.exception"><p>{{$ctrl.results.validation.exception | trusted_html}}</p></div>
+<div ng-show="$ctrl.results.showSuccessMessages"><p>{{$ctrl.results.successMessage | trusted_html}}</p></div>
 
 <script type="text/ng-template" id="validation-result-messages.html">
     <div role="tablist">

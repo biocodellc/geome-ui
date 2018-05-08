@@ -25,7 +25,11 @@ class UploadController {
 
   $onInit() {
     this.fastaData = [];
+    this.fastqMetadata = Object.assign({}, defaultFastqMetadata);
     this.dataTypes = {};
+    this.expeditionCode = undefined;
+    this.verifySampleLocations = false;
+    this.sampleLocationsVerified = false;
   }
 
   $onChanges(changesObj) {
@@ -87,7 +91,14 @@ class UploadController {
       return;
     }
 
-    this.onUpload({ data: this.getUploadData() });
+    this.onUpload({ data: this.getUploadData() }).then(success => {
+      if (success) {
+        this.onMetadataChange({ fimsMetadata: undefined });
+        this.$onInit();
+        this.dataTypes.fims = true;
+        this.$scope.$broadcast('show-errors-reset');
+      }
+    });
   }
 
   checkCoordinatesVerified() {

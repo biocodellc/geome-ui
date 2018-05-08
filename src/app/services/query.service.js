@@ -5,12 +5,12 @@ import authService from './auth.service';
 const { restRoot } = config;
 
 class QueryService {
-  constructor($http, $window, AuthService) {
+  constructor($http, $window, FileService) {
     'ngInject';
 
     this.$http = $http;
     this.$window = $window;
-    this.AuthService = AuthService;
+    this.FileService = FileService;
   }
 
   queryJson(query, entity, page, limit) {
@@ -86,21 +86,7 @@ class QueryService {
           return;
         }
 
-        const accessToken = this.AuthService.getAccessToken();
-        let url = new URL(response.data.url);
-
-        const parser = this.$window.document.createElement('a');
-        parser.href = url;
-
-        if (accessToken) {
-          if (parser.search) {
-            url += `&access_token=${accessToken}`;
-          } else {
-            url += `?access_token=${accessToken}`;
-          }
-        }
-
-        this.$window.open(url, '_self');
+        this.FileService.download(response.data.url);
       })
       .catch(angular.catcher('Failed downloading file!'));
   }

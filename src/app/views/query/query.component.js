@@ -86,7 +86,8 @@ class QueryController {
   // TODO: have query results return this as well. requires updating PostgresRecordRepository in backend
   // to support sql pagination & sorting
   hasFastqData() {
-    return this.results && this.results.data.some(d => d.fastqMetadata);
+    return true;
+    // return this.results && this.results.data.some(d => d.fastqMetadata);
   }
 
   toggleSidebar() {
