@@ -8,6 +8,7 @@
 .project-view {
   padding: 30px 25px; // when changing this, update.project-view-white
 
+  fims-dashboard,
   fims-validation,
   fims-templates {
     @extend .project-view-white;

@@ -29,6 +29,7 @@ import project from './views/project';
 import expeditions from './views/expeditions';
 import validation from './views/validation';
 import query from './views/query';
+import dashboard from './views/dashboard';
 
 import projectService from './services/project.service';
 import recordService from './services/record.service';
@@ -69,6 +70,7 @@ const dependencies = [
   notFound,
   login,
   query,
+  dashboard,
   auth,
   templates,
   expeditions,
