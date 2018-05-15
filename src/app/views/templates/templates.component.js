@@ -68,6 +68,7 @@ class TemplateController {
     this.getAttributes();
     this.filterTemplates();
     this.template = Object.assign({}, DEFAULT_TEMPLATE);
+    this.templateChange();
   }
 
   templateChange() {
