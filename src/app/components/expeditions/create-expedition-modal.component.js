@@ -19,6 +19,7 @@ class CreateExpeditionModalController {
       expeditionTitle: '',
       expeditionCode: '',
       visibility: visibilities[0],
+      public: true,
       metadata: {},
     };
   }
@@ -39,6 +40,7 @@ class CreateExpeditionModalController {
 
     if (this.form.$invalid) return;
 
+    this.loading = true;
     this.ExpeditionService.create(this.resolve.projectId, this.expedition)
       .then(({ data }) => this.close({ $value: data }))
       .catch(response => {
@@ -46,6 +48,7 @@ class CreateExpeditionModalController {
           this.form.expeditionCode.$setValidity('exists', false);
           this.invalidExpeditionCode = this.expedition.expeditionCode;
         }
+        this.loading = false;
       });
   }
 }

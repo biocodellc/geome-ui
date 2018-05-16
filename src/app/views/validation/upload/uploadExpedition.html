@@ -9,9 +9,9 @@
           <option value="">-- Select an Expedition --</option>
         </select>
         <span class="input-group-btn">
-          <button class="btn btn-default">
+          <button class="btn btn-default" ng-click="$ctrl.onChange({ expeditionCode: 'CREATE' })">
             <md-tooltip md-direction="top">New expedition</md-tooltip>
-            <span class="fa fa-plus" ng-click="$ctrl.onChange({ expeditionCode: 'CREATE' })"></span>
+            <span class="fa fa-plus"></span>
           </button>
         </span>
       </div>
