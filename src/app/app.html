@@ -14,7 +14,7 @@
 
       <main ng-show="!$ctrl.loading" flex layout="column">
         <alerts></alerts>
-        <div class="project-view layout-fill" layout="row" flex ui-view current-project="$ctrl.currentProject" current-user="$ctrl.currentUser"></div>
+        <div class="project-view layout-fill" layout="row" flex ui-view="projectView" current-project="$ctrl.currentProject" current-user="$ctrl.currentUser"></div>
       </main>
     </md-content>
   </div>

@@ -4,10 +4,5 @@ export default {
   template,
   bindings: {
     layout: '@',
-    // currentUser: '<',
-    // currentProject: '<',
-    // onProjectChange: '&',
-    // onSignout: '&',
-    // showProjectSelector: '<',
   },
 };

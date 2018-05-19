@@ -4,9 +4,13 @@ function getStates() {
       state: 'projectView',
       config: {
         url: '/workbench',
-        template:
-          '<ui-view layout="column" class="layout-fill" current-project="$ctrl.currentProject" current-user="$ctrl.currentUser"/>',
         abstract: true,
+        views: {
+          projectView: {
+            template:
+              '<ui-view layout="column" class="layout-fill" current-project="$ctrl.currentProject" current-user="$ctrl.currentUser"/>',
+          },
+        },
       },
     },
     {
