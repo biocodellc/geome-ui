@@ -35,7 +35,7 @@
       <div class="md-form-group" ng-show="$ctrl.showMap" layout="column" layout-margin>
         <div layout="row" layout-wrap>
           <md-checkbox class="small" ng-model="$ctrl.params.isMappable" name="isMappable"> is Mappable</md-checkbox>
-          <md-checkbox class="small" ng-model="$ctrl.params.coordinateUncertaintyInMeters" name="coordinateUncertaintyInMeters">
+          <md-checkbox class="small" ng-model="$ctrl.params.hasCoordinateUncertaintyInMeters" name="coordinateUncertaintyInMeters">
             has coordinateUncertaintyInMeters</md-checkbox>
           <md-checkbox class="small" ng-model="$ctrl.params.hasPermitInfo" name="hasPermitInfo"> has permitInfo</md-checkbox>
         </div>
@@ -91,20 +91,20 @@
             <input ng-model="$ctrl.params.genus" type="text" placeholder="Genus" />
           </md-input-container>
           <md-input-container flex="50">
-            <input ng-model="$ctrl.params.country" type="text" placeholder="Country" />
-          </md-input-container>
-        </div>
-        <div layout="row">
-          <md-input-container flex="50">
-            <input ng-model="$ctrl.params.family" type="text" placeholder="Family" />
-          </md-input-container>
-          <md-input-container flex="50">
-            <input ng-model="$ctrl.params.locality" type="text" placeholder="Locality" />
+            <input ng-model="$ctrl.params.species" type="text" placeholder="Species" />
           </md-input-container>
         </div>
         <div layout="row">
           <md-input-container flex>
-            <input ng-model="$ctrl.params.species" type="text" placeholder="Species" />
+            <input ng-model="$ctrl.params.family" type="text" placeholder="Family" />
+          </md-input-container>
+        </div>
+        <div layout="row">
+          <md-input-container flex="50">
+            <input ng-model="$ctrl.params.country" type="text" placeholder="Country" />
+          </md-input-container>
+          <md-input-container flex="50">
+            <input ng-model="$ctrl.params.locality" type="text" placeholder="Locality" />
           </md-input-container>
         </div>
         <div layout="row" layout-align="start center">
