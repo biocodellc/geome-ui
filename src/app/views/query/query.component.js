@@ -133,6 +133,7 @@ export default {
   controller: QueryController,
   bindings: {
     currentUser: '<',
+    currentProject: '<',
     layout: '@',
     layoutFill: '@',
   },
