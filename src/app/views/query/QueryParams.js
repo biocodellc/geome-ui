@@ -17,8 +17,6 @@ const defaultParams = {
   bounds: null,
 };
 
-const escapeNum = num => (num < 0 ? `\\${num}` : num);
-
 export default class QueryParams {
   constructor() {
     this.expeditions = [];
@@ -123,31 +121,26 @@ export default class QueryParams {
       builder.add('_exists_:permitInformation');
     }
 
-    // TODO: fix this b/c it isn't necessarily only geome anymore
     if (this.bounds) {
       const ne = this.bounds.northEast;
       const sw = this.bounds.southWest;
 
       if (ne.lng > sw.lng) {
         if (builder.queryString.length > 0) builder.add('and');
-        builder.add(`decimalLongitude >= ${escapeNum(sw.lng)}`);
-        builder.add(`and decimalLongitude <= ${escapeNum(ne.lng)}`);
+        builder.add(`decimalLongitude >= ${sw.lng}`);
+        builder.add(`and decimalLongitude <= ${ne.lng}`);
       } else {
         if (builder.queryString.length > 0) builder.add('and');
         builder.add(
-          `((decimalLongitude >= ${escapeNum(
-            sw.lng,
-          )} and decimalLongitude <= 180)`,
+          `((decimalLongitude >= ${sw.lng} and decimalLongitude <= 180)`,
         );
         builder.add(
-          `or (decimalLongitude <= ${escapeNum(
-            ne.lng,
-          )} or decimalLongitude >= \\-180))`,
+          `or (decimalLongitude <= ${ne.lng} or decimalLongitude >= -180))`,
         );
       }
       if (builder.queryString.length > 0) builder.add('and');
-      builder.add(`decimalLatitude <= ${escapeNum(ne.lat)}`);
-      builder.add(`and decimalLatitude >= ${escapeNum(sw.lat)}`);
+      builder.add(`decimalLatitude <= ${ne.lat}`);
+      builder.add(`and decimalLatitude >= ${sw.lat}`);
     }
 
     builder.setSource(source);

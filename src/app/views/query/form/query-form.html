@@ -59,7 +59,7 @@
             </div>
             <md-button class="md-raised md-warn md-hue-2 md-button-sm" ng-click="$ctrl.clearBounds()">Clear</md-button>
           </div>
-          <md-button class="md-raised md-primary md-button-sm" ng-class="{'active': $ctrl.drawing}" ng-show="!$ctrl.params.bounds"
+          <md-button class="md-raised md-accent md-button-sm" ng-class="{'active': $ctrl.drawing}" ng-show="!$ctrl.params.bounds"
             ng-click="$ctrl.drawBounds()">Draw</md-button>
         </div>
       </div>
@@ -165,7 +165,7 @@
   </div>
 
   <div layout="row" layout-align="end center">
-    <md-button type="submit" ng-click="$ctrl.currentProject ? $ctrl.queryJson() : '';" class="md-raised">
+    <md-button type="submit" ng-click="$ctrl.currentProject ? $ctrl.queryJson() : '';" class="md-raised md-primary">
       <md-tooltip ng-show="!$ctrl.currentProject" md-direction="top">Select a project</md-tooltip>
       <span class="fa fa-search"></span> Search
     </md-button>
