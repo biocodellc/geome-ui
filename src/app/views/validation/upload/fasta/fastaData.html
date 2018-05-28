@@ -1,4 +1,4 @@
-<hr class="separator"/>
+<hr class="separator" />
 <div class="col-sm-8">
     <div ng-repeat="d in $ctrl.data track by $index">
         <div class="form-group" show-errors="{trigger: 'change'}">
@@ -7,17 +7,12 @@
                 <div class="input-group">
                     <label class="input-group-btn">
                         <span class="btn btn-default form-control">Browse &hellip;</span>
-                        <input type="file" style="display:none;" id="fasta" name="fasta_{{$index}}"
-                               class="form-control"
-                               ng-change="$ctrl.dataChanged()"
-                               ngf-select
-                               ngf-pattern="'.fa,.mpfa,.fna,.fsa,.fas,.fasta,.txt'"
-                               ngf-model-invalid="invalidFastaFile_{{$index}}"
-                               required
-                               ng-model="$ctrl.data[$index].file"/>
+                        <input type="file" style="display:none;" id="fasta" name="fasta_{{$index}}" class="form-control" ng-change="$ctrl.dataChanged()"
+                            ngf-select ngf-pattern="'.fa,.mpfa,.fna,.fsa,.fas,.fasta,.txt'" ngf-model-invalid="invalidFastaFile_{{$index}}"
+                            required ng-model="$ctrl.data[$index].file" />
                     </label>
-                    <input type="text" class="form-control"
-                           ng-value="$ctrl.data[$index].file.name || invalidFastaFile_{{$index}}.name" readonly/>
+                    <input type="text" class="form-control" ng-value="$ctrl.data[$index].file.name || invalidFastaFile_{{$index}}.name"
+                        readonly/>
                 </div>
                 <p class="help-block small col-sm-offset-3" ng-show="$ctrl.form.fasta_{{$index}}.$error.pattern">
                     File must have one of the following extensions: .fa, .mpfa, .fna, .fsa, .fas, .fasta, or .txt</p>
@@ -27,45 +22,67 @@
         <div class="form-group" show-errors>
             <label for="fastaMarker" class="col-sm-3 control-label">Marker</label>
             <div class="col-sm-9">
-                <select class="form-control" id="fastaMarker" name="fastaMarker_{{$index}}"
-                        ng-model="$ctrl.data[$index].marker"
-                        ng-change="$ctrl.dataChanged()"
-                        required
-                        ng-options="marker.value as marker.value for marker in $ctrl.markers">
+                <select class="form-control" id="fastaMarker" name="fastaMarker_{{$index}}" ng-model="$ctrl.data[$index].marker"
+                    ng-change="$ctrl.dataChanged()" required ng-options="marker.value as marker.value for marker in $ctrl.markers">
                     <option value="">-- Select a Marker --</option>
                 </select>
             </div>
-            <a class="help-link" href="#"
-               uib-popover-template="'fastaData.popover.html'"
-               popover-placement="bottom">
-                <span class="glyphicon glyphicon-question-sign glyphicon-help"></span>
-            </a>
+            <md-button class="md-icon-button help-link md-popover-button">
+                <md-popover md-popover-class="fasta-help" md-popover-group="fastaHelp" md-direction="bottom">
+                    <div ng-include="'fasta-help.popover.html'"></div>
+                </md-popover>
+                <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
+            </md-button>
         </div>
-        <button type="button" class="btn btn-primary btn-sm pull-right" ng-show="$last" ng-click="$ctrl.addData()">
-            <span class="glyphicon glyphicon-plus"></span>
-        </button>
-        <button type="button" class="btn btn-danger btn-sm pull-right" ng-show="$last && $ctrl.data.length > 1"
+        <div class="col-xs-12">
+            <button type="button" class="btn btn-primary btn-sm pull-right" ng-show="$last" ng-click="$ctrl.addData()">
+                <span class="fa fa-plus"></span>
+            </button>
+            <button type="button" class="btn btn-danger btn-sm pull-right" ng-show="$last && $ctrl.data.length > 1"
                 ng-click="$ctrl.removeData()">
-            <span class="glyphicon glyphicon-minus"></span>
-        </button>
+                <span class="fa fa-minus"></span>
+            </button>
+        </div>
     </div>
 </div>
 
 <div class="col-sm-4">
     <ul>
-        <li class="list-unstyled big"><strong>Instructions:</strong></li>
-        <li>The name of your fasta sequences must match the materialsampleIDs in the metadata
-            file
+        <li class="list-unstyled big">
+            <strong>Instructions:</strong>
+        </li>
+        <li>The name of your fasta sequences must match the materialsampleIDs in the metadata file
         </li>
         <li>You can include multiple taxa in a single fasta/metadata file</li>
-        <li>Each fasta file should only include data from a single marker type (e.g. CO1, CYB,
-            etc)
+        <li>Each fasta file should only include data from a single marker type (e.g. CO1, CYB, etc)
         </li>
-        <li>If you have multiple markers for the same taxa you must upload multiple fasta files
-            for a single metadata file.
+        <li>If you have multiple markers for the same taxa you must upload multiple fasta files for a single
+            metadata file.
         </li>
-        <li>We recommend Fasta files names should follow this format
-            markerabbreviation_usertaxaabbreviation.fa
+        <li>We recommend Fasta files names should follow this format markerabbreviation_usertaxaabbreviation.fa
         </li>
     </ul>
 </div>
+
+<!----------------------------
+help templates
+ ---------------------------->
+
+<script type="text/ng-template" id="fasta-help.popover.html">
+    <div>
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <th>Marker</th>
+                <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="field in $ctrl.markers track by field.value">
+                <td>{{ ::field.value }}</td>
+                <td>{{ ::field.definition}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</script>
