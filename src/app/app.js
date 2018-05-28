@@ -17,6 +17,7 @@ import router from './utils/router';
 import postInterceptor from './postInterceptor';
 import autofocus from './directives/autofocus.directive';
 import showErrors from './directives/showErrors.directive';
+import mdPopover from './directives/mdPopover.directive';
 import trustedHtml from './filters/html.filter';
 
 import about from './views/about';
@@ -55,6 +56,7 @@ const dependencies = [
   postInterceptor,
   autofocus,
   showErrors,
+  mdPopover,
   trustedHtml,
   bootstrap,
   ngMaterial,

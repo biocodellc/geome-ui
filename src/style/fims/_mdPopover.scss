@@ -1,0 +1,43 @@
+.md-popover {
+    background-color: #fff;
+    position: absolute;
+
+    &-hide {
+        display: none;
+    }
+}
+
+.md-popover-button {
+    overflow: visible;
+
+    > * {
+        text-transform: none;
+        white-space: normal;
+        font-weight: 300;
+    }
+}
+
+// .md-panel-outer-wrapper {
+//     > .arrow,
+//     > .arrow::after {
+//         position: absolute;
+//         display: block;
+//         width: 0;
+//         height: 0;
+//         border-color: transparent;
+//         border-style: solid;
+//     }
+
+//     > .arrow::after {
+//         border-width: 10px;
+//         content: "";
+//     }
+
+//     &.bottom > .arrow::after {
+//         content: " ";
+//         top: 1px;
+//         margin-left: -10px;
+//         border-top-width: 0;
+//         border-bottom-color: #fff;
+//     }
+// }

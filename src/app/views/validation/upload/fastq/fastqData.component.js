@@ -7,15 +7,9 @@ class FastqDataController {
     }
 
     if ('config' in changesObj && changesObj.config.currentValue) {
-      this.libraryStrategies = this.config
-        .getList('libraryStrategy')
-        .fields.map(f => f.value);
-      this.librarySources = this.config
-        .getList('librarySource')
-        .fields.map(f => f.value);
-      this.librarySelections = this.config
-        .getList('librarySelection')
-        .fields.map(f => f.value);
+      this.libraryStrategies = this.config.getList('libraryStrategy').fields;
+      this.librarySources = this.config.getList('librarySource').fields;
+      this.librarySelections = this.config.getList('librarySelection').fields;
       this.platforms = {};
 
       this.platforms = this.config
