@@ -74,16 +74,15 @@ class EntityDetailController {
       const msg =
         invalidMetadata.length > 1 ? ' are all required' : ' is required';
 
-      angular.alerts.error(invalidMetadata.join(', ') + msg);
+      angular.toaster.error(invalidMetadata.join(', ') + msg);
       return;
     }
 
     if (this.entity.rules.find(r => angular.equals(r, rule))) {
-      angular.alerts.error('That rule already exists.');
+      angular.toaster.error('That rule already exists.');
       return;
     }
 
-    angular.alerts.removeTmp();
     this.entity.rules.push(rule);
     this.onUpdateEntity({
       alias: this.entity.conceptAlias,

@@ -23,7 +23,7 @@ class LoginController {
   resetPassword() {
     this.UserService.sendResetPasswordToken(this.credentials.username)
       .then(() =>
-        angular.alerts.success(
+        angular.toaster.success(
           'Successfully sent reset password token. Check your email for further instructions.',
         ),
       )
@@ -31,7 +31,6 @@ class LoginController {
   }
 
   submit() {
-    angular.alerts.removeTmp();
     this.loadingModal.open();
     this.AuthService.authenticate(
       this.credentials.username,

@@ -48,7 +48,9 @@ import projectSelectorDialog from './components/project-selector-dialog';
 
 import Exceptions from './utils/exceptions';
 import Alerts from './utils/alerts';
+import Toaster from './utils/toaster';
 import projectViewHook from './projectView.hook';
+import fimsMdDialog from './utils/fimsMdDialog';
 
 const dependencies = [
   uirouter,
@@ -92,7 +94,13 @@ angular.catcher = e.catcher.bind(e);
 export default angular
   .module('biscicolApp', dependencies)
   .component('app', app)
+  .run(
+    /* ngInject */ $mdToast => {
+      angular.toaster = Toaster($mdToast);
+    },
+  )
   .run(routing)
   .run(run)
   .run(projectViewHook)
+  .config(fimsMdDialog)
   .config(theme);

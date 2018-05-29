@@ -14,12 +14,12 @@ class ProjectCtrl {
     if (!angular.equals(this.currentProject, project)) {
       this.ProjectService.update(project)
         .then(({ data }) => {
-          angular.alerts.success('Successfully updated!');
+          angular.toaster.success('Successfully updated!');
           return this.ProjectService.setCurrentProject(data);
         })
         .then(() => this.$state.reload());
     } else {
-      angular.alerts.success('Successfully updated!');
+      angular.toaster.success('Successfully updated!');
     }
   }
 }

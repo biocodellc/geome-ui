@@ -75,7 +75,7 @@ class ConfigController {
     this.ProjectConfigService.save(this.config, this.currentProject.projectId)
       .then(config => {
         this.currentProject.config = config;
-        angular.alerts.success('Successfully updated project configuration!');
+        angular.toaster.success('Successfully updated project configuration!');
         this.config = new ProjectConfig(config);
         this.updateStateData();
       })

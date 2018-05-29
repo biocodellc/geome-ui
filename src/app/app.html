@@ -3,6 +3,7 @@
     on-project-change="$ctrl.handleProjectChange(project)" on-signout="$ctrl.signout()">
   </fims-header>
 
+
   <div flex layout="row" ng-if="$ctrl.projectView">
     <!-- Sidebar navigation -->
     <fims-navigation layout="column" current-project="$ctrl.currentProject" current-user="$ctrl.currentUser"></fims-navigation>
@@ -14,7 +15,8 @@
 
       <main ng-show="!$ctrl.loading" flex layout="column">
         <alerts></alerts>
-        <div class="project-view layout-fill" layout="row" flex ui-view="projectView" current-project="$ctrl.currentProject" current-user="$ctrl.currentUser"></div>
+        <div class="project-view layout-fill" layout="row" flex ui-view="projectView" current-project="$ctrl.currentProject"
+          current-user="$ctrl.currentUser"></div>
       </main>
     </md-content>
   </div>
@@ -30,3 +32,4 @@
     </main>
   </div>
 </md-content>
+<div id="toast-container"></div>

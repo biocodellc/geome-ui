@@ -48,9 +48,7 @@ export default (
                 // such as settings, the currentProject resolvable is cached and the latest
                 // config will not be displayed when going back to a project config state
                 $state.reload();
-                angular.alerts.success(
-                  'Successfully updated project configuration!',
-                );
+                angular.toaster.success('Successfully updated project configuration!');
               })
               .catch(response => {
                 if (response.status === 400) {
@@ -58,7 +56,7 @@ export default (
                     angular.alerts.error(error),
                   );
                 } else {
-                  angular.alerts.error('Error saving project configuration!');
+                  angular.toaster.error('Error saving project configuration!');
                 }
 
                 return false;

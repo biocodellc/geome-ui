@@ -23,23 +23,31 @@ const defaultResults = {
   showSuccessMessages: false,
 };
 
-const checkBrowser = () => {
+const checkBrowser = $mdDialog => {
   const { browser, version } = detectBrowser();
 
   if (browser === 'Explorer' && version <= 9) {
-    angular.alerts.warn(
-      `NOTE: Your browser only supports the Template Generator and not the Validation Component.
+    $mdDialog.show(
+      $mdDialog
+        .alert()
+        .clickOutsideToClose(true)
+        .title('Unsupported Browser')
+        .textContent(
+          `Your browser only supports the Template Generator and not the Validation Component.
          Use IE 11, or a recent version of Chrome, Firefox, or Safari to run data validation.`,
+        )
+        .ok('Got it!'),
     );
   }
 };
 
 class ValidationController {
-  constructor($scope, $interval, $uibModal, DataService) {
+  constructor($scope, $interval, $uibModal, $mdDialog, DataService) {
     'ngInject';
 
     this.$scope = $scope;
     this.$uibModal = $uibModal;
+    this.$mdDialog = $mdDialog;
     this.DataService = DataService;
     this.$interval = $interval;
 
@@ -53,7 +61,7 @@ class ValidationController {
   $onInit() {
     this.results = Object.assign({}, defaultResults);
 
-    checkBrowser();
+    checkBrowser(this.$mdDialog);
   }
 
   validate(data) {
@@ -188,12 +196,26 @@ class ValidationController {
       this.parseSpreadsheet('~naan=[0-9]+~', 'Instructions').then(n => {
         if (naan && n && n > 0) {
           if (n !== naan) {
-            const message = `Spreadsheet appears to have been created using a different FIMS/BCID system.
-                 Spreadsheet says NAAN = ${n}
-                 System says NAAN = ${naan}
-                 Proceed only if you are SURE that this spreadsheet is being called.
-                 Otherwise, re-load the proper FIMS system or re-generate your spreadsheet template.`;
-            angular.alerts.error(message);
+            this.$mdDialog.show(
+              this.$mdDialog
+                .alert('naanDialog')
+                .clickOutsideToClose(true)
+                .title('Incorrect NAAN')
+                .css('naan-dialog')
+                .htmlContent(
+                  `Spreadsheet appears to have been created using a different FIMS/BCID system.
+                   <br/>
+                   <br/>
+                   Spreadsheet says <strong>NAAN = ${n}</strong>
+                   <br/>
+                   System says <strong>NAAN = ${naan}</strong>
+                   <br/>
+                   <br/>
+                   Proceed only if you are SURE that this spreadsheet is being called.
+                   Otherwise, re-load the proper FIMS system or re-generate your spreadsheet template.`,
+                )
+                .ok('Proceed Anyways'),
+            );
           }
         }
       });

@@ -14,8 +14,6 @@ class QueryService {
   }
 
   queryJson(query, entity, page, limit) {
-    angular.alerts.removeTmp();
-
     return this.$http({
       method: 'GET',
       url: `${restRoot}records/${entity}/json?limit=${limit}&page=${page}`,
@@ -43,7 +41,7 @@ class QueryService {
         // }
 
         if (results.totalElements === 0) {
-          angular.alerts.info('No results found.');
+          angular.toaster('No results found.');
         }
 
         results.data = response.data.content;
@@ -82,7 +80,7 @@ class QueryService {
     })
       .then(response => {
         if (response.status === 204) {
-          angular.alerts.info('No results found.');
+          angular.toaster('No results found.');
           return;
         }
 

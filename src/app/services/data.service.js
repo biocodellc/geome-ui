@@ -93,7 +93,7 @@ class DataService {
       .get(`${restRoot}data/export/${projectId}/${expeditionCode}`)
       .then(response => {
         if (response.status === 204) {
-          angular.alerts.info('No resources found');
+          angular.toaster('No resources found');
           return Promise.resolve();
         }
         return this.FileService.download(response.data.url);
@@ -108,7 +108,7 @@ class DataService {
       )
       .then(response => {
         if (response.status === 204) {
-          angular.alerts.info('No Fastq records found.');
+          angular.toaster('No Fastq records found.');
           return Promise.resolve();
         }
         return this.FileService.download(response.data.url);

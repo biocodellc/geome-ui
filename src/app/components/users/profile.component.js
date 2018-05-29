@@ -1,5 +1,7 @@
 import angular from 'angular';
 
+const template = require('./profile.html');
+
 class ProfileController {
   constructor(UserService) {
     'ngInject';
@@ -14,7 +16,7 @@ class ProfileController {
   save() {
     this.UserService.save(this.user).then(() => {
       this.UserService.setCurrentUser(this.user);
-      angular.alerts.success('Successfully saved your profile!');
+      angular.toaster.success('Successfully saved your profile!');
     });
   }
 
@@ -24,7 +26,7 @@ class ProfileController {
       this.currentPassword,
       this.newPassword,
     ).then(() => {
-      angular.alerts.success('Successfully saved your profile!');
+      angular.toaster.success('Successfully saved your profile!');
       this.currentPassword = undefined;
       this.newPassword = undefined;
       this.verifyPassword = undefined;
@@ -33,7 +35,7 @@ class ProfileController {
 }
 
 export default {
-  template: require('./profile.html'),
+  template,
   controller: ProfileController,
   bindings: {
     currentUser: '<',

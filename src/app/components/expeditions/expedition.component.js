@@ -18,11 +18,11 @@ export class ExpeditionController extends FimsExpeditionController {
         this.currentProject.projectId,
         expedition,
       ).then(() => {
-        angular.alerts.success('Successfully updated!');
+        angular.toaster.success('Successfully updated!');
         this.$state.reload();
       });
     } else {
-      angular.alerts.success('Successfully updated!');
+      angular.toaster.success('Successfully updated!');
     }
   }
 

@@ -30,7 +30,7 @@ function getStates() {
 
               return fetchExpeditions
                 .then(({ data }) => data)
-                .catch(() => angular.alerts.error('Failed to load datasets'));
+                .catch(() => angular.toaster.error('Failed to load datasets'));
             }
 
             return [];

@@ -200,7 +200,7 @@ class UploadController {
       )
       .then(data => {
         if (data.length === 0) {
-          angular.alerts.warn(
+          angular.toaster.error(
             'Failed to find lat/long coordinates for your samples',
           );
           return undefined;
@@ -213,18 +213,25 @@ class UploadController {
           uniqueKey: sampleEntity.uniqueKey,
         });
 
-        return this.$mdDialog
-          .show({
-            template:
-              '<upload-map-dialog layout="column" unique-key="uniqueKey" lat-column="latColumn" lng-column="lngColumn" data="data"></upload-map-dialog>',
-            scope,
-          })
-          .then(() => {
-            this.sampleLocationsVerified = true;
-          })
-          .catch(() => {
-            this.sampleLocationsVerified = false;
-          });
+        const naanDialog =
+          this.$mdDialog('naanDialog') || Promise.resolve(true);
+
+        naanDialog.then(
+          res =>
+            res &&
+            this.$mdDialog
+              .show({
+                template:
+                  '<upload-map-dialog layout="column" unique-key="uniqueKey" lat-column="latColumn" lng-column="lngColumn" data="data"></upload-map-dialog>',
+                scope,
+              })
+              .then(() => {
+                this.sampleLocationsVerified = true;
+              })
+              .catch(() => {
+                this.sampleLocationsVerified = false;
+              }),
+        );
       })
       .catch(e => {
         angular.catcher('Failed to load samples map')(e);
