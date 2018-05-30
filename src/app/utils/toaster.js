@@ -5,15 +5,16 @@ export default $mdToast => {
   let currentToast;
   let toastCnt = 0;
 
-  const toast = (msg, action, toastClass) => {
+  const toast = (msg, action, opts) => {
     toastCnt += 1;
 
     const t = $mdToast
       .simple()
       .textContent(msg)
       .position('bottom right')
-      .toastClass(toastClass)
       .parent(angular.element('#toast-container'));
+
+    Object.assign(t._options, opts);
 
     if (action) {
       t.action(action.name);
@@ -35,12 +36,18 @@ export default $mdToast => {
   };
 
   const ext = {
-    error(msg, action) {
-      return toast(msg, action, 'error');
+    error(msg, action, opts = {}) {
+      opts.toasterClass = opts.toasterClass
+        ? `${opts.toasterClass} error`
+        : 'error';
+      return toast(msg, action, opts);
     },
 
-    success(msg, action) {
-      return toast(msg, action, 'success');
+    success(msg, action, opts = {}) {
+      opts.toasterClass = opts.toasterClass
+        ? `${opts.toasterClass} success`
+        : 'success';
+      return toast(msg, action, opts);
     },
   };
 

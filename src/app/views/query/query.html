@@ -1,23 +1,4 @@
 <div class="query-bar">
-
-  <!-- alerts -->
-  <div class="alerts">
-    <div class="alert alert-info alert-dismissable">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-      Data is subject to our data usage policy found
-      <a target="_blank" href="http://diversityindopacific.net/data-usage-agreement/">here</a>
-    </div>
-
-    <div ng-repeat="alert in $ctrl.alerts.getAlerts()" class="alert alert-{{alert.level}} alert-dismissable">
-      <button type="button" class="close" data-dismiss="alert" ng-click="$ctrl.alerts.remove(alert)" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-      {{ alert.msg }}
-    </div>
-  </div>
-
   <div class="actions" layout="row" layout-align="end center">
     <!-- download menu -->
     <md-menu ng-show="$ctrl.results" class="md-dense" md-position-mode="target-right target">

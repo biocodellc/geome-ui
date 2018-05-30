@@ -1,23 +1,31 @@
+import angular from 'angular';
+
 import QueryMap from './QueryMap';
 import QueryParams from './QueryParams';
 
 const template = require('./query.html');
 
+const POLICY_STORAGE_KEY = 'informedOfDataPolicy';
+
 class QueryController {
   constructor(
     $state,
     $timeout,
+    $window,
     QueryService,
     ExpeditionService,
     ProjectService,
+    StorageService,
   ) {
     'ngInject';
 
     this.$state = $state;
     this.$timeout = $timeout;
+    this.$window = $window;
     this.QueryService = QueryService;
     this.ExpeditionService = ExpeditionService;
     this.ProjectService = ProjectService;
+    this.StorageService = StorageService;
   }
 
   $onInit() {
@@ -27,6 +35,32 @@ class QueryController {
       'decimalLatitude',
       'decimalLongitude',
     );
+
+    const informed = this.StorageService.get(POLICY_STORAGE_KEY);
+    if (!informed) {
+      angular.toaster(
+        'Data is subject to our data usage policy',
+        {
+          name: 'View',
+          fn: () => {
+            const newWin = this.$window.open(
+              'http://diversityindopacific.net/data-usage-agreement/',
+              '_blank',
+            );
+
+            if (
+              !newWin ||
+              newWin.closed ||
+              typeof newWin.closed === 'undefined'
+            ) {
+              angular.toaster('It appears you have a popup blocker enabled');
+            }
+          },
+        },
+        { hideDelay: 7000 },
+      );
+      this.StorageService.set(POLICY_STORAGE_KEY, true);
+    }
 
     this.showSidebar = true;
     this.showMap = true;
