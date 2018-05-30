@@ -18,6 +18,7 @@ import postInterceptor from './postInterceptor';
 import autofocus from './directives/autofocus.directive';
 import showErrors from './directives/showErrors.directive';
 import mdPopover from './directives/mdPopover.directive';
+import mdSticky from './directives/mdSticky.directive';
 import trustedHtml from './filters/html.filter';
 
 import about from './views/about';
@@ -40,14 +41,12 @@ import app from './app.component';
 import auth from './components/auth';
 import header from './components/header';
 import navigation from './components/navigation';
-import alerts from './components/alerts';
 // import lookup from './components/lookup';
 import modals from './components/modals';
 import users from './components/users';
 import projectSelectorDialog from './components/project-selector-dialog';
 
 import Exceptions from './utils/exceptions';
-import Alerts from './utils/alerts';
 import Toaster from './utils/toaster';
 import projectViewHook from './projectView.hook';
 import fimsMdDialog from './utils/fimsMdDialog';
@@ -59,6 +58,7 @@ const dependencies = [
   autofocus,
   showErrors,
   mdPopover,
+  mdSticky,
   trustedHtml,
   bootstrap,
   ngMaterial,
@@ -68,7 +68,6 @@ const dependencies = [
   containerPage,
   header,
   navigation,
-  alerts,
   about,
   contact,
   notFound,
@@ -87,7 +86,6 @@ const dependencies = [
 ];
 
 // attach global objects for easy access throughout app
-angular.alerts = new Alerts();
 const e = new Exceptions();
 angular.catcher = e.catcher.bind(e);
 

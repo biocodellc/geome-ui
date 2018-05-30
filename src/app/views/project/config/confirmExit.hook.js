@@ -1,4 +1,7 @@
 import angular from 'angular';
+import displayConfigErrors from '../../../utils/displayConfigErrors';
+
+const template = require('./unsaved-config-confirmation.html');
 
 function configConfirmationController($uibModalInstance) {
   'ngInject';
@@ -12,6 +15,7 @@ export default (
   $transitions,
   $state,
   $uibModal,
+  $mdDialog,
   ProjectService,
   ProjectConfigService,
 ) => {
@@ -21,11 +25,11 @@ export default (
   // ask the user if they would like to save before transitioning
   // to a new page
   // TODO use https://ui-router.github.io/ng1/docs/latest/interfaces/ng1.ng1controller.html#uicanexit instead?
-  $transitions.onExit({ exiting: 'project.config' }, () => {
+  $transitions.onExit({ exiting: 'project.config' }, transition => {
     const state = $state.get('project.config');
     if (state.data && state.data.config) {
       const modal = $uibModal.open({
-        template: require('./unsaved-config-confirmation.html'),
+        template,
         size: 'md',
         controller: configConfirmationController,
         controllerAs: 'vm',
@@ -43,18 +47,14 @@ export default (
             )
               .then(config => {
                 ProjectService.currentProject().config = config;
-                // need to reload here so that project.config currentProject resolvable
-                // is reloaded. otherwise, when transitioning to another project state
-                // such as settings, the currentProject resolvable is cached and the latest
-                // config will not be displayed when going back to a project config state
-                $state.reload();
-                angular.toaster.success('Successfully updated project configuration!');
+                angular.toaster.success(
+                  'Successfully updated project configuration!',
+                );
+                return true;
               })
               .catch(response => {
                 if (response.status === 400) {
-                  response.data.errors.forEach(error =>
-                    angular.alerts.error(error),
-                  );
+                  displayConfigErrors($mdDialog, response.data.errors);
                 } else {
                   angular.toaster.error('Error saving project configuration!');
                 }
@@ -62,9 +62,10 @@ export default (
                 return false;
               });
           }
+          return true;
         })
         .then(res => {
-          delete state.data.config;
+          if (res) delete state.data.config;
           return res;
         });
     }
