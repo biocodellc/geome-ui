@@ -93,7 +93,7 @@ class EntityDetailController {
 
   newAttribute() {
     this.entity.attributes = this.entity.attributes.concat({
-      datatype: 'STRING',
+      dataType: 'STRING',
       group: 'Default',
       isNew: true,
     });

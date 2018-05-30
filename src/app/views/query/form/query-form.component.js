@@ -112,7 +112,7 @@ class QueryFormController {
 
   getQueryTypes(column) {
     const opt = this.filterOptions.find(o => o.column === column);
-    return opt ? queryTypes[opt.datatype.toLowerCase()] : [];
+    return opt ? queryTypes[opt.dataType.toLowerCase()] : [];
   }
 
   drawBounds() {
@@ -144,7 +144,7 @@ class QueryFormController {
     this.filterOptions = config.entities[0].attributes.map(a => ({
       group: a.group || 'Default Group',
       column: a.column,
-      datatype: a.datatype,
+      dataType: a.dataType,
       list: config.findListForColumn(config.entities[0], a.column),
     }));
     this.filterOptionsGroups = config.entities[0].attributes.reduce(

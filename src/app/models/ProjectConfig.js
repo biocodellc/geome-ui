@@ -56,7 +56,7 @@ export default class ProjectConfig {
   findAttributesByDefinition(sheetName, def) {
     return this.entities
       .filter(entity => entity.worksheet === sheetName)
-      .map(e => e.attributes.filter(a => a.defined_by === def))
+      .map(e => e.attributes.filter(a => a.definedBy === def))
       .reduce((attributes, val) => val.concat(attributes), []);
   }
 
