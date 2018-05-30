@@ -47,7 +47,8 @@ export default function(
         const timeoutPromise = $timeout(() => {
           hasTimedOut = true;
           deregister();
-          console.log('loadingSession timed out, redirecting to home page');
+          console.log('loadingSession timed out, redirecting to about page');
+          angular.toaster('Timed out loading session');
           resolve(trans.router.stateService.target('about'));
         }, 10000); // timeout loading after 10 secs
 
