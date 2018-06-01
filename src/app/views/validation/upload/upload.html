@@ -1,7 +1,5 @@
 <form role="form" name="$ctrl.uploadForm" class="form-horizontal" novalidate ng-submit="$ctrl.upload()">
-    <fims-upload-datatypes class="clearfix" on-update="$ctrl.handleDatatypes(dataTypes)" new-expedition="$ctrl.newExpedition"
-        config="$ctrl.currentProject.config">
-    </fims-upload-datatypes>
+    <fims-upload-datatypes class="clearfix" on-update="$ctrl.handleDatatypes(dataTypes)" available-types="$ctrl.availableDataTypes"></fims-upload-datatypes>
 
 
     <fims-upload-expedition class="clearfix" user-expeditions="$ctrl.userExpeditions" expedition-code="$ctrl.expeditionCode"
@@ -9,12 +7,10 @@
     </fims-upload-expedition>
 
 
-    <div ng-if="$ctrl.dataTypes.fims">
+    <div class="clearfix" ng-repeat="data in $ctrl.worksheetData track by data.worksheet">
         <hr class="separator" />
-        <fims-metadata class="clearfix" ng-show="$ctrl.dataTypes.fims" fims-metadata="$ctrl.fimsMetadata" required="$ctrl.dataTypes.fims"
-            on-change="$ctrl.onMetadataChange({ fimsMetadata: fimsMetadata })">
-        </fims-metadata>
-        <div class="form-group" ng-hide="$ctrl.checkCoordinatesVerified()">
+        <fims-worksheet-data on-change="$ctrl.handleWorksheetDataChange(worksheet, file)" worksheet="data.worksheet" file="data.file"></fims-worksheet-data>
+        <div class="form-group" ng-hide="$ctrl.checkCoordinatesVerified()" ng-if="data.worksheet === 'Samples'">
             <div class="col-xs-offset-2 has-error">
                 <div class="col-xs-8">
                     <label>
@@ -26,15 +22,15 @@
         </div>
     </div>
 
-    <div class="form-group split-form" ng-if="$ctrl.dataTypes.fasta">
+    <div class="form-group split-form" ng-if="$ctrl.dataTypes.Fasta">
         <fims-fasta-data on-change="$ctrl.handleFastaDataChange(data)" form="$ctrl.uploadForm" config="$ctrl.currentProject.config"
             data="$ctrl.fastaData">
         </fims-fasta-data>
     </div>
 
-    <div class="form-group split-form" ng-if="$ctrl.dataTypes.fastq">
+    <div class="form-group split-form" ng-if="$ctrl.dataTypes.Fastq">
         <fims-fastq-data on-change="$ctrl.handleFastqDataChange(data)" form="$ctrl.uploadForm" config="$ctrl.currentProject.config"
-            data="$ctrl.fastaData">
+            data="$ctrl.fastqData">
         </fims-fastq-data>
     </div>
 

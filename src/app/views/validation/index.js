@@ -10,6 +10,7 @@ import fimsUploadDatatypes from './upload/uploadDatatypes.component';
 import fimsUploadExpedition from './upload/uploadExpedition.component';
 import fimsMetadata from './fimsMetadata/fimsMetadata.component';
 import fimsFastaData from './upload/fasta/fastaData.component';
+import fimsWorksheetData from './upload/worksheet/worksheet.component';
 import fimsFastqData from './upload/fastq/fastqData.component';
 import expeditionCreateModal from '../../components/expeditions/create-expedition-modal.component';
 import uploadMapDialog from '../../components/upload-map-dialog';
@@ -29,5 +30,6 @@ export default angular
   .component('fimsUpload', fimsUpload)
   .component('fimsUploadDatatypes', fimsUploadDatatypes)
   .component('fimsUploadExpedition', fimsUploadExpedition)
+  .component('fimsWorksheetData', fimsWorksheetData)
   .component('fimsFastaData', fimsFastaData)
   .component('fimsFastqData', fimsFastqData).name;

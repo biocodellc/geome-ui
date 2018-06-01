@@ -25,6 +25,8 @@ class UploadController {
 
   $onInit() {
     this.fastaData = [];
+    this.worksheetData = [];
+    this.availableDataTypes = this.getAvailableDataTypes();
     this.fastqMetadata = Object.assign({}, defaultFastqMetadata);
     this.dataTypes = {};
     this.expeditionCode = undefined;
@@ -34,6 +36,23 @@ class UploadController {
 
   $onChanges(changesObj) {
     if ('fimsMetadata' in changesObj) {
+      if (this.worksheetData) {
+        const samplesData = this.worksheetData.find(
+          d => d.worksheet === 'Samples',
+        );
+
+        this.dataTypes.Samples = true;
+
+        if (samplesData) {
+          samplesData.file = this.fimsMetadata;
+        } else {
+          this.worksheetData.push({
+            file: this.fimsMetadata,
+            worksheet: 'Samples',
+          });
+        }
+      }
+
       if (this.fimsMetadata && this.isVisible) this.verifyCoordinates();
       this.verifySampleLocations = !!this.fimsMetadata;
       this.sampleLocationsVerified = false;
@@ -41,12 +60,33 @@ class UploadController {
       if (this.fimsMetadata && this.isVisible && !this.sampleLocationsVerified)
         this.verifyCoordinates();
     }
+
+    if (this.currentProject && 'currentProject' in changesObj) {
+      this.availableDataTypes = this.getAvailableDataTypes();
+    }
   }
 
   handleDatatypes(dataTypes) {
-    if (!dataTypes.fastq) {
+    if (!dataTypes.Fastq) {
       this.fastqMetadata = Object.assign({}, defaultFastqMetadata);
     }
+
+    const worksheets = Object.keys(dataTypes).filter(
+      d => dataTypes[d] && d !== 'Fasta' && d !== 'Fastq',
+    );
+
+    // remove any worksheetData objects that aren't in the dataTypes
+    this.worksheetData = this.worksheetData.filter(d =>
+      worksheets.includes(d.worksheet),
+    );
+    // add any missing worksheetData objects
+    worksheets.forEach(w => {
+      if (this.worksheetData.find(d => d.worksheet === w)) return;
+      this.worksheetData.push({
+        worksheet: w,
+        file: w === 'Samples' ? this.fimsMetadata : undefined,
+      });
+    });
 
     this.dataTypes = dataTypes;
   }
@@ -76,6 +116,21 @@ class UploadController {
     this.expeditionCode = expeditionCode;
   }
 
+  handleWorksheetDataChange(worksheet, file) {
+    if (worksheet === 'Samples') {
+      this.onMetadataChange({
+        fimsMetadata: file,
+      });
+    }
+    const data = this.worksheetData.find(d => d.worksheet === worksheet);
+
+    if (data) {
+      data.file = file;
+    } else {
+      this.worksheetData.push({ worksheet, file });
+    }
+  }
+
   handleFastaDataChange(data) {
     this.fastaData = data;
   }
@@ -95,7 +150,7 @@ class UploadController {
       if (success) {
         this.onMetadataChange({ fimsMetadata: undefined });
         this.$onInit();
-        this.dataTypes.fims = true;
+        this.dataTypes.worksheet = true;
         this.$scope.$broadcast('show-errors-reset');
       }
     });
@@ -103,7 +158,7 @@ class UploadController {
 
   checkCoordinatesVerified() {
     if (
-      this.fimsMetadata &&
+      this.worksheetData.find(d => d.worksheet === 'Samples' && d.file) &&
       this.verifySampleLocations &&
       !this.sampleLocationsVerified
     ) {
@@ -121,22 +176,24 @@ class UploadController {
       dataSourceFiles: [],
     };
 
-    if (this.dataTypes.fims) {
-      if (['xlsx', 'xls'].includes(getFileExt(this.fimsMetadata.name))) {
-        data.workbooks = [this.fimsMetadata];
-      } else {
-        data.dataSourceMetadata.push({
-          dataType: 'TABULAR',
-          filename: this.fimsMetadata.name,
-          reload: true,
-          metadata: {
-            sheetName: 'Samples', // TODO this needs to be dynamic, depending on the entity being validated
-          },
-        });
-        data.dataSourceFiles.push(this.fimsMetadata);
-      }
+    if (this.dataTypes.worksheet) {
+      this.worksheetData.forEach(wd => {
+        if (['xlsx', 'xls'].includes(getFileExt(wd.file.name))) {
+          data.workbooks = [wd.file];
+        } else {
+          data.dataSourceMetadata.push({
+            dataType: 'TABULAR',
+            filename: wd.file.name,
+            reload: true,
+            metadata: {
+              sheetName: wd.worksheet,
+            },
+          });
+          data.dataSourceFiles.push(wd.file);
+        }
+      });
     }
-    if (this.dataTypes.fasta) {
+    if (this.dataTypes.Fasta) {
       this.fastaData.forEach(fd => {
         data.dataSourceMetadata.push({
           dataType: 'FASTA',
@@ -145,14 +202,14 @@ class UploadController {
           metadata: {
             conceptAlias: this.currentProject.config.entities.find(
               e => e.type === 'Fasta',
-            ).conceptAlias, // TODO this needs to be dynamically choosen by the user
+            ).conceptAlias,
             marker: fd.marker,
           },
         });
         data.dataSourceFiles.push(fd.file);
       });
     }
-    if (this.dataTypes.fastq) {
+    if (this.dataTypes.Fastq) {
       data.dataSourceMetadata.push({
         dataType: 'FASTQ',
         filename: this.fastqMetadata.file.name,
@@ -160,7 +217,7 @@ class UploadController {
         metadata: {
           conceptAlias: this.currentProject.config.entities.find(
             e => e.type === 'Fastq',
-          ).conceptAlias, // TODO this needs to be dynamically choosen by the user
+          ).conceptAlias,
           libraryLayout: this.fastqMetadata.libraryLayout,
           libraryStrategy: this.fastqMetadata.libraryStrategy,
           librarySource: this.fastqMetadata.librarySource,
@@ -240,6 +297,38 @@ class UploadController {
           this.verifySampleLocations = false;
         });
       });
+  }
+
+  getAvailableDataTypes() {
+    const dataTypes = [];
+
+    this.currentProject.config.entities.forEach(e => {
+      let name = e.worksheet;
+
+      if (!name) {
+        switch (e.type) {
+          case 'Fastq':
+          case 'Fasta':
+            name = e.type;
+            break;
+          default:
+            return; // skip this b/c there is no worksheet?
+        }
+      }
+
+      if (dataTypes.find(d => d.name === name)) return;
+
+      dataTypes.push({
+        name,
+        isRequired: this.newExpedition && name === 'Samples',
+        help:
+          name === 'Samples'
+            ? 'A Samples worksheet is required if you are creating a new expedition.'
+            : undefined,
+      });
+    });
+
+    return dataTypes;
   }
 }
 
