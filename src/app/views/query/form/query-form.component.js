@@ -30,10 +30,11 @@ const queryTypes = {
 };
 
 class QueryFormController {
-  constructor($timeout, QueryService) {
+  constructor($timeout, $window, QueryService) {
     'ngInject';
 
     this.$timeout = $timeout;
+    this.$window = $window;
     this.QueryService = QueryService;
   }
 
@@ -41,7 +42,7 @@ class QueryFormController {
     this.hasFastqEntity = false;
 
     // view toggles
-    this.moreSearchOptions = false;
+    this.moreSearchOptions = true;
     this.showMap = true;
     this.showSequences = true;
     this.showHas = true;
@@ -108,6 +109,17 @@ class QueryFormController {
       .finally(() => {
         this.toggleLoading({ val: false });
       });
+  }
+
+  helpDocs() {
+    const newWin = this.$window.open(
+      'http://fims.readthedocs.io/en/latest/fims/query.html',
+      '_blank',
+    );
+
+    if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
+      angular.toaster('It appears you have a popup blocker enabled');
+    }
   }
 
   getQueryTypes(column) {

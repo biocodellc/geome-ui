@@ -17,7 +17,7 @@ class ValidateController {
           filename: this.fimsMetadata.name,
           reload: true,
           metadata: {
-            sheetName: 'Samples', // TODO this needs to be dynamic, depending on the entity being validated
+            sheetName: 'Samples',
           },
         },
       ];

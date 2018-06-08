@@ -3,13 +3,15 @@
   <project-selector layout="row" layout-align="center" is-authenticated="!!($ctrl.currentUser)" current-project="$ctrl.currentProject"
     on-change="$ctrl.onProjectChange({ project: project })"></project-selector>
 
-  <md-input-container ng-show="$ctrl.currentProject">
+  <md-input-container ng-show="$ctrl.currentProject" class="md-icon-float md-icon-right md-block">
     <input type="text" placeholder="Query String..." ng-model="$ctrl.params.queryString" />
+    <md-icon md-font-icon="fa fa-question-circle fa-sm" ng-click="$ctrl.helpDocs()">
+    </md-icon>
     <a class="hint-right text-upper" href="#" ng-click="$ctrl.moreSearchOptions = !$ctrl.moreSearchOptions">
       More search options</a>
   </md-input-container>
 
-  <div ng-show="$ctrl.moreSearchOptions">
+  <div ng-show="$ctrl.currentProject && $ctrl.moreSearchOptions">
 
     <section class="expeditions">
       <a href="#" ng-click="$ctrl.showExpeditions = !$ctrl.showExpeditions" class="md-subhead bold">Expeditions</a>

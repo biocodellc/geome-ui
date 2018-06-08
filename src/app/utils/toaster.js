@@ -37,15 +37,13 @@ export default $mdToast => {
 
   const ext = {
     error(msg, action, opts = {}) {
-      opts.toasterClass = opts.toasterClass
-        ? `${opts.toasterClass} error`
-        : 'error';
+      opts.toastClass = opts.toastClass ? `${opts.toastClass} error` : 'error';
       return toast(msg, action, opts);
     },
 
     success(msg, action, opts = {}) {
-      opts.toasterClass = opts.toasterClass
-        ? `${opts.toasterClass} success`
+      opts.toastClass = opts.toastClass
+        ? `${opts.toastClass} success`
         : 'success';
       return toast(msg, action, opts);
     },

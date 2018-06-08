@@ -30,15 +30,7 @@ class QueryService {
       if (response.data) {
         results.size = response.data.size;
         results.page = response.data.number;
-
-        // TODO: I think we can remove this b/c we aren't using es anymore
-        // if (response.data.totalElements > 10000) {
-        // elasitc_search will throw an error if we try and retrieve results from 10000 and greater
-        // results.totalElements = 10000;
-        // alerts.info("Query results are limited to 10,000. Either narrow your search or download the results to view everything.")
-        // } else {
         results.totalElements = response.data.totalElements;
-        // }
 
         if (results.totalElements === 0) {
           angular.toaster('No results found.');

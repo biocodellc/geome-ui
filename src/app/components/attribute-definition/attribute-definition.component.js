@@ -11,8 +11,7 @@ class AttributeDefController {
     this._config = this.currentProject.config;
   }
 
-  $onChanges({ attribute, sheetName }) {
-    // TODO check if this works when changing sheet
+  $onChanges() {
     if (this.attribute) {
       // && attribute.currentValue !== attribute.previousValue) {
       this.rules = this._config.attributeRules(this.sheetName, this.attribute);
