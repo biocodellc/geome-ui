@@ -197,7 +197,7 @@ class ValidationController {
       // Check NAAN
       this.parseSpreadsheet('~naan=[0-9]+~', 'Instructions').then(n => {
         if (naan && n && n > 0) {
-          if (Number(n) !== naan) {
+          if (Number(n) !== Number(naan)) {
             this.$mdDialog.show(
               this.$mdDialog
                 .alert('naanDialog')
