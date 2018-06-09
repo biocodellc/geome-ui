@@ -176,23 +176,21 @@ class UploadController {
       dataSourceFiles: [],
     };
 
-    if (this.dataTypes.worksheet) {
-      this.worksheetData.forEach(wd => {
-        if (['xlsx', 'xls'].includes(getFileExt(wd.file.name))) {
-          data.workbooks = [wd.file];
-        } else {
-          data.dataSourceMetadata.push({
-            dataType: 'TABULAR',
-            filename: wd.file.name,
-            reload: true,
-            metadata: {
-              sheetName: wd.worksheet,
-            },
-          });
-          data.dataSourceFiles.push(wd.file);
-        }
-      });
-    }
+    this.worksheetData.forEach(wd => {
+      if (['xlsx', 'xls'].includes(getFileExt(wd.file.name))) {
+        data.workbooks = [wd.file];
+      } else {
+        data.dataSourceMetadata.push({
+          dataType: 'TABULAR',
+          filename: wd.file.name,
+          reload: true,
+          metadata: {
+            sheetName: wd.worksheet,
+          },
+        });
+        data.dataSourceFiles.push(wd.file);
+      }
+    });
     if (this.dataTypes.Fasta) {
       this.fastaData.forEach(fd => {
         data.dataSourceMetadata.push({

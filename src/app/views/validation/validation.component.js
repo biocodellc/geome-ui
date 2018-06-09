@@ -125,7 +125,8 @@ class ValidationController {
       .catch(response => {
         console.log('failed ->', response);
         this.modalInstance.close(false);
-        this.results.validation.error =
+        this.results.validation.isValid = false;
+        this.results.validation.exception =
           response.data.message ||
           response.data.error ||
           response.data.usrMessage ||
@@ -147,13 +148,14 @@ class ValidationController {
 
             listener.on('status', status => {
               this.results.status = status;
-              this.results.validation.error = null;
+              this.results.validation.exception = null;
             });
             listener.on('result', resolve);
           }),
       )
       .catch(response => {
-        this.results.validation.error =
+        this.results.validation.isValid = false;
+        this.results.validation.exception =
           response.data.usrMessage || 'Server Error!';
         this.results.showOkButton = true;
       });
@@ -195,7 +197,7 @@ class ValidationController {
       // Check NAAN
       this.parseSpreadsheet('~naan=[0-9]+~', 'Instructions').then(n => {
         if (naan && n && n > 0) {
-          if (n !== naan) {
+          if (Number(n) !== naan) {
             this.$mdDialog.show(
               this.$mdDialog
                 .alert('naanDialog')

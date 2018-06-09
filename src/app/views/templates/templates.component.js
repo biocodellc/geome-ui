@@ -203,6 +203,29 @@ class TemplateController {
   getAttributes() {
     this.attributes = this.projectConfig.attributesByGroup(this.worksheet);
     this.required = this.projectConfig.requiredAttributes(this.worksheet);
+
+    const hasPhotoEntity = this.projectConfig.entities.some(
+      e => e.type === 'Photo' && e.worksheet === this.worksheet,
+    );
+
+    // hack until we determine a better way to represent hidden & non template attributes in backend
+    if (hasPhotoEntity) {
+      const blacklist = [
+        'processed',
+        'imageProcessingErrors',
+        'img128',
+        'img512',
+        'img1024',
+      ];
+
+      this.attributes = Object.entries(this.attributes).reduce(
+        (result, [group, attributes]) =>
+          Object.assign({}, result, {
+            [group]: attributes.filter(a => !blacklist.includes(a.column)),
+          }),
+        {},
+      );
+    }
   }
 
   getWorksheets() {
