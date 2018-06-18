@@ -1,3 +1,4 @@
+//remove injections of LoadingModalService
 import angular from 'angular';
 
 class LoadingModalService {
@@ -18,8 +19,8 @@ class LoadingModalService {
   open() {
     if (!this._modalInstance) {
       this._modalInstance = this._uibModal.open({
-        template: '<span us-spinner></span>',
-        windowTemplate: '<div uib-modal-transclude></div>',
+        template: '<md-progress-circular md-mode="indeterminate"></md-progress-circular>',
+	windowTemplate: '<div uib-modal-transclude></div>',
         appendTo: angular.element(document.querySelector('app')),
         size: 'sm',
         backdrop: true,

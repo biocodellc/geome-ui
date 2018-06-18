@@ -32,6 +32,8 @@ class LoginController {
 
   submit() {
     this.loadingModal.open();
+	  //this.loading = true
+	  //add md-circular element to the page
     this.AuthService.authenticate(
       this.credentials.username,
       this.credentials.password,
@@ -51,6 +53,7 @@ class LoginController {
       })
       .catch(angular.catcher('Error during authentication.'))
       .finally(() => this.loadingModal.close());
+	  //this.loading = false
   }
 }
 
