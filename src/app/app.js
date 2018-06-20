@@ -32,9 +32,9 @@ import expeditions from './views/expeditions';
 import validation from './views/validation';
 import query from './views/query';
 import dashboard from './views/dashboard';
+import record from './views/record';
 
 import projectService from './services/project.service';
-import recordService from './services/record.service';
 import userService from './services/user.service';
 
 import app from './app.component';
@@ -64,7 +64,6 @@ const dependencies = [
   ngMaterial,
   projectService,
   userService,
-  recordService,
   containerPage,
   header,
   navigation,
@@ -74,6 +73,7 @@ const dependencies = [
   login,
   query,
   dashboard,
+  record,
   auth,
   templates,
   expeditions,

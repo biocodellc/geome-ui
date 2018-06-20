@@ -1,6 +1,15 @@
-import { FimsExpeditionController } from '../../../components/expeditions/FimsExpeditionController';
+import FimsExpeditionController from '../../../components/expeditions/FimsExpeditionController';
+
+const template = require('./project-expeditions.html');
 
 class ProjectExpeditionsController extends FimsExpeditionController {
+  constructor($state, ExpeditionService, DataService, $uibModal) {
+    'ngInject';
+
+    super($uibModal, ExpeditionService, DataService);
+    this.$state = $state;
+  }
+
   deleteExpedition(expedition) {
     super
       .deleteExpedition(this.currentProject.projectId, expedition)
@@ -9,7 +18,7 @@ class ProjectExpeditionsController extends FimsExpeditionController {
 }
 
 export default {
-  template: require('./project-expeditions.html'),
+  template,
   controller: ProjectExpeditionsController,
   bindings: {
     expeditions: '<',

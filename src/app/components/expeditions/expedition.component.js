@@ -1,5 +1,5 @@
 import angular from 'angular';
-import { FimsExpeditionController } from './FimsExpeditionController';
+import FimsExpeditionController from './FimsExpeditionController';
 import dataService from '../../services/data.service';
 import expeditionService from '../../services/expedition.service';
 
@@ -9,7 +9,8 @@ export class ExpeditionController extends FimsExpeditionController {
   constructor($state, ExpeditionService, DataService, $uibModal) {
     'ngInject';
 
-    super($uibModal, $state, ExpeditionService, DataService);
+    super($uibModal, ExpeditionService, DataService);
+    this.$state = $state;
   }
 
   handleExpeditionUpdate(expedition) {
@@ -17,7 +18,7 @@ export class ExpeditionController extends FimsExpeditionController {
       this.ExpeditionService.update(
         this.currentProject.projectId,
         expedition,
-      ).then(() => {
+      ).then((e) => {
         angular.toaster.success('Successfully updated!');
         this.$state.reload();
       });
