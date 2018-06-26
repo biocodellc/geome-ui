@@ -1,3 +1,7 @@
+import compareValues from '../../../utils/compareValues';
+
+const expeditionMemberTemplate = require('../../../components/expeditions/expedition-members.html');
+
 function getStates() {
   return [
     {
@@ -11,7 +15,7 @@ function getStates() {
             ExpeditionService,
           ) =>
             ExpeditionService.all(ProjectService.currentProject().projectId)
-              .then(response => response.data)
+              .then(({ data }) => data.sort(compareValues('expeditionTitle')))
               .catch(() => $state.go('project')),
         },
         views: {
@@ -28,12 +32,12 @@ function getStates() {
         redirectTo: 'project.expeditions.detail.settings',
         resolve: {
           expedition: /* @ngInject */ ($transition$, $state, expeditions) => {
-            let expedition = $transition$.params().expedition;
+            let { expedition } = $transition$.params();
             if (expedition) {
               return expedition;
             }
 
-            const id = $transition$.params().id;
+            const { id } = $transition$.params();
             expedition = expeditions.find(e => e.expeditionId === id);
 
             if (expedition) {
@@ -85,7 +89,7 @@ function getStates() {
         url: '/members',
         views: {
           details: {
-            template: require('../../../components/expeditions/expedition-members.html'),
+            template: expeditionMemberTemplate,
             // controller: "ExpeditionMembersController as vm"
           },
         },

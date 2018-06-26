@@ -44,7 +44,7 @@ class QueryTableController {
   detailView(resource) {
     const bcidIndex = this.tableColumns.indexOf('bcid');
     this.$window.open(
-      this.$state.href('sample', {
+      this.$state.href('record', {
         bcid: resource[bcidIndex],
       }),
     );

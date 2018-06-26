@@ -23,7 +23,7 @@
     <tbody>
       <tr ng-repeat="expedition in $ctrl.displayResults track by expedition.expeditionCode">
         <td>{{ expedition.expeditionTitle}}</td>
-        <td>{{ expedition.ResourceCount}}</td>
+        <td>{{ expedition.SampleCount}}</td>
         <td>{{ expedition.fastaSequenceCount}}</td>
         <td>{{ expedition.fastqMetadataCount}}</td>
         <td ng-show="expedition.expeditionIdentifier">

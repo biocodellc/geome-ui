@@ -13,7 +13,7 @@ class RecordService {
   get(identifier) {
     return this.$http({
       method: 'GET',
-      url: `${restRoot}records/${identifier}`,
+      url: `${restRoot}records/${identifier}?includeParent&includeChildren`,
     });
   }
 }

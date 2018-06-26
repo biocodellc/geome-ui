@@ -1,8 +1,11 @@
 <div class="full-page-header-bottom-border"></div>
-<div class="sample-detail">
+<div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
+  <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+</div>
+<div class="sample-detail" ng-show="!$ctrl.loading">
   <div class="detail-wrapper">
     <p>identifier:
-      <span class="h3" style="margin-left: 10px;text-transform: none;">{{$ctrl.bcid}}</span>
+      <span class="h3" style="margin-left: 10px;text-transform: none;">{{$ctrl.record.bcid}}</span>
     </p>
 
     <p style="margin-top: 24px; margin-bottom: 5px;" ng-show="$ctrl.bioProjectLink">
@@ -22,7 +25,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="(key, value) in ::$ctrl.sample track by ::key" ng-if="value">
+        <tr ng-repeat="(key, value) in ::$ctrl.filterDisplayKeys($ctrl.record) track by ::key" ng-if="value">
           <td>{{ ::key }}</td>
           <td>{{ ::value }}</td>
         </tr>

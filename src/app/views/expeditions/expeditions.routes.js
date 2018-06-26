@@ -1,3 +1,5 @@
+import compareValues from '../../utils/compareValues';
+
 const expeditionMembersTemplate = require('../../components/expeditions/expedition-members.html');
 
 function getStates() {
@@ -19,7 +21,7 @@ function getStates() {
               ProjectService.currentProject().projectId,
               true,
             )
-              .then(({ data }) => data)
+              .then(({ data }) => data.sort(compareValues('expeditionTitle')))
               .catch(() => $state.go('home')),
         },
         params: {

@@ -36,6 +36,10 @@ class QueryController {
       'decimalLongitude',
     );
 
+    if (this.currentProject) {
+      this.handleProjectChange(this.currentProject);
+    }
+
     const informed = this.StorageService.get(POLICY_STORAGE_KEY);
     if (!informed) {
       angular.toaster(
