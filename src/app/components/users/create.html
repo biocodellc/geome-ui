@@ -10,6 +10,9 @@
                 <hr>
             </div>
             <div class="panel-body">
+<div layout="row" class="loading-overlay"  ng-show="$ctrl.loading" layout-align="center center">
+	<md-progress-circular md-mode="indeterminate"></md-progress-circular>
+</div>
                 <div class="row">
                     <div class="col-lg-12">
                         <form id="login-form" ng-submit="$ctrl.save()" method="post" role="form"

@@ -8,7 +8,9 @@ export class FimsExpeditionController {
   }
 
   exportData(projectId, expedition) {
-    this.DataService.exportData(projectId, expedition.expeditionCode);
+    this.loading = true;
+    this.DataService.exportData(projectId, expedition.expeditionCode)
+    .then(() => {this.loading = false});
   }
 
   deleteExpedition(projectId, expedition) {

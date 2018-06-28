@@ -12,15 +12,17 @@ class ProjectMembersController {
     this.ProjectMembersService = ProjectMembersService;
     this.UserService = UserService;
   }
-
+  
   $onInit() {
-    this.orderByList = [
+  // this.loading = true;
+   this.orderByList = [
       'username',
       'institution',
       'email',
       'firstName',
       'lastName',
     ];
+
     this.orderBy = this.orderByList[0];
   }
 

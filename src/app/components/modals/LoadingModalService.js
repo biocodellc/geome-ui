@@ -1,3 +1,4 @@
+/*
 //remove injections of LoadingModalService
 import angular from 'angular';
 
@@ -31,4 +32,4 @@ class LoadingModalService {
 
 LoadingModalService.$inject = ['$uibModal'];
 
-export default LoadingModalService;
+export default LoadingModalService; */

@@ -43,7 +43,7 @@ class AppCtrl {
       FINISHED_LOADING_PROJECT_EVENT,
       () => (this.loading = false),
     );
-
+ 
     // show spinner on transitions
     this.$transitions.onStart({}, trans => {
       const hasResolvables = s => {
@@ -52,7 +52,7 @@ class AppCtrl {
         return hasResolvables(s.parent);
       };
 
-      if (hasResolvables(trans.$to())) this.loading = true;
+/*    if (hasResolvables(trans.$to())) this.loading = true; */ 
     });
     this.$transitions.onFinish({}, () => {
       this.loading = false;
