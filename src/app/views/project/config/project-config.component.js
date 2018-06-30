@@ -4,13 +4,26 @@ import displayConfigErrors from '../../../utils/displayConfigErrors';
 
 const template = require('./config.html');
 
+//if user changes project configuration, and tries to exit without saving 
+//show this modal instance 
+function configConfirmationController($uibModalInstance) {
+  'ngInject';
+
+  const vm = this;
+  vm.continue = $uibModalInstance.close;
+  vm.cancel = $uibModalInstance.dismiss;
+}
+
 class ConfigController {
-  constructor($state, $mdDialog, ProjectConfigService) {
+  constructor($state, $uibModal, $mdDialog, $transitions, ProjectConfigService, ProjectService) {
     'ngInject';
 
     this.$state = $state;
     this.$mdDialog = $mdDialog;
+    this.$transitions = $transitions;
     this.ProjectConfigService = ProjectConfigService;
+    this.ProjectService = ProjectService;
+    this.$uibModal = $uibModal;
   }
 
   $onInit() {
@@ -88,7 +101,59 @@ class ConfigController {
           angular.toaster.error('Error saving project configuration!');
         }
       })
-      .then(() => {this.loading = false});
+      .then(() => { this.loading = false });
+  }
+
+  // exit hook to catch if there are unsaved changes to the project configuration
+  uiCanExit() {
+    this.$transitions.onExit({ exiting: 'project.config' }, transition => {
+      const state = this.$state.get('project.config');
+      if (state.data && state.data.config) {
+        const modal = this.$uibModal.open({
+          template: require('./unsaved-config-confirmation.html'),
+          size: 'md',
+          controller: configConfirmationController,
+          controllerAs: 'vm',
+          windowClass: 'app-modal-window',
+          backdrop: 'static',
+        }); //these cancel and continue options are defined in configConfirmationController above 
+
+        //TODO: the modal sometimes appears more than once, and on save and continue,
+        //doesn't function the first time 
+        return modal.result
+          .then(shouldSave => {
+            if (shouldSave) {
+              this.loading = true;
+              return this.ProjectConfigService.save(
+                state.data.config,
+                this.ProjectService.currentProject().projectId,
+              )
+                .then(config => {
+                  this.ProjectService.currentProject().config = config;
+                  angular.toaster.success(
+                    'Successfully updated project configuration!',
+                  );
+                  return true;
+                })
+                .catch(response => {
+                  if (response.status === 400) {
+                    displayConfigErrors($mdDialog, response.data.errors);
+                  } else {
+                    angular.toaster.error('Error saving project configuration!');
+                  }
+                  return false;
+                });
+            }
+            return true;
+          })
+
+          .then(() => { this.loading = false })
+          .then(res => {
+            if (res) delete state.data.config;
+            return res;
+          })
+      }
+    });
   }
 }
 

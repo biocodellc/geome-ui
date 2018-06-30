@@ -1,11 +1,10 @@
 class NewUserController {
-  constructor($state, UserService, AuthService/*, LoadingModal*/) {
+  constructor($state, UserService, AuthService) {
     'ngInject';
 
     this.$state = $state;
     this.UserService = UserService;
     this.AuthService = AuthService;
-//  this.LoadingModal = LoadingModal;
   }
 
   $onInit() {
@@ -16,15 +15,14 @@ class NewUserController {
 
   save() {
     this.loading = true;
-    //this.LoadingModal.open();
     this.UserService.create(this.$state.params.id, this.user)
       .then(user => this.AuthService.authenticate(user.username, user.password))
       .then(() => $state.go('home'))
-      .finally(() => /*this.LoadingModal.close()*/ this.loading = false);
+      .finally(() => this.loading = false)
   }
 }
 
 export default {
-  template: require('./profile.html'),
+  template: require('./profile.html'/*'./create.html'*/),
   controller: NewUserController,
 };

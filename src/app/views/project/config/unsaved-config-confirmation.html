@@ -6,6 +6,9 @@
         Are you sure you want to leave this page? <strong>Any unsaved changes to the project config will be
         lost.</strong>
     </div>
+    <div layout="row" class="loading-overlay"  ng-show="$ctrl.loading" layout-align="center center">
+	<md-progress-circular md-mode="indeterminate"></md-progress-circular>
+    </div>
 
     <div class="modal-footer">
         <button class="btn btn-danger" type="button" ng-click="vm.continue(false)">Continue</button>
@@ -13,3 +16,4 @@
         <button class="btn btn-default" type="button" ng-click="vm.cancel()">Cancel</button>
     </div>
 </div>
+
