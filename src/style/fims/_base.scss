@@ -171,3 +171,78 @@ md-checkbox.small {
     margin-left: 0px;
     margin-right: 0px;
 }
+
+//about page/splashpage
+.splash-page {
+width: 1200px;
+height: 550px;
+border: 1px solid black;
+box-shadow: 0px 0px 10px;
+margin-bottom: 100px;
+}
+#logo-splashpage {
+position:absolute;
+width: 340px;
+height: 80px;
+top: 270px;
+}
+
+hr {
+width: 500px;
+height: 12px;
+border: 0;
+box-shadow: inset 0 12px 12px -12px rgba(0,0,0,0.5);
+position: absolute;
+top: 350px;
+}
+
+//Icon links
+#about-icon {
+position:absolute;
+bottom: 50px;
+left:280px;
+font-size: 25px;
+font-weight: bold;
+}
+
+#about-icon > img {
+border-radius: 50%;
+border: 5px solid black;
+height: 128px;
+width: 128px;
+position:absolute;
+bottom: 40px;
+left: -20px;
+}
+ 
+#query-icon {
+position:absolute;
+bottom: 50px;
+left:680px;
+font-size: 25px;
+font-weight: bold;
+}
+
+#query-icon > img {
+border-radius: 50%;
+height: 130px;
+position:absolute;
+bottom: 40px;
+left: -28px;
+height: 130px;
+}
+
+#workbench-icon {
+position:absolute;
+bottom: 50px;
+left:1050px;
+font-size: 25px;
+font-weight: bold;
+}
+
+#workbench-icon > img {
+border-radius: 50%;
+height: 130px;
+position:absolute;
+bottom: 40px;
+}
