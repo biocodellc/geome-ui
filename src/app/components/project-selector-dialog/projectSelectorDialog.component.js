@@ -3,14 +3,22 @@ import '../../../style/fims/_projectSelectorDialog.scss';
 const template = require('./projectSelectorDialog.html');
 
 class ProjectSelectorDialogController {
-  constructor($mdDialog) {
+  constructor($mdDialog, $state) {
     'ngInject';
 
     this.$mdDialog = $mdDialog;
+    this.$state = $state;
   }
 
   cancel() {
     this.$mdDialog.cancel();
+  }
+ 
+  go() {
+    this.$state.go("login")
+    .then(() => {
+      this.$mdDialog.cancel();
+    });
   }
 
   select(project) {
