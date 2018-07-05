@@ -3,7 +3,7 @@ function getStates() {
     {
       state: 'query',
       config: {
-        url: '/',
+        url: '/query',
         component: 'fimsQuery',
         resolve: {
           layout: () => 'column',
