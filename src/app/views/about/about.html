@@ -4,24 +4,19 @@
   </h3>
   <md-divider class="margin-bottom"></md-divider>
   <div class="splash-page" layout="row" layout-align="center center">
-  <img src="img/geomecropped.png" alt="geome-db" id="logo-splashpage"/>
-  <hr/> 
-  <a href="#instructions" id="about-icon">
-	  <img src="img/about1.jpg" alt="bluefish"/>
-  	   About
-  </a>
-  <a ui-sref="query" id="query-icon">
-	  <img src="img/world.png" alt="world"/>
-  	   Query
-  </a>
-  <a ui-sref="dashboard" id="workbench-icon">
-	  <img src="img/fish-icon.jpg" alt="greyfish"/>
-  	   Workbench
-  </a>
+    <a href="#instructions" id="about-icon" class="icon-links">
+      <img src="img/icon1.png" alt="iconabout" /> About
+    </a>
+    <a ui-sref="query" id="query-icon" class="icon-links">
+      <img src="img/world.png" alt="world" /> Query
+    </a>
+    <a ui-sref="dashboard" id="workbench-icon" class="icon-links">
+      <img src="img/fish-icon.jpg" alt="greyfish" /> Workbench
+    </a>
   </div>
   <div layout="row" layout-align="center center">
     <div flex>
-     <p id="instructions">
+      <p id="instructions">
         <strong>Get started by watching our instructional videos:</strong>
         <ul>
           <li>
@@ -37,15 +32,14 @@
         </ul>
       </p>
       <p>
-        The Genomic Observatories Meta-Database (GeOMe) is a web-based database which captures metadata on biological
-        samples, used for biodiversity inventories, population studies, and environmental metagenomics.
-        GeOMe assigns persistent identifiers for all samples and sampling events and specifies the set
-        of metadata attributes which satisfy the requirements of the
-        <a href="https://gigascience.biomedcentral.com/articles/10.1186/2047-217X-3-2">genomic observatories model</a>, including capturing the who, what, where, and when associated
-        with all samples. GeOMe provides instant feedback to users on the quality of their data and packages
-        data for further analysis for use in a laboratory information system (LIMS) using the
-        <a href="http://software.mooreabiocode.org/">Biocode LIMS plugin</a>. GeOMe also packages FASTQ submissions for easy delivery to the Sequence
-        Read Archive (
+        The Genomic Observatories Meta-Database (GeOMe) is a web-based database which captures metadata on biological samples, used
+        for biodiversity inventories, population studies, and environmental metagenomics. GeOMe assigns persistent identifiers
+        for all samples and sampling events and specifies the set of metadata attributes which satisfy the requirements of
+        the
+        <a href="https://gigascience.biomedcentral.com/articles/10.1186/2047-217X-3-2">genomic observatories model</a>, including capturing the who, what, where, and when associated with all samples.
+        GeOMe provides instant feedback to users on the quality of their data and packages data for further analysis for
+        use in a laboratory information system (LIMS) using the
+        <a href="http://software.mooreabiocode.org/">Biocode LIMS plugin</a>. GeOMe also packages FASTQ submissions for easy delivery to the Sequence Read Archive (
         <a href="#whyfastq">Why only FASTQ and not VCF or other formats?</a>)
       </p>
       <p>
@@ -78,8 +72,8 @@
 <div>
   <h3 class="md-headline">Users can upload two types of data (under "tools" tab)</h3>
   <md-divider class="margin-bottom"></md-divider>
-  <p>To upload data users much have an account. If you don't have one please send an email with you name,
-    title and affiliation to
+  <p>To upload data users much have an account. If you don't have one please send an email with you name, title and affiliation
+    to
     <a href="mailto:geome.database@gmail.com">geome.database@gmail.com</a>
   </p>
   <ol>
@@ -89,8 +83,7 @@
       Metadata associated with
       <u>next-generation sequence data</u> (fastq format)
       <ul>
-        <li>In the process of uploading the metadata for your next-generation sequence data we create two
-          files:
+        <li>In the process of uploading the metadata for your next-generation sequence data we create two files:
         </li>
         <ol>
           <li>the SRA metadata file</li>
@@ -116,8 +109,7 @@
       Generate a template (under “tools” tab) for your metadata
       <ul>
         <li>
-          This option allows the user to create an excel file to store the metadata associated with each of their
-          samples.
+          This option allows the user to create an excel file to store the metadata associated with each of their samples.
         </li>
       </ul>
     </li>
@@ -133,12 +125,11 @@
 <div>
   <h3 id="whyfastq" class="md-headline">Why do we require FASTQ submissions for next generation sequence data?</h3>
   <md-divider class="margin-bottom"></md-divider>
-  <p>GeOMe accepts FASTQ submissions because we want to archive unmanipulated sequence data that are free
-    of filtering biases. By doing this we are reducing ascertainment bias (a site that is not a SNP in
-    your dataset may be a SNP when combined with data from a different population). We are also avoiding
-    the subjective choices that go into calling SNPs, such as thresholds for trimming, filtering, coverage
-    and likelihood. Our objective is for future users of your data to be able to make these choices in
-    the context of their own question and dataset.
+  <p>GeOMe accepts FASTQ submissions because we want to archive unmanipulated sequence data that are free of filtering biases.
+    By doing this we are reducing ascertainment bias (a site that is not a SNP in your dataset may be a SNP when combined
+    with data from a different population). We are also avoiding the subjective choices that go into calling SNPs, such as
+    thresholds for trimming, filtering, coverage and likelihood. Our objective is for future users of your data to be able
+    to make these choices in the context of their own question and dataset.
   </p>
 </div>
 
