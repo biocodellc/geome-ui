@@ -1,18 +1,32 @@
-<div>
+<div ng-cloak>
   <h3 class="md-headline">
     Genomic Observatories MetaDatabase (GeOMe)
   </h3>
   <md-divider class="margin-bottom"></md-divider>
-  <div class="splash-page" layout="row" layout-align="center center">
-    <a href="#instructions" id="about-icon" class="icon-links">
-      <img src="img/icon1.png" alt="iconabout" /> About
+  <div class="md-padding" id="landing-page" layout-xs="column" layout="row" layout-align="center center"> 
+    <div flex> 
+	<md-card layout-align="center center">
+		<a href="#instructions">
+			<img src="img/icon1.png" alt="iconabout" />
+		</a>
+		<a href="#instructions">About</a>
+	 </md-card>
+    </div>
+    <div flex>
+	 <md-card layout-align="center center">
+    		<a ui-sref="query"><img src="img/world.png" alt="world" />
+   		</a>
+		<a ui-sref="query">Query</a>
+	</md-card>
+    </div>
+    <div flex>
+	<md-card layout-align="center center">
+    <a ui-sref="dashboard">
+      <img src="img/fish-icon.jpg" alt="greyfish" /> 
     </a>
-    <a ui-sref="query" id="query-icon" class="icon-links">
-      <img src="img/world.png" alt="world" /> Query
-    </a>
-    <a ui-sref="dashboard" id="workbench-icon" class="icon-links">
-      <img src="img/fish-icon.jpg" alt="greyfish" /> Workbench
-    </a>
+    <a ui-sref="dashboard">Workbench</a>
+	</md-card>
+    </div>
   </div>
   <div layout="row" layout-align="center center">
     <div flex>

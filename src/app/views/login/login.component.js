@@ -26,14 +26,12 @@ class LoginController {
         angular.toaster.success(
           'Successfully sent reset password token. Check your email for further instructions.',
         ),
-      )
+    )
       .catch(angular.catcher('Error sending reset password token'));
   }
 
   submit() {
     this.loadingModal.open();
-	  //this.loading = true
-	  //add md-circular element to the page
     this.AuthService.authenticate(
       this.credentials.username,
       this.credentials.password,
@@ -53,7 +51,6 @@ class LoginController {
       })
       .catch(angular.catcher('Error during authentication.'))
       .finally(() => this.loadingModal.close());
-	  //this.loading = false
   }
 }
 
