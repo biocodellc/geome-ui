@@ -4,7 +4,7 @@ function getStates() {
       state: 'about',
       config: {
         parent: 'containerPageView',
-        url: '/about',
+        url: '/',
         component: 'about',
       },
     },
