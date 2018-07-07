@@ -1,12 +1,32 @@
-<div>
+<div id="landing-page" layout="column" flex>
   <h3 class="md-headline">
     Genomic Observatories MetaDatabase (GeOMe)
   </h3>
-  <md-divider class="margin-bottom"></md-divider>
-
+  <div layout="row" layout-align="center center" flex>
+    <div layout="row" flex layout-wrap>
+      <md-card layout-align="center center" layout-padding ng-click="$ctrl.$anchorScroll('instructions')" flex>
+        <img src="img/icon1.png" alt="iconabout" />
+        <h3>About</h3>
+        <p>Learn more about GeOMe</p>
+      </md-card>
+      <md-card layout-align="center center" layout-padding ng-click="$ctrl.$state.go('query')" flex>
+        <img src="img/world.png" alt="world" />
+        <h3>Query</h3>
+        <p>Search and download sequence files and associated metadata</p>
+      </md-card>
+      </a>
+      <md-card layout-align="center center" layout-padding ng-click="$ctrl.$state.go('dashboard')" flex>
+        <img src="img/workbench.png" alt="workbench icon" />
+        <h3>Workbench</h3>
+        <p>View and manage project specific data</p>
+      </md-card>
+    </div>
+  </div>
+</div>
+<div>
   <div layout="row" layout-align="center center">
     <div flex>
-      <p>
+      <p id="instructions">
         <strong>Get started by watching our instructional videos:</strong>
         <ul>
           <li>
