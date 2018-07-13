@@ -30,8 +30,8 @@ class LoginController {
   }
 
   submit() {
-      this.loading = true;
-      this.AuthService.authenticate(
+    this.loading = true;
+    this.AuthService.authenticate(
       this.credentials.username,
       this.credentials.password,
     )
@@ -49,7 +49,7 @@ class LoginController {
         this.state.go('about', {}, { reload: true, inherit: false });
       })
       .catch(angular.catcher('Error during authentication.'))
-      .finally(() => this.loading = false);
+      .finally(() => (this.loading = false));
   }
 }
 

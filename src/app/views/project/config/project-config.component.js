@@ -88,7 +88,9 @@ class ConfigController {
           angular.toaster.error('Error saving project configuration!');
         }
       })
-      .then(() => {this.loading = false});
+      .finally(() => {
+        this.loading = false;
+      });
   }
 }
 

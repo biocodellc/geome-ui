@@ -18,11 +18,11 @@ class NewUserController {
     this.UserService.create(this.$state.params.id, this.user)
       .then(user => this.AuthService.authenticate(user.username, user.password))
       .then(() => $state.go('home'))
-      .finally(() => this.loading = false)
+      .finally(() => (this.loading = false));
   }
 }
 
 export default {
-  template: require('./profile.html'/*'./create.html'*/),
+  template: require('./profile.html'),
   controller: NewUserController,
 };
