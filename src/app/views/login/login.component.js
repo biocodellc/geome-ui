@@ -25,7 +25,7 @@ class LoginController {
         angular.toaster.success(
           'Successfully sent reset password token. Check your email for further instructions.',
         ),
-      )
+    )
       .catch(angular.catcher('Error sending reset password token'));
   }
 
