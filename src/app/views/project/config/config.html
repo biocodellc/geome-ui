@@ -1,5 +1,8 @@
 <div class="settings">
-    <div ui-view="detail"
+   <div layout="column" class="loading-overlay" ng-show="$ctrl.loading" layout-align="top center">
+      <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+   </div> 
+   <div ui-view="detail"
          config="$ctrl.config"
          show-save="$ctrl.showSave"
          on-save="$ctrl.handleOnSave()"
@@ -18,3 +21,4 @@
         </fims-project-config-overview>
     </div>
 </div>
+

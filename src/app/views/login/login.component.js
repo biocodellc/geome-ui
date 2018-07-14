@@ -3,13 +3,12 @@ import angular from 'angular';
 const template = require('./login.html');
 
 class LoginController {
-  constructor($state, UserService, AuthService, LoadingModal) {
+  constructor($state, UserService, AuthService) {
     'ngInject';
 
     this.state = $state;
     this.UserService = UserService;
     this.AuthService = AuthService;
-    this.loadingModal = LoadingModal;
   }
 
   $onInit() {
@@ -31,7 +30,7 @@ class LoginController {
   }
 
   submit() {
-    this.loadingModal.open();
+    this.loading = true;
     this.AuthService.authenticate(
       this.credentials.username,
       this.credentials.password,
@@ -50,7 +49,7 @@ class LoginController {
         this.state.go('about', {}, { reload: true, inherit: false });
       })
       .catch(angular.catcher('Error during authentication.'))
-      .finally(() => this.loadingModal.close());
+      .finally(() => (this.loading = false));
   }
 }
 

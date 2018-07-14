@@ -20,7 +20,12 @@ export default class FimsExpeditionController {
   }
 
   exportData(projectId, expedition) {
-    this.DataService.exportData(projectId, expedition.expeditionCode);
+    this.loading = true;
+    this.DataService.exportData(projectId, expedition.expeditionCode).finally(
+      () => {
+        this.loading = false;
+      },
+    );
   }
 
   deleteExpedition(projectId, expedition) {

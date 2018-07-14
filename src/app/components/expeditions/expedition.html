@@ -7,6 +7,9 @@
 
 <div class="row">
   <div class="col-xs-12">
+    <div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
+      <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+    </div> 
     <section class="heading">
       <h3>{{ $ctrl.expedition.expeditionTitle }}</h3>
       <p>
@@ -37,13 +40,12 @@
           </ul>
         </div>
       </div>
-
       <div class="row">
         <div class="col-xs-12" ui-view="details" on-update="$ctrl.handleExpeditionUpdate(expedition)" on-export-data="$ctrl.exportData()"
           current-project="$ctrl.currentProject" on-delete="$ctrl.handleExpeditionDelete(expedition)">
         </div>
       </div>
-
+    
     </section>
   </div>
 
