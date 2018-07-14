@@ -4,7 +4,7 @@ function getStates() {
       state: 'about',
       config: {
         parent: 'containerPageView',
-        url: '/',
+        url: '/about',
         component: 'about',
         resolve: {
           layout: () => 'column',
