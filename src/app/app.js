@@ -42,7 +42,6 @@ import auth from './components/auth';
 import header from './components/header';
 import navigation from './components/navigation';
 // import lookup from './components/lookup';
-import modals from './components/modals';
 import users from './components/users';
 import projectSelectorDialog from './components/project-selector-dialog';
 
@@ -81,7 +80,6 @@ const dependencies = [
   project,
   users,
   projectSelectorDialog,
-  modals,
   // lookup,
 ];
 

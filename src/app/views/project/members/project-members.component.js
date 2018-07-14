@@ -21,6 +21,7 @@ class ProjectMembersController {
       'firstName',
       'lastName',
     ];
+
     this.orderBy = this.orderByList[0];
   }
 

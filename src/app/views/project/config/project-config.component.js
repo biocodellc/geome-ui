@@ -73,6 +73,7 @@ class ConfigController {
   }
 
   handleOnSave() {
+    this.loading = true;
     this.ProjectConfigService.save(this.config, this.currentProject.projectId)
       .then(config => {
         this.currentProject.config = config;
@@ -86,6 +87,9 @@ class ConfigController {
         } else {
           angular.toaster.error('Error saving project configuration!');
         }
+      })
+      .finally(() => {
+        this.loading = false;
       });
   }
 }
