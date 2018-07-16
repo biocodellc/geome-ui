@@ -37,7 +37,7 @@ class ExpeditionService {
     }).catch(angular.catcher('Failed to update the expedition.'));
   }
 
-  deleteExpedition(projectId, expedition) {
+  delete(projectId, expedition) {
     if (!projectId) {
       return Promise.reject({ data: { error: 'No project is selected' } });
     }

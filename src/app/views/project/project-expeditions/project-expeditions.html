@@ -8,7 +8,7 @@
                 <a href ui-sref="project.expeditions.detail.settings({ id:expedition.expeditionId, expedition:expedition })">
                     <i class="fa fa-pencil fa-fw"></i></a>
                 <a href ng-click="$ctrl.exportData($ctrl.currentProject.projectId, expedition)" uib-tooltip="export data"><i class="fa fa-download fa-fw"></i></a>
-                <a href="#" ng-click="$ctrl.delete(expedition)"><i class="fa fa-trash text-danger fa-fw"></i></a>
+                <a href="#" ng-click="$ctrl.deleteExpedition(expedition)"><i class="fa fa-trash text-danger fa-fw"></i></a>
             </div>
 					
             <div class="info">
