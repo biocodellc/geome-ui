@@ -88,7 +88,7 @@ const mdPopover = /* ngInject */ ($timeout, $mdPanel) => {
       };
 
       // const wrapper = angular.element(
-        // '<div class="md-panel-outer-wrapper"></div>',
+      // '<div class="md-panel-outer-wrapper"></div>',
       // );
 
       // wrapper.on('click', () => parent.click());
