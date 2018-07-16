@@ -91,7 +91,7 @@ class UserService extends EventEmitter {
 
   resetPassword(password, resetToken) {
     return this.$http
-      .post(`${restRoot}users/resetPassword`, {
+      .post(`${restRoot}users/reset`, {
         password,
         resetToken,
       })

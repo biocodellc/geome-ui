@@ -1,3 +1,5 @@
+const template = require('./create.html');
+
 class NewUserController {
   constructor($state, UserService, AuthService) {
     'ngInject';
@@ -16,13 +18,15 @@ class NewUserController {
   save() {
     this.loading = true;
     this.UserService.create(this.$state.params.id, this.user)
-      .then(user => this.AuthService.authenticate(user.username, user.password))
-      .then(() => $state.go('home'))
+      .then(() =>
+        this.AuthService.authenticate(this.user.username, this.user.password),
+      )
+      .then(() => this.$state.go('about'))
       .finally(() => (this.loading = false));
   }
 }
 
 export default {
-  template: require('./profile.html'),
+  template,
   controller: NewUserController,
 };
