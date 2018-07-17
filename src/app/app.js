@@ -22,6 +22,7 @@ import mdSticky from './directives/mdSticky.directive';
 import trustedHtml from './filters/html.filter';
 
 import about from './views/about';
+import home from './views/home';
 import containerPage from './components/container-page';
 import notFound from './views/not-found';
 import contact from './views/contact';
@@ -67,6 +68,7 @@ const dependencies = [
   header,
   navigation,
   about,
+  home,
   contact,
   notFound,
   login,

@@ -1,0 +1,39 @@
+//home page
+#landing-page {
+    min-height: calc(100vh - 64px - 32px); // 64px is header height 32px is padding & margin
+    .md-headline {
+        margin-top: 0px;
+        font-size: 28px;
+        font-weight: 500;
+    }
+
+    #spacer {
+        flex-shrink: 100;
+    }
+
+    img {
+        width: 150px;
+        padding: 0;
+        margin-top: 8px;
+    }
+
+    md-card {
+        h3 {
+            margin-top: 8px;
+        }
+
+        p {
+            text-align: center;
+        }
+    }
+
+    md-card:focus {
+        outline: none;
+    }
+
+    @media (max-width: 959px) {
+        md-card {
+            min-width: 250px;
+        }
+    }
+}

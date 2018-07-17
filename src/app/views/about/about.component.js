@@ -1,13 +1,10 @@
-import '../../../style/fims/_about.scss';
-
 const template = require('./about.html');
 
 class AboutController {
-  constructor($state, $anchorScroll) {
+  constructor($state) {
     'ngInject';
 
     this.$state = $state;
-    this.$anchorScroll = $anchorScroll;
   }
 }
 
