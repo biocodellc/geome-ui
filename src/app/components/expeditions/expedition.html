@@ -7,9 +7,6 @@
 
 <div class="row">
   <div class="col-xs-12">
-    <div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
-      <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-    </div> 
     <section class="heading">
       <h3>{{ $ctrl.expedition.expeditionTitle }}</h3>
       <p>
@@ -45,7 +42,7 @@
           current-project="$ctrl.currentProject" on-delete="$ctrl.handleExpeditionDelete(expedition)">
         </div>
       </div>
-    
+
     </section>
   </div>
 
@@ -64,7 +61,9 @@
         </a>
         <a class="list-group-item" href="#" ng-click="$ctrl.exportData($ctrl.currentProject.projectId, $ctrl.expedition)">
           <strong>Export Data
-            <i class="fa fa-download fa-fw pull-right"></i>
+            <i ng-show="!$ctrl.loading" class="fa fa-download fa-fw pull-right"></i>
+            <md-progress-circular ng-show="$ctrl.loading" md-mode="indeterminate"
+            md-diameter="18" class="md-accent md-hue-3 pull-right"></md-progress-circular>
           </strong>
         </a>
       </div>

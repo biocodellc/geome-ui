@@ -6,7 +6,7 @@ function getStates() {
         url: '/config',
         redirectTo: 'project.config.entities',
         views: {
-          details: {
+          'details@project': {
             component: 'fimsProjectConfig',
           },
         },

@@ -23,7 +23,7 @@ class LoginController {
     this.UserService.sendResetPasswordToken(this.credentials.username)
       .then(() =>
         angular.toaster.success(
-          'Successfully sent reset password token. Check your email for further instructions.',
+          'If you have provided a valid username, check your email for further instructions.',
         ),
       )
       .catch(angular.catcher('Error sending reset password token'));
