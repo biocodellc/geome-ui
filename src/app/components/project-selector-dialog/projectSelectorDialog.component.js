@@ -13,13 +13,6 @@ class ProjectSelectorDialogController {
   cancel() {
     this.$mdDialog.cancel();
   }
- 
-  go() {
-    this.$state.go("login")
-    .then(() => {
-      this.$mdDialog.cancel();
-    });
-  }
 
   select(project) {
     this.$mdDialog.hide(project);

@@ -7,13 +7,9 @@
   </md-toolbar>
 
   <md-dialog-content flex layout="column">
-  <br>
-  <h4 ng-show="!$ctrl.isAuthenticated" align="center">
-   <a ng-click="$ctrl.go()">Sign In </a> to see your projects
-  </h4>
     <div flex></div>
-    <project-selector layout="row" layout-align="center center" is-authenticated="$ctrl.isAuthenticated"
-      on-change="$ctrl.select(project)" button-class="">
+    <project-selector layout="row" layout-align="center center" is-authenticated="$ctrl.isAuthenticated" on-change="$ctrl.select(project)"
+      button-class="">
     </project-selector>
     <div flex></div>
     <md-dialog-actions>
