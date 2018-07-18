@@ -22,6 +22,7 @@ import mdSticky from './directives/mdSticky.directive';
 import trustedHtml from './filters/html.filter';
 
 import about from './views/about';
+import home from './views/home';
 import containerPage from './components/container-page';
 import notFound from './views/not-found';
 import contact from './views/contact';
@@ -42,7 +43,6 @@ import auth from './components/auth';
 import header from './components/header';
 import navigation from './components/navigation';
 // import lookup from './components/lookup';
-import modals from './components/modals';
 import users from './components/users';
 import projectSelectorDialog from './components/project-selector-dialog';
 
@@ -68,6 +68,7 @@ const dependencies = [
   header,
   navigation,
   about,
+  home,
   contact,
   notFound,
   login,
@@ -81,7 +82,6 @@ const dependencies = [
   project,
   users,
   projectSelectorDialog,
-  modals,
   // lookup,
 ];
 

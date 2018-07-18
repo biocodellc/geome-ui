@@ -13,25 +13,22 @@
   <table class="table table-hover table-condensed text-center" ng-show="$ctrl.displayResults.length > 0">
     <thead>
       <th class="text-center">Expedition Title</th>
-      <th class="text-center">Samples</thcl>
-        <th class="text-center">Fasta Sequences</th>
-        <th class="text-center">Fastq Metadata</th>
-        <th class="text-center">GUID</th>
-        <th></th>
+      <th class="text-center" ng-repeat="header in $ctrl.headers">{{$ctrl.humanReadableHeader(header)}}</th>
+      <th class="text-center">GUID</th>
+      <th></th>
     </thead>
 
     <tbody>
       <tr ng-repeat="expedition in $ctrl.displayResults track by expedition.expeditionCode">
         <td>{{ expedition.expeditionTitle}}</td>
-        <td>{{ expedition.SampleCount}}</td>
-        <td>{{ expedition.fastaSequenceCount}}</td>
-        <td>{{ expedition.fastqMetadataCount}}</td>
+        <td ng-repeat="header in $ctrl.headers">{{ expedition[header] }}</td>
         <td ng-show="expedition.expeditionIdentifier">
           <a href="https://n2t.net/{{expedition.expeditionIdentifier}}">https://n2t.net/{{ expedition.expeditionIdentifier}}
           </a>
         </td>
         <td ng-show="!expedition.expeditionIdentifier"></td>
-        <td>
+        <td ng-show="$ctrl.menuOptions(expedition).length == 0"></td>
+        <td ng-show="$ctrl.menuOptions(expedition).length > 0">
           <md-menu ng-show="$ctrl.results" class="md-dense" md-position-mode="target-right target">
             <md-button aria-label="Open expedition download menu" ng-click="$mdMenu.open($event)" class="md-primary md-raised download-button">
               <!-- Download -->
@@ -40,15 +37,15 @@
                 md-diameter="18" class="md-accent md-hue-3"></md-progress-circular>
             </md-button>
             <md-menu-content width="2" class="md-dense download-menu-content">
-              <md-menu-item>
-                <md-button ng-click="$ctrl.downloadCsv(expedition.expeditionCode)">CSV</md-button>
+              <md-menu-item ng-repeat="opt in $ctrl.menuOptions(expedition) track by expedition.expeditionCode + opt.name">
+                <md-button ng-click="opt.fn(expedition.expeditionCode)">{{opt.name}}</md-button>
               </md-menu-item>
-              <md-menu-item ng-show="expedition.fastaSequenceCount > 0">
-                <md-button ng-click="$ctrl.downloadFasta(expedition.expeditionCode)">Fasta</md-button>
-              </md-menu-item>
-              <md-menu-item ng-show="expedition.fastqMetadataCount > 0">
-                <md-button ng-click="$ctrl.downloadFastq(expedition.expeditionCode)">Fastq</md-button>
-              </md-menu-item>
+              <!-- <md-menu-item ng-show="expedition.fastaSequenceCount > 0"> -->
+                <!-- <md-button ng-click="$ctrl.downloadFasta(expedition.expeditionCode)">Fasta</md-button> -->
+              <!-- </md-menu-item> -->
+              <!-- <md-menu-item ng-show="expedition.fastqMetadataCount > 0"> -->
+                <!-- <md-button ng-click="$ctrl.downloadFastq(expedition.expeditionCode)">Fastq</md-button> -->
+              <!-- </md-menu-item> -->
             </md-menu-content>
           </md-menu>
         </td>

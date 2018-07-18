@@ -12,57 +12,51 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-lg-12">
-                        <form id="login-form" ng-submit="$ctrl.save()" method="post" role="form"
-                              class="form-horizontal"
-                              style="display: block;">
+                        <form id="login-form" ng-submit="$ctrl.save()" method="post" role="form" class="form-horizontal" style="display: block;">
 
                             <div class="form-group" show-errors>
                                 <label class="control-label">Username</label>
-                                <input type="text" name="username" ng-model="$ctrl.user.username" id="username"
-                                       required autofocus class="form-control">
+                                <input type="text" name="username" ng-model="$ctrl.user.username" id="username" required autofocus class="form-control">
                             </div>
 
                             <div class="form-group" show-errors>
                                 <label class="control-label">Email</label>
-                                <input type="text" name="email" ng-model="$ctrl.user.email" required
-                                       class="form-control">
+                                <input type="text" name="email" ng-model="$ctrl.user.email" required class="form-control">
                             </div>
 
                             <div class="form-group" show-errors>
                                 <label class="control-label">First Name</label>
-                                <input type="text" name="firstName" ng-model="$ctrl.user.firstName" required
-                                       class="form-control">
+                                <input type="text" name="firstName" ng-model="$ctrl.user.firstName" required class="form-control">
                             </div>
 
                             <div class="form-group" show-errors>
                                 <label class="control-label">Last Name</label>
-                                <input type="text" name="lastName" ng-model="$ctrl.user.lastName" required
-                                       class="form-control">
+                                <input type="text" name="lastName" ng-model="$ctrl.user.lastName" required class="form-control">
                             </div>
 
                             <div class="form-group" show-errors>
                                 <label class="control-label">Institution</label>
-                                <input type="text" name="institution" ng-model="$ctrl.user.institution"
-                                       class="form-control">
+                                <input type="text" name="institution" ng-model="$ctrl.user.institution" class="form-control">
                             </div>
 
                             <div class="form-group" show-errors>
                                 <label class="control-label">Password</label>
-                                <input type="password" name="password" ng-model="$ctrl.user.password"
-                                       class="form-control">
+                                <input type="password" name="password" ng-model="$ctrl.user.password" required class="form-control">
                             </div>
 
                             <div class="form-group" show-errors>
                                 <label class="control-label">Verify Password</label>
-                                <input type="password" name="verifyPassword" ng-model="$ctrl.verifyPassword"
-                                       compare-to="$ctrl.user.password" class="form-control">
+                                <input type="password" name="verifyPassword" ng-model="$ctrl.verifyPassword" required compare-to="$ctrl.user.password"
+                                    class="form-control">
                             </div>
 
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-6 col-sm-offset-3">
-                                        <input type="submit" name="create-submit"
-                                               class="form-control btn btn-block btn-primary" value="Register">
+                                        <button ng-click="$ctrl.save()" name="create-submit" class="form-control btn btn-block btn-primary">
+                                            <span ng-if="!$ctrl.loading">Register</span>
+                                            <md-progress-circular ng-show="$ctrl.loading" md-mode="indeterminate" md-diameter="18" class="md-accent" style="margin-left: auto; margin-right: auto;"></md-progress-circular>
+                                        </button>
                                     </div>
                                 </div>
                             </div>

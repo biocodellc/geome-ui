@@ -18,7 +18,7 @@ export class ExpeditionController extends FimsExpeditionController {
       this.ExpeditionService.update(
         this.currentProject.projectId,
         expedition,
-      ).then((e) => {
+      ).then(e => {
         angular.toaster.success('Successfully updated!');
         this.$state.reload();
       });

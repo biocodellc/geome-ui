@@ -5,7 +5,7 @@ function getStates() {
       config: {
         url: '/settings',
         views: {
-          details: {
+          'details@project': {
             component: 'fimsProjectSettings',
           },
         },

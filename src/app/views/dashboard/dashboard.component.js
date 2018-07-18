@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import QueryParams from '../query/QueryParams';
 
 const template = require('./dashboard.html');
@@ -18,6 +19,7 @@ class DashboardController {
     this.currentPage = 1;
     this.results = [];
     this.displayResults = [];
+    this.menuCache = {};
   }
 
   $onChanges(changesObj) {
@@ -30,19 +32,19 @@ class DashboardController {
     }
   }
 
-  downloadCsv(expeditionCode) {
+  downloadCsv(conceptAlias, expeditionCode) {
     this.loadingExpedition = expeditionCode;
     this.QueryService.downloadCsv(
       this.getQuery(expeditionCode),
-      'Resource',
+      conceptAlias,
     ).finally(() => (this.loadingExpedition = undefined));
   }
 
-  downloadFasta(expeditionCode) {
+  downloadFasta(conceptAlias, expeditionCode) {
     this.loadingExpedition = expeditionCode;
     this.QueryService.downloadFasta(
       this.getQuery(expeditionCode),
-      'fastaSequence',
+      conceptAlias,
     ).finally(() => (this.loadingExpedition = undefined));
   }
 
@@ -60,7 +62,62 @@ class DashboardController {
     ).finally(() => (this.loadingExpedition = undefined));
   }
 
+  menuOptions(expedition) {
+    if (!this.menuCache[expedition.expeditionCode]) {
+      this.menuCache[expedition.expeditionCode] = this.headers
+        .map(header => {
+          const conceptAlias = header.replace('Count', '');
+          const entity = this.currentProject.config.entities.find(
+            e => e.conceptAlias === conceptAlias,
+          );
+
+          // if count is 0
+          if (!Number(expedition[header])) return;
+
+          if (entity.worksheet) {
+            // eslint-disable-next-line consistent-return
+            return {
+              fn: this.downloadCsv.bind(this, conceptAlias),
+              name: `${conceptAlias} CSV`,
+            };
+          } else if (entity.type === 'Fasta') {
+            // eslint-disable-next-line consistent-return
+            return {
+              fn: this.downloadFasta.bind(this, conceptAlias),
+              name: 'Fasta',
+            };
+          } else if (entity.type === 'Fastq') {
+            // eslint-disable-next-line consistent-return
+            return {
+              fn: this.downloadFastq.bind(this),
+              name: 'Fastq',
+            };
+          }
+        })
+        .filter(o => o !== undefined);
+    }
+    return this.menuCache[expedition.expeditionCode];
+  }
+  // eslint-disable-next-line class-methods-use-this
+  humanReadableHeader(val) {
+    return val
+      .replace('Count', '') // remove 'Count' suffix
+      .replace(/([A-Z])/g, match => ` ${match}`) // split on camelCase
+      .replace(/^./, match => match.toUpperCase()) // uppercase each word
+      .trim()
+      .replace(
+        /\w$/,
+        match => (match === 's' || match === 'a' ? match : `${match}s`),
+      ); // end w/ 's'
+  }
+
   pageChanged() {
+    // each object in the result contains the expedition info,
+    // as well as the 1 {entity}Count value for each entity
+    // our table headers are these count values
+    this.headers = Object.keys(this.results[0]).filter(k =>
+      k.endsWith('Count'),
+    );
     this.displayResults = this.results.slice(
       (this.currentPage - 1) * this.itemsPerPage,
       this.currentPage * this.itemsPerPage,

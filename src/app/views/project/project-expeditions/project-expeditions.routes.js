@@ -19,7 +19,7 @@ function getStates() {
               .catch(() => $state.go('project')),
         },
         views: {
-          details: {
+          'details@project': {
             component: 'fimsProjectExpeditions',
           },
         },
@@ -33,7 +33,7 @@ function getStates() {
         resolve: {
           expedition: /* @ngInject */ ($transition$, $state, expeditions) => {
             let { expedition } = $transition$.params();
-            if (expedition) {
+            if (expedition && Object.keys(expedition).length) {
               return expedition;
             }
 
@@ -47,9 +47,12 @@ function getStates() {
             return $state.go('project.expeditions');
           },
           backState: () => 'project.expeditions',
+          currentProject: /* @ngInject */ ProjectService =>
+            ProjectService.currentProject(),
         },
         views: {
-          '@': {
+          // target the default ui-view for the `project` state
+          '@project': {
             component: 'fimsProjectExpedition',
           },
         },
@@ -90,7 +93,6 @@ function getStates() {
         views: {
           details: {
             template: expeditionMemberTemplate,
-            // controller: "ExpeditionMembersController as vm"
           },
         },
       },

@@ -236,9 +236,7 @@ class UploadController {
     const LON_COL_DEF = 'http://rs.tdwg.org/dwc/terms/decimalLongitude';
 
     const { config } = this.currentProject;
-    const sampleEntity = config.entities.find(
-      e => e.conceptAlias === 'Resource',
-    );
+    const sampleEntity = config.entities.find(e => e.conceptAlias === 'Sample');
     const { worksheet } = sampleEntity;
     const latColumn = config.findAttributesByDefinition(
       worksheet,

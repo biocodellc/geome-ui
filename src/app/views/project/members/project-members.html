@@ -1,6 +1,9 @@
 <div class="settings">
-    <div ui-view on-invite-user="$ctrl.handleInviteUser(email)" on-add-member="$ctrl.handleAddMember(user)">
+    <div ui-view on-invite-user="$ctrl.handleInviteUser(email)" on-add-member="$ctrl.handleAddMember(username)">
         <div class="settings-bar">
+<div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
+	<md-progress-circular md-mode="indeterminate"></md-progress-circular>
+</div> 
             <div class="settings-bar-container">
                 <ul class="actions">
                     <li>

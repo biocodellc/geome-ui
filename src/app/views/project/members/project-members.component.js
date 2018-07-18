@@ -21,6 +21,7 @@ class ProjectMembersController {
       'firstName',
       'lastName',
     ];
+
     this.orderBy = this.orderByList[0];
   }
 
@@ -43,10 +44,10 @@ class ProjectMembersController {
     return !!this.members.find(m => m.email === email);
   }
 
-  handleAddMember() {
+  handleAddMember(username) {
     this.ProjectMembersService.add(
       this.currentProject.projectId,
-      this.username,
+      username,
     ).then(() => {
       this.username = undefined;
       angular.toaster.success('Successfully added user');

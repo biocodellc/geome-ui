@@ -19,11 +19,11 @@ class ResetPassController {
     // TODO use a different password strength meter
     const e = $('#pwindicator');
     if (e && !e.hasClass('pw-weak')) {
-      this.UserService.resetPassword(this.password, this.resetToken).then(() =>
-        angular.toaster.success('Successfully reset you password', {
-          name: 'login',
-          fn: () => this.$state.go('login'),
-        }),
+      this.UserService.resetPassword(this.password, this.resetToken).then(
+        () => {
+          angular.toaster.success('Successfully reset your password');
+          this.$state.go('login');
+        },
       );
     }
   }

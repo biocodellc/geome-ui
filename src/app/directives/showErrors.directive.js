@@ -46,7 +46,7 @@ function showErrors($timeout, showErrorsConfig, $interpolate) {
     trigger = getTrigger(options);
     // wrap in a $timeout so the following is run after compilation in-case ng-repeat is in the dom
     $timeout(() => {
-    // modified by RJ Ewing to allow multiple inputs under the same show-errors directive
+      // modified by RJ Ewing to allow multiple inputs under the same show-errors directive
       const inputEls = el[0].querySelectorAll(
         '.form-control[name], input[type=checkbox]',
       );

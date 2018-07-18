@@ -15,7 +15,8 @@ function getStates() {
               .catch(() => $state.go('project')),
         },
         views: {
-          details: {
+          // details: {
+          'details@project': {
             component: 'fimsProjectMembers',
           },
         },
