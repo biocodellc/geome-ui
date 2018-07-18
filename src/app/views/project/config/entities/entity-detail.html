@@ -11,9 +11,10 @@
     <div class="row back">
         <div class="col-xs-12">
             <a href ui-sref="project.config.entities"> <i class="fa fa-chevron-left"></i> Entities</a>
+	    <p> Editing {{$ctrl.addText}}s for Entity: {{$ctrl.entity.conceptAlias}}</p>
         </div>
     </div>
-
+    
     <div ui-view="attributes"
          attributes="$ctrl.entity.attributes"
          on-update-attributes="$ctrl.handleUpdateAttributes(attributes)">
