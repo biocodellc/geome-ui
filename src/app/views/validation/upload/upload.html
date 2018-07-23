@@ -9,7 +9,7 @@
 
     <div class="clearfix" ng-repeat="data in $ctrl.worksheetData track by data.worksheet">
         <hr class="separator" />
-        <fims-worksheet-data on-change="$ctrl.handleWorksheetDataChange(worksheet, file)" worksheet="data.worksheet" file="data.file"></fims-worksheet-data>
+        <fims-worksheet-data on-change="$ctrl.handleWorksheetDataChange(worksheet, file, reload)" worksheet="data.worksheet" file="data.file"></fims-worksheet-data>
         <div class="form-group" ng-hide="$ctrl.checkCoordinatesVerified()" ng-if="data.worksheet === 'Samples'">
             <div class="col-xs-offset-2 has-error">
                 <div class="col-xs-8">

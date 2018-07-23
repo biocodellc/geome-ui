@@ -49,6 +49,7 @@ class UploadController {
           this.worksheetData.push({
             file: this.fimsMetadata,
             worksheet: 'Samples',
+            reload: false,
           });
         }
       }
@@ -85,6 +86,7 @@ class UploadController {
       this.worksheetData.push({
         worksheet: w,
         file: w === 'Samples' ? this.fimsMetadata : undefined,
+        reload: false,
       });
     });
 
@@ -116,7 +118,7 @@ class UploadController {
     this.expeditionCode = expeditionCode;
   }
 
-  handleWorksheetDataChange(worksheet, file) {
+  handleWorksheetDataChange(worksheet, file, reload) {
     if (worksheet === 'Samples') {
       this.onMetadataChange({
         fimsMetadata: file,
@@ -126,8 +128,9 @@ class UploadController {
 
     if (data) {
       data.file = file;
+      data.reload = reload;
     } else {
-      this.worksheetData.push({ worksheet, file });
+      this.worksheetData.push({ worksheet, file, reload });
     }
   }
 
@@ -139,21 +142,64 @@ class UploadController {
     this.fastqMetadata = data;
   }
 
-  upload() {
+  async upload() {
     this.$scope.$broadcast('show-errors-check-validity');
 
     if (!this.checkCoordinatesVerified() || this.uploadForm.$invalid) {
       return;
     }
 
-    this.onUpload({ data: this.getUploadData() }).then(success => {
-      if (success) {
-        this.onMetadataChange({ fimsMetadata: undefined });
-        this.$onInit();
-        this.dataTypes.worksheet = true;
-        this.$scope.$broadcast('show-errors-reset');
+    const data = this.getUploadData();
+    const hasReload =
+      data.reloadWorkbooks || data.dataSourceMetadata.some(d => d.reload);
+
+    const upload = () =>
+      this.onUpload({ data }).then(success => {
+        if (success) {
+          this.onMetadataChange({ fimsMetadata: undefined });
+          this.$onInit();
+          this.dataTypes.worksheet = true;
+          this.$scope.$broadcast('show-errors-reset');
+        }
+      });
+
+    if (hasReload) {
+      const reloadSheets = [];
+
+      if (data.reloadWorkbooks) {
+        const worksheets = this.currentProject.config.entities
+          .filter(e => e.worksheet)
+          .map(e => e.worksheet);
+        const workbook = await workbookToJson(data.workbooks[0]);
+        Object.keys(workbook)
+          .filter(k => worksheets.includes(k))
+          .forEach(s => reloadSheets.push(s));
       }
-    });
+
+      data.dataSourceMetadata.forEach(
+        wd => wd.reload && reloadSheets.push(wd.metadata.sheetName),
+      );
+
+      const confirm = this.$mdDialog
+        .confirm()
+        .title('Confirm Data Reload')
+        .htmlContent(
+          `<br/><p>All existing ${reloadSheets.join(
+            ', ',
+          )} data will replaced with the data in this upload.</p><p><strong>Are you sure you want to continue?</strong></p>`,
+        )
+        .ok('Upload')
+        .cancel('Cancel');
+
+      this.$mdDialog
+        .show(confirm)
+        .then(() => {
+          upload();
+        })
+        .catch(() => {});
+    } else {
+      upload();
+    }
   }
 
   checkCoordinatesVerified() {
@@ -171,19 +217,20 @@ class UploadController {
     const data = {
       expeditionCode: this.expeditionCode,
       upload: true,
-      reloadWorkbooks: true,
+      reloadWorkbooks: false,
       dataSourceMetadata: [],
       dataSourceFiles: [],
     };
 
     this.worksheetData.forEach(wd => {
-      if (['xlsx', 'xls'].includes(getFileExt(wd.file.name))) {
+      if (wd.worksheet === 'Workbook') {
         data.workbooks = [wd.file];
+        data.reloadWorkbooks = wd.reload;
       } else {
         data.dataSourceMetadata.push({
           dataType: 'TABULAR',
           filename: wd.file.name,
-          reload: true,
+          reload: wd.reload,
           metadata: {
             sheetName: wd.worksheet,
           },
@@ -236,8 +283,8 @@ class UploadController {
     const LON_COL_DEF = 'http://rs.tdwg.org/dwc/terms/decimalLongitude';
 
     const { config } = this.currentProject;
-    const sampleEntity = config.entities.find(e => e.conceptAlias === 'Sample');
-    const { worksheet } = sampleEntity;
+    const eventEntity = config.entities.find(e => e.conceptAlias === 'Event');
+    const { worksheet } = eventEntity;
     const latColumn = config.findAttributesByDefinition(
       worksheet,
       LAT_COL_DEF,
@@ -263,7 +310,7 @@ class UploadController {
           data,
           latColumn,
           lngColumn,
-          uniqueKey: sampleEntity.uniqueKey,
+          uniqueKey: eventEntity.uniqueKey,
         });
 
         const naanDialog =
@@ -296,16 +343,23 @@ class UploadController {
   }
 
   getAvailableDataTypes() {
-    const dataTypes = [];
+    const dataTypes = [
+      {
+        name: 'Workbook',
+        isWorksheet: false,
+      },
+    ];
 
     this.currentProject.config.entities.forEach(e => {
       let name = e.worksheet;
+      let isWorksheet = true;
 
       if (!name) {
         switch (e.type) {
           case 'Fastq':
           case 'Fasta':
             name = e.type;
+            isWorksheet = false;
             break;
           default:
             return; // skip this b/c there is no worksheet?
@@ -316,10 +370,12 @@ class UploadController {
 
       dataTypes.push({
         name,
-        isRequired: this.newExpedition && name === 'Samples',
+        isWorksheet,
+        isRequired: dt =>
+          this.newExpedition && !dt.Workbook && name === 'Events',
         help:
-          name === 'Samples'
-            ? 'A Samples worksheet is required if you are creating a new expedition.'
+          name === 'Events'
+            ? 'An Events worksheet is required if you are creating a new expedition.'
             : undefined,
       });
     });

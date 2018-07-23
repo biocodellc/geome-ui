@@ -16,7 +16,7 @@
       <p class="small help-block col-sm-offset-3" ng-show="$ctrl.form.fastqFileNames.$error.pattern">
         File must be a .txt file</p>
     </div>
-    <md-button class="md-icon-button help-link md-popover-button">
+    <md-button class="md-icon-button sequence-help-link md-popover-button">
       <md-popover md-popover-class="fastq-help-filenames" md-popover-group="fastqHelp" md-direction="right">
         <div ng-include="'fastq-filenames.popover.html'"></div>
       </md-popover>
@@ -61,7 +61,7 @@
         For instance if uploading using RADSeq data this is likely to be “WGS”
       </p>
     </div>
-    <md-button class="md-icon-button help-link md-popover-button" ng-click="list=$ctrl.libraryStrategies; name='Strategy'">
+    <md-button class="md-icon-button sequence-help-link md-popover-button" ng-click="list=$ctrl.libraryStrategies; name='Strategy'">
       <md-popover md-popover-class="fastq-help" md-popover-group="fastqHelp" md-direction="bottom">
         <div ng-include="'fastq-help.popover.html'"></div>
       </md-popover>
@@ -77,7 +77,7 @@
         <option value="">-- Select a Library Source --</option>
       </select>
     </div>
-    <md-button class="md-icon-button help-link md-popover-button" ng-click="list=$ctrl.librarySources; name='Source'">
+    <md-button class="md-icon-button sequence-help-link md-popover-button" ng-click="list=$ctrl.librarySources; name='Source'">
       <md-popover md-popover-class="fastq-help" md-popover-group="fastqHelp" md-direction="bottom">
         <div ng-include="'fastq-help.popover.html'"></div>
       </md-popover>
@@ -96,7 +96,7 @@
         For instance if uploading using RADSeq data this is likely to be “Reduced Representation”
       </p>
     </div>
-    <md-button class="md-icon-button help-link md-popover-button" ng-click="list=$ctrl.librarySelections; name='Selection'">
+    <md-button class="md-icon-button sequence-help-link md-popover-button" ng-click="list=$ctrl.librarySelections; name='Selection'">
       <md-popover md-popover-class="fastq-help" md-popover-group="fastqHelp" md-direction="bottom">
         <div ng-include="'fastq-help.popover.html'"></div>
       </md-popover>

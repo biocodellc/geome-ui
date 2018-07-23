@@ -9,10 +9,22 @@ class WorksheetController {
   handleSelect($files) {
     this.valid = !!$files[0];
     this.file = $files[0];
+    this.handleChange();
+  }
+
+  handleChange() {
     this.onChange({
       worksheet: this.worksheet,
       file: this.file,
+      reload: this.reload,
     });
+  }
+
+  fileTypes() {
+    if (this.worksheet === 'Workbook') {
+      return "'.xls,.xlsx'";
+    }
+    return "'.txt,.csv,.tsv'";
   }
 }
 
