@@ -50,6 +50,14 @@ class QueryService {
         if (results.data.length === 0) {
           angular.toaster('No results found.');
         }
+
+        // TODO: Remove this, and implement dynamic loading. Set limit to 1000
+        // and if 1k results are returned, ask the user if they want to load more.
+        if (results.totalElements === limit) {
+          angular.toaster(
+            'Query results are limited to 10,000. Either narrow your search or download the results to view everything.',
+          );
+        }
       }
 
       return results;
