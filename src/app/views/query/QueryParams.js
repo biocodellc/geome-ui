@@ -24,7 +24,7 @@ export default class QueryParams {
     Object.assign(this, defaultParams);
   }
 
-  buildQuery(projectId, source) {
+  buildQuery(projectId, selectEntities, source) {
     const builder = new QueryBuilder();
 
     if (this.expeditions.length > 0) {
@@ -73,52 +73,52 @@ export default class QueryParams {
 
     if (this.country) {
       if (builder.queryString.length > 0) builder.add('and');
-      builder.add(`country = ${this.country}`);
+      builder.add(`Event.country = ${this.country}`);
     }
 
     if (this.genus) {
       if (builder.queryString.length > 0) builder.add('and');
-      builder.add(`genus = ${this.genus}`);
+      builder.add(`Sample.genus = ${this.genus}`);
     }
 
     if (this.locality) {
       if (builder.queryString.length > 0) builder.add('and');
-      builder.add(`locality = ${this.locality}`);
+      builder.add(`Event.locality = ${this.locality}`);
     }
 
     if (this.family) {
       if (builder.queryString.length > 0) builder.add('and');
-      builder.add(`family = ${this.family}`);
+      builder.add(`Sample.family = ${this.family}`);
     }
 
     if (this.species) {
       if (builder.queryString.length > 0) builder.add('and');
-      builder.add(`species = ${this.species}`);
+      builder.add(`Sample.species = ${this.species}`);
     }
 
     if (this.fromYear) {
       if (builder.queryString.length > 0) builder.add('and');
-      builder.add(`yearCollected >= ${this.fromYear}`);
+      builder.add(`Event.yearCollected >= ${this.fromYear}`);
     }
 
     if (this.toYear) {
       if (builder.queryString.length > 0) builder.add('and');
-      builder.add(`yearCollected <= ${this.toYear}`);
+      builder.add(`Event.yearCollected <= ${this.toYear}`);
     }
 
     if (this.isMappable) {
       if (builder.queryString.length > 0) builder.add('and');
-      builder.add('_exists_:decimalLongitude and _exists_:decimalLatitude');
+      builder.add('_exists_:Event.decimalLongitude and _exists_:Event.decimalLatitude');
     }
 
     if (this.hasCoordinateUncertaintyInMeters) {
       if (builder.queryString.length > 0) builder.add('and');
-      builder.add('_exists_:coordinateUncertaintyInMeters');
+      builder.add('_exists_:Event.coordinateUncertaintyInMeters');
     }
 
     if (this.hasPermitInfo) {
       if (builder.queryString.length > 0) builder.add('and');
-      builder.add('_exists_:permitInformation');
+      builder.add('_exists_:Event.permitInformation');
     }
 
     if (this.bounds) {
@@ -127,20 +127,24 @@ export default class QueryParams {
 
       if (ne.lng > sw.lng) {
         if (builder.queryString.length > 0) builder.add('and');
-        builder.add(`decimalLongitude >= ${sw.lng}`);
-        builder.add(`and decimalLongitude <= ${ne.lng}`);
+        builder.add(`Event.decimalLongitude >= ${sw.lng}`);
+        builder.add(`and Event.decimalLongitude <= ${ne.lng}`);
       } else {
         if (builder.queryString.length > 0) builder.add('and');
         builder.add(
-          `((decimalLongitude >= ${sw.lng} and decimalLongitude <= 180)`,
+          `((Event.decimalLongitude >= ${sw.lng} and Event.decimalLongitude <= 180)`,
         );
         builder.add(
-          `or (decimalLongitude <= ${ne.lng} or decimalLongitude >= -180))`,
+          `or (Event.decimalLongitude <= ${ne.lng} or Event.decimalLongitude >= -180))`,
         );
       }
       if (builder.queryString.length > 0) builder.add('and');
-      builder.add(`decimalLatitude <= ${ne.lat}`);
-      builder.add(`and decimalLatitude >= ${sw.lat}`);
+      builder.add(`Event.decimalLatitude <= ${ne.lat}`);
+      builder.add(`and Event.decimalLatitude >= ${sw.lat}`);
+    }
+
+    if (selectEntities) {
+      builder.add(`_select_:[${selectEntities.join(',')}]`);
     }
 
     builder.setSource(source);

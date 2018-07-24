@@ -3,16 +3,20 @@ import angular from 'angular';
 const template = require('./query-form.html');
 
 const SOURCE = [
-  'principalInvestigator',
-  'materialSampleID',
+  'Sample.principalInvestigator',
+  'Event.eventID',
+  'Sample.eventID',
+  'Sample.specimenID',
   'locality',
   'country',
   'decimalLatitude',
   'decimalLongitude',
-  'genus',
-  'species',
-  // 'fastqMetadata',
-  'bcid',
+  'Sample.genus',
+  'Sample.species',
+  'fastqMetadata.identifier',
+  'fastqMetadata.identifier',
+  'Event.bcid',
+  'Sample.bcid',
 ];
 
 const defaultFilter = {
@@ -91,9 +95,13 @@ class QueryFormController {
 
     const { projectId } = this.currentProject;
 
+    const selectEntities = this.currentProject.config.entities
+      .filter(e => e.type === 'Fastq' || e.conceptAlias === 'Sample')
+      .map(e => e.conceptAlias);
+
     this.QueryService.queryJson(
-      this.params.buildQuery(projectId, SOURCE.join()),
-      this.currentProject.config.entities[0].conceptAlias,
+      this.params.buildQuery(projectId, selectEntities, SOURCE.join()),
+      'Event',
       0,
       10000,
     )
@@ -153,20 +161,24 @@ class QueryFormController {
 
   generateFilterOptions() {
     const { config } = this.currentProject;
-    this.filterOptions = config.entities[0].attributes.map(a => ({
-      group: a.group || 'Default Group',
-      column: a.column,
-      dataType: a.dataType,
-      list: config.findListForColumn(config.entities[0], a.column),
-    }));
-    this.filterOptionsGroups = config.entities[0].attributes.reduce(
-      (val, a) => {
-        const g = a.group || 'Default Group';
-        if (!val.includes(g)) val.push(g);
-        return val;
-      },
+    this.filterOptions = config.entities.reduce(
+      (accumulator, entity) =>
+        accumulator.concat(
+          entity.attributes.filter(a => !a.internal).map(a => ({
+            group: a.group
+              ? `${entity.conceptAlias} ${a.group}`
+              : `${entity.conceptAlias} Default Group`,
+            column: `${entity.conceptAlias}.${a.column}`,
+            dataType: a.dataType,
+            list: config.findListForColumn(entity, a.column),
+          })),
+        ),
       [],
     );
+    this.filterOptionsGroups = this.filterOptions.reduce((accumulator, a) => {
+      if (!accumulator.includes(a.group)) accumulator.push(a.group);
+      return accumulator;
+    }, []);
   }
 }
 

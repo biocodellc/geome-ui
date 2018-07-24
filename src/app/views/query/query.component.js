@@ -32,8 +32,8 @@ class QueryController {
     this.params = new QueryParams();
     this.queryMap = new QueryMap(
       this.$state,
-      'decimalLatitude',
-      'decimalLongitude',
+      'event.decimalLatitude',
+      'event.decimalLongitude',
     );
 
     if (this.currentProject) {
@@ -69,19 +69,24 @@ class QueryController {
     this.showSidebar = true;
     this.showMap = true;
     this.loading = false;
+    this.hasFastqData = false;
     this.sidebarToggleToolTip = 'hide sidebar';
   }
 
   handleNewResults(results) {
     this.results = results;
+    this.hasFastqData =
+      results &&
+      results.data.fastqMetadata &&
+      results.data.fastqMetadata.length > 0;
   }
 
   downloadExcel() {
     this.loading = true;
     const { projectId } = this.currentProject;
     this.QueryService.downloadExcel(
-      this.params.buildQuery(projectId),
-      this.currentProject.config.entities[0].conceptAlias,
+      this.params.buildQuery(projectId, this.selectEntities()),
+      'Event',
     ).finally(() => (this.loading = false));
   }
 
@@ -89,8 +94,8 @@ class QueryController {
     this.loading = true;
     const { projectId } = this.currentProject;
     this.QueryService.downloadCsv(
-      this.params.buildQuery(projectId),
-      this.currentProject.config.entities[0].conceptAlias,
+      this.params.buildQuery(projectId, this.selectEntities()),
+      'Event',
     ).finally(() => (this.loading = false));
   }
 
@@ -98,8 +103,8 @@ class QueryController {
     this.loading = true;
     const { projectId } = this.currentProject;
     this.QueryService.downloadKml(
-      this.params.buildQuery(projectId),
-      this.currentProject.config.entities[0].conceptAlias,
+      this.params.buildQuery(projectId, this.selectEntities()),
+      'Event',
     ).finally(() => (this.loading = false));
   }
 
@@ -107,7 +112,7 @@ class QueryController {
     this.loading = true;
     const { projectId } = this.currentProject;
     this.QueryService.downloadFasta(
-      this.params.buildQuery(projectId),
+      this.params.buildQuery(projectId, this.selectEntities().push('Event')),
       'fastaSequence',
     ).finally(() => (this.loading = false));
   }
@@ -116,16 +121,18 @@ class QueryController {
     this.loading = true;
     const { projectId } = this.currentProject;
     this.QueryService.downloadFastq(
-      this.params.buildQuery(projectId),
+      this.params.buildQuery(projectId, this.selectEntities().push('Event')),
       'fastqMetadata',
     ).finally(() => (this.loading = false));
   }
 
-  // TODO: have query results return this as well. requires updating PostgresRecordRepository in backend
-  // to support sql pagination & sorting
-  hasFastqData() {
-    return true;
-    // return this.results && this.results.data.some(d => d.fastqMetadata);
+  selectEntities() {
+    this.currentProject.entities
+      .filter(
+        e =>
+          e.type === 'Fastq' || ['Sample', 'Tissue'].includes(e.conceptAlias),
+      )
+      .map(e => e.conceptAlias);
   }
 
   toggleSidebar() {

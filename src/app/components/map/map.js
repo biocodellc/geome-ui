@@ -77,6 +77,15 @@ export default class Map extends EventEmitter {
     this.emit(Map.INIT_EVENT);
   }
 
+  getKey(record, column) {
+    const split = column.split('.');
+    if (split.length === 1) {
+      return record[split[0]];
+    }
+
+    return this.getKey(record[split.shift()], split.join('.'));
+  }
+
   /**
    *
    * @param data data is a json array of objects. Each object should contain a key matching the given latColumn
@@ -87,8 +96,12 @@ export default class Map extends EventEmitter {
     this._clearMap();
 
     data.forEach(resource => {
-      const lat = resource[this.latColumn];
-      const lng = L.Util.wrapNum(resource[this.lngColumn], [0, 360], true); // center on pacific ocean
+      const lat = this.getKey(resource, this.latColumn);
+      const lng = L.Util.wrapNum(
+        this.getKey(resource, this.lngColumn),
+        [0, 360],
+        true,
+      ); // center on pacific ocean
 
       if (Number.isNaN(lat) || Number.isNaN(lng)) return;
 

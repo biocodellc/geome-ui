@@ -4,6 +4,20 @@ import authService from './auth.service';
 
 const { restRoot } = config;
 
+function transformResults(data) {
+  const records = [];
+
+  if (data.Sample) {
+    data.Sample.forEach(s => {
+      const record = s;
+      record.event = data.Event.find(e => e.eventID === s.eventID);
+      records.push(record);
+    });
+  }
+
+  return records;
+}
+
 class QueryService {
   constructor($http, $window, FileService) {
     'ngInject';
@@ -28,15 +42,14 @@ class QueryService {
       };
 
       if (response.data) {
-        results.size = response.data.size;
-        results.page = response.data.number;
-        results.totalElements = response.data.totalElements;
+        results.data = transformResults(response.data.content);
 
-        if (results.totalElements === 0) {
+        results.page = response.data.page;
+        results.totalElements = results.data.length;
+
+        if (results.data.length === 0) {
           angular.toaster('No results found.');
         }
-
-        results.data = response.data.content;
       }
 
       return results;
