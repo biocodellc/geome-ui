@@ -137,7 +137,10 @@ class ValidationController {
 
   validateSubmit(data) {
     // Clear the results
-    this.results = Object.assign({}, defaultResults, { showStatus: true });
+    this.results = Object.assign({}, defaultResults, {
+      showStatus: true,
+      status: 'Uploading...',
+    });
     this.openResultsModal();
     return this.DataService.validate(data)
       .then(
@@ -148,7 +151,7 @@ class ValidationController {
             );
 
             listener.on('status', status => {
-              this.results.status = status;
+              this.results.status = `Uploading...\n${status}`;
               this.results.validation.exception = null;
             });
             listener.on('result', resolve);
