@@ -36,7 +36,6 @@ export default class ProjectConfig {
     const defaultGroup = 'Default Group';
 
     const attributes = {};
-    attributes[defaultGroup] = [];
 
     this.entities.filter(entity => entity.worksheet === sheetName).forEach(e =>
       e.attributes.forEach(attribute => {

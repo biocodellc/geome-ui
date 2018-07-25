@@ -32,12 +32,11 @@ class UploadController {
     this.expeditionCode = undefined;
     this.verifySampleLocations = false;
     this.sampleLocationsVerified = false;
-    this.validateOnly = false;
   }
 
   $onChanges(changesObj) {
     if ('currentUser' in changesObj) {
-      this.validateOnly = !!this.currentUser;
+      this.validateOnly = !this.currentUser;
     }
 
     if (this.currentProject && 'currentProject' in changesObj) {
