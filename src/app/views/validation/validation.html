@@ -1,19 +1,10 @@
 <div id="warning"></div>
 <div class="row validation">
-    <h3 class="page-header">Validate and Load Data</h3>
+    <h3 class="page-header" ng-if="$ctrl.currentUser">Load Data</h3>
+    <h3 class="page-header" ng-if="!$ctrl.currentUser">Validate Data</h3>
 
-    <p>Using this tool you can check for errors in your metadata file and upload your data. The validate
-        tab can be used to ensure that all required fields are completed and that each materialSampleID
-        is unique in your metadata file (in tab delimited text format) while the upload tab will also
-        validate your files and ensure that each materialSampleID is accompanied by a fasta/fastq file
-        of the same name.</p>
-    <p>If you are uploading pooled data (each fastq file represents data from multiple individuals that
-        can't be demultiplexed) please include the number of individuals in the pool using the individualCount
-        field and the range over which the samples were collected in the coordinateUncertaintyInMeters
-        field with the decimal latitude and decimal longitude representing the mid point.
-    </p>
     <p ng-show="!$ctrl.currentUser">
-        <strong>To upload data users must have an account.</strong> To set up an account send an email with you
+        <strong>To upload data users must have an account.</strong> To set up an account send an email with your
         name, title and affiliation to
         <a href="mailto:geome.database@gmail.com">geome.database@gmail.com</a>
     </p>
