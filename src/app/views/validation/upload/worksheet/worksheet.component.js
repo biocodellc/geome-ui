@@ -36,5 +36,6 @@ export default {
     worksheet: '<',
     file: '<',
     onChange: '&',
+    canReload: '<',
   },
 };

@@ -32,34 +32,12 @@ class UploadController {
     this.expeditionCode = undefined;
     this.verifySampleLocations = false;
     this.sampleLocationsVerified = false;
+    this.validateOnly = false;
   }
 
   $onChanges(changesObj) {
-    if ('fimsMetadata' in changesObj) {
-      if (this.worksheetData) {
-        const samplesData = this.worksheetData.find(
-          d => d.worksheet === 'Samples',
-        );
-
-        this.dataTypes.Samples = true;
-
-        if (samplesData) {
-          samplesData.file = this.fimsMetadata;
-        } else {
-          this.worksheetData.push({
-            file: this.fimsMetadata,
-            worksheet: 'Samples',
-            reload: false,
-          });
-        }
-      }
-
-      if (this.fimsMetadata && this.isVisible) this.verifyCoordinates();
-      this.verifySampleLocations = !!this.fimsMetadata;
-      this.sampleLocationsVerified = false;
-    } else if ('isVisible' in changesObj) {
-      if (this.fimsMetadata && this.isVisible && !this.sampleLocationsVerified)
-        this.verifyCoordinates();
+    if ('currentUser' in changesObj) {
+      this.validateOnly = !!this.currentUser;
     }
 
     if (this.currentProject && 'currentProject' in changesObj) {
@@ -151,7 +129,8 @@ class UploadController {
 
     const data = this.getUploadData();
     const hasReload =
-      data.reloadWorkbooks || data.dataSourceMetadata.some(d => d.reload);
+      !this.validateOnly &&
+      (data.reloadWorkbooks || data.dataSourceMetadata.some(d => d.reload));
 
     const upload = () =>
       this.onUpload({ data }).then(success => {
@@ -216,7 +195,7 @@ class UploadController {
   getUploadData() {
     const data = {
       expeditionCode: this.expeditionCode,
-      upload: true,
+      upload: !this.validateOnly,
       reloadWorkbooks: false,
       dataSourceMetadata: [],
       dataSourceFiles: [],
@@ -389,6 +368,7 @@ export default {
   controller: UploadController,
   bindings: {
     isVisible: '<',
+    currentUser: '<',
     currentProject: '<',
     fimsMetadata: '<',
     userExpeditions: '<',

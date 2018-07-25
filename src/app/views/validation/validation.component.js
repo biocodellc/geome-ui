@@ -64,19 +64,6 @@ class ValidationController {
     checkBrowser(this.$mdDialog);
   }
 
-  validate(data) {
-    this.validateSubmit(
-      Object.assign({}, data, {
-        projectId: this.currentProject.projectId,
-        expeditionCode: this.expeditionCode,
-        upload: false,
-      }),
-    ).then(resp => {
-      this.results.validation = resp;
-      this.modalInstance.close();
-    });
-  }
-
   handleUpload(uploadData) {
     const { projectId } = this.currentProject;
 
@@ -84,6 +71,13 @@ class ValidationController {
       Object.assign({}, uploadData, { projectId }),
     ).then(data => {
       if (!data) return false;
+
+      if (!uploadData.upload) {
+        this.results.validation = data;
+        this.modalInstance.close();
+        this.activeTab = 1;
+        return false;
+      }
 
       if (data.isValid) {
         this.continueUpload(data.id);

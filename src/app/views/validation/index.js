@@ -4,7 +4,6 @@ import ngFileUpload from 'ng-file-upload';
 
 import routing from './validation.routes';
 import fimsValidation from './validation.component';
-import fimsValidate from './validate/validate.component';
 import fimsUpload from './upload/upload.component';
 import fimsUploadDatatypes from './upload/uploadDatatypes.component';
 import fimsUploadExpedition from './upload/uploadExpedition.component';
@@ -26,7 +25,6 @@ export default angular
   .run(routing)
   .component('fimsMetadata', fimsMetadata)
   .component('fimsValidation', fimsValidation)
-  .component('fimsValidate', fimsValidate)
   .component('fimsUpload', fimsUpload)
   .component('fimsUploadDatatypes', fimsUploadDatatypes)
   .component('fimsUploadExpedition', fimsUploadExpedition)

@@ -1,7 +1,7 @@
-<div class="col-sm-8">
+<div class="col-xs-12">
   <div class="form-group" show-errors ng-if="$ctrl.availableTypes.length > 1">
-    <label class="col-xs-3 control-label">Data Type(s)</label>
-    <div class="col-xs-9">
+    <label class="col-xs-2 control-label">Data Type(s)</label>
+    <div class="col-xs-10">
       <label class="checkbox-inline" ng-repeat="type in $ctrl.availableTypes track by type.name">
         <input type="checkbox" ng-model="$ctrl.dataTypes[type.name]" name="{{type.name}}" ng-required="type.isRequired($ctrl.dataTypes) || !$ctrl.dataTypeSelected"
           ng-click="$ctrl.handleChange()" />

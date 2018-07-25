@@ -10,7 +10,8 @@
         </md-list-item>
         <md-list-item ng-click="$ctrl.$state.go('validate')">
             <md-icon md-font-icon="fa fa-upload fa-fw"></md-icon>
-            <p>Validate and Upload Data</p>
+            <p ng-if="$ctrl.currentUser">Load Data</p>
+            <p ng-if="!$ctrl.currentUser">Validate Data</p>
         </md-list-item>
     </md-list>
 
