@@ -72,7 +72,15 @@ class ValidationController {
     ).then(data => {
       if (!data) return false;
 
+      if (data.hasError || !data.exception) {
+        this.results.showValidationMessages = true;
+      }
+
       if (!uploadData.upload) {
+        if (data.isValid) {
+          this.results.showSuccessMessages = true;
+          this.results.successMessage = 'Successfully Validated!';
+        }
         this.results.validation = data;
         this.modalInstance.close();
         this.activeTab = 1;
@@ -83,7 +91,6 @@ class ValidationController {
         this.continueUpload(data.id);
       } else if (data.hasError) {
         this.results.validation = data;
-        if (!data.exception) this.results.showValidationMessages = true;
         this.results.showOkButton = true;
         return false;
       }
