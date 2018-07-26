@@ -64,19 +64,6 @@ class ValidationController {
     checkBrowser(this.$mdDialog);
   }
 
-  validate(data) {
-    this.validateSubmit(
-      Object.assign({}, data, {
-        projectId: this.currentProject.projectId,
-        expeditionCode: this.expeditionCode,
-        upload: false,
-      }),
-    ).then(resp => {
-      this.results.validation = resp;
-      this.modalInstance.close();
-    });
-  }
-
   handleUpload(uploadData) {
     const { projectId } = this.currentProject;
 
@@ -85,11 +72,25 @@ class ValidationController {
     ).then(data => {
       if (!data) return false;
 
+      if (data.hasError || !data.exception) {
+        this.results.showValidationMessages = true;
+      }
+
+      if (!uploadData.upload) {
+        if (data.isValid) {
+          this.results.showSuccessMessages = true;
+          this.results.successMessage = 'Successfully Validated!';
+        }
+        this.results.validation = data;
+        this.modalInstance.close();
+        this.activeTab = 1;
+        return false;
+      }
+
       if (data.isValid) {
         this.continueUpload(data.id);
       } else if (data.hasError) {
         this.results.validation = data;
-        if (!data.exception) this.results.showValidationMessages = true;
         this.results.showOkButton = true;
         return false;
       }
@@ -136,7 +137,10 @@ class ValidationController {
 
   validateSubmit(data) {
     // Clear the results
-    this.results = Object.assign({}, defaultResults, { showStatus: true });
+    this.results = Object.assign({}, defaultResults, {
+      showStatus: true,
+      status: 'Uploading...',
+    });
     this.openResultsModal();
     return this.DataService.validate(data)
       .then(
@@ -147,7 +151,7 @@ class ValidationController {
             );
 
             listener.on('status', status => {
-              this.results.status = status;
+              this.results.status = `Uploading...\n${status}`;
               this.results.validation.exception = null;
             });
             listener.on('result', resolve);

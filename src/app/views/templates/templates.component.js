@@ -143,6 +143,7 @@ class TemplateController {
   }
 
   templateChange() {
+    this.defAttribute = undefined;
     if (angular.equals(this.template, DEFAULT_TEMPLATE)) {
       this.selected = this.required.concat(
         this.projectConfig.suggestedAttributes(this.worksheet),

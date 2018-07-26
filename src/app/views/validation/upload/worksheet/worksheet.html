@@ -17,9 +17,9 @@
         </div>
     </div>
 </div>
-<div class="col-sm-8">
+<div class="col-sm-8" ng-if="$ctrl.canReload">
     <div class="form-group" show-errors>
-        <label class="col-xs-3 control-label">Reload Data</label>
+        <label class="col-xs-3 control-label"></label>
         <div class="col-xs-9">
             <label class="checkbox-inline">
                 <input type="checkbox" ng-model="$ctrl.reload" name="{{$ctrl.worksheet}}_reload" ng-click="$ctrl.handleChange()"

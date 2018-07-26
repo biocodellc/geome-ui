@@ -31,32 +31,36 @@ export default (
   $transitions.onSuccess({}, trans => (prevState = trans.to().name));
 
   // setup dialog for workbench states if no project is selected
-  $transitions.onBefore({ to: checkProjectViewPresent }, trans => {
-    if (ProjectService.currentProject()) return Promise.resolve();
+  $transitions.onBefore(
+    { to: checkProjectViewPresent },
+    trans => {
+      if (ProjectService.currentProject()) return Promise.resolve();
 
-    const scope = Object.assign($rootScope.$new(true), {
-      isAuthenticated: !!UserService.currentUser(),
-    });
-
-    return $mdDialog
-      .show({
-        template:
-          '<project-selector-dialog is-authenticated="isAuthenticated"></project-selector-dialog>',
-        scope,
-      })
-      .then(project => {
-        ProjectLoadingEmitter.emit(LOADING_PROJECT_EVENT);
-        return ProjectService.setCurrentProject(project);
-      })
-      .then(() => {
-        ProjectLoadingEmitter.emit(FINISHED_LOADING_PROJECT_EVENT);
-      })
-      .catch(() => {
-        let state = prevState || 'query';
-        if (!UserService.currentUser() && checkProjectViewPresent(state)) {
-          state = 'query';
-        }
-        return trans.router.stateService.target(state);
+      const scope = Object.assign($rootScope.$new(true), {
+        isAuthenticated: !!UserService.currentUser(),
       });
-  });
+
+      return $mdDialog
+        .show({
+          template:
+            '<project-selector-dialog is-authenticated="isAuthenticated"></project-selector-dialog>',
+          scope,
+        })
+        .then(project => {
+          ProjectLoadingEmitter.emit(LOADING_PROJECT_EVENT);
+          return ProjectService.setCurrentProject(project);
+        })
+        .then(() => {
+          ProjectLoadingEmitter.emit(FINISHED_LOADING_PROJECT_EVENT);
+        })
+        .catch(() => {
+          let state = prevState || 'query';
+          if (!UserService.currentUser() && checkProjectViewPresent(state)) {
+            state = 'query';
+          }
+          return trans.router.stateService.target(state);
+        });
+    },
+    { priority: 50 },
+  );
 };

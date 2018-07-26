@@ -1,16 +1,17 @@
 <md-sidenav flex class="md-sidenav-left" md-is-locked-open="true" md-whiteframe="4">
     <md-list>
-        <md-list-item ng-click="$ctrl.$state.go('dashboard')">
-            <md-icon md-font-icon="fa fa-file-excel-o fa-fw"></md-icon>
-            <p>Project Overview</p>
+        <md-list-item ng-click="$ctrl.$state.go('validate')">
+            <md-icon md-font-icon="fa fa-upload fa-fw"></md-icon>
+            <p ng-if="$ctrl.currentUser">Load Data</p>
+            <p ng-if="!$ctrl.currentUser">Validate Data</p>
         </md-list-item>
         <md-list-item ng-click="$ctrl.$state.go('template')">
             <md-icon md-font-icon="fa fa-file-excel-o fa-fw"></md-icon>
             <p>Generate Template</p>
         </md-list-item>
-        <md-list-item ng-click="$ctrl.$state.go('validate')">
-            <md-icon md-font-icon="fa fa-upload fa-fw"></md-icon>
-            <p>Validate and Upload Data</p>
+        <md-list-item ng-click="$ctrl.$state.go('dashboard')">
+            <md-icon md-font-icon="fa fa-desktop fa-fw"></md-icon>
+            <p>Project Overview</p>
         </md-list-item>
     </md-list>
 
