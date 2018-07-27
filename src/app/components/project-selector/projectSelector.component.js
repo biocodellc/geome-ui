@@ -53,7 +53,7 @@ class ProjectSelectorController {
   }
 
   go() {
-    this.$mdDialog.cancel(console.log(this.$state.target('login')));
+     this.$mdDialog.cancel(this.$state.target('login'));
   }
 
 

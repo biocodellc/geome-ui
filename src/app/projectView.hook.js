@@ -37,7 +37,6 @@ export default (
     const scope = Object.assign($rootScope.$new(true), {
       isAuthenticated: !!UserService.currentUser(),
     });
-
     return $mdDialog
       .show({
         template:
@@ -51,12 +50,18 @@ export default (
       .then(() => {
         ProjectLoadingEmitter.emit(FINISHED_LOADING_PROJECT_EVENT);
       })
-      .catch(() => {
-        let state = prevState || 'query';
+      .catch(targetState => {
+        let stateService = trans.router.stateService;
+        let state = prevState || 'query' || targetState;
+
+        if (targetState) {
+          state = targetState._identifier;
+        }
         if (!UserService.currentUser() && checkProjectViewPresent(state)) {
           state = 'query';
         }
-        return trans.router.stateService.target(state);
+
+        return stateService.target(state);
       });
   });
 };
