@@ -20,7 +20,7 @@ class AttributeDefController {
 
   getListFields(listName) {
     const list = this._config.getList(listName);
-    return list ? list.field : [];
+    return list ? list.fields : [];
   }
 }
 

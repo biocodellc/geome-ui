@@ -62,6 +62,8 @@ export default (
         }
 
         return stateService.target(state);
-      });
-  });
+      })
+    },
+    { priority: 50 },
+  );
 };

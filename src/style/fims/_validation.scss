@@ -39,10 +39,6 @@ fims-worksheet-data {
 
 // TODO remove this when we migrate the validation page away from bootstrap
 .md-button.help-link {
-    position: absolute;
-    margin-top: 11px;
-    margin-left: -7.5px;
-    width: 16px;
     line-height: 16px;
     height: 16px;
     min-height: 0;
@@ -60,6 +56,13 @@ fims-worksheet-data {
         font-size: 16px;
         line-height: 16px;
     }
+}
+.md-button.sequence-help-link {
+    @extend .md-button.help-link;
+    width: 16px;
+    position: absolute;
+    margin-top: 11px;
+    margin-left: -7.5px;
 }
 
 .split-form-group-col {

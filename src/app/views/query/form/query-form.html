@@ -130,7 +130,7 @@
             <div flex="40" class="filter-select">
               <md-select ng-model="$chip.column" md-container-class="query-form">
                 <md-optgroup label="{{group}}" ng-repeat="group in $ctrl.filterOptionsGroups">
-                  <md-option ng-value="opt.column" ng-repeat="opt in $ctrl.filterOptions | filter: {group: group} | filter: {group: '!hidden'} track by opt.column">{{opt.column}}</md-option>
+                  <md-option ng-value="opt.column" ng-repeat="opt in $ctrl.filterOptions | filter: {group: group} | filter: {group: '!hidden'} track by opt.column">{{opt.column.split('.')[1]}}</md-option>
                   <md-divider></md-divider>
                 </md-optgroup>
               </md-select>

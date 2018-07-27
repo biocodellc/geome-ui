@@ -4,6 +4,20 @@ import authService from './auth.service';
 
 const { restRoot } = config;
 
+function transformResults(data) {
+  const records = [];
+
+  if (data.Sample) {
+    data.Sample.forEach(s => {
+      const record = s;
+      record.event = data.Event.find(e => e.eventID === s.eventID);
+      records.push(record);
+    });
+  }
+
+  return records;
+}
+
 class QueryService {
   constructor($http, $window, FileService) {
     'ngInject';
@@ -28,15 +42,22 @@ class QueryService {
       };
 
       if (response.data) {
-        results.size = response.data.size;
-        results.page = response.data.number;
-        results.totalElements = response.data.totalElements;
+        results.data = transformResults(response.data.content);
 
-        if (results.totalElements === 0) {
+        results.page = response.data.page;
+        results.totalElements = results.data.length;
+
+        if (results.data.length === 0) {
           angular.toaster('No results found.');
         }
 
-        results.data = response.data.content;
+        // TODO: Remove this, and implement dynamic loading. Set limit to 1000
+        // and if 1k results are returned, ask the user if they want to load more.
+        if (results.totalElements === limit) {
+          angular.toaster(
+            'Query results are limited to 10,000. Either narrow your search or download the results to view everything.',
+          );
+        }
       }
 
       return results;

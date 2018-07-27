@@ -11,6 +11,7 @@ class QueryTableController {
   $onInit() {
     this.tableColumns = [
       'principalInvestigator',
+      'eventID',
       'materialSampleID',
       'locality',
       'decimalLatitude',
@@ -55,8 +56,8 @@ class QueryTableController {
   greatly improving the performance of sizable tables
   */
   prepareTableData(data) {
-    this.tableData = data.map(resource =>
-      this.tableColumns.map(key => resource[key]),
+    this.tableData = data.map(sample =>
+      this.tableColumns.map(key => sample[key] || sample.event[key]),
     );
   }
 }
