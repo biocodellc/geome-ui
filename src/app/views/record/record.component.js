@@ -78,17 +78,47 @@ const childRecordDetails = {
 };
 
 const mainRecordDetails = {
-  Event: [],
-  Sample: [
-    'materialSampleID',
-    'species',
-    'genus',
-    'principalInvestigator',
-    'bcid',
-  ],
-  Tissue: [],
-  fastaSequence: ['marker', 'identifier', 'sequence', 'bcid'],
-  fastqMetadata: ['materialSampleID', 'bioSample', 'bcid'],
+  Event: {},
+  Sample: {
+    materialSampleID: getKey('materialSampleID'),
+    species: getKey('species'),
+    genus: getKey('genus'),
+    principalInvestigator: getKey('principalInvestigator'),
+    bcid: s => ({
+      text: s.bcid,
+      href: `https://n2t.net/${s.bcid}`,
+    }),
+  },
+  Tissue: {},
+  fastaSequence: {
+    marker: getKey('marker'),
+    sequence: getKey('sequence'),
+    bcid: s => ({
+      text: s.bcid,
+      href: `https://n2t.net/${s.bcid}`,
+    }),
+  },
+  fastqMetadata: {
+    materialSampleID: getKey('materialSampleID'),
+    bioSamplesLink: m => ({
+      text: m.bioSample ? 'NCBI BioSamples' : undefined,
+      href: m.bioSample
+        ? `https://www.ncbi.nlm.nih.gov/bioproject/${m.bioSample.bioProjectId}`
+        : undefined,
+    }),
+    bioProjectLink: m => ({
+      text: m.bioSample ? 'NCBI BioProject' : undefined,
+      href: m.bioSample
+        ? `https://www.ncbi.nlm.nih.gov/biosample?LinkName=bioproject_biosample_all&from_uid=${
+            m.bioSample.bioProjectId
+          }`
+        : undefined,
+    }),
+    bcid: s => ({
+      text: s.bcid,
+      href: `https://n2t.net/${s.bcid}`,
+    }),
+  },
 };
 
 const mapChildren = children =>
@@ -117,10 +147,11 @@ class RecordController {
     if ('record' in changesObj && this.record) {
       this.setParentDetail(this.record.parent);
       this.setChildDetails(this.record.children);
-      this.parent = this.record.paren;
+      this.parent = this.record.parent;
       this.children = this.record.children;
+      const { projectId } = this.record;
       this.record = this.record.record;
-      this.fetchConfig();
+      this.fetchConfig(projectId);
     }
   }
 
@@ -135,40 +166,25 @@ class RecordController {
     if (detailCache.main) {
       return detailCache.main;
     }
-    detailCache.main = Object.keys(this.record)
-      .filter(k => mainRecordDetails[this.record.entity].includes(k))
-      .reduce((accumulator, key) => {
-        const val = { text: this.record[key] };
-        if (key === 'bcid') {
-          val.href = `https://n2t.net/${this.record[key]}`;
-        }
-
-        if (key === 'bioSample') {
-          accumulator.bioSamplesLink = {
-            text: 'NCBI BioSamples',
-            href: `https://www.ncbi.nlm.nih.gov/bioproject/${
-              this.record.bioSample.bioProjectId
-            }`,
-          };
-          accumulator.bioProjectLink = {
-            text: 'NCBI BioProject',
-            href: `https://www.ncbi.nlm.nih.gov/biosample?LinkName=bioproject_biosample_all&from_uid=${
-              this.record.bioSample.bioProjectId
-            }`,
-          };
-        } else {
-          accumulator[key] = val;
-        }
-        return accumulator;
-      }, {});
+    const detailMap = mainRecordDetails[this.record.entity];
+    detailCache.main = Object.keys(detailMap).reduce(
+      (accumulator, key) =>
+        Object.assign(accumulator, { [key]: detailMap[key](this.record) }),
+      {},
+    );
     return detailCache.main;
   }
 
   auxiliaryRecordDetails(index) {
     const numCols = this.$mdMedia('gt-sm') ? 2 : 1;
 
-    if (detailCache[index] && detailCacheNumCols === numCols)
-      return detailCache[index];
+    if (['fastaSequence', 'fastqMetadata'].includes(this.record.entity)) {
+      return undefined;
+    }
+
+    if (detailCache[index] && detailCacheNumCols === numCols) {
+      return detailCache[index] === {} ? undefined : detailCache[index];
+    }
 
     if (detailCacheNumCols !== numCols) {
       Object.keys(detailCache).forEach(k => {
@@ -179,7 +195,7 @@ class RecordController {
 
     const keys = Object.keys(this.record).filter(
       k =>
-        !mainRecordDetails[this.record.entity].includes(k) &&
+        !Object.keys(mainRecordDetails[this.record.entity]).includes(k) &&
         !['bcid', 'entity'].includes(k),
     );
 
@@ -198,7 +214,7 @@ class RecordController {
       return accumulator;
     }, {});
 
-    return detailCache[index];
+    return detailCache[index] === {} ? undefined : detailCache[index];
   }
 
   setPhotos() {
@@ -206,9 +222,10 @@ class RecordController {
       .filter(e => e.type === 'Photo')
       .map(e => e.conceptAlias);
 
-    this.photos = Object.keys(this.children)
-      .filter(e => photoEntities.includes(e))
-      .reduce((accumulator, k) => accumulator.concat(this.children[k]), [])
+    if (!this.children) return;
+
+    this.photos = this.children
+      .filter(e => photoEntities.includes(e.entity))
       .sort((a, b) => a.qualityScore > b.qualityScore)
       .map(photo => ({
         id: photo.photoID,
@@ -225,7 +242,7 @@ class RecordController {
     const detailMap = parentRecordDetails[parent.entity];
     this.parentDetail = Object.keys(detailMap).reduce(
       (accumulator, key) =>
-        Object.assign(accumulator, { key: detailMap[key](parent) }),
+        Object.assign(accumulator, { [key]: detailMap[key](parent) }),
       {},
     );
   }
@@ -255,19 +272,16 @@ class RecordController {
     );
   }
 
-  fetchConfig() {
+  fetchConfig(projectId) {
     this.loading = true;
     // short-circuit if the config is already loaded
-    if (
-      this.currentProject &&
-      this.currentProject.projectId === this.record.projectId
-    ) {
+    if (this.currentProject && this.currentProject.projectId === projectId) {
       this.config = this.currentProject.config;
       this.loading = false;
       return;
     }
 
-    this.ProjectConfigService.get(this.record.projectId)
+    this.ProjectConfigService.get(projectId)
       .then(config => {
         this.config = config;
         this.setPhotos();

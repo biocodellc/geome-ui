@@ -9,13 +9,13 @@
       <tbody>
         <tr ng-repeat="(key, value) in $ctrl.mainRecordDetails() track by key">
           <th>{{key}}:</th>
-          <td ng-if="value.href" class="truncate">
+          <td ng-if="value.href && value.text" class="truncate">
             <a href="{{value.href}}" target="_blank">{{value.text}}</a>
           </td>
-          <td ng-if="!value.href">
+          <td ng-if="!value.href || !value.text">
             <div class="truncate">
               <md-tooltip md-direction="top" class="fix-placement" text-overflow-tooltip md-visible="false">{{value.text}}</md-tooltip>
-              {{value.text}}
+              {{value.text || 'N/A'}}
             </div>
           </td>
         </tr>
@@ -23,7 +23,7 @@
     </table>
     <div flex ng-if="$ctrl.photos">
       <div class>
-        <img src="{{$ctrl.photos[0].extUrl}}" />
+        <img ng-src="{{$ctrl.photos[0].extUrl}}" />
       </div>
       <!-- <ng-image-gallery images="$ctrl.photos" thumbnails="true" thumb-size="80" inline="true"
         bubble-size="integer | model" img-bubbles="true" img-anim="fadeup" on-open="$ctrl.inlineGallery = false"
@@ -31,9 +31,9 @@
     </div>
   </div>
 
-  <md-divider ng-if="$ctrl.auxiliaryRecordDetails(0) !== '{}'"></md-divider>
+  <md-divider ng-if="$ctrl.auxiliaryRecordDetails(0)"></md-divider>
 
-  <div class="auxiliary-details" ng-if="$ctrl.auxiliaryRecordDetails(0) !== {}" layout="row">
+  <div class="auxiliary-details" ng-if="$ctrl.auxiliaryRecordDetails(0)" layout="row">
     <table flex="100" flex-gt-sm="50" class="table table-condensed">
       <tbody>
         <tr ng-repeat="(key, value) in $ctrl.auxiliaryRecordDetails(0) track by key">
@@ -64,15 +64,17 @@
 
   <md-divider ng-if="$ctrl.parentDetail"></md-divider>
 
-  <div class="parent-details" ng-if="$ctrl.parentDetail">
-    <h3>Parent {{$ctrl.parent.event}}</h3>
+  <div class="parent-details horizontal-description-list" ng-if="$ctrl.parentDetail">
+    <h3>Parent {{$ctrl.parent.entity}}</h3>
     <div layout="row">
-      <dl>
+      <dl flex layout="row">
         <dt ng-repeat-start="(key, value) in $ctrl.parentDetail track by key">{{key}}:</dt>
-        <span ng-if="!value.href">{{value.text || 'N/A'}}</span>
-        <span ng-if="value.href">
-          <a href="{{value.href}}" target="_blank">{{value.text || 'N/A'}}</a>
-        </span>
+        <dd ng-repeat-end>
+          <span ng-if="!value.href">{{value.text || 'N/A'}}</span>
+          <span ng-if="value.href">
+            <a href="{{value.href}}" target="_blank">{{value.text || 'N/A'}}</a>
+          </span>
+        </dd>
       </dl>
     </div>
   </div>
@@ -80,7 +82,7 @@
 
   <md-divider ng-if="$ctrl.childDetails"></md-divider>
 
-  <div class="child-details" ng-if="$ctrl.childDetails">
+  <div class="child-details horizontal-description-list" ng-if="$ctrl.childDetails">
     <h3>Child Entities</h3>
     <div class="entity-group" ng-repeat="(entity, children) in $ctrl.childDetails track by entity">
       <div layout="row" ng-repeat="child in children track by $index">

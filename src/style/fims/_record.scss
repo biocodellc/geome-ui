@@ -26,6 +26,7 @@
     }
     td>a,
     td>.truncate {
+        display: block;
         padding: 5px;
     }
     .table {
@@ -51,10 +52,14 @@
     }
 }
 
+.parent-details,
 .child-details {
     h3 {
         margin-bottom: 32px;
     }
+}
+
+.child-details {
     .entity {
         font-weight: 600;
         margin-right: 24px;
@@ -62,6 +67,9 @@
     .entity-group {
         margin: 8px 0;
     }
+}
+
+.horizontal-description-list {
     dl {
         margin-bottom: 8px;
     }
