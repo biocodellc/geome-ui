@@ -2,6 +2,7 @@ import angular from 'angular';
 import uirouter from '@uirouter/angularjs';
 import bootstrap from 'angular-ui-bootstrap';
 import ngMaterial from 'angular-material';
+import ngAnimate from 'angular-animate';
 
 // todo remove the following and use only angular-ui-bootstrap
 import 'jquery-ui';
@@ -16,6 +17,7 @@ import routing from './app.routes';
 import router from './utils/router';
 import postInterceptor from './postInterceptor';
 import autofocus from './directives/autofocus.directive';
+import textOverflowTooltip from './directives/textOverflowTooltip.directive';
 import showErrors from './directives/showErrors.directive';
 import mdPopover from './directives/mdPopover.directive';
 import mdSticky from './directives/mdSticky.directive';
@@ -56,12 +58,14 @@ const dependencies = [
   router,
   postInterceptor,
   autofocus,
+  textOverflowTooltip,
   showErrors,
   mdPopover,
   mdSticky,
   trustedHtml,
   bootstrap,
   ngMaterial,
+  ngAnimate,
   projectService,
   userService,
   containerPage,

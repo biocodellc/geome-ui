@@ -1,35 +1,101 @@
-<div class="full-page-header-bottom-border"></div>
 <div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
   <md-progress-circular md-mode="indeterminate"></md-progress-circular>
 </div>
-<div class="sample-detail" ng-show="!$ctrl.loading">
-  <div class="detail-wrapper">
-    <p>identifier:
-      <span class="h3" style="margin-left: 10px;text-transform: none;">{{$ctrl.record.bcid}}</span>
-    </p>
+<div layout="column" class="record-detail" ng-show="!$ctrl.loading">
+  <h2>{{$ctrl.record.entity}} {{$ctrl.getIdentifier($ctrl.record)}}</h2>
 
-    <p style="margin-top: 24px; margin-bottom: 5px;" ng-show="$ctrl.bioProjectLink">
-      <strong>NCBI BioProject:</strong>
-      <a href="{{ $ctrl.bioProjectLink }}" target="_blank">{{$ctrl.bioProjectLink}}</a>
-    </p>
-    <p ng-show="$ctrl.bioSamplesLink">
-      <strong>NCBI BioSamples:</strong>
-      <a href="{{$ctrl.bioSamplesLink}}" target="_blank">{{$ctrl.bioSamplesLink}}</a>
-    </p>
-
-    <table class="table table-condensed table-striped text-nowrap">
-      <thead>
-        <tr>
-          <th>Term</th>
-          <th>Value</th>
-        </tr>
-      </thead>
+  <div class="main-details" layout="row" layout-align="center center">
+    <table flex class="table table-condensed">
       <tbody>
-        <tr ng-repeat="(key, value) in ::$ctrl.filterDisplayKeys($ctrl.record) track by ::key" ng-if="value">
-          <td>{{ ::key }}</td>
-          <td>{{ ::value }}</td>
+        <tr ng-repeat="(key, value) in $ctrl.mainRecordDetails() track by key">
+          <th>{{key}}:</th>
+          <td ng-if="value.href && value.text" class="truncate">
+            <a href="{{value.href}}" target="_blank">{{value.text}}</a>
+          </td>
+          <td ng-if="!value.href || !value.text">
+            <div class="truncate">
+              <md-tooltip md-direction="top" class="fix-placement" text-overflow-tooltip md-visible="false">{{value.text}}</md-tooltip>
+              {{value.text || 'N/A'}}
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div flex ng-if="$ctrl.photos">
+      <div class>
+        <img ng-src="{{$ctrl.photos[0].extUrl}}" />
+      </div>
+      <!-- <ng-image-gallery images="$ctrl.photos" thumbnails="true" thumb-size="80" inline="true"
+        bubble-size="integer | model" img-bubbles="true" img-anim="fadeup" on-open="$ctrl.inlineGallery = false"
+        on-close="$ctrl.inlineGallery = true"></ng-image-gallery> -->
+    </div>
+  </div>
+
+  <md-divider ng-if="$ctrl.auxiliaryRecordDetails(0)"></md-divider>
+
+  <div class="auxiliary-details" ng-if="$ctrl.auxiliaryRecordDetails(0)" layout="row">
+    <table flex="100" flex-gt-sm="50" class="table table-condensed">
+      <tbody>
+        <tr ng-repeat="(key, value) in $ctrl.auxiliaryRecordDetails(0) track by key">
+          <th>{{key}}:</th>
+          <td>
+            <div class="truncate">
+              <md-tooltip md-direction="top" class="fix-placement" text-overflow-tooltip md-visible="false">{{value}}</md-tooltip>
+              {{value}}
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table flex="100" flex-gt-sm="50" class="table table-condensed">
+      <tbody>
+        <tr ng-repeat="(key, value) in $ctrl.auxiliaryRecordDetails(1) track by key">
+          <th>{{key}}:</th>
+          <td>
+            <div class="truncate">
+              <md-tooltip md-direction="top" class="fix-placement" text-overflow-tooltip md-visible="false">{{value}}</md-tooltip>
+              {{value}}
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
   </div>
-</div>
+
+  <md-divider ng-if="$ctrl.parentDetail"></md-divider>
+
+  <div class="parent-details horizontal-description-list" ng-if="$ctrl.parentDetail">
+    <h3>Parent {{$ctrl.parent.entity}}</h3>
+    <div layout="row">
+      <dl flex layout="row">
+        <dt ng-repeat-start="(key, value) in $ctrl.parentDetail track by key">{{key}}:</dt>
+        <dd ng-repeat-end>
+          <span ng-if="!value.href">{{value.text || 'N/A'}}</span>
+          <span ng-if="value.href">
+            <a href="{{value.href}}" target="_blank">{{value.text || 'N/A'}}</a>
+          </span>
+        </dd>
+      </dl>
+    </div>
+  </div>
+
+
+  <md-divider ng-if="$ctrl.childDetails"></md-divider>
+
+  <div class="child-details horizontal-description-list" ng-if="$ctrl.childDetails">
+    <h3>Child Entities</h3>
+    <div class="entity-group" ng-repeat="(entity, children) in $ctrl.childDetails track by entity">
+      <div layout="row" ng-repeat="child in children track by $index">
+        <span class="entity">{{entity}}</span>
+        <dl flex layout="row">
+          <dt ng-repeat-start="(key, value) in child track by key">{{key}}:</dt>
+          <dd ng-repeat-end>
+            <span ng-if="!value.href">{{value.text || 'N/A'}}</span>
+            <span ng-if="value.href">
+              <a href="{{value.href}}" target="_blank">{{value.text || 'N/A'}}</a>
+            </span>
+          </dd>
+        </dl>
+      </div>
+    </div>
+  </div>
