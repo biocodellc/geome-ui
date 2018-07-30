@@ -31,46 +31,48 @@ export default (
   $transitions.onSuccess({}, trans => (prevState = trans.to().name));
 
   // setup dialog for workbench states if no project is selected
-  $transitions.onBefore({ to: checkProjectViewPresent }, trans => {
-    if (ProjectService.currentProject()) return Promise.resolve();
-    
-    const scope = Object.assign($rootScope.$new(true), {
-      isAuthenticated: !!UserService.currentUser(),
-    });
-    return $mdDialog
-      .show({
-        template:
-          '<project-selector-dialog is-authenticated="isAuthenticated"></project-selector-dialog>',
-        scope,
-      })
-      .then(project => {
-        ProjectLoadingEmitter.emit(LOADING_PROJECT_EVENT);
-        return ProjectService.setCurrentProject(project);
-      })
-      .then(() => {
-        ProjectLoadingEmitter.emit(FINISHED_LOADING_PROJECT_EVENT);
-      })
-      .catch(targetState => {
-        let stateService = trans.router.stateService;
+  $transitions.onBefore(
+    { to: checkProjectViewPresent },
+    trans => {
+      if (ProjectService.currentProject()) return Promise.resolve();
 
-        if (targetState) {
-          let state = targetState._identifier;
-	  //nextState and nextStateParams are executed from 
-	  //login.component.js after user logs in
-          return stateService.target(state, {
-		  nextState: trans.to(checkProjectViewPresent), 
-		  nextStateParams: trans.to(checkProjectViewPresent).params 
-	  });
-	}
+      const scope = Object.assign($rootScope.$new(true), {
+        isAuthenticated: !!UserService.currentUser(),
+      });
+      return $mdDialog
+        .show({
+          template:
+            '<project-selector-dialog is-authenticated="isAuthenticated"></project-selector-dialog>',
+          scope,
+        })
+        .then(project => {
+          ProjectLoadingEmitter.emit(LOADING_PROJECT_EVENT);
+          return ProjectService.setCurrentProject(project);
+        })
+        .then(() => {
+          ProjectLoadingEmitter.emit(FINISHED_LOADING_PROJECT_EVENT);
+        })
+        .catch(targetState => {
+          let stateService = trans.router.stateService;
 
-        let state = prevState || 'query';
-        
-	if (!UserService.currentUser() && checkProjectViewPresent(state)) {
-          state = 'query';
-        }
+          if (targetState) {
+            let state = targetState._identifier;
+            // nextState and nextStateParams are executed from
+            // login.component.js after user logs in
+            return stateService.target(state, {
+              nextState: trans.to(checkProjectViewPresent),
+              nextStateParams: trans.to(checkProjectViewPresent).params,
+            });
+          }
 
-        return stateService.target(state);
-      })
+          let state = prevState || 'query';
+
+          if (!UserService.currentUser() && checkProjectViewPresent(state)) {
+            state = 'query';
+          }
+
+          return stateService.target(state);
+        });
     },
     { priority: 50 },
   );
