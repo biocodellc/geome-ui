@@ -33,7 +33,7 @@ export default (
   // setup dialog for workbench states if no project is selected
   $transitions.onBefore({ to: checkProjectViewPresent }, trans => {
     if (ProjectService.currentProject()) return Promise.resolve();
-
+    
     const scope = Object.assign($rootScope.$new(true), {
       isAuthenticated: !!UserService.currentUser(),
     });
@@ -52,12 +52,20 @@ export default (
       })
       .catch(targetState => {
         let stateService = trans.router.stateService;
-        let state = prevState || 'query' || targetState;
 
         if (targetState) {
-          state = targetState._identifier;
-        }
-        if (!UserService.currentUser() && checkProjectViewPresent(state)) {
+          let state = targetState._identifier;
+	  //nextState and nextStateParams are executed from 
+	  //login.component.js after user logs in
+          return stateService.target(state, {
+		  nextState: trans.to(checkProjectViewPresent), 
+		  nextStateParams: trans.to(checkProjectViewPresent).params 
+	  });
+	}
+
+        let state = prevState || 'query';
+        
+	if (!UserService.currentUser() && checkProjectViewPresent(state)) {
           state = 'query';
         }
 

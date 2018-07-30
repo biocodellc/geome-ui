@@ -52,8 +52,11 @@ class ProjectSelectorController {
     this.isOpen = false;
   }
 
-  go() {
-     this.$mdDialog.cancel(this.$state.target('login'));
+  signIn() {
+    this.$mdDialog.cancel(this.$state.target('login', {
+      nextState: this.$state.nextState,
+      nextStateParams: this.$state.nextStateParams,
+    }));
   }
 
 
