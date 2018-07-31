@@ -54,13 +54,11 @@ class AppCtrl {
 
       if (hasResolvables(trans.$to())) this.loading = true;
     });
-    this.$transitions.onFinish({}, () => {
-      this.loading = false;
-    });
     this.$transitions.onError({}, () => {
       this.loading = false;
     });
     this.$transitions.onSuccess({}, transition => {
+      this.loading = false;
       this.projectView = checkProjectViewPresent(transition.$to());
     });
   }
