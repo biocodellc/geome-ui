@@ -53,15 +53,14 @@ export default (
           ProjectLoadingEmitter.emit(FINISHED_LOADING_PROJECT_EVENT);
         })
         .catch(targetState => {
-          let stateService = trans.router.stateService;
+          const stateService = trans.router.stateService;
 
-          if (targetState) {
-            let state = targetState._identifier;
+          if (targetState && targetState.withParams) {
             // nextState and nextStateParams are executed from
             // login.component.js after user logs in
-            return stateService.target(state, {
-              nextState: trans.to(checkProjectViewPresent),
-              nextStateParams: trans.to(checkProjectViewPresent).params,
+            return stateService.target(targetState._identifier, {
+              nextState: trans.to(),
+              nextStateParams: trans.to().params,
             });
           }
 
