@@ -3,13 +3,12 @@ import '../../../style/fims/_projectSelector.scss';
 const template = require('./projectSelector.html');
 
 class ProjectSelectorController {
-  constructor(ProjectService, $state, $mdDialog, $transitions) {
+  constructor(ProjectService, $state, $mdDialog) {
     'ngInject';
 
     this.ProjectService = ProjectService;
     this.$state = $state;
     this.$mdDialog = $mdDialog;
-    this.$transitions = $transitions;
   }
 
   $onInit() {
@@ -54,16 +53,14 @@ class ProjectSelectorController {
   }
 
   signIn() {
-    this.$mdDialog
-      .cancel(this.$state.target('login'))
-      .then(() => {
-        if (this.$state.current.name !== 'login') {
-          this.$state.go('login', {
-            nextState: this.$state.current.name,
-            nextStateParams: this.$state.current.params,
-          });
-        }
-      });
+    this.$mdDialog.cancel(this.$state.target('login')).then(() => {
+      if (this.$state.current.name !== 'login') {
+        this.$state.go('login', {
+          nextState: this.$state.current.name,
+          nextStateParams: this.$state.current.params,
+        });
+      }
+    });
   }
 }
 

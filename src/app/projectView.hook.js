@@ -29,7 +29,6 @@ export default (
 
   let prevState;
   $transitions.onSuccess({}, trans => (prevState = trans.to().name));
-
   // setup dialog for workbench states if no project is selected
   $transitions.onBefore(
     { to: checkProjectViewPresent },
@@ -56,8 +55,6 @@ export default (
           const stateService = trans.router.stateService;
 
           if (targetState && targetState.withParams) {
-            // nextState and nextStateParams are executed from
-            // login.component.js after user logs in
             return stateService.target(targetState._identifier, {
               nextState: trans.to(),
               nextStateParams: trans.to().params,
