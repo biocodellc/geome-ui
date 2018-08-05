@@ -3,12 +3,12 @@ import angular from 'angular';
 const template = require('./query-form.html');
 
 const SOURCE = [
-  'Sample.principalInvestigator',
   'Event.eventID',
   'Sample.eventID',
   'Sample.specimenID',
   'locality',
   'country',
+  'yearCollected',
   'decimalLatitude',
   'decimalLongitude',
   'Sample.genus',
