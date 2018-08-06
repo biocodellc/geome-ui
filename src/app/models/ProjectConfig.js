@@ -36,7 +36,6 @@ export default class ProjectConfig {
     const defaultGroup = 'Default Group';
 
     const attributes = {};
-    attributes[defaultGroup] = [];
 
     this.entities.filter(entity => entity.worksheet === sheetName).forEach(e =>
       e.attributes.forEach(attribute => {
@@ -56,7 +55,8 @@ export default class ProjectConfig {
   findAttributesByDefinition(sheetName, def) {
     return this.entities
       .filter(entity => entity.worksheet === sheetName)
-      .map(e => e.attributes.filter(a => a.defined_by === def));
+      .map(e => e.attributes.filter(a => a.definedBy === def))
+      .reduce((attributes, val) => val.concat(attributes), []);
   }
 
   findListForColumn(entity, column) {
@@ -143,6 +143,22 @@ export default class ProjectConfig {
           .filter(r => r.name === 'RequiredValue' && r.level === level)
           .map(r => r.columns)
           .reduce((result, c) => result.concat(c), []);
+
+        // hack for photo entity for now
+        // would be better to come up w/ solution in backend
+        // these don't show up b/c the PhotoEntity default rules
+        // are enforced by the PhotoValidator, and not stored on the entity itself
+        if (e.type === 'Photo') {
+          requiredColumns.push('photoID');
+          requiredColumns.push('originalUrl');
+
+          const parent = this.entities.find(
+            entity => entity.conceptAlias === e.parentEntity,
+          );
+          if (parent) {
+            requiredColumns.push(parent.uniqueKey);
+          }
+        }
 
         return e.attributes.filter(a => requiredColumns.includes(a.column));
       })

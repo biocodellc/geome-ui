@@ -45,9 +45,7 @@ angular
             (data, status, headers, config) => {
               angular.extend(metadata, data.data);
               if (vm.metadata['rdf:type'].value == DATASET_TYPE) {
-                metadata.download = `${restRoot}bcids/dataset/${
-                  vm.identifier
-                }`;
+                metadata.download = `${restRoot}bcids/dataset/${vm.identifier}`;
               }
             },
             (data, status, headers, config) => {

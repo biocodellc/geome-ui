@@ -1,3 +1,8 @@
+/* eslint-disable class-methods-use-this */
+import angular from 'angular';
+
+const template = require('./validationResults.html');
+
 class ValidationResultsController {
   isEmptyObject(obj) {
     return angular.equals({}, obj);
@@ -5,7 +10,7 @@ class ValidationResultsController {
 }
 
 export default {
-  template: require('./validationResults.html'),
+  template,
   controller: ValidationResultsController,
   bindings: {
     results: '<',

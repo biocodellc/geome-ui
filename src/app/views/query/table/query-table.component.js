@@ -10,11 +10,12 @@ class QueryTableController {
 
   $onInit() {
     this.tableColumns = [
-      'principalInvestigator',
-      'materialSampleID',
+      'eventID',
+      'specimenID',
       'locality',
       'decimalLatitude',
       'decimalLongitude',
+      'yearCollected',
       'genus',
       'species',
       'bcid',
@@ -44,8 +45,7 @@ class QueryTableController {
   detailView(resource) {
     const bcidIndex = this.tableColumns.indexOf('bcid');
     this.$window.open(
-      this.$state.href('sample', {
-        entity: 'Resource', // TODO don't hardcode this
+      this.$state.href('record', {
         bcid: resource[bcidIndex],
       }),
     );
@@ -56,8 +56,8 @@ class QueryTableController {
   greatly improving the performance of sizable tables
   */
   prepareTableData(data) {
-    this.tableData = data.map(resource =>
-      this.tableColumns.map(key => resource[key]),
+    this.tableData = data.map(sample =>
+      this.tableColumns.map(key => sample[key] || sample.event[key]),
     );
   }
 }

@@ -1,11 +1,15 @@
 import angular from 'angular';
 import ProjectConfig from '../../../models/ProjectConfig';
+import displayConfigErrors from '../../../utils/displayConfigErrors';
+
+const template = require('./config.html');
 
 class ConfigController {
-  constructor($state, ProjectConfigService) {
+  constructor($state, $mdDialog, ProjectConfigService) {
     'ngInject';
 
     this.$state = $state;
+    this.$mdDialog = $mdDialog;
     this.ProjectConfigService = ProjectConfigService;
   }
 
@@ -69,23 +73,29 @@ class ConfigController {
   }
 
   handleOnSave() {
-    angular.alerts.removeTmp();
+    this.loading = true;
     this.ProjectConfigService.save(this.config, this.currentProject.projectId)
       .then(config => {
         this.currentProject.config = config;
-        angular.alerts.success('Successfully updated project configuration!');
+        angular.toaster.success('Successfully updated project configuration!');
+        this.config = new ProjectConfig(config);
         this.updateStateData();
       })
       .catch(response => {
         if (response.status === 400) {
-          response.data.errors.forEach(error => angular.alerts.error(error));
+          displayConfigErrors(this.$mdDialog, response.data.errors);
+        } else {
+          angular.toaster.error('Error saving project configuration!');
         }
+      })
+      .finally(() => {
+        this.loading = false;
       });
   }
 }
 
 export default {
-  template: require('./config.html'),
+  template,
   controller: ConfigController,
   bindings: {
     currentProject: '<',

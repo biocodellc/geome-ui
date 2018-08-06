@@ -69,7 +69,7 @@ class ConfigOverviewController {
 
       entity.attributes.push({
         column,
-        datatype: 'STRING',
+        dataType: 'STRING',
         group: 'Default',
       });
 

@@ -16,10 +16,12 @@
       <p class="small help-block col-sm-offset-3" ng-show="$ctrl.form.fastqFileNames.$error.pattern">
         File must be a .txt file</p>
     </div>
-    <a class="help-link" href="#" uib-popover-template="'app/components/validation/templates/fastqFilenamesPopover.tpl.html'"
-      popover-title="Ex. file contents" popover-placement="right">
-      <span class="glyphicon glyphicon-question-sign glyphicon-help"></span>
-    </a>
+    <md-button class="md-icon-button sequence-help-link md-popover-button">
+      <md-popover md-popover-class="fastq-help-filenames" md-popover-group="fastqHelp" md-direction="right">
+        <div ng-include="'fastq-filenames.popover.html'"></div>
+      </md-popover>
+      <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
+    </md-button>
   </div>
 
   <div class="form-group" show-errors="">
@@ -51,7 +53,7 @@
   <div class="form-group" show-errors>
     <label for="libraryStrategy" class="col-sm-3 control-label">Library Strategy</label>
     <div class="col-sm-9 pull-left">
-      <select class="form-control" name="libraryStrategy" ng-model="$ctrl.data.libraryStrategy" ng-options="strategy for strategy in $ctrl.libraryStrategies"
+      <select class="form-control" name="libraryStrategy" ng-model="$ctrl.data.libraryStrategy" ng-options="field.value as field.value for field in $ctrl.libraryStrategies"
         ng-change="$ctrl.dataChanged()" required>
         <option value="">-- Select a Library Strategy --</option>
       </select>
@@ -59,30 +61,34 @@
         For instance if uploading using RADSeq data this is likely to be “WGS”
       </p>
     </div>
-    <a class="help-link" href="#" uib-popover-template="'app/components/validation/templates/fastq-library-strategy-popover.tpl.html'"
-      popover-placement="bottom">
-      <span class="glyphicon glyphicon-question-sign glyphicon-help"></span>
-    </a>
+    <md-button class="md-icon-button sequence-help-link md-popover-button" ng-click="list=$ctrl.libraryStrategies; name='Strategy'">
+      <md-popover md-popover-class="fastq-help" md-popover-group="fastqHelp" md-direction="bottom">
+        <div ng-include="'fastq-help.popover.html'"></div>
+      </md-popover>
+      <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
+    </md-button>
   </div>
 
   <div class="form-group" show-errors>
     <label for="librarySource" class="col-sm-3 control-label">Library Source</label>
     <div class="col-sm-9">
-      <select class="form-control" name="librarySource" ng-model="$ctrl.data.librarySource" ng-options="source for source in $ctrl.librarySources"
+      <select class="form-control" name="librarySource" ng-model="$ctrl.data.librarySource" ng-options="field.value as field.value for field in $ctrl.librarySources"
         ng-change="$ctrl.dataChanged()" required>
         <option value="">-- Select a Library Source --</option>
       </select>
     </div>
-    <a class="help-link" href="#" uib-popover-template="'app/components/validation/templates/fastq-library-source-popover.tpl.html'"
-      popover-placement="bottom">
-      <span class="glyphicon glyphicon-question-sign glyphicon-help"></span>
-    </a>
+    <md-button class="md-icon-button sequence-help-link md-popover-button" ng-click="list=$ctrl.librarySources; name='Source'">
+      <md-popover md-popover-class="fastq-help" md-popover-group="fastqHelp" md-direction="bottom">
+        <div ng-include="'fastq-help.popover.html'"></div>
+      </md-popover>
+      <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
+    </md-button>
   </div>
 
   <div class="form-group" show-errors>
     <label for="librarySelection" class="col-sm-3 control-label">Library Selection</label>
     <div class="col-sm-9">
-      <select class="form-control" name="librarySelection" ng-model="$ctrl.data.librarySelection" ng-options="selection for selection in $ctrl.librarySelections"
+      <select class="form-control" name="librarySelection" ng-model="$ctrl.data.librarySelection" ng-options="field.value as field.value for field in $ctrl.librarySelections"
         ng-change="$ctrl.dataChanged()" required>
         <option value="">-- Select a Library Selection --</option>
       </select>
@@ -90,10 +96,12 @@
         For instance if uploading using RADSeq data this is likely to be “Reduced Representation”
       </p>
     </div>
-    <a class="help-link" href="#" uib-popover-template="'app/components/validation/templates/fastq-library-selection-popover.tpl.html'"
-      popover-placement="bottom">
-      <span class="glyphicon glyphicon-question-sign glyphicon-help"></span>
-    </a>
+    <md-button class="md-icon-button sequence-help-link md-popover-button" ng-click="list=$ctrl.librarySelections; name='Selection'">
+      <md-popover md-popover-class="fastq-help" md-popover-group="fastqHelp" md-direction="bottom">
+        <div ng-include="'fastq-help.popover.html'"></div>
+      </md-popover>
+      <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
+    </md-button>
   </div>
 
   <div class="form-group" show-errors>
@@ -150,3 +158,41 @@
     </li>
   </ul>
 </div>
+
+<!----------------------------
+help templates
+ ---------------------------->
+
+<script type="text/ng-template" id="fastq-help.popover.html">
+<div>
+  <table class="table table-condensed">
+    <thead>
+      <tr>
+        <th>{{name}}</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="field in list track by field.value">
+        <td>{{ ::field.value }}</td>
+        <td>{{ ::field.definition}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</script>
+
+<script type="text/ng-template" id="fastq-filenames.popover.html">
+<div>
+  <h4>Ex. File Contents</h4>
+  <md-divider></md-divider>
+    <ol class="list-unstyled">
+        <li>Lutkas001.R1.fq.gz</li>
+        <li>Lutkas001.R2.fq.gz</li>
+        <li>Lutkas012.R1.fq.gz</li>
+        <li>Lutkas012.R2.fq.gz</li>
+        <li>Lutkas37.R1.fq.gz</li>
+        <li>Lutkas37.R2.fq.gz</li>
+    </ol>
+</div>
+</script>

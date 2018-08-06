@@ -1,11 +1,13 @@
 import angular from 'angular';
 
+const template = require('./resetPass.html');
+
 class ResetPassController {
-  constructor($location, $sce, UserService) {
+  constructor($location, $state, UserService) {
     'ngInject';
 
     this.$location = $location;
-    this.$sce = $sce;
+    this.$state = $state;
     this.UserService = UserService;
   }
 
@@ -17,18 +19,17 @@ class ResetPassController {
     // TODO use a different password strength meter
     const e = $('#pwindicator');
     if (e && !e.hasClass('pw-weak')) {
-      this.UserService.resetPassword(this.password, this.resetToken).then(() =>
-        angular.alerts.success(
-          this.$sce.trustAsHtml(
-            "Successfully reset your password. Click <a ui-sref='login' href='/login' class='alert-link'>here</a> to login.",
-          ),
-        ),
+      this.UserService.resetPassword(this.password, this.resetToken).then(
+        () => {
+          angular.toaster.success('Successfully reset your password');
+          this.$state.go('login');
+        },
       );
     }
   }
 }
 
 export default {
-  template: require('./resetPass.html'),
+  template,
   controller: ResetPassController,
 };

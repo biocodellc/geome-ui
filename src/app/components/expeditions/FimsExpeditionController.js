@@ -1,5 +1,17 @@
-export class FimsExpeditionController {
-  constructor($uibModal, $state, ExpeditionService, DataService) {
+const template = require('./delete-confirmation.tpl.html');
+
+class DeleteConfirmationController {
+  constructor($uibModalInstance, expeditionCode) {
+    'ngInject';
+
+    this.expeditionCode = expeditionCode;
+    this.delete = $uibModalInstance.close;
+    this.cancel = $uibModalInstance.dismiss;
+  }
+}
+
+export default class FimsExpeditionController {
+  constructor($uibModal, ExpeditionService, DataService) {
     'ngInject';
 
     this.$uibModal = $uibModal;
@@ -8,12 +20,17 @@ export class FimsExpeditionController {
   }
 
   exportData(projectId, expedition) {
-    this.DataService.exportData(projectId, expedition.expeditionCode);
+    this.loading = true;
+    this.DataService.exportData(projectId, expedition.expeditionCode).finally(
+      () => {
+        this.loading = false;
+      },
+    );
   }
 
   deleteExpedition(projectId, expedition) {
     const modal = this.$uibModal.open({
-      template: require('./delete-confirmation.tpl.html'),
+      template,
       size: 'md',
       controller: DeleteConfirmationController,
       controllerAs: 'vm',
@@ -27,15 +44,5 @@ export class FimsExpeditionController {
     return modal.result.then(() =>
       this.ExpeditionService.delete(projectId, expedition),
     );
-  }
-}
-
-class DeleteConfirmationController {
-  constructor($uibModalInstance, expeditionCode) {
-    'ngInject';
-
-    this.expeditionCode = expeditionCode;
-    this.delete = $uibModalInstance.close;
-    this.cancel = $uibModalInstance.dismiss;
   }
 }

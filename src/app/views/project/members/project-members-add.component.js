@@ -1,4 +1,7 @@
-self = undefined;
+import angular from 'angular';
+
+const template = require('./project-members-add.html');
+
 class ProjectMembersAddController {
   $onInit() {
     this.username = undefined;
@@ -10,7 +13,7 @@ class ProjectMembersAddController {
 }
 
 const fimsProjectMembersAdd = {
-  template: require('./project-members-add.html'),
+  template,
   controller: ProjectMembersAddController,
   bindings: {
     members: '<',

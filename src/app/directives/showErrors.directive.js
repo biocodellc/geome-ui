@@ -44,41 +44,46 @@ function showErrors($timeout, showErrorsConfig, $interpolate) {
     options = scope.$eval(attrs.showErrors);
     showSuccess = getShowSuccess(options);
     trigger = getTrigger(options);
-    // modified by RJ Ewing to allow multiple inputs under the same show-errors directive
-    const inputEls = el[0].querySelectorAll(
-      '.form-control[name], input[type=checkbox]',
-    );
-    angular.forEach(inputEls, el => {
-      inputEl = el;
+    // wrap in a $timeout so the following is run after compilation in-case ng-repeat is in the dom
+    $timeout(() => {
+      // modified by RJ Ewing to allow multiple inputs under the same show-errors directive
+      const inputEls = el[0].querySelectorAll(
+        '.form-control[name], input[type=checkbox]',
+      );
 
-      inputNgEl = angular.element(inputEl);
-      const inputName = $interpolate(inputNgEl.attr('name') || '')(scope);
+      angular.forEach(inputEls, el => {
+        inputEl = el;
 
-      if (inputName) {
-        inputNames.push(inputName);
-        inputNgEl.bind(trigger, () => {
-          blurred = true;
-          return toggleClasses(checkGroupValidity(inputNames, formCtrl));
-        });
+        inputNgEl = angular.element(inputEl);
+        const inputName = $interpolate(inputNgEl.attr('name') || '')(scope);
+
+        if (inputName) {
+          inputNames.push(inputName);
+          inputNgEl.bind(trigger, () => {
+            blurred = true;
+            return toggleClasses(checkGroupValidity(inputNames, formCtrl));
+          });
+        }
+      });
+
+      if (inputNames.length === 0) {
+        throw "show-errors element has no child input elements with a 'name' attribute and a 'form-control' class";
       }
+
+      scope.$watch(
+        () => checkGroupValidity(inputNames, formCtrl),
+        valid => {
+          if (!blurred) {
+            return;
+          }
+          return toggleClasses(valid);
+        },
+      );
+      scope.$on('show-errors-check-validity', () =>
+        toggleClasses(checkGroupValidity(inputNames, formCtrl)),
+      );
     });
 
-    if (inputNames.length === 0) {
-      throw "show-errors element has no child input elements with a 'name' attribute and a 'form-control' class";
-    }
-
-    scope.$watch(
-      () => checkGroupValidity(inputNames, formCtrl),
-      valid => {
-        if (!blurred) {
-          return;
-        }
-        return toggleClasses(valid);
-      },
-    );
-    scope.$on('show-errors-check-validity', () =>
-      toggleClasses(checkGroupValidity(inputNames, formCtrl)),
-    );
     scope.$on('show-errors-reset', () =>
       $timeout(
         () => {

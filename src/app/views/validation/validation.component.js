@@ -1,18 +1,16 @@
 import angular from 'angular';
-import XLSXReader from '../../utils/XLSXReader';
+import { findExcelCell, isExcelFile } from '../../utils/tabReader';
 
-import StatusPolling from './StatusPolling';
 import detectBrowser from '../../utils/detectBrowser';
-import { getFileExt } from '../../utils/utils';
 
 import config from '../../utils/config';
-const { naan, restRoot, mapboxToken } = config;
+
+const { naan } = config;
 
 const template = require('./validation.html');
 
 const defaultResults = {
   validation: {},
-  error: '',
   status: '',
   uploadMessage: '',
   successMessage: '',
@@ -25,43 +23,37 @@ const defaultResults = {
   showSuccessMessages: false,
 };
 
-const checkBrowser = () => {
+const checkBrowser = $mdDialog => {
   const { browser, version } = detectBrowser();
 
   if (browser === 'Explorer' && version <= 9) {
-    angular.alerts.warn(
-      `NOTE: Your browser only supports the Template Generator and not the Validation Component.
+    $mdDialog.show(
+      $mdDialog
+        .alert()
+        .clickOutsideToClose(true)
+        .title('Unsupported Browser')
+        .textContent(
+          `Your browser only supports the Template Generator and not the Validation Component.
          Use IE 11, or a recent version of Chrome, Firefox, or Safari to run data validation.`,
+        )
+        .ok('Got it!'),
     );
   }
 };
 
 class ValidationController {
-  constructor($scope, $http, $uibModal, DataService) {
+  constructor($scope, $interval, $uibModal, $mdDialog, DataService) {
     'ngInject';
 
     this.$scope = $scope;
     this.$uibModal = $uibModal;
+    this.$mdDialog = $mdDialog;
     this.DataService = DataService;
-    const latestExpeditionCode = null;
+    this.$interval = $interval;
 
-    // TODO this should go in the DataService class
-    this.polling = new StatusPolling($http, restRoot);
-    // TODO find a better place for this
-    this.polling.on('error', err => {
-      this.results.error = err;
-      this.results.showOkButton = true;
-    });
-    this.polling.on('status', status => {
-      this.results.status = status;
-      this.results.error = null;
-    });
-
-    this.fimsMetadata = null;
-    this.verifyDataPoints = false;
-    this.coordinatesVerified = false;
+    this.fimsMetadata = undefined;
+    this.latestExpeditionCode = undefined;
     this.displayResults = false;
-    this.coordinatesErrorClass = null;
     this.showGenbankDownload = false;
     this.activeTab = 0;
   }
@@ -69,7 +61,7 @@ class ValidationController {
   $onInit() {
     this.results = Object.assign({}, defaultResults);
 
-    checkBrowser();
+    checkBrowser(this.$mdDialog);
   }
 
   handleUpload(uploadData) {
@@ -77,99 +69,100 @@ class ValidationController {
 
     return this.validateSubmit(
       Object.assign({}, uploadData, { projectId }),
-    ).then(({ data }) => {
+    ).then(data => {
+      if (!data) return false;
+
+      if (data.hasError || !data.exception) {
+        this.results.showValidationMessages = true;
+      }
+
+      if (!uploadData.upload) {
+        if (data.isValid) {
+          this.results.showSuccessMessages = true;
+          this.results.successMessage = 'Successfully Validated!';
+        }
+        this.results.validation = data;
+        this.modalInstance.close();
+        this.activeTab = 1;
+        return false;
+      }
+
       if (data.isValid) {
         this.continueUpload(data.id);
       } else if (data.hasError) {
         this.results.validation = data;
         this.results.showOkButton = true;
-        this.results.showValidationMessages = true;
-      } else {
-        this.results.validation = data;
-        this.results.showValidationMessages = true;
-        this.results.showStatus = false;
-        this.results.showContinueButton = true;
-        this.results.uploadId = data.id;
-        this.results.showCancelButton = true;
-        // if (!angular.equals(this.fastqMetadata, defaultFastqMetadata)) {
-        //   this.showGenbankDownload = true;
-        // }
+        return false;
       }
+
+      Object.assign(this.results, {
+        validation: data,
+        showValidationMessages: true,
+        showStatus: false,
+        showContinueButton: true,
+        uploadId: data.id,
+        showCancelButton: true,
+      });
+
+      return this.modalInstance.result.then(success => {
+        if (success) {
+          this.latestExpeditionCode = uploadData.expeditionCode;
+          if (uploadData.dataSourceMetadata.find(m => m.dataType === 'FASTQ')) {
+            this.showGenbankDownload = true;
+          }
+        }
+        return success;
+      });
     });
   }
 
   continueUpload(uploadId) {
-    // this.polling.startPolling();
     this.results.showStatus = true;
     return this.DataService.upload(uploadId)
       .then(({ data }) => {
         this.results.successMessage = data.message;
-        this.modalInstance.close();
-        console.log(this.expeditionCode);
-        this.latestExpeditionCode = this.expeditionCode;
-        // if (!angular.equals(this.fastqMetadata, defaultFastqMetadata)) {
-        //   this.showGenbankDownload = true;
-        // }
-        // this.resetForm();
-        // }
+        this.modalInstance.close(true);
       })
       .catch(response => {
         console.log('failed ->', response);
-        this.modalInstance.close();
-        // this.results = Object.assign({}, defaultResults);
-        this.results.error =
+        this.modalInstance.close(false);
+        this.results.validation.isValid = false;
+        this.results.validation.exception =
           response.data.message ||
           response.data.error ||
           response.data.usrMessage ||
           'Server Error!';
-        // this.results.showOkButton = true;
       });
-    // .finally(this.polling.stopPolling);
   }
 
   validateSubmit(data) {
-    this.results = Object.assign({}, defaultResults);
-    this.showGenbankDownload = false;
-    // start polling here, since firefox support for progress events doesn't seem to be very good
-    // this.polling.startPolling();
-    this.results.showStatus = true;
+    // Clear the results
+    this.results = Object.assign({}, defaultResults, {
+      showStatus: true,
+      status: 'Uploading...',
+    });
     this.openResultsModal();
-    return this.DataService.validate(data).catch(response => {
-      this.results.error = response.data.usrMessage || 'Server Error!';
-      this.results.showOkButton = true;
-      return response;
-    });
-    // .finally(this.polling.stopPolling);
-  }
+    return this.DataService.validate(data)
+      .then(
+        response =>
+          new Promise(resolve => {
+            const listener = this.DataService.validationStatus(
+              response.data.id,
+            );
 
-  // TODO should this be moved to the validate component?
-  validate() {
-    const data = {
-      projectId: this.currentProject.projectId,
-      expeditionCode: this.expeditionCode,
-      upload: false,
-    };
-
-    if (['xlsx', 'xls'].includes(getFileExt(this.fimsMetadata.name))) {
-      data.workbooks = [this.fimsMetadata];
-    } else {
-      data.dataSourceMetadata = [
-        {
-          dataType: 'TABULAR',
-          filename: this.fimsMetadata.name,
-          reload: true,
-          metadata: {
-            sheetName: 'Samples', // TODO this needs to be dynamic, depending on the entity being validated
-          },
-        },
-      ];
-      data.dataSourceFiles = [this.fimsMetadata];
-    }
-
-    this.validateSubmit(data).then(response => {
-      this.results.validation = response.data;
-      this.modalInstance.close();
-    });
+            listener.on('status', status => {
+              this.results.status = `Uploading...\n${status}`;
+              this.results.validation.exception = null;
+            });
+            listener.on('result', resolve);
+          }),
+      )
+      .catch(response => {
+        this.results.validation.isValid = false;
+        this.results.validation.exception =
+          response.data.usrMessage || 'Server Error!';
+        this.results.showOkButton = true;
+      });
   }
 
   openResultsModal() {
@@ -180,7 +173,7 @@ class ValidationController {
       backdrop: 'static',
       resolve: {
         onContinue: () => () => {
-          this.continueUpload(this.results.uploadId);
+          this.continuePromise = this.continueUpload(this.results.uploadId);
           this.results.showContinueButton = false;
           this.results.showCancelButton = false;
           this.results.showValidationMessages = false;
@@ -201,69 +194,50 @@ class ValidationController {
     });
   }
 
-  // TODO move this to uploads?
-  resetForm() {
-    this.fimsMetadata = null;
-    this.fastaFiles = [];
-    this.fastaData = [];
-    this.fastaCnt = [0];
-    this.fastqFilenames = null;
-    // angular.copy(defaultFastqMetadata, this.fastqMetadata);
-    this.expeditionCode = null;
-    this.verifyDataPoints = false;
-    this.coordinatesVerified = false;
-    this.$scope.$broadcast('show-errors-reset');
-  }
-
   fimsMetadataChange(fimsMetadata) {
     this.fimsMetadata = fimsMetadata;
-    // Clear the results
-    this.results = Object.assign({}, defaultResults);
 
     if (this.fimsMetadata) {
       // Check NAAN
       this.parseSpreadsheet('~naan=[0-9]+~', 'Instructions').then(n => {
         if (naan && n && n > 0) {
-          if (n !== naan) {
-            const message = `Spreadsheet appears to have been created using a different FIMS/BCID system.
-                 Spreadsheet says NAAN = ${n}
-                 System says NAAN = ${naan}
-                 Proceed only if you are SURE that this spreadsheet is being called.
-                 Otherwise, re-load the proper FIMS system or re-generate your spreadsheet template.`;
-            angular.alerts.error(message);
+          if (Number(n) !== Number(naan)) {
+            this.$mdDialog.show(
+              this.$mdDialog
+                .alert('naanDialog')
+                .clickOutsideToClose(true)
+                .title('Incorrect NAAN')
+                .css('naan-dialog')
+                .htmlContent(
+                  `Spreadsheet appears to have been created using a different FIMS/BCID system.
+                   <br/>
+                   <br/>
+                   Spreadsheet says <strong>NAAN = ${n}</strong>
+                   <br/>
+                   System says <strong>NAAN = ${naan}</strong>
+                   <br/>
+                   <br/>
+                   Proceed only if you are SURE that this spreadsheet is being called.
+                   Otherwise, re-load the proper FIMS system or re-generate your spreadsheet template.`,
+                )
+                .ok('Proceed Anyways'),
+            );
           }
         }
       });
-
-      // generateMap('map', this.currentProject.projectId, this.fimsMetadata, mapboxToken).then(
-      //   function () {
-      //     this.verifyDataPoints = true;
-      //   }, function () {
-      //     this.verifyDataPoints = false;
-      //   }).always(function () {
-      //   // this is a hack since we are using jQuery for generateMap
-      //   this.$scope.$apply();
-      // });
-    } else {
-      this.verifyDataPoints = false;
-      this.coordinatesVerified = false;
     }
   }
 
   parseSpreadsheet(regExpression, sheetName) {
-    const splitFileName = this.fimsMetadata.name.split('.');
-
-    if (XLSXReader.exts.includes(splitFileName[splitFileName.length - 1])) {
-      return new XLSXReader()
-        .findCell(this.fimsMetadata, regExpression, sheetName)
-        .then(
-          match =>
-            match
-              ? match
+    if (isExcelFile(this.fimsMetadata)) {
+      return findExcelCell(this.fimsMetadata, regExpression, sheetName).then(
+        match =>
+          match
+            ? match
                 .toString()
                 .split('=')[1]
                 .slice(0, -1)
-              : match,
+            : match,
       );
     }
 

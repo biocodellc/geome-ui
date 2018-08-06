@@ -1,14 +1,17 @@
 import angular from 'angular';
+import { EventEmitter } from 'events';
 import fileService from './file.service';
 
 import config from '../utils/config';
+
 const { restRoot } = config;
 
 class DataService {
-  constructor($http, Upload, FileService) {
+  constructor($http, $interval, Upload, FileService) {
     'ngInject';
 
     this.$http = $http;
+    this.$interval = $interval;
     this.Upload = Upload;
     this.FileService = FileService;
   }
@@ -50,10 +53,33 @@ class DataService {
       data.dataSourceMetadata = this.Upload.jsonBlob(data.dataSourceMetadata);
     }
     return this.Upload.upload({
-      url: `${restRoot}data/validate`,
+      url: `${restRoot}data/validate?waitForCompletion=false`,
       data,
       arrayKey: '',
     }).catch(angular.catcher('Data validation failed'));
+  }
+
+  /**
+   * Poll the server to get updates on the validation progress
+   *
+   * @param {*} id - id of the validation to pol
+   * @returns EventEmitter - emits 'result' event when finished & 'status' event when the status has been updated
+   */
+  validationStatus(id) {
+    let interval;
+    const emitter = new EventEmitter();
+
+    const poll = () =>
+      this.$http.get(`${restRoot}data/validate/${id}`).then(({ data }) => {
+        if ('isValid' in data) {
+          emitter.emit('result', data);
+          this.$interval.cancel(interval);
+        } else emitter.emit('status', data.status);
+      });
+
+    poll();
+    interval = this.$interval(() => poll(), 1000);
+    return emitter;
   }
 
   upload(uploadId) {
@@ -67,12 +93,27 @@ class DataService {
       .get(`${restRoot}data/export/${projectId}/${expeditionCode}`)
       .then(response => {
         if (response.status === 204) {
-          angular.alerts.info('No resources found');
+          angular.toaster('No resources found');
           return Promise.resolve();
         }
         return this.FileService.download(response.data.url);
       })
       .catch(angular.catcher('Failed to export data'));
+  }
+
+  generateSraData(projectId, expeditionCode) {
+    return this.$http
+      .get(
+        `${restRoot}projects/${projectId}/expeditions/${expeditionCode}/generateSraFiles`,
+      )
+      .then(response => {
+        if (response.status === 204) {
+          angular.toaster('No Fastq records found.');
+          return Promise.resolve();
+        }
+        return this.FileService.download(response.data.url);
+      })
+      .catch(angular.catcher('Failed to generate SRA files'));
   }
 }
 

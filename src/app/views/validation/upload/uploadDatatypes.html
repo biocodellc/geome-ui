@@ -1,20 +1,17 @@
-<div class="form-group" show-errors ng-if="$ctrl.fastaEnabled || $ctrl.fastqEnabled" ng-class="{'has-error': $ctrl.newExpedition && !$ctrl.fims}">
-  <label class="col-xs-2 control-label">Data Type(s)</label>
-  <div class="col-xs-8">
-    <label class="checkbox-inline">
-      <input type="checkbox" ng-model="$ctrl.fims" name="fimsData" ng-required="$ctrl.newExpedition || (!$ctrl.dataTypeSelected)"
-        ng-click="$ctrl.datatypesChange()" /> Metadata
-    </label>
-    <label class="checkbox-inline">
-      <input type="checkbox" ng-model="$ctrl.fasta" name="fastaData" ng-if="$ctrl.fastaEnabled" ng-required="!$ctrl.dataTypeSelected"
-        ng-click="$ctrl.datatypesChange()" /> Fasta
-    </label>
-    <label class="checkbox-inline">
-      <input type="checkbox" ng-model="$ctrl.fastq" name="fastqData" ng-if="$ctrl.fastqEnabled" ng-required="!$ctrl.dataTypeSelected"
-        ng-click="$ctrl.datatypesChange()" /> Fastq
-    </label>
-    <p class="help-block col-xs-12" style="padding-left:0px;" ng-show="$ctrl.newExpedition && !$ctrl.fims">
-      Metadata is required if you are creating a new expedition.
-    </p>
+<div class="col-xs-12">
+  <div class="form-group" show-errors ng-if="$ctrl.availableTypes.length > 1">
+    <label class="col-xs-2 control-label">Data Type(s)</label>
+    <div class="col-xs-10">
+      <label class="checkbox-inline" ng-repeat="type in $ctrl.availableTypes track by type.name">
+        <input type="checkbox" ng-model="$ctrl.dataTypes[type.name]" name="{{type.name}}" ng-required="type.isRequired($ctrl.dataTypes) || !$ctrl.dataTypeSelected"
+          ng-click="$ctrl.handleChange()" />
+          <span ng-if="!type.isWorksheet">{{type.name}}</span>
+          <span ng-if="type.isWorksheet">{{type.name}} Worksheet</span>
+      </label>
+      <p class="help-block col-xs-12" style="padding-left:0px;" ng-repeat="type in $ctrl.availableTypes | filter:{help: '!!'} track by type.name"
+        ng-show="$ctrl.touched && type.isRequired($ctrl.dataTypes) && !$ctrl.dataTypes[type.name]">
+        {{type.help}}
+      </p>
+    </div>
   </div>
 </div>

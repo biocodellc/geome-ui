@@ -37,7 +37,7 @@ class ExpeditionService {
     }).catch(angular.catcher('Failed to update the expedition.'));
   }
 
-  deleteExpedition(projectId, expedition) {
+  delete(projectId, expedition) {
     if (!projectId) {
       return Promise.reject({ data: { error: 'No project is selected' } });
     }
@@ -80,6 +80,16 @@ class ExpeditionService {
     return this.$http.get(
       `${restRoot}projects/${projectId}/expeditions/${expeditionCode}`,
     );
+  }
+
+  stats(projectId) {
+    if (!projectId) {
+      return Promise.reject({ data: { error: 'No project is selected' } });
+    }
+
+    return this.$http
+      .get(`${restRoot}projects/${projectId}/expeditions/stats`)
+      .catch(angular.catcher('Failed to load expedition stats.'));
   }
 
   getExpeditionsForUser(projectId, includePrivate) {

@@ -4,21 +4,33 @@ import authService from './auth.service';
 
 const { restRoot } = config;
 
+function transformResults(data) {
+  const records = [];
+
+  if (data.Sample) {
+    data.Sample.forEach(s => {
+      const record = s;
+      record.event = data.Event.find(e => e.eventID === s.eventID);
+      records.push(record);
+    });
+  }
+
+  return records;
+}
+
 class QueryService {
-  constructor($http, $window, AuthService) {
+  constructor($http, $window, FileService) {
     'ngInject';
 
     this.$http = $http;
     this.$window = $window;
-    this.AuthService = AuthService;
+    this.FileService = FileService;
   }
 
-  queryJson(query, projectId, entity, page, limit) {
-    angular.alerts.removeTmp();
-
+  queryJson(query, entity, page, limit) {
     return this.$http({
       method: 'GET',
-      url: `${restRoot}projects/${projectId}/query/${entity}/json?limit=${limit}&page=${page}`,
+      url: `${restRoot}records/${entity}/json?limit=${limit}&page=${page}`,
       params: query,
       keepJson: true,
     }).then(response => {
@@ -30,77 +42,62 @@ class QueryService {
       };
 
       if (response.data) {
-        results.size = response.data.size;
-        results.page = response.data.number;
+        results.data = transformResults(response.data.content);
 
-        // TODO: I think we can remove this b/c we aren't using es anymore
-        // if (response.data.totalElements > 10000) {
-        // elasitc_search will throw an error if we try and retrieve results from 10000 and greater
-        // results.totalElements = 10000;
-        // alerts.info("Query results are limited to 10,000. Either narrow your search or download the results to view everything.")
-        // } else {
-        results.totalElements = response.data.totalElements;
-        // }
+        results.page = response.data.page;
+        results.totalElements = results.data.length;
 
-        if (results.totalElements === 0) {
-          angular.alerts.info('No results found.');
+        if (results.data.length === 0) {
+          angular.toaster('No results found.');
         }
 
-        results.data = response.data.content;
+        // TODO: Remove this, and implement dynamic loading. Set limit to 1000
+        // and if 1k results are returned, ask the user if they want to load more.
+        if (results.totalElements === limit) {
+          angular.toaster(
+            'Query results are limited to 10,000. Either narrow your search or download the results to view everything.',
+          );
+        }
       }
 
       return results;
     });
   }
 
-  downloadExcel(query, projectId, entity) {
-    return this.download('excel', query, projectId, entity);
+  downloadExcel(query, entity) {
+    return this.download('excel', query, entity);
   }
 
-  downloadKml(query, projectId, entity) {
-    return this.download('kml', query, projectId, entity);
+  downloadKml(query, entity) {
+    return this.download('kml', query, entity);
   }
 
-  downloadCsv(query, projectId, entity) {
-    return this.download('csv', query, projectId, entity);
+  downloadCsv(query, entity) {
+    return this.download('csv', query, entity);
   }
 
-  downloadFasta(query, projectId, entity) {
-    return this.download('fasta', query, projectId, entity);
+  downloadFasta(query, entity) {
+    return this.download('fasta', query, entity);
   }
 
-  downloadFastq(query, projectId, entity) {
-    return this.download('fastq', query, projectId, entity);
+  downloadFastq(query, entity) {
+    return this.download('fastq', query, entity);
   }
 
-  download(path, query, projectId, entity) {
+  download(path, query, entity) {
     return this.$http({
       method: 'GET',
-      url: `${restRoot}projects/${projectId}/query/${entity}/${path}`,
+      url: `${restRoot}records/${entity}/${path}`,
       params: query,
       keepJson: true,
     })
       .then(response => {
         if (response.status === 204) {
-          angular.alerts.info('No results found.');
+          angular.toaster('No results found.');
           return;
         }
 
-        const accessToken = this.AuthService.getAccessToken();
-        let url = new URL(response.data.url);
-
-        const parser = this.$window.document.createElement('a');
-        parser.href = url;
-
-        if (accessToken) {
-          if (parser.search) {
-            url += `&access_token=${accessToken}`;
-          } else {
-            url += `?access_token=${accessToken}`;
-          }
-        }
-
-        this.$window.open(url, '_self');
+        this.FileService.download(response.data.url);
       })
       .catch(angular.catcher('Failed downloading file!'));
   }

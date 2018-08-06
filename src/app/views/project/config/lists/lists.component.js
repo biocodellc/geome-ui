@@ -1,3 +1,5 @@
+const template = require('./lists.html');
+
 class ListsController {
   constructor($uibModal, ConfirmationService) {
     'ngInject';
@@ -37,7 +39,7 @@ class ListsController {
 }
 
 export default {
-  template: require('./lists.html'),
+  template,
   controller: ListsController,
   bindings: {
     lists: '<',

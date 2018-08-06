@@ -289,7 +289,7 @@ module.exports = (function makeWebpackConfig() {
       // Reference: https://github.com/webpack-contrib/mini-css-extract-plugin
       // Extract css files
       new MiniCssExtractPlugin({
-        filename: 'css/[name].css',
+        filename: 'css/[name]-[hash:6].css',
         allChunks: true,
       }),
 

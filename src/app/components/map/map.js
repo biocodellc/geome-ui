@@ -1,3 +1,4 @@
+import { EventEmitter } from 'events';
 import 'leaflet-draw';
 import 'leaflet.markercluster';
 import 'leaflet-draw/dist/leaflet.draw.css';
@@ -21,23 +22,34 @@ L.Icon.Default.mergeOptions({
 
 const { mapboxToken } = config;
 
-export default class Map {
+export default class Map extends EventEmitter {
   constructor(latColumn, lngColumn) {
+    super();
     this.latColumn = latColumn;
     this.lngColumn = lngColumn;
     this.markers = [];
   }
 
+  static get INIT_EVENT() {
+    return 'INIT_EVENT';
+  }
+
   /**
    * @param mapId the id of the the div container for the map
    */
-  init(mapId) {
-    this.map = L.map(mapId, {
-      center: [0, 0],
-      zoom: 1,
-      closePopupOnClick: false,
-      maxBoundsViscocity: 0.5,
-    });
+  init(mapId, opts = {}) {
+    this.map = L.map(
+      mapId,
+      Object.assign(
+        {
+          center: [0, 0],
+          zoom: 1,
+          closePopupOnClick: false,
+          maxBoundsViscocity: 0.5,
+        },
+        opts,
+      ),
+    );
 
     // fill screen with map, roughly 360 degrees of longitude
     const z = this.map.getBoundsZoom([[90, -180], [-90, 180]], true);
@@ -62,6 +74,16 @@ export default class Map {
     );
 
     this.clusterLayer = new L.MarkerClusterGroup({ chunkedLoading: true });
+    this.emit(Map.INIT_EVENT);
+  }
+
+  getKey(record, column) {
+    const split = column.split('.');
+    if (split.length === 1) {
+      return record[split[0]];
+    }
+
+    return this.getKey(record[split.shift()], split.join('.'));
   }
 
   /**
@@ -70,19 +92,23 @@ export default class Map {
    * & lngColumn
    * @param popupContentCallback the function to call to populate the popup box content. Will be passed the current resource
    */
-  setMarkers(data, popupContentCallback) {
+  setMarkers(data, popupContentCallback, popupOptions = {}) {
     this._clearMap();
 
     data.forEach(resource => {
-      const lat = resource[this.latColumn];
-      const lng = L.Util.wrapNum(resource[this.lngColumn], [0, 360], true); // center on pacific ocean
+      const lat = this.getKey(resource, this.latColumn);
+      const lng = L.Util.wrapNum(
+        this.getKey(resource, this.lngColumn),
+        [0, 360],
+        true,
+      ); // center on pacific ocean
 
-      if (isNaN(lat) || isNaN(lng)) return;
+      if (Number.isNaN(lat) || Number.isNaN(lng)) return;
 
       const marker = L.marker([lat, lng]);
 
       if (typeof popupContentCallback === 'function') {
-        marker.bindPopup(popupContentCallback(resource));
+        marker.bindPopup(popupContentCallback(resource), popupOptions);
       }
 
       this.markers.push(marker);
@@ -92,7 +118,7 @@ export default class Map {
 
     this.map.addLayer(this.clusterLayer).setMinZoom(1);
 
-    if (this.markers.length > 0) {
+    if (this.markers.length > 0 && this.clusterLayer.getBounds().isValid()) {
       this.map.fitBounds(this.clusterLayer.getBounds(), {
         padding: [30, 30],
       });

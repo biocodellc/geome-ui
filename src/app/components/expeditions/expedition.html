@@ -37,7 +37,6 @@
           </ul>
         </div>
       </div>
-
       <div class="row">
         <div class="col-xs-12" ui-view="details" on-update="$ctrl.handleExpeditionUpdate(expedition)" on-export-data="$ctrl.exportData()"
           current-project="$ctrl.currentProject" on-delete="$ctrl.handleExpeditionDelete(expedition)">
@@ -62,7 +61,9 @@
         </a>
         <a class="list-group-item" href="#" ng-click="$ctrl.exportData($ctrl.currentProject.projectId, $ctrl.expedition)">
           <strong>Export Data
-            <i class="fa fa-download fa-fw pull-right"></i>
+            <i ng-show="!$ctrl.loading" class="fa fa-download fa-fw pull-right"></i>
+            <md-progress-circular ng-show="$ctrl.loading" md-mode="indeterminate"
+            md-diameter="18" class="md-accent md-hue-3 pull-right"></md-progress-circular>
           </strong>
         </a>
       </div>

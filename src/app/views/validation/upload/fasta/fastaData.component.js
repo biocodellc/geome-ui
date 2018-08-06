@@ -1,31 +1,6 @@
 const template = require('./fastaData.html');
 
-const POPOVER_TEMPLATE = `
-<div>
-    <table class="table table-condensed">
-        <thead>
-        <tr>
-            <th>Marker</th>
-            <th>Description</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="field in $ctrl.markers track by field.value">
-            <td>{{ ::field.value }}</td>
-            <td>{{ ::field.definition}}</td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-`;
-
 class FastaDataController {
-  constructor($templateCache) {
-    'ngInject';
-
-    $templateCache.put('fastaData.popover.html', POPOVER_TEMPLATE);
-  }
-
   $onInit() {
     this.data = this.data ? this.data.slice() : [];
     if (this.data.length === 0) {

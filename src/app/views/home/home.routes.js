@@ -3,6 +3,7 @@ function getStates() {
     {
       state: 'home',
       config: {
+        parent: 'containerPageView',
         url: '/',
         component: 'home',
       },

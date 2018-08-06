@@ -1,5 +1,7 @@
 import angular from 'angular';
 
+const template = require('./edit-attribute.html');
+
 class EditAttributeController {
   $onInit() {
     this.attribute = Object.assign({}, this.attribute);
@@ -20,7 +22,7 @@ class EditAttributeController {
 }
 
 const fimsAttributeEdit = {
-  template: require('./edit-attribute.html'),
+  template,
   controller: EditAttributeController,
   bindings: {
     attribute: '<',

@@ -3,16 +3,20 @@ import angular from 'angular';
 const template = require('./query-form.html');
 
 const SOURCE = [
-  'principalInvestigator',
-  'materialSampleID',
+  'Event.eventID',
+  'Sample.eventID',
+  'Sample.specimenID',
   'locality',
   'country',
+  'yearCollected',
   'decimalLatitude',
   'decimalLongitude',
-  'genus',
-  'species',
-  // 'fastqMetadata',
-  'bcid',
+  'Sample.genus',
+  'Sample.species',
+  'fastqMetadata.identifier',
+  'fastqMetadata.identifier',
+  'Event.bcid',
+  'Sample.bcid',
 ];
 
 const defaultFilter = {
@@ -30,10 +34,11 @@ const queryTypes = {
 };
 
 class QueryFormController {
-  constructor($timeout, QueryService) {
+  constructor($timeout, $window, QueryService) {
     'ngInject';
 
     this.$timeout = $timeout;
+    this.$window = $window;
     this.QueryService = QueryService;
   }
 
@@ -41,7 +46,7 @@ class QueryFormController {
     this.hasFastqEntity = false;
 
     // view toggles
-    this.moreSearchOptions = false;
+    this.moreSearchOptions = true;
     this.showMap = true;
     this.showSequences = true;
     this.showHas = true;
@@ -88,10 +93,15 @@ class QueryFormController {
   queryJson() {
     this.toggleLoading({ val: true });
 
+    const { projectId } = this.currentProject;
+
+    const selectEntities = this.currentProject.config.entities
+      .filter(e => e.type === 'Fastq' || e.conceptAlias === 'Sample')
+      .map(e => e.conceptAlias);
+
     this.QueryService.queryJson(
-      this.params.buildQuery(SOURCE.join()),
-      this.currentProject.projectId,
-      this.currentProject.config.entities[0].conceptAlias,
+      this.params.buildQuery(projectId, selectEntities, SOURCE.join()),
+      'Event',
       0,
       10000,
     )
@@ -109,9 +119,20 @@ class QueryFormController {
       });
   }
 
+  helpDocs() {
+    const newWin = this.$window.open(
+      'http://fims.readthedocs.io/en/latest/fims/query.html',
+      '_blank',
+    );
+
+    if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
+      angular.toaster('It appears you have a popup blocker enabled');
+    }
+  }
+
   getQueryTypes(column) {
     const opt = this.filterOptions.find(o => o.column === column);
-    return opt ? queryTypes[opt.datatype.toLowerCase()] : [];
+    return opt ? queryTypes[opt.dataType.toLowerCase()] : [];
   }
 
   drawBounds() {
@@ -140,20 +161,24 @@ class QueryFormController {
 
   generateFilterOptions() {
     const { config } = this.currentProject;
-    this.filterOptions = config.entities[0].attributes.map(a => ({
-      group: a.group || 'Default Group',
-      column: a.column,
-      datatype: a.datatype,
-      list: config.findListForColumn(config.entities[0], a.column),
-    }));
-    this.filterOptionsGroups = config.entities[0].attributes.reduce(
-      (val, a) => {
-        const g = a.group || 'Default Group';
-        if (!val.includes(g)) val.push(g);
-        return val;
-      },
+    this.filterOptions = config.entities.reduce(
+      (accumulator, entity) =>
+        accumulator.concat(
+          entity.attributes.filter(a => !a.internal).map(a => ({
+            group: a.group
+              ? `${entity.conceptAlias} ${a.group}`
+              : `${entity.conceptAlias} Default Group`,
+            column: `${entity.conceptAlias}.${a.column}`,
+            dataType: a.dataType,
+            list: config.findListForColumn(entity, a.column),
+          })),
+        ),
       [],
     );
+    this.filterOptionsGroups = this.filterOptions.reduce((accumulator, a) => {
+      if (!accumulator.includes(a.group)) accumulator.push(a.group);
+      return accumulator;
+    }, []);
   }
 }
 

@@ -1,7 +1,7 @@
-<div class="form-group" show-errors>
-  <label for="expeditionCode" class="col-xs-2 control-label">Expedition Name</label>
-  <div class="row col-xs-8">
-    <div class="col-xs-8">
+<div class="col-sm-8">
+  <div class="form-group" show-errors>
+    <label for="expeditionCode" class="col-xs-3 control-label">Expedition Name</label>
+    <div class="col-xs-9">
       <div class="input-group">
         <select id="expeditionCode" name="expeditionCode" ng-change="$ctrl.onChange({ expeditionCode: $ctrl.expeditionCode })"
           ng-model="$ctrl.expeditionCode" ng-options="e.expeditionCode as e.expeditionTitle for e in $ctrl.userExpeditions | orderBy: 'expeditionTitle'"
@@ -9,9 +9,9 @@
           <option value="">-- Select an Expedition --</option>
         </select>
         <span class="input-group-btn">
-          <button class="btn btn-default">
+          <button class="btn btn-default" ng-click="$ctrl.onChange({ expeditionCode: 'CREATE' })">
             <md-tooltip md-direction="top">New expedition</md-tooltip>
-            <span class="fa fa-plus" ng-click="$ctrl.onChange({ expeditionCode: 'CREATE' })"></span>
+            <span class="fa fa-plus"></span>
           </button>
         </span>
       </div>

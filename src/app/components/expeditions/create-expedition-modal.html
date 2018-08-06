@@ -24,10 +24,10 @@
       </p>
     </div>
 
-    <div class="form-group clearfix">
-      <label>Visibility</label>
-      <select ng-model="$ctrl.expedition.visibility" class="form-control" required ng-options="v for v in $ctrl.visibilities"></select>
-    </div>
+    <!-- <div class="form-group clearfix"> -->
+    <!-- <label>Visibility</label> -->
+    <!-- <select ng-model="$ctrl.expedition.visibility" class="form-control" required ng-options="v for v in $ctrl.visibilities"></select> -->
+    <!-- </div> -->
 
     <div class="form-group" ng-repeat="p in $ctrl.metadataProperties" show-errors>
       <label for="expedition{{p.name}}">{{p.name}}</label>
@@ -35,7 +35,10 @@
     </div>
 
   </form>
-  <div class="modal-footer">
+  <div class="modal-footer" layout="row" layout-fill layout-sm="column" ng-show="$ctrl.loading" layout-align="end center">
+    <md-progress-circular md-diameter=30 md-mode="indeterminate"></md-progress-circular>
+  </div>
+  <div ng-show="!$ctrl.loading" class="modal-footer">
     <button class="btn btn-success" type="button" ng-click="$ctrl.submit()">Create</button>
     <button class="btn btn-danger" type="button" ng-click="$ctrl.dismiss()">Cancel</button>
   </div>

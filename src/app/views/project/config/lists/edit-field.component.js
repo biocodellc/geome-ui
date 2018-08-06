@@ -1,5 +1,7 @@
 import angular from 'angular';
 
+const template = require('./edit-field.html');
+
 class EditFieldController {
   $onInit() {
     this.field = Object.assign({}, this.field);
@@ -26,7 +28,7 @@ class EditFieldController {
 }
 
 const fimsFieldEdit = {
-  template: require('./edit-field.html'),
+  template,
   controller: EditFieldController,
   bindings: {
     field: '<',

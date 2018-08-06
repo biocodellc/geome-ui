@@ -2,18 +2,18 @@
     <h3 class="modal-title">Validation Results</h3>
 </div>
 <div class="modal-body">
-    <div ng-show="!$ctrl.results.status && $ctrl.isEmpty($ctrl.results.validation) && !$ctrl.results.error">
-        <span us-spinner></span></div>
     <div ng-show="$ctrl.results.showStatus" ng-bind-html="$ctrl.results.status | trusted_html"></div>
     <div ng-show="$ctrl.results.showValidationMessages || $ctrl.results.showUploadMessages || $ctrl.results.showSuccessMessages">
         <fims-validation-results results="$ctrl.results"></fims-validation-results>
     </div>
-    <div ng-show="$ctrl.results.error" ng-bind-html="$ctrl.results.error | trusted_html" class="error"></div>
+    <div ng-show="$ctrl.results.validation.exception" ng-bind-html="$ctrl.results.validation.exception | trusted_html" class="error"></div>
+    <div layout="row" layout-fill layout-sm="column" ng-show="$ctrl.results.validation.isValid === undefined" layout-align="center center">
+        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+    </div>
 </div>
 <div class="modal-footer">
     <button ng-show="$ctrl.results.showOkButton" class="btn btn-primary" type="button" ng-click="$ctrl.close()">OK</button>
-    <button ng-show="$ctrl.results.showContinueButton" class="btn btn-primary" type="button"
-            ng-click="$ctrl.onContinue()">Continue
+    <button ng-show="$ctrl.results.showContinueButton" class="btn btn-primary" type="button" ng-click="$ctrl.onContinue()">Continue
     </button>
     <button ng-show="$ctrl.results.showCancelButton" class="btn btn-primary" type="button" ng-click="$ctrl.dismiss()">Cancel
     </button>

@@ -16,7 +16,7 @@ const loadSession = (
 export default function(
   $http,
   $timeout,
-  $rootScope,
+  $animate,
   $transitions,
   $location,
   AuthService,
@@ -26,11 +26,15 @@ export default function(
 ) {
   'ngInject';
 
-  $http.defaults.headers.common = { 'Fims-App': 'Biscicol-Fims' };
+  $http.defaults.headers.common = { 'Fims-App': 'GeOMe-db' };
 
-  $rootScope.isEmpty = function(val) {
-    return angular.equals({}, val);
-  };
+  $transitions.onBefore({}, () => {
+    // disable animations on transitions.
+    // seems to be a bug where ui-router will display 2 views
+    // (current & next) during a transition while ngAnimate is
+    // used.
+    $animate.enabled(false);
+  });
 
   // this will wait for the currentProject & currentUser to be loaded from the session
   // before resolving the first route. This hook is only run on page load/refresh
@@ -43,7 +47,8 @@ export default function(
         const timeoutPromise = $timeout(() => {
           hasTimedOut = true;
           deregister();
-          console.log('loadingSession timed out, redirecting to home page');
+          console.log('loadingSession timed out, redirecting to about page');
+          angular.toaster('Timed out loading session');
           resolve(trans.router.stateService.target('about'));
         }, 10000); // timeout loading after 10 secs
 

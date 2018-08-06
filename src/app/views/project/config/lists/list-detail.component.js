@@ -3,6 +3,8 @@ import angular from 'angular';
 import fimsConfigNavbar from '../navbar.component';
 import fimsConfigField from './edit-field.component';
 
+const template = require('./list-detail.html');
+
 export class ListDetailController {
   constructor(ConfirmationService) {
     'ngInject';
@@ -11,7 +13,9 @@ export class ListDetailController {
   }
 
   $onInit() {
+    // make a copy of data we may edit
     this.list = Object.assign({}, this.list);
+    this.list.fields = this.list.fields.slice();
     if (this.addField) {
       this.newField();
     }
@@ -50,15 +54,13 @@ export class ListDetailController {
   }
 
   newField() {
-    this.list.fields.push({
-      isNew: true,
-    });
+    this.list.fields.push({});
     this.editField = this.list.fields.length - 1;
   }
 }
 
 const fimsListDetail = {
-  template: require('./list-detail.html'),
+  template,
   controller: ListDetailController,
   bindings: {
     list: '<',

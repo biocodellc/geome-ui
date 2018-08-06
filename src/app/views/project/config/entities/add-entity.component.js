@@ -1,5 +1,7 @@
 import angular from 'angular';
 
+const template = require('./add-entity.html');
+
 class AddEntityController {
   $onInit() {
     this.entities = this.entities.map(c => c.conceptAlias);
@@ -9,7 +11,7 @@ class AddEntityController {
     this.parentEntity = undefined;
   }
 
-  add() {
+  addEntity() {
     const e = this.entities.find(
       alias => alias.toLowerCase() === this.conceptAlias.toLowerCase(),
     );
@@ -27,14 +29,14 @@ class AddEntityController {
         parentEntity: this.parentEntity,
         conceptURI: this.conceptURI,
         editable: true,
-        isNew: true,
+        // isNew: true,
       },
     });
   }
 }
 
 const fimsProjectConfigEntityAdd = {
-  template: require('./add-entity.html'),
+  template,
   controller: AddEntityController,
   bindings: {
     entities: '<',

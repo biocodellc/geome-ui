@@ -1,5 +1,7 @@
 import angular from 'angular';
 
+const template = require('./add-list.html');
+
 class AddListController {
   $onInit() {
     this.caseSensitive = false;
@@ -25,7 +27,7 @@ class AddListController {
 }
 
 const fimsAddList = {
-  template: require('./add-list.html'),
+  template,
   controller: AddListController,
   bindings: {
     lists: '<',

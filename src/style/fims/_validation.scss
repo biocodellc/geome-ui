@@ -1,10 +1,74 @@
 .validation {
+    .md-button {
+        margin: 0;
+    }
+    .tab-content {
+        margin-top: 20px;
+    }
+}
 
-  .md-button {
-    margin: 0;
-  }
+fims-worksheet-data {
+    .help-block {
+        margin-bottom: 0;
+    }
+}
 
-  .tab-content {
-    margin-top: 20px;
-  }
+.naan-dialog {
+    max-width: 600px;
+}
+
+.fasta-help,
+.fastq-help {
+    margin-top: 8px;
+    width: 400px;
+    text-align: left;
+}
+.fastq-help-filenames {
+    width: 200px;
+    margin-left: 11px;
+
+    h4 {
+        margin-top: 0;
+        text-transform: none;
+    }
+
+    md-divider {
+        margin-bottom: 8px;
+    }
+}
+
+// TODO remove this when we migrate the validation page away from bootstrap
+.md-button.help-link {
+    line-height: 16px;
+    height: 16px;
+    min-height: 0;
+    padding: 0;
+
+    md-icon {
+        color: #42516a;
+        min-height: 16px;
+        height: 16px;
+        min-width: 16px;
+        width: 16px;
+    }
+
+    .fa {
+        font-size: 16px;
+        line-height: 16px;
+    }
+}
+.md-button.sequence-help-link {
+    @extend .md-button.help-link;
+    width: 16px;
+    position: absolute;
+    margin-top: 11px;
+    margin-left: -7.5px;
+}
+
+.split-form-group-col {
+    padding: 0px;
+}
+
+.popover {
+    max-width: 800px;
 }

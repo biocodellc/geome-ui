@@ -10,6 +10,9 @@
         Switch Project
         <md-checkbox class="small include-public" ng-change="$ctrl.filterProjects()" ng-model="$ctrl.includePublicProjects"
           ng-show="$ctrl.isAuthenticated">
+          <!-- <md-tooltip ng-show="$ctrl.isAuthenticated && $ctrl.currentProject.public && $ctrl.includePublicProjects" md-delay="500" -->
+            <!-- md-direction="bottom">The current selected project is a public project that you are not a member of. Select a project -->
+            <!-- you are a member of to uncheck this</md-tooltip> -->
           include public
         </md-checkbox>
       </span>

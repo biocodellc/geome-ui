@@ -1,29 +1,29 @@
 import angular from 'angular';
 
+const template = require('./entity-attributes.html');
+
 class EntityAttributesController {
-  constructor($location, $anchorScroll, ConfirmationService) {
+  constructor($anchorScroll, ConfirmationService) {
     'ngInject';
 
-    this.$location = $location;
     this.$anchorScroll = $anchorScroll;
     this.ConfirmationService = ConfirmationService;
   }
 
   $onInit() {
     this.editAttribute = undefined;
-
-    const newAttributeIndex = this.attributes.findIndex(a => a.isNew);
-    if (newAttributeIndex > -1) {
-      this.editAttribute = newAttributeIndex;
-      this.$location.hash(`attribute_${newAttributeIndex}`);
-      this.$anchorScroll();
-      delete this.attributes[newAttributeIndex].isNew;
-    }
   }
 
   $onChanges(changesObj) {
-    if (changesObj.attributes) {
+    if (this.attributes && 'attributes' in changesObj) {
       this.attributes = this.attributes.slice();
+
+      const newAttributeIndex = this.attributes.findIndex(a => a.isNew);
+      if (newAttributeIndex > -1) {
+        this.editAttribute = newAttributeIndex;
+        this.$anchorScroll(`attribute_${newAttributeIndex}`);
+        delete this.attributes[newAttributeIndex].isNew;
+      }
     }
   }
 
@@ -81,7 +81,7 @@ class EntityAttributesController {
 }
 
 const fimsEntityAttributes = {
-  template: require('./entity-attributes.html'),
+  template,
   controller: EntityAttributesController,
   bindings: {
     attributes: '<',

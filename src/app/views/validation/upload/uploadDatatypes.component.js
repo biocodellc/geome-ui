@@ -2,28 +2,25 @@ const template = require('./uploadDatatypes.html');
 
 class DataTypesController {
   $onInit() {
-    this.fims = true; // only temporary
-    this.fasta = false;
-    this.fastq = false;
-    this.datatypesChange(); // only temporary
-    this.dataTypeSelected = true;
+    this.dataTypes = {};
+    this.touched = false;
+    this.dataTypeSelected = false;
   }
 
   $onChanges(changesObj) {
-    if ('config' in changesObj && changesObj.config.currentValue) {
-      this.fastaEnabled = this.config.entities.some(e => e.type === 'Fasta');
-      this.fastqEnabled = this.config.entities.some(e => e.type === 'Fastq');
+    if (this.availableTypes && 'availableTypes' in changesObj) {
+      if (this.availableTypes.length === 1) {
+        this.dataTypes[this.availableTypes[0].name] = true;
+        this.handleChange();
+      }
     }
   }
 
-  datatypesChange() {
-    this.dataTypeSelected = this.fims || this.fasta || this.fastq;
+  handleChange() {
+    this.dataTypeSelected = Object.values(this.dataTypes).some(v => v);
+    this.touched = true;
     this.onUpdate({
-      dataTypes: {
-        fims: this.fims,
-        fasta: this.fasta,
-        fastq: this.fastq,
-      },
+      dataTypes: this.dataTypes,
     });
   }
 }
@@ -32,8 +29,7 @@ export default {
   template,
   controller: DataTypesController,
   bindings: {
-    newExpedition: '<',
-    config: '<',
+    availableTypes: '<',
     onUpdate: '&',
   },
 };

@@ -1,0 +1,58 @@
+<div layout-fill layout="column">
+  <h2 class="page-header">Project Overview</h2>
+  <p class="text-center">In this system an “Expedition” includes the metadata (and Sanger sequences if applicable) from a single
+    dataset. The GUID is the globally unique persistent identifier for the expedition and should be acknowledged
+    in the original publication of the dataset and accredited when any part of that dataset is downloaded
+    for reuse.</p>
+
+  <div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
+    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+  </div>
+
+  <!-- <table class="table table-hover table-condensed text-center" ng-show="!$ctrl.loading"> -->
+  <table class="table table-hover table-condensed text-center" ng-show="$ctrl.displayResults.length > 0">
+    <thead>
+      <th class="text-center">Expedition Title</th>
+      <th class="text-center" ng-repeat="header in $ctrl.headers">{{$ctrl.humanReadableHeader(header)}}</th>
+      <th class="text-center">GUID</th>
+      <th></th>
+    </thead>
+
+    <tbody>
+      <tr ng-repeat="expedition in $ctrl.displayResults track by expedition.expeditionCode">
+        <td>{{ expedition.expeditionTitle}}</td>
+        <td ng-repeat="header in $ctrl.headers">{{ expedition[header] }}</td>
+        <td ng-show="expedition.expeditionIdentifier">
+          <a href="https://n2t.net/{{expedition.expeditionIdentifier}}">https://n2t.net/{{ expedition.expeditionIdentifier}}
+          </a>
+        </td>
+        <td ng-show="!expedition.expeditionIdentifier"></td>
+        <td ng-show="$ctrl.menuOptions(expedition).length == 0"></td>
+        <td ng-show="$ctrl.menuOptions(expedition).length > 0">
+          <md-menu ng-show="$ctrl.results" class="md-dense" md-position-mode="target-right target">
+            <md-button aria-label="Open expedition download menu" ng-click="$mdMenu.open($event)" class="md-primary md-raised download-button">
+              <!-- Download -->
+              <md-icon ng-show="$ctrl.loadingExpedition !== expedition.expeditionCode" md-font-icon="fa fa-download fa-xs"></md-icon>
+              <md-progress-circular ng-show="$ctrl.loadingExpedition === expedition.expeditionCode" md-mode="indeterminate"
+                md-diameter="18" class="md-accent md-hue-3"></md-progress-circular>
+            </md-button>
+            <md-menu-content width="2" class="md-dense download-menu-content">
+              <md-menu-item ng-repeat="opt in $ctrl.menuOptions(expedition) track by expedition.expeditionCode + opt.name">
+                <md-button ng-click="opt.fn(expedition.expeditionCode)">{{opt.name}}</md-button>
+              </md-menu-item>
+              <!-- <md-menu-item ng-show="expedition.fastaSequenceCount > 0"> -->
+                <!-- <md-button ng-click="$ctrl.downloadFasta(expedition.expeditionCode)">Fasta</md-button> -->
+              <!-- </md-menu-item> -->
+              <!-- <md-menu-item ng-show="expedition.fastqMetadataCount > 0"> -->
+                <!-- <md-button ng-click="$ctrl.downloadFastq(expedition.expeditionCode)">Fastq</md-button> -->
+              <!-- </md-menu-item> -->
+            </md-menu-content>
+          </md-menu>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <uib-pagination total-items="$ctrl.totalItems" ng-model="$ctrl.currentPage" ng-change="$ctrl.pageChanged()"
+    items-per-page="$ctrl.itemsPerPage"></uib-pagination>
+</div>

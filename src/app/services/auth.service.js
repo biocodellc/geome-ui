@@ -13,7 +13,7 @@ let triedToRefresh = false;
 let timeoutId;
 
 class AuthService extends EventEmitter {
-  constructor($state, $http, $timeout, StorageService) {
+  constructor($state, $http, $timeout, $mdDialog, StorageService) {
     'ngInject';
 
     super();
@@ -22,6 +22,7 @@ class AuthService extends EventEmitter {
     this.StorageService = StorageService;
     this.$http = $http;
     this.$timeout = $timeout;
+    this.$mdDialog = $mdDialog;
   }
 
   getAccessToken() {
@@ -38,7 +39,7 @@ class AuthService extends EventEmitter {
     };
 
     return this.$http
-      .post(`${restRoot}authenticationService/oauth/accessToken`, data)
+      .post(`${restRoot}oauth/accessToken`, data)
       .then(({ data }) => this._authSuccess(data, username))
       .catch(response => {
         this.clearTokens();
@@ -61,7 +62,7 @@ class AuthService extends EventEmitter {
 
     if (refreshToken && this._checkAuthenticated() && !triedToRefresh) {
       return this.$http
-        .post(`${restRoot}authenticationService/oauth/refresh`, {
+        .post(`${restRoot}oauth/refresh`, {
           client_id: fimsClientId,
           refresh_token: refreshToken,
         })
@@ -98,7 +99,15 @@ class AuthService extends EventEmitter {
     timeoutId = this.$timeout(() => {
       this.emit(AUTH_ERROR_EVENT);
       this.clearTokens();
-      angular.alerts.info('You have been signed out due to inactivity.');
+      this.$mdDialog
+        .show(
+          this.$mdDialog
+            .confirm()
+            .textContent('You have been signed out due to inactivity.')
+            .ok('Login')
+            .cancel('Close'),
+        )
+        .then(res => res && this.$state.go('login'));
       this.$state.go('home');
     }, authTimeout);
   }

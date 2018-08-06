@@ -3,13 +3,12 @@ import angular from 'angular';
 const template = require('./login.html');
 
 class LoginController {
-  constructor($state, UserService, AuthService, LoadingModal) {
+  constructor($state, UserService, AuthService) {
     'ngInject';
 
     this.state = $state;
     this.UserService = UserService;
     this.AuthService = AuthService;
-    this.loadingModal = LoadingModal;
   }
 
   $onInit() {
@@ -23,16 +22,15 @@ class LoginController {
   resetPassword() {
     this.UserService.sendResetPasswordToken(this.credentials.username)
       .then(() =>
-        angular.alerts.success(
-          'Successfully sent reset password token. Check your email for further instructions.',
+        angular.toaster.success(
+          'If you have provided a valid username, check your email for further instructions.',
         ),
       )
       .catch(angular.catcher('Error sending reset password token'));
   }
 
   submit() {
-    angular.alerts.removeTmp();
-    this.loadingModal.open();
+    this.loading = true;
     this.AuthService.authenticate(
       this.credentials.username,
       this.credentials.password,
@@ -51,7 +49,7 @@ class LoginController {
         this.state.go('about', {}, { reload: true, inherit: false });
       })
       .catch(angular.catcher('Error during authentication.'))
-      .finally(() => this.loadingModal.close());
+      .finally(() => (this.loading = false));
   }
 }
 

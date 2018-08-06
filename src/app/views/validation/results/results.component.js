@@ -1,28 +1,18 @@
-import angular from 'angular';
-
-import config from '../../../utils/config';
-const { restRoot } = config;
-
 const template = require('./results.html');
 
 class ResultsController {
-  constructor($window) {
+  constructor(DataService) {
     'ngInject';
 
-    this.$window = $window;
+    this.DataService = DataService;
   }
 
   downloadFastqFiles() {
     if (!this.expeditionCode) {
       return;
     }
-    // TODO use file service & another service for generateSraFiles?
-    this.$window.open(
-      `${restRoot}projects/${this.projectId}/expeditions/${
-        this.expeditionCode
-      }/generateSraFiles`,
-      '_self',
-    );
+
+    this.DataService.generateSraData(this.projectId, this.expeditionCode);
   }
 }
 

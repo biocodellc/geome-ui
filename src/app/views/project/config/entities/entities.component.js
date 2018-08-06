@@ -1,22 +1,24 @@
+const template = require('./entities.html');
+
 class EntitiesController {
-  constructor($uibModal, $location, $anchorScroll, ConfirmationService) {
+  constructor($uibModal, $anchorScroll, ConfirmationService) {
     'ngInject';
 
     this.$uibModal = $uibModal;
-    this.$location = $location;
     this.$anchorScroll = $anchorScroll;
     this.ConfirmationService = ConfirmationService;
   }
 
-  $onInit() {
-    this.entities = this.config.entities.slice(); // make a copy of the array
+  $onChanges(changesObj) {
+    if (this.config && 'config' in changesObj) {
+      this.entities = this.config.entities.slice(); // make a copy of the array
 
-    const newEntityIndex = this.entities.findIndex(e => e.isNew);
-    if (newEntityIndex > -1) {
-      this.editEntity = newEntityIndex;
-      this.$location.hash(`entity_${newEntityIndex}`);
-      this.$anchorScroll();
-      delete this.entities[newEntityIndex].isNew;
+      const newEntityIndex = this.entities.findIndex(e => e.isNew);
+      if (newEntityIndex > -1) {
+        this.editEntity = newEntityIndex;
+        this.$anchorScroll(`entity_${newEntityIndex}`);
+        delete this.entities[newEntityIndex].isNew;
+      }
     }
   }
 
@@ -63,7 +65,7 @@ class EntitiesController {
 }
 
 export default {
-  template: require('./entities.html'),
+  template,
   controller: EntitiesController,
   bindings: {
     config: '<',

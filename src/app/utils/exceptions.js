@@ -4,7 +4,7 @@ export default class {
   catcher(defaultMsg) {
     return response => {
       console.error(response);
-      angular.alerts.error(
+      angular.toaster.error(
         response.data
           ? response.data.error || response.data.usrMessage
           : defaultMsg,

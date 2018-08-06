@@ -1,7 +1,8 @@
 import angular from 'angular';
-import fileService from './file.service';
 
+import fileService from './file.service';
 import config from '../utils/config';
+
 const { restRoot } = config;
 
 class TemplateService {
@@ -16,14 +17,29 @@ class TemplateService {
     return this.$http.get(`${restRoot}projects/${projectId}/templates`);
   }
 
-  generate(projectId, sheetName, columns) {
+  generate(projectId, worksheet, columns) {
     return this.$http
       .post(`${restRoot}projects/${projectId}/templates/generate`, {
-        sheetName,
+        worksheet,
         columns,
       })
       .then(response => this.FileService.download(response.data.url))
       .catch(angular.catcher('Failed to generate template'));
+  }
+
+  save(projectId, templateName, worksheet, columns) {
+    return this.$http
+      .post(`${restRoot}projects/${projectId}/templates/${templateName}`, {
+        columns,
+        worksheet,
+      })
+      .catch(angular.catcher('Failed to save template'));
+  }
+
+  delete(projectId, templateName) {
+    return this.$http
+      .delete(`${restRoot}projects/${projectId}/templates/${templateName}`)
+      .catch(angular.catcher('Failed to delete template'));
   }
 }
 

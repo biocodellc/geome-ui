@@ -1,7 +1,8 @@
 import angular from 'angular';
-import ProjectConfig from '../../../models/ProjectConfig';
 
+import ProjectConfig from '../../../models/ProjectConfig';
 import config from '../../../utils/config';
+
 const { restRoot } = config;
 
 export default class ProjectConfigService {
@@ -17,11 +18,11 @@ export default class ProjectConfigService {
       .then(({ data }) => new ProjectConfig(data));
   }
 
-  save(config, projectId) {
+  save(projectConfig, projectId) {
     return this.$http({
       method: 'PUT',
       url: `${restRoot}projects/${projectId}/config`,
-      data: config,
+      data: projectConfig,
       keepJson: true,
     })
       .then(({ data }) => new ProjectConfig(data))
@@ -29,7 +30,7 @@ export default class ProjectConfigService {
         if (response.status !== 400 || !response.data.errors) {
           angular.catcher('Error updating config')(response);
         }
-        throw new Error(response);
+        throw response;
       });
   }
 }

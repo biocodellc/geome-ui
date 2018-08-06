@@ -4,6 +4,8 @@ import entityAttributes from './attributes/entity-attributes.component';
 import fimsAttribute from './attributes/attribute.component';
 import entityRules from './rules/entity-rules.component';
 
+const template = require('./entity-detail.html');
+
 class EntityDetailController {
   constructor($scope, $state) {
     'ngInject';
@@ -72,16 +74,15 @@ class EntityDetailController {
       const msg =
         invalidMetadata.length > 1 ? ' are all required' : ' is required';
 
-      angular.alerts.error(invalidMetadata.join(', ') + msg);
+      angular.toaster.error(invalidMetadata.join(', ') + msg);
       return;
     }
 
     if (this.entity.rules.find(r => angular.equals(r, rule))) {
-      angular.alerts.error('That rule already exists.');
+      angular.toaster.error('That rule already exists.');
       return;
     }
 
-    angular.alerts.removeTmp();
     this.entity.rules.push(rule);
     this.onUpdateEntity({
       alias: this.entity.conceptAlias,
@@ -91,8 +92,8 @@ class EntityDetailController {
   }
 
   newAttribute() {
-    this.entity.attributes.push({
-      datatype: 'STRING',
+    this.entity.attributes = this.entity.attributes.concat({
+      dataType: 'STRING',
       group: 'Default',
       isNew: true,
     });
@@ -100,7 +101,7 @@ class EntityDetailController {
 }
 
 const fimsEntityDetail = {
-  template: require('./entity-detail.html'),
+  template,
   controller: EntityDetailController,
   bindings: {
     config: '<',

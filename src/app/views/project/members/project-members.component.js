@@ -21,20 +21,20 @@ class ProjectMembersController {
       'firstName',
       'lastName',
     ];
+
     this.orderBy = this.orderByList[0];
   }
 
   handleInviteUser(email) {
     if (this.isMemberEmail(email)) {
-      angular.alerts.error(
+      angular.toaster.error(
         'A user with the email is already a member of this project.',
       );
       return;
     }
 
-    angular.alerts.removeTmp();
     this.UserService.invite(email, this.currentProject.projectId).then(() =>
-      angular.alerts.success(
+      angular.toaster(
         `${email} has been sent an invitation to create an account.`,
       ),
     );
@@ -45,13 +45,12 @@ class ProjectMembersController {
   }
 
   handleAddMember(username) {
-    angular.alerts.removeTmp();
     this.ProjectMembersService.add(
       this.currentProject.projectId,
-      this.username,
+      username,
     ).then(() => {
       this.username = undefined;
-      angular.alerts.success('Successfully added user');
+      angular.toaster.success('Successfully added user');
       this.$state.reload();
     });
   }
