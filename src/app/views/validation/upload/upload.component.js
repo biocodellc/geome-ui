@@ -164,7 +164,7 @@ class UploadController {
         .htmlContent(
           `<br/><p>All existing ${reloadSheets.join(
             ', ',
-          )} data will replaced with the data in this upload.</p><p><strong>Are you sure you want to continue?</strong></p>`,
+          )} data will replaced with the data in this upload.</p><p><strong>This will also delete any child data that references the removed rows.</strong></p><p><strong>Are you sure you want to continue?</strong></p>`,
         )
         .ok('Upload')
         .cancel('Cancel');

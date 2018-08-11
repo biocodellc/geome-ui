@@ -17,12 +17,13 @@ class TemplateService {
     return this.$http.get(`${restRoot}projects/${projectId}/templates`);
   }
 
-  generate(projectId, worksheet, columns) {
-    return this.$http
-      .post(`${restRoot}projects/${projectId}/templates/generate`, {
-        worksheet,
-        columns,
-      })
+  generate(projectId, worksheetTemplates) {
+    return this.$http({
+      method: 'POST',
+      url: `${restRoot}projects/${projectId}/templates/generate`,
+      data: worksheetTemplates,
+      keepJson: true,
+    })
       .then(response => this.FileService.download(response.data.url))
       .catch(angular.catcher('Failed to generate template'));
   }
