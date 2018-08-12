@@ -63,7 +63,7 @@ export default class QueryParams {
 
     if (this.marker) {
       if (builder.queryString.length > 0) builder.add('and');
-      builder.add(`fastaSequence.marker = "${this.marker.value}"`);
+      builder.add(`fastaSequence.marker = "${this.marker}"`);
     }
 
     if (this.hasSRAAccessions) {
