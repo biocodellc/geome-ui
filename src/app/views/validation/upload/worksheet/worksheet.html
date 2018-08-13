@@ -13,7 +13,7 @@
                 <input type="text" class="form-control" ng-value="$ctrl.file.name || invalidFile.name" readonly/>
             </div>
             <p class="help-block" ng-show="!$ctrl.valid">
-                File must have one of the following extensions: .xls, .xlsx, .csv, .tsv, or .txt</p>
+                File must have one of the following extensions: {{ $ctrl.fileTypes() }}</p>
         </div>
     </div>
 </div>
