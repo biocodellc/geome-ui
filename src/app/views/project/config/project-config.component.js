@@ -4,10 +4,11 @@ import displayConfigErrors from '../../../utils/displayConfigErrors';
 
 const template = require('./config.html');
 
-function configConfirmationController($mdDialog) {
+function configConfirmationController($mdDialog, $transitions) {
   'ngInject';
 
   const vm = this;
+
   vm.continue = $mdDialog.hide;
   vm.cancel = $mdDialog.cancel;
 }
@@ -101,20 +102,20 @@ class ConfigController {
       });
   }
 
-  uiCanExit() { 
+  uiCanExit() {
     const state = this.$state.get('project.config');
     if (state.data && state.data.config) {
-	    return this.$mdDialog.show({
-		template: require('./unsaved-config-confirmation.html'),
-          	controller: configConfirmationController,
-		controllerAs: 'vm',
-	//	onComplete: function loadingIndicator(){loading=true}
-	    })
-	    .then(shouldSave => {
-		  if (shouldSave) {
-			  this.handleOnSave()
-		  }
-	    })
+      return this.$mdDialog
+        .show({
+          template: require('./unsaved-config-confirmation.html'),
+          controller: configConfirmationController,
+          controllerAs: 'vm',
+        })
+        .then(shouldSave => {
+          if (shouldSave) {
+            this.handleOnSave();
+          }
+        });
     }
   }
 }
