@@ -40,12 +40,6 @@
               <md-menu-item ng-repeat="opt in $ctrl.menuOptions(expedition) track by expedition.expeditionCode + opt.name">
                 <md-button ng-click="opt.fn(expedition.expeditionCode)">{{opt.name}}</md-button>
               </md-menu-item>
-              <!-- <md-menu-item ng-show="expedition.fastaSequenceCount > 0"> -->
-                <!-- <md-button ng-click="$ctrl.downloadFasta(expedition.expeditionCode)">Fasta</md-button> -->
-              <!-- </md-menu-item> -->
-              <!-- <md-menu-item ng-show="expedition.fastqMetadataCount > 0"> -->
-                <!-- <md-button ng-click="$ctrl.downloadFastq(expedition.expeditionCode)">Fastq</md-button> -->
-              <!-- </md-menu-item> -->
             </md-menu-content>
           </md-menu>
         </td>
@@ -53,6 +47,8 @@
     </tbody>
   </table>
 
-  <uib-pagination total-items="$ctrl.totalItems" ng-model="$ctrl.currentPage" ng-change="$ctrl.pageChanged()"
-    items-per-page="$ctrl.itemsPerPage"></uib-pagination>
+  <div class="text-center" ng-show="$ctrl.totalItems > 0">
+    <ul uib-pagination total-items="$ctrl.totalItems" ng-model="$ctrl.currentPage" ng-change="$ctrl.pageChanged()"
+      max-size="10" force-ellipses="true" boundary-link-numbers="true" items-per-page="$ctrl.itemsPerPage"></ul>
+  </div>
 </div>
