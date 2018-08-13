@@ -3,29 +3,18 @@
     <div>
       <p>
         The Genomic Observatories Meta-Database (GeOMe) is a web-based database which captures metadata on biological samples, used
-        for biodiversity inventories, population studies, and environmental metagenomics. GeOMe assigns persistent identifiers
-        for all samples and sampling events and specifies the set of metadata attributes which satisfy the requirements of
-        the
+        for biodiversity inventories, population studies, and environmental metagenomics. GeOMe satisfies the requirements of the 
         <a href="https://gigascience.biomedcentral.com/articles/10.1186/2047-217X-3-2">genomic observatories model</a>, 
-	including capturing the who, what, where, and when associated with all samples.
+	including capturing the who, what, where, and when associated with all samples.  GeOMe draws on both the 
+	<a href="http://rs.tdwg.org/dwc/">Darwin Core</a> and the <a href="http://gensc.org/mixs/">Minimum
+	Information about any type of Sequence (MIxS)</a> standards.
       </p>	
-      <p>
-       <b>Table of Contents:</b>
-       <ul>
-       <li><a href="#workflowDiagram">GeOMe Workflow Diagram</a></li>
-       <li><a href="#downloadVideo">Search and Download Data Video</a></li>
-       <li><a href="#uploadVideo">Upload Metadata Video</a></li>
-       <li><a href="#templates">Template generation: what you need to do before you upload data</a></li>
-       <li><a href="#upload">Users can upload several types of data</a></li>
-       <li><a href="#rpackage">Query GeOMe using "R"</a></li>
-       <li><a href="#whyfastq">Why FASTQ submissions for next generation sequence data?</a></li>
-       <li><a href="#limsPlugin">About the Biocode LIMS plugin</a></li>
-       <li><a href="#dataUsage">Data usage policy</a><//li>
-       <li><a href="#funding">Funding</a></li>	
-       </ul>
-      </p>
     </div>
-    <md-divider class="margin-bottom"></md-divider>
+</div>
+
+<div>
+  <h3 id="help" class="md-headline">User Help</h3>
+  Instructions on using the GeOMe web interface are available by reading our <a href='docs/helpDocumentation.pdf'>GeOMe Help Document (PDF format)</a>.
 </div>
 
 <div>
@@ -34,69 +23,6 @@
     <div flex>
       <img id='workflowImage' class="img-responsive" style="max-height: 350px;" src='docs/geomeWorkflow.png'>
     </div>
-</div>
-
-<div>
-  <h3 id="downloadVideo" class="md-headline">Search and Download Data Video</h3>
-  The following video illustrates how to search and download data from Version 1 of the GeOMe interface.  The screens may appear different in current versions of the software but the instructions will still be helpful.
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/rdoP7xqDyhQ" frameborder="0" allowfullscreen></iframe>
-</div>
-
-<div>
-  <h3 id="uploadVideo" class="md-headline">Upload Metadata Video</h3>
-  The following video illustrates how to upload metadata to Version 1 of the GeOMe interface.  The screens may appear different in current versions of the software but the instructions will still be helpful.
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/GgPsFnoinZc" frameborder="0" allowfullscreen></iframe>
-</div>
-
-<div>
-  <h3 id="templates" class="md-headline">Template generation: what you need to do before you upload data</h3>
-  <ul>
-    <li>
-      Generate a template (see Workbench -> "Generate Template") to create a spreadsheet template for your metadata
-      <ul>
-        <li>
-          This option allows the user to create an excel file to store the metadata associated with each of their samples.
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
-
-<div>
-  <h3 id="upload" class="md-headline">Users can upload several types of data</h3>
-  <p>To upload data users much have an account. If you don't have one please send an email with you name, title and affiliation
-    to
-    <a href="mailto:geome.database@gmail.com">geome.database@gmail.com</a>
-  </p>
-  The following types of data are recognized in the GeOMe system:
-  <ol>
-    <li>Collecting Event metadata
-    <li>Sample metadata
-    <li>Tissue metadata
-    <li>Photos of collecting event metadata
-    <li>Photos of sample metadata
-    <li>Published
-      <u>Sanger sequence data</u> and the associated metadata (fasta format)</li>
-    <li>
-      Metadata associated with
-      <u>next-generation sequence data</u> (fastq format)
-      <ul>
-        <li>In the process of uploading the metadata for your next-generation sequence data we create two files:
-        </li>
-        <ol>
-          <li>the SRA metadata file</li>
-          <li>the BioSample datasheet</li>
-        </ol>
-
-      </ul>
-    </li>
-  </ol>
-  <p>
-    <strong>This will make uploading your data to Genbank's Sequence Read Archive (SRA) database faster and easier
-    </strong>.</p>
-  <p>
-    <small>* Note we are not currently accepting microsatellite datasets</small>
-  </p>
 </div>
 
 
@@ -110,16 +36,6 @@
 </div>
 
 <div>
-  <h3 id="whyfastq" class="md-headline">Why FASTQ submissions for next generation sequence data?</h3>
-  <p>GeOMe accepts FASTQ submissions because we want to archive unmanipulated sequence data that are free of filtering biases.
-    By doing this we are reducing ascertainment bias (a site that is not a SNP in your dataset may be a SNP when combined
-    with data from a different population). We are also avoiding the subjective choices that go into calling SNPs, such as
-    thresholds for trimming, filtering, coverage and likelihood. Our objective is for future users of your data to be able
-    to make these choices in the context of their own question and dataset.
-  </p>
-</div>
-
-<div>
   <h3 id="limsPlugin" class="md-headline">The Biocode LIMS Plugin</h3>
       <p style="margin-top:20px;">
        Data uploaded to GeOMe can be manipulated in a laboratory information management system (LIMS) using 
@@ -128,6 +44,13 @@
        is referred to as the "Biocode LIMS Plugin" since it was originally developed for the Moorea Bioocode Project.  It has
        since been adapted for use in the GeOMe environment.
       </p>
+</div>
+
+<div>
+  <h3 id="video" class="md-headline">Instructional Videos (DEPRECATED)</h3>
+  The following videos illustrate how to work with <b>Version 1</b> of the GeOMe interface.  While these videos have been marked as DEPRECATED, much of the functionality, especially with regards to dealing with sequence data is still applicable to the current interface.  We will update these videos with more current information as soon as we are able.
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/rdoP7xqDyhQ" frameborder="0" allowfullscreen></iframe>
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/GgPsFnoinZc" frameborder="0" allowfullscreen></iframe>
 </div>
 
 <div>
