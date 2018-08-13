@@ -56,6 +56,16 @@ class EntityDetailController {
 
   handleUpdateRules(rules) {
     this.entity.rules = rules;
+
+    // auto set entity.uniqueAcrossProject if we set the rule
+    const uniqueKeyUniqueValueRule = rules.find(
+      r => r.name === 'UniqueValue' && r.column === this.entity.uniqueKey,
+    );
+    if (uniqueKeyUniqueValueRule) {
+      this.entity.uniqueAcrossProject =
+        uniqueKeyUniqueValueRule.uniqueAcrossProject;
+    }
+
     this.onUpdateEntity({
       alias: this.entity.conceptAlias,
       entity: this.entity,
