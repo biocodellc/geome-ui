@@ -54,7 +54,9 @@ class AppCtrl {
 
       if (hasResolvables(trans.$to())) this.loading = true;
     });
-    this.$transitions.onError({}, () => {
+    this.$transitions.onError({}, trans => {
+      const err = trans.error();
+      if (err && err.message.includes('superseded')) return;
       this.loading = false;
     });
     this.$transitions.onSuccess({}, transition => {
