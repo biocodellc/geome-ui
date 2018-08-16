@@ -10,12 +10,12 @@ class QueryTableController {
 
   $onInit() {
     this.tableColumns = [
-      'principalInvestigator',
       'eventID',
       'materialSampleID',
       'locality',
       'decimalLatitude',
       'decimalLongitude',
+      'yearCollected',
       'genus',
       'species',
       'bcid',

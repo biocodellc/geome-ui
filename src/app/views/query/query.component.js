@@ -112,7 +112,10 @@ class QueryController {
     this.loading = true;
     const { projectId } = this.currentProject;
     this.QueryService.downloadFasta(
-      this.params.buildQuery(projectId, this.selectEntities().push('Event')),
+      this.params.buildQuery(
+        projectId,
+        this.selectEntities(false).concat(['Event']),
+      ),
       'fastaSequence',
     ).finally(() => (this.loading = false));
   }
@@ -121,16 +124,20 @@ class QueryController {
     this.loading = true;
     const { projectId } = this.currentProject;
     this.QueryService.downloadFastq(
-      this.params.buildQuery(projectId, this.selectEntities().push('Event')),
+      this.params.buildQuery(
+        projectId,
+        this.selectEntities().concat(['Event']),
+      ),
       'fastqMetadata',
     ).finally(() => (this.loading = false));
   }
 
-  selectEntities() {
-    this.currentProject.entities
+  selectEntities(includeFastq = true) {
+    return this.currentProject.config.entities
       .filter(
         e =>
-          e.type === 'Fastq' || ['Sample', 'Tissue'].includes(e.conceptAlias),
+          (includeFastq && e.type === 'Fastq') ||
+          ['Sample', 'Tissue'].includes(e.conceptAlias),
       )
       .map(e => e.conceptAlias);
   }
