@@ -52,10 +52,8 @@ export default (
           ProjectLoadingEmitter.emit(FINISHED_LOADING_PROJECT_EVENT);
         })
         .catch(targetState => {
-          const stateService = trans.router.stateService;
-
           if (targetState && targetState.withParams) {
-            return stateService.target(targetState._identifier, {
+            return targetState.withParams({
               nextState: trans.to(),
               nextStateParams: trans.to().params,
             });
@@ -67,7 +65,7 @@ export default (
             state = 'query';
           }
 
-          return stateService.target(state);
+          return trans.router.stateService.target(state);
         });
     },
     { priority: 50 },

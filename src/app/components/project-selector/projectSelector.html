@@ -8,10 +8,10 @@
     <md-menu-item>
       <span layout="row" layout-align="center center">
         Switch Project
-        <div>
+        <div class="project-selector-action">
           <md-button class="small" ng-click="$ctrl.signIn()" ng-show="!$ctrl.isAuthenticated" align="center">Sign In
           </md-button>
-          <md-tooltip md-direction="left">Sign In to see your projects</md-tooltip>
+          <md-tooltip md-direction="bottom">Sign In to see your projects</md-tooltip>
         </div>
         <md-checkbox class="small include-public" ng-change="$ctrl.filterProjects()" ng-model="$ctrl.includePublicProjects" ng-show="$ctrl.isAuthenticated">
           <!-- <md-tooltip ng-show="$ctrl.isAuthenticated && $ctrl.currentProject.public && $ctrl.includePublicProjects" md-delay="500" -->
