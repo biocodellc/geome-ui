@@ -53,12 +53,14 @@ class ProjectSelectorController {
   }
 
   signIn() {
-    this.$mdDialog.cancel(
-      this.$state.target('login', {
-        nextState: this.$state.nextState,
-        nextStateParams: this.$state.nextStateParams,
-      }),
-    );
+    this.$mdDialog.cancel(this.$state.target('login')).then(() => {
+      if (this.$state.current.name !== 'login') {
+        this.$state.go('login', {
+          nextState: this.$state.current.name,
+          nextStateParams: this.$state.current.params,
+        });
+      }
+    });
   }
 }
 
