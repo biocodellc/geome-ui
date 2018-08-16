@@ -29,7 +29,6 @@ export default (
 
   let prevState;
   $transitions.onSuccess({}, trans => (prevState = trans.to().name));
-
   // setup dialog for workbench states if no project is selected
   $transitions.onBefore(
     { to: checkProjectViewPresent },
@@ -39,7 +38,6 @@ export default (
       const scope = Object.assign($rootScope.$new(true), {
         isAuthenticated: !!UserService.currentUser(),
       });
-
       return $mdDialog
         .show({
           template:
@@ -53,11 +51,20 @@ export default (
         .then(() => {
           ProjectLoadingEmitter.emit(FINISHED_LOADING_PROJECT_EVENT);
         })
-        .catch(() => {
+        .catch(targetState => {
+          if (targetState && targetState.withParams) {
+            return targetState.withParams({
+              nextState: trans.to(),
+              nextStateParams: trans.to().params,
+            });
+          }
+
           let state = prevState || 'query';
+
           if (!UserService.currentUser() && checkProjectViewPresent(state)) {
             state = 'query';
           }
+
           return trans.router.stateService.target(state);
         });
     },
