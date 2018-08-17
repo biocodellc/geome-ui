@@ -1,3 +1,14 @@
+<md-card>
+    <md-card-content>
+<h4>Expeditions belong to {{ currentUser.username }}</h4>
+<p>The following expeditions belong to {{ }} 
+<br>and may not represent a comprehensive list of expeditions for this project, 
+which can be found on the 
+<br><a href ui-sref='dashboard'>Project Overview</a>. 
+<br>Select each of your expeditions below to change title, permissions and collaborators
+</p>
+    </md-card-content>
+</md-card>
 <md-card class="list-group">
     <md-card-content>
         <a class="list-group-item clearfix" ng-repeat="expedition in $ctrl.expeditions" href ui-sref="expeditions.detail({ id: expedition.expeditionId })">
