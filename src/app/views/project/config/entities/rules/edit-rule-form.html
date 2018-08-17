@@ -33,8 +33,13 @@
                 columns="$ctrl.columns"
                 rule="$ctrl.rule">
         </fims-rule-metadata-column>
+        <fims-rule-metadata-checkbox
+                ng-if="key === 'uniqueAcrossProject'"
+                key="key"
+                rule="$ctrl.rule">
+        </fims-rule-metadata-checkbox>
         <fims-rule-metadata-default
-                ng-if="key !== 'listName' && !key.toLowerCase().includes('column')"
+                ng-if="key !== 'listName' && key !== 'uniqueAcrossProject' && !key.toLowerCase().includes('column')"
                 key="key"
                 rule="$ctrl.rule">
         </fims-rule-metadata-default>

@@ -17,7 +17,7 @@
             </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" ng-if="$ctrl.worksheet !== 'Workbook'">
             <label class="control-label col-sm-3">Template Config:</label>
             <div class="col-sm-4">
                 <div class="input-group col-sm-12">
@@ -45,28 +45,31 @@
 <div class="row">
 
     <div class="col-xs-6">
-        <div class="btn-group btn-group-xs">
-            <button type="button" class="btn btn-link" ng-click="$ctrl.selectAll()">Select ALL</button>
-            <button type="button" class="btn btn-link" ng-click="$ctrl.selectNone()">Select None</button>
-            <button type="button" class="btn btn-link" ng-click="$ctrl.saveConfig($event)">Save</button>
-        </div>
-        <uib-accordion close-others="false" ng-repeat="(group, attributes) in $ctrl.attributes">
-            <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="{{ group }}" is-open="true">
-                <div class="checkbox" ng-repeat="attribute in attributes">
-                    <label>
-                        <input type="checkbox" ng-disabled="$ctrl.required.indexOf(attribute) > -1" ng-checked="$ctrl.selected.indexOf(attribute) > -1"
-                            ng-click="$ctrl.toggleSelected(attribute)" /> {{ attribute.column }}
-                        <a href="#definition" ng-click="$ctrl.define(attribute)">DEF</a>
-                    </label>
-                </div>
+        <div ng-repeat="(worksheet, data) in $ctrl.getAttributes()">
+            <h3 ng-if="$ctrl.worksheet === 'Workbook'">{{ worksheet }} Worksheet</h3>
+            <div class="btn-group btn-group-xs">
+                <button type="button" class="btn btn-link" ng-click="$ctrl.selectAll(worksheet)">Select ALL</button>
+                <button type="button" class="btn btn-link" ng-click="$ctrl.selectNone(worksheet)">Select None</button>
+                <button type="button" class="btn btn-link" ng-if="$ctrl.worksheet !== 'Workbook'" ng-click="$ctrl.saveConfig($event)">Save</button>
             </div>
-        </uib-accordion>
+            <uib-accordion close-others="false" ng-repeat="(group, attributes) in data.attributes">
+                <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="{{ group }}" is-open="true">
+                    <div class="checkbox" ng-repeat="attribute in attributes">
+                        <label>
+                            <input type="checkbox" ng-disabled="data.required.indexOf(attribute) > -1" ng-checked="$ctrl.selected[worksheet].indexOf(attribute) > -1"
+                                ng-click="$ctrl.toggleSelected(worksheet, attribute)" /> {{ attribute.column }}
+                            <a ng-click="$ctrl.define(worksheet, attribute)">DEF</a>
+                        </label>
+                    </div>
+                </div>
+            </uib-accordion>
+        </div>
     </div>
 
-    <div class="col-xs-6">
+    <div class="col-xs-6" md-sticky>
         <p>{{ $ctrl.description }}</p>
 
-        <fims-attribute-definition current-project="$ctrl.currentProject" attribute="$ctrl.defAttribute" sheet-name="$ctrl.worksheet">
+        <fims-attribute-definition current-project="$ctrl.currentProject" attribute="$ctrl.defAttribute" sheet-name="$ctrl.defWorksheet">
         </fims-attribute-definition>
     </div>
 

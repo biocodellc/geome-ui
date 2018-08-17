@@ -1,10 +1,8 @@
 (function() {
-  'use strict';
-
   angular.module('fims.query').filter('queryTypeDisplay', queryTypeDisplay);
 
   function queryTypeDisplay() {
-    var types = {
+    const types = {
       EQUALS: '=',
       EXISTS: 'has',
       FUZZY: 'fuzzy',

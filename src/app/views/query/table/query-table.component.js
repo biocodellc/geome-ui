@@ -11,7 +11,7 @@ class QueryTableController {
   $onInit() {
     this.tableColumns = [
       'eventID',
-      'specimenID',
+      'materialSampleID',
       'locality',
       'decimalLatitude',
       'decimalLongitude',

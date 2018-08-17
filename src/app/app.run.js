@@ -18,6 +18,7 @@ export default function(
   $timeout,
   $animate,
   $transitions,
+  $state,
   $location,
   AuthService,
   StorageService,
@@ -27,6 +28,12 @@ export default function(
   'ngInject';
 
   $http.defaults.headers.common = { 'Fims-App': 'GeOMe-db' };
+
+  const transErrorHandler = $state.defaultErrorHandler();
+  $state.defaultErrorHandler(err => {
+    if (err && err.message.includes('transition has been superseded')) return;
+    transErrorHandler(err);
+  });
 
   $transitions.onBefore({}, () => {
     // disable animations on transitions.

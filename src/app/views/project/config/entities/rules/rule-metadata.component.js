@@ -29,6 +29,14 @@ const defaultTemplate = `${openTemplate}<input
       type='text'
       ng-model='$ctrl.rule[$ctrl.key]'/>${closeTemplate}`;
 
+const checkboxTemplate = `
+                    <div class="checkbox col-xs-offset-3 col-xs-9">
+                        <label>
+                            <input type="checkbox" ng-model='$ctrl.rule[$ctrl.key]'"/> {{$ctrl.key}}?
+                        </label>
+                    </div>
+                    `;
+
 const fimsRuleMetadataList = {
   template: listTemplate,
   bindings: {
@@ -56,6 +64,14 @@ const fimsRuleMetadataColumns = {
   },
 };
 
+const fimsRuleMetadataCheckbox = {
+  template: checkboxTemplate,
+  bindings: {
+    key: '<',
+    rule: '<',
+  },
+};
+
 const fimsRuleMetadataDefault = {
   template: defaultTemplate,
   bindings: {
@@ -69,4 +85,5 @@ export default angular
   .component('fimsRuleMetadataList', fimsRuleMetadataList)
   .component('fimsRuleMetadataColumn', fimsRuleMetadataColumn)
   .component('fimsRuleMetadataColumns', fimsRuleMetadataColumns)
+  .component('fimsRuleMetadataCheckbox', fimsRuleMetadataCheckbox)
   .component('fimsRuleMetadataDefault', fimsRuleMetadataDefault).name;

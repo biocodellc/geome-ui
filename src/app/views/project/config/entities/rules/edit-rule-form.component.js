@@ -3,6 +3,8 @@ import angular from 'angular';
 import { RULE_LEVELS } from '../../../../../models/Rule';
 import fimsRuleMetadata from './rule-metadata.component';
 
+const template = require('./edit-rule-form.html');
+
 class EditRuleFormController {
   $onInit() {
     this.levels = RULE_LEVELS;
@@ -14,7 +16,7 @@ class EditRuleFormController {
 }
 
 const fimsEditRuleForm = {
-  template: require('./edit-rule-form.html'),
+  template,
   controller: EditRuleFormController,
   bindings: {
     rule: '<', // TODO fix this, as we are editing the parent components data

@@ -1,6 +1,6 @@
 <div class="col-sm-8">
     <div class="form-group" show-errors="{trigger: 'change'}">
-        <label ng-if="$ctrl.worksheet === 'Workbook'" for="{{$ctrl.worksheet}}Data" class="col-sm-3 control-label">{{$ctrl.worksheet}}</label>
+        <label ng-if="$ctrl.worksheet === 'Workbook'" for="{{$ctrl.worksheet}}Data" class="col-sm-3 control-label">Excel {{$ctrl.worksheet}}</label>
         <label ng-if="$ctrl.worksheet !== 'Workbook'" for="{{$ctrl.worksheet}}Data" class="col-sm-3 control-label">{{$ctrl.worksheet}} Worksheet</label>
         <div class="col-sm-9">
             <div class="input-group">
@@ -13,7 +13,7 @@
                 <input type="text" class="form-control" ng-value="$ctrl.file.name || invalidFile.name" readonly/>
             </div>
             <p class="help-block" ng-show="!$ctrl.valid">
-                File must have one of the following extensions: .xls, .xlsx, .csv, .tsv, or .txt</p>
+                File must have one of the following extensions: {{ $ctrl.fileTypes() }}</p>
         </div>
     </div>
 </div>

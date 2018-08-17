@@ -148,7 +148,7 @@ export default class ProjectConfig {
         // would be better to come up w/ solution in backend
         // these don't show up b/c the PhotoEntity default rules
         // are enforced by the PhotoValidator, and not stored on the entity itself
-        if (e.type === 'Photo') {
+        if (level === 'ERROR' && e.type === 'Photo') {
           requiredColumns.push('photoID');
           requiredColumns.push('originalUrl');
 

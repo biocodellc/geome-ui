@@ -1,6 +1,7 @@
 import angular from 'angular';
 
 import config from '../../utils/config';
+
 const { resolverRoot } = config;
 
 angular
