@@ -4,7 +4,7 @@ import displayConfigErrors from '../../../utils/displayConfigErrors';
 
 const template = require('./config.html');
 
-function configConfirmationController($mdDialog, $transitions) {
+function configConfirmationController($mdDialog) {
   'ngInject';
 
   const vm = this;
@@ -83,7 +83,10 @@ class ConfigController {
 
   handleOnSave() {
     this.loading = true;
-    this.ProjectConfigService.save(this.config, this.currentProject.projectId)
+    return this.ProjectConfigService.save(
+      this.config,
+      this.currentProject.projectId,
+    )
       .then(config => {
         this.currentProject.config = config;
         angular.toaster.success('Successfully updated project configuration!');
@@ -113,7 +116,7 @@ class ConfigController {
         })
         .then(shouldSave => {
           if (shouldSave) {
-            this.handleOnSave();
+            return this.handleOnSave();
           }
         });
     }
