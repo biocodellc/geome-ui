@@ -5,7 +5,7 @@ const template = require('./query-form.html');
 const SOURCE = [
   'Event.eventID',
   'Sample.eventID',
-  'Sample.specimenID',
+  'Sample.materialSampleID',
   'locality',
   'country',
   'yearCollected',

@@ -1,22 +1,24 @@
 .project-selector {
   .md-button.md-icon-button {
     width: auto;
-
     md-icon {
       display: inline-block;
     }
   }
 }
 
-md-checkbox.include-public {
+.project-selector-action {
   margin: 0 4px 0 auto;
+}
+
+md-checkbox.include-public {
+  @extend .project-selector-action;
 }
 
 .include-public {
   padding-left: 8px;
   margin-left: 32px;
   margin-bottom: 0;
-
   .md-label {
     margin-left: 8px;
     font-size: 10px;
