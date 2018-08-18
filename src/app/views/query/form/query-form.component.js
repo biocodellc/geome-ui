@@ -66,6 +66,7 @@ class QueryFormController {
       this.hasFastqEntity = config.entities.some(e => e.type === 'Fastq');
 
       this.generateFilterOptions();
+      this.params.expeditions = [];
       // if (this.params.filters.length === 0) this.addFilter();
     }
 
