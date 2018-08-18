@@ -39,6 +39,21 @@ export default class ProjectConfig {
 
     this.entities.filter(entity => entity.worksheet === sheetName).forEach(e =>
       e.attributes.forEach(attribute => {
+        // don't include the uniqueKey if this is a hashed entity
+        if (e.hashed && attribute.column === e.uniqueKey) return;
+
+        // don't include the parentEntity uniqueKey if the parent is a hashed entity
+        if (e.parentEntity) {
+          const parentEntity = this.entities.find(
+            en => en.conceptAlias === e.parentEntity,
+          );
+          if (
+            parentEntity.hashed &&
+            attribute.column === parentEntity.uniqueKey
+          )
+            return;
+        }
+
         const group = attribute.group || defaultGroup;
 
         if (!(group in attributes)) {
@@ -142,7 +157,22 @@ export default class ProjectConfig {
         const requiredColumns = e.rules
           .filter(r => r.name === 'RequiredValue' && r.level === level)
           .map(r => r.columns)
-          .reduce((result, c) => result.concat(c), []);
+          .reduce((result, c) => result.concat(c), [])
+          .filter(c => {
+            // don't include the uniqueKey if this is a hashed entity
+            if (e.hashed && c === e.uniqueKey) return false;
+
+            // don't include the parentEntity uniqueKey if the parent is a hashed entity
+            if (e.parentEntity) {
+              const parentEntity = this.entities.find(
+                en => en.conceptAlias === e.parentEntity,
+              );
+              if (parentEntity.hashed && c === parentEntity.uniqueKey)
+                return false;
+            }
+
+            return true;
+          });
 
         // hack for photo entity for now
         // would be better to come up w/ solution in backend

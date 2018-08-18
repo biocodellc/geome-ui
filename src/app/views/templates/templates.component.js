@@ -276,7 +276,9 @@ class TemplateController {
 
   getWorksheets() {
     this.worksheets = this.projectConfig.worksheets();
-    this.worksheets.unshift('Workbook');
+    if (this.worksheets.length > 1 && !this.worksheets.includes('Workbook')) {
+      this.worksheets.unshift('Workbook');
+    }
     this.worksheet = this.worksheets[0];
   }
 
