@@ -1,15 +1,15 @@
 <div class="settings">
-    <fims-project-config-navbar
-            show-save="$ctrl.showSave"
-            on-save="$ctrl.onSave()"
-            add-text="'Field'"
-            on-add="$ctrl.handleOnAdd()">
+    <fims-project-config-navbar show-save="$ctrl.showSave" on-save="$ctrl.onSave()" add-text="'Field'" on-add="$ctrl.handleOnAdd()">
     </fims-project-config-navbar>
 
     <div class="row back">
         <div class="col-xs-12">
-            <a href ui-sref="project.config.lists"> <i class="fa fa-chevron-left"></i>
+            <a href ui-sref="project.config.lists">
+                <i class="fa fa-chevron-left"></i>
                 Lists</a>
+            <p layout-padding>Showing details for list:
+                <strong>{{$ctrl.list.alias}}</strong>
+            </p>
         </div>
     </div>
 
@@ -22,17 +22,15 @@
         </thead>
 
         <tbody>
-            <tr ng-repeat="field in $ctrl.list.fields track by $index"
-                id="field_{{ $index }}"
-                uib-popover-template="'editField.html'"
-                popover-is-open="$index===$ctrl.editField"
-                popover-placement="auto bottom"
-                popover-trigger="'none'"
-                popover-class="edit-popover">
+            <tr ng-repeat="field in $ctrl.list.fields track by $index" id="field_{{ $index }}" uib-popover-template="'editField.html'"
+                popover-is-open="$index===$ctrl.editField" popover-placement="auto bottom" popover-trigger="'none'" popover-class="edit-popover">
                 <td class="row-actions">
-                    <a href="#" ng-click="$ctrl.handleToggleEdit($index)"><i class="fa fa-pencil fa-fw"></i></a>
-                    <a href="#" class="delete" ng-click="$ctrl.handleOnDelete($index)"><i
-                            class="fa fa-trash text-danger fa-fw"></i></a>
+                    <a href="#" ng-click="$ctrl.handleToggleEdit($index)">
+                        <i class="fa fa-pencil fa-fw"></i>
+                    </a>
+                    <a href="#" class="delete" ng-click="$ctrl.handleOnDelete($index)">
+                        <i class="fa fa-trash text-danger fa-fw"></i>
+                    </a>
                 </td>
                 <td ng-click="$ctrl.handleToggleEdit($index)">{{ field.value }}</td>
                 <td ng-click="$ctrl.handleToggleEdit($index)">{{ field.definedBy }}</td>
