@@ -58,6 +58,8 @@ export default class ProjectConfig {
 
         if (!(group in attributes)) {
           attributes[group] = [];
+        } else if (attributes[group].find(a => a.column === attribute.column)) {
+          return;
         }
 
         attributes[group].push(attribute);
@@ -154,25 +156,29 @@ export default class ProjectConfig {
     return this.entities
       .filter(e => e.worksheet === sheetName)
       .map(e => {
-        const requiredColumns = e.rules
-          .filter(r => r.name === 'RequiredValue' && r.level === level)
-          .map(r => r.columns)
-          .reduce((result, c) => result.concat(c), [])
-          .filter(c => {
-            // don't include the uniqueKey if this is a hashed entity
-            if (e.hashed && c === e.uniqueKey) return false;
+        const requiredColumns = Array.from(
+          new Set(
+            e.rules
+              .filter(r => r.name === 'RequiredValue' && r.level === level)
+              .map(r => r.columns)
+              .reduce((result, c) => result.concat(c), [])
+              .filter(c => {
+                // don't include the uniqueKey if this is a hashed entity
+                if (e.hashed && c === e.uniqueKey) return false;
 
-            // don't include the parentEntity uniqueKey if the parent is a hashed entity
-            if (e.parentEntity) {
-              const parentEntity = this.entities.find(
-                en => en.conceptAlias === e.parentEntity,
-              );
-              if (parentEntity.hashed && c === parentEntity.uniqueKey)
-                return false;
-            }
+                // don't include the parentEntity uniqueKey if the parent is a hashed entity
+                if (e.parentEntity) {
+                  const parentEntity = this.entities.find(
+                    en => en.conceptAlias === e.parentEntity,
+                  );
+                  if (parentEntity.hashed && c === parentEntity.uniqueKey)
+                    return false;
+                }
 
-            return true;
-          });
+                return true;
+              }),
+          ),
+        );
 
         // hack for photo entity for now
         // would be better to come up w/ solution in backend
