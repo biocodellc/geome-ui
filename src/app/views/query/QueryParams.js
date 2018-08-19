@@ -149,7 +149,7 @@ export default class QueryParams {
       builder.add(`and Event.decimalLatitude >= ${sw.lat}`);
     }
 
-    if (selectEntities) {
+    if (selectEntities && selectEntities.length > 0) {
       builder.add(`_select_:[${selectEntities.join(',')}]`);
     }
 

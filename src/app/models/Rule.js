@@ -25,6 +25,7 @@ export const AVAILABLE_RULES = [
   new Rule({
     name: 'UniqueValue',
     column: undefined,
+    uniqueAcrossProject: false,
   }),
   new Rule({
     name: 'CompositeUniqueValue',

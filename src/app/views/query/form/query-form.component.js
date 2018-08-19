@@ -5,7 +5,7 @@ const template = require('./query-form.html');
 const SOURCE = [
   'Event.eventID',
   'Sample.eventID',
-  'Sample.specimenID',
+  'Sample.materialSampleID',
   'locality',
   'country',
   'yearCollected',
@@ -66,6 +66,7 @@ class QueryFormController {
       this.hasFastqEntity = config.entities.some(e => e.type === 'Fastq');
 
       this.generateFilterOptions();
+      this.params.expeditions = [];
       // if (this.params.filters.length === 0) this.addFilter();
     }
 

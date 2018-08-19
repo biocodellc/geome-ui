@@ -5,11 +5,10 @@ const template = require('./templates.html');
 const DEFAULT_TEMPLATE = { name: 'DEFAULT' };
 
 class TemplateController {
-  constructor($anchorScroll, $state, $mdDialog, TemplateService) {
+  constructor($state, $mdDialog, TemplateService) {
     'ngInject';
 
     this.TemplateService = TemplateService;
-    this.$anchorScroll = $anchorScroll;
     this.$state = $state;
     this.$mdDialog = $mdDialog;
   }
@@ -34,27 +33,31 @@ class TemplateController {
       changesObj.currentProject.previousValue !== this.currentProject
     ) {
       this.projectConfig = this.currentProject.config;
+      this.attributes = {};
+      this.selected = {};
       this.getTemplates();
       this.getWorksheets();
-      this.getAttributes();
+      this.populateAttributesCache();
       this.description = this.currentProject.description;
       this.defAttribute = undefined;
+      this.defWorksheet = undefined;
     }
   }
 
-  selectAll() {
-    this.selected = Object.values(this.attributes).reduce(
-      (result, group) => result.concat(group),
-      [],
-    );
+  selectAll(worksheet) {
+    this.selected[worksheet] = Object.values(
+      this.attributes[worksheet].attributes,
+    ).reduce((result, group) => result.concat(group), []);
   }
 
-  selectNone() {
-    this.selected = this.required.slice();
+  selectNone(worksheet) {
+    this.selected[worksheet] = this.attributes[worksheet].required.slice();
   }
 
   saveConfig(ev) {
-    const columns = this.selected.map(attribute => attribute.column);
+    const columns = this.selected[this.worksheet].map(
+      attribute => attribute.column,
+    );
 
     const prompt = this.$mdDialog
       .prompt()
@@ -124,19 +127,18 @@ class TemplateController {
       });
   }
 
-  toggleSelected(attribute) {
-    const i = this.selected.indexOf(attribute);
+  toggleSelected(worksheet, attribute) {
+    const i = this.selected[worksheet].indexOf(attribute);
 
     // currently selected
     if (i > -1) {
-      this.selected.splice(i, 1);
+      this.selected[worksheet].splice(i, 1);
     } else {
-      this.selected.push(attribute);
+      this.selected[worksheet].push(attribute);
     }
   }
 
   sheetChange() {
-    this.getAttributes();
     this.filterTemplates();
     this.template = Object.assign({}, DEFAULT_TEMPLATE);
     this.templateChange();
@@ -144,17 +146,19 @@ class TemplateController {
 
   templateChange() {
     this.defAttribute = undefined;
+    if (this.worksheet === 'Workbook') return;
     if (angular.equals(this.template, DEFAULT_TEMPLATE)) {
-      this.selected = this.required.concat(
-        this.projectConfig.suggestedAttributes(this.worksheet),
-      );
+      this.selected[this.worksheet] = this.attributes[
+        this.worksheet
+      ].required.concat(this.projectConfig.suggestedAttributes(this.worksheet));
     } else {
-      this.selected = this.required.slice();
-
-      Object.values(this.attributes)
+      this.selected[this.worksheet] = this.attributes[
+        this.worksheet
+      ].required.slice();
+      Object.values(this.attributes[this.worksheet])
         .reduce((result, attributes) => result.concat(attributes), [])
         .filter(a => this.template.columns.includes(a.column))
-        .forEach(a => this.selected.push(a));
+        .forEach(a => this.selected[this.worksheet].push(a));
     }
   }
 
@@ -167,14 +171,30 @@ class TemplateController {
   }
 
   generate() {
-    const columns = this.selected.map(attribute => attribute.column);
+    const templates =
+      this.worksheet === 'Workbook'
+        ? Object.keys(this.selected).reduce((accumulator, worksheet) => {
+            if (this.selected[worksheet].length > 0) {
+              accumulator.push({
+                name: worksheet,
+                columns: this.selected[worksheet].map(
+                  attribute => attribute.column,
+                ),
+              });
+            }
+            return accumulator;
+          }, [])
+        : [
+            {
+              name: this.worksheet,
+              columns: this.selected[this.worksheet].map(
+                attribute => attribute.column,
+              ),
+            },
+          ];
 
     this.loading = true;
-    this.TemplateService.generate(
-      this.currentProject.projectId,
-      this.worksheet,
-      columns,
-    )
+    this.TemplateService.generate(this.currentProject.projectId, templates)
       .catch(() => {})
       .then(() => {
         this.loading = false;
@@ -183,9 +203,9 @@ class TemplateController {
 
   filterTemplates() {
     this.templates = this.allTemplates.filter(
-      t => t.worksheet === this.worksheet,
+      t => t.worksheet === this.selected,
     );
-    this.templates.splice(0, 1, DEFAULT_TEMPLATE);
+    this.templates.unshift(DEFAULT_TEMPLATE);
   }
 
   getTemplates() {
@@ -202,41 +222,69 @@ class TemplateController {
   }
 
   getAttributes() {
-    this.attributes = this.projectConfig.attributesByGroup(this.worksheet);
-    this.required = this.projectConfig.requiredAttributes(this.worksheet);
+    if (this.worksheet === 'Workbook') return this.attributes;
+    return { [this.worksheet]: this.attributes[this.worksheet] };
+  }
 
-    const hasPhotoEntity = this.projectConfig.entities.some(
-      e => e.type === 'Photo' && e.worksheet === this.worksheet,
+  populateAttributesCache() {
+    const blacklist = [
+      'processed',
+      'imageProcessingErrors',
+      'img128',
+      'img512',
+      'img1024',
+    ];
+
+    this.attributes = this.projectConfig.entities.reduce(
+      (accumulator, entity) => {
+        const { worksheet } = entity;
+
+        if (!worksheet) return accumulator;
+
+        if (!this.selected[worksheet]) this.selected[worksheet] = [];
+
+        // eslint-disable-next-line no-param-reassign
+        accumulator[worksheet] = {
+          attributes: this.projectConfig.attributesByGroup(worksheet),
+          required: this.projectConfig.requiredAttributes(worksheet),
+        };
+
+        this.selected[worksheet] = this.selected[worksheet].concat(
+          accumulator[worksheet].required,
+          this.projectConfig.suggestedAttributes(worksheet),
+        );
+
+        // hack until we determine a better way to represent hidden & non template attributes in backend
+        if (entity.type === 'Photo') {
+          // eslint-disable-next-line no-param-reassign
+          accumulator[worksheet].attributes = Object.entries(
+            accumulator[worksheet].attributes,
+          ).reduce(
+            (result, [group, attributes]) =>
+              Object.assign({}, result, {
+                [group]: attributes.filter(a => !blacklist.includes(a.column)),
+              }),
+            {},
+          );
+        }
+
+        return accumulator;
+      },
+      {},
     );
-
-    // hack until we determine a better way to represent hidden & non template attributes in backend
-    if (hasPhotoEntity) {
-      const blacklist = [
-        'processed',
-        'imageProcessingErrors',
-        'img128',
-        'img512',
-        'img1024',
-      ];
-
-      this.attributes = Object.entries(this.attributes).reduce(
-        (result, [group, attributes]) =>
-          Object.assign({}, result, {
-            [group]: attributes.filter(a => !blacklist.includes(a.column)),
-          }),
-        {},
-      );
-    }
   }
 
   getWorksheets() {
     this.worksheets = this.projectConfig.worksheets();
+    if (this.worksheets.length > 1 && !this.worksheets.includes('Workbook')) {
+      this.worksheets.unshift('Workbook');
+    }
     this.worksheet = this.worksheets[0];
   }
 
-  define(attribute) {
+  define(worksheet, attribute) {
     this.defAttribute = attribute;
-    this.$anchorScroll('definition'); // scroll to definition
+    this.defWorksheet = worksheet;
   }
 }
 

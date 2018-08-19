@@ -8,11 +8,15 @@
     <md-menu-item>
       <span layout="row" layout-align="center center">
         Switch Project
-        <md-checkbox class="small include-public" ng-change="$ctrl.filterProjects()" ng-model="$ctrl.includePublicProjects"
-          ng-show="$ctrl.isAuthenticated">
+        <div class="project-selector-action">
+          <md-button class="small" ng-click="$ctrl.signIn()" ng-show="!$ctrl.isAuthenticated" align="center">Sign In
+          </md-button>
+          <md-tooltip md-direction="bottom">Sign In to see your projects</md-tooltip>
+        </div>
+        <md-checkbox class="small include-public" ng-change="$ctrl.filterProjects()" ng-model="$ctrl.includePublicProjects" ng-show="$ctrl.isAuthenticated">
           <!-- <md-tooltip ng-show="$ctrl.isAuthenticated && $ctrl.currentProject.public && $ctrl.includePublicProjects" md-delay="500" -->
-            <!-- md-direction="bottom">The current selected project is a public project that you are not a member of. Select a project -->
-            <!-- you are a member of to uncheck this</md-tooltip> -->
+          <!-- md-direction="bottom">The current selected project is a public project that you are not a member of. Select a project -->
+          <!-- you are a member of to uncheck this</md-tooltip> -->
           include public
         </md-checkbox>
       </span>
