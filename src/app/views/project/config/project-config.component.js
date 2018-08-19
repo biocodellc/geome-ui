@@ -4,6 +4,15 @@ import displayConfigErrors from '../../../utils/displayConfigErrors';
 
 const template = require('./config.html');
 
+function configConfirmationController($mdDialog) {
+  'ngInject';
+
+  const vm = this;
+
+  vm.continue = $mdDialog.hide;
+  vm.cancel = $mdDialog.cancel;
+}
+
 class ConfigController {
   constructor($state, $mdDialog, ProjectConfigService) {
     'ngInject';
@@ -74,7 +83,10 @@ class ConfigController {
 
   handleOnSave() {
     this.loading = true;
-    this.ProjectConfigService.save(this.config, this.currentProject.projectId)
+    return this.ProjectConfigService.save(
+      this.config,
+      this.currentProject.projectId,
+    )
       .then(config => {
         this.currentProject.config = config;
         angular.toaster.success('Successfully updated project configuration!');
@@ -91,6 +103,23 @@ class ConfigController {
       .finally(() => {
         this.loading = false;
       });
+  }
+
+  uiCanExit() {
+    const state = this.$state.get('project.config');
+    if (state.data && state.data.config) {
+      return this.$mdDialog
+        .show({
+          template: require('./unsaved-config-confirmation.html'),
+          controller: configConfirmationController,
+          controllerAs: 'vm',
+        })
+        .then(shouldSave => {
+          if (shouldSave) {
+            return this.handleOnSave();
+          }
+        });
+    }
   }
 }
 
