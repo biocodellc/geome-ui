@@ -41,7 +41,7 @@ export default class UploadMap extends Map {
     return super.setMarkers(
       transformedData,
       this.generatePopupContent.bind(this),
-      { maxHeight: 20 },
+      { maxHeight: 60 },
     );
   }
 
