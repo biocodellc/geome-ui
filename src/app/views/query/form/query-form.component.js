@@ -17,6 +17,7 @@ const SOURCE = [
   'fastqMetadata.identifier',
   'Event.bcid',
   'Sample.bcid',
+  'Sample.phylum',
 ];
 
 const defaultFilter = {
