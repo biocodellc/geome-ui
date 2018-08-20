@@ -1,11 +1,4 @@
-import angular from 'angular';
-import { findExcelCell, isExcelFile } from '../../utils/tabReader';
-
 import detectBrowser from '../../utils/detectBrowser';
-
-import config from '../../utils/config';
-
-const { naan } = config;
 
 const template = require('./validation.html');
 
@@ -51,7 +44,6 @@ class ValidationController {
     this.DataService = DataService;
     this.$interval = $interval;
 
-    this.fimsMetadata = undefined;
     this.latestExpeditionCode = undefined;
     this.displayResults = false;
     this.showGenbankDownload = false;
@@ -107,9 +99,9 @@ class ValidationController {
       return this.modalInstance.result.then(success => {
         if (success) {
           this.latestExpeditionCode = uploadData.expeditionCode;
-          if (uploadData.dataSourceMetadata.find(m => m.dataType === 'FASTQ')) {
-            this.showGenbankDownload = true;
-          }
+          this.showGenbankDownload = !!uploadData.dataSourceMetadata.find(
+            m => m.dataType === 'FASTQ',
+          );
         }
         return success;
       });
@@ -192,56 +184,6 @@ class ValidationController {
       this.results.showSuccessMessages = true;
       this.results.showUploadMessages = false;
     });
-  }
-
-  fimsMetadataChange(fimsMetadata) {
-    this.fimsMetadata = fimsMetadata;
-
-    if (this.fimsMetadata) {
-      // Check NAAN
-      this.parseSpreadsheet('~naan=[0-9]+~', 'Instructions').then(n => {
-        if (naan && n && n > 0) {
-          if (Number(n) !== Number(naan)) {
-            this.$mdDialog.show(
-              this.$mdDialog
-                .alert('naanDialog')
-                .clickOutsideToClose(true)
-                .title('Incorrect NAAN')
-                .css('naan-dialog')
-                .htmlContent(
-                  `Spreadsheet appears to have been created using a different FIMS/BCID system.
-                   <br/>
-                   <br/>
-                   Spreadsheet says <strong>NAAN = ${n}</strong>
-                   <br/>
-                   System says <strong>NAAN = ${naan}</strong>
-                   <br/>
-                   <br/>
-                   Proceed only if you are SURE that this spreadsheet is being called.
-                   Otherwise, re-load the proper FIMS system or re-generate your spreadsheet template.`,
-                )
-                .ok('Proceed Anyways'),
-            );
-          }
-        }
-      });
-    }
-  }
-
-  parseSpreadsheet(regExpression, sheetName) {
-    if (isExcelFile(this.fimsMetadata)) {
-      return findExcelCell(this.fimsMetadata, regExpression, sheetName).then(
-        match =>
-          match
-            ? match
-                .toString()
-                .split('=')[1]
-                .slice(0, -1)
-            : match,
-      );
-    }
-
-    return Promise.resolve();
   }
 }
 

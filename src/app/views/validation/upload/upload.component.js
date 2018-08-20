@@ -1,8 +1,17 @@
 import angular from 'angular';
-import { getFileExt } from '../../../utils/utils';
-import { workbookToJson } from '../../../utils/tabReader';
+import {
+  findExcelCell,
+  isExcelFile,
+  parseWorkbookSheetNames,
+  workbookToJson,
+} from '../../../utils/tabReader';
+import appConfig from '../../../utils/config';
 
+const { naan } = appConfig;
 const template = require('./upload.html');
+
+const LAT_URI = 'urn:decimalLatitude';
+const LNG_URI = 'urn:decimalLongitude';
 
 const defaultFastqMetadata = {
   libraryLayout: null,
@@ -12,6 +21,22 @@ const defaultFastqMetadata = {
   platform: null,
   designDescription: null,
   instrumentModel: null,
+};
+
+const parseSpreadsheet = (regExpression, sheetName, file) => {
+  if (isExcelFile(file)) {
+    return findExcelCell(file, regExpression, sheetName).then(
+      match =>
+        match
+          ? match
+              .toString()
+              .split('=')[1]
+              .slice(0, -1)
+          : match,
+    );
+  }
+
+  return Promise.resolve();
 };
 
 class UploadController {
@@ -30,6 +55,8 @@ class UploadController {
     this.fastqMetadata = Object.assign({}, defaultFastqMetadata);
     this.dataTypes = {};
     this.expeditionCode = undefined;
+    this.coordinateWorksheets = [];
+    this.verifiedCoordinateWorksheets = [];
     this.verifySampleLocations = false;
     this.sampleLocationsVerified = false;
   }
@@ -62,7 +89,7 @@ class UploadController {
       if (this.worksheetData.find(d => d.worksheet === w)) return;
       this.worksheetData.push({
         worksheet: w,
-        file: w === 'Samples' ? this.fimsMetadata : undefined,
+        file: undefined,
         reload: false,
       });
     });
@@ -96,18 +123,77 @@ class UploadController {
   }
 
   handleWorksheetDataChange(worksheet, file, reload) {
-    if (worksheet === 'Samples') {
-      this.onMetadataChange({
-        fimsMetadata: file,
-      });
-    }
-    const data = this.worksheetData.find(d => d.worksheet === worksheet);
+    let data = this.worksheetData.find(d => d.worksheet === worksheet);
 
+    const fileChanged = (!data && file) || data.file !== file;
     if (data) {
       data.file = file;
       data.reload = reload;
     } else {
-      this.worksheetData.push({ worksheet, file, reload });
+      data = { worksheet, file, reload };
+      this.worksheetData.push(data);
+    }
+
+    if (fileChanged) {
+      if (worksheet === 'Workbook') {
+        // Check NAAN
+        parseSpreadsheet('~naan=[0-9]+~', 'Instructions', file).then(n => {
+          if (naan && n && n > 0 && Number(n) !== Number(naan)) {
+            this.$mdDialog
+              .show(
+                this.$mdDialog
+                  .alert('naanDialog')
+                  .clickOutsideToClose(true)
+                  .title('Incorrect NAAN')
+                  .css('naan-dialog')
+                  .htmlContent(
+                    `Spreadsheet appears to have been created using a different FIMS/BCID system.
+                   <br/>
+                   <br/>
+                   Spreadsheet says <strong>NAAN = ${n}</strong>
+                   <br/>
+                   System says <strong>NAAN = ${naan}</strong>
+                   <br/>
+                   <br/>
+                   Proceed only if you are SURE that this spreadsheet is being called.
+                   Otherwise, re-load the proper FIMS system or re-generate your spreadsheet template.`,
+                  )
+                  .ok('Proceed Anyways'),
+              )
+              .then(() => {
+                parseWorkbookSheetNames(file).then(sheets => {
+                  sheets.some(s => {
+                    if (this.setCoordinateWorksheet(s)) {
+                      this.verifyCoordinates(worksheet);
+                      this.coordinateWorksheets.push('Workbook');
+                      return true;
+                    }
+                    return false;
+                  });
+                });
+              });
+          } else {
+            parseWorkbookSheetNames(file).then(sheets => {
+              sheets.some(s => {
+                if (this.setCoordinateWorksheet(s)) {
+                  this.verifyCoordinates(worksheet);
+                  this.coordinateWorksheets.push('Workbook');
+                  return true;
+                }
+                return false;
+              });
+            });
+          }
+        });
+      } else if (this.setCoordinateWorksheet(worksheet)) {
+        this.verifyCoordinates(worksheet);
+        this.coordinateWorksheets.push(worksheet);
+      }
+    } else if (!file) {
+      const i = this.coordinateWorksheets.findIndex(v => v === worksheet);
+      if (i > -1) {
+        this.coordinateWorksheets.splice(i, 1);
+      }
     }
   }
 
@@ -134,9 +220,7 @@ class UploadController {
     const upload = () =>
       this.onUpload({ data }).then(success => {
         if (success) {
-          this.onMetadataChange({ fimsMetadata: undefined });
           this.$onInit();
-          this.dataTypes.worksheet = true;
           this.$scope.$broadcast('show-errors-reset');
         }
       });
@@ -181,14 +265,9 @@ class UploadController {
   }
 
   checkCoordinatesVerified() {
-    if (
-      this.worksheetData.find(d => d.worksheet === 'Samples' && d.file) &&
-      this.verifySampleLocations &&
-      !this.sampleLocationsVerified
-    ) {
-      return false;
-    }
-    return true;
+    return !this.coordinateWorksheets.some(
+      w => !this.verifiedCoordinateWorksheets.includes(w),
+    );
   }
 
   getUploadData() {
@@ -256,39 +335,45 @@ class UploadController {
     return data;
   }
 
-  verifyCoordinates() {
-    const LAT_COL_DEF = 'http://rs.tdwg.org/dwc/terms/decimalLatitude';
-    const LON_COL_DEF = 'http://rs.tdwg.org/dwc/terms/decimalLongitude';
-
+  verifyCoordinates(worksheet) {
     const { config } = this.currentProject;
     const eventEntity = config.entities.find(e => e.conceptAlias === 'Event');
-    const { worksheet } = eventEntity;
-    const latColumn = config.findAttributesByDefinition(
-      worksheet,
-      LAT_COL_DEF,
-    )[0].column;
-    const lngColumn = config.findAttributesByDefinition(
-      worksheet,
-      LON_COL_DEF,
-    )[0].column;
+    const { worksheet: eventWorksheet } = eventEntity;
 
-    workbookToJson(this.fimsMetadata)
+    const latColumn = (
+      eventEntity.attributes.find(a => a.uri === LAT_URI) || {}
+    ).column;
+    const lngColumn = (
+      eventEntity.attributes.find(a => a.uri === LNG_URI) || {}
+    ).column;
+
+    const data = this.worksheetData.find(d => d.worksheet === worksheet);
+    workbookToJson(data.file)
       .then(
-        workbook => (workbook.isExcel ? workbook[worksheet] : workbook.default),
+        workbook =>
+          workbook.isExcel ? workbook[eventWorksheet] : workbook.default,
       )
-      .then(data => {
-        if (data.length === 0) {
+      .then(d => {
+        if (d.length === 0) {
           angular.toaster.error(
-            'Failed to find lat/long coordinates for your samples',
+            `Failed to find lat/long coordinates for your ${eventWorksheet}`,
           );
-          return undefined;
+          return;
         }
 
+        const uniqueKey = eventEntity.hashed
+          ? config.entities.find(
+              e =>
+                e.worksheet === eventWorksheet &&
+                e.parentEntity === eventEntity.conceptAlias,
+            ).uniqueKey
+          : eventEntity.uniqueKey;
+
         const scope = Object.assign(this.$scope.$new(true), {
-          data,
+          d,
           latColumn,
           lngColumn,
-          uniqueKey: eventEntity.uniqueKey,
+          uniqueKey,
         });
 
         const naanDialog =
@@ -300,22 +385,32 @@ class UploadController {
             this.$mdDialog
               .show({
                 template:
-                  '<upload-map-dialog layout="column" unique-key="uniqueKey" lat-column="latColumn" lng-column="lngColumn" data="data"></upload-map-dialog>',
+                  '<upload-map-dialog layout="column" unique-key="uniqueKey" lat-column="latColumn" lng-column="lngColumn" data="d"></upload-map-dialog>',
                 scope,
               })
               .then(() => {
-                this.sampleLocationsVerified = true;
+                this.verifiedCoordinateWorksheets.push(worksheet);
               })
               .catch(() => {
-                this.sampleLocationsVerified = false;
+                const i = this.verifiedCoordinateWorksheets.findIndex(
+                  v => v === worksheet,
+                );
+                if (i > -1) {
+                  this.verifiedCoordinateWorksheets.splice(i, 1);
+                }
               }),
         );
       })
       .catch(e => {
         angular.catcher('Failed to load samples map')(e);
-        // need to apply here b/c FileReader isn't an angular object
+        // need to $scope.$apply here b/c FileReader isn't an angular object
         this.$scope.$apply(() => {
-          this.verifySampleLocations = false;
+          const i = this.verifiedCoordinateWorksheets.findIndex(
+            v => v === worksheet,
+          );
+          if (i > -1) {
+            this.verifiedCoordinateWorksheets.splice(i, 1);
+          }
         });
       });
   }
@@ -360,6 +455,12 @@ class UploadController {
 
     return dataTypes;
   }
+
+  setCoordinateWorksheet(worksheet) {
+    return this.currentProject.config.entities
+      .filter(e => e.attributes.some(a => a.uri === LAT_URI))
+      .some(e => e.worksheet === worksheet);
+  }
 }
 
 export default {
@@ -369,7 +470,6 @@ export default {
     isVisible: '<',
     currentUser: '<',
     currentProject: '<',
-    fimsMetadata: '<',
     userExpeditions: '<',
     onMetadataChange: '&',
     onUpload: '&',
