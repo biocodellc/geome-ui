@@ -155,7 +155,7 @@ class TemplateController {
       this.selected[this.worksheet] = this.attributes[
         this.worksheet
       ].required.slice();
-      Object.values(this.attributes[this.worksheet])
+      Object.values(this.attributes[this.worksheet].attributes)
         .reduce((result, attributes) => result.concat(attributes), [])
         .filter(a => this.template.columns.includes(a.column))
         .forEach(a => this.selected[this.worksheet].push(a));
@@ -203,7 +203,7 @@ class TemplateController {
 
   filterTemplates() {
     this.templates = this.allTemplates.filter(
-      t => t.worksheet === this.selected,
+      t => t.worksheet === this.worksheet,
     );
     this.templates.unshift(DEFAULT_TEMPLATE);
   }
@@ -276,7 +276,9 @@ class TemplateController {
 
   getWorksheets() {
     this.worksheets = this.projectConfig.worksheets();
-    this.worksheets.unshift('Workbook');
+    if (this.worksheets.length > 1 && !this.worksheets.includes('Workbook')) {
+      this.worksheets.unshift('Workbook');
+    }
     this.worksheet = this.worksheets[0];
   }
 

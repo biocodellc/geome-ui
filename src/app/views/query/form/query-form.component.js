@@ -43,7 +43,9 @@ class QueryFormController {
   }
 
   $onInit() {
-    this.hasFastqEntity = false;
+    this.hasFastqEntity = this.currentProject
+      ? this.currentProject.config.entities.some(e => e.type === 'Fastq')
+      : false;
 
     // view toggles
     this.moreSearchOptions = true;
@@ -66,6 +68,7 @@ class QueryFormController {
       this.hasFastqEntity = config.entities.some(e => e.type === 'Fastq');
 
       this.generateFilterOptions();
+      this.params.expeditions = [];
       // if (this.params.filters.length === 0) this.addFilter();
     }
 
