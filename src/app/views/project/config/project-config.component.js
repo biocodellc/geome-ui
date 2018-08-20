@@ -32,7 +32,7 @@ class ConfigController {
     }
   }
 
-  updateStateData() {
+  updateShowSave() {
     this.showSave = !angular.equals(this.currentProject.config, this.config);
     if (this.showSave) {
       this.projectConfigState.data.config = this.config;
@@ -43,42 +43,42 @@ class ConfigController {
 
   handleUpdateEntities(entities) {
     this.config.entities = entities;
-    this.updateStateData();
+    this.updateShowSave();
   }
 
   handleUpdateEntity(alias, entity) {
     const i = this.config.entities.findIndex(e => e.conceptAlias === alias);
     this.config.entities.splice(i, 1, entity);
-    this.updateStateData();
+    this.updateShowSave();
   }
 
   handleUpdateLists(lists) {
     this.config.lists = lists;
-    this.updateStateData();
+    this.updateShowSave();
   }
 
   handleUpdateList(alias, list) {
     const i = this.config.lists.findIndex(l => l.alias === alias);
     this.config.lists.splice(i, 1, list);
-    this.updateStateData();
+    this.updateShowSave();
   }
 
   handleUpdateMetadata(config) {
     delete config.entities;
     delete config.lists;
     Object.assign(this.config, config);
-    this.updateStateData();
+    this.updateShowSave();
   }
 
   handleNewWorksheet(sheetName) {
     this.config.addWorksheet(sheetName);
     // this.showSave = true;
-    this.updateStateData();
+    this.updateShowSave();
   }
 
   handleUpdateExpeditionMetadata(expeditionMetadata) {
     this.config.expeditionMetadataProperties = expeditionMetadata;
-    this.updateStateData();
+    this.updateShowSave();
   }
 
   handleOnSave() {
@@ -91,7 +91,7 @@ class ConfigController {
         this.currentProject.config = config;
         angular.toaster.success('Successfully updated project configuration!');
         this.config = new ProjectConfig(config);
-        this.updateStateData();
+        this.updateShowSave();
       })
       .catch(response => {
         if (response.status === 400) {
@@ -106,8 +106,7 @@ class ConfigController {
   }
 
   uiCanExit() {
-    const state = this.$state.get('project.config');
-    if (state.data && state.data.config) {
+    if (this.showSave) {
       return this.$mdDialog
         .show({
           template: require('./unsaved-config-confirmation.html'),
