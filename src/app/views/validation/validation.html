@@ -4,8 +4,8 @@
     <h3 class="page-header" ng-if="!$ctrl.currentUser">Validate Data</h3>
 
     <p ng-show="!$ctrl.currentUser">
-        <strong>To upload data users must have an account.</strong> To set up an account send an email with your
-        name, title and affiliation to
+        <strong>To upload data users must have an account.</strong> To set up an account send an email
+        with your name, title and affiliation to
         <a href="mailto:geome.database@gmail.com">geome.database@gmail.com</a>
     </p>
 
@@ -23,8 +23,7 @@
                     <span ng-if="!$ctrl.currentUser">Validate</span>
                     <span ng-if="$ctrl.currentUser">Load</span>
                 </uib-tab-heading>
-                <fims-upload is-visible="$ctrl.activeTab === 1" current-project="$ctrl.currentProject" fims-metadata="$ctrl.fimsMetadata"
-                    user-expeditions="$ctrl.userExpeditions" on-metadata-change="$ctrl.fimsMetadataChange(fimsMetadata)"
+                <fims-upload is-visible="$ctrl.activeTab === 1" current-project="$ctrl.currentProject" user-expeditions="$ctrl.userExpeditions"
                     current-user="$ctrl.currentUser" on-upload="$ctrl.handleUpload(data)">
                 </fims-upload>
 
