@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 const EXTS = ['xls', 'xlsx', 'xlsxm', 'xlsb', 'ods'];
 
-const workbookFromFile = file =>
+const workbookFromFile = (file, onlySheetNames = false) =>
   new Promise((resolve, reject) => {
     try {
       const reader = new FileReader();
@@ -14,6 +14,7 @@ const workbookFromFile = file =>
         try {
           const workbook = xlsx.read(data, {
             type: 'binary',
+            bookSheets: onlySheetNames,
           });
           resolve(workbook);
         } catch (err) {
@@ -123,12 +124,15 @@ export const findExcelCell = (file, regEx, sheetName) =>
     return match;
   });
 
+export const parseWorkbookSheetNames = file =>
+  workbookFromFile(file, true).then(wb => wb.SheetNames);
+
 export const parseWorkbook = (file, readCells) =>
   workbookFromFile(file).then(workbook => {
     const sheets = {};
 
     workbook.SheetNames.forEach(sName => {
-      const s = workbook.sheets[sName];
+      const s = workbook.Sheets[sName];
 
       if (s && Object.keys(s).length > 0) {
         sheets[sName] = parseSheet(s, readCells);
