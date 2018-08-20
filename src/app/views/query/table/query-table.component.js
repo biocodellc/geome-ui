@@ -16,6 +16,7 @@ class QueryTableController {
       'decimalLatitude',
       'decimalLongitude',
       'yearCollected',
+      'phylum',
       'genus',
       'species',
       'bcid',
