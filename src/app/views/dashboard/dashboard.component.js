@@ -32,10 +32,17 @@ class DashboardController {
     }
   }
 
-  downloadCsv(conceptAlias, expeditionCode) {
+  downloadCsv(worksheet, expeditionCode) {
     this.loadingExpedition = expeditionCode;
+
+    const entities = this.currentProject.config.entities
+      .filter(e => e.worksheet === worksheet)
+      .map(e => e.conceptAlias);
+
+    const conceptAlias = entities.shift();
+
     this.QueryService.downloadCsv(
-      this.getQuery(expeditionCode),
+      this.getQuery(expeditionCode, entities),
       conceptAlias,
     ).finally(() => (this.loadingExpedition = undefined));
   }
@@ -48,10 +55,10 @@ class DashboardController {
     ).finally(() => (this.loadingExpedition = undefined));
   }
 
-  getQuery(expeditionCode) {
+  getQuery(expeditionCode, selectEntities) {
     const params = new QueryParams();
     params.expeditions.push({ expeditionCode });
-    return params.buildQuery(this.currentProject.projectId);
+    return params.buildQuery(this.currentProject.projectId, selectEntities);
   }
 
   downloadFastq(expeditionCode) {
@@ -64,6 +71,7 @@ class DashboardController {
 
   menuOptions(expedition) {
     if (!this.menuCache[expedition.expeditionCode]) {
+      const worksheets = [];
       this.menuCache[expedition.expeditionCode] = this.headers
         .map(header => {
           const conceptAlias = header.replace('Count', '');
@@ -75,10 +83,12 @@ class DashboardController {
           if (!Number(expedition[header])) return;
 
           if (entity.worksheet) {
+            if (worksheets.includes(entity.worksheet)) return;
+            worksheets.push(entity.worksheet);
             // eslint-disable-next-line consistent-return
             return {
-              fn: this.downloadCsv.bind(this, conceptAlias),
-              name: `${conceptAlias} CSV`,
+              fn: this.downloadCsv.bind(this, entity.worksheet),
+              name: `${entity.worksheet} CSV`,
             };
           } else if (entity.type === 'Fasta') {
             // eslint-disable-next-line consistent-return

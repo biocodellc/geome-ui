@@ -2,7 +2,6 @@ const template = require('./uploadDatatypes.html');
 
 class DataTypesController {
   $onInit() {
-    this.dataTypes = {};
     this.touched = false;
     this.dataTypeSelected = false;
   }
@@ -13,6 +12,10 @@ class DataTypesController {
         this.dataTypes[this.availableTypes[0].name] = true;
         this.handleChange();
       }
+    }
+
+    if ('dataTypes' in changesObj && this.dataTypes) {
+      this.dataTypes = Object.assign({}, this.dataTypes);
     }
   }
 
@@ -30,6 +33,7 @@ export default {
   controller: DataTypesController,
   bindings: {
     availableTypes: '<',
+    dataTypes: '<',
     onUpdate: '&',
   },
 };
