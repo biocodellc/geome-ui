@@ -14,10 +14,9 @@ function configConfirmationController($mdDialog) {
 }
 
 class ConfigController {
-  constructor($state, $mdDialog, ProjectConfigService) {
+  constructor($mdDialog, ProjectConfigService) {
     'ngInject';
 
-    this.$state = $state;
     this.$mdDialog = $mdDialog;
     this.ProjectConfigService = ProjectConfigService;
   }
@@ -25,20 +24,10 @@ class ConfigController {
   $onInit() {
     this.showSave = false;
     this.config = new ProjectConfig(this.currentProject.config);
-    this.projectConfigState = this.$state.get('project.config');
-
-    if (!this.projectConfigState.data) {
-      this.projectConfigState.data = {};
-    }
   }
 
   updateShowSave() {
     this.showSave = !angular.equals(this.currentProject.config, this.config);
-    if (this.showSave) {
-      this.projectConfigState.data.config = this.config;
-    } else {
-      delete this.projectConfigState.data.config;
-    }
   }
 
   handleUpdateEntities(entities) {
