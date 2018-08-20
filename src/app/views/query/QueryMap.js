@@ -10,13 +10,13 @@ export default class QueryMap extends Map {
     return super.setMarkers(data, this.generatePopupContent.bind(this));
   }
 
-  generatePopupContent({ bcid, phylum, genus, species, yearCollected, event }) {
+  generatePopupContent({ bcid, phylum, genus, species, event }) {
     return (
-      `<strong>GUID</strong>:  ${bcid}<br>` +
+     // `<strong>GUID</strong>:  ${bcid}<br>` +
       `<strong>Phylum</strong>:  ${phylum}<br>` +
       `<strong>Genus</strong>:  ${genus}<br>` +
       `<strong>Species</strong>:  ${species}<br>` +
-      `<strong>Year of collection</strong>:  ${yearCollected}<br>` +
+      `<strong>Year Collected</strong>:  ${event.yearCollected}<br>` +
       `<strong>Locality, Country</strong>:  ${event.locality}, ${
         event.country
       }<br>` +
