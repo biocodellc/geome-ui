@@ -10,7 +10,7 @@ function getStates() {
         parent: 'projectView',
         abstract: true,
         template:
-          '<div ui-view class="admin" current-project="$ctrl.currentProject"></div>',
+          '<div ui-view class="admin" current-user="$ctrl.currentUser" current-project="$ctrl.currentProject"></div>',
         resolve: {
           expeditions: /* @ngInject */ (
             $state,

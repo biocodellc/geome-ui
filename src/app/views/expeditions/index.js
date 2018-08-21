@@ -2,7 +2,6 @@ import angular from 'angular';
 import bootstrap from 'angular-ui-bootstrap';
 
 import users from '../../components/users/index';
-import userService from '../../services/user.service';
 
 import routing from './expeditions.routes';
 import projectService from '../../services/project.service';
@@ -14,7 +13,6 @@ import fimsExpeditionResources from '../../components/expeditions/expedition-res
 const dependencies = [
   bootstrap,
   users,
-  userService,
   projectService,
   fimsExpeditionsList,
   fimsExpedition,
