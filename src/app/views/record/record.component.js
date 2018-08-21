@@ -193,11 +193,13 @@ class RecordController {
       detailCacheNumCols = numCols;
     }
 
-    const keys = Object.keys(this.record).filter(
-      k =>
-        !Object.keys(mainRecordDetails[this.record.entity]).includes(k) &&
-        !['bcid', 'entity'].includes(k),
-    );
+    const keys = Object.keys(this.record)
+      .filter(
+        k =>
+          !Object.keys(mainRecordDetails[this.record.entity]).includes(k) &&
+          !['bcid', 'entity'].includes(k),
+      )
+      .sort();
 
     let view = index === 0 ? keys : [];
     if (numCols > 1) {
