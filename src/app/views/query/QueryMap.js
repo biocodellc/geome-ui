@@ -12,7 +12,6 @@ export default class QueryMap extends Map {
 
   generatePopupContent({ bcid, phylum, genus, species, event }) {
     return (
-     // `<strong>GUID</strong>:  ${bcid}<br>` +
       `<strong>Phylum</strong>:  ${phylum}<br>` +
       `<strong>Genus</strong>:  ${genus}<br>` +
       `<strong>Species</strong>:  ${species}<br>` +
@@ -23,8 +22,8 @@ export default class QueryMap extends Map {
       `<a href='${this.$state.href('record', {
         bcid,
       })}' target='_blank'>Sample details</a><br>` +
-      `<a href='${this.$state.href('event', {
-        bcid,
+      `<a href='${this.$state.href('record', {
+        bcid: event.bcid,
       })}' target='_blank'>Event details</a>`
     );
   }
