@@ -43,7 +43,9 @@ class QueryFormController {
   }
 
   $onInit() {
-    this.hasFastqEntity = false;
+    this.hasFastqEntity = this.currentProject
+      ? this.currentProject.config.entities.some(e => e.type === 'Fastq')
+      : false;
 
     // view toggles
     this.moreSearchOptions = true;
