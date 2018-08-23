@@ -15,7 +15,7 @@ const mapChildren = children =>
     return accumulator;
   }, {});
 
-const detailCache = {};
+let detailCache = {};
 let detailCacheNumCols;
 class RecordController {
   constructor($mdMedia, ProjectConfigService) {
@@ -32,6 +32,8 @@ class RecordController {
 
   $onChanges(changesObj) {
     if ('record' in changesObj && this.record) {
+      detailCache = {};
+      detailCacheNumCols = undefined;
       this.setParentDetail(this.record.parent);
       this.setChildDetails(this.record.children);
       this.parent = this.record.parent;
