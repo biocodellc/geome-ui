@@ -21,6 +21,7 @@ import textOverflowTooltip from './directives/textOverflowTooltip.directive';
 import showErrors from './directives/showErrors.directive';
 import mdPopover from './directives/mdPopover.directive';
 import mdSticky from './directives/mdSticky.directive';
+import ngImageGallery from './directives/ngImageGallery.directive';
 import trustedHtml from './filters/html.filter';
 
 import about from './views/about';
@@ -62,6 +63,7 @@ const dependencies = [
   showErrors,
   mdPopover,
   mdSticky,
+  ngImageGallery,
   trustedHtml,
   bootstrap,
   ngMaterial,

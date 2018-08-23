@@ -1,125 +1,11 @@
 import angular from 'angular';
+import {
+  mainRecordDetails,
+  childRecordDetails,
+  parentRecordDetails,
+} from './recordDetails';
 
 const template = require('./record.html');
-
-const getKey = key => event => ({ text: event[key] });
-
-const parentRecordDetails = {
-  Event: {
-    eventID: event => ({ text: event.eventID, href: `/record/${event.bcid}` }),
-    yearCollected: getKey('yearCollected'),
-    country: getKey('country'),
-    decimalLatitude: getKey('decimalLatitude'),
-    decimalLongitude: getKey('decimalLongitude'),
-  },
-  Sample: {
-    materialSampleID: sample => ({
-      text: sample.materialSampleID,
-      href: `/record/${sample.bcid}`,
-    }),
-    genus: getKey('genus'),
-    species: getKey('species'),
-  },
-  Tissue: {
-    tissueID: tissue => ({
-      text: tissue.tissueID,
-      href: `/record/${tissue.bcid}`,
-    }),
-    tissueType: getKey('tissueType'),
-    tissueInstitution: getKey('tissueInstitution'),
-  },
-};
-
-const childRecordDetails = {
-  Sample: {
-    materialSampleID: sample => ({
-      text: sample.materialSampleID,
-      href: `/record/${sample.bcid}`,
-    }),
-    genus: getKey('genus'),
-    species: getKey('species'),
-  },
-  Tissue: {
-    tissueID: tissue => ({
-      text: tissue.tissueID,
-      href: `/record/${tissue.bcid}`,
-    }),
-    tissueType: getKey('tissueType'),
-    tissueInstitution: getKey('tissueInstitution'),
-  },
-  fastaSequence: {
-    marker: sq => ({
-      text: sq.marker,
-      href: `/record/${sq.bcid}`,
-    }),
-  },
-  fastqMetadata: {
-    materialSampleID: m => ({
-      text: m.materialSampleID,
-      href: `/record/${m.bcid}`,
-    }),
-  },
-  sample_photos: {
-    photoID: p => ({
-      text: p.photoID,
-      href: `/record/${p.bcid}`,
-    }),
-    qualityScore: getKey('qualityScore'),
-    hasScale: getKey('hasScale'),
-  },
-  event_photos: {
-    photoID: p => ({
-      text: p.photoID,
-      href: `/record/${p.bcid}`,
-    }),
-    qualityScore: getKey('qualityScore'),
-    hasScale: getKey('hasScale'),
-  },
-};
-
-const mainRecordDetails = {
-  Event: {},
-  Sample: {
-    materialSampleID: getKey('materialSampleID'),
-    species: getKey('species'),
-    genus: getKey('genus'),
-    principalInvestigator: getKey('principalInvestigator'),
-    bcid: s => ({
-      text: s.bcid,
-      href: `https://n2t.net/${s.bcid}`,
-    }),
-  },
-  Tissue: {},
-  fastaSequence: {
-    marker: getKey('marker'),
-    sequence: getKey('sequence'),
-    bcid: s => ({
-      text: s.bcid,
-      href: `https://n2t.net/${s.bcid}`,
-    }),
-  },
-  fastqMetadata: {
-    materialSampleID: getKey('materialSampleID'),
-    bioSamplesLink: m => ({
-      text: m.bioSample ? 'NCBI BioSamples' : undefined,
-      href: m.bioSample
-        ? `https://www.ncbi.nlm.nih.gov/bioproject/${m.bioSample.bioProjectId}`
-        : undefined,
-    }),
-    bioProjectLink: m => ({
-      text: m.bioSample ? 'NCBI BioProject' : undefined,
-      href: m.bioSample
-        ? `https://www.ncbi.nlm.nih.gov/biosample?LinkName=bioproject_biosample_all&from_uid=${
-            m.bioSample.bioProjectId
-          }`
-        : undefined,
-    }),
-    bcid: s => ({
-      text: s.bcid,
-      href: `https://n2t.net/${s.bcid}`,
-    }),
-  },
-};
 
 const mapChildren = children =>
   children.reduce((accumulator, child) => {
@@ -176,6 +62,8 @@ class RecordController {
   }
 
   auxiliaryRecordDetails(index) {
+    if (this.loading) return undefined;
+
     const numCols = this.$mdMedia('gt-sm') ? 2 : 1;
 
     if (['fastaSequence', 'fastqMetadata'].includes(this.record.entity)) {
@@ -193,20 +81,39 @@ class RecordController {
       detailCacheNumCols = numCols;
     }
 
-    const keys = Object.keys(this.record).filter(
-      k =>
-        !Object.keys(mainRecordDetails[this.record.entity]).includes(k) &&
-        !['bcid', 'entity'].includes(k),
+    const e = this.config.entities.find(
+      entity => entity.conceptAlias === this.record.entity,
     );
 
-    let view = index === 0 ? keys : [];
+    const recordKeys = Object.keys(this.record).filter(
+      k =>
+        !Object.keys(mainRecordDetails[this.record.entity]).includes(k) &&
+        !['bcid', 'entity', 'expeditionCode', 'projectId'].includes(k),
+    );
+
+    const sortedKeys = e.attributes.reduce((accumulator, attribute) => {
+      if (recordKeys.includes(attribute.column)) {
+        accumulator.push(attribute.column);
+      }
+      return accumulator;
+    }, []);
+
+    // add any missing keys to the sortedKeys list
+    recordKeys
+      .sort()
+      .forEach(k => !sortedKeys.includes(k) && sortedKeys.push(k));
+
+    let view = index === 0 ? sortedKeys : [];
     if (numCols > 1) {
-      const perCol = Math.ceil(keys.length / numCols);
+      const perCol = Math.ceil(sortedKeys.length / numCols);
       const start = index * perCol;
-      if (start > keys.length) view = [];
+      if (start > sortedKeys.length) view = [];
       else {
         const last = start + perCol;
-        view = keys.slice(start, last > keys.length ? keys.length : last);
+        view = sortedKeys.slice(
+          start,
+          last > sortedKeys.length ? sortedKeys.length : last,
+        );
       }
     }
     detailCache[index] = view.reduce((accumulator, key) => {
@@ -224,15 +131,22 @@ class RecordController {
 
     if (!this.children) return;
 
-    this.photos = this.children
-      .filter(e => photoEntities.includes(e.entity))
-      .sort((a, b) => a.qualityScore > b.qualityScore)
+    const photos = this.children.filter(e => photoEntities.includes(e.entity));
+    const hasQualityScore = photos.some(p => p.qualityScore);
+
+    this.photos = photos
+      .sort(
+        (a, b) =>
+          hasQualityScore
+            ? a.qualityScore > b.qualityScore
+            : a.photoID > b.photoID,
+      )
       .map(photo => ({
         id: photo.photoID,
         title: photo.photoID,
         alt: `${photo.photoID} image`,
-        thumbUrl: photo.img128,
-        url: photo.img512,
+        bubbleUrl: photo.img64,
+        url: photo.img1024,
         extUrl: photo.originalUrl,
       }));
   }

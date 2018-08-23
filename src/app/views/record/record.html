@@ -21,13 +21,10 @@
         </tr>
       </tbody>
     </table>
-    <div flex ng-if="$ctrl.photos">
-      <div class>
-        <img ng-src="{{$ctrl.photos[0].extUrl}}" />
-      </div>
-      <!-- <ng-image-gallery images="$ctrl.photos" thumbnails="true" thumb-size="80" inline="true"
-        bubble-size="integer | model" img-bubbles="true" img-anim="fadeup" on-open="$ctrl.inlineGallery = false"
-        on-close="$ctrl.inlineGallery = true"></ng-image-gallery> -->
+    <div flex ng-if="$ctrl.photos" bubble-auto-scroll>
+      <!-- <ng-image-gallery images="$ctrl.photos" inline="$ctrl.inlineGallery" on-click="$ctrl.inlineGallery = !$ctrl.inlineGallery" img-Bubbles="true" bubble-size="64" -->
+      <ng-image-gallery images="$ctrl.photos" inline="true" img-Bubbles="true" bubble-size="64"
+      on-close="$ctrl.inlineGallery = true"></ng-image-gallery>
     </div>
   </div>
 
