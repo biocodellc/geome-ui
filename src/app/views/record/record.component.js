@@ -151,7 +151,7 @@ class RecordController {
         id: photo.photoID,
         title: photo.photoID,
         alt: `${photo.photoID} image`,
-        bubbleUrl: photo.img64,
+        bubbleUrl: photo.img128,
         url: photo.img1024,
         extUrl: photo.originalUrl,
       }));
