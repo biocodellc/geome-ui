@@ -165,6 +165,7 @@ const bubbleAutoScroll = /* ngInject */ ($window, $timeout) => ({
         scope._bubblesInView - (scope._bubblesInView - scope._activeImageIndex);
 
       $timeout(() => {
+        // TODO scroll when > then 1/2 bubble is clicked
         if (relativeIndexToBubbleWrapper > scope._bubblesInView - 2) {
           const outBubbles =
             scope._activeImageIndex + 1 - scope._bubblesInView + 1;

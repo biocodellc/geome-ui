@@ -1,4 +1,5 @@
 import angular from 'angular';
+import compareValues from '../../utils/compareValues';
 import {
   mainRecordDetails,
   childRecordDetails,
@@ -53,6 +54,8 @@ class RecordController {
       return detailCache.main;
     }
     const detailMap = mainRecordDetails[this.record.entity];
+    if (!detailMap) return undefined;
+
     detailCache.main = Object.keys(detailMap).reduce(
       (accumulator, key) =>
         Object.assign(accumulator, { [key]: detailMap[key](this.record) }),
@@ -87,7 +90,8 @@ class RecordController {
 
     const recordKeys = Object.keys(this.record).filter(
       k =>
-        !Object.keys(mainRecordDetails[this.record.entity]).includes(k) &&
+        (!mainRecordDetails[this.record.entity] ||
+          !Object.keys(mainRecordDetails[this.record.entity]).includes(k)) &&
         !['bcid', 'entity', 'expeditionCode', 'projectId'].includes(k),
     );
 
@@ -199,6 +203,7 @@ class RecordController {
       .then(config => {
         this.config = config;
         this.setPhotos();
+        this.sortChildren();
       })
       .catch(() =>
         angular.toaster.error('Failed to fetch project configuration'),
@@ -206,6 +211,19 @@ class RecordController {
       .finally(() => {
         this.loading = false;
       });
+  }
+
+  sortChildren() {
+    if (!this.childDetails) return;
+
+    Object.keys(this.childDetails).forEach(conceptAlias => {
+      const e = this.config.entities.find(
+        entity => entity.conceptAlias === conceptAlias,
+      );
+      this.childDetails[conceptAlias] = this.childDetails[conceptAlias].sort(
+        compareValues(`${e.uniqueKey}.text`),
+      );
+    });
   }
 }
 
