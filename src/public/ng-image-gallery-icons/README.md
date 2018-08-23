@@ -1,1 +1,0 @@
-If `svg` is not working, convert to `png`.

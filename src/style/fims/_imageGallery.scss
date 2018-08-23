@@ -229,7 +229,7 @@ $bubble-background-color: #999;
       }
       .galleria {
         position: absolute;
-        top: 0;
+        top: 20px;
         bottom: 0;
         left: 80px;
         right: 80px;
@@ -437,7 +437,7 @@ $bubble-background-color: #999;
             color: #fff;
             .title {
               font-size: 18px;
-              margin-bottom: 10px;
+              margin-top: 8px;
             }
             .desc {
               font-size: 12px;
@@ -594,6 +594,7 @@ $bubble-background-color: #999;
           height: 30px;
         }
         .galleria {
+          top: 0;
           .galleria-bubbles-wrapper {
             flex: none;
             margin: 20px 0 0 0;
