@@ -355,7 +355,7 @@ class UploadController {
       )
       .then(d => {
         if (!d.some(e => e[latColumn] && e[lngColumn])) {
-          angular.toaster.warn(
+          angular.toaster.error(
             `We didn't find any coordinates for your ${eventWorksheet} records`,
           );
           this.verifiedCoordinateWorksheets.push(worksheet);
