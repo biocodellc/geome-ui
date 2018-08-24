@@ -1,7 +1,9 @@
 <div class="col-xs-11 col-xs-offset-1">
-    <fims-validation-results
-            results="$ctrl.results">
+    <fims-validation-results results="$ctrl.results">
     </fims-validation-results>
+</div>
+<div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
+    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
 </div>
 <div class="col-xs-11 col-xs-offset-1" ng-show="$ctrl.showGenbankDownload">
     <md-button type="button" ng-click="$ctrl.downloadFastqFiles()" class="md-raised md-primary">
