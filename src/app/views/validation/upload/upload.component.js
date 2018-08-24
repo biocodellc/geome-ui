@@ -354,10 +354,11 @@ class UploadController {
           workbook.isExcel ? workbook[eventWorksheet] : workbook.default,
       )
       .then(d => {
-        if (d.length === 0) {
+        if (!d.some(e => e[latColumn] && e[lngColumn])) {
           angular.toaster.error(
-            `Failed to find lat/long coordinates for your ${eventWorksheet}`,
+            `We didn't find any coordinates for your ${eventWorksheet} records`,
           );
+          this.verifiedCoordinateWorksheets.push(worksheet);
           return;
         }
 

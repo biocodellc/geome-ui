@@ -1,37 +1,37 @@
 @mixin layout-align-divider-fix() {
-    // Fix md-divider when layout-align directive is used on parent
-    // ------------------------------
-    $name: 'layout-align';
-    .#{$name},
-    .#{$name}-start,
-    .#{$name}-start-start,
-    .#{$name}-start-center,
-    .#{$name}-start-end,
-    .#{$name}-start-stretch,
-    .#{$name}-center,
-    .#{$name}-center-start,
-    .#{$name}-center-center,
-    .#{$name}-center-end,
-    .#{$name}-center-stretch,
-    .#{$name}-end,
-    .#{$name}-end-start,
-    .#{$name}-end-center,
-    .#{$name}-end-end,
-    .#{$name}-end-stretch,
-    .#{$name}-space-around,
-    .#{$name}-space-around-center,
-    .#{$name}-space-around-start,
-    .#{$name}-space-around-end,
-    .#{$name}-space-around-stretch,
-    .#{$name}-space-between,
-    .#{$name}-space-between-center,
-    .#{$name}-space-between-start,
-    .#{$name}-space-between-end,
-    .#{$name}-space-between-stretch {
-        md-divider {
-            align-self: normal;
-        }
+  // Fix md-divider when layout-align directive is used on parent
+  // ------------------------------
+  $name: 'layout-align';
+  .#{$name},
+  .#{$name}-start,
+  .#{$name}-start-start,
+  .#{$name}-start-center,
+  .#{$name}-start-end,
+  .#{$name}-start-stretch,
+  .#{$name}-center,
+  .#{$name}-center-start,
+  .#{$name}-center-center,
+  .#{$name}-center-end,
+  .#{$name}-center-stretch,
+  .#{$name}-end,
+  .#{$name}-end-start,
+  .#{$name}-end-center,
+  .#{$name}-end-end,
+  .#{$name}-end-stretch,
+  .#{$name}-space-around,
+  .#{$name}-space-around-center,
+  .#{$name}-space-around-start,
+  .#{$name}-space-around-end,
+  .#{$name}-space-around-stretch,
+  .#{$name}-space-between,
+  .#{$name}-space-between-center,
+  .#{$name}-space-between-start,
+  .#{$name}-space-between-end,
+  .#{$name}-space-between-stretch {
+    md-divider {
+      align-self: normal;
     }
+  }
 }
 
 @include layout-align-divider-fix();
@@ -39,19 +39,19 @@
 // Font Awesome
 //////////////
 .fa-xs {
-    font-size: 18px;
+  font-size: 18px;
 }
 
 .fa-sm {
-    font-size: 24px;
+  font-size: 24px;
 }
 
 .fa-md {
-    font-size: 36px;
+  font-size: 36px;
 }
 
 .fa-lg {
-    font-size: 48px;
+  font-size: 48px;
 }
 
 ///////////
@@ -59,34 +59,34 @@
 ///////////
 // btn groups https://material.angularjs.org/latest/CSS/button#grouping-with-css-overrides
 .groupX {
-    margin-right: 0;
-    margin-left: 0;
-    text-transform: none;
-    &.md-button {
-        &.md-button-sm {
-            min-height: 0;
-            min-width: 0;
-            font-size: 13px;
-            line-height: 13px;
-            padding: 8px;
-        }
-        &.left {
-            border-radius: $button-border-radius 0 0 $button-border-radius;
-        }
-        &.middle {
-            border-radius: 0;
-            border-left: 1px solid rgba(230, 230, 230, 0.96);
-            border-right: 1px solid rgba(230, 230, 230, 0.96);
-        }
-        &.right {
-            border-radius: 0 $button-border-radius $button-border-radius 0;
-        }
-        &:not([disabled]):hover {
-            background-color: rgba(193, 193, 193, 0.96);
-            color: rgba(44, 65, 164, 0.96);
-            transition: 0.3s;
-        }
+  margin-right: 0;
+  margin-left: 0;
+  text-transform: none;
+  &.md-button {
+    &.md-button-sm {
+      min-height: 0;
+      min-width: 0;
+      font-size: 13px;
+      line-height: 13px;
+      padding: 8px;
     }
+    &.left {
+      border-radius: $button-border-radius 0 0 $button-border-radius;
+    }
+    &.middle {
+      border-radius: 0;
+      border-left: 1px solid rgba(230, 230, 230, 0.96);
+      border-right: 1px solid rgba(230, 230, 230, 0.96);
+    }
+    &.right {
+      border-radius: 0 $button-border-radius $button-border-radius 0;
+    }
+    &:not([disabled]):hover {
+      background-color: rgba(193, 193, 193, 0.96);
+      color: rgba(44, 65, 164, 0.96);
+      transition: 0.3s;
+    }
+  }
 }
 
 //////////
@@ -95,121 +95,126 @@
 [ng\:cloak],
 [ng-cloak],
 .ng-cloak {
-    display: none !important;
+  display: none !important;
 }
 
 .loading-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1000;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
 }
 
 .wrapper {
-    margin-bottom: 40px;
+  margin-bottom: 40px;
 }
 
-body>app>md-content {
-    background-color: #fff;
+body > app > md-content {
+  background-color: #fff;
 }
 
 md-menu-content.md-menu-bar-menu.md-dense a.md-button {
-    padding-top: inherit;
+  padding-top: inherit;
 }
 
 .margin-bottom {
-    margin-bottom: 24px;
+  margin-bottom: 24px;
 }
 
 .success {
-    color: #388e3c;
+  color: #388e3c;
 }
 
 .text-upper {
-    text-transform: uppercase;
+  text-transform: uppercase;
 }
 
 .text-center {
-    text-align: center
+  text-align: center;
 }
 
 .bold {
-    font-weight: 700;
+  font-weight: 700;
 }
 
 // page header
 .page-header {
-    margin: 0 0 35px 0;
-    border-bottom: none; // padding-bottom: 0;
-    @extend .text-center;
-    @extend .layout-padding;
+  margin: 0 0 35px 0;
+  border-bottom: none; // padding-bottom: 0;
+  @extend .text-center;
+  @extend .layout-padding;
 }
 
 md-checkbox.small {
-    min-width: 12px;
-    min-height: 12px;
-    @include checkbox-container('.md-checked', 12px, 12px);
-    @extend .layout-row;
-    .md-container {
-        width: 12px;
-        height: 12px;
-        .md-icon {
-            width: 12px;
-            height: 12px;
-        }
+  min-width: 12px;
+  min-height: 12px;
+  @include checkbox-container('.md-checked', 12px, 12px);
+  @extend .layout-row;
+  .md-container {
+    width: 12px;
+    height: 12px;
+    .md-icon {
+      width: 12px;
+      height: 12px;
     }
+  }
 }
 
 // responsive tables
 .Rtable {
-    display: flex;
-    flex-wrap: wrap;
-    margin: 0 0 3em 0;
-    padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 0 3em 0;
+  padding: 0;
 }
 
 .Rtable-cell {
-    box-sizing: border-box;
-    flex-grow: 1;
-    width: 100%; // Default to full width
-    padding: 0.8em 1.2em;
-    overflow: hidden; // Or flex might break
-    list-style: none;
-    border: solid 3px white;
-    background: fade(slategrey, 20%);
-    >h1,
-    >h2,
-    >h3,
-    >h4,
-    >h5,
-    >h6 {
-        margin: 0;
-    }
+  box-sizing: border-box;
+  flex-grow: 1;
+  width: 100%; // Default to full width
+  padding: 0.8em 1.2em;
+  overflow: hidden; // Or flex might break
+  list-style: none;
+  border: solid 3px white;
+  background: fade(slategrey, 20%);
+  > h1,
+  > h2,
+  > h3,
+  > h4,
+  > h5,
+  > h6 {
+    margin: 0;
+  }
 }
 
 /* Table column sizing
 ================================== */
 
-.Rtable--2cols>.Rtable-cell {
-    width: 50%;
+.Rtable--2cols > .Rtable-cell {
+  width: 50%;
 }
 
-.Rtable--3cols>.Rtable-cell {
-    width: 33.33%;
+.Rtable--3cols > .Rtable-cell {
+  width: 33.33%;
 }
 
-.Rtable--4cols>.Rtable-cell {
-    width: 25%;
+.Rtable--4cols > .Rtable-cell {
+  width: 25%;
 }
 
-.Rtable--5cols>.Rtable-cell {
-    width: 20%;
+.Rtable--5cols > .Rtable-cell {
+  width: 20%;
 }
 
-.Rtable--6cols>.Rtable-cell {
-    width: 16.6%;
+.Rtable--6cols > .Rtable-cell {
+  width: 16.6%;
+}
+
+// firefox flex table fix
+.flex.table {
+  width: auto;
 }
 
 // TODO: remove when we remove bootstrap
@@ -218,6 +223,6 @@ md-checkbox.small {
 //////////////////////
 .row,
 .form-horizontal .form-group {
-    margin-left: 0px;
-    margin-right: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
 }
