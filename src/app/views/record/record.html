@@ -8,7 +8,7 @@
     <div ng-if="$ctrl.record.originalUrl" flex="100">
       <img src="{{$ctrl.record.img1024}}" href="{{$ctrl.record.originalUrl}}"/>
     </div>
-    <table ng-if="!$ctrl.record.originalUrl" flex class="table table-condensed">
+    <table ng-if="!$ctrl.record.originalUrl" flex="100" class="table table-condensed">
       <tbody>
         <tr ng-repeat="(key, value) in $ctrl.mainRecordDetails() track by key">
           <th>{{key}}:</th>
