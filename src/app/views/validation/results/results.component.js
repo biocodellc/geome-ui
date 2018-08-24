@@ -13,11 +13,12 @@ class ResultsController {
       return;
     }
 
-    this.DataService.generateSraData(this.projectId, this.expeditionCode).then(
-      () => {
-        this.loading = false;
-      },
-    );
+    this.DataService.generateSraData(
+      this.projectId,
+      this.expeditionCode,
+    ).finally(() => {
+      this.loading = false;
+    });
   }
 }
 
