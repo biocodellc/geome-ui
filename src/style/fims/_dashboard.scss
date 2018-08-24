@@ -1,8 +1,18 @@
 .download-button {
   min-width: 40px;
   margin: 0;
-
   md-progress-circular {
     margin-left: 5px;
+  }
+}
+
+.project-download-button {
+  @extend .download-button;
+  span {
+    margin-right: 5px;
+  }
+  md-progress-circular {
+    display: inline-block;
+    margin-left: 7px;
   }
 }

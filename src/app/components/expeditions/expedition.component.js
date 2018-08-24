@@ -6,11 +6,10 @@ import expeditionService from '../../services/expedition.service';
 const template = require('./expedition.html');
 
 export class ExpeditionController extends FimsExpeditionController {
-  constructor($state, ExpeditionService, DataService, $uibModal) {
+  constructor($state, ExpeditionService, DataService, QueryService, $uibModal) {
     'ngInject';
 
-    super($uibModal, ExpeditionService, DataService);
-    this.$state = $state;
+    super($state, $uibModal, ExpeditionService, DataService, QueryService);
   }
 
   handleExpeditionUpdate(expedition) {

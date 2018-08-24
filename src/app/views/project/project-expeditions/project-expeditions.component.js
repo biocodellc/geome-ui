@@ -3,11 +3,10 @@ import FimsExpeditionController from '../../../components/expeditions/FimsExpedi
 const template = require('./project-expeditions.html');
 
 class ProjectExpeditionsController extends FimsExpeditionController {
-  constructor($state, ExpeditionService, DataService, $uibModal) {
+  constructor($state, ExpeditionService, DataService, QueryService, $uibModal) {
     'ngInject';
 
-    super($uibModal, ExpeditionService, DataService);
-    this.$state = $state;
+    super($state, $uibModal, ExpeditionService, DataService, QueryService);
   }
 
   deleteExpedition(expedition) {

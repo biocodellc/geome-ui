@@ -69,16 +69,11 @@ class QueryController {
     this.showSidebar = true;
     this.showMap = true;
     this.loading = false;
-    this.hasFastqData = false;
     this.sidebarToggleToolTip = 'hide sidebar';
   }
 
   handleNewResults(results) {
     this.results = results;
-    this.hasFastqData =
-      results &&
-      results.data.fastqMetadata &&
-      results.data.fastqMetadata.length > 0;
   }
 
   downloadExcel() {
@@ -99,46 +94,21 @@ class QueryController {
     ).finally(() => (this.loading = false));
   }
 
-  downloadKml() {
-    this.loading = true;
-    const { projectId } = this.currentProject;
-    this.QueryService.downloadKml(
-      this.params.buildQuery(projectId, this.selectEntities()),
-      'Event',
-    ).finally(() => (this.loading = false));
-  }
-
   downloadFasta() {
     this.loading = true;
     const { projectId } = this.currentProject;
     this.QueryService.downloadFasta(
       this.params.buildQuery(
         projectId,
-        this.selectEntities(false).concat(['Event']),
+        this.selectEntities().concat(['Event']),
       ),
       'fastaSequence',
     ).finally(() => (this.loading = false));
   }
 
-  downloadFastq() {
-    this.loading = true;
-    const { projectId } = this.currentProject;
-    this.QueryService.downloadFastq(
-      this.params.buildQuery(
-        projectId,
-        this.selectEntities().concat(['Event']),
-      ),
-      'fastqMetadata',
-    ).finally(() => (this.loading = false));
-  }
-
-  selectEntities(includeFastq = true) {
+  selectEntities() {
     return this.currentProject.config.entities
-      .filter(
-        e =>
-          (includeFastq && e.type === 'Fastq') ||
-          ['Sample', 'Tissue'].includes(e.conceptAlias),
-      )
+      .filter(e => ['Sample', 'Tissue'].includes(e.conceptAlias))
       .map(e => e.conceptAlias);
   }
 
