@@ -294,6 +294,7 @@ $adminnav-border-bottom: 1px solid $gray-light;
             border-top: 1px solid $list-group-border;
             border-bottom: 1px solid $list-group-border;
             >td {
+                border-top: none;
                 padding: 10px 15px;
             }
         }
