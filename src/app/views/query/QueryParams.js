@@ -27,9 +27,11 @@ export default class QueryParams {
   buildQuery(projectId, selectEntities, source) {
     const builder = new QueryBuilder();
 
+    builder.add(`_projects_:${projectId}`);
+
     if (this.expeditions.length > 0) {
       builder.add(
-        `_expeditions_:[${this.expeditions.map(e => e.expeditionCode)}]`,
+        `and _expeditions_:[${this.expeditions.map(e => e.expeditionCode)}]`,
       );
     }
 
@@ -154,7 +156,6 @@ export default class QueryParams {
     }
 
     builder.setSource(source);
-    builder.setProjectId(projectId);
     return builder.build();
   }
 
