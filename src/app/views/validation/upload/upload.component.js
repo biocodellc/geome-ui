@@ -10,6 +10,8 @@ import appConfig from '../../../utils/config';
 const { naan } = appConfig;
 const template = require('./upload.html');
 
+const MULTI_EXPEDITION = 'MULTI_EXPEDITION';
+
 const LAT_URI = 'urn:decimalLatitude';
 const LNG_URI = 'urn:decimalLongitude';
 
@@ -59,6 +61,7 @@ class UploadController {
     this.verifiedCoordinateWorksheets = [];
     this.verifySampleLocations = false;
     this.sampleLocationsVerified = false;
+    this.multiExpeditionAllowed = true;
   }
 
   $onChanges(changesObj) {
@@ -95,6 +98,18 @@ class UploadController {
     });
 
     this.dataTypes = dataTypes;
+    this.multiExpeditionAllowed = !(dataTypes.Fastq || dataTypes.Fasta);
+
+    if (
+      !this.multiExpeditionAllowed &&
+      this.expeditionCode === MULTI_EXPEDITION
+    ) {
+      this.expeditionCode = undefined;
+      angular.toaster.error(
+        'Multi expedition uploads are not supported for Fasta or Fastq dataTypes',
+        { hideDelay: 5000 },
+      );
+    }
   }
 
   handleExpeditionChange(expeditionCode) {
@@ -272,12 +287,15 @@ class UploadController {
 
   getUploadData() {
     const data = {
-      expeditionCode: this.expeditionCode,
       upload: !this.validateOnly,
       reloadWorkbooks: false,
       dataSourceMetadata: [],
       dataSourceFiles: [],
     };
+
+    if (this.expeditionCode !== MULTI_EXPEDITION) {
+      data.expeditionCode = this.expeditionCode;
+    }
 
     this.worksheetData.forEach(wd => {
       if (wd.worksheet === 'Workbook') {

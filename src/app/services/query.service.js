@@ -13,6 +13,10 @@ function transformResults(data) {
       record.event = data.Event.find(e => e.eventID === s.eventID);
       records.push(record);
     });
+  } else if (data.Event) {
+    data.Event.forEach(e => {
+      records.push({ event: e });
+    });
   }
 
   return records;

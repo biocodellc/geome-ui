@@ -6,7 +6,7 @@
     <div ng-show="$ctrl.results.showValidationMessages || $ctrl.results.showUploadMessages || $ctrl.results.showSuccessMessages">
         <fims-validation-results results="$ctrl.results"></fims-validation-results>
     </div>
-    <div ng-show="$ctrl.results.validation.exception" ng-bind-html="$ctrl.results.validation.exception | trusted_html" class="error"></div>
+    <!-- <div ng-show="$ctrl.results.validation.exception" ng-bind-html="$ctrl.results.validation.exception | trusted_html" class="error"></div> -->
     <div layout="row" layout-fill layout-sm="column" ng-show="$ctrl.results.validation.isValid === undefined" layout-align="center center">
         <md-progress-circular md-mode="indeterminate"></md-progress-circular>
     </div>

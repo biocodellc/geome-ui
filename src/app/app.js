@@ -49,7 +49,7 @@ import navigation from './components/navigation';
 import users from './components/users';
 import projectSelectorDialog from './components/project-selector-dialog';
 
-import Exceptions from './utils/exceptions';
+import catcher from './utils/exceptions';
 import Toaster from './utils/toaster';
 import projectViewHook from './projectView.hook';
 import fimsMdDialog from './utils/fimsMdDialog';
@@ -92,8 +92,7 @@ const dependencies = [
 ];
 
 // attach global objects for easy access throughout app
-const e = new Exceptions();
-angular.catcher = e.catcher.bind(e);
+angular.catcher = catcher;
 
 export default angular
   .module('biscicolApp', dependencies)

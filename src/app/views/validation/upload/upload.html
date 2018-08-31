@@ -3,7 +3,7 @@
         available-types="$ctrl.availableDataTypes"></fims-upload-datatypes>
 
     <fims-upload-expedition user-expeditions="$ctrl.userExpeditions" expedition-code="$ctrl.expeditionCode"
-        on-change="$ctrl.handleExpeditionChange(expeditionCode)">
+        multi-expedition-allowed="$ctrl.multiExpeditionAllowed" on-change="$ctrl.handleExpeditionChange(expeditionCode)">
     </fims-upload-expedition>
 
     <div class="clearfix">
