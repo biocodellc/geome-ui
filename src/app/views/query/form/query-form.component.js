@@ -12,7 +12,7 @@ const SOURCE = [
   'decimalLatitude',
   'decimalLongitude',
   'Sample.genus',
-  'Sample.species',
+  'Sample.specificEpithet',
   'fastqMetadata.identifier',
   'fastqMetadata.identifier',
   'Event.bcid',

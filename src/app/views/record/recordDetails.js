@@ -14,7 +14,7 @@ export const parentRecordDetails = {
       href: `/record/${sample.bcid}`,
     }),
     genus: getKey('genus'),
-    species: getKey('species'),
+    specificEpithet: getKey('specificEpithet'),
   },
   Tissue: {
     tissueID: tissue => ({
@@ -33,7 +33,7 @@ export const childRecordDetails = {
       href: `/record/${sample.bcid}`,
     }),
     genus: getKey('genus'),
-    species: getKey('species'),
+    specificEpithet: getKey('specificEpithet'),
   },
   Tissue: {
     tissueID: tissue => ({
@@ -87,8 +87,8 @@ export const mainRecordDetails = {
   },
   Sample: {
     materialSampleID: getKey('materialSampleID'),
-    species: getKey('species'),
     genus: getKey('genus'),
+    specificEpithet: getKey('specificEpithet'),
     bcid: s => ({
       text: s.bcid,
       href: `https://n2t.net/${s.bcid}`,

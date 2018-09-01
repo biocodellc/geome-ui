@@ -10,7 +10,7 @@ const defaultParams = {
   genus: null,
   locality: null,
   family: null,
-  species: null,
+  specificEpithet: null,
   country: null,
   fromYear: null,
   toYear: null,
@@ -93,9 +93,9 @@ export default class QueryParams {
       builder.add(`Sample.family = "${this.family}"`);
     }
 
-    if (this.species) {
+    if (this.specificEpithet) {
       if (builder.queryString.length > 0) builder.add('and');
-      builder.add(`Sample.species = "${this.species}"`);
+      builder.add(`Sample.specificEpithet = "${this.specificEpithet}"`);
     }
 
     if (this.fromYear) {

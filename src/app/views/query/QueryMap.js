@@ -10,7 +10,7 @@ export default class QueryMap extends Map {
     return super.setMarkers(data, this.generatePopupContent.bind(this));
   }
 
-  generatePopupContent({ bcid, phylum, genus, species, event }) {
+  generatePopupContent({ bcid, phylum, genus, specificEpithet, event }) {
     let loc = '';
     if (event.locality && event.country) {
       loc = `<strong>Locality, Country</strong>:  ${event.locality}, ${
@@ -24,7 +24,7 @@ export default class QueryMap extends Map {
     return (
       `${`<strong>Phylum</strong>:  ${phylum}<br>` +
         `<strong>Genus</strong>:  ${genus || 'N/A'}<br>` +
-        `<strong>Species</strong>:  ${species || 'N/A'}<br>` +
+        `<strong>specificEpithet</strong>:  ${specificEpithet || 'N/A'}<br>` +
         `<strong>Year Collected</strong>:  ${
           event.yearCollected
         }<br>`}${loc}<a href='${this.$state.href('record', {

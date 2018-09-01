@@ -18,7 +18,7 @@ class QueryTableController {
       'yearCollected',
       'phylum',
       'genus',
-      'species',
+      'specificEpithet',
       'bcid',
     ];
     this.tableData = [];
