@@ -43,11 +43,17 @@
                                 <label class="control-label">Password</label>
                                 <input type="password" name="password" ng-model="$ctrl.user.password" required class="form-control">
                             </div>
+                            <div class="row">
+                                <strong class="col-md-4">Strength:</strong>
+
+                                <div class="col-md-6" ng-password-strength="$ctrl.user.password" strength="passStrength" inner-class="progress-bar" inner-class-prefix="progress-bar-">
+                                </div>
+                                <md-icon class="col-md-4" ng-show="passStrength > 30" md-font-icon="fa fa-check fa-xs md-secondary" style="color:green"></md-icon>
+                            </div>
 
                             <div class="form-group" show-errors>
                                 <label class="control-label">Verify Password</label>
-                                <input type="password" name="verifyPassword" ng-model="$ctrl.verifyPassword" required compare-to="$ctrl.user.password"
-                                    class="form-control">
+                                <input type="password" name="verifyPassword" ng-model="$ctrl.verifyPassword" required compare-to="$ctrl.user.password" class="form-control">
                             </div>
 
                             <div class="form-group">
