@@ -10,7 +10,7 @@ const defaultParams = {
   genus: null,
   locality: null,
   family: null,
-  species: null,
+  specificEpithet: null,
   country: null,
   fromYear: null,
   toYear: null,
@@ -27,9 +27,11 @@ export default class QueryParams {
   buildQuery(projectId, selectEntities, source) {
     const builder = new QueryBuilder();
 
+    builder.add(`_projects_:${projectId}`);
+
     if (this.expeditions.length > 0) {
       builder.add(
-        `_expeditions_:[${this.expeditions.map(e => e.expeditionCode)}]`,
+        `and _expeditions_:[${this.expeditions.map(e => e.expeditionCode)}]`,
       );
     }
 
@@ -91,9 +93,9 @@ export default class QueryParams {
       builder.add(`Sample.family = "${this.family}"`);
     }
 
-    if (this.species) {
+    if (this.specificEpithet) {
       if (builder.queryString.length > 0) builder.add('and');
-      builder.add(`Sample.species = "${this.species}"`);
+      builder.add(`Sample.specificEpithet = "${this.specificEpithet}"`);
     }
 
     if (this.fromYear) {
@@ -154,7 +156,6 @@ export default class QueryParams {
     }
 
     builder.setSource(source);
-    builder.setProjectId(projectId);
     return builder.build();
   }
 

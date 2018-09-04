@@ -21,6 +21,7 @@ import textOverflowTooltip from './directives/textOverflowTooltip.directive';
 import showErrors from './directives/showErrors.directive';
 import mdPopover from './directives/mdPopover.directive';
 import mdSticky from './directives/mdSticky.directive';
+import ngImageGallery from './directives/ngImageGallery.directive';
 import trustedHtml from './filters/html.filter';
 
 import about from './views/about';
@@ -48,7 +49,7 @@ import navigation from './components/navigation';
 import users from './components/users';
 import projectSelectorDialog from './components/project-selector-dialog';
 
-import Exceptions from './utils/exceptions';
+import catcher from './utils/exceptions';
 import Toaster from './utils/toaster';
 import projectViewHook from './projectView.hook';
 import fimsMdDialog from './utils/fimsMdDialog';
@@ -62,6 +63,7 @@ const dependencies = [
   showErrors,
   mdPopover,
   mdSticky,
+  ngImageGallery,
   trustedHtml,
   bootstrap,
   ngMaterial,
@@ -90,8 +92,7 @@ const dependencies = [
 ];
 
 // attach global objects for easy access throughout app
-const e = new Exceptions();
-angular.catcher = e.catcher.bind(e);
+angular.catcher = catcher;
 
 export default angular
   .module('biscicolApp', dependencies)

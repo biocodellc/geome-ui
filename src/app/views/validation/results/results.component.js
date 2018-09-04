@@ -8,11 +8,17 @@ class ResultsController {
   }
 
   downloadFastqFiles() {
+    this.loading = true;
     if (!this.expeditionCode) {
       return;
     }
 
-    this.DataService.generateSraData(this.projectId, this.expeditionCode);
+    this.DataService.generateSraData(
+      this.projectId,
+      this.expeditionCode,
+    ).finally(() => {
+      this.loading = false;
+    });
   }
 }
 

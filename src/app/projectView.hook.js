@@ -32,11 +32,26 @@ export default (
   // setup dialog for workbench states if no project is selected
   $transitions.onBefore(
     { to: checkProjectViewPresent },
-    trans => {
+    async trans => {
       if (ProjectService.currentProject()) return Promise.resolve();
 
+      const setProject = project => {
+        ProjectLoadingEmitter.emit(LOADING_PROJECT_EVENT);
+        return ProjectService.setCurrentProject(project).then(() => {
+          ProjectLoadingEmitter.emit(FINISHED_LOADING_PROJECT_EVENT);
+        });
+      };
+
+      const isAuthenticated = !!UserService.currentUser();
+      // if there is only a single project the currentUser is a member, auto-select that project
+      // project loads are cached so we don't fetch 2x if there are multiple projects
+      try {
+        const res = await ProjectService.all(!isAuthenticated);
+        if (res.data.length === 1) return setProject(res.data[0]);
+      } catch (e) {}
+
       const scope = Object.assign($rootScope.$new(true), {
-        isAuthenticated: !!UserService.currentUser(),
+        isAuthenticated,
       });
       return $mdDialog
         .show({
@@ -44,13 +59,7 @@ export default (
             '<project-selector-dialog is-authenticated="isAuthenticated"></project-selector-dialog>',
           scope,
         })
-        .then(project => {
-          ProjectLoadingEmitter.emit(LOADING_PROJECT_EVENT);
-          return ProjectService.setCurrentProject(project);
-        })
-        .then(() => {
-          ProjectLoadingEmitter.emit(FINISHED_LOADING_PROJECT_EVENT);
-        })
+        .then(setProject)
         .catch(targetState => {
           if (targetState && targetState.withParams) {
             return targetState.withParams({

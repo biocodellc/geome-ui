@@ -32,32 +32,59 @@ class DashboardController {
     }
   }
 
-  downloadCsv(worksheet, expeditionCode) {
-    this.loadingExpedition = expeditionCode;
-
-    const entities = this.currentProject.config.entities
-      .filter(e => e.worksheet === worksheet)
+  worksheetEntities() {
+    return this.currentProject.config.entities
+      .filter(e => !!e.worksheet)
+      .sort((a, b) => {
+        if (a.parentEntity) {
+          if (b.parentEntity) return 0;
+          return 1;
+        } else if (b.parentEntity) {
+          return -1;
+        }
+        return 0;
+      })
       .map(e => e.conceptAlias);
-
-    const conceptAlias = entities.shift();
-
-    this.QueryService.downloadCsv(
-      this.getQuery(expeditionCode, entities),
-      conceptAlias,
-    ).finally(() => (this.loadingExpedition = undefined));
   }
 
-  downloadFasta(conceptAlias, expeditionCode) {
+  downloadCsv(expeditionCode) {
+    this.loadingExpedition = expeditionCode || 'project';
+
+    let res;
+    if (expeditionCode) {
+      res = this.DataService.exportData(
+        this.currentProject.projectId,
+        expeditionCode,
+      );
+    } else {
+      const entities = this.worksheetEntities();
+      const conceptAlias = entities.shift();
+
+      res = this.QueryService.downloadCsv(
+        this.getQuery(expeditionCode, entities),
+        conceptAlias,
+      );
+    }
+    res.finally(() => (this.loadingExpedition = undefined));
+  }
+
+  downloadExcel(expeditionCode) {
     this.loadingExpedition = expeditionCode;
-    this.QueryService.downloadFasta(
-      this.getQuery(expeditionCode),
+
+    const entities = this.worksheetEntities();
+    const conceptAlias = entities.shift();
+
+    this.QueryService.downloadExcel(
+      this.getQuery(expeditionCode, entities),
       conceptAlias,
     ).finally(() => (this.loadingExpedition = undefined));
   }
 
   getQuery(expeditionCode, selectEntities) {
     const params = new QueryParams();
-    params.expeditions.push({ expeditionCode });
+    if (expeditionCode) {
+      params.expeditions.push({ expeditionCode });
+    }
     return params.buildQuery(this.currentProject.projectId, selectEntities);
   }
 
@@ -71,7 +98,8 @@ class DashboardController {
 
   menuOptions(expedition) {
     if (!this.menuCache[expedition.expeditionCode]) {
-      const worksheets = [];
+      // const worksheets = [];
+      let foundWorksheet = false;
       this.menuCache[expedition.expeditionCode] = this.headers
         .map(header => {
           const conceptAlias = header.replace('Count', '');
@@ -83,28 +111,29 @@ class DashboardController {
           if (!Number(expedition[header])) return;
 
           if (entity.worksheet) {
-            if (worksheets.includes(entity.worksheet)) return;
-            worksheets.push(entity.worksheet);
+            if (foundWorksheet) return;
+            foundWorksheet = true;
             // eslint-disable-next-line consistent-return
             return {
-              fn: this.downloadCsv.bind(this, entity.worksheet),
-              name: `${entity.worksheet} CSV`,
-            };
-          } else if (entity.type === 'Fasta') {
-            // eslint-disable-next-line consistent-return
-            return {
-              fn: this.downloadFasta.bind(this, conceptAlias),
-              name: 'Fasta',
+              fn: this.downloadCsv.bind(this),
+              name: 'CSV Archive',
             };
           } else if (entity.type === 'Fastq') {
             // eslint-disable-next-line consistent-return
             return {
               fn: this.downloadFastq.bind(this),
-              name: 'Fastq',
+              name: 'Fastq - SRA Metadata',
             };
           }
         })
         .filter(o => o !== undefined);
+
+      if (foundWorksheet) {
+        this.menuCache[expedition.expeditionCode].splice(1, 0, {
+          fn: this.downloadExcel.bind(this),
+          name: 'Excel Workbook',
+        });
+      }
     }
     return this.menuCache[expedition.expeditionCode];
   }

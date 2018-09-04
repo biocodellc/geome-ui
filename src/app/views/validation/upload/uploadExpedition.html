@@ -4,9 +4,10 @@
     <div class="col-xs-9">
       <div class="input-group">
         <select id="expeditionCode" name="expeditionCode" ng-change="$ctrl.onChange({ expeditionCode: $ctrl.expeditionCode })"
-          ng-model="$ctrl.expeditionCode" ng-options="e.expeditionCode as e.expeditionTitle for e in $ctrl.userExpeditions | orderBy: 'expeditionTitle'"
-          required class="form-control col-xs-6">
+          ng-model="$ctrl.expeditionCode" required class="form-control col-xs-6">
           <option value="">-- Select an Expedition --</option>
+          <option ng-if="$ctrl.multiExpeditionAllowed" value="MULTI_EXPEDITION">-- Multiple Expeditions --</option>
+          <option ng-value="e.expeditionCode" ng-repeat="e in $ctrl.userExpeditions | orderBy: 'expeditionTitle' track by e.expeditionCode">{{e.expeditionTitle}}</option>
         </select>
         <span class="input-group-btn">
           <button class="btn btn-default" ng-click="$ctrl.onChange({ expeditionCode: 'CREATE' })">

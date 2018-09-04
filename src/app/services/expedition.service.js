@@ -82,13 +82,18 @@ class ExpeditionService {
     );
   }
 
-  stats(projectId) {
+  stats(projectId, expeditionCode) {
     if (!projectId) {
       return Promise.reject({ data: { error: 'No project is selected' } });
     }
 
+    let url = `${restRoot}projects/${projectId}/expeditions/stats`;
+    if (expeditionCode) {
+      url += `?expeditionCode=${expeditionCode}`;
+    }
+
     return this.$http
-      .get(`${restRoot}projects/${projectId}/expeditions/stats`)
+      .get(url)
       .catch(angular.catcher('Failed to load expedition stats.'));
   }
 

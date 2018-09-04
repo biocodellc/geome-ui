@@ -8,19 +8,10 @@
       </md-button>
       <md-menu-content width="2" class="md-dense download-menu-content">
         <md-menu-item>
-          <md-button ng-click="$ctrl.downloadCsv()">CSV</md-button>
-        </md-menu-item>
-        <md-menu-item>
-          <md-button ng-click="$ctrl.downloadKml()">KML</md-button>
+          <md-button ng-click="$ctrl.downloadCsv()">CSV Archive</md-button>
         </md-menu-item>
         <md-menu-item>
           <md-button ng-click="$ctrl.downloadFasta()">Fasta</md-button>
-        </md-menu-item>
-        <md-menu-item ng-show="$ctrl.hasFastqData">
-          <md-button ng-click="$ctrl.downloadFastq()">Fastq</md-button>
-        </md-menu-item>
-        <md-menu-item>
-          <md-button ng-click="$ctrl.downloadExcel()">Excel Template</md-button>
         </md-menu-item>
       </md-menu-content>
     </md-menu>

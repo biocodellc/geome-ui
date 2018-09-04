@@ -1,3 +1,5 @@
+import QueryParams from '../../views/query/QueryParams';
+
 const template = require('./delete-confirmation.tpl.html');
 
 class DeleteConfirmationController {
@@ -11,21 +13,83 @@ class DeleteConfirmationController {
 }
 
 export default class FimsExpeditionController {
-  constructor($uibModal, ExpeditionService, DataService) {
+  constructor($state, $uibModal, ExpeditionService, DataService, QueryService) {
     'ngInject';
 
+    this.$state = $state;
     this.$uibModal = $uibModal;
     this.ExpeditionService = ExpeditionService;
     this.DataService = DataService;
+    this.QueryService = QueryService;
+
+    this.hasFastq = false;
   }
 
-  exportData(projectId, expedition) {
+  $onChanges(changesObj) {
+    if (
+      this.expedition &&
+      this.currentProject &&
+      ('expedition' in changesObj || 'currentProject' in changesObj)
+    ) {
+      this.ExpeditionService.stats(
+        this.currentProject.projectId,
+        this.expedition.expeditionCode,
+      ).then(({ data }) => {
+        if (data && data.length > 0) {
+          this.hasFastq = data[0].fastqMetadataCount > 0;
+        }
+      });
+    }
+  }
+
+  worksheetEntities() {
+    return this.currentProject.config.entities
+      .filter(e => !!e.worksheet)
+      .sort((a, b) => {
+        if (a.parentEntity) {
+          if (b.parentEntity) return 0;
+          return 1;
+        } else if (b.parentEntity) {
+          return -1;
+        }
+        return 0;
+      })
+      .map(e => e.conceptAlias);
+  }
+
+  downloadCsv() {
     this.loading = true;
-    this.DataService.exportData(projectId, expedition.expeditionCode).finally(
-      () => {
-        this.loading = false;
-      },
-    );
+
+    this.DataService.exportData(
+      this.currentProject.projectId,
+      this.expedition.expeditionCode,
+    ).finally(() => (this.loading = false));
+  }
+
+  downloadExcel() {
+    this.loading = true;
+
+    const entities = this.worksheetEntities();
+    const conceptAlias = entities.shift();
+
+    this.QueryService.downloadExcel(
+      this.getQuery(entities),
+      conceptAlias,
+    ).finally(() => (this.loading = false));
+  }
+
+  getQuery(selectEntities) {
+    const params = new QueryParams();
+    params.expeditions.push({ expeditionCode: this.expedition.expeditionCode });
+    return params.buildQuery(this.currentProject.projectId, selectEntities);
+  }
+
+  downloadFastq() {
+    this.loading = true;
+    this.DataService.generateSraData(
+      this.currentProject.projectId,
+      this.expedition.expeditionCode,
+    ).finally(() => (this.loading = false));
   }
 
   deleteExpedition(projectId, expedition) {

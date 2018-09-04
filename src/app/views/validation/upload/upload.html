@@ -2,8 +2,8 @@
     <fims-upload-datatypes class="clearfix" data-types="$ctrl.dataTypes" on-update="$ctrl.handleDatatypes(dataTypes)"
         available-types="$ctrl.availableDataTypes"></fims-upload-datatypes>
 
-    <fims-upload-expedition user-expeditions="$ctrl.userExpeditions" expedition-code="$ctrl.expeditionCode"
-        on-change="$ctrl.handleExpeditionChange(expeditionCode)">
+    <fims-upload-expedition ng-if="$ctrl.showExpeditions" user-expeditions="$ctrl.userExpeditions" expedition-code="$ctrl.expeditionCode"
+        multi-expedition-allowed="$ctrl.multiExpeditionAllowed" on-change="$ctrl.handleExpeditionChange(expeditionCode)">
     </fims-upload-expedition>
 
     <div class="clearfix">
@@ -48,9 +48,11 @@
 
     <div class="col-xs-8">
         <div class="col-xs-12">
-            <button ng-click="$ctrl.upload()" class="md-button md-raised md-primary pull-right">
-                <span ng-if="$ctrl.currentUser && !$ctrl.validateOnly">Load</span>
-                <span ng-if="!$ctrl.currentUser || $ctrl.validateOnly">Validate</span>
+            <button ng-click="$ctrl.upload()" class="md-button md-raised md-primary pull-right" ng-disabled="!$ctrl.canValidate || $ctrl.parsing"
+                layout="row" layout-align="center center">
+                <span ng-if="!$ctrl.parsing && $ctrl.currentUser && !$ctrl.validateOnly">Load</span>
+                <span ng-if="!$ctrl.parsing && (!$ctrl.currentUser || $ctrl.validateOnly)">Validate</span>
+                <md-progress-circular ng-if="$ctrl.parsing" md-mode="indeterminate" md-diameter="18" class="md-accent md-hue-3"></md-progress-circular>
             </button>
         </div>
     </div>

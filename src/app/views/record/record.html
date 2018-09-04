@@ -5,7 +5,10 @@
   <h2>{{$ctrl.record.entity}} {{$ctrl.getIdentifier($ctrl.record)}}</h2>
 
   <div class="main-details" layout="row" layout-align="center center">
-    <table flex class="table table-condensed">
+    <div ng-if="$ctrl.record.originalUrl" flex="100">
+      <img src="{{$ctrl.record.img1024}}" href="{{$ctrl.record.originalUrl}}"/>
+    </div>
+    <table ng-if="!$ctrl.record.originalUrl" flex="100" class="table table-condensed">
       <tbody>
         <tr ng-repeat="(key, value) in $ctrl.mainRecordDetails() track by key">
           <th>{{key}}:</th>
@@ -21,20 +24,15 @@
         </tr>
       </tbody>
     </table>
-    <div flex ng-if="$ctrl.photos">
-      <div class>
-        <img ng-src="{{$ctrl.photos[0].extUrl}}" />
-      </div>
-      <!-- <ng-image-gallery images="$ctrl.photos" thumbnails="true" thumb-size="80" inline="true"
-        bubble-size="integer | model" img-bubbles="true" img-anim="fadeup" on-open="$ctrl.inlineGallery = false"
-        on-close="$ctrl.inlineGallery = true"></ng-image-gallery> -->
+    <div flex="100" ng-if="$ctrl.photos">
+      <ng-image-gallery images="$ctrl.photos" inline="true" img-Bubbles="true" bubble-size="64"></ng-image-gallery>
     </div>
   </div>
 
   <md-divider ng-if="$ctrl.auxiliaryRecordDetails(0)"></md-divider>
 
   <div class="auxiliary-details" ng-if="$ctrl.auxiliaryRecordDetails(0)" layout="row">
-    <table flex="100" flex-gt-sm="50" class="table table-condensed">
+    <table flex class="table table-condensed">
       <tbody>
         <tr ng-repeat="(key, value) in $ctrl.auxiliaryRecordDetails(0) track by key">
           <th>{{key}}:</th>
@@ -47,7 +45,9 @@
         </tr>
       </tbody>
     </table>
-    <table flex="100" flex-gt-sm="50" class="table table-condensed">
+    <!-- Not sure why the following isn't working, but works on the angularjs material docs website -->
+    <!-- <table hide show-gt-sm flex class="table table-condensed"> -->
+    <table ng-show="$ctrl.$mdMedia('gt-sm')" flex class="table table-condensed">
       <tbody>
         <tr ng-repeat="(key, value) in $ctrl.auxiliaryRecordDetails(1) track by key">
           <th>{{key}}:</th>
@@ -72,7 +72,7 @@
         <dd ng-repeat-end>
           <span ng-if="!value.href">{{value.text || 'N/A'}}</span>
           <span ng-if="value.href">
-            <a href="{{value.href}}" target="_blank">{{value.text || 'N/A'}}</a>
+            <a href="{{value.href}}">{{value.text || 'N/A'}}</a>
           </span>
         </dd>
       </dl>
@@ -92,7 +92,7 @@
           <dd ng-repeat-end>
             <span ng-if="!value.href">{{value.text || 'N/A'}}</span>
             <span ng-if="value.href">
-              <a href="{{value.href}}" target="_blank">{{value.text || 'N/A'}}</a>
+              <a href="{{value.href}}">{{value.text || 'N/A'}}</a>
             </span>
           </dd>
         </dl>

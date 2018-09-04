@@ -143,7 +143,7 @@ class ValidationController {
             );
 
             listener.on('status', status => {
-              this.results.status = `Uploading...\n${status}`;
+              this.results.status = `Uploading...<br/>${status}`;
               this.results.validation.exception = null;
             });
             listener.on('result', resolve);
