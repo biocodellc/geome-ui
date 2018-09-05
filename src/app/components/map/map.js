@@ -80,9 +80,13 @@ export default class Map extends EventEmitter {
   getKey(record, column) {
     const split = column.split('.');
     if (split.length === 1) {
-      return record[split[0]];
-    }
+      let splitRecord = record[split[0]];
 
+      if (splitRecord === '') {
+        splitRecord = NaN;
+      }
+      return splitRecord;
+    }
     return this.getKey(record[split.shift()], split.join('.'));
   }
 
