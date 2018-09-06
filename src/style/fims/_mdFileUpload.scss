@@ -1,0 +1,65 @@
+// Material-Design
+@import '~angular-material/angular-material.scss';
+$file-content-margin-left: 16px;
+.input-info {
+  margin-left: $file-content-margin-left;
+  font-size: 12px;
+  line-height: 14px;
+  -webkit-transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+  transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+}
+
+md-file-upload {
+  @extend .layout-row;
+  position: relative;
+  padding: 2px;
+  margin: 18px 0;
+  vertical-align: middle;
+  &:after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+  &.md-input-invalid {
+    .file-content {
+      color: rgb(255, 109, 0) !important;
+    }
+    .error-messages {
+      @extend .input-info;
+      > div {
+        padding-top: 5px;
+      }
+    }
+  }
+  .md-errors-spacer {
+    float: right;
+    min-height: 24px;
+    min-width: 1px;
+  }
+  input {
+    height: 36px;
+  }
+  input:disabled {
+    border: none;
+    background-color: inherit;
+    margin-left: $file-content-margin-left;
+    width: 100%;
+    &:after {
+      content: '';
+      display: table;
+      clear: both;
+    }
+  }
+  label.md-button {
+    margin: 0;
+    height: 36px;
+  }
+  .file-content {
+    position: relative;
+    .hint {
+      @extend .input-info;
+      padding-top: 5px;
+      color: grey;
+    }
+  }
+}

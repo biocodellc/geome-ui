@@ -1,0 +1,12 @@
+.photo-upload-button {
+  @extend .pull-right;
+  margin-right: 0;
+}
+
+.information {
+  margin-bottom: 24px;
+
+  li {
+    margin-bottom: 8px;
+  }
+}
