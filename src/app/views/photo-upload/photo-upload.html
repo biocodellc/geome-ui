@@ -12,20 +12,20 @@
         <ul>
           <li>{parentIdentifier}+{imgIdentifier}.{ext}</li>
         </ul>
-        <li>Include a metadata.csv file with the following columns</li>
-        <ul>
-          <li>parentIdentifier* - the identifier of the record to attach the photo to</li>
-          <li>fileName* - the name of the file in the directory</li>
-          <li ng-if="!$ctrl.entity">any additional metadata - this is project specific. 1 entry per column.</li>
-          <li ng-repeat="a in $ctrl.entity.additionalMetadata track by a.column">{{a.column}} (optional)
-            - {{a.description}}</li>
-        </ul>
+        <!-- <li>Include a metadata.csv file with the following columns</li> -->
+        <!-- <ul> -->
+        <!-- <li>parentIdentifier* - the identifier of the record to attach the photo to</li> -->
+        <!-- <li>fileName* - the name of the file in the directory</li> -->
+        <!-- <li ng-if="!$ctrl.entity">any additional metadata - this is project specific. 1 entry per column.</li> -->
+        <!-- <li ng-repeat="a in $ctrl.entity.additionalMetadata track by a.column">{{a.column}} (optional) -->
+        <!-- - {{a.description}}</li> -->
+        <!-- </ul> -->
       </ol>
     </div>
 
     <div layout="row" layout-xs="column" layout-sm="column" layout-align="center center">
       <form flex flex-gt-md="75" flex-gt-sm="80" role="form" name="$ctrl.uploadForm" class="form-horizontal"
-        novalidate ng-submit="$ctrl.uploadForm.$valid && $ctrl.upload()">
+        novalidate>
 
         <div layout-gt-sm="row" ng-if="$ctrl.photoEntities.length > 1">
           <md-input-container class="md-block" flex-gt-sm>
@@ -62,7 +62,8 @@
             file="$ctrl.file" hints='["A zipped directory of photos to upload."]' />
         </div>
         <md-progress-linear ng-if="$ctrl.uploadProgress !== undefined" md-mode="determinate" ng-value="$ctrl.uploadProgress"></md-progress-linear>
-        <button type="submit" class="md-button md-raised md-primary photo-upload-button" layout="row" layout-align="center center">
+        <button type="submit" class="md-button md-raised md-primary photo-upload-button" layout="row" layout-align="center center"
+          ng-click="$ctrl.uploadForm.$valid && $ctrl.upload()">
           <span ng-if="!$ctrl.loading && !$ctrl.canResume">Upload</span>
           <span ng-if="!$ctrl.loading && $ctrl.canResume">Resume</span>
           <md-progress-circular ng-if="$ctrl.loading" md-mode="indeterminate" md-diameter="18" class="md-accent md-hue-3"></md-progress-circular>

@@ -49,23 +49,26 @@ class PhotoUploadController {
       this.expeditionCode,
       this.entity.conceptAlias,
       this.file,
-      resume,
     )
       .progress(event => {
         const p = parseInt(100.0 * event.loaded / event.total, 10);
 
-        if (p < 100) {
-          // if network disconnects, a progress event will be emitted saying fully loaded
-          // this is used to determine if we can resume the upload
-          previousProgress = this.uploadProgress;
-        }
+        // if (p < 100) {
+        // if network disconnects, a progress event will be emitted saying fully loaded
+        // this is used to determine if we can resume the upload
+        // previousProgress = this.uploadProgress;
+        // }
         this.uploadProgress = p;
       })
       .then(res => {
         this.showResultDialog(res);
       })
       .catch(res => {
-        if ((res.status === -1 || res.status > 500) && previousProgress < 100) {
+        // if ((res.status === -1 || res.status > 500) && previousProgress < 100) {
+        if (
+          (res.status === -1 || res.status > 500) &&
+          this.uploadProgress < 100
+        ) {
           this.canResume = true;
           this.uploadProgress = previousProgress;
           this.showResumeDialog();
