@@ -82,7 +82,6 @@ export default class Map extends EventEmitter {
     if (split.length === 1) {
       return record[split[0]];
     }
-
     return this.getKey(record[split.shift()], split.join('.'));
   }
 
@@ -103,7 +102,7 @@ export default class Map extends EventEmitter {
         true,
       ); // center on pacific ocean
 
-      if (Number.isNaN(lat) || Number.isNaN(lng)) return;
+      if (!Number.parseFloat(lat) || !Number.parseFloat(lng)) return;
 
       const marker = L.marker([lat, lng]);
 
