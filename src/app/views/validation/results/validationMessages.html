@@ -5,7 +5,7 @@
         <span class="{{ $ctrl.class }}">{{ $ctrl.type }}: {{ group.groupMessage | trusted_html }}</span>
     </div>
 
-    <div ng-repeat="m in group.messages track by $index">{{ m.message }}</div>
+    <div class="message" ng-repeat="m in group.messages track by $index">{{ m.message }}</div>
 </div>
 
 <!--NOTE: we can't user $ctrl in here b/c it doesn't have access to it, I think isOpen & toggleOpen are defined on the uib-accordian-group ctrl-->

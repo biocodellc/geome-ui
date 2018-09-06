@@ -17,7 +17,11 @@ class PhotosService {
   upload(projectId, expeditionCode, entity, file, isResume = false) {
     const progressCallbacks = [];
 
-    const onSuccess = res => res;
+    const onSuccess = res => ({
+      success: res.data.success,
+      errors: res.data.messages.errors || [],
+      warnings: res.data.messages.warnings || [],
+    });
     const onFail = angular.catcher('Photo upload failed');
     const onProgress = event => progressCallbacks.forEach(fn => fn(event));
 
@@ -50,16 +54,18 @@ class PhotosService {
   }
 
   getResumeSize(projectId, expeditionCode, entity) {
-    return this.$http
-      .get(
-        `${restRoot}photos/${entity}/upload/progress?expeditionCode=${expeditionCode}&projectId=${projectId}`,
-      )
-      .catch(response => {
-        if (response.status !== 400) {
-          angular.catcher('Error fetching resume upload size')(response);
-        }
-        return 0;
-      });
+    return this.$http({
+      url: `${restRoot}photos/${entity}/upload/progress`,
+      params: {
+        projectId,
+        expeditionCode,
+      },
+    }).catch(response => {
+      if (response.status !== 400) {
+        angular.catcher('Error fetching resume upload size')(response);
+      }
+      return 0;
+    });
   }
 }
 

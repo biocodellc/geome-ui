@@ -14,10 +14,11 @@
         </ul>
         <li>Include a metadata.csv file with the following columns</li>
         <ul>
-          <li>parentIdentifier - the identifier of the record to attach the photo to</li>
-          <li>fileName - the name of the file in the directory</li>
+          <li>parentIdentifier* - the identifier of the record to attach the photo to</li>
+          <li>fileName* - the name of the file in the directory</li>
           <li ng-if="!$ctrl.entity">any additional metadata - this is project specific. 1 entry per column.</li>
-          <li ng-repeat="a in $ctrl.entity.additionalMetadata track by a.column">{{a.column}} - {{a.description}}</li>
+          <li ng-repeat="a in $ctrl.entity.additionalMetadata track by a.column">{{a.column}} (optional)
+            - {{a.description}}</li>
         </ul>
       </ol>
     </div>
@@ -58,13 +59,15 @@
 
         <div layout-gt-sm="row">
           <md-file-upload flex required="true" pattern=".zip" on-select="$ctrl.onSelect(files)" text="Choose File"
-            hints='["A zipped directory of photos to upload."]' />
+            file="$ctrl.file" hints='["A zipped directory of photos to upload."]' />
         </div>
         <md-progress-linear ng-if="$ctrl.uploadProgress !== undefined" md-mode="determinate" ng-value="$ctrl.uploadProgress"></md-progress-linear>
         <button type="submit" class="md-button md-raised md-primary photo-upload-button" layout="row" layout-align="center center">
-          <span ng-if="!$ctrl.loading">Upload</span>
+          <span ng-if="!$ctrl.loading && !$ctrl.canResume">Upload</span>
+          <span ng-if="!$ctrl.loading && $ctrl.canResume">Resume</span>
           <md-progress-circular ng-if="$ctrl.loading" md-mode="indeterminate" md-diameter="18" class="md-accent md-hue-3"></md-progress-circular>
         </button>
+        <button ng-show="$ctrl.canResume" ng-click="$ctrl.canResume = false;" class="md-button md-raised md-warn md-hue-2 pull-right">Reset</button>
     </div>
     </form>
 

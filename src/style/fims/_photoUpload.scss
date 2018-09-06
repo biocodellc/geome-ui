@@ -1,12 +1,28 @@
 .photo-upload-button {
   @extend .pull-right;
-  margin-right: 0;
+  margin-right: 0 !important;
 }
 
 .information {
   margin-bottom: 24px;
-
   li {
     margin-bottom: 8px;
+  }
+}
+
+.photo-upload-results {
+  width: 75%;
+  md-dialog-content {
+    margin: 16px;
+    padding: 16px;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  .panel {
+    box-shadow: none;
+    margin-bottom: 16px;
+    .message:first-of-type {
+      margin-bottom: 8px;
+    }
   }
 }

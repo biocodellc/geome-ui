@@ -8,8 +8,8 @@
     />
 
     <div ng-messages="$ctrl.form.file.$error" ng-if="!$ctrl.isValid" class="error-messages">
-        <div ng-if="invalidFile" ng-message="ng-pattern">File must have one of the
-            following extensions: {{ $ctrl.pattern }}
+        <div ng-if="invalidFile" ng-message="ng-pattern">File must have one of the following extensions:
+            {{ $ctrl.pattern }}
         </div>
         <div ng-if="!invalidFile" ng-message="required">A file is required.</div>
     </div>

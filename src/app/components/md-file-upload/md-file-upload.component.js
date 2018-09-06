@@ -50,6 +50,7 @@ export default {
   controller: Controller,
   bindings: {
     multiple: '<',
+    file: '<',
     required: '<',
     pattern: '@',
     hints: '<',
