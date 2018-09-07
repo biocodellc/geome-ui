@@ -49,6 +49,7 @@ class PhotoUploadController {
       this.expeditionCode,
       this.entity.conceptAlias,
       this.file,
+      resume,
     )
       .progress(event => {
         const p = parseInt(100.0 * event.loaded / event.total, 10);
@@ -70,7 +71,7 @@ class PhotoUploadController {
           this.uploadProgress < 100
         ) {
           this.canResume = true;
-          this.uploadProgress = previousProgress;
+          // this.uploadProgress = previousProgress;
           this.showResumeDialog();
         }
       })
