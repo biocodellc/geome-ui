@@ -8,25 +8,21 @@ class NavigationController {
     this.$transitions = $transitions;
     this.ExpeditionService = ExpeditionService;
 
-    // on project change, retrieve expedition data
-    this.$transitions.onBefore({}, () => {
+  }
+
+  $onChanges(changesObj) {
+    if (
+      this.currentUser &&
+      this.currentProject &&
+      'currentProject' in changesObj 
+    ) {
       this.ExpeditionService.getExpeditionsForUser(
         this.currentProject.projectId,
         true,
       ).then(({ data }) => {
         this.data = data;
       });
-    });
-  }
-
-  // On initialization, retrieve expedition data
-  $onInit() {
-    this.ExpeditionService.getExpeditionsForUser(
-      this.currentProject.projectId,
-      true,
-    ).then(({ data }) => {
-      this.data = data;
-    });
+    }
   }
 }
 
