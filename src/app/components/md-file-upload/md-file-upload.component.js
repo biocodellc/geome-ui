@@ -1,5 +1,3 @@
-import '../../../style/fims/_mdFileUpload.scss';
-
 const template = require('./md-file-upload.html');
 
 class Controller {
