@@ -1,10 +1,14 @@
 const template = require('./project-info.html');
 
 class ProjectInfoController {
-  constructor($state) {
+  constructor($state, ProjectService) {
     'ngInject';
 
     this.$state = $state;
+    this.ProjectService = ProjectService;
+  
+	  this.ProjectService.all(true)
+	  .then(({ data }) => this.data = data)
   }
 }
 
