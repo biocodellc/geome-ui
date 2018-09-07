@@ -5,8 +5,8 @@
   <h2>{{$ctrl.record.entity}} {{$ctrl.getIdentifier($ctrl.record)}}</h2>
 
   <div class="main-details" layout="row" layout-align="center center">
-    <div ng-if="$ctrl.record.originalUrl" flex="100">
-      <img src="{{$ctrl.record.img1024}}" href="{{$ctrl.record.originalUrl}}"/>
+    <div ng-if="$ctrl.record.img1024" flex="100">
+      <img ng-src="{{$ctrl.record.img1024}}" href="{{$ctrl.record.originalUrl}}"/>
     </div>
     <table ng-if="!$ctrl.record.originalUrl" flex="100" class="table table-condensed">
       <tbody>
