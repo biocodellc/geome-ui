@@ -44,25 +44,29 @@ class PhotoUploadController {
 
   fetchPlate() {
     if (this.plate) {
-      this.PlateService.get(this.currentProject.projectId, this.plate).then(
-        plateData => {
+      this.loadingPlate = true;
+      this.PlateService.get(this.currentProject.projectId, this.plate)
+        .then(plateData => {
           this.plateData = plateData;
           this.viewPlate();
-        },
-      );
+        })
+        .finally(() => (this.loadingPlate = false));
     } else {
       this.plateData = undefined;
     }
   }
 
   fetchPlates() {
-    this.PlateService.all(this.currentProject.projectId).then(plates => {
-      this.plates = plates.sort();
-      if (this.plates.length === 1) {
-        this.plate = this.plates[0];
-        this.fetchPlate();
-      }
-    });
+    this.loading = true;
+    this.PlateService.all(this.currentProject.projectId)
+      .then(plates => {
+        this.plates = plates.sort();
+        if (this.plates.length === 1) {
+          this.plate = this.plates[0];
+          this.fetchPlate();
+        }
+      })
+      .finally(() => (this.loading = false));
   }
 }
 

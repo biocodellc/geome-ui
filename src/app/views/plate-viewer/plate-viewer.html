@@ -1,6 +1,10 @@
 <div layout-fill layout="column">
-  <md-content>
+  <md-content layout-fill>
     <h2 class="page-header">Plate Viewer</h2>
+
+    <div layout="row" layout-fill layout-sm="column" ng-show="$ctrl.loading" layout-align="center center">
+      <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+    </div>
 
     <div layout="row" layout-xs="column" layout-sm="column" layout-align="center center">
 
@@ -16,11 +20,16 @@
             <div class="hint">Choose a plate to view data</div>
           </md-autocomplete>
         </div>
+        <p ng-if="!$ctrl.loading && $ctrl.plates.length === 0">No Plates found</p>
 
         <div flex layout="row">
           <span flex></span>
-          <md-button ng-show="$ctrl.plate" ng-click="$ctrl.viewPlate()" class="md-raised md-primary">View
-            Plate</md-button>
+          <md-button ng-show="$ctrl.plate" ng-click="$ctrl.viewPlate()" class="md-raised md-primary"
+            layout="row" layout-align="center center">
+            <span ng-show="!$ctrl.loadingPlate">View Plate</span>
+            <md-progress-circular ng-show="$ctrl.loadingPlate" md-mode="indeterminate" md-diameter="18"
+              class="md-accent md-hue-3"></md-progress-circular>
+          </md-button>
           <span flex></span>
         </div>
       </div>
