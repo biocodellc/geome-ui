@@ -1,0 +1,29 @@
+<div layout-fill layout="column">
+  <md-content>
+    <h2 class="page-header">Plate Viewer</h2>
+
+    <div layout="row" layout-xs="column" layout-sm="column" layout-align="center center">
+
+      <div flex-gt-md="75" flex-gt-sm="80">
+        <div layout-gt-sm="row" ng-if="$ctrl.plates.length > 1" class="md-autocomplete-wrapper">
+          <md-autocomplete flex required md-no-cache md-selected-item="$ctrl.plate" md-items="p in $ctrl.plates | filter:searchText"
+            md-floating-label="Tissue Plate" md-require-match md-search-text="$ctrl.searchText"
+            md-min-length="0" md-selected-item-change="$ctrl.fetchPlate();" ng-click="$ctrl.clearSearchText()">
+            <md-item-template>
+              <span md-highlight-text="$ctrl.searchText" md-highlight-flags="i">{{p}}</span>
+            </md-item-template>
+            <span class="md-select-icon" aria-hidden="true" ng-click="$mdAutocompleteCtrl.focus($event)"></span>
+            <div class="hint">Choose a plate to view data</div>
+          </md-autocomplete>
+        </div>
+
+        <div flex layout="row">
+          <span flex></span>
+          <md-button ng-show="$ctrl.plate" ng-click="$ctrl.viewPlate()" class="md-raised md-primary">View
+            Plate</md-button>
+          <span flex></span>
+        </div>
+      </div>
+
+  </md-content>
+</div>

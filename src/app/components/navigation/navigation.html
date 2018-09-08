@@ -13,6 +13,10 @@
             <md-icon md-font-icon="fa fa-file-excel-o fa-fw"></md-icon>
             <p>Generate Template</p>
         </md-list-item>
+        <md-list-item ng-if="$ctrl.showPlateViewer" ng-click="$ctrl.$state.go('plates')">
+            <md-icon md-font-icon="fa fa-table fa-fw"></md-icon>
+            <p>Plate Viewer</p>
+        </md-list-item>
         <md-list-item ng-click="$ctrl.$state.go('dashboard')">
             <md-icon md-font-icon="fa fa-desktop fa-fw"></md-icon>
             <p>Project Overview</p>

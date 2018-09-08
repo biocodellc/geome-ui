@@ -38,6 +38,7 @@ import query from './views/query';
 import dashboard from './views/dashboard';
 import record from './views/record';
 import photoUpload from './views/photo-upload';
+import plateViewer from './views/plate-viewer';
 
 import projectService from './services/project.service';
 import userService from './services/user.service';
@@ -85,6 +86,7 @@ const dependencies = [
   dashboard,
   record,
   photoUpload,
+  plateViewer,
   auth,
   templates,
   expeditions,

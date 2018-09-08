@@ -111,7 +111,7 @@
   margin-bottom: 40px;
 }
 
-body > app > md-content {
+body>app>md-content {
   background-color: #fff;
 }
 
@@ -179,12 +179,12 @@ md-checkbox.small {
   list-style: none;
   border: solid 3px white;
   background: fade(slategrey, 20%);
-  > h1,
-  > h2,
-  > h3,
-  > h4,
-  > h5,
-  > h6 {
+  >h1,
+  >h2,
+  >h3,
+  >h4,
+  >h5,
+  >h6 {
     margin: 0;
   }
 }
@@ -192,29 +192,69 @@ md-checkbox.small {
 /* Table column sizing
 ================================== */
 
-.Rtable--2cols > .Rtable-cell {
+.Rtable--2cols>.Rtable-cell {
   width: 50%;
 }
 
-.Rtable--3cols > .Rtable-cell {
+.Rtable--3cols>.Rtable-cell {
   width: 33.33%;
 }
 
-.Rtable--4cols > .Rtable-cell {
+.Rtable--4cols>.Rtable-cell {
   width: 25%;
 }
 
-.Rtable--5cols > .Rtable-cell {
+.Rtable--5cols>.Rtable-cell {
   width: 20%;
 }
 
-.Rtable--6cols > .Rtable-cell {
+.Rtable--6cols>.Rtable-cell {
   width: 16.6%;
 }
 
 // firefox flex table fix
 .flex.table {
   width: auto;
+}
+
+md-autocomplete {
+  input:hover {
+    cursor: pointer;
+  }
+  md-autocomplete-wrap {
+    &.md-menu-showing {
+      input:hover {
+        cursor: text;
+      }
+    }
+  }
+  .md-select-icon {
+    float: right;
+    text-align: end;
+    width: 13px;
+    margin: 0 4px;
+    margin-top: -24px;
+    -webkit-transform: translate3d(0, -2px, 0);
+    transform: translate3d(0, -2px, 0);
+    font-size: 1.2rem;
+    color: rgba(0, 0, 0, 0.54);
+    &:hover {
+      cursor: pointer;
+    }
+    &:focus {
+      outline: none;
+    }
+    &:after {
+      display: block;
+      content: '\25BC';
+      position: relative;
+      top: 2px;
+      speak: none;
+      font-size: 13px;
+      -webkit-transform: scaleY(0.5) scaleX(1);
+      transform: scaleY(0.5) scaleX(1);
+    }
+  }
 }
 
 // TODO: remove when we remove bootstrap
