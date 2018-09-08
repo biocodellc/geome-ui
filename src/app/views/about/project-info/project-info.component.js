@@ -6,15 +6,15 @@ class ProjectInfoController {
 
     this.$state = $state;
     this.ProjectService = ProjectService;
-  
-	  this.ProjectService.all(true)
-	  .then(({ data }) => this.data = data)
+  }
+
+  $onInit() {
+    this.ProjectService.all(true).then(({ data }) => (this.data = data));
   }
 }
 
 export default {
   template,
   controller: ProjectInfoController,
-  bindings: {
-  },
+  bindings: {},
 };
