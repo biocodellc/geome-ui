@@ -62,13 +62,21 @@
                             </div>
                             <div class="form-group" show-errors="">
                                 <label class="control-label">New Password</label>
-                                <input type="password" required name="newPassword" class="form-control" ng-model="$ctrl.newPassword" minlength="10" />
+                                <input type="password" required name="newPassword" class="form-control" ng-model="$ctrl.newPassword" />
+                                <div ng-password-strength="$ctrl.newPassword" strength="passStrength" inner-class-prefix="progress-bar-" inner-class="progress-bar"
+                                    style="width:72%">
+                                </div>
+                                <p>
+                                    <strong>New Password Strength:</strong>
+                                    <md-icon ng-show="passStrength > 30" md-font-icon="fa fa-check fa-xs md-secondary"
+                                        style="color:green"></md-icon>
+                                </p>
                             </div>
 
                             <div class="form-group" show-errors="">
                                 <label class="control-label">Verify Password</label>
                                 <input type="password" required name="verifyPassword" class="form-control" ng-model="$ctrl.verifyPassword" compare-to="$ctrl.newPassword"
-                                />
+                                    ng-disabled="passStrength < 30" />
                                 <p class="help-block" ng-if="passwordForm.verifyPassword.$error.compareTo && passwordForm.verifyPassword.$touched">
                                     Passwords do not match.</p>
                             </div>
@@ -77,14 +85,6 @@
                             </div>
 
                         </form>
-                        <div class="row">
-                            <strong class="col-md-1">Strength:</strong>
-
-                            <div class="col-md-6" ng-password-strength="$ctrl.newPassword" strength="passStrength" inner-class-prefix="progress-bar-"
-                                inner-class="progress-bar">
-                            </div>
-                            <md-icon class="col-md-4" ng-show="passStrength > 30" md-font-icon="fa fa-check fa-xs md-secondary" style="color:green"></md-icon>
-                        </div>
                     </div>
 
                 </div>
