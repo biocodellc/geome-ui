@@ -1,0 +1,36 @@
+<!-- worksheet validation messages -->
+<md-dialog class="plate-viewer-dialog">
+  <md-toolbar>
+    <div class="md-toolbar-tools" layout-align="center center">
+      <span flex></span>
+      <h2>Tissue Plate: {{$ctrl.plateName}}</h2>
+      <span flex></span>
+      <md-button class="md-icon-button" ng-click="$ctrl.$mdDialog.hide()">
+        <md-icon md-font-icon="fa fa-close fa-sm" aria-label="Close dialog"></md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content layout="column">
+    <div flex class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th></th>
+            <th ng-repeat="c in [1,2,3,4,5,6,7,8,9,10,11,12]">{{c}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="r in ['A','B','C','D','E','F','G','H']">
+            <th>{{r}}</th>
+            <td ng-repeat="c in [0,1,2,3,4,5,6,7,8,9,10,11]">{{$ctrl.plateData[r][c].tissueID}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <md-dialog-actions>
+      <md-button ng-click="$ctrl.$mdDialog.hide()" class="md-primary">Close</md-button>
+    </md-dialog-actions>
+
+  </md-dialog-content>
+</md-dialog>

@@ -2,7 +2,7 @@ import angular from 'angular';
 import {
   findExcelCell,
   isExcelFile,
-  parseWorkbookSheetNames,
+  parseWorkbookWithHeaders,
   workbookToJson,
 } from '../../../utils/tabReader';
 import appConfig from '../../../utils/config';
@@ -11,6 +11,7 @@ const { naan } = appConfig;
 const template = require('./upload.html');
 
 const MULTI_EXPEDITION = 'MULTI_EXPEDITION';
+const EXCEL_MAX_ROWS_TO_PARSE = 10000;
 
 const LAT_URI = 'urn:decimalLatitude';
 const LNG_URI = 'urn:decimalLongitude';
@@ -62,6 +63,9 @@ class UploadController {
     this.verifySampleLocations = false;
     this.sampleLocationsVerified = false;
     this.multiExpeditionAllowed = true;
+    this.showExpeditions = false;
+    this.canValidate = false;
+    this.parsing = false;
   }
 
   $onChanges(changesObj) {
@@ -97,7 +101,7 @@ class UploadController {
       });
     });
 
-    this.dataTypes = dataTypes;
+    this.dataTypes = Object.assign({}, dataTypes);
     this.multiExpeditionAllowed = !(dataTypes.Fastq || dataTypes.Fasta);
 
     if (
@@ -149,9 +153,9 @@ class UploadController {
       this.worksheetData.push(data);
     }
 
-    if (fileChanged) {
+    if (fileChanged && file) {
+      this.parsing = true;
       if (worksheet === 'Workbook') {
-        // Check NAAN
         parseSpreadsheet('~naan=[0-9]+~', 'Instructions', file).then(n => {
           if (naan && n && n > 0 && Number(n) !== Number(naan)) {
             this.$mdDialog
@@ -175,40 +179,188 @@ class UploadController {
                   )
                   .ok('Proceed Anyways'),
               )
-              .then(() => {
-                parseWorkbookSheetNames(file).then(sheets => {
-                  sheets.some(s => {
-                    if (this.setCoordinateWorksheet(s)) {
-                      this.verifyCoordinates(worksheet);
-                      this.coordinateWorksheets.push('Workbook');
-                      return true;
-                    }
-                    return false;
-                  });
-                });
-              });
+              .then(() => this.handleNewWorksheet(data));
           } else {
-            parseWorkbookSheetNames(file).then(sheets => {
-              sheets.some(s => {
-                if (this.setCoordinateWorksheet(s)) {
-                  this.verifyCoordinates(worksheet);
-                  this.coordinateWorksheets.push('Workbook');
-                  return true;
-                }
-                return false;
-              });
-            });
+            this.handleNewWorksheet(data);
           }
         });
-      } else if (this.setCoordinateWorksheet(worksheet)) {
-        this.verifyCoordinates(worksheet);
-        this.coordinateWorksheets.push(worksheet);
+      } else {
+        this.handleNewWorksheet(data);
       }
     } else if (!file) {
       const i = this.coordinateWorksheets.findIndex(v => v === worksheet);
       if (i > -1) {
         this.coordinateWorksheets.splice(i, 1);
       }
+    }
+
+    this.canValidate = this.worksheetData.some(d => d.file);
+  }
+
+  /**
+   * Attempt to parse the expeditionCodes & verify coordinates if present
+   *
+   * If we find a single expeditionCode, we can set the expeditionCode. If we find multiple
+   * expeditionCodes, set the expeditionCode to multiple.
+   *
+   * If we find coordinates, ask the user to verify the coordinates
+   *
+   * @param {object} worksheetData this.worksheetData object
+   */
+  async handleNewWorksheet({ worksheet, file }) {
+    const expeditionCodes = new Set();
+
+    const updateView = (timedOut = false, parsedEntireBook = false) => {
+      this.parsing = false;
+      if (timedOut && this.expeditionCode) return;
+
+      if (expeditionCodes.size === 1) {
+        const expeditionCode = expeditionCodes.values().next().value;
+        if (
+          this.userExpeditions.some(e => e.expeditionCode === expeditionCode)
+        ) {
+          this.expeditionCode = expeditionCode;
+        }
+      } else if (expeditionCodes.size > 1) {
+        if (this.multiExpeditionAllowed) {
+          this.expeditionCode = MULTI_EXPEDITION;
+        }
+      } else if (parsedEntireBook) {
+        this.multiExpeditionAllowed = false;
+      }
+      this.$scope.$apply(() => {
+        this.showExpeditions = true;
+      });
+    };
+
+    if (worksheet === 'Workbook') {
+      // if may take a while to parse an excel workbook, so set a timeout
+      let timedOut = false;
+
+      const parseWorkbook = async () => {
+        const wb = await parseWorkbookWithHeaders(file);
+        let rowCount = 0;
+        let fullWorkbookPromise;
+        let hasCoordinateWorksheet = false;
+        const worksheets = [];
+
+        wb.SheetNames.forEach(s => {
+          if (this.setCoordinateWorksheet(s)) {
+            hasCoordinateWorksheet = true;
+          }
+          if (this.currentProject.config.worksheets().includes(s)) {
+            worksheets.push(s);
+          }
+          rowCount += wb.Sheets[s].rowCount;
+        });
+
+        // xlsx parser is too slow to parse workbooks w/ > 10k rows
+        // If we want to do this, we should for the xlsx-js lib and
+        // add the ability to parse only specific sheets & rows
+        // current behavior is to parse the entire wb
+        if (hasCoordinateWorksheet && rowCount <= EXCEL_MAX_ROWS_TO_PARSE) {
+          if (!fullWorkbookPromise) {
+            fullWorkbookPromise = workbookToJson(file);
+          }
+          fullWorkbookPromise.then(fullWorkbook => {
+            // if the file has been changed, don't ask to upload
+            if (
+              timedOut &&
+              (this.uploading || !this.worksheetData.some(d => d.file))
+            ) {
+              return fullWorkbook;
+            }
+            this.verifyCoordinates(worksheet, fullWorkbook);
+            this.coordinateWorksheets.push('Workbook');
+            return fullWorkbook;
+          });
+        }
+
+        let parsedEntireBook = true;
+
+        // parse expeditionCodes
+        if (worksheets.length > 0) {
+          const hasExpeditionCode = worksheets.find(s =>
+            wb.Sheets[s].headers.includes('expeditionCode'),
+          );
+
+          if (hasExpeditionCode) {
+            if (!fullWorkbookPromise) {
+              parsedEntireBook = rowCount <= EXCEL_MAX_ROWS_TO_PARSE;
+              const opts =
+                rowCount <= EXCEL_MAX_ROWS_TO_PARSE
+                  ? {}
+                  : {
+                      sheetRows: Math.floor(
+                        EXCEL_MAX_ROWS_TO_PARSE / worksheets.length,
+                      ),
+                    };
+              fullWorkbookPromise = workbookToJson(file, opts);
+            }
+            const fullWorkbook = await fullWorkbookPromise;
+            // if the file has been changed, don't ask to upload
+            if (
+              timedOut &&
+              (this.uploading || !this.worksheetData.some(d => d.file))
+            ) {
+              return undefined;
+            }
+
+            worksheets.forEach(s => {
+              const records = fullWorkbook[s];
+
+              if (records.length && 'expeditionCode' in records[0]) {
+                records.forEach(
+                  record =>
+                    record.expeditionCode &&
+                    expeditionCodes.add(record.expeditionCode),
+                );
+              }
+            });
+
+            return parsedEntireBook;
+          }
+        } else {
+          angular.toaster.error(
+            `Failed to find one of the following worksheets: ${this.currentProject.config
+              .worksheets()
+              .join(', ')}`,
+            { hideDelay: 5000 },
+          );
+        }
+      };
+
+      const t = setTimeout(() => {
+        timedOut = true;
+        angular.toaster.error(
+          'Timed out attempting to parse Workbook for coordinate verification. You can still validate/upload your data. If there are many rows in your workbook, it will be faster to upload a csv file.',
+          { hideDelay: 5000 },
+        );
+        updateView();
+      }, 2000);
+
+      parseWorkbook().then(parsedEntireBook => {
+        if (!timedOut) {
+          clearTimeout(t);
+        }
+        updateView(timedOut, parsedEntireBook);
+      });
+    } else {
+      const workbook = await workbookToJson(file);
+
+      if (this.setCoordinateWorksheet(worksheet)) {
+        this.verifyCoordinates(worksheet, workbook);
+        this.coordinateWorksheets.push(worksheet);
+      }
+
+      // parse expeditionCodes
+      const sheet = workbook.default;
+      sheet
+        .map(record => record.expeditionCode)
+        .filter(e => e)
+        .forEach(e => expeditionCodes.add(e));
+
+      updateView();
     }
   }
 
@@ -221,9 +373,11 @@ class UploadController {
   }
 
   async upload() {
+    this.uploading = true;
     this.$scope.$broadcast('show-errors-check-validity');
 
     if (!this.checkCoordinatesVerified() || this.uploadForm.$invalid) {
+      this.uploading = false;
       return;
     }
 
@@ -233,12 +387,16 @@ class UploadController {
       (data.reloadWorkbooks || data.dataSourceMetadata.some(d => d.reload));
 
     const upload = () =>
-      this.onUpload({ data }).then(success => {
-        if (success) {
-          this.$onInit();
-          this.$scope.$broadcast('show-errors-reset');
-        }
-      });
+      this.onUpload({ data })
+        .then(success => {
+          if (success) {
+            this.$onInit();
+            this.$scope.$broadcast('show-errors-reset');
+          }
+        })
+        .finally(() => {
+          this.uploading = false;
+        });
 
     if (hasReload) {
       const reloadSheets = [];
@@ -353,7 +511,7 @@ class UploadController {
     return data;
   }
 
-  verifyCoordinates(worksheet) {
+  async verifyCoordinates(worksheet, workbook) {
     const { config } = this.currentProject;
     const eventEntity = config.entities.find(e => e.conceptAlias === 'Event');
     const { worksheet: eventWorksheet } = eventEntity;
@@ -365,73 +523,71 @@ class UploadController {
       eventEntity.attributes.find(a => a.uri === LNG_URI) || {}
     ).column;
 
-    const data = this.worksheetData.find(d => d.worksheet === worksheet);
-    workbookToJson(data.file)
-      .then(
-        workbook =>
-          workbook.isExcel ? workbook[eventWorksheet] : workbook.default,
-      )
-      .then(d => {
-        if (!d.some(e => e[latColumn] && e[lngColumn])) {
-          angular.toaster.error(
-            `We didn't find any coordinates for your ${eventWorksheet} records`,
-          );
-          this.verifiedCoordinateWorksheets.push(worksheet);
-          return;
-        }
+    if (!workbook) {
+      const data = this.worksheetData.find(d => d.worksheet === worksheet);
+      workbook = await workbookToJson(data.file);
+    }
 
-        const uniqueKey = eventEntity.hashed
-          ? config.entities.find(
-              e =>
-                e.worksheet === eventWorksheet &&
-                e.parentEntity === eventEntity.conceptAlias,
-            ).uniqueKey
-          : eventEntity.uniqueKey;
-
-        const scope = Object.assign(this.$scope.$new(true), {
-          d,
-          latColumn,
-          lngColumn,
-          uniqueKey,
-        });
-
-        const naanDialog =
-          this.$mdDialog('naanDialog') || Promise.resolve(true);
-
-        naanDialog.then(
-          res =>
-            res &&
-            this.$mdDialog
-              .show({
-                template:
-                  '<upload-map-dialog layout="column" unique-key="uniqueKey" lat-column="latColumn" lng-column="lngColumn" data="d"></upload-map-dialog>',
-                scope,
-              })
-              .then(() => {
-                this.verifiedCoordinateWorksheets.push(worksheet);
-              })
-              .catch(() => {
-                const i = this.verifiedCoordinateWorksheets.findIndex(
-                  v => v === worksheet,
-                );
-                if (i > -1) {
-                  this.verifiedCoordinateWorksheets.splice(i, 1);
-                }
-              }),
+    try {
+      const d = workbook.isExcel ? workbook[eventWorksheet] : workbook.default;
+      if (!d.some(e => e[latColumn] && e[lngColumn])) {
+        angular.toaster.error(
+          `We didn't find any coordinates for your ${eventWorksheet} records`,
         );
-      })
-      .catch(e => {
-        angular.catcher('Failed to load samples map')(e);
-        // need to $scope.$apply here b/c FileReader isn't an angular object
-        this.$scope.$apply(() => {
-          const i = this.verifiedCoordinateWorksheets.findIndex(
-            v => v === worksheet,
-          );
-          if (i > -1) {
-            this.verifiedCoordinateWorksheets.splice(i, 1);
-          }
-        });
+        this.verifiedCoordinateWorksheets.push(worksheet);
+        return;
+      }
+
+      const uniqueKey = eventEntity.hashed
+        ? config.entities.find(
+            e =>
+              e.worksheet === eventWorksheet &&
+              e.parentEntity === eventEntity.conceptAlias,
+          ).uniqueKey
+        : eventEntity.uniqueKey;
+
+      const scope = Object.assign(this.$scope.$new(true), {
+        d,
+        latColumn,
+        lngColumn,
+        uniqueKey,
       });
+
+      const naanDialog = this.$mdDialog('naanDialog') || Promise.resolve(true);
+
+      naanDialog.then(
+        res =>
+          res &&
+          this.$mdDialog
+            .show({
+              template:
+                '<upload-map-dialog layout="column" unique-key="uniqueKey" lat-column="latColumn" lng-column="lngColumn" data="d"></upload-map-dialog>',
+              scope,
+            })
+            .then(() => {
+              this.verifiedCoordinateWorksheets.push(worksheet);
+            })
+            .catch(() => {
+              const i = this.verifiedCoordinateWorksheets.findIndex(
+                v => v === worksheet,
+              );
+              if (i > -1) {
+                this.verifiedCoordinateWorksheets.splice(i, 1);
+              }
+            }),
+      );
+    } catch (e) {
+      angular.catcher('Failed to load samples map')(e);
+      // need to $scope.$apply here b/c FileReader isn't an angular object
+      this.$scope.$apply(() => {
+        const i = this.verifiedCoordinateWorksheets.findIndex(
+          v => v === worksheet,
+        );
+        if (i > -1) {
+          this.verifiedCoordinateWorksheets.splice(i, 1);
+        }
+      });
+    }
   }
 
   getAvailableDataTypes() {

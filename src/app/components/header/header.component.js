@@ -1,4 +1,8 @@
+import config from '../../utils/config';
+
 const template = require('./header.html');
+
+const { restRoot } = config;
 
 class HeaderController {
   constructor($location, $state) {
@@ -6,6 +10,10 @@ class HeaderController {
 
     this.$location = $location;
     this.$state = $state;
+  }
+
+  $onInit() {
+    this.restRoot = restRoot;
   }
 
   login() {

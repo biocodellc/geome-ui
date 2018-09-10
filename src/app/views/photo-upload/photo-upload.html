@@ -1,0 +1,84 @@
+<div layout-fill layout="column">
+  <md-content>
+    <h2 class="page-header">Upload Photos</h2>
+
+    <div class="information">
+      <p><strong>The GeOMe bulk image loader accepts a directory of images zipped into a single
+          file.</strong></p>
+
+      <p>The max file size is 2GB. If you need to upload more then that, split the upload into
+        multiple uploads.</p>
+
+      <p>When uploading images, you have <strong>the following options:</strong></p>
+      <ol>
+        <li>Name each file according to the following template. Each file will then be parsed and
+          attached
+          to the appropriate record:</li>
+        <ul>
+          <li>{parentIdentifier}+{imgIdentifier}.{ext}</li>
+        </ul>
+        <!-- <li>Include a metadata.csv file with the following columns</li> -->
+        <!-- <ul> -->
+        <!-- <li>parentIdentifier* - the identifier of the record to attach the photo to</li> -->
+        <!-- <li>fileName* - the name of the file in the directory</li> -->
+        <!-- <li ng-if="!$ctrl.entity">any additional metadata - this is project specific. 1 entry per column.</li> -->
+        <!-- <li ng-repeat="a in $ctrl.entity.additionalMetadata track by a.column">{{a.column}} (optional) -->
+        <!-- - {{a.description}}</li> -->
+        <!-- </ul> -->
+      </ol>
+    </div>
+
+    <div layout="row" layout-xs="column" layout-sm="column" layout-align="center center">
+      <form flex flex-gt-md="75" flex-gt-sm="80" role="form" name="$ctrl.uploadForm" class="form-horizontal"
+        novalidate>
+
+        <div layout-gt-sm="row" ng-if="$ctrl.photoEntities.length > 1">
+          <md-input-container class="md-block" flex-gt-sm>
+            <label>Photo Entity</label>
+            <md-select name="entity" ng-model="$ctrl.entity" required>
+              <md-option ng-repeat="e in $ctrl.photoEntities" ng-value="e">
+                {{e.conceptAlias.replace('_', ' ')}}s
+              </md-option>
+            </md-select>
+
+            <div ng-messages="$ctrl.uploadForm.entity.$error">
+              <div ng-message="required">Photo Entity is required.</div>
+            </div>
+          </md-input-container>
+        </div>
+
+        <div layout-gt-sm="row" ng-if="$ctrl.entity && $ctrl.entity.requiresExpedition">
+          <md-input-container class="md-block" flex-gt-sm>
+            <label>Expedition</label>
+            <md-select name="expedition" ng-model="$ctrl.expeditionCode" required>
+              <md-option ng-repeat="expedition in $ctrl.userExpeditions" value="{{expedition.expeditionCode}}">
+                {{expedition.expeditionTitle}}
+              </md-option>
+            </md-select>
+
+            <div ng-messages="$ctrl.uploadForm.expedition.$error">
+              <div ng-message="required">Expedition is required.</div>
+            </div>
+          </md-input-container>
+        </div>
+
+        <div layout-gt-sm="row">
+          <md-file-upload flex required="true" pattern=".zip" on-select="$ctrl.onSelect(files)"
+            text="Choose File" file="$ctrl.file" hints='["A zipped directory of photos to upload."]' />
+        </div>
+        <md-progress-linear ng-if="$ctrl.uploadProgress !== undefined" md-mode="determinate"
+          ng-value="$ctrl.uploadProgress"></md-progress-linear>
+        <button type="submit" class="md-button md-raised md-primary photo-upload-button" layout="row"
+          layout-align="center center" ng-click="$ctrl.uploadForm.$valid && $ctrl.upload()">
+          <span ng-if="!$ctrl.loading && !$ctrl.canResume">Upload</span>
+          <span ng-if="!$ctrl.loading && $ctrl.canResume">Resume</span>
+          <md-progress-circular ng-if="$ctrl.loading" md-mode="indeterminate" md-diameter="18"
+            class="md-accent md-hue-3"></md-progress-circular>
+        </button>
+        <button ng-show="$ctrl.canResume" ng-click="$ctrl.canResume = false;$ctrl.uploadProgress = undefined;"
+          class="md-button md-raised md-warn md-hue-2 pull-right">Reset</button>
+    </div>
+    </form>
+
+  </md-content>
+</div>
