@@ -176,7 +176,7 @@ class TemplateController {
         ? Object.keys(this.selected).reduce((accumulator, worksheet) => {
             if (this.selected[worksheet].length > 0) {
               accumulator.push({
-                name: worksheet,
+                worksheet,
                 columns: this.selected[worksheet].map(
                   attribute => attribute.column,
                 ),
@@ -186,7 +186,7 @@ class TemplateController {
           }, [])
         : [
             {
-              name: this.worksheet,
+              worksheet: this.worksheet,
               columns: this.selected[this.worksheet].map(
                 attribute => attribute.column,
               ),

@@ -60,12 +60,14 @@ class PhotosService {
         projectId,
         expeditionCode,
       },
-    }).catch(response => {
-      if (response.status !== 400) {
-        angular.catcher('Error fetching resume upload size')(response);
-      }
-      return 0;
-    });
+    })
+      .then(response => response.data.size || 0)
+      .catch(response => {
+        if (response.status !== 400) {
+          angular.catcher('Error fetching resume upload size')(response);
+        }
+        return 0;
+      });
   }
 }
 

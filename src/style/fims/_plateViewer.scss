@@ -1,0 +1,39 @@
+.plate-viewer-dialog {
+  max-width: 90%;
+  width: 90%;
+  max-height: 90%;
+  height: 90%;
+  md-dialog-content {
+    margin: 16px;
+    height: 100%; // margin-bottom: 0;
+    table {
+      height: 100%;
+      margin-bottom: 0;
+      thead {
+        tr {
+          th {
+            text-align: center;
+          }
+        }
+      }
+      tbody {
+        tr {
+          th,
+          td {
+            padding: 8px 4px;
+            text-align: center;
+            vertical-align: middle;
+          }
+        }
+      }
+    }
+  }
+  md-dialog-actions {
+    border-top: none !important;
+    min-height: 36px;
+    padding-right: 0;
+    .md-button {
+      margin-bottom: 0;
+    }
+  }
+}

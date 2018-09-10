@@ -12,6 +12,12 @@ class NavigationController {
       this.currentUser &&
       this.currentProject &&
       this.currentProject.config.entities.some(e => e.type === 'Photo');
+
+    this.showPlateViewer =
+      this.currentProject &&
+      this.currentProject.config.entities.some(
+        e => e.conceptAlias === 'Tissue',
+      );
   }
 }
 

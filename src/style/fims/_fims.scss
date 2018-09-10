@@ -7,9 +7,13 @@
 @import "expeditions";
 @import "expedition";
 
+// components
+@import "mdFileUpload";
+
 // views
 @import "query";
 @import "dashboard";
 @import "record";
 @import "templates";
 @import "photoUpload";
+@import "plateViewer";
