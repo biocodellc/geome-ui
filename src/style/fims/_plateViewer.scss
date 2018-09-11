@@ -1,11 +1,20 @@
+.md-autocomplete-suggestions-container-plate-viewer-dialog {
+  min-width: 160px !important;
+}
+
 .plate-viewer-dialog {
   max-width: 90%;
   width: 90%;
   max-height: 90%;
   height: 90%;
+  a:hover,
+  a:focus {
+    text-decoration: none;
+  }
   md-dialog-content {
     margin: 16px;
-    height: 100%; // margin-bottom: 0;
+    margin-bottom: 8px;
+    height: 100%;
     table {
       height: 100%;
       margin-bottom: 0;
@@ -20,12 +29,24 @@
         tr {
           th,
           td {
+            min-width: 100px;
             padding: 8px 4px;
             text-align: center;
             vertical-align: middle;
           }
+          th:first-of-type,
+          td:first-of-type {
+            min-width: 0;
+          }
         }
       }
+    }
+  }
+  .plate-viewer-errors {
+    max-height: 100px;
+    margin-bottom: 8px;
+    ul {
+      margin-bottom: 0;
     }
   }
   md-dialog-actions {
@@ -35,5 +56,38 @@
     .md-button {
       margin-bottom: 0;
     }
+  }
+  md-autocomplete {
+    // min-width: 150px;
+    min-width: 100px;
+    height: 30px;
+    md-autocomplete-wrap {
+      box-shadow: none;
+      border-color: rgba(0, 0, 0, 0.12);
+      border-width: 0 0 1px 0;
+      border-style: solid;
+      border-radius: 0;
+      height: 30px;
+      padding-bottom: 2px;
+      input {
+        height: 30px;
+        padding: 0 0 0 2px;
+        text-overflow: ellipsis;
+      }
+      button {
+        margin: 0;
+        width: 22px;
+      }
+    }
+  }
+}
+
+.new-plate-dialog {
+  min-width: 400px;
+  md-dialog-content {
+    margin: 16px;
+  }
+  md-input-container {
+    margin-bottom: 0;
   }
 }
