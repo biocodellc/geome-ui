@@ -96,7 +96,7 @@ class PlateViewerController {
             }),
           );
         }
-        this.newPlate = this.newPlate && !resp.plate;
+        this.newPlate = this.newPlate && !!resp.plate;
         this.origPlateData = resp.plate || angular.copy(NEW_PLATE);
         this.hasChanges = !angular.equals(this.origPlateData, this.plateData);
       })
@@ -135,10 +135,17 @@ class PlateViewerController {
 }
 
 class PlatesController {
-  constructor($mdDialog, PlateService, ExpeditionService, QueryService) {
+  constructor(
+    $mdDialog,
+    $state,
+    PlateService,
+    ExpeditionService,
+    QueryService,
+  ) {
     'ngInject';
 
     this.$mdDialog = $mdDialog;
+    this.$state = $state;
     this.PlateService = PlateService;
     this.ExpeditionService = ExpeditionService;
     this.QueryService = QueryService;
@@ -152,6 +159,13 @@ class PlatesController {
       'currentProject' in changesObj &&
       changesObj.currentProject.previousValue !== this.currentProject
     ) {
+      if (
+        !this.currentProject.config.entities.some(
+          e => e.conceptAlias === 'Tissue' && e.uniqueKey === 'tissueID',
+        )
+      ) {
+        this.$state.go('validate');
+      }
       this.plates = [];
       this.plateData = undefined;
       this.fetchPlates();

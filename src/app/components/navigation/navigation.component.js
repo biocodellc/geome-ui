@@ -16,7 +16,7 @@ class NavigationController {
     this.showPlateViewer =
       this.currentProject &&
       this.currentProject.config.entities.some(
-        e => e.conceptAlias === 'Tissue',
+        e => e.conceptAlias === 'Tissue' && e.uniqueKey === 'tissueID',
       );
   }
 }
