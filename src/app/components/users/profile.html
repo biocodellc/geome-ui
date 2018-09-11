@@ -61,14 +61,14 @@
                             </div>
                             <div class="form-group" show-errors="">
                                 <label class="control-label">New Password</label>
-                                <input type="password" ng-required="true" name="newPassword" class="form-control" ng-model="$ctrl.newPassword" />
+                                <input type="password" ng-required="true" name="newPassword" class="form-control" ng-model="$ctrl.newPassword">
+                                <md-icon ng-show="passStrength > 30" md-font-icon="fa fa-check fa-xs md-secondary" style="color:green"></md-icon>
+                                </input>
                                 <div ng-password-strength="$ctrl.newPassword" strength="passStrength" inner-class-prefix="progress-bar-" inner-class="progress-bar"
-                                    style="width:72%">
+                                    style="width:80%">
                                 </div>
-                                <p>
-                                    <strong>New Password Strength:</strong>
-                                    <md-icon ng-show="passStrength > 30" md-font-icon="fa fa-check fa-xs md-secondary" style="color:green"></md-icon>
-                                </p>
+                                <div class="help-block" ng-if="passStrength<30 && passwordForm.newPassword.$touched">
+                                    Password is not strong enough.</div>
                             </div>
 
                             <div class="form-group" show-errors="">

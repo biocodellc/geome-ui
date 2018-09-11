@@ -4,9 +4,6 @@ import bootstrap from 'angular-ui-bootstrap';
 import ngMaterial from 'angular-material';
 import ngAnimate from 'angular-animate';
 
-// todo remove the following and use only angular-ui-bootstrap
-import 'jquery-ui';
-
 // this loads the css for the app
 import '../style/bootstrap.scss';
 import '../style/app.scss';
