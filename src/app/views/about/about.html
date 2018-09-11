@@ -13,32 +13,29 @@
 <br>
 <uib-accordion>
   <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="Getting Started">
-    <p>Welcome to GeOMe! There are several paths you can take to get started with GeOMe.</p>
-    <ul>
-      <li>
-        <strong>I want to query publicly available GeOMe data or use available templates</strong>
-        <p>For read-only access to public projects, you do not need an account and may create project-specific templates and
-          query data. We recommend reading the
-          <a href='docs/helpDocumentation.pdf' target=_blank>GeOMe Help Document</a> to get started using the web interface.</p>
-      </li>
-      <li>
-        <strong>I want to contribute data to an existing project</strong>
-        <p>See the
-          <a href="#">GeOMe projects page</a> to read about current GeOMe projects. Contact the project administrator of the project
+    <p>Welcome to GeOMe! Following are several routes you can take to get started with GeOMe:</p>
+      <p>
+        <strong><u>Route 1</u>: I want to query public data or generate public templates</strong>
+        <br>Most GeOMe projects are marked as "public", which means that anyone can query public data or generate that project's templates.  
+          We recommend reading the
+          <a href='docs/helpDocumentation.pdf' target=_blank>GeOMe Help Document</a> to get started using the web interface.</br>
+      </p>
+      <p>
+        <strong><u>Route 2</u>: I want to contribute data to an existing project</strong>
+        <br>See the
+          <a href="#projects">GeOMe projects page</a> to read about current GeOMe projects. Contact the project administrator of the project
           you would like to join and the will either create a new account for you or associate your existing account to their
-          project.
-        </p>
-      </li>
-      <li>
-        <strong>I want to create a new project</strong>
-        <p>Creating a new project currently requires sending an email request to
+          project.</br>
+       </p>
+      <p>
+        <strong><u>Route 3</u>: I want to create a new project</strong>
+        <br>Creating a new project currently requires sending an email request to
           <a href="mailto:geome.help@gmail.com">geome.help@gmail.com</a> with a brief statement of what your project involves. The GeOMe team will be in touch
-          about getting you setup.</p>
-      </li>
-    </ul>
+          about getting you setup.</br>
+    </p>
   </div>
 
-  <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="GeOMe Projects">
+  <div uib-accordion-group id="projects" class="panel-default md-whiteframe-2dp" heading="GeOMe Projects">
     <p>The following projects are active in the GeOMe database. New users can either contribute to an existing project or create
       a new project of their own. Please go through this list to see if you can join an existing project before creating
       a new project. When joining a project you agree to work together with the project administrator and project users.</p>
@@ -47,7 +44,16 @@
   </div>
 
   <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="Using the Web Interface">
-    <p>Instructions on using the GeOMe web interface are available by reading our
+    <p>
+    GeOMe's web interface lets users create spreadsheet templates, customized for individual projects, which ensure
+    rapid feedback on data quality during the data loading process.  
+    The web interface lets users upload data on collecting events, specimens, tissues,
+    photos of specimens and events, FASTA files, and FASTQ metadata.  Users can also choose to create their own GeOMe 
+    projects and customize their own attributes, lookup lists, rules, and project members. 
+    </p>
+
+    <p>
+    Step by step instructions on using the GeOMe web interface are available by reading our
       <a href='docs/helpDocumentation.pdf ' target='_blank '>GeOMe Help Document (PDF format)</a>.</p>
   </div>
 
@@ -69,7 +75,8 @@
   </div>
 
   <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="The Biocode LIMS Plugin">
-    <p> Data uploaded to GeOMe can be manipulated in a laboratory information management system (LIMS) using a specially built
+    <p> 
+    Data uploaded to GeOMe can be manipulated in a laboratory information management system (LIMS) using a specially built
       <a href="http://software.mooreabiocode.org/">LIMS plugin</a> that operates within the Geneious environment. The purpose of the LIMS tool is to help manage lab and
       sequence analysis workflows.Use the
       <a href="https://github.com/biocodellc/biocode-lims/wiki">LIMS plugin wiki</a> to learn about how to use the LIMS and download the latest version from the
@@ -87,24 +94,78 @@
     </p>
   </div>
 
-  <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="Instructional Videos (DEPRECATED)">
-    <p>The following videos illustrate how to work with
-      <b>Version 1</b> of the GeOMe interface. While these videos have been marked as DEPRECATED, much of the functionality
-      (especially with regards to dealing with sequence data) is still applicable to the current interface. We will update
-      these videos with current information as soon as we are able.
+  <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="Instructional Videos">
+    <p>
+    While the content of these videos reference a prior version of the web interface, the functionality is still 
+    applicable to the current interface. The videos cover generating templates, loading data, and associating FASTQ sequence data and loading to the Sequence Read Archive. 
     </p>
+
     <iframe width="560" height="315" src="https://www.youtube.com/embed/rdoP7xqDyhQ" frameborder="0" allowfullscreen></iframe>
     <iframe width="560" height="315" src="https://www.youtube.com/embed/GgPsFnoinZc" frameborder="0" allowfullscreen></iframe>
   </div>
 
   <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="Data usage policy">
-    <p style="margin-top:20px;">GeOMe data is subject to the
-      <a target="_blank" href="http://diversityindopacific.net/data-usage-agreement/">data usage policy</a> developed by the Diversity of the Indopacific Project (the first GeOMe project).
-    </p>
-  </div>
+    The Genomic Observatories Metadatabase has the following objectives:
 
-  <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="GeOMe Publication">
+	<ul>
+	<li>To advance genetic diversity research worldwide</li>
+	<li>To aggregate sample and genetic data in raw formats in a searchable database such that original datasets can be utilized for further investigation.</li>
+	<li>To promote and advocate open and collaborative science as a best practice for conducting biodiversity research</li>
+	<li>To promote and provide capacity-building within developing countries for monitoring, study and protection of their biodiversity resources.</li>
+	</ul>
+
+    <p> 
+    Recalling that access to and utilization of genetic resources and data taken should be consistent with the provisions of the Convention on 
+    Biological Diversity (CBD) taking into account their specifications by the Bonn Guidelines on Access to Genetic Resources and the Fair and 
+    Equitable Sharing of Benefits arising from their Utilization, and, where appropriate, the Nagoya Protocol on Access to Genetic Resources and the 
+    Fair and Equitable Sharing of Benefits arising from their Utilization (NP),
+    </p>
+
+    <p> 
+    Recalling that according to these provisions non-monetary and/or monetary benefits from the utilization of the genetic resources shall be 
+    shared with the Country of Origin if the same so requires and as it is set out in mutually agreed terms,
+    </p>
+
     <p>
+    Acknowledging that research and development on genetic resources can be for the public domain (non-commercial) or for commercial purposes and,
+    </p>
+
+    <p>
+    Recalling that according to these provisions, non-commercial research purposes may contribute to the conservation and sustainable use of biodiversity
+    </p>
+
+    <p>
+    By uploading data to or downloading data from the DIPnet database, DIPnet contributors and Recipients of DIPnet data agree as follows:
+    </p>
+
+    <p><b>ARTICLE 1 – UPLOADING OF LEGAL AND ACCURATE GENETIC DATA AND ASSOCIATED METADATA</b></p>
+
+    <p>
+    By uploading Genetic Data and associated metadata to GeOME database, Contributors certify that 1) the Genetic Resources from which Genetic 
+    Data and Associated Metadata were derived were collected under appropriate and legal access permits or their equivalent by each Country 
+    of Origin and that the data contributor can provide their copies upon request, and 2) that all co-authors on the data’s primary publication 
+    have consented to share the data into the GeOMe database.
+    </p>
+
+    <p><b>ARTICLE 2 – USAGE OF DOWNLOADED GENETIC DATA AND ASSOCIATED METADATA</b></p>
+
+    <p><b>2.1</b> The Recipient shall be entitled to the Use of the Genetic Data and Associated Metadata for the Public Domain.</p>
+
+    <p><b>2.2</b> Should the Recipient intend to utilize the Genetic Data and Associated Metadata for Commercial Purposes they will seek consent of the Country of Origin, subject to the mutually agreed terms between the DIPnet contributor and Country of Origin.</p>
+
+    <p><b>2.3</b> When used for Commercial Purposes or in the Public Domain, data should be recognized as follows: “Data were made available through GeOMe (https://geome-db.org/)”.</p>
+
+    <p><b>2.4</b> Every attempt should be made to cite the original studies having contributed data to the new analyses. Attribution would include any publications first describing these data as well as reference to electronic depositions (such as DOI associated with dataDryad). This information may often be found in the “associatedReferences” field of the database.</p>
+
+    <p><b>2.5</b> The Recipient may transfer downloaded Genetic Data and Associated Metadata to Subsequent Recipients provided that Subsequent Recipients agree in writing to use the data under the terms of this agreement.</p>
+
+    <p><b>2.6</b> GeOMe does not undertake to monitor the rights of any Country of Origin for their Genetic Resources downstream from our database portal.</p>
+
+  </div>
+</uib-accordion>
+
+<div>
+  <p>
       <a href="https://doi.org/10.1371/journal.pbio.2002925">
         <i>"The Genomic Observatories Metadatabase (GeOMe): A new repository for field and sampling event metadata associated
           with genetic samples"</a>, John Deck , Michelle R. Gaither, Rodney Ewing, Christopher E. Bird, Neil Davies, Christopher
@@ -112,11 +173,8 @@
       <br>
       <a href="https://doi.org/10.1371/journal.pbio.2002925">https://doi.org/10.1371/journal.pbio.2002925</a>
       </i>
-    </p>
-  </div>
-</uib-accordion>
-<div>
-  <h3 id="funding">Funding</h3>
+  </p>
+
   <p>
     Development of GeOMe has been supported by the
     <a href='https://www.moore.org/article-detail?newsUrlName=ambitious-project-to-create-genetic-catalog-of-a-model-ecosystem-gets-$5-2-million-from-the-gordon-and-betty-moore-foundation '>Gordon and Betty Moore Foundation</a>, the
