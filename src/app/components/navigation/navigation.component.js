@@ -1,11 +1,10 @@
 const template = require('./navigation.html');
 
 class NavigationController {
-  constructor($state, $transitions, ExpeditionService) {
+  constructor($state, ExpeditionService) {
     'ngInject';
 
     this.$state = $state;
-    this.$transitions = $transitions;
     this.ExpeditionService = ExpeditionService;
   }
 
