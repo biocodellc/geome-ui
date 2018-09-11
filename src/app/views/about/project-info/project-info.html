@@ -1,18 +1,18 @@
-<div>
+<div style="padding:20px">
 	<uib-accordion>
 		<ul ng-repeat="x in $ctrl.data">
-			<li uib-accordion-group heading="{{x.projectTitle}}">
+			<li uib-accordion-group heading="{{x.projectTitle}}" style="margin:-20px">
 				<ul class="list-unstyled">
 				<li>
 					<strong>{{x.projectTitle}} ({{x.projectCode}})</strong>
 				</li>
 				<li>
-					<i>{{x.description}}description description description</i>
+					<i>{{x.description}}</i>
 				</li>
 				<li>
 					<u>Administrator</u>:
-					<span class="text-capitalize">{{x.user.firstName}} {{x.user.lastName}} </span>(
-					<a href="mailto:{{x.user.email}}">{{x.user.email}}</a>)</li>
+					<span class="text-capitalize">{{x.user.firstName}} {{x.user.lastName}} </span>
+					(<a href="mailto:{{x.user.email}}">{{x.user.email}}</a>)</li>
 				<li>
 					<u>Status</u>:
 					<span ng-if="!x.public">Not </span>Visible To Public</li>
