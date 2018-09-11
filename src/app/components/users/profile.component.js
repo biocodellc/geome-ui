@@ -20,8 +20,7 @@ class ProfileController {
     });
   }
 
-  updatePassword(isValid) {
-    if (isValid) {
+  updatePassword() {
       this.UserService.updatePassword(
         this.user.username,
         this.currentPassword,
@@ -32,7 +31,6 @@ class ProfileController {
         this.newPassword = undefined;
         this.verifyPassword = undefined;
       });
-    }
   }
 }
 
