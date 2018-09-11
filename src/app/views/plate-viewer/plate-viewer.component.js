@@ -47,9 +47,7 @@ class PlateViewerController {
   }
 
   dataChanged(row, column) {
-    // TODO remove newPlate restriction after updating api
-    this.hasChanges =
-      this.newPlate && !angular.equals(this.origPlateData, this.plateData);
+    this.hasChanges = !angular.equals(this.origPlateData, this.plateData);
     if (!this.editedData[row]) {
       this.editedData[row] = {};
     }
@@ -98,11 +96,9 @@ class PlateViewerController {
             }),
           );
         }
-        this.newPlate = !!resp.plate;
+        this.newPlate = this.newPlate && !resp.plate;
         this.origPlateData = resp.plate || angular.copy(NEW_PLATE);
-        // TODO remove newPlate restriction after updating api
-        this.hasChanges =
-          this.netPlate && !angular.equals(this.origPlateData, this.plateData);
+        this.hasChanges = !angular.equals(this.origPlateData, this.plateData);
       })
       .finally(() => (this.isSaving = false));
   }
