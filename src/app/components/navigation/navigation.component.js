@@ -18,11 +18,7 @@ class NavigationController {
         this.currentProject.projectId,
         true,
       ).then(({ data }) => {
-        this.data = data;
-        this.showMyExpeditions = false;
-        if (this.data.length > 0) {
-          this.showMyExpeditions = true;
-        }
+        this.showMyExpeditions = data.length > 0;
       });
     }
 
