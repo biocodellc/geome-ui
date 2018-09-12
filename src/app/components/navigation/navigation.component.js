@@ -17,18 +17,13 @@ class NavigationController {
       this.ExpeditionService.getExpeditionsForUser(
         this.currentProject.projectId,
         true,
-      )
-        .then(({ data }) => {
-          this.data = data;
-        })
-        .then(() => {
-          if (
-            this.data.length <= 0 &&
-            this.$state.current.name === 'expeditions.list'
-          ) {
-            this.$state.go('dashboard');
-          }
-        });
+      ).then(({ data }) => {
+        this.data = data;
+        this.showMyExpeditions = false;
+        if (this.data.length > 0) {
+          this.showMyExpeditions = true;
+        }
+      });
     }
   }
 }

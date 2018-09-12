@@ -21,7 +21,11 @@ function getStates() {
               ProjectService.currentProject().projectId,
               true,
             )
-              .then(({ data }) => data.sort(compareValues('expeditionTitle')))
+              .then(({ data }) => {
+                if (data.length > 0)
+                  return data.sort(compareValues('expeditionTitle'));
+                return $state.go('dashboard');
+              })
               .catch(() => $state.go('home')),
         },
         params: {
