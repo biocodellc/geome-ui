@@ -117,10 +117,17 @@ export default class Map extends EventEmitter {
 
     this.map.addLayer(this.clusterLayer).setMinZoom(1);
 
-    if (this.markers.length > 0 && this.clusterLayer.getBounds().isValid()) {
+    const fit = () =>
       this.map.fitBounds(this.clusterLayer.getBounds(), {
         padding: [30, 30],
       });
+
+    if (this.markers.length > 0 && this.clusterLayer.getBounds().isValid()) {
+      // hack b/c sometimes after loading the map will zoom after calling fitBounds, then messing up the bounds
+      // so we call fitBounds again after the zoom
+      fit();
+      this.map.once('zoom', fit);
+      setTimeout(() => this.map.off('zoom', fit), 500);
     }
 
     this.map.on('move', this._updateMarkerLocations.bind(this));
