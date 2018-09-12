@@ -94,7 +94,13 @@ class RecordController {
       k =>
         (!mainRecordDetails[this.record.entity] ||
           !Object.keys(mainRecordDetails[this.record.entity]).includes(k)) &&
-        !['bcid', 'entity', 'expeditionCode', 'projectId'].includes(k),
+        ![
+          'bcid',
+          'entity',
+          'expeditionCode',
+          'projectId',
+          'bulkLoadFile',
+        ].includes(k),
     );
 
     const sortedKeys = e.attributes.reduce((accumulator, attribute) => {
@@ -137,7 +143,9 @@ class RecordController {
 
     if (!this.children) return;
 
-    const photos = this.children.filter(e => photoEntities.includes(e.entity));
+    const photos = this.children.filter(
+      e => photoEntities.includes(e.entity) && e.processed === 'true',
+    );
     const hasQualityScore = photos.some(p => p.qualityScore);
 
     this.photos = photos
