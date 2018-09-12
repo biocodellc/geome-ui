@@ -30,9 +30,7 @@ class NavigationController {
           }
         });
     }
-  }
 
-  $onChanges() {
     this.showPhotoUpload =
       this.currentUser &&
       this.currentProject &&
