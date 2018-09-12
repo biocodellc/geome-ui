@@ -1,0 +1,28 @@
+<md-dialog class="new-plate-dialog">
+  <md-toolbar>
+    <div class="md-toolbar-tools" layout-align="center center">
+      <span flex></span>
+      <h2>New Tissue Plate</h2>
+      <span flex></span>
+      <md-button class="md-icon-button" ng-click="$ctrl.$mdDialog.hide()">
+        <md-icon md-font-icon="fa fa-close fa-sm" aria-label="Close dialog"></md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content layout="column">
+    <p>Enter a unique name for the plate.</p>
+    <md-input-container class="md-block" flex-gt-sm md-is-error="$ctrl.error">
+      <label>Plate Name</label>
+      <input name="plate" ng-model="$ctrl.plate" required md-autofocus/>
+
+      <div ng-messages="$ctrl">
+        <div ng-message="error">A plate with that name already exists.</div>
+      </div>
+    </md-input-container>
+
+    <md-dialog-actions>
+      <md-button ng-click="$ctrl.$mdDialog.cancel()" class="md-primary">Cancel</md-button>
+      <md-button ng-click="$ctrl.create()" class="md-primary" ng-disabled="!$ctrl.plate">Create</md-button>
+    </md-dialog-actions>
+  </md-dialog-content>
+</md-dialog>

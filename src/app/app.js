@@ -37,6 +37,8 @@ import validation from './views/validation';
 import query from './views/query';
 import dashboard from './views/dashboard';
 import record from './views/record';
+import photoUpload from './views/photo-upload';
+import plateViewer from './views/plate-viewer';
 
 import projectService from './services/project.service';
 import userService from './services/user.service';
@@ -45,6 +47,7 @@ import app from './app.component';
 import auth from './components/auth';
 import header from './components/header';
 import navigation from './components/navigation';
+import mdFileUpload from './components/md-file-upload';
 // import lookup from './components/lookup';
 import users from './components/users';
 import projectSelectorDialog from './components/project-selector-dialog';
@@ -73,6 +76,7 @@ const dependencies = [
   containerPage,
   header,
   navigation,
+  mdFileUpload,
   about,
   home,
   contact,
@@ -81,6 +85,8 @@ const dependencies = [
   query,
   dashboard,
   record,
+  photoUpload,
+  plateViewer,
   auth,
   templates,
   expeditions,

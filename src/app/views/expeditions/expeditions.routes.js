@@ -17,7 +17,7 @@ function getStates() {
             ExpeditionService,
             ProjectService,
           ) =>
-            ExpeditionService.userExpeditions(
+            ExpeditionService.getExpeditionsForUser(
               ProjectService.currentProject().projectId,
               true,
             )
