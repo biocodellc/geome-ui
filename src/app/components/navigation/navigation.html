@@ -27,10 +27,10 @@
 
     <md-list ng-show="$ctrl.currentUser">
         <md-subheader class="md-no-sticky">Admin</md-subheader>
-        <md-list-item ng-click="$ctrl.$state.go('expeditions.list')">
-            <md-icon md-font-icon="fa fa-cog fa-fw"></md-icon>
-            <p>My Expeditions</p>
-        </md-list-item>
+	<md-list-item ng-click="$ctrl.$state.go('expeditions.list')" ng-show="$ctrl.data.length > 0">
+                <md-icon md-font-icon="fa fa-cog fa-fw"></md-icon>
+                <p>My Expeditions</p>
+            </md-list-item>
         <md-list-item ng-click="$ctrl.$state.go('project')" ng-show="$ctrl.currentUser.userId === $ctrl.currentProject.user.userId">
             <md-icon md-font-icon="fa fa-wrench fa-fw"></md-icon>
             <p>Project Settings</p>
