@@ -50,7 +50,7 @@ export default class QueryParams {
             break;
           case 'like':
             if (!filter.value.includes('%')) filter.value = `%${filter.value}%`;
-            builder.add(`${filter.column}::${filter.value}`);
+            builder.add(`${filter.column}::"${filter.value}"`);
             break;
           default:
             builder.add(`${filter.column} ${filter.type} "${filter.value}"`);
