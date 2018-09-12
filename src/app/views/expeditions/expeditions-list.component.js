@@ -6,6 +6,7 @@ const fimsExpeditionsList = {
   template,
   bindings: {
     expeditions: '<',
+    currentUser: '<',
   },
 };
 

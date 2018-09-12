@@ -27,7 +27,7 @@
 
     <md-list ng-show="$ctrl.currentUser">
         <md-subheader class="md-no-sticky">Admin</md-subheader>
-        <md-list-item ng-click="$ctrl.$state.go('expeditions.list')">
+        <md-list-item ng-click="$ctrl.$state.go('expeditions.list')" ng-if="$ctrl.showMyExpeditions">
             <md-icon md-font-icon="fa fa-cog fa-fw"></md-icon>
             <p>My Expeditions</p>
         </md-list-item>

@@ -1,13 +1,27 @@
 const template = require('./navigation.html');
 
 class NavigationController {
-  constructor($state) {
+  constructor($state, ExpeditionService) {
     'ngInject';
 
     this.$state = $state;
+    this.ExpeditionService = ExpeditionService;
   }
 
-  $onChanges() {
+  $onChanges(changesObj) {
+    if (
+      this.currentUser &&
+      this.currentProject &&
+      'currentProject' in changesObj
+    ) {
+      this.ExpeditionService.getExpeditionsForUser(
+        this.currentProject.projectId,
+        true,
+      ).then(({ data }) => {
+        this.showMyExpeditions = data.length > 0;
+      });
+    }
+
     this.showPhotoUpload =
       this.currentUser &&
       this.currentProject &&
