@@ -220,27 +220,17 @@ export default class Map extends EventEmitter {
    */
   _updateMarkerLocations() {
     const centerLng = this.map.getCenter().lng;
-    const updatedMarkers = [];
-    const originalMarkers = [];
     this.clusterLayer.eachLayer(m => {
       const latlng = m.getLatLng();
       if (latlng.lng < centerLng) {
         // marker is W of center
         if (centerLng - 180 > latlng.lng) {
-          const mCopy = L.marker([latlng.lat, latlng.lng + 360]);
-          mCopy.bindPopup(m.getPopup());
-          updatedMarkers.push(mCopy);
-          originalMarkers.push(m);
+          m.setLatLng([latlng.lat, latlng.lng + 360]);
         }
         // marker is E of center
       } else if (centerLng + 180 < latlng.lng) {
-        const mCopy = L.marker([latlng.lat, latlng.lng - 360]);
-        mCopy.bindPopup(m.getPopup());
-        updatedMarkers.push(mCopy);
-        originalMarkers.push(m);
+        m.setLatLng([latlng.lat, latlng.lng - 360]);
       }
     });
-    this.clusterLayer.removeLayers(originalMarkers);
-    this.clusterLayer.addLayers(updatedMarkers);
   }
 }
