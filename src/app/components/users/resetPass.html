@@ -12,16 +12,18 @@
             <div class="panel-body">
                 <div class="row">
                     <div ng-show="!$ctrl.resetPass" class="col-lg-12">
-                        <form name="resetPassForm" ng-submit="$ctrl.resetPassword()" method="post" role="form" style="display: block;">
-                            <div class="form-group" show-errors>
-                                <input type="password" name="password" ng-model="$ctrl.password" ng-required="true" tabindex="1" class="form-control" placeholder="New Password">
-                                <div class="row" style="padding:20px">
-                                    <strong class="col-xs-4">Strength:</strong>
-                                    <div class="col-xs-4" ng-password-strength="$ctrl.password" strength="passStrength" inner-class-prefix="progress-bar-" inner-class="progress-bar">
-                                    </div>
-                                    <md-icon class="col-xs-4" ng-show="passStrength > 30" md-font-icon="fa fa-check fa-xs md-secondary" style="color:green"></md-icon>
-                                    <p class="help-block" ng-if="passStrength<30 && resetPassForm.password.$touched">Password is not strong enough.</p>
+                        <form class="reset-pass-form" name="resetPassForm" ng-submit="$ctrl.resetPassword()" method="post"
+                            role="form">
+                            <div class="form-group" ng-class="{'has-error' : passStrength < 50 && resetPassForm.password.$touched}">
+                                <div class="input">
+                                    <span ng-show="passStrength > 50" class="fa fa-check fa-xs"></span>
+                                    <span ng-show="passStrength < 50 && resetPassForm.password.$touched" class="fa fa-close fa-xs"></span>
+                                    <input type="password" name="password" ng-model="$ctrl.password" required tabindex="1"
+                                        class="form-control" placeholder="New Password" />
                                 </div>
+                                <span class="help-block" ng-if="passStrength < 50 && resetPassForm.password.$touched">Password
+                                    is not strong enough.</span>
+                                <div ng-password-strength="$ctrl.password" strength="passStrength" ng-hide="true"></div>
 
                             </div>
                             <div class="form-group">
@@ -32,11 +34,13 @@
                                         </button>
                                         <strong>Error!</strong> {{ $ctrl.error }}
                                     </div>
-                                    <div class="col-sm-12 alert alert-success alert-dismissable" role="alert" ng-show="$ctrl.success" ng-bind-html="$ctrl.success">
+                                    <div class="col-sm-12 alert alert-success alert-dismissable" role="alert" ng-show="$ctrl.success"
+                                        ng-bind-html="$ctrl.success">
                                     </div>
                                     <div class="col-sm-6 col-sm-offset-3">
-                                        <input type="submit" name="reset-pass-submit" id="reset-pass-submit" tabindex="2" class="form-control btn btn-login btn-primary"
-                                            ng-disabled="passStrength < 30" value="Reset Password">
+                                        <input type="submit" name="reset-pass-submit" id="reset-pass-submit" tabindex="2"
+                                            class="form-control btn btn-login btn-primary" ng-disabled="passStrength < 50"
+                                            value="Reset Password">
                                     </div>
                                 </div>
                             </div>
