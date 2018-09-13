@@ -94,13 +94,7 @@ class RecordController {
       k =>
         (!mainRecordDetails[this.record.entity] ||
           !Object.keys(mainRecordDetails[this.record.entity]).includes(k)) &&
-        ![
-          'bcid',
-          'entity',
-          'expeditionCode',
-          'projectId',
-          'bulkLoadFile',
-        ].includes(k),
+        !['bcid', 'entity', 'bulkLoadFile'].includes(k),
     );
 
     const sortedKeys = e.attributes.reduce((accumulator, attribute) => {
