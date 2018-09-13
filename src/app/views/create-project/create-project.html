@@ -1,0 +1,76 @@
+<div layout-fill layout="column">
+    <h2 class="text-center">New Project</h2>
+    <p class="text-center">Welcome the the GeOMe project creation wizard</p>
+
+    <div layout="row">
+        <form flex name="form" novalidate>
+            <md-stepper flex id="create-project-stepper" md-vertical="true" md-prevent-skip="true">
+                <md-step md-label="Project Details">
+                    <md-step-body>
+                        <md-input-container flex-gt-sm>
+                            <label>Project Title</label>
+                            <input name="title" ng-model="$ctrl.project.projectTitle" required />
+
+                            <div ng-messages="form.title.$error">
+                                <div ng-message="required">This field is required.</div>
+                            </div>
+                        </md-input-container>
+
+                        <!-- <md-input-container flex-gt-sm>
+                            <label>Project Code</label>
+                            <input name="code" ng-model="$ctrl.project.projectCode" ng-pattern="/^[a-zA-Z0-9_-]{4,50}$/" />
+
+                            <div ng-show="!form.code.$touched || !form.code.$valid" class="hint">This
+                                is a short name for your project.</div>
+                            <div ng-messages="form.code.$error">
+                                <div ng-message="pattern">Must contain only numbers, letters, or
+                                    underscores and be 4 to 50 characters long</div>
+                            </div>
+                        </md-input-container> -->
+
+                        <md-input-container flex-gt-sm>
+                            <label>Project Description</label>
+                            <textarea name="description" ng-model="$ctrl.project.description"
+                                placeholder="What is the purpose of this project" ng-minlength="10"
+                                rows="1" md-select-on-focus required></textarea>
+
+                            <div ng-messages="form.description.$error">
+                                <div ng-message="minlength">Must be at least 10 characters long.</div>
+                            </div>
+                        </md-input-container>
+                    </md-step-body>
+                    <md-step-actions>
+                        <md-button class="md-primary md-raised" ng-click="$mdStep.$stepper.next()">Next</md-button>
+                    </md-step-actions>
+                </md-step>
+                <md-step md-label="Project Config" ng-class="{'md-step-disabled': $mdStep.stepNumber > $mdStep.$stepper.currentStep}">
+                    <md-step-body>
+                        <p>The project config determines how and what data you can upload. You can
+                            choose to clone an existing project config to use as a base, or build a
+                            custom configuration</p>
+
+                        <md-switch ng-model="$ctrl.newConfig" ng-true-value="false" ng-false-value="true"
+                            class="md-primary" aria-label="Clone Existing Project Config?">
+                            Clone Existing Project Config?
+                        </md-switch>
+
+                        <md-autocomplete ng-show="!$ctrl.newConfig" flex required md-no-cache
+                            md-selected-item="$ctrl.existingProject" md-items="p in $ctrl.existingProjects | filter:{projectTitle: projectSearchText}"
+                            md-floating-label="Existing Project" md-require-match md-search-text="projectSearchText"
+                            md-min-length="0" md-selected-item-change="$ctrl.cloneConfig()"
+                            md-item-text="p.projectTitle" ng-click="projectSearchText = ''">
+                            <md-item-template>
+                                <span md-highlight-text="projectSearchText" md-highlight-flags="i">{{p.projectTitle}}</span>
+                            </md-item-template>
+                            <span class="md-select-icon" aria-hidden="true" ng-click="$mdAutocompleteCtrl.focus($event)"></span>
+                            <div class="hint">Choose an existing project to clone</div>
+                        </md-autocomplete>
+                    </md-step-body>
+                    <md-step-actions>
+                        <md-button class="md-primary md-raised" ng-click="$mdStep.next()">Next</md-button>
+                    </md-step-actions>
+                </md-step>
+            </md-stepper>
+        </form>
+    </div>
+</div>

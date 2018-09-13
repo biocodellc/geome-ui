@@ -32,6 +32,7 @@ import contact from './views/contact';
 import login from './views/login';
 import templates from './views/templates';
 import project from './views/project';
+import createProject from './views/create-project';
 import expeditions from './views/expeditions';
 import validation from './views/validation';
 import query from './views/query';
@@ -92,6 +93,7 @@ const dependencies = [
   expeditions,
   validation,
   project,
+  createProject,
   users,
   projectSelectorDialog,
   // lookup,

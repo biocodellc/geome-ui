@@ -1,0 +1,30 @@
+md-step-body {
+  overflow: visible !important;
+  md-input-container {
+    margin-bottom: 8px;
+    &:not(:first-of-type) {
+      *:not(:first-of-type) {
+        margin-top: 5px;
+      }
+    }
+  }
+}
+
+md-step-actions {
+  >button:first-of-type {
+    margin-left: 0;
+  }
+}
+
+.md-step-disabled {
+  .md-stepper-indicator:hover {
+    cursor: default !important;
+  }
+}
+
+.md-steppers:not(.md-steppers-linear) .md-stepper-indicator.md-editable.md-completed:hover,
+.md-steppers:not(.md-steppers-linear) .md-stepper-indicator.md-editable.md-completed:hover .md-stepper-indicator-wrapper,
+.md-steppers:not(.md-steppers-linear) .md-stepper-indicator:not(.md-active):not(.md-completed):hover,
+.md-steppers:not(.md-steppers-linear) .md-stepper-indicator:not(.md-active):not(.md-completed):hover .md-stepper-indicator-wrapper {
+  background-color: inherit !important;
+}
