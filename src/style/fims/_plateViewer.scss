@@ -33,6 +33,9 @@
             padding: 8px 4px;
             text-align: center;
             vertical-align: middle;
+            &:focus {
+              outline: none;
+            }
           }
           th:first-of-type,
           td:first-of-type {
@@ -89,5 +92,28 @@
   }
   md-input-container {
     margin-bottom: 0;
+  }
+}
+
+.tissue-dialog {
+  md-dialog-content {
+    padding: 16px 8px;
+  }
+  table {
+    margin: 0;
+    tbody {
+      tr:first-of-type {
+        th,
+        td {
+          border-top: none;
+        }
+      }
+    }
+  }
+  md-dialog-actions {
+    min-height: 36px;
+    button {
+      margin: 0;
+    }
   }
 }

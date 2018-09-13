@@ -4,6 +4,7 @@ import { QueryBuilder } from '../query/Query';
 const template = require('./plate-viewer.html');
 const viewPlateTemplate = require('./plate-viewer-dialog.html');
 const newPlateTemplate = require('./new-plate-dialog.html');
+const tissueDialogTemplate = require('./tissue-dialog.html');
 
 const NEW_PLATE = {
   A: [],
@@ -59,6 +60,27 @@ class PlateViewerController {
     return `${row}${column + 1}`;
   }
 
+  tissueDetails(tissue) {
+    // make backdrop cover plate viewer
+    angular.element('.md-dialog-backdrop').css('z-index', 82);
+    this.$mdDialog
+      .show({
+        template: tissueDialogTemplate,
+        locals: {
+          tissue,
+          $mdDialog: this.$mdDialog,
+        },
+        bindToController: true,
+        controller: function Controller() {},
+        controllerAs: '$ctrl',
+        clickOutsideToClose: true,
+        escapeToClose: true,
+        autoWrap: false,
+        multiple: true,
+        onShowing: (scope, el) => el.css('z-index', 85),
+      })
+      .finally(() => angular.element('.md-dialog-backdrop').css('z-index', 79));
+  }
   save() {
     this.isSaving = true;
     const p = this.newPlate
@@ -185,6 +207,7 @@ class PlatesController {
   viewPlate() {
     this.$mdDialog
       .show({
+        componentId: 'plateDialog',
         template: viewPlateTemplate,
         locals: {
           plateName: this.plate,
@@ -204,7 +227,8 @@ class PlatesController {
         escapeToClose: !this.currentUser,
         autoWrap: false,
       })
-      .then(() => {
+      .then(plateData => {
+        this.plateData = plateData;
         if (this.isNewPlate) {
           this.plates.push(this.plate);
           this.isNewPlate = false;
@@ -248,14 +272,14 @@ class PlatesController {
       })
       .then(name => {
         this.isNewPlate = true;
-        // setting this.plate should happen last b/c viewPlate will be called as soon as the val is set
         this.plate = name;
+        this.viewPlate();
       })
       .catch(() => {});
   }
 
   fetchPlate() {
-    if (this.plate) {
+    if (this.plate && !this.isNewPlate) {
       this.loadingPlate = true;
       this.PlateService.get(this.currentProject.projectId, this.plate)
         .then(plateData => {

@@ -5,10 +5,10 @@
  * This is similar to how mdSidenav works.
  *
  * A `componentId` can be provided to the $mdDialog.show function. This wll
- * cause the dialog to be registerd for later retrieval using $mdDialog(componentId);
+ * cause the dialog to be registered for later retrieval using $mdDialog(componentId);
  *
  * TODO Note: due to limitations in $mdDialog, we can only close/cancel the latest dialog.
- * There doesn't appear to be a way to close a specifice dialog instance.
+ * There doesn't appear to be a way to close a specific dialog instance.
  */
 const decorate = ($mdComponentRegistry, $mdDialog) => {
   const dialog = componentId => $mdComponentRegistry.get(componentId);

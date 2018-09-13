@@ -30,11 +30,8 @@
         <tbody>
           <tr ng-repeat="r in ['A','B','C','D','E','F','G','H']">
             <th>{{r}}</th>
-            <td ng-repeat="c in [0,1,2,3,4,5,6,7,8,9,10,11]">
-              <a target="_blank" ng-if="$ctrl.plateData[r][c]" ui-sref="record({bcid: $ctrl.plateData[r][c].bcid})">
-                <!-- <md-tooltip>{{$ctrl.plateData[r][c].materialSampleID}}</md-tooltip> -->
-                {{$ctrl.plateData[r][c].tissueID}}
-              </a>
+            <td ng-repeat="c in [0,1,2,3,4,5,6,7,8,9,10,11]" ng-click="$ctrl.tissueDetails($ctrl.plateData[r][c])">
+              {{$ctrl.plateData[r][c].tissueID}}
               <md-autocomplete ng-if="$ctrl.canEdit && (!$ctrl.plateData[r][c] || $ctrl.editedData[r][c])"
                 required md-selected-item="$ctrl.plateData[r][c]" md-items="s in $ctrl.query(r, c)"
                 placeholder="Create Tissue" md-item-text="s.materialSampleID" md-require-match
@@ -58,7 +55,7 @@
       </md-button>
       <md-button ng-if="$ctrl.newPlate || $ctrl.hasChanges" ng-click="$ctrl.$mdDialog.cancel()"
         class="md-primary">Cancel</md-button>
-      <md-button ng-if="!$ctrl.newPlate && !$ctrl.hasChanges" ng-click="$ctrl.$mdDialog.hide()"
+      <md-button ng-if="!$ctrl.newPlate && !$ctrl.hasChanges" ng-click="$ctrl.$mdDialog.hide($ctrl.plateData)"
         class="md-primary">Close</md-button>
     </md-dialog-actions>
 
