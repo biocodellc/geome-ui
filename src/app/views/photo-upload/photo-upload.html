@@ -17,14 +17,16 @@
         <ul>
           <li>{parentIdentifier}+{imgIdentifier}.{ext}</li>
         </ul>
-        <!-- <li>Include a metadata.csv file with the following columns</li> -->
-        <!-- <ul> -->
-        <!-- <li>parentIdentifier* - the identifier of the record to attach the photo to</li> -->
-        <!-- <li>fileName* - the name of the file in the directory</li> -->
-        <!-- <li ng-if="!$ctrl.entity">any additional metadata - this is project specific. 1 entry per column.</li> -->
-        <!-- <li ng-repeat="a in $ctrl.entity.additionalMetadata track by a.column">{{a.column}} (optional) -->
-        <!-- - {{a.description}}</li> -->
-        <!-- </ul> -->
+        <li>Include a metadata.csv file with the following columns</li>
+        <ul>
+          <li>parentIdentifier* - the identifier of the record to attach the photo to</li>
+          <li>fileName* - the name of the file in the directory</li>
+          <li ng-if="!$ctrl.entity">any additional metadata - this is project specific. 1 entry per
+            column.</li>
+          <li ng-repeat="a in $ctrl.entity.additionalMetadata track by a.column">{{a.column}}
+            (optional)
+            - {{a.description}}</li>
+        </ul>
       </ol>
     </div>
 

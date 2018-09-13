@@ -174,11 +174,9 @@ export const parseWorkbookWithHeaders = file =>
         const range = utils.decode_range(s['!ref']);
 
         // range looks like A1:AA35
-        const sheetRange = utils.decode_range(s['!fullref']);
+        const sheetRange = s['!fullref'];
         const match = new RegExp(/:[a-zA-Z]+(\d+)/).exec(sheetRange);
-        if (match) {
-          s.rowCount = match[1];
-        }
+        s.rowCount = match ? parseInt(match[1], 10) : NaN;
 
         _.range(range.s.r, range.e.r + 1).forEach(row => {
           _.range(range.s.c, range.e.c + 1).forEach(column => {

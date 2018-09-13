@@ -10,7 +10,7 @@ function getStates() {
         parent: 'projectView',
         abstract: true,
         template:
-          '<div ui-view class="admin" current-project="$ctrl.currentProject"></div>',
+          '<div ui-view class="admin" current-user="$ctrl.currentUser" current-project="$ctrl.currentProject"></div>',
         resolve: {
           expeditions: /* @ngInject */ (
             $state,
@@ -21,7 +21,11 @@ function getStates() {
               ProjectService.currentProject().projectId,
               true,
             )
-              .then(({ data }) => data.sort(compareValues('expeditionTitle')))
+              .then(({ data }) => {
+                if (data.length > 0)
+                  return data.sort(compareValues('expeditionTitle'));
+                return $state.go('dashboard');
+              })
               .catch(() => $state.go('home')),
         },
         params: {
