@@ -111,7 +111,7 @@
   margin-bottom: 40px;
 }
 
-body>app>md-content {
+body > app > md-content {
   background-color: #fff;
 }
 
@@ -179,12 +179,12 @@ md-checkbox.small {
   list-style: none;
   border: solid 3px white;
   background: fade(slategrey, 20%);
-  >h1,
-  >h2,
-  >h3,
-  >h4,
-  >h5,
-  >h6 {
+  > h1,
+  > h2,
+  > h3,
+  > h4,
+  > h5,
+  > h6 {
     margin: 0;
   }
 }
@@ -192,23 +192,23 @@ md-checkbox.small {
 /* Table column sizing
 ================================== */
 
-.Rtable--2cols>.Rtable-cell {
+.Rtable--2cols > .Rtable-cell {
   width: 50%;
 }
 
-.Rtable--3cols>.Rtable-cell {
+.Rtable--3cols > .Rtable-cell {
   width: 33.33%;
 }
 
-.Rtable--4cols>.Rtable-cell {
+.Rtable--4cols > .Rtable-cell {
   width: 25%;
 }
 
-.Rtable--5cols>.Rtable-cell {
+.Rtable--5cols > .Rtable-cell {
   width: 20%;
 }
 
-.Rtable--6cols>.Rtable-cell {
+.Rtable--6cols > .Rtable-cell {
   width: 16.6%;
 }
 
@@ -254,6 +254,27 @@ md-autocomplete {
       -webkit-transform: scaleY(0.5) scaleX(1);
       transform: scaleY(0.5) scaleX(1);
     }
+  }
+}
+
+// mdDialog
+md-autocomplete {
+  &.no-floating-label {
+    md-input-container {
+      margin-top: 0;
+    }
+    .md-input-focused,
+    .md-input-has-value {
+      label {
+        display: none;
+      }
+    }
+  }
+}
+
+md-dialog {
+  md-content {
+    background-color: inherit;
   }
 }
 

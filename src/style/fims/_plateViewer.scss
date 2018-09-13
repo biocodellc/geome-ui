@@ -45,11 +45,21 @@
       }
     }
   }
-  .plate-viewer-errors {
-    max-height: 100px;
+  .plate-viewer-details {
     margin-bottom: 8px;
-    ul {
-      margin-bottom: 0;
+    .errors {
+      max-height: 100px;
+      ul {
+        margin-bottom: 0;
+      }
+    }
+    md-autocomplete {
+      md-input-container {
+        margin-bottom: 0;
+      }
+      .md-errors-spacer {
+        display: none;
+      }
     }
   }
   md-dialog-actions {
@@ -60,28 +70,34 @@
       margin-bottom: 0;
     }
   }
-  md-autocomplete {
-    // min-width: 150px;
-    min-width: 100px;
-    height: 30px;
-    md-autocomplete-wrap {
-      box-shadow: none;
-      border-color: rgba(0, 0, 0, 0.12);
-      border-width: 0 0 1px 0;
-      border-style: solid;
-      border-radius: 0;
+  .plate {
+    md-autocomplete {
+      // min-width: 150px;
+      min-width: 100px;
       height: 30px;
-      padding-bottom: 2px;
-      input {
+      md-autocomplete-wrap {
+        box-shadow: none;
+        border-color: rgba(0, 0, 0, 0.12);
+        border-width: 0 0 1px 0;
+        border-style: solid;
+        border-radius: 0;
         height: 30px;
-        padding: 0 0 0 2px;
-        text-overflow: ellipsis;
-      }
-      button {
-        margin: 0;
-        width: 22px;
+        padding-bottom: 2px;
+        input {
+          height: 30px;
+          padding: 0 0 0 2px;
+          text-overflow: ellipsis;
+        }
+        button {
+          margin: 0;
+          width: 22px;
+        }
       }
     }
+  }
+  .sub-column {
+    margin-top: 2px;
+    font-size: 86%;
   }
 }
 

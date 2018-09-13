@@ -45,6 +45,18 @@ class PlateViewerController {
     this.searchTexts = {};
     this.editedData = {};
     this.hasChanges = false;
+
+    const { config } = this.currentProject;
+    const tissueEntity = config.entities.find(e => e.conceptAlias === 'Tissue');
+    const sampleEntity = config.entities.find(e => e.conceptAlias === 'Sample');
+    this.metadataColumns = Array.from(
+      new Set(
+        tissueEntity.attributes
+          .map(a => a.column)
+          .concat(sampleEntity.attributes.map(a => a.column)),
+      ),
+    );
+    this.metadataColumns.sort();
   }
 
   dataChanged(row, column) {
@@ -55,12 +67,17 @@ class PlateViewerController {
     this.editedData[row][column] = !!this.plateData[row][column];
   }
 
+  getValue(row, column) {
+    return this.plateData[row][column][this.displayColumn] || 'N/A';
+  }
+
   // eslint-disable-next-line class-methods-use-this
   getWell(row, column) {
     return `${row}${column + 1}`;
   }
 
   tissueDetails(tissue) {
+    if (!tissue || !tissue.tissueID) return;
     // make backdrop cover plate viewer
     angular.element('.md-dialog-backdrop').css('z-index', 82);
     this.$mdDialog
@@ -71,7 +88,16 @@ class PlateViewerController {
           $mdDialog: this.$mdDialog,
         },
         bindToController: true,
-        controller: function Controller() {},
+        controller: function Controller() {
+          this.tissueData = () => {
+            if (this.cachedData) return this.cachedData;
+            this.cachedData = Object.keys(this.tissue).map(key => ({
+              key,
+              value: this.tissue[key],
+            }));
+            return this.cachedData;
+          };
+        },
         controllerAs: '$ctrl',
         clickOutsideToClose: true,
         escapeToClose: true,
@@ -79,6 +105,7 @@ class PlateViewerController {
         multiple: true,
         onShowing: (scope, el) => el.css('z-index', 85),
       })
+      .catch(() => {})
       .finally(() => angular.element('.md-dialog-backdrop').css('z-index', 79));
   }
   save() {
@@ -118,7 +145,7 @@ class PlateViewerController {
             }),
           );
         }
-        this.newPlate = this.newPlate && !!resp.plate;
+        this.newPlate = this.newPlate && !resp.plate;
         this.origPlateData = resp.plate || angular.copy(NEW_PLATE);
         this.hasChanges = !angular.equals(this.origPlateData, this.plateData);
       })
@@ -231,12 +258,12 @@ class PlatesController {
         this.plateData = plateData;
         if (this.isNewPlate) {
           this.plates.push(this.plate);
-          this.isNewPlate = false;
         }
       })
-      .catch(() => {
+      .catch(() => {})
+      .finally(() => {
         if (this.isNewPlate) {
-          this.plate = undefined;
+          this.fetchPlates();
           this.isNewPlate = false;
         }
       });
@@ -296,6 +323,7 @@ class PlatesController {
     this.loading = true;
     this.PlateService.all(this.currentProject.projectId)
       .then(plates => {
+        if (this.plate && !plates.includes(this.plate)) this.plate = undefined;
         this.plates = plates.sort();
         if (this.plates.length === 1) {
           this.plate = this.plates[0];

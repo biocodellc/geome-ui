@@ -2,11 +2,11 @@
   <md-dialog-content layout="column">
     <table flex class="table table-condensed">
       <tbody>
-        <tr ng-repeat="(key, value) in $ctrl.tissue track by key">
-          <th>{{key}}:</th>
+        <tr ng-repeat="d in $ctrl.tissueData() | orderBy: 'key' track by d.key">
+          <th>{{d.key}}:</th>
           <td>
-            <span ng-if="key !== 'bcid'">{{value}}</span>
-            <span ng-if="key === 'bcid'"><a target="_blank" ui-sref="record({bcid: value})">{{value}}</a></span>
+            <span ng-if="d.key !== 'bcid'">{{d.value}}</span>
+            <span ng-if="d.key === 'bcid'"><a target="_blank" ui-sref="record({bcid: d.value})">{{d.value}}</a></span>
           </td>
         </tr>
       </tbody>
