@@ -35,12 +35,17 @@ const queryTypes = {
 };
 
 class QueryFormController {
-  constructor($timeout, $window, QueryService) {
+  constructor($timeout, $window, $location, QueryService) {
     'ngInject';
 
     this.$timeout = $timeout;
     this.$window = $window;
+    this.$location = $location;
     this.QueryService = QueryService;
+  }
+
+  go() {
+    this.$location.path('/about').hash('dataPolicy');
   }
 
   $onInit() {
