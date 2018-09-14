@@ -5,7 +5,7 @@ import QueryParams from './QueryParams';
 
 const template = require('./query.html');
 
-const POLICY_STORAGE_KEY = 'informedOfDataPolicy';
+//const POLICY_STORAGE_KEY = 'informedOfDataPolicy';
 
 class QueryController {
   constructor(
@@ -39,7 +39,7 @@ class QueryController {
     if (this.currentProject) {
       this.handleProjectChange(this.currentProject);
     }
-
+    /*
     const informed = this.StorageService.get(POLICY_STORAGE_KEY);
     if (!informed) {
       angular.toaster(
@@ -53,7 +53,7 @@ class QueryController {
         { hideDelay: 7000 },
       );
       this.StorageService.set(POLICY_STORAGE_KEY, true);
-    }
+    } */
 
     this.showSidebar = true;
     this.showMap = true;

@@ -35,7 +35,7 @@ const checkBrowser = $mdDialog => {
 };
 
 class ValidationController {
-  constructor($scope, $interval, $uibModal, $mdDialog, DataService) {
+  constructor($scope, $interval, $uibModal, $mdDialog, DataService, $location) {
     'ngInject';
 
     this.$scope = $scope;
@@ -43,11 +43,16 @@ class ValidationController {
     this.$mdDialog = $mdDialog;
     this.DataService = DataService;
     this.$interval = $interval;
+    this.$location = $location;
 
     this.latestExpeditionCode = undefined;
     this.displayResults = false;
     this.showGenbankDownload = false;
     this.activeTab = 0;
+  }
+
+  go() {
+    this.$location.path('/about').hash('dataPolicy');
   }
 
   $onInit() {

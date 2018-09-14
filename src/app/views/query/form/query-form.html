@@ -17,8 +17,8 @@
       <a href="#" ng-click="$ctrl.showExpeditions = !$ctrl.showExpeditions" class="md-subhead bold">Expeditions</a>
       <div class="md-form-group" ng-show="$ctrl.showExpeditions" layout="column" layout-margin>
         <md-chips ng-model="$ctrl.params.expeditions" md-require-match>
-          <md-autocomplete md-selected-item="$ctrl.selectedItem" md-no-cache md-autocomplete-snap="width" md-search-text="$ctrl.searchText"
-            md-items="item in $ctrl.filterExpeditions($ctrl.searchText)" md-item-text="item.expeditionTitle"
+          <md-autocomplete md-selected-item="$ctrl.selectedItem" md-no-cache md-autocomplete-snap="width"
+            md-search-text="$ctrl.searchText" md-items="item in $ctrl.filterExpeditions($ctrl.searchText)" md-item-text="item.expeditionTitle"
             md-dropdown-position="bottom" md-min-length="0" placeholder="Expedition Name ...">
             <span md-highlight-text="$ctrl.searchText" md-highlight-flags="i">{{item.expeditionTitle}}</span>
           </md-autocomplete>
@@ -50,12 +50,14 @@
             <div flex="66" layout="column">
               <div>
                 <span class="small bold">northEast:</span>
-                <span class="small"> [{{$ctrl.params.bounds.northEast.lat | number:2 }}, {{$ctrl.params.bounds.northEast.lng
+                <span class="small"> [{{$ctrl.params.bounds.northEast.lat | number:2 }},
+                  {{$ctrl.params.bounds.northEast.lng
                   | number:2 }}]</span>
               </div>
               <div>
                 <span class="small bold">southWest:</span>
-                <span class="small"> [{{$ctrl.params.bounds.southWest.lat | number:2 }}, {{$ctrl.params.bounds.southWest.lng
+                <span class="small"> [{{$ctrl.params.bounds.southWest.lat | number:2 }},
+                  {{$ctrl.params.bounds.southWest.lng
                   | number:2 }}]</span>
               </div>
             </div>
@@ -71,7 +73,8 @@
       <a href="#" ng-click="$ctrl.showSequences = !$ctrl.showSequences" class="md-subhead bold">Sequences</a>
       <div class="md-form-group" ng-show="$ctrl.showSequences" layout="column" layout-margin>
         <div layout="row" ng-show="$ctrl.hasFastqEntity">
-          <md-checkbox class="small" ng-model="$ctrl.params.hasSRAAccessions" name="hasSraAccessions"> has NCBI Sequence Read Archive Accession Numbers</md-checkbox>
+          <md-checkbox class="small" ng-model="$ctrl.params.hasSRAAccessions" name="hasSraAccessions"> has NCBI
+            Sequence Read Archive Accession Numbers</md-checkbox>
         </div>
         <div layout="row" ng-show="$ctrl.markers">
           <md-input-container flex="80">
@@ -171,5 +174,8 @@
       <md-tooltip ng-show="!$ctrl.currentProject" md-direction="top">Select a project</md-tooltip>
       <span class="fa fa-search"></span> Search
     </md-button>
+  </div>
+  <div layout="row" layout-align="center">
+    <i>Data is subject to our <a ng-click="$ctrl.go()"> Data Usage Policy</a>.</i>
   </div>
 </form>
