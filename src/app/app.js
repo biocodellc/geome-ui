@@ -41,6 +41,7 @@ import photoUpload from './views/photo-upload';
 import plateViewer from './views/plate-viewer';
 
 import projectService from './services/project.service';
+import projectConfigService from './services/project-config.service';
 import userService from './services/user.service';
 
 import app from './app.component';
@@ -72,6 +73,7 @@ const dependencies = [
   ngMaterial,
   ngAnimate,
   projectService,
+  projectConfigService,
   userService,
   containerPage,
   header,

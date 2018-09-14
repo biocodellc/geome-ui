@@ -1,11 +1,11 @@
 import angular from 'angular';
 
-import ProjectConfig from '../../../models/ProjectConfig';
-import config from '../../../utils/config';
+import ProjectConfig from '../models/ProjectConfig';
+import config from '../utils/config';
 
 const { restRoot } = config;
 
-export default class ProjectConfigService {
+class ProjectConfigService {
   constructor($http) {
     'ngInject';
 
@@ -34,3 +34,7 @@ export default class ProjectConfigService {
       });
   }
 }
+
+export default angular
+  .module('fims.projectConfigService', [])
+  .service('ProjectConfigService', ProjectConfigService).name;
