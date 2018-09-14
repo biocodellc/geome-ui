@@ -9,7 +9,10 @@ class ProjectInfoController {
   }
 
   $onInit() {
-    this.ProjectService.all(true).then(({ data }) => (this.data = data));
+    this.loading = true;
+    this.ProjectService.all(true)
+      .then(({ data }) => (this.data = data))
+      .finally(() => (this.loading = false));
   }
 }
 

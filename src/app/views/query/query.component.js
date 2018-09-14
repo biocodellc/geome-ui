@@ -11,7 +11,7 @@ class QueryController {
   constructor(
     $state,
     $timeout,
-    $window,
+    $location,
     QueryService,
     ExpeditionService,
     ProjectService,
@@ -21,7 +21,7 @@ class QueryController {
 
     this.$state = $state;
     this.$timeout = $timeout;
-    this.$window = $window;
+    this.$location = $location;
     this.QueryService = QueryService;
     this.ExpeditionService = ExpeditionService;
     this.ProjectService = ProjectService;
@@ -47,18 +47,7 @@ class QueryController {
         {
           name: 'View',
           fn: () => {
-            const newWin = this.$window.open(
-              'http://diversityindopacific.net/data-usage-agreement/',
-              '_blank',
-            );
-
-            if (
-              !newWin ||
-              newWin.closed ||
-              typeof newWin.closed === 'undefined'
-            ) {
-              angular.toaster('It appears you have a popup blocker enabled');
-            }
+            this.$location.path('/about').hash('dataPolicy');
           },
         },
         { hideDelay: 7000 },
