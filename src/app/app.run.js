@@ -31,7 +31,7 @@ export default function(
 
   const transErrorHandler = $state.defaultErrorHandler();
   $state.defaultErrorHandler(err => {
-    if (err && err.message.includes('transition has been superseded')) return;
+    // if (err && err.message.includes('transition has been superseded')) return;
     transErrorHandler(err);
   });
 

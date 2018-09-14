@@ -1,9 +1,9 @@
 // Query View styles
 
 .md-raised-disabled {
-  background-color: rgba(0,0,0,0.30);
+  background-color: rgba(0, 0, 0, 0.3);
   color: #fff;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26)
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
 }
 
 .query-content {
@@ -35,7 +35,6 @@
         @extend .md-raised-disabled;
       }
     }
-
   }
 }
 
@@ -61,11 +60,11 @@ $query-form-toggle-width: 40px;
       width: $query-form-toggle-width;
       min-width: $query-form-toggle-width;
       border-radius: 0 6px 6px 0;
-      background-color: rgba(255, 255, 255, .5);
+      background-color: rgba(255, 255, 255, 0.5);
       z-index: 60;
 
       &.md-raised:not([disabled]) {
-        box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.26); 
+        box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.26);
       }
     }
   }
@@ -78,7 +77,7 @@ $query-form-toggle-width: 40px;
 
     &.md-raised[disabled] {
       @extend .md-raised-disabled;
-      background-color: rgba(0,0,0,0.60);
+      background-color: rgba(0, 0, 0, 0.6);
     }
   }
 }

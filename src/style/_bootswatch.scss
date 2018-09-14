@@ -2,10 +2,11 @@
 // Bootswatch
 // -----------------------------------------------------
 
-$web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:400,700" !default;
+$web-font-path: 'https://fonts.googleapis.com/css?family=Open+Sans:400,700'
+  !default;
 @import url($web-font-path);
 
-@mixin btn-shadow($color){
+@mixin btn-shadow($color) {
   @include gradient-vertical-three-colors(lighten($color, 3%), $color, 6%, darken($color, 3%));
   filter: none;
   border: 1px solid darken($color, 10%);
@@ -14,9 +15,7 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:400,700" !def
 // Navbar =====================================================================
 
 .navbar {
-
   &-inverse {
-
     .badge {
       background-color: #fff;
       color: $brand-primary;
@@ -153,7 +152,7 @@ label {
   }
 
   a:hover,
-  .active > a, {
+  .active > a {
     border-color: $brand-primary;
     color: #fff;
   }

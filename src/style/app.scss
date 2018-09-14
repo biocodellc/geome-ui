@@ -1,15 +1,15 @@
 // Roboto font
-@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic");
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic');
 
 // Default variables.
-@import "variables";
+@import 'variables';
 
 // Font Awesome
-$fa-font-path: "../fonts/fa";
+$fa-font-path: '../fonts/fa';
 @import 'font-awesome/font-awesome';
 
 // Material-Design
-@import "~angular-material/angular-material.scss";
+@import '~angular-material/angular-material.scss';
 
 // Fims Overrides
-@import "fims/fims";
+@import 'fims/fims';
