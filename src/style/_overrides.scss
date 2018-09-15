@@ -447,23 +447,6 @@ $adminnav-border-bottom: 1px solid $gray-light;
   display: none;
 }
 
-// project-info
-md-virtual-repeat-container {
-  height: 330px;
-  width: 50%;
-
-  .virtual-repeat {
-    padding-top: 20px;
-    box-sizing: border-box;
-    height: 40px;
-    display: block;
-
-    ul {
-      border: solid 1px grey;
-    }
-  }
-}
-
 // Profile
 .profile {
   .heading {

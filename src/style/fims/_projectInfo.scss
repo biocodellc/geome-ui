@@ -1,0 +1,15 @@
+.project-info {
+  md-virtual-repeat-container {
+    height: 330px;
+
+    .virtual-repeat {
+      padding-top: 20px;
+      height: 40px;
+      display: block;
+
+      ul {
+        border: solid 1px grey;
+      }
+    }
+  }
+}
