@@ -1,20 +1,20 @@
 .md-popover {
-    background-color: #fff;
-    position: absolute;
+  background-color: #fff;
+  position: absolute;
 
-    &-hide {
-        display: none;
-    }
+  &-hide {
+    display: none;
+  }
 }
 
 .md-popover-button {
-    overflow: visible;
+  overflow: visible;
 
-    > * {
-        text-transform: none;
-        white-space: normal;
-        font-weight: 300;
-    }
+  > * {
+    text-transform: none;
+    white-space: normal;
+    font-weight: 300;
+  }
 }
 
 // .md-panel-outer-wrapper {

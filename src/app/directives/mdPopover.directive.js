@@ -101,9 +101,6 @@ const mdPopover = /* ngInject */ ($timeout, $mdPanel) => {
 
       const panelRef = $mdPanel.create(config);
 
-      if (parent.css('position') !== 'relative')
-        parent.css('position', 'relative');
-
       parent.on('click', () => {
         if (panelRef.isAttached) {
           // wrapper.detach();

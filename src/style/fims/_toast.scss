@@ -1,20 +1,19 @@
 md-toast {
-    &.md-bottom.md-right {
-        margin-right: 16px;
-    }
+  &.md-bottom.md-right {
+    margin-right: 16px;
+  }
 
-    &.success {
-        & .md-toast-content {
-            background-color: #087f23;
-            color: #fff;
-        }
+  &.success {
+    & .md-toast-content {
+      background-color: #087f23;
+      color: #fff;
     }
+  }
 
-    &.error {
-        & .md-toast-content {
-            background-color: #BA000D;
-            color: #fff;
-        }
+  &.error {
+    & .md-toast-content {
+      background-color: #ba000d;
+      color: #fff;
     }
-
+  }
 }

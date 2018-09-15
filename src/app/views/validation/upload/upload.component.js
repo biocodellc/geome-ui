@@ -372,6 +372,10 @@ class UploadController {
     this.fastqMetadata = data;
   }
 
+  isMultiExpeditionUpload() {
+    return this.expeditionCode === MULTI_EXPEDITION;
+  }
+
   async upload() {
     this.uploading = true;
     this.$scope.$broadcast('show-errors-check-validity');
@@ -451,19 +455,19 @@ class UploadController {
       dataSourceFiles: [],
     };
 
-    if (this.expeditionCode !== MULTI_EXPEDITION) {
+    if (!this.isMultiExpeditionUpload()) {
       data.expeditionCode = this.expeditionCode;
     }
 
     this.worksheetData.forEach(wd => {
       if (wd.worksheet === 'Workbook') {
         data.workbooks = [wd.file];
-        data.reloadWorkbooks = wd.reload;
+        data.reloadWorkbooks = !this.isMultiExpeditionUpload() && wd.reload;
       } else {
         data.dataSourceMetadata.push({
           dataType: 'TABULAR',
           filename: wd.file.name,
-          reload: wd.reload,
+          reload: !this.isMultiExpeditionUpload() && wd.reload,
           metadata: {
             sheetName: wd.worksheet,
           },

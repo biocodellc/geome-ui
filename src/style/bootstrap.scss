@@ -1,13 +1,13 @@
 // Default variables.
-@import "variables";
+@import 'variables';
 
 // Bootstrap Framework.
-$icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap-sprockets";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap";
+$icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
+@import '~bootstrap-sass/assets/stylesheets/bootstrap-sprockets';
+@import '~bootstrap-sass/assets/stylesheets/bootstrap';
 
 // Bootswatch Flatly Theme
-@import "bootswatch";
+@import 'bootswatch';
 
 // Base-theme overrides.
 @import 'overrides';
