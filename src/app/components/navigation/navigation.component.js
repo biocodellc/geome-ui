@@ -8,12 +8,8 @@ class NavigationController {
     this.ExpeditionService = ExpeditionService;
   }
 
-  $onChanges(changesObj) {
-    if (
-      this.currentUser &&
-      this.currentProject &&
-      'currentProject' in changesObj
-    ) {
+  $onChanges() {
+    if (this.currentUser && this.currentProject) {
       this.ExpeditionService.getExpeditionsForUser(
         this.currentProject.projectId,
         true,
@@ -21,6 +17,12 @@ class NavigationController {
         this.showMyExpeditions = data.length > 0;
       });
     }
+
+    this.showProjectConfig =
+      this.currentUser &&
+      this.currentProject &&
+      this.currentProject.projectConfiguration.user.userId ===
+        this.currentUser.userId;
 
     this.showPhotoUpload =
       this.currentUser &&

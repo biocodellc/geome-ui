@@ -4,6 +4,7 @@ import { QueryBuilder } from '../query/Query';
 const template = require('./plate-viewer.html');
 const viewPlateTemplate = require('./plate-viewer-dialog.html');
 const newPlateTemplate = require('./new-plate-dialog.html');
+const tissueDialogTemplate = require('./tissue-dialog.html');
 
 const NEW_PLATE = {
   A: [],
@@ -44,6 +45,18 @@ class PlateViewerController {
     this.searchTexts = {};
     this.editedData = {};
     this.hasChanges = false;
+
+    const { config } = this.currentProject;
+    const tissueEntity = config.entities.find(e => e.conceptAlias === 'Tissue');
+    const sampleEntity = config.entities.find(e => e.conceptAlias === 'Sample');
+    this.metadataColumns = Array.from(
+      new Set(
+        tissueEntity.attributes
+          .map(a => a.column)
+          .concat(sampleEntity.attributes.map(a => a.column)),
+      ),
+    );
+    this.metadataColumns.sort();
   }
 
   dataChanged(row, column) {
@@ -54,11 +67,47 @@ class PlateViewerController {
     this.editedData[row][column] = !!this.plateData[row][column];
   }
 
+  getValue(row, column) {
+    return this.plateData[row][column][this.displayColumn] || 'N/A';
+  }
+
   // eslint-disable-next-line class-methods-use-this
   getWell(row, column) {
     return `${row}${column + 1}`;
   }
 
+  tissueDetails(tissue) {
+    if (!tissue || !tissue.tissueID) return;
+    // make backdrop cover plate viewer
+    angular.element('.md-dialog-backdrop').css('z-index', 82);
+    this.$mdDialog
+      .show({
+        template: tissueDialogTemplate,
+        locals: {
+          tissue,
+          $mdDialog: this.$mdDialog,
+        },
+        bindToController: true,
+        controller: function Controller() {
+          this.tissueData = () => {
+            if (this.cachedData) return this.cachedData;
+            this.cachedData = Object.keys(this.tissue).map(key => ({
+              key,
+              value: this.tissue[key],
+            }));
+            return this.cachedData;
+          };
+        },
+        controllerAs: '$ctrl',
+        clickOutsideToClose: true,
+        escapeToClose: true,
+        autoWrap: false,
+        multiple: true,
+        onShowing: (scope, el) => el.css('z-index', 85),
+      })
+      .catch(() => {})
+      .finally(() => angular.element('.md-dialog-backdrop').css('z-index', 79));
+  }
   save() {
     this.isSaving = true;
     const p = this.newPlate
@@ -96,7 +145,7 @@ class PlateViewerController {
             }),
           );
         }
-        this.newPlate = this.newPlate && !!resp.plate;
+        this.newPlate = this.newPlate && !resp.plate;
         this.origPlateData = resp.plate || angular.copy(NEW_PLATE);
         this.hasChanges = !angular.equals(this.origPlateData, this.plateData);
       })
@@ -185,6 +234,7 @@ class PlatesController {
   viewPlate() {
     this.$mdDialog
       .show({
+        componentId: 'plateDialog',
         template: viewPlateTemplate,
         locals: {
           plateName: this.plate,
@@ -204,15 +254,16 @@ class PlatesController {
         escapeToClose: !this.currentUser,
         autoWrap: false,
       })
-      .then(() => {
+      .then(plateData => {
+        this.plateData = plateData;
         if (this.isNewPlate) {
           this.plates.push(this.plate);
-          this.isNewPlate = false;
         }
       })
-      .catch(() => {
+      .catch(() => {})
+      .finally(() => {
         if (this.isNewPlate) {
-          this.plate = undefined;
+          this.fetchPlates();
           this.isNewPlate = false;
         }
       });
@@ -248,14 +299,14 @@ class PlatesController {
       })
       .then(name => {
         this.isNewPlate = true;
-        // setting this.plate should happen last b/c viewPlate will be called as soon as the val is set
         this.plate = name;
+        this.viewPlate();
       })
       .catch(() => {});
   }
 
   fetchPlate() {
-    if (this.plate) {
+    if (this.plate && !this.isNewPlate) {
       this.loadingPlate = true;
       this.PlateService.get(this.currentProject.projectId, this.plate)
         .then(plateData => {
@@ -272,6 +323,7 @@ class PlatesController {
     this.loading = true;
     this.PlateService.all(this.currentProject.projectId)
       .then(plates => {
+        if (this.plate && !plates.includes(this.plate)) this.plate = undefined;
         this.plates = plates.sort();
         if (this.plates.length === 1) {
           this.plate = this.plates[0];

@@ -18,11 +18,11 @@ const mapChildren = children =>
 let detailCache = {};
 let detailCacheNumCols;
 class RecordController {
-  constructor($mdMedia, ProjectConfigService) {
+  constructor($mdMedia, ProjectService) {
     'ngInject';
 
     this.$mdMedia = $mdMedia;
-    this.ProjectConfigService = ProjectConfigService;
+    this.ProjectService = ProjectService;
   }
 
   $onInit() {
@@ -94,13 +94,7 @@ class RecordController {
       k =>
         (!mainRecordDetails[this.record.entity] ||
           !Object.keys(mainRecordDetails[this.record.entity]).includes(k)) &&
-        ![
-          'bcid',
-          'entity',
-          'expeditionCode',
-          'projectId',
-          'bulkLoadFile',
-        ].includes(k),
+        !['bcid', 'entity', 'bulkLoadFile'].includes(k),
     );
 
     const sortedKeys = e.attributes.reduce((accumulator, attribute) => {
@@ -209,7 +203,7 @@ class RecordController {
       return;
     }
 
-    this.ProjectConfigService.get(projectId)
+    this.ProjectService.getConfig(projectId)
       .then(config => {
         this.config = config;
         this.setPhotos();

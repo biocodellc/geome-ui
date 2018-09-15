@@ -16,9 +16,9 @@ class EntityDetailController {
     $scope.$watch(
       () => $state.current.name,
       name => {
-        if (name === 'project.config.entities.detail.attributes') {
+        if (name === 'project-config.entities.detail.attributes') {
           this.addText = 'Attribute';
-        } else if (name === 'project.config.entities.detail.rules') {
+        } else if (name === 'project-config.entities.detail.rules') {
           this.addText = 'Rule';
         }
       },
@@ -36,11 +36,11 @@ class EntityDetailController {
 
   handleOnAdd() {
     if (
-      this.$state.current.name === 'project.config.entities.detail.attributes'
+      this.$state.current.name === 'project-config.entities.detail.attributes'
     ) {
       this.newAttribute();
     } else if (
-      this.$state.current.name === 'project.config.entities.detail.rules'
+      this.$state.current.name === 'project-config.entities.detail.rules'
     ) {
       this.$state.go('.add');
     }

@@ -4,63 +4,81 @@
       <span flex></span>
       <h2>Tissue Plate: {{$ctrl.plateName}}</h2>
       <span flex></span>
-      <md-button class="md-icon-button" ng-click="$ctrl.$mdDialog.hide()" ng-if="!$ctrl.canEdit || !$ctrl.hasChanges">
+      <md-button class="md-icon-button" ng-click="$ctrl.$mdDialog.hide($ctrl.plateData)" ng-if="!$ctrl.canEdit || !$ctrl.hasChanges">
         <md-icon md-font-icon="fa fa-close fa-sm" aria-label="Close dialog"></md-icon>
       </md-button>
     </div>
   </md-toolbar>
   <md-dialog-content layout="column">
-    <div class="plate-viewer-errors" ng-show="$ctrl.errors">
-      <p><strong>The following errors occurred when creating the plate. Any tissues below were not
-          created.</strong></p>
-      <md-virtual-repeat-container md-auto-shrink="true">
-        <ul md-virtual-repeat="msg in $ctrl.errors" class="repeated-item" flex>
-          <li>{{msg}}</li>
-        </ul>
-      </md-virtual-repeat-container>
-    </div>
-    <div flex class="table-responsive">
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th></th>
-            <th ng-repeat="c in [1,2,3,4,5,6,7,8,9,10,11,12]">{{c}}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="r in ['A','B','C','D','E','F','G','H']">
-            <th>{{r}}</th>
-            <td ng-repeat="c in [0,1,2,3,4,5,6,7,8,9,10,11]">
-              <a target="_blank" ng-if="$ctrl.plateData[r][c]" ui-sref="record({bcid: $ctrl.plateData[r][c].bcid})">
-                <!-- <md-tooltip>{{$ctrl.plateData[r][c].materialSampleID}}</md-tooltip> -->
-                {{$ctrl.plateData[r][c].tissueID}}
-              </a>
-              <md-autocomplete ng-if="$ctrl.canEdit && (!$ctrl.plateData[r][c] || $ctrl.editedData[r][c])"
-                required md-selected-item="$ctrl.plateData[r][c]" md-items="s in $ctrl.query(r, c)"
-                placeholder="Create Tissue" md-item-text="s.materialSampleID" md-require-match
-                md-search-text="$ctrl.searchTexts[r][c]" md-delay="200" md-min-length="2"
-                md-menu-container-class="md-autocomplete-suggestions-container-plate-viewer-dialog"
-                md-selected-item-change="$ctrl.dataChanged(r, c)">
-                <span md-highlight-text="$ctrl.searchTexts[r][c]" md-highlight-flags="i">{{s.materialSampleID}}</span>
-              </md-autocomplete>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <md-content flex layout="column">
+      <div class="plate-viewer-details">
+        <div ng-show="!$ctrl.newPlate" layout="row">
+          <span flex />
+          <md-autocomplete md-no-cache md-selected-item="$ctrl.displayColumn" md-items="c in $ctrl.metadataColumns | filter:searchText"
+            md-floating-label="Display Column" md-require-match md-search-text="searchText" class="no-floating-label"
+            md-min-length="0" ng-click="searchText = ''">
+            <md-item-template>
+              <span md-highlight-text="searchText" md-highlight-flags="i">{{c}}</span>
+            </md-item-template>
+            <span class="md-select-icon" aria-hidden="true" ng-click="$mdAutocompleteCtrl.focus($event)"></span>
+          </md-autocomplete>
+          <span flex />
+        </div>
+        <div ng-show="$ctrl.errors" class="errors">
+          <p><strong>The following errors occurred when creating the plate. Any tissues below were
+              not created.</strong></p>
+          <md-virtual-repeat-container md-auto-shrink="true">
+            <ul md-virtual-repeat="msg in $ctrl.errors" class="repeated-item" flex>
+              <li>{{msg}}</li>
+            </ul>
+          </md-virtual-repeat-container>
+        </div>
+      </div>
+      <div flex class="table-responsive plate">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th></th>
+              <th ng-repeat="c in [1,2,3,4,5,6,7,8,9,10,11,12]">{{c}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="r in ['A','B','C','D','E','F','G','H']">
+              <th>{{r}}</th>
+              <td ng-repeat="c in [0,1,2,3,4,5,6,7,8,9,10,11]" ng-click="$ctrl.tissueDetails($ctrl.plateData[r][c])">
+                <div ng-if="$ctrl.plateData[r][c].tissueID">
+                  <div>{{$ctrl.plateData[r][c].tissueID}}</div>
+                  <div class="sub-column" ng-if="$ctrl.displayColumn && $ctrl.displayColumn !== 'tissueID'">
+                    {{$ctrl.getValue(r,c)}}
+                  </div>
+                </div>
+                <md-autocomplete ng-if="$ctrl.canEdit && (!$ctrl.plateData[r][c] || $ctrl.editedData[r][c])"
+                  required md-selected-item="$ctrl.plateData[r][c]" md-items="s in $ctrl.query(r, c)"
+                  placeholder="Create Tissue" md-item-text="s.materialSampleID" md-require-match
+                  md-search-text="$ctrl.searchTexts[r][c]" md-delay="200" md-min-length="2"
+                  md-menu-container-class="md-autocomplete-suggestions-container-plate-viewer-dialog"
+                  md-selected-item-change="$ctrl.dataChanged(r, c)">
+                  <span md-highlight-text="$ctrl.searchTexts[r][c]" md-highlight-flags="i">{{s.materialSampleID}}</span>
+                </md-autocomplete>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-    <md-dialog-actions>
-      <md-button ng-if="$ctrl.hasChanges" ng-click="$ctrl.save()" class="md-primary md-raised"
-        layout="row" layout-align="center center">
-        <span ng-if='!$ctrl.isSaving'>Save</span>
-        <md-progress-circular ng-show="$ctrl.isSaving" md-mode="indeterminate" md-diameter="18"
-          class="md-accent md-hue-3"></md-progress-circular>
-      </md-button>
-      <md-button ng-if="$ctrl.newPlate || $ctrl.hasChanges" ng-click="$ctrl.$mdDialog.cancel()"
-        class="md-primary">Cancel</md-button>
-      <md-button ng-if="!$ctrl.newPlate && !$ctrl.hasChanges" ng-click="$ctrl.$mdDialog.hide()"
-        class="md-primary">Close</md-button>
-    </md-dialog-actions>
+      <md-dialog-actions>
+        <md-button ng-if="$ctrl.hasChanges" ng-click="$ctrl.save()" class="md-primary md-raised"
+          layout="row" layout-align="center center">
+          <span ng-if='!$ctrl.isSaving'>Save</span>
+          <md-progress-circular ng-show="$ctrl.isSaving" md-mode="indeterminate" md-diameter="18"
+            class="md-accent md-hue-3"></md-progress-circular>
+        </md-button>
+        <md-button ng-if="$ctrl.newPlate || $ctrl.hasChanges" ng-click="$ctrl.$mdDialog.cancel()"
+          class="md-primary">Cancel</md-button>
+        <md-button ng-if="!$ctrl.newPlate && !$ctrl.hasChanges" ng-click="$ctrl.$mdDialog.hide($ctrl.plateData)"
+          class="md-primary">Close</md-button>
+      </md-dialog-actions>
 
+    </md-content>
   </md-dialog-content>
 </md-dialog>
