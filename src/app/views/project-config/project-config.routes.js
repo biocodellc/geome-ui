@@ -1,19 +1,18 @@
 function getStates() {
   return [
     {
-      state: 'project.config',
+      state: 'project-config',
       config: {
         url: '/config',
-        redirectTo: 'project.config.entities',
-        views: {
-          'details@project': {
-            component: 'fimsProjectConfig',
-          },
-        },
+        redirectTo: 'project-config.entities',
+        component: 'fimsProjectConfig',
+        parent: 'projectView',
+        projectRequired: true,
+        loginRequired: true,
       },
     },
     {
-      state: 'project.config.metadata',
+      state: 'project-config.metadata',
       config: {
         url: '/metadata',
         views: {
@@ -26,7 +25,7 @@ function getStates() {
 
     // ExpeditionMetadataProperties
     {
-      state: 'project.config.expeditionMetadata',
+      state: 'project-config.expeditionMetadata',
       config: {
         url: '/expedition/properties/',
         views: {
@@ -39,7 +38,7 @@ function getStates() {
 
     // Entities
     {
-      state: 'project.config.entities',
+      state: 'project-config.entities',
       config: {
         url: '/entities',
         views: {
@@ -50,11 +49,11 @@ function getStates() {
       },
     },
     {
-      state: 'project.config.entities.add',
+      state: 'project-config.entities.add',
       config: {
         url: '/add',
         views: {
-          'entities@project.config': {
+          'entities@project-config': {
             component: 'fimsProjectConfigEntityAdd',
           },
         },
@@ -62,10 +61,10 @@ function getStates() {
     },
 
     {
-      state: 'project.config.entities.detail',
+      state: 'project-config.entities.detail',
       config: {
         url: '/:alias/',
-        redirectTo: 'project.config.entities.detail.attributes',
+        redirectTo: 'project-config.entities.detail.attributes',
         resolve: {
           entity: /* @ngInject */ ($transition$, $state, ProjectService) => {
             const currentProject = ProjectService.currentProject();
@@ -79,14 +78,14 @@ function getStates() {
             }
 
             if (!e) {
-              return $state.go('project.config.entities');
+              return $state.go('project-config.entities');
             }
 
             return e;
           },
         },
         views: {
-          'detail@project.config': {
+          'detail@project-config': {
             component: 'fimsEntityDetail',
           },
         },
@@ -100,7 +99,7 @@ function getStates() {
     },
 
     {
-      state: 'project.config.entities.detail.attributes',
+      state: 'project-config.entities.detail.attributes',
       config: {
         url: 'attributes',
         views: {
@@ -117,7 +116,7 @@ function getStates() {
     },
 
     {
-      state: 'project.config.entities.detail.rules',
+      state: 'project-config.entities.detail.rules',
       config: {
         url: 'rules',
         resolve: {
@@ -134,11 +133,11 @@ function getStates() {
       },
     },
     {
-      state: 'project.config.entities.detail.rules.add',
+      state: 'project-config.entities.detail.rules.add',
       config: {
         url: '/add',
         views: {
-          'rules@project.config.entities.detail': {
+          'rules@project-config.entities.detail': {
             component: 'fimsProjectConfigRuleAdd',
           },
         },
@@ -147,7 +146,7 @@ function getStates() {
     // - End Entities
 
     {
-      state: 'project.config.lists',
+      state: 'project-config.lists',
       config: {
         url: '/lists',
         views: {
@@ -158,7 +157,7 @@ function getStates() {
       },
     },
     {
-      state: 'project.config.lists.detail',
+      state: 'project-config.lists.detail',
       config: {
         url: '/:alias/',
         resolve: {
@@ -172,7 +171,7 @@ function getStates() {
             }
 
             if (!l) {
-              return $state.go('project.config.lists');
+              return $state.go('project-config.lists');
             }
 
             return l;
@@ -181,7 +180,7 @@ function getStates() {
             $transition$.params('to').addField,
         },
         views: {
-          'detail@project.config': {
+          'detail@project-config': {
             component: 'fimsListDetail',
           },
         },
@@ -197,11 +196,11 @@ function getStates() {
       },
     },
     {
-      state: 'project.config.lists.add',
+      state: 'project-config.lists.add',
       config: {
         url: '/add',
         views: {
-          'lists@project.config': {
+          'lists@project-config': {
             component: 'fimsAddList',
           },
         },

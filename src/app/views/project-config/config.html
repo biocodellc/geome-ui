@@ -1,0 +1,58 @@
+<div class="admin">
+    <!-- <div class="admin"> -->
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="heading">
+                <h3>{{ $ctrl.configuration.name }}</h3>
+                <p>
+                    <strong>Description: </strong> {{ $ctrl.configuration.description }}</p>
+            </section>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <section>
+                <!-- <ul class="nav nav-pills">
+                    <li>
+                        <a href ui-sref="project.settings" ui-sref-active="active">Settings</a>
+                    </li>
+                    <li>
+                        <a href ui-sref="project.expeditions" ui-sref-active="active">Expeditions</a>
+                    </li>
+                    <li>
+                        <a href ui-sref="project.members" ui-sref-active="active">Members</a>
+                    </li>
+                    <!-- <li> -->
+                <!-- <a href ui-sref="project.config" ui-sref-active="active">Config</a> -->
+                <!-- </li> -->
+                <!-- </ul> -->
+
+                <div class="row">
+                    <div class="settings">
+                        <div layout="column" class="loading-overlay" ng-show="$ctrl.loading"
+                            layout-align="top center">
+                            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                        </div>
+                        <div ng-if="!$ctrl.loading" ui-view="detail" config="$ctrl.config"
+                            show-save="$ctrl.showSave" on-save="$ctrl.handleOnSave()"
+                            on-update-entity="$ctrl.handleUpdateEntity(alias, entity)"
+                            on-update-list="$ctrl.handleUpdateList(alias, list)">
+                            <!-- NOTE: this will be replaced when a route targets the 'detail' ui-view above -->
+                            <fims-project-config-overview config="$ctrl.config" show-save="$ctrl.showSave"
+                                on-save="$ctrl.handleOnSave()" on-update-metadata="$ctrl.handleUpdateMetadata(config)"
+                                on-update-expedition-metadata="$ctrl.handleUpdateExpeditionMetadata(expeditionMetadata)"
+                                on-new-worksheet="$ctrl.handleNewWorksheet(sheetName)"
+                                on-update-entities="$ctrl.handleUpdateEntities(entities)"
+                                on-update-lists="$ctrl.handleUpdateLists(lists)">
+                            </fims-project-config-overview>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+        </div>
+    </div>
+
+</div>

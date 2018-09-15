@@ -1,6 +1,6 @@
 import angular from 'angular';
 
-import { RULE_LEVELS } from '../../../../../models/Rule';
+import { RULE_LEVELS } from '../../../../models/Rule';
 import fimsRuleMetadata from './rule-metadata.component';
 
 const template = require('./edit-rule-form.html');

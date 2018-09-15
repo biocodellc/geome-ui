@@ -1,6 +1,5 @@
-import { AVAILABLE_RULES, RULE_LEVELS } from '../../../../../models/Rule';
 import angular from 'angular';
-import Rule from '../../../../../models/Rule';
+import { AVAILABLE_RULES, RULE_LEVELS, Rule } from '../../../../models/Rule';
 
 class AddRuleController {
   $onInit() {

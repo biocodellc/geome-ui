@@ -1,8 +1,9 @@
 import angular from 'angular';
-import ProjectConfig from '../../../models/ProjectConfig';
-import displayConfigErrors from '../../../utils/displayConfigErrors';
+import ProjectConfig from '../../models/ProjectConfig';
+import displayConfigErrors from '../../utils/displayConfigErrors';
 
 const template = require('./config.html');
+const unsavedConfigConfirmationTemplate = require('./unsaved-config-confirmation.html');
 
 function configConfirmationController($mdDialog) {
   'ngInject';
@@ -14,20 +15,29 @@ function configConfirmationController($mdDialog) {
 }
 
 class ConfigController {
-  constructor($mdDialog, ProjectConfigService) {
+  constructor($mdDialog, ProjectConfigurationService) {
     'ngInject';
 
     this.$mdDialog = $mdDialog;
-    this.ProjectConfigService = ProjectConfigService;
+    this.ProjectConfigurationService = ProjectConfigurationService;
   }
 
   $onInit() {
     this.showSave = false;
-    this.config = new ProjectConfig(this.currentProject.config);
+    this.loading = true;
+
+    this.ProjectConfigurationService.get(
+      this.currentProject.projectConfiguration.id,
+    )
+      .then(configuration => {
+        this.config = new ProjectConfig(configuration.config);
+        this.configuration = configuration;
+      })
+      .finally(() => (this.loading = false));
   }
 
   updateShowSave() {
-    this.showSave = !angular.equals(this.currentProject.config, this.config);
+    this.showSave = !angular.equals(this.configuration.config, this.config);
   }
 
   handleUpdateEntities(entities) {
@@ -72,19 +82,18 @@ class ConfigController {
 
   handleOnSave() {
     this.loading = true;
-    return this.ProjectConfigService.save(
-      this.config,
-      this.currentProject.projectId,
+    return this.ProjectConfigurationService.save(
+      Object.assign({}, this.configuration, { config: this.config }),
     )
-      .then(config => {
-        this.currentProject.config = config;
+      .then(configuration => {
+        this.configuration = configuration;
         angular.toaster.success('Successfully updated project configuration!');
-        this.config = new ProjectConfig(config);
+        this.config = new ProjectConfig(configuration.config);
         this.updateShowSave();
       })
       .catch(response => {
         if (response.status === 400) {
-          displayConfigErrors(this.$mdDialog, response.data.errors);
+          displayConfigErrors(this.$mdDialog, response.data.config.errors);
         } else {
           angular.toaster.error('Error saving project configuration!');
         }
@@ -98,7 +107,7 @@ class ConfigController {
     if (this.showSave) {
       return this.$mdDialog
         .show({
-          template: require('./unsaved-config-confirmation.html'),
+          template: unsavedConfigConfirmationTemplate,
           controller: configConfirmationController,
           controllerAs: 'vm',
         })
@@ -108,6 +117,7 @@ class ConfigController {
           }
         });
     }
+    return Promise.resolve();
   }
 }
 
