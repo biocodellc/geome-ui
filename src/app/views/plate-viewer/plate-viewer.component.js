@@ -79,7 +79,9 @@ class PlateViewerController {
   tissueDetails(tissue) {
     if (!tissue || !tissue.tissueID) return;
     // make backdrop cover plate viewer
-    angular.element('.md-dialog-backdrop').css('z-index', 82);
+    angular
+      .element(document.querySelector('.md-dialog-backdrop'))
+      .css('z-index', 82);
     this.$mdDialog
       .show({
         template: tissueDialogTemplate,
@@ -106,7 +108,11 @@ class PlateViewerController {
         onShowing: (scope, el) => el.css('z-index', 85),
       })
       .catch(() => {})
-      .finally(() => angular.element('.md-dialog-backdrop').css('z-index', 79));
+      .finally(() =>
+        angular
+          .element(document.querySelector('.md-dialog-backdrop'))
+          .css('z-index', 79),
+      );
   }
   save() {
     this.isSaving = true;
@@ -122,34 +128,32 @@ class PlateViewerController {
           this.plateData,
         );
 
-    p
-      .then(resp => {
-        this.errors = resp.validationMessages
-          ? resp.validationMessages.errors.reduce(
-              (accumulator, group) =>
-                accumulator.concat(group.messages.map(g => g.message)),
-              [],
-            )
-          : undefined;
-        if (resp.plate) {
-          angular.toaster.success(
-            `Successfully ${this.newPlate ? 'created' : 'updated'} the plate.`,
-          );
+    p.then(resp => {
+      this.errors = resp.validationMessages
+        ? resp.validationMessages.errors.reduce(
+            (accumulator, group) =>
+              accumulator.concat(group.messages.map(g => g.message)),
+            [],
+          )
+        : undefined;
+      if (resp.plate) {
+        angular.toaster.success(
+          `Successfully ${this.newPlate ? 'created' : 'updated'} the plate.`,
+        );
 
-          Object.keys(resp.plate).forEach(row =>
-            resp.plate[row].forEach((val, col) => {
-              this.plateData[row][col] = val;
-              if (this.editedData[row]) {
-                this.editedData[row][col] = false;
-              }
-            }),
-          );
-        }
-        this.newPlate = this.newPlate && !resp.plate;
-        this.origPlateData = resp.plate || angular.copy(NEW_PLATE);
-        this.hasChanges = !angular.equals(this.origPlateData, this.plateData);
-      })
-      .finally(() => (this.isSaving = false));
+        Object.keys(resp.plate).forEach(row =>
+          resp.plate[row].forEach((val, col) => {
+            this.plateData[row][col] = val;
+            if (this.editedData[row]) {
+              this.editedData[row][col] = false;
+            }
+          }),
+        );
+      }
+      this.newPlate = this.newPlate && !resp.plate;
+      this.origPlateData = resp.plate || angular.copy(NEW_PLATE);
+      this.hasChanges = !angular.equals(this.origPlateData, this.plateData);
+    }).finally(() => (this.isSaving = false));
   }
 
   query(row, column) {
