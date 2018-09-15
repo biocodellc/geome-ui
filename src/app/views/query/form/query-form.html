@@ -168,7 +168,6 @@
     </section>
 
   </div>
-
   <div layout="row" layout-align="end center">
     <md-button type="submit" ng-click="$ctrl.currentProject ? $ctrl.queryJson() : '';" class="md-raised md-primary">
       <md-tooltip ng-show="!$ctrl.currentProject" md-direction="top">Select a project</md-tooltip>
@@ -176,6 +175,6 @@
     </md-button>
   </div>
   <div layout="row" layout-align="center">
-    <i>Data is subject to our <a ng-click="$ctrl.go()"> Data Usage Policy</a>.</i>
+    <i>Data is subject to our <a ui-sref="about({'#':'dataPolicy'})"> Data Usage Policy</a>.</i>
   </div>
 </form>
