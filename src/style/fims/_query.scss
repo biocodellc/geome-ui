@@ -83,6 +83,10 @@ $query-form-toggle-width: 40px;
 }
 
 .query-form {
+  height: 100%;
+  > form {
+    height: 100%;
+  }
   section {
     margin-bottom: $layout-gutter-width / 2;
 
@@ -217,6 +221,10 @@ $query-form-toggle-width: 40px;
     }
   }
 
+  project-selector {
+    flex-shrink: 0;
+  }
+
   .project-selector {
     margin: 10px 0;
 
@@ -229,6 +237,17 @@ $query-form-toggle-width: 40px;
       line-height: 18px;
       font-weight: 600;
       border-radius: 35%;
+    }
+  }
+
+  .search-row {
+    flex-shrink: 0;
+  }
+
+  .data-policy {
+    flex-shrink: 0;
+    md-divider {
+      margin: 16px 0;
     }
   }
 }

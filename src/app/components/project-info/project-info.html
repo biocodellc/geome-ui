@@ -12,18 +12,17 @@
 						</uib-accordion-heading>
 
 						<li>
-							<strong>{{x.projectCode}}</strong>
+							<p><i>{{x.description}}</i></p>
 						</li>
 						<li>
-							<i>{{x.description}}</i>
-						</li>
-						<li>
-							<u>Administrator</u>:
+							<span class="heading">Administrator:</span>
 							<span class="text-capitalize">{{x.user.firstName}} {{x.user.lastName}} </span>
-							(<a href="mailto:{{x.user.email}}">{{x.user.email}}</a>)</li>
+							<a href="mailto:{{x.user.email}}">{{x.user.email}}</a>
+						</li>
 						<li>
-							<u>Status</u>:
-							<span ng-if="!x.public">Not </span>Visible To Public</li>
+							<span class="heading">Status:</span>
+							<span ng-if="!x.public">Not </span>Visible To Public
+						</li>
 
 					</ul>
 				</div>
