@@ -5,10 +5,9 @@ const template = require('./header.html');
 const { restRoot } = config;
 
 class HeaderController {
-  constructor($location, $state) {
+  constructor($state) {
     'ngInject';
 
-    this.$location = $location;
     this.$state = $state;
   }
 

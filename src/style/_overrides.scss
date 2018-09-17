@@ -6,6 +6,7 @@
   .fa {
     padding-right: 8px;
   }
+
   .fa-after {
     padding-left: 8px;
   }
@@ -14,12 +15,15 @@
 // main view
 .main {
   padding-left: $sidenav-width;
+
   > .content {
     position: relative;
+
     > .modal-backdrop {
       margin-left: $sidenav-width;
       margin-top: $navbar-height;
     }
+
     > .container-fluid {
       display: flex;
       flex-direction: column;
@@ -54,12 +58,14 @@
 a {
   &.disabled {
     @extend .btn.disabled;
+
     @extend a.btn.disabled;
   }
 }
 
 // admin pages
 $adminnav-border-bottom: 1px solid $gray-light;
+
 .admin {
   section {
     background-color: #fff;
@@ -67,11 +73,13 @@ $adminnav-border-bottom: 1px solid $gray-light;
     padding: 15px;
     padding-bottom: 50px;
   }
+
   .nav-pills {
     > li {
       > a {
         color: $gray-darker;
         border-radius: 0;
+
         &.active {
           &,
           &:hover,
@@ -82,15 +90,19 @@ $adminnav-border-bottom: 1px solid $gray-light;
       }
     }
   }
+
   .back {
     margin-bottom: 5px;
+
     .fa {
       padding-right: 5px;
     }
   }
+
   .heading {
     margin-bottom: 20px;
     min-height: 110px;
+
     h1,
     h2,
     h3,
@@ -99,13 +111,16 @@ $adminnav-border-bottom: 1px solid $gray-light;
       margin-top: 5px;
     }
   }
+
   .nav {
     border-top: 1px solid $gray-light;
     border-bottom: $adminnav-border-bottom;
     margin-bottom: $adminnav-margin-bottom;
   }
+
   .right-column .list-group {
     margin-bottom: 5px;
+
     .list-group-item {
       border-left: none;
       border-right: none;
@@ -119,38 +134,48 @@ $adminnav-border-bottom: 1px solid $gray-light;
     font-weight: bold;
     margin-bottom: 8px;
   }
+
   fieldset {
     border-bottom: 1px solid $gray-lighter;
     margin-bottom: $form-group-margin-bottom;
   }
+
   .checkbox {
     margin-top: 0;
+
     .help-block {
       margin-top: 3px;
       margin-bottom: 0;
     }
   }
+
   .dropdown {
     .dropdown-toggle {
       color: #000;
     }
   }
+
   .back {
     margin-top: 10px;
   }
+
   .row-actions {
     display: flex;
+
     a {
       text-decoration: none;
       color: $text-color;
+
       &.delete {
         @extend .text-danger;
       }
     }
   }
+
   .panel-danger {
     background-color: hsla(6, 80%, 80%, 0.4);
   }
+
   .help-block {
     color: #798088;
     font-size: $font-size-small;
@@ -159,45 +184,59 @@ $adminnav-border-bottom: 1px solid $gray-light;
 
 .settings-bar {
   @extend .clearfix;
+
   margin-top: -$adminnav-margin-bottom;
   margin-bottom: $adminnav-margin-bottom;
   border-bottom: $adminnav-border-bottom;
+
   .settings-bar-container {
     @extend .col-xs-12;
+
     @extend .col-lg-9;
+
     padding-left: 0;
     padding-right: 0;
   }
+
   a:hover,
   a:focus {
     text-decoration: none;
   }
+
   .nav {
     border: none;
     margin-bottom: 0;
   }
+
   ul {
     margin-left: 0;
     margin-bottom: 0;
+
     &.actions {
       @extend .list-unstyled;
+
       @extend .list-inline;
+
       > li {
         padding: $nav-link-padding;
       }
     }
   }
+
   .order-by {
     text-transform: capitalize;
     padding-left: 5px;
     font-weight: 500;
+
     .fa-angle-down {
       font-weight: 900;
     }
   }
+
   a {
     color: #000;
   }
+
   .dropdown-menu {
     > li {
       > a {
@@ -205,6 +244,7 @@ $adminnav-border-bottom: 1px solid $gray-light;
       }
     }
   }
+
   .add {
     background-color: hsla(105, 54%, 44%, 0.3);
   }
@@ -212,25 +252,32 @@ $adminnav-border-bottom: 1px solid $gray-light;
 
 .settings-list {
   @extend .list-group;
+
   .settings-list-item {
     @extend .list-group-item;
+
     @extend .clearfix;
+
     border-left: none;
     border-right: none;
     padding: 8px 15px;
     display: flex;
     flex-direction: row;
     align-items: center;
+
     .info {
       margin-left: 20px;
       width: 100%;
+
       a {
         color: #000;
       }
+
       .metadata {
         margin-top: 8px;
         clear: both;
       }
+
       .title {
         font-size: $font-size-large;
         font-weight: 500;
@@ -254,6 +301,7 @@ $adminnav-border-bottom: 1px solid $gray-light;
     font-size: $font-size-large;
     padding: 15px 15px 10px;
   }
+
   .resource {
     padding: 20px 15px;
   }
@@ -269,6 +317,7 @@ $adminnav-border-bottom: 1px solid $gray-light;
     width: auto;
     max-height: 300px;
   }
+
   .input-group {
     width: 100%;
   }
@@ -276,6 +325,7 @@ $adminnav-border-bottom: 1px solid $gray-light;
 
 .save-config {
   @extend .add;
+
   margin-left: 30px;
   margin-right: 30px;
 }
@@ -290,16 +340,19 @@ $adminnav-border-bottom: 1px solid $gray-light;
       }
     }
   }
+
   > tbody {
     > tr {
       border-top: 1px solid $list-group-border;
       border-bottom: 1px solid $list-group-border;
+
       > td {
         border-top: none;
         padding: 10px 15px;
       }
     }
   }
+
   .dndPlaceholder {
     height: 40px;
   }
@@ -314,13 +367,16 @@ $adminnav-border-bottom: 1px solid $gray-light;
 .edit-popover {
   min-width: 500px;
   display: block;
+
   .edit-close {
     color: $text-color;
     opacity: 0.7;
   }
+
   .row {
     margin-top: -2px;
   }
+
   textarea {
     resize: vertical;
   }
@@ -336,6 +392,7 @@ $adminnav-border-bottom: 1px solid $gray-light;
       display: inline-block;
       width: auto;
       padding: 5px 7px;
+
       .close {
         color: $text-color;
         opacity: 0.7;
@@ -350,6 +407,7 @@ $adminnav-border-bottom: 1px solid $gray-light;
 .ui-select-match {
   .btn-default {
     @extend .form-control;
+
     &:active,
     &:hover,
     &:focus {
@@ -361,14 +419,19 @@ $adminnav-border-bottom: 1px solid $gray-light;
 
 .ui-select-choices-row {
   @extend .small;
+
   padding: 5px;
   border-bottom: 1px solid $gray-lighter;
+
   .title {
     margin-bottom: 5px;
   }
+
   .info {
     @extend .small;
+
     font-weight: 300;
+
     label {
       font-weight: 400;
     }
@@ -389,18 +452,23 @@ $adminnav-border-bottom: 1px solid $gray-light;
   .heading {
     margin-top: 10px;
     min-height: 0;
+
     .username {
       margin-top: 0px;
+
       .fa {
         margin-right: 10px;
       }
     }
   }
+
   .settings {
     margin-top: 35px;
     border-top: 1px solid $gray-lighter;
+
     .section {
       border-bottom: 1px solid $gray-lighter;
+
       .title {
         font-weight: 500;
         margin-bottom: $line-height-computed;
@@ -411,6 +479,7 @@ $adminnav-border-bottom: 1px solid $gray-light;
 
 .change-password-form {
   display: flex;
+
   .form-group {
     margin-bottom: $form-group-margin-bottom;
     margin-right: 15px;
@@ -427,8 +496,10 @@ $adminnav-border-bottom: 1px solid $gray-light;
   box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.2);
   padding-top: 20px;
   margin-top: 30px;
+
   .panel-heading {
     text-align: center;
+
     a {
       text-decoration: none;
       font-weight: bold;
@@ -437,6 +508,7 @@ $adminnav-border-bottom: 1px solid $gray-light;
       -moz-transition: all 0.1s linear;
       transition: all 0.1s linear;
     }
+
     hr {
       margin-top: 10px;
       margin-bottom: 0px;
@@ -514,6 +586,7 @@ $adminnav-border-bottom: 1px solid $gray-light;
   .form-control-feedback {
     color: $brand-warning;
   }
+
   .form-control,
   .form-control:focus {
     border-color: $brand-warning;
@@ -534,6 +607,7 @@ $adminnav-border-bottom: 1px solid $gray-light;
   .form-control-feedback {
     color: $brand-danger;
   }
+
   .form-control,
   .form-control:focus {
     border-color: $brand-danger;

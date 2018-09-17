@@ -1,7 +1,7 @@
 <form method="POST" name="queryForm" layout="column">
 
-  <project-selector layout="row" layout-align="center" is-authenticated="!!($ctrl.currentUser)" current-project="$ctrl.currentProject"
-    on-change="$ctrl.onProjectChange({ project: project })"></project-selector>
+  <project-selector layout="row" layout-align="center" is-authenticated="!!($ctrl.currentUser)"
+    current-project="$ctrl.currentProject" on-change="$ctrl.onProjectChange({ project: project })"></project-selector>
 
   <md-input-container ng-show="$ctrl.currentProject" class="md-icon-float md-icon-right md-block">
     <input type="text" placeholder="Query String..." ng-model="$ctrl.params.queryString" />
@@ -17,9 +17,10 @@
       <a href="#" ng-click="$ctrl.showExpeditions = !$ctrl.showExpeditions" class="md-subhead bold">Expeditions</a>
       <div class="md-form-group" ng-show="$ctrl.showExpeditions" layout="column" layout-margin>
         <md-chips ng-model="$ctrl.params.expeditions" md-require-match>
-          <md-autocomplete md-selected-item="$ctrl.selectedItem" md-no-cache md-autocomplete-snap="width" md-search-text="$ctrl.searchText"
-            md-items="item in $ctrl.filterExpeditions($ctrl.searchText)" md-item-text="item.expeditionTitle"
-            md-dropdown-position="bottom" md-min-length="0" placeholder="Expedition Name ...">
+          <md-autocomplete md-selected-item="$ctrl.selectedItem" md-no-cache md-autocomplete-snap="width"
+            md-search-text="$ctrl.searchText" md-items="item in $ctrl.filterExpeditions($ctrl.searchText)"
+            md-item-text="item.expeditionTitle" md-dropdown-position="bottom" md-min-length="0"
+            placeholder="Expedition Name ...">
             <span md-highlight-text="$ctrl.searchText" md-highlight-flags="i">{{item.expeditionTitle}}</span>
           </md-autocomplete>
           <md-chip-template>
@@ -36,10 +37,12 @@
       <a href="#" ng-click="$ctrl.showMap = !$ctrl.showMap" class="md-subhead bold">Map</a>
       <div class="md-form-group" ng-show="$ctrl.showMap" layout="column" layout-margin>
         <div layout="row" layout-wrap>
-          <md-checkbox class="small" ng-model="$ctrl.params.isMappable" name="isMappable"> is Mappable</md-checkbox>
+          <md-checkbox class="small" ng-model="$ctrl.params.isMappable" name="isMappable"> is
+            Mappable</md-checkbox>
           <md-checkbox class="small" ng-model="$ctrl.params.hasCoordinateUncertaintyInMeters" name="coordinateUncertaintyInMeters">
             has coordinateUncertaintyInMeters</md-checkbox>
-          <md-checkbox class="small" ng-model="$ctrl.params.hasPermitInfo" name="hasPermitInfo"> has permitInfo</md-checkbox>
+          <md-checkbox class="small" ng-model="$ctrl.params.hasPermitInfo" name="hasPermitInfo">
+            has permitInfo</md-checkbox>
         </div>
         <div layout="row">
           <div flex="25">
@@ -50,19 +53,21 @@
             <div flex="66" layout="column">
               <div>
                 <span class="small bold">northEast:</span>
-                <span class="small"> [{{$ctrl.params.bounds.northEast.lat | number:2 }}, {{$ctrl.params.bounds.northEast.lng
+                <span class="small"> [{{$ctrl.params.bounds.northEast.lat | number:2 }},
+                  {{$ctrl.params.bounds.northEast.lng
                   | number:2 }}]</span>
               </div>
               <div>
                 <span class="small bold">southWest:</span>
-                <span class="small"> [{{$ctrl.params.bounds.southWest.lat | number:2 }}, {{$ctrl.params.bounds.southWest.lng
+                <span class="small"> [{{$ctrl.params.bounds.southWest.lat | number:2 }},
+                  {{$ctrl.params.bounds.southWest.lng
                   | number:2 }}]</span>
               </div>
             </div>
             <md-button class="md-raised md-warn md-hue-2 md-button-sm" ng-click="$ctrl.clearBounds()">Clear</md-button>
           </div>
-          <md-button class="md-raised md-accent md-button-sm" ng-class="{'active': $ctrl.drawing}" ng-show="!$ctrl.params.bounds"
-            ng-click="$ctrl.drawBounds()">Draw</md-button>
+          <md-button class="md-raised md-accent md-button-sm" ng-class="{'active': $ctrl.drawing}"
+            ng-show="!$ctrl.params.bounds" ng-click="$ctrl.drawBounds()">Draw</md-button>
         </div>
       </div>
     </section>
@@ -71,7 +76,9 @@
       <a href="#" ng-click="$ctrl.showSequences = !$ctrl.showSequences" class="md-subhead bold">Sequences</a>
       <div class="md-form-group" ng-show="$ctrl.showSequences" layout="column" layout-margin>
         <div layout="row" ng-show="$ctrl.hasFastqEntity">
-          <md-checkbox class="small" ng-model="$ctrl.params.hasSRAAccessions" name="hasSraAccessions"> has NCBI Sequence Read Archive Accession Numbers</md-checkbox>
+          <md-checkbox class="small" ng-model="$ctrl.params.hasSRAAccessions" name="hasSraAccessions">
+            has NCBI
+            Sequence Read Archive Accession Numbers</md-checkbox>
         </div>
         <div layout="row" ng-show="$ctrl.markers">
           <md-input-container flex="80">
@@ -86,7 +93,8 @@
     </section>
 
     <section class="dwc-terms">
-      <a href="#" ng-click="$ctrl.showDWC = !$ctrl.showDWC" class="md-subhead bold">Darwin Core Terms</a>
+      <a href="#" ng-click="$ctrl.showDWC = !$ctrl.showDWC" class="md-subhead bold">Darwin Core
+        Terms</a>
       <div class="md-form-group" ng-show="$ctrl.showDWC" layout="column" layout-margin>
         <div layout="row">
           <md-input-container flex="50">
@@ -123,9 +131,11 @@
     </section>
 
     <section class="filters" layout="column">
-      <a href="#" flex="30" ng-click="$ctrl.showFilters = !$ctrl.showFilters" class="md-subhead bold">Column Filters</a>
+      <a href="#" flex="30" ng-click="$ctrl.showFilters = !$ctrl.showFilters" class="md-subhead bold">Column
+        Filters</a>
       <div class="md-form-group" ng-show="$ctrl.showFilters" layout="column" layout-margin>
-        <md-chips ng-model="$ctrl.params.filters" readonly="true" md-removable="true" md-transform-chip="$ctrl.transformChip($chip)">
+        <md-chips ng-model="$ctrl.params.filters" readonly="true" md-removable="true"
+          md-transform-chip="$ctrl.transformChip($chip)">
           <md-chip-template layout="row">
             <div flex="40" class="filter-select">
               <md-select ng-model="$chip.column" md-container-class="query-form">
@@ -136,7 +146,8 @@
               </md-select>
             </div>
             <div flex="15" class="filter-select">
-              <md-select ng-model="$chip.type" ng-model-options="{trackBy: '$value'}" md-container-class="query-form">
+              <md-select ng-model="$chip.type" ng-model-options="{trackBy: '$value'}"
+                md-container-class="query-form">
                 <md-option ng-value="t" ng-repeat="t in $ctrl.getQueryTypes($chip.column)">{{t}}</md-option>
               </md-select>
             </div>
@@ -166,10 +177,15 @@
 
   </div>
 
-  <div layout="row" layout-align="end center">
+  <div class="search-row" layout="row" layout-align="end center">
     <md-button type="submit" ng-click="$ctrl.currentProject ? $ctrl.queryJson() : '';" class="md-raised md-primary">
       <md-tooltip ng-show="!$ctrl.currentProject" md-direction="top">Select a project</md-tooltip>
       <span class="fa fa-search"></span> Search
     </md-button>
+  </div>
+  <span flex></span>
+  <div class="data-policy" layout="column" layout-align="center center">
+    <md-divider></md-divider>
+    <i>Data is subject to our <a ui-sref="about({'#':'dataPolicy'})"> Data Usage Policy</a>.</i>
   </div>
 </form>

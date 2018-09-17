@@ -1,0 +1,32 @@
+<div class="project-info">
+	<md-virtual-repeat-container>
+		<div layout="row" class="loading-overlay" layout-align="center top" ng-show="$ctrl.loading">
+			<md-progress-circular md-mode="indeterminate"></md-progress-circular>
+		</div>
+		<div class="virtual-repeat">
+			<uib-accordion>
+				<div md-virtual-repeat="x in $ctrl.data" class="repeated-item">
+					<ul uib-accordion-group class="list-unstyled">
+						<uib-accordion-heading>
+							{{x.projectTitle}}
+						</uib-accordion-heading>
+
+						<li>
+							<p><i>{{x.description}}</i></p>
+						</li>
+						<li>
+							<span class="heading">Administrator:</span>
+							<span class="text-capitalize">{{x.user.firstName}} {{x.user.lastName}} </span>
+							<a href="mailto:{{x.user.email}}">{{x.user.email}}</a>
+						</li>
+						<li>
+							<span class="heading">Status:</span>
+							<span ng-if="!x.public">Not </span>Visible To Public
+						</li>
+
+					</ul>
+				</div>
+			</uib-accordion>
+		</div>
+	</md-virtual-repeat-container>
+</div>
