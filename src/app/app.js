@@ -33,6 +33,7 @@ import login from './views/login';
 import templates from './views/templates';
 import project from './views/project';
 import createProject from './views/create-project';
+import projectConfig from './views/project-config';
 import expeditions from './views/expeditions';
 import validation from './views/validation';
 import query from './views/query';
@@ -42,6 +43,7 @@ import photoUpload from './views/photo-upload';
 import plateViewer from './views/plate-viewer';
 
 import projectService from './services/project.service';
+import projectConfigurationService from './services/projectConfiguration.service';
 import userService from './services/user.service';
 
 import app from './app.component';
@@ -73,6 +75,7 @@ const dependencies = [
   ngMaterial,
   ngAnimate,
   projectService,
+  projectConfigurationService,
   userService,
   containerPage,
   header,
@@ -94,6 +97,7 @@ const dependencies = [
   validation,
   project,
   createProject,
+  projectConfig,
   users,
   projectSelectorDialog,
   // lookup,

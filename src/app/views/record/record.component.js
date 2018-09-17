@@ -18,11 +18,11 @@ const mapChildren = children =>
 let detailCache = {};
 let detailCacheNumCols;
 class RecordController {
-  constructor($mdMedia, ProjectConfigService) {
+  constructor($mdMedia, ProjectService) {
     'ngInject';
 
     this.$mdMedia = $mdMedia;
-    this.ProjectConfigService = ProjectConfigService;
+    this.ProjectService = ProjectService;
   }
 
   $onInit() {
@@ -203,7 +203,7 @@ class RecordController {
       return;
     }
 
-    this.ProjectConfigService.get(projectId)
+    this.ProjectService.getConfig(projectId)
       .then(config => {
         this.config = config;
         this.setPhotos();

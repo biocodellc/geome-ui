@@ -19,8 +19,12 @@
     "start": "npm run server",
     "eslint": "eslint 'src/app/**/*.js'",
     "eslint:fix": "eslint 'src/app/**/*.js' --fix",
-    "prettier": "prettier 'src/app/**/*.js' --single-quote --trailing-comma all -l",
-    "prettier:write": "prettier 'src/app/**/*.js' --single-quote --trailing-comma all --write"
+    "prettier": "npm run prettier:js && npm run prettier:sass",
+    "prettier:write": "npm run prettier:js:write && npm run prettier:sass:write",
+    "prettier:js": "prettier 'src/app/**/*.js' --single-quote --trailing-comma all -l",
+    "prettier:js:write": "prettier 'src/app/**/*.js' --single-quote --trailing-comma all --write",
+    "prettier:sass": "prettier 'src/style/**/*.scss' --parser scss -l",
+    "prettier:sass:write": "prettier 'src/style/**/*.scss' --parser scss --write"
   },
   "dependencies": {
     "@uirouter/angularjs": "^1.0.4",

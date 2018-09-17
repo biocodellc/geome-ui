@@ -20,7 +20,7 @@
     <div class="clearfix" ng-repeat="data in $ctrl.worksheetData track by data.worksheet">
         <hr class="separator" />
         <fims-worksheet-data on-change="$ctrl.handleWorksheetDataChange(worksheet, file, reload)" worksheet="data.worksheet"
-            file="data.file" can-reload="!$ctrl.validateOnly"></fims-worksheet-data>
+            file="data.file" can-reload="!$ctrl.validateOnly && !$ctrl.isMultiExpeditionUpload()"></fims-worksheet-data>
         <div class="form-group" ng-if="$ctrl.coordinateWorksheets.includes(data.worksheet) && !$ctrl.verifiedCoordinateWorksheets.includes(data.worksheet)">
             <div class="col-xs-offset-2 has-error">
                 <div class="col-xs-8">

@@ -11,7 +11,7 @@ export function checkProjectRequired(state) {
   return false;
 }
 
-export default ($rootScope, $transitions, ProjectService) => {
+export default ($transitions, ProjectService) => {
   'ngInject';
 
   $transitions.onBefore({}, trans => {

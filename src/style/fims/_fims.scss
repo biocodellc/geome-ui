@@ -1,14 +1,15 @@
-@import "base";
-@import "forms";
-@import "header";
-@import "fimsNavigation";
-@import "projectView";
-@import "validation";
-@import "expeditions";
-@import "expedition";
+@import 'base';
+@import 'forms';
+@import 'header';
+@import 'fimsNavigation';
+@import 'projectView';
+@import 'validation';
+@import 'expeditions';
+@import 'expedition';
 
 // components
-@import "mdFileUpload";
+@import 'mdFileUpload';
+@import 'projectInfo';
 
 // views
 @import "query";
