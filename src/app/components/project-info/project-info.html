@@ -8,7 +8,7 @@
 				<div md-virtual-repeat="x in $ctrl.data" class="repeated-item">
 					<ul uib-accordion-group class="list-unstyled">
 						<uib-accordion-heading>
-							{{x.projectTitle}}
+							{{x.projectTitle}} 
 						</uib-accordion-heading>
 
 						<li>
@@ -22,6 +22,10 @@
 						<li>
 							<span class="heading">Status:</span>
 							<span ng-if="!x.public">Not </span>Visible To Public
+						</li>
+						<li>
+							<span class="heading">Network Status:</span>
+							<span ng-if="!x.projectConfiguration.networkApproved">Not </span>Synchronized with {{x.projectConfiguration.name}} network configuration
 						</li>
 
 					</ul>
