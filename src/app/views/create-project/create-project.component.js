@@ -1,16 +1,321 @@
+import angular from 'angular';
+import ProjectConfig from '../../models/ProjectConfig';
+
 const template = require('./create-project.html');
 
+const BASE_CONFIG = {
+  entities: [
+    {
+      conceptAlias: 'Event',
+      type: 'DefaultEntity',
+      worksheet: 'Events',
+      uniqueKey: 'eventID',
+      attributes: [],
+      rules: [],
+      conceptURI: 'http://rs.tdwg.org/dwc/terms/Event',
+    },
+    {
+      conceptAlias: 'Sample',
+      type: 'DefaultEntity',
+      worksheet: 'Samples',
+      uniqueKey: 'materialSampleID',
+      attributes: [],
+      rules: [],
+      conceptURI: 'http://rs.tdwg.org/dwc/terms/MaterialSample',
+      parentEntity: 'Event',
+    },
+  ],
+  lists: [],
+  expeditionMetadata: [],
+};
+
+const UNIQUE_KEYS = {
+  Event: ['eventID'],
+  Sample: ['materialSampleID'],
+  Tissue: ['tissueID'],
+};
+
 class CreateProjectController {
-  constructor($state, $mdDialog) {
+  constructor(
+    $state,
+    $mdDialog,
+    NetworkConfigurationService,
+    ProjectConfigurationService,
+  ) {
     'ngInject';
 
     this.$state = $state;
     this.$mdDialog = $mdDialog;
+    this.NetworkConfigurationService = NetworkConfigurationService;
+    this.ProjectConfigurationService = ProjectConfigurationService;
   }
 
   $onInit() {
-    this.project = {};
+    this.project = {
+      projectTitle: 'New Project',
+      description: "so I don't have to type",
+    };
     this.newConfig = false;
+    this.syncConfig = true;
+    this.worksheetSearchText = {};
+  }
+
+  createProject() {}
+
+  getPossibleUniqueKeys(entity) {
+    const keys = UNIQUE_KEYS[entity.conceptAlias].slice();
+    if (entity.parentEntity) {
+      const parent = this.config.entities.find(
+        e => e.conceptAlias === entity.parentEntity,
+      );
+      keys.push(parent.uniqueKey);
+    }
+    return keys;
+  }
+
+  async toConfigStep($mdStep) {
+    this.fetchNetworkConfig();
+
+    if (this.newConfig) {
+      this.config = new ProjectConfig(BASE_CONFIG);
+    } else {
+      this.loading = true;
+      await this.fetchConfig();
+      this.loading = false;
+
+      if (!this.config) return;
+      this.selectModulesForExistingConfig();
+    }
+
+    $mdStep.$stepper.next();
+  }
+
+  tissuesChanged() {
+    if (!this.tissues) this.removeEntity('Tissue');
+    else {
+      let e;
+      if (this.existingConfig) {
+        e = this.existingConfig.config.entities.find(
+          entity => entity.conceptAlias === 'Tissue',
+        );
+      }
+      if (!e) {
+        e = {
+          conceptAlias: 'Tissue',
+          type: 'DefaultEntity',
+          worksheet: 'Tissues',
+          uniqueKey: 'tissueID',
+          attributes: [],
+          rules: [],
+          conceptURI: 'http://rs.tdwg.org/dwc/terms/MaterialSample',
+          parentEntity: 'Sample',
+        };
+      }
+      this.config.entities.push(e);
+    }
+  }
+
+  nextgenChanged() {
+    if (!this.nextgen) this.removeEntity('fastqMetadata');
+    else {
+      let e;
+      if (this.existingConfig) {
+        e = this.existingConfig.config.entities.find(
+          entity => entity.conceptAlias === 'fastqMetadata',
+        );
+      }
+      if (!e) {
+        e = {
+          conceptAlias: 'fastqMetadata',
+          type: 'Fastq',
+          attributes: [],
+          rules: [],
+          conceptURI: 'urn:fastqMetadata',
+          parentEntity: 'Tissue',
+        };
+      }
+      this.config.entities.push(e);
+    }
+  }
+
+  barcodeChanged() {
+    if (!this.barcode) this.removeEntity('fastaSequence');
+    else {
+      let e;
+      if (this.existingConfig) {
+        e = this.existingConfig.config.entities.find(
+          entity => entity.conceptAlias === 'fastaSequence',
+        );
+      }
+      if (!e) {
+        e = {
+          conceptAlias: 'fastaSequence',
+          type: 'Fasta',
+          attributes: [],
+          rules: [],
+          conceptURI: 'urn:fastaSequence',
+          parentEntity: 'Tissue',
+        };
+      }
+      this.config.entities.push(e);
+    }
+  }
+
+  photosChanged() {
+    if (!this.photos) {
+      this.samplePhotos = false;
+      this.eventPhotos = false;
+      this.eventPhotosChanged();
+      this.samplePhotosChanged();
+    }
+  }
+
+  eventPhotosChanged() {
+    if (!this.eventPhotos) this.removeEntity('Event_Photo');
+    else {
+      let e;
+      if (this.existingConfig) {
+        e = this.existingConfig.config.entities.find(
+          entity => entity.conceptAlias === 'EventPhoto',
+        );
+      }
+      if (!e) {
+        e = {
+          conceptAlias: 'EventPhoto',
+          type: 'Photo',
+          attributes: [],
+          rules: [],
+          worksheet: 'event_photos',
+          uniqueKey: 'photoID',
+          conceptURI: 'http://rs.tdwg.org/dwc/terms/associatedMedia',
+          parentEntity: 'Event',
+        };
+      }
+      this.config.entities.push(e);
+    }
+  }
+
+  samplePhotosChanged() {
+    if (!this.samplePhotos) this.removeEntity('Sample_Photo');
+    else {
+      let e;
+      if (this.existingConfig) {
+        e = this.existingConfig.config.entities.find(
+          entity => entity.conceptAlias === 'Sample_Photo',
+        );
+      }
+      if (!e) {
+        e = {
+          conceptAlias: 'Sample_Photo',
+          type: 'Photo',
+          attributes: [],
+          rules: [],
+          worksheet: 'sample_photos',
+          uniqueKey: 'photoID',
+          conceptURI: 'http://rs.tdwg.org/dwc/terms/associatedMedia',
+          parentEntity: 'Sample',
+        };
+      }
+      this.config.entities.push(e);
+    }
+  }
+
+  removeEntity(conceptAlias) {
+    const i = this.config.entities.findIndex(
+      e => e.conceptAlias === conceptAlias,
+    );
+
+    if (i > -1) this.config.entities.splice(i, 1);
+  }
+
+  selectModulesForExistingConfig() {
+    // reset selected modules
+    this.tissues = false;
+    this.photos = false;
+    this.eventPhotos = false;
+    this.samplePhotos = false;
+    this.nextgen = false;
+    this.barcode = false;
+
+    this.config.entities.forEach(e => {
+      switch (e.conceptAlias) {
+        case 'Tissue':
+          this.tissues = true;
+          break;
+        case 'Event_Photo':
+          this.photos = true;
+          this.eventPhotos = true;
+          break;
+        case 'Sample_Photo':
+          this.photos = true;
+          this.samplePhotos = true;
+          break;
+        case 'fastaSequence':
+          this.barcode = true;
+          break;
+        case 'fastqMetadata':
+          this.nextgen = true;
+          break;
+        default:
+      }
+    });
+  }
+
+  getWorksheets() {
+    if (!this.worksheetChange && this.worksheets) return this.worksheets;
+
+    const worksheets = new Set();
+    this.config.entities.map(e => e.worksheet).forEach(w => worksheets.add(w));
+    this.worksheetChange = false;
+    this.worksheets = Array.from(worksheets);
+    return this.worksheets;
+  }
+
+  worksheetSelected(item) {
+    if (item) this.worksheetChange = true;
+  }
+
+  addWorksheet(entity, sheetName) {
+    entity.worksheet = sheetName;
+    return sheetName;
+  }
+
+  fetchConfig() {
+    if (!this.existingConfig || this.existingConfig.config) {
+      if (this.existingConfig && this.existingConfig.name !== this.configName) {
+        this.config = new ProjectConfig(this.existingConfig.config);
+      }
+      return Promise.resolve();
+    }
+
+    return this.ProjectConfigurationService.get(this.existingConfig.id)
+      .then(data => {
+        this.existingConfig = data;
+        this.config = new ProjectConfig(data.config);
+        this.configName = this.existingConfig.name;
+
+        const i = this.configurations.findIndex(
+          c => c.name === this.existingConfig.name,
+        );
+        this.configurations.splice(i, 1, this.existingConfig);
+      })
+      .catch(() =>
+        angular.toaster.error(
+          'Failed to load the configuration. Please refresh the page and try again',
+        ),
+      );
+  }
+
+  fetchNetworkConfig() {
+    this.networkPromise = this.NetworkConfigurationService.get()
+      .then(config => {
+        this.networkConfig = config;
+      })
+      .catch(() =>
+        angular.toaster.error(
+          'Failed to load the network configuration. Please try again later.',
+        ),
+      );
   }
 }
 
@@ -19,6 +324,6 @@ export default {
   controller: CreateProjectController,
   bindings: {
     currentUser: '<',
-    existingProjects: '<',
+    configurations: '<',
   },
 };

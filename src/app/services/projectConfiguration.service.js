@@ -20,8 +20,11 @@ class ProjectConfigurationService {
         }`,
       )
       .then(({ data }) =>
-        data.map(d =>
-          Object.assign({}, d, { config: new ProjectConfig(d.config) }),
+        data.map(
+          d =>
+            d.config
+              ? Object.assign({}, d, { config: new ProjectConfig(d.config) })
+              : d,
         ),
       );
   }

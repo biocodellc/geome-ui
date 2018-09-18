@@ -318,7 +318,8 @@ module.exports = (function makeWebpackConfig() {
   config.devServer = {
     contentBase: './src/public',
     historyApiFallback: true,
-    // hot: true,
+    hot: true,
+    // hotOnly: true, // no page reload as fallback
     // stats: 'minimal',
     port: PORT,
   };

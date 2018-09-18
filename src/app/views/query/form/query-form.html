@@ -7,8 +7,12 @@
     <input type="text" placeholder="Query String..." ng-model="$ctrl.params.queryString" />
     <md-icon md-font-icon="fa fa-question-circle fa-sm" ng-click="$ctrl.helpDocs()">
     </md-icon>
-    <a class="hint-right text-upper" href="#" ng-click="$ctrl.moreSearchOptions = !$ctrl.moreSearchOptions">
-      More search options</a>
+    <md-hints>
+      <md-hint class="pull-right">
+        <a class="text-upper" href="#" ng-click="$ctrl.moreSearchOptions = !$ctrl.moreSearchOptions">
+          More search options</a>
+      </md-hint>
+    </md-hints>
   </md-input-container>
 
   <div ng-show="$ctrl.currentProject && $ctrl.moreSearchOptions">

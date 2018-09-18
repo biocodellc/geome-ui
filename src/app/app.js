@@ -21,6 +21,8 @@ import textOverflowTooltip from './directives/textOverflowTooltip.directive';
 import showErrors from './directives/showErrors.directive';
 import mdPopover from './directives/mdPopover.directive';
 import mdSticky from './directives/mdSticky.directive';
+import mdHint from './directives/mdHint.directive';
+import mdAutocomplete from './directives/mdAutocomplete.directive';
 import ngImageGallery from './directives/ngImageGallery.directive';
 import trustedHtml from './filters/html.filter';
 
@@ -44,6 +46,7 @@ import plateViewer from './views/plate-viewer';
 
 import projectService from './services/project.service';
 import projectConfigurationService from './services/projectConfiguration.service';
+import networkConfigurationService from './services/networkConfiguration.service';
 import userService from './services/user.service';
 
 import app from './app.component';
@@ -69,6 +72,8 @@ const dependencies = [
   showErrors,
   mdPopover,
   mdSticky,
+  mdHint,
+  mdAutocomplete,
   ngImageGallery,
   trustedHtml,
   bootstrap,
@@ -76,6 +81,7 @@ const dependencies = [
   ngAnimate,
   projectService,
   projectConfigurationService,
+  networkConfigurationService,
   userService,
   containerPage,
   header,

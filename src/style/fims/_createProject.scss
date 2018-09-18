@@ -1,13 +1,22 @@
 md-step-body {
   overflow: visible !important;
-  md-input-container {
-    margin-bottom: 8px;
-    &:not(:first-of-type) {
-      *:not(:first-of-type) {
-        margin-top: 5px;
-      }
-    }
-  }
+}
+
+.form-hint {
+  font-size: 12px;
+  line-height: 14px;
+  -webkit-transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+  transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+  color: grey;
+}
+
+.config-description {
+  margin-bottom: 8px;
+  @extend .form-hint;
+}
+
+md-checkbox {
+  margin-top: 16px;
 }
 
 md-step-actions {
@@ -33,4 +42,38 @@ md-step-actions {
   .md-stepper-indicator:not(.md-active):not(.md-completed):hover
   .md-stepper-indicator-wrapper {
   background-color: inherit !important;
+}
+
+.worksheet-autocomplete {
+  // removing margin from md-input-container will break the placement of the select list
+  // so we use a - margin instead
+  margin-bottom: -16px;
+}
+
+.project-details-step {
+  md-step-body {
+    margin-top: 8px;
+  }
+
+  md-input-container {
+    margin-bottom: 8px;
+    &:not(:first-of-type) {
+      *:not(:first-of-type) {
+        // margin-top: 5px;
+      }
+    }
+  }
+}
+
+.config-modules-step {
+  md-checkbox {
+    margin: 8px 0;
+  }
+}
+
+.photo-modules {
+  margin-left: 32px;
+  md-checkbox {
+    margin-top: 0;
+  }
 }

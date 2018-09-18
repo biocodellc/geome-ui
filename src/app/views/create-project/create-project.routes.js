@@ -9,8 +9,8 @@ function getStates() {
         component: 'fimsCreateProject',
         loginRequired: true,
         resolve: {
-          existingProjects: /* @ngInject */ ProjectService =>
-            ProjectService.all(true).then(({ data }) => data),
+          configurations: /* @ngInject */ ProjectConfigurationService =>
+            ProjectConfigurationService.all(true),
         },
       },
     },
