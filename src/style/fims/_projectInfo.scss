@@ -11,15 +11,10 @@
     height: 330px;
     border: solid 1px rgba(0, 0, 0, 0.12);
 
-    .virtual-repeat {
-      height: 40px;
-      display: block;
-
-      ul {
-        border-bottom: solid 1px rgba(0, 0, 0, 0.12);
-        .heading {
-          font-weight: 500;
-        }
+    ul {
+      border-bottom: solid 1px rgba(0, 0, 0, 0.12);
+      .heading {
+        font-weight: 500;
       }
     }
   }
