@@ -3,6 +3,7 @@ import uirouter from '@uirouter/angularjs';
 import bootstrap from 'angular-ui-bootstrap';
 import ngMaterial from 'angular-material';
 import ngAnimate from 'angular-animate';
+import filter from 'angular-filter';
 
 // todo remove the following and use only angular-ui-bootstrap
 import 'jquery-ui';
@@ -73,6 +74,7 @@ const dependencies = [
   bootstrap,
   ngMaterial,
   ngAnimate,
+  filter,
   projectService,
   projectConfigurationService,
   userService,
