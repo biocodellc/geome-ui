@@ -2,59 +2,33 @@
   <h2>About the Genomic Observatories Metadatabase</h2>
   <p>
     The Genomic Observatories Meta-Database (GeOMe) is a web-based database which captures metadata on biological
-    samples, used
-    for biodiversity inventories, population studies, and environmental metagenomics. GeOMe satisfies the requirements
-    of
-    the
+    samples.  GeOMe satisfies the requirements of the
     <a href="https://gigascience.biomedcentral.com/articles/10.1186/2047-217X-3-2">genomic observatories model</a>,
-    including capturing the who, what, where, and when associated with all samples. GeOMe
-    draws on both the
-    <a href="http://rs.tdwg.org/dwc/">Darwin Core</a> and the
-    <a href="http://gensc.org/mixs/">Minimum Information about any type of Sequence (MIxS)</a> standards.
-    New projects can be created by choosing from atomic terms defined by the netork or by 
-    adopting network approved configurations, which are pre-defined sets of terms and validation rules.  
-    Click on the items in the following list for more information.
+    including capturing the who, what, where, and when associated with all samples. All GeOMe terms are drawn, whenever
+    possible, from community standard vocabularies, including <a href="http://rs.tdwg.org/dwc/">Darwin Core</a> and 
+    <a href="http://gensc.org/mixs/">MIxS</a>.  Click on the headings below to expand each topic with more information.
   </p>
 </div>
 <br>
 <uib-accordion>
   <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="Getting Started">
     <p>
-    Welcome to GeOMe! There are several routes you can take to get started with GeOMe.  The route you take depends on whether you
-    are interested in only adopting an available template, generated from a network approved configuration, or if you want to submit 
-    data to the GeOMe repository.  A network approved configuration is a configuration template that projects can adopt during creation.  
-    Currently, there are two network approved configurations: one for <b>Biocode</b> projects and another for <b>GeOMe publications</b> (which follow the
-    model developed by the Diversity of the IndoPacific Network for publishing genomic data.
-    Templates are a collection of data attributes, rules, and lists that are represented through the 
-    interface as JSON files, with the option of generating Excel spreadsheets.  JSON files are useful for developers in automating the discovery
-    of metadata attributes belonging to a template while Excel spreadsheets are useful for guiding the data attributes for a particular
-    task.
-    </p>
-
-    <p>
-    If you choose to submit data to the GeOMe repository, you can choose to submit to an 
-    existing project, create a new project that is synchronized to a network approved configuration, or create a new project either from 
-    scratch or cloned but un-synchronized with a network approved configuration.   When a project is synchronized with a network 
-    approved configuration, all changes to the master configuration (e.g. Biocode), will apply to all projects that belong to the 
-    master configuration.  Projcts that are cloned but un-synchronized with the network approved configuration will not receive any 
-    configuration updates once they are created.
-    </p>
-
-    <p>
-    The following lists the available routes you can choose to get started:
-    </p>
+    Welcome to GeOMe! There are several routes you can take to get started.  The path you take depends on if you need to
+    read data, write data, or specify attributes and rules in a new project.  The following describes routes you can choose 
+    to get started:</p>
 
     <p>
       <strong><u>Route 1</u>: I want to query public data or generate a template</strong>
       <br>Most GeOMe projects are marked as "public", which means that anyone can query public data or generate that
-      project's templates.  Read the <a href='docs/helpDocumentation.pdf' target=_blank>GeOMe Help Document</a> to get started 
+      project's templates.  Most projects let any visitor (regardless of whether they have a login) dynamically create spreadsheet templates.  
+      Read the <a href='docs/helpDocumentation.pdf' target=_blank>GeOMe Help Document</a> to get started 
       using the web interface for generating templates and querying data.</br>
     </p>
 
     <p>
       <strong><u>Route 2</u>: I want to contribute data to an existing project</strong>
       <br>See the <a ng-click="$ctrl.openProjects()">GeOMe projects page</a> to read about current GeOMe projects. 
-      Contact the project administrator of the project you would like to join and the will either create a new account 
+      Contact the project administrator of the project you would like to join and they will either create a new account 
       for you or associate your existing account to their project.  Read the 
       <a href='docs/helpDocumentation.pdf' target=_blank>GeOMe Help Document</a> to get started using the web interface.</br>
     </p>
@@ -62,7 +36,7 @@
     <p>
       <strong><u>Route 3</u>: I want to create a new project, synchronized with a network approved configuration</strong>
       <br>If you choose to create a project that is synchronized with a network approved configuration, you will receive all
-      updates and additions of data attributes, rules, and lookkup lists of the network approved configuration. 
+      updates and additions of data attributes, rules, and lookup lists of the network approved configuration. 
       Creating any new project currently requires sending an email request to <a href="mailto:geome.help@gmail.com">geome.help@gmail.com</a> 
       with a brief statement of what your project involves.</br>
     </p>
@@ -72,41 +46,45 @@
       <br>If you choose to create a project that is un-synchronized with a network approved configuration, you will either start
       from scratch or you can choose to clone a network approved configuration.  If your project is un-syncrhonized, then you are
       free to make your own changes and additions to your project configuration and you will not receive any changes made by the
-      master network approved configuration.  Creating a new project currently requires sending an email request to 
+      network approved configuration.  Creating a new project currently requires sending an email request to 
       <a href="mailto:geome.help@gmail.com">geome.help@gmail.com</a> with a brief statement of what your project involves.</br>
     </p>
 
-    <p>
-      The <a href='docs/helpDocumentation.pdf' target=_blank>GeOMe Help Document</a> contains detailed instructions on using the web interface.
-    </p>
+    <p><b><u>Glossary</u></b>:</p>
+
+    <p><i>Generate a template</i> (see Workbench -> "Generate Template") enables the user to create and download a spreadsheet template useful for guiding
+    data entry.  For public proejcts, you do not need a user account to generate a template.</p>
+
+    <p><i>Validate Data</i> (see Workbench -> "Load Data") enables the user to validate data for selected projects.  For public projects, you can 
+    check the "Only validate data" box to validate your spreadsheet data without being a project member.  </p>
+
+    <p><i>Load Data</i> (see Workbench -> "Load Data") enables the user to submit data for a project that you have access to.</p>
+
+    <p><i>Create project</i> (interface functions in development) tools enables the user to manage their own project data within GeOMe.
+    We are working on a project creation wizard to guide users into easily creating their own projects on the website.  Meanwhile users can
+    contact send an email to <a href="mailto:geome.help@gmail.com">geome.help@gmail.com</a> to create a new project. Projects can either
+    adopt a network approved configuration, clone an existing project, or build a project from scratch. </p>
+
+    <p><i>Newtork approved configurations</i> are templates adopted by a set of projects that share a common set of rules and attributes.
+    If a project adopts a network approved configuration, then that project accepts all rules, attributes, and lists from the network 
+    approved configuration.  During project creation, if the project creator chooses to synchronize with the network approved configuration then
+    when all updates to rules, attributes and lists are controlled by the network administrator.  On the other hand, if the project creator chooses
+    to NOT synchronize with the network approved configuration then the project can control its own rules, attributes, and lists.
+    Currently deployed network approved configurations are visible on the <a ng-click="$ctrl.openProjects()">GeOMe projects page</a>.
+These projects follow on the spirit and principals of the Diversity of the IndoPacific project.
+
   </div>
 
   <div uib-accordion-group id="projects" class="panel-default md-whiteframe-2dp" heading="Projects and Configurations" is-open="$ctrl.projects">
     <p>
-    The following network approved configurations and projects are active in the GeOMe database.  It is important for new users to be familiar with existing
-    projects in GeOMe before getting started.  Please go through this list to see if you can join an existing project before 
-    creating a new project. When joining a project you agree to work together with the project administrator and project users.
-    The following list of projects describes the project, indicates whether it is public or not and gives a contact for getting 
-    started.  
+    The following network approved configurations and projects are active in the GeOMe database.  Please go through this list to see if you 
+    can join an existing project before creating a new project. When joining a project you agree to work together with the project 
+    administrator and project users.  The following list of network approved configurations and projects describes the network approved configuration,
+    the project, and indicates whether it is public or not and gives a contact for getting started. Click the headings in the following list to expand descriptions:
     </p>
 
     <project-info ng-if="$ctrl.projects"></project-info>
 
-  </div>
-
-  <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="Using the Web Interface" id="userHelp"
-    is-open="$ctrl.userHelp">
-    <p>
-      GeOMe's web interface lets users create spreadsheet templates, customized for individual projects, which ensure
-      rapid feedback on data quality during the data loading process.
-      The web interface lets users upload data on collecting events, specimens, tissues,
-      photos of specimens and events, FASTA files, and FASTQ metadata. Users can also choose to create their own GeOMe
-      projects and customize their own attributes, lookup lists, rules, and project members.
-    </p>
-
-    <p>
-      Step by step instructions on using the GeOMe web interface are available by reading our
-      <a href='docs/helpDocumentation.pdf ' target='_blank '>GeOMe Help Document (PDF format)</a>.</p>
   </div>
 
   <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="Workflow Diagram">
@@ -171,32 +149,37 @@
     Moore Foundation funded Moorea Biocode Project: an all taxa biotic inventory of a single tropical island involving 6 teams, 50 researchers,
     and thousands of collecting events.  The Moorea Biocode field information management system, also known as "FIMS1", was developed
     to ingest spreadsheet data from researchers working on the project and employed data validation on data ingest.  The tools were
-    written on server side with Perl with a client application in Java (bioValidator).   FIMS1 has been running from 2006 through 2018 and 
+    written in Perl and Java.  FIMS1 has been running from 2006 through 2018 and 
     developed tools such as the Plate Matcher (to easily map tissues to 96 well plates), the bioValidator (for loading and validating spreadsheets), 
     and a web interface for managing data.
     </p>
     <p>
     From 2012 to 2015, the National Science Foundation funded the BiSciCol (Biological Sciences Collections) project.
     While BiSciCol focused on identifiers, ontologies, and semantic technologies for linking biodiversity data, the primary use case
-    was to work on a solution for linking events, samples, and tissues across many different systems using linked data technology.  The project
+    was to work on a solution for linking events, samples, and tissues across many different systems using linked data technology with the
+    Moorea Biocode Project data integration with member institution databases.  The project
     had mixed results but did result in several achievements: a clearer understanding of the role of persistent identifiers, building 
     a darwin core triplifier, the development
-    of the Biological Collections Ontology (BCO), and FIMS2 (running at http://biscicol.org/).  FIMS2 collaborated with the California
-    Digital Library system to assign ARK identifiers (through their EZID system) for all samples, events and tissues.   In addition,
-    all data inserted into FIMS2 was backed by a Fuseki triplestore with all metadata directly assigned data attributes identified by 
-    Darwin Core and the MIxS Standards.  
+    of the Biological Collections Ontology (BCO), and the development of FIMS2, also known as "BiSciCol FIMS" (http://biscicol.org/)   The BiSciCol FIMS 
+    adopted ARK identifiers (through California Digital Library's EZID system) for all samples, events and tissues.   In addition,
+    all data inserted into BiSciCol FIMS was backed by a Fuseki triplestore with metadata configurations specified using an XML configuration file, stored
+    and managed separately by each project. 
     </p>
     <p>
-    From 2014-2017, FIMS2 also began working with the Diversity of the IndoPacific Network (DIPNet) to develop a coherent metadata repository for
+    From 2014-2017, BiSciCol FIMS began hosting the Diversity of the IndoPacific Network (DIPNet) to develop a coherent metadata repository for
     assembling metadata from across the IndoPacific region.  DIPNet added the ability to upload FASTA and FASTQ metadata to the FIMS2 site and also 
-    developed the name "GeOMe", which eventually became the brand name for FIMS3.  As of 2018, FIMS2 is still running at http://biscicol.org/ but is being transitioned to FIMS3.
+    developed the name "GeOMe" (eventually becaming the brand name for FIMS3).
+    During this time-frame, another FIMS system was developed for the Smithosnian National Museum of Natural History ("NMNH FIMS") with the goal
+    of creating a centralized field data ingestion system for all NMNH field data.  The NMNH FIMS has since been discontinued with SI users 
+    using the BiSciCol FIMS (Barcode of Wildlife Project, ARMS portal, and Global Genome Initiative) and FIMS1 installations (Invertebrate Zoology and LAB applications).
     </p>
     <p>
-    Beginning in 2016, John Deck and RJ Ewing started work on a redesigned FIMS system, utilizing a Postgres backend to control project management features and used JSON metadata 
-    objects to store data and configurations.   This FIMS system (FIMS3) assumed the name GeOMe.   It incorporates design features from FIMS1 (including photo uploading,
-    specimen, tissue, and event pages, plate-matching tools) along with features of FIMS2 (persistent id generation, flexible project configuration with attributes stored
-    in a non-relational system guided by a configuration file).  In addition, FIMS3 brings in the concept of a network which governs multiple configuraiton templates and the 
-    ability to easily create projects.   GeOMe will be replacing FIMS1 and FIMS2 instances before the end of 2018.
+    Beginning in 2016, John Deck and RJ Ewing started work on a redesigned FIMS system, utilizing a Postgres backend to control project management features and JSON metadata 
+    objects to store data and configurations.   This FIMS system (FIMS3) assumed the name GeOMe.   It incorporates features from FIMS1 (including photo uploading,
+    specimen, tissue, and event pages, plate-matching tools) along with features of the BiSciCol FIMS (persistent id generation, flexible project configuration with attributes stored
+    in a non-relational system guided by a configuration file).  In addition, FIMS3 brings in the concept of a network which governs multiple configuration templates and the 
+    ability to easily create projects through a user interface.   The goal of GeOMe is to integrate all previous FIMS1 and FIMS2, with FIMS1 and FIMS2 projects removed from their
+    current hosting environment by Spring of 2019.  
     </p>
   </div>
 

@@ -8,7 +8,7 @@
 			<div ng-repeat="(key,value) in $ctrl.data | groupBy: 'projectConfiguration.name'">
 				<ul uib-accordion-group>
 					<uib-accordion-heading>
-						<strong> {{key}} </strong>
+						<a href="#">{{key}} (a network approved configuration)</a>
 					</uib-accordion-heading>
 					{{value[0].projectConfiguration.description}}
 					<ul class="list-unstyled">
@@ -16,7 +16,7 @@
 							<li ng-repeat="x in value | orderBy:'projectTitle'">
 								<ul uib-accordion-group class="list-unstyled">
 									<uib-accordion-heading>
-										{{x.projectTitle}}
+										<i><a href="#">{{x.projectTitle}}</a></i>
 									</uib-accordion-heading>
 
 
