@@ -1,5 +1,6 @@
 @import 'base';
 @import 'forms';
+@import 'tables';
 @import 'header';
 @import 'fimsNavigation';
 @import 'projectView';
@@ -10,6 +11,7 @@
 // components
 @import 'mdFileUpload';
 @import 'projectInfo';
+@import 'projectConfigAttributes';
 
 // views
 @import 'query';

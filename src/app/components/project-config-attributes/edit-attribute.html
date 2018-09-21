@@ -1,0 +1,35 @@
+<md-dialog id="edit-attribute-dialog">
+  <md-dialog-content layout="column">
+    <md-input-container class="md-block">
+      <label>Group</label>
+      <input name="group" ng-model="$ctrl.attribute.group" md-autofocus="!$ctrl.attribute.group"
+        placeholder="Default Group" />
+      <md-hints>
+        <md-hint>The group this attribute will display under when using the template generator.</md-hint>
+      </md-hints>
+    </md-input-container>
+
+    <md-input-container>
+      <label>Definition</label>
+      <textarea name="definition" ng-model="$ctrl.attribute.definition" md-select-on-focus
+        md-autofocus="$ctrl.attribute.group && !$ctrl.attribute.definition"></textarea>
+      <md-hints>
+        <md-hint>The help text to show for this attribute in the template generator and excel
+          templates</md-hint>
+      </md-hints>
+    </md-input-container>
+
+    <md-checkbox ng-model="$ctrl.attribute.allowUnknown" class="md-align-top-left" name="allowUnknown"
+      ng-show="$ctrl.showAllowUnknown">
+      allow Unknown?
+      <md-hints>
+        <md-hint>Allow "Unknown" (case-insensitive) as a valid value</md-hint>
+      </md-hints>
+    </md-checkbox>
+
+    <md-dialog-actions>
+      <md-button ng-click="$ctrl.$mdDialog.cancel()" class="md-primary">Cancel</md-button>
+      <md-button ng-click="$ctrl.$mdDialog.hide($ctrl.attribute)" class="md-primary">Save</md-button>
+    </md-dialog-actions>
+  </md-dialog-content>
+</md-dialog>

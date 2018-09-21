@@ -112,6 +112,11 @@ const dependencies = [
 // attach global objects for easy access throughout app
 angular.catcher = catcher;
 
+// allow hot module replacement for development
+if (module.hot) {
+  module.hot.accept();
+}
+
 export default angular
   .module('biscicolApp', dependencies)
   .component('app', app)

@@ -19,6 +19,7 @@ md-input-container {
     -ms-flex-order: 4;
     order: 4;
     overflow: hidden;
+    float: left;
     clear: left;
     margin-top: 5px;
     font-size: 12px;
@@ -40,15 +41,19 @@ md-input-container {
 }
 
 md-autocomplete {
-  md-hints:before {
-    content: ' ';
-    display: table;
-    height: 5px;
+  md-hints {
+    float: none;
+    &:before {
+      content: ' ';
+      display: table;
+      height: 5px;
+    }
   }
 }
 
 md-checkbox {
   md-hints {
     display: block;
+    float: none;
   }
 }

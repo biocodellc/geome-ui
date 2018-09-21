@@ -1,5 +1,6 @@
 md-step-body {
   overflow: visible !important;
+  margin-top: 8px;
 }
 
 .form-hint {
@@ -15,8 +16,10 @@ md-step-body {
   @extend .form-hint;
 }
 
-md-checkbox {
-  margin-top: 16px;
+md-step-body {
+  md-checkbox:not(:first-child) {
+    margin-top: 16px;
+  }
 }
 
 md-step-actions {
@@ -76,4 +79,8 @@ md-step-actions {
   md-checkbox {
     margin-top: 0;
   }
+}
+
+fims-project-config-attributes {
+  margin-bottom: 16px;
 }

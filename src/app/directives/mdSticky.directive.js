@@ -7,17 +7,26 @@ const mdSticky = ($compile, $mdSticky) => {
     restrict: 'A',
     replace: true,
     transclude: true,
-    template: '<div class="md-sticky-content"></div>',
     compile: (el, attrs, transclude) => (scope, element) => {
-      const { outerHTML } = element[0];
+      element.addClass('md-sticky-content');
+      const stickyClone = element.clone();
+      stickyClone.removeAttr('md-sticky');
+
       transclude(scope, clone => {
         element.append(clone);
       });
 
       transclude(scope, clone => {
-        const stickyClone = $compile(
-          angular.element(outerHTML).removeAttr('md-sticky'),
-        )(scope);
+        // add stickyClone to dom before compiling so any
+        // required controllers are found, otherwise we get a compile error
+        // hide stickyClone before we add to dom
+        stickyClone.css('visibility', 'hidden');
+        element.after(stickyClone);
+        $compile(stickyClone)(scope);
+        stickyClone.remove();
+        // remove style attr
+        stickyClone.css('visibility', '');
+
         stickyClone.append(clone);
         $mdSticky(scope, element, stickyClone);
       });

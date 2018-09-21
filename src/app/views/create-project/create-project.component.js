@@ -38,6 +38,7 @@ const UNIQUE_KEYS = {
 class CreateProjectController {
   constructor(
     $state,
+    $anchorScroll,
     $mdDialog,
     NetworkConfigurationService,
     ProjectConfigurationService,
@@ -45,6 +46,7 @@ class CreateProjectController {
     'ngInject';
 
     this.$state = $state;
+    this.$anchorScroll = $anchorScroll;
     this.$mdDialog = $mdDialog;
     this.NetworkConfigurationService = NetworkConfigurationService;
     this.ProjectConfigurationService = ProjectConfigurationService;
@@ -58,6 +60,8 @@ class CreateProjectController {
     this.newConfig = false;
     this.syncConfig = true;
     this.worksheetSearchText = {};
+    this.selectedAttributes = {};
+    this.requiredAttributes = {};
   }
 
   createProject() {}
@@ -73,8 +77,34 @@ class CreateProjectController {
     return keys;
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  updateAttributes(e, attributes) {
+    e.attributes = attributes.map(a => Object.assign({}, a));
+  }
+
+  availableAttributes(conceptAlias) {
+    return this.networkConfig.entities.find(
+      e => e.conceptAlias === conceptAlias,
+    ).attributes;
+  }
+
+  isRequiredAttribute(conceptAlias, attribute) {
+    return this.requiredAttributes[conceptAlias].includes(attribute);
+  }
+
   async toConfigStep($mdStep) {
     this.fetchNetworkConfig();
+
+    this.networkPromise.then(() => {
+      this.setRequiredAttributes();
+      BASE_CONFIG.lists = this.networkConfig.lists.slice();
+      BASE_CONFIG.entities.forEach(e => {
+        e.attributes = this.requiredAttributes[e.conceptAlias].slice();
+        e.rules = this.networkConfig.entities
+          .find(entity => entity.conceptAlias === e.conceptAlias)
+          .rules.slice();
+      });
+    });
 
     if (this.newConfig) {
       this.config = new ProjectConfig(BASE_CONFIG);
@@ -105,8 +135,12 @@ class CreateProjectController {
           type: 'DefaultEntity',
           worksheet: 'Tissues',
           uniqueKey: 'tissueID',
-          attributes: [],
-          rules: [],
+          attributes: this.requiredAttributes.Tissue.map(a =>
+            Object.assign({}, a),
+          ),
+          rules: this.networkConfig.entities
+            .find(entity => entity.conceptAlias === 'Tissue')
+            .rules.slice(),
           conceptURI: 'http://rs.tdwg.org/dwc/terms/MaterialSample',
           parentEntity: 'Sample',
         };
@@ -128,8 +162,12 @@ class CreateProjectController {
         e = {
           conceptAlias: 'fastqMetadata',
           type: 'Fastq',
-          attributes: [],
-          rules: [],
+          attributes: this.requiredAttributes.fastqMetadata.map(a =>
+            Object.assign({}, a),
+          ),
+          rules: this.networkConfig.entities
+            .find(entity => entity.conceptAlias === 'fastqMetadata')
+            .rules.slice(),
           conceptURI: 'urn:fastqMetadata',
           parentEntity: 'Tissue',
         };
@@ -151,8 +189,12 @@ class CreateProjectController {
         e = {
           conceptAlias: 'fastaSequence',
           type: 'Fasta',
-          attributes: [],
-          rules: [],
+          attributes: this.requiredAttributes.fastaSequence.map(a =>
+            Object.assign({}, a),
+          ),
+          rules: this.networkConfig.entities
+            .find(entity => entity.conceptAlias === 'fastaSequence')
+            .rules.slice(),
           conceptURI: 'urn:fastaSequence',
           parentEntity: 'Tissue',
         };
@@ -181,10 +223,14 @@ class CreateProjectController {
       }
       if (!e) {
         e = {
-          conceptAlias: 'EventPhoto',
+          conceptAlias: 'Event_Photo',
           type: 'Photo',
-          attributes: [],
-          rules: [],
+          attributes: this.requiredAttributes.EventPhoto.map(a =>
+            Object.assign({}, a),
+          ),
+          rules: this.networkConfig.entities
+            .find(entity => entity.conceptAlias === 'Event_Photo')
+            .rules.slice(),
           worksheet: 'event_photos',
           uniqueKey: 'photoID',
           conceptURI: 'http://rs.tdwg.org/dwc/terms/associatedMedia',
@@ -208,8 +254,12 @@ class CreateProjectController {
         e = {
           conceptAlias: 'Sample_Photo',
           type: 'Photo',
-          attributes: [],
-          rules: [],
+          attributes: this.requiredAttributes.Sample_Photo.map(a =>
+            Object.assign({}, a),
+          ),
+          rules: this.networkConfig.entities
+            .find(entity => entity.conceptAlias === 'Sample_Photo')
+            .rules.slice(),
           worksheet: 'sample_photos',
           uniqueKey: 'photoID',
           conceptURI: 'http://rs.tdwg.org/dwc/terms/associatedMedia',
@@ -278,6 +328,33 @@ class CreateProjectController {
   addWorksheet(entity, sheetName) {
     entity.worksheet = sheetName;
     return sheetName;
+  }
+
+  setRequiredAttributes() {
+    this.networkConfig.entities.forEach(e => {
+      this.setEntityRequiredAttributes(e);
+    });
+  }
+
+  setEntityRequiredAttributes(e) {
+    if (e.worksheet) {
+      this.requiredAttributes[
+        e.conceptAlias
+      ] = this.networkConfig.config
+        .requiredAttributes(e.worksheet)
+        .filter(a => e.attributes.includes(a));
+    } else {
+      this.requiredAttributes[e.conceptAlias] = [];
+    }
+
+    if (
+      !this.requiredAttributes[e.conceptAlias].find(
+        a => a.column === e.uniqueKey,
+      )
+    ) {
+      const attribute = e.attributes.find(a => a.column === e.uniqueKey);
+      this.requiredAttributes[e.conceptAlias].push(attribute);
+    }
   }
 
   fetchConfig() {

@@ -198,7 +198,7 @@
                         <md-input-container ng-if="!e.hashed && e.type == 'DefaultEntity'">
                             <label>Unique Key</label>
                             <md-select name="{{e.conceptAlias}}-uniqueKey" ng-model="e.uniqueKey"
-                                required>
+                                ng-change="$ctrl.setEntityRequiredAttributes(e)" required>
                                 <md-option ng-repeat="k in $ctrl.getPossibleUniqueKeys(e)" ng-value="k">
                                     {{k}}
                                 </md-option>
@@ -213,13 +213,13 @@
                             </md-hints>
                         </md-input-container>
 
-                        <md-autocomplete ng-show="['DefaultEntity', 'Photo'].includes(e.type)" flex
+                        <md-autocomplete ng-if="['DefaultEntity', 'Photo'].includes(e.type)" flex
                             md-show-arrow="true" required md-no-cache md-selected-item="e.worksheet"
                             md-select-on-focus="true" md-autofocus="true" md-items="w in $ctrl.getWorksheets() | filter: $ctrl.worksheetSearchText[e.conceptAlias]"
                             class="worksheet-autocomplete" md-floating-label="Worksheet"
                             md-on-add-new-item="$ctrl.addWorksheet(e, item)" md-search-text="$ctrl.worksheetSearchText[e.conceptAlias]"
-                            md-selected-item-change="$ctrl.worksheetSelected(e.worksheet)" md-min-length="0"
-                            ng-click="$ctrl.worksheetSearchText[e.conceptAlias] = ''">
+                            md-selected-item-change="$ctrl.worksheetSelected(e.worksheet)"
+                            md-min-length="0" ng-click="$ctrl.worksheetSearchText[e.conceptAlias] = ''">
                             <md-item-template>
                                 <span md-highlight-text="$ctrl.worksheetSearchText[e.conceptAlias]">{{w}}</span>
                             </md-item-template>
@@ -244,6 +244,16 @@
                                     across all expeditions within the project.</md-hint>
                             </md-hints>
                         </md-checkbox>
+
+                        <h4>Attributes</h4>
+                        <p class="small">The available attributes for {{e.conceptAlias}} are listed
+                            below. You can choose which attributes you would like to collect. You
+                            can also edit a the group, description, etc. Attributes that are
+                            required by GeOMe can not be disabled.</p>
+
+                        <fims-project-config-attributes selected="e.attributes" available="$ctrl.availableAttributes(e.conceptAlias)"
+                            required="$ctrl.requiredAttributes[e.conceptAlias]" on-change="$ctrl.updateAttributes(e, attributes)"></fims-project-config-attributes>
+
                     </md-step-body>
                     <md-step-actions>
                         <md-button class="md-primary md-raised" ng-click="$mdStep.$stepper.next()">Next</md-button>

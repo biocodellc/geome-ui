@@ -3,7 +3,6 @@ function getStates() {
     {
       state: 'create-project',
       config: {
-        // parent: 'projectView',
         parent: 'containerPageView',
         url: '/project/new',
         component: 'fimsCreateProject',
