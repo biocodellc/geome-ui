@@ -2,8 +2,7 @@
   <md-dialog-content layout="column">
     <md-input-container class="md-block">
       <label>Group</label>
-      <input name="group" ng-model="$ctrl.attribute.group" md-autofocus="!$ctrl.attribute.group"
-        placeholder="Default Group" />
+      <input name="group" ng-model="$ctrl.attribute.group" md-autofocus placeholder="Default Group" />
       <md-hints>
         <md-hint>The group this attribute will display under when using the template generator.</md-hint>
       </md-hints>
@@ -11,8 +10,7 @@
 
     <md-input-container>
       <label>Definition</label>
-      <textarea name="definition" ng-model="$ctrl.attribute.definition" md-select-on-focus
-        md-autofocus="$ctrl.attribute.group && !$ctrl.attribute.definition"></textarea>
+      <textarea name="definition" ng-model="$ctrl.attribute.definition" md-select-on-focus></textarea>
       <md-hints>
         <md-hint>The help text to show for this attribute in the template generator and excel
           templates</md-hint>

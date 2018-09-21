@@ -113,14 +113,7 @@ class PhotoUploadController {
         p => p.conceptAlias === e.parentEntity,
       );
 
-      const excludeCols = [
-        'originalUrl',
-        'photoID',
-        'img128',
-        'img512',
-        'img1024',
-        parentEntity.uniqueKey,
-      ];
+      const excludeCols = ['originalUrl', 'photoID', parentEntity.uniqueKey];
 
       return {
         conceptAlias: e.conceptAlias,

@@ -340,9 +340,7 @@ class CreateProjectController {
     if (e.worksheet) {
       this.requiredAttributes[
         e.conceptAlias
-      ] = this.networkConfig.config
-        .requiredAttributes(e.worksheet)
-        .filter(a => e.attributes.includes(a));
+      ] = this.networkConfig.requiredAttributesForEntity(e.conceptAlias);
     } else {
       this.requiredAttributes[e.conceptAlias] = [];
     }

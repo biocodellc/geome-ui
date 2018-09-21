@@ -227,14 +227,6 @@ class TemplateController {
   }
 
   populateAttributesCache() {
-    const blacklist = [
-      'processed',
-      'imageProcessingErrors',
-      'img128',
-      'img512',
-      'img1024',
-    ];
-
     this.attributes = this.projectConfig.entities.reduce(
       (accumulator, entity) => {
         const { worksheet } = entity;
@@ -262,7 +254,7 @@ class TemplateController {
           ).reduce(
             (result, [group, attributes]) =>
               Object.assign({}, result, {
-                [group]: attributes.filter(a => !blacklist.includes(a.column)),
+                [group]: attributes.filter(a => !a.internal),
               }),
             {},
           );
