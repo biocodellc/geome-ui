@@ -6,6 +6,7 @@ export default {
     userExpeditions: '<',
     expeditionCode: '<',
     multiExpeditionAllowed: '<',
+    canCreate: '<',
     onChange: '&',
   },
 };
