@@ -32,6 +32,7 @@
     "angular-animate": "^1.6.9",
     "angular-aria": "^1.6.9",
     "angular-drag-and-drop-lists": "^2.1.0",
+    "angular-filter": "^0.5.17",
     "angular-material": "^1.1.10",
     "angular-sanitize": "^1.6.8",
     "angular-ui-bootstrap": "^2.5.6",

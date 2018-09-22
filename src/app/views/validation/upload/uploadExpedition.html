@@ -2,14 +2,14 @@
   <div class="form-group" show-errors>
     <label for="expeditionCode" class="col-xs-3 control-label">Expedition Name</label>
     <div class="col-xs-9">
-      <div class="input-group">
+      <div ng-class="{'input-group': $ctrl.canCreate}">
         <select id="expeditionCode" name="expeditionCode" ng-change="$ctrl.onChange({ expeditionCode: $ctrl.expeditionCode })"
           ng-model="$ctrl.expeditionCode" required class="form-control col-xs-6">
           <option value="">-- Select an Expedition --</option>
           <option ng-if="$ctrl.multiExpeditionAllowed" value="MULTI_EXPEDITION">-- Multiple Expeditions --</option>
           <option ng-value="e.expeditionCode" ng-repeat="e in $ctrl.userExpeditions | orderBy: 'expeditionTitle' track by e.expeditionCode">{{e.expeditionTitle}}</option>
         </select>
-        <span class="input-group-btn">
+        <span class="input-group-btn" ng-if="$ctrl.canCreate">
           <button class="btn btn-default" ng-click="$ctrl.onChange({ expeditionCode: 'CREATE' })">
             <md-tooltip md-direction="top">New expedition</md-tooltip>
             <span class="fa fa-plus"></span>
