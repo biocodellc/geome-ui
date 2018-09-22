@@ -325,10 +325,6 @@ class PlatesController {
       .then(plates => {
         if (this.plate && !plates.includes(this.plate)) this.plate = undefined;
         this.plates = plates.sort();
-        if (this.plates.length === 1) {
-          this.plate = this.plates[0];
-          this.fetchPlate();
-        }
       })
       .finally(() => (this.loading = false));
   }
