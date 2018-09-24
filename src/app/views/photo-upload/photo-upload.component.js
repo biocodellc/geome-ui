@@ -90,7 +90,6 @@ class PhotoUploadController {
         this.file = undefined;
         this.entity = undefined;
         this.expeditionCode = undefined;
-        this.resume;
       });
   }
 

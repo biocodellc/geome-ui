@@ -26,6 +26,7 @@ import mdHint from './directives/mdHint.directive';
 import mdAutocomplete from './directives/mdAutocomplete.directive';
 import ngImageGallery from './directives/ngImageGallery.directive';
 import trustedHtml from './filters/html.filter';
+import excludeFilter from './filters/exclude.filter';
 
 import about from './views/about';
 import home from './views/home';
@@ -77,6 +78,7 @@ const dependencies = [
   mdAutocomplete,
   ngImageGallery,
   trustedHtml,
+  excludeFilter,
   bootstrap,
   ngMaterial,
   ngAnimate,

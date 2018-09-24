@@ -12,7 +12,7 @@ table.clone + md-table-container table tbody tr:first-child td {
       th.md-column,
       td.md-cell {
         &:nth-child(n + 3):nth-last-child(n + 2) {
-          padding: 0 32px 0 0;
+          padding: 5px 32px 5px 0;
         }
         &:first-child {
           padding: 0 0 0 16px;
@@ -20,19 +20,10 @@ table.clone + md-table-container table tbody tr:first-child td {
         &:nth-child(2) {
           padding: 0 16px;
         }
-      }
 
-      > thead,
-      > tbody,
-      > tfoot {
-        > tr {
-          > td.md-cell,
-          > th.md-{
-            &.edit-row {
-              width: 5px;
-              padding-left: 5px;
-            }
-          }
+        &.md-checkbox-cell + .md-column,
+        &.md-checkbox-cell + .md-cell {
+          padding: 0 16px 0 8px;
         }
       }
 
@@ -40,6 +31,13 @@ table.clone + md-table-container table tbody tr:first-child td {
         > tr.md-row.md-selected {
           background-color: inherit;
         }
+      }
+    }
+
+    &:not(.md-row-select) {
+      th.md-column.action-row:first-child,
+      td.md-cell.action-row:first-child {
+        padding: 0 16px;
       }
     }
 
@@ -65,8 +63,6 @@ table.clone + md-table-container table tbody tr:first-child td {
     }
 
     .md-sort-icon {
-      // width: 20px;
-      // height: 20px;
       min-width: 16px;
       min-height: 16px;
       margin-left: 5px;
@@ -80,6 +76,37 @@ table.clone + md-table-container table tbody tr:first-child td {
           > td,
           > th {
             padding: 5px 16px;
+            md-icon {
+              min-width: 14px;
+              min-height: 14px;
+              width: 14px;
+              height: 14px;
+              line-height: 14px;
+              margin: 0;
+
+              &:not(:first-of-type) {
+                margin-left: 5px;
+              }
+            }
+          }
+        }
+      }
+
+      &:not(.md-row-select) {
+        th.md-column,
+        td.md-cell {
+          &.action-row:first-child {
+            padding: 5px 16px;
+          }
+
+          &:nth-child(n + 3):nth-last-child(n + 2) {
+            padding: 5px 32px 5px 0;
+          }
+          &:first-child {
+            padding: 5px 0 5px 16px;
+          }
+          &:nth-child(2) {
+            padding: 5px 32px 5px 0;
           }
         }
       }
@@ -102,6 +129,28 @@ table.clone + md-table-container table tbody tr:first-child td {
             }
           }
           margin: 3px 0;
+        }
+      }
+
+      thead > tr > th {
+        .add-button {
+          margin: -3px -16px -3px 0;
+          min-height: 4px;
+          height: 23px;
+          line-height: 12px;
+          font-size: 12px;
+          font-weight: 600;
+          float: right;
+
+          md-icon {
+            min-width: 12px;
+            min-height: 12px;
+            width: 12px;
+            height: 12px;
+            line-height: 12px !important;
+            font-size: 12px !important;
+            color: inherit;
+          }
         }
       }
     }

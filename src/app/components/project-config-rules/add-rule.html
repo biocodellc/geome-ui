@@ -1,0 +1,22 @@
+<md-dialog class="rule-dialog">
+  <md-dialog-content layout="column">
+    <h4 ng-if="!$ctrl.rule" class="md-title">New Rule</h4>
+    <md-input-container ng-if="!$ctrl.rule">
+      <label>Rule Type</label>
+      <md-select name="type" ng-model="$ctrl.rule" required>
+        <md-option ng-repeat="rule in $ctrl.availableRules" ng-value="rule">
+          {{rule.name}}
+        </md-option>
+      </md-select>
+    </md-input-container>
+
+    <fims-md-rule-form ng-if="$ctrl.rule" rule="$ctrl.rule" lists="$ctrl.lists" columns="$ctrl.columns"></fims-md-rule-form>
+
+    <md-dialog-actions>
+      <md-button ng-click="$ctrl.$mdDialog.cancel()" class="md-primary">Cancel</md-button>
+      <md-button ng-if="$ctrl.rule" ng-click="$ctrl.rule = undefined" class="md-primary">Change
+        Type</md-button>
+      <md-button ng-if="$ctrl.rule" ng-click="$ctrl.$mdDialog.hide($ctrl.rule)" class="md-primary">Add</md-button>
+    </md-dialog-actions>
+  </md-dialog-content>
+</md-dialog>

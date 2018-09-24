@@ -5,7 +5,7 @@
     <div layout="row">
         <form flex name="form" novalidate>
             <md-stepper flex id="create-project-stepper" md-vertical="true" md-prevent-skip="true">
-                <md-step md-label="Project Details" class="project-details-step">
+                <md-step md-label="Project Details" class="project-details-step" md-order="0">
                     <md-step-body>
                         <md-input-container flex-gt-sm>
                             <label>Project Title</label>
@@ -49,7 +49,7 @@
                             ng-disabled="form.description.$invalid || form.title.$invalid">Next</md-button>
                     </md-step-actions>
                 </md-step>
-                <md-step md-label="Project Config" ng-class="{'md-step-disabled': $mdStep.stepNumber > $mdStep.$stepper.currentStep}">
+                <md-step md-label="Project Config" md-order="1">
                     <md-step-body>
                         <p>The project config determines how and what data you can upload. You can
                             choose to clone an existing project config to use as a base, or build a
@@ -100,12 +100,16 @@
                                 md-diameter="18" class="md-accent md-hue-3"></md-progress-circular>
                         </md-button>
                         <md-button class="md-primary md-raised" ng-click="$ctrl.createProject()"
-                            ng-disabled="!$ctrl.existingConfig" ng-if="($ctrl.syncConfig || !$ctrl.existingConfig) && !$ctrl.newConfig">Create
-                            Project</md-button>
+                            ng-disabled="!$ctrl.existingConfig" ng-if="($ctrl.syncConfig || !$ctrl.existingConfig) && !$ctrl.newConfig"
+                            layout="row" layout-align="center center">
+                            <span ng-show="!$ctrl.creatingProject">Create Project</span>
+                            <md-progress-circular ng-show="$ctrl.creatingProject" md-mode="indeterminate"
+                                md-diameter="18" class="md-accent md-hue-3"></md-progress-circular>
+                        </md-button>
                     </md-step-actions>
                 </md-step>
-                <md-step md-label="Project Config Modules" ng-class="{'md-step-disabled': $mdStep.stepNumber > $mdStep.$stepper.currentStep}"
-                    ng-show="$ctrl.newConfig || !$ctrl.syncConfig" class="config-modules-step">
+                <md-step md-label="Project Config Modules" ng-show="$ctrl.newConfig || !$ctrl.syncConfig"
+                    class="config-modules-step" md-order="2">
                     <md-step-body>
                         <p>Select the modules that you would like to use in your project.</p>
 
@@ -178,8 +182,7 @@
                 </md-step>
 
                 <md-step ng-repeat="e in $ctrl.config.entities track by e.conceptAlias" md-label="Entity - {{e.conceptAlias}}"
-                    ng-class="{'md-step-disabled': $mdStep.stepNumber > $mdStep.$stepper.currentStep}"
-                    ng-show="$ctrl.newConfig || !$ctrl.syncConfig">
+                    ng-show="$ctrl.newConfig || !$ctrl.syncConfig" md-order="$index + 3">
                     <md-step-body>
                         <!-- <p>{{e.conceptAlias}} Configuration</p> -->
 
@@ -198,7 +201,7 @@
                         <md-input-container ng-if="!e.hashed && e.type == 'DefaultEntity'">
                             <label>Unique Key</label>
                             <md-select name="{{e.conceptAlias}}-uniqueKey" ng-model="e.uniqueKey"
-                                ng-change="$ctrl.setEntityRequiredAttributes(e)" required>
+                                ng-change="$ctrl.uniqueKeyChange(e)" required>
                                 <md-option ng-repeat="k in $ctrl.getPossibleUniqueKeys(e)" ng-value="k">
                                     {{k}}
                                 </md-option>
@@ -254,9 +257,37 @@
                         <fims-project-config-attributes selected="e.attributes" available="$ctrl.availableAttributes(e.conceptAlias)"
                             required="$ctrl.requiredAttributes[e.conceptAlias]" on-change="$ctrl.updateAttributes(e, attributes)"></fims-project-config-attributes>
 
+                        <h4>Rules</h4>
+                        <p class="small">Here you can configure the validation rules for this
+                            entity.</p>
+
+                        <fims-project-config-rules rules="e.rules" required="$ctrl.requiredRules[e.conceptAlias]"
+                            attributes="e.attributes" lists="$ctrl.networkConfig.lists" on-change="$ctrl.updateRules(e, rules)">
+                            </fims-project-config-attributes>
+
                     </md-step-body>
                     <md-step-actions>
-                        <md-button class="md-primary md-raised" ng-click="$mdStep.$stepper.next()">Next</md-button>
+                        <md-button class="md-primary md-raised" ng-click="$mdStep.$stepper.next()"
+                            ng-if="$mdStep.stepNumber < $mdStep.$stepper.steps.length - 1">Next</md-button>
+                    </md-step-actions>
+                </md-step>
+
+                <md-step md-label="Expedition Metadata Properties" ng-if="$ctrl.config" md-order="$ctrl.config.entities.length + 3">
+                    <md-step-body>
+                        <p class="small">Specify any additional metadata you would like to collect
+                            when an expedition is created</p>
+
+                        <fims-project-config-expedition-metadata properties="$ctrl.config.expeditionMetadataProperties"
+                            on-change="$ctrl.updateProperties(properties)">
+                        </fims-project-config-expedition-metadata>
+                    </md-step-body>
+                    <md-step-actions>
+                        <md-button class="md-primary md-raised" ng-click="$ctrl.createProject()"
+                            layout="row" layout-align="center center">
+                            <span ng-show="!$ctrl.creatingProject">Create Project</span>
+                            <md-progress-circular ng-show="$ctrl.creatingProject" md-mode="indeterminate"
+                                md-diameter="18" class="md-accent md-hue-3"></md-progress-circular>
+                        </md-button>
                     </md-step-actions>
                 </md-step>
             </md-stepper>

@@ -97,6 +97,15 @@ class ProjectService extends EventEmitter {
       .catch(angular.catcher('Failed to load projects'));
   }
 
+  create(project) {
+    return this.$http({
+      method: 'POST',
+      url: `${restRoot}projects`,
+      data: project,
+      keepJson: true,
+    }).catch(angular.catcher('Failed to create the project.'));
+  }
+
   update(project) {
     this.PROJECT_CACHE.removeAll();
     return this.$http({

@@ -1,20 +1,18 @@
 import angular from 'angular';
-// import 'material-steppers';
-import 'material-steppers/dist/material-steppers';
-import 'material-steppers/dist/material-steppers.min.css';
 
 import routing from './create-project.routes';
 import fimsCreateProject from './create-project.component';
-import fimsMdStep from '../../directives/mdStep.directive';
-import fimsMdStepper from '../../directives/mdStepper.directive';
+import materialSteppers from '../../components/material-steppers';
 import fimsProjectConfigAttributes from '../../components/project-config-attributes';
+import fimsProjectConfigRules from '../../components/project-config-rules';
+import fimsProjectConfigExpeditionMetadata from '../../components/project-config-expedition-metadata';
 
 export default angular
   .module('fims.createProject', [
-    'mdSteppers',
-    fimsMdStepper,
-    fimsMdStep,
+    materialSteppers,
     fimsProjectConfigAttributes,
+    fimsProjectConfigRules,
+    fimsProjectConfigExpeditionMetadata,
   ])
   .run(routing)
   .component('fimsCreateProject', fimsCreateProject).name;

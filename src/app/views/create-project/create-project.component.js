@@ -1,5 +1,6 @@
 import angular from 'angular';
 import ProjectConfig from '../../models/ProjectConfig';
+import Rule from '../../models/Rule';
 
 const template = require('./create-project.html');
 
@@ -26,7 +27,7 @@ const BASE_CONFIG = {
     },
   ],
   lists: [],
-  expeditionMetadata: [],
+  expeditionMetadataProperties: [],
 };
 
 const UNIQUE_KEYS = {
@@ -42,6 +43,7 @@ class CreateProjectController {
     $mdDialog,
     NetworkConfigurationService,
     ProjectConfigurationService,
+    ProjectService,
   ) {
     'ngInject';
 
@@ -50,21 +52,45 @@ class CreateProjectController {
     this.$mdDialog = $mdDialog;
     this.NetworkConfigurationService = NetworkConfigurationService;
     this.ProjectConfigurationService = ProjectConfigurationService;
+    this.ProjectService = ProjectService;
   }
 
   $onInit() {
     this.project = {
       projectTitle: 'New Project',
       description: "so I don't have to type",
+      public: true,
     };
     this.newConfig = false;
     this.syncConfig = true;
     this.worksheetSearchText = {};
-    this.selectedAttributes = {};
     this.requiredAttributes = {};
+    this.requiredRules = {};
   }
 
-  createProject() {}
+  createProject() {
+    if (!this.newConfig && this.syncConfig) {
+      this.project.projectConfiguration = this.existingConfig;
+    } else {
+      // creating a new ProjectConfiguration
+      this.project.projectConfig = this.config;
+    }
+
+    this.creatingProject = true;
+    this.ProjectService.create(this.project)
+      .then(({ data }) => {
+        data.config = new ProjectConfig(data.projectConfig);
+        delete data.projectConfig;
+        return this.ProjectService.setCurrentProject(data);
+      })
+      .then(() => this.$state.go('validate'))
+      .catch(e => {
+        console.log(e);
+      })
+      .finally(() => {
+        this.creatingProject = false;
+      });
+  }
 
   getPossibleUniqueKeys(entity) {
     const keys = UNIQUE_KEYS[entity.conceptAlias].slice();
@@ -77,9 +103,16 @@ class CreateProjectController {
     return keys;
   }
 
-  // eslint-disable-next-line class-methods-use-this
   updateAttributes(e, attributes) {
     e.attributes = attributes.map(a => Object.assign({}, a));
+  }
+
+  updateRules(e, rules) {
+    e.rules = rules.map(r => new Rule(angular.copy(r)));
+  }
+
+  updateProperties(properties) {
+    this.config.expeditionMetadataProperties = properties;
   }
 
   availableAttributes(conceptAlias) {
@@ -97,6 +130,7 @@ class CreateProjectController {
 
     this.networkPromise.then(() => {
       this.setRequiredAttributes();
+      this.setRequiredRules();
       BASE_CONFIG.lists = this.networkConfig.lists.slice();
       BASE_CONFIG.entities.forEach(e => {
         e.attributes = this.requiredAttributes[e.conceptAlias].slice();
@@ -118,6 +152,26 @@ class CreateProjectController {
     }
 
     $mdStep.$stepper.next();
+  }
+
+  uniqueKeyChange(e) {
+    this.setEntityRequiredAttributes(e);
+
+    const validForUriRule = e.rules.find(
+      r => r.name === 'ValidForURI' && r.level === 'ERROR',
+    );
+
+    if (validForUriRule) {
+      validForUriRule.column = e.uniqueKey;
+    }
+
+    const uniqueValueRule = e.rules.find(
+      r => r.name === 'UniqueValue' && r.level === 'ERROR',
+    );
+
+    if (uniqueValueRule) {
+      uniqueValueRule.column = e.uniqueKey;
+    }
   }
 
   tissuesChanged() {
@@ -225,7 +279,7 @@ class CreateProjectController {
         e = {
           conceptAlias: 'Event_Photo',
           type: 'Photo',
-          attributes: this.requiredAttributes.EventPhoto.map(a =>
+          attributes: this.requiredAttributes.Event_Photo.map(a =>
             Object.assign({}, a),
           ),
           rules: this.networkConfig.entities
@@ -353,6 +407,34 @@ class CreateProjectController {
       const attribute = e.attributes.find(a => a.column === e.uniqueKey);
       this.requiredAttributes[e.conceptAlias].push(attribute);
     }
+  }
+
+  setRequiredRules() {
+    this.networkConfig.entities.forEach(e => {
+      this.setEntityRequiredRules(e);
+    });
+  }
+
+  setEntityRequiredRules(e) {
+    this.requiredRules[e.conceptAlias] = this.networkConfig.entities.find(
+      entity => entity.conceptAlias === e.conceptAlias,
+    ).rules;
+
+    // if (
+    //   !this.requiredRules[e.conceptAlias].find(
+    //     r =>
+    //       r.name === 'RequiredValue' &&
+    //       r.columns.includes(e.uniqueKey) &&
+    //       r.level === 'ERROR',
+    //   )
+    // ) {
+    //   this.requiredRules.push(
+    //     new Rule({
+    //       name: 'RequiredValue',
+    //       columns: [],
+    //     }),
+    //   );
+    // }
   }
 
   fetchConfig() {
