@@ -12,12 +12,12 @@ class ProjectConfigurationService {
     this.$http = $http;
   }
 
-  all(networkApproved = false) {
+  all(networkApproved = false, includeUser = false) {
     return this.$http
       .get(
         `${restRoot}projects/configs${
-          networkApproved ? '?networkApproved=true' : ''
-        }`,
+          networkApproved ? '?networkApproved=true&' : '?'
+        }${includeUser ? 'user=true' : ''}`,
       )
       .then(({ data }) =>
         data.map(

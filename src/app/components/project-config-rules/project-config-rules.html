@@ -17,7 +17,7 @@
             </tr>
         </thead>
         <tbody md-body>
-            <tr md-row ng-repeat="r in $ctrl.rules |  orderBy: $ctrl.orderBy">
+            <tr md-row ng-repeat="r in $ctrl.rules |  orderBy: $ctrl.orderBy track by $index">
                 <td md-cell class="action-row">
                     <div layout="row" ng-if="$ctrl.canEdit(r)">
                         <md-icon ng-click="$ctrl.editRule($event, r)" md-font-icon="fa fa-pencil fa-fw"></md-icon>

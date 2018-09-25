@@ -9,10 +9,17 @@
                     <md-step-body>
                         <md-input-container flex-gt-sm>
                             <label>Project Title</label>
-                            <input name="title" ng-model="$ctrl.project.projectTitle" required />
+                            <input name="title" ng-model="$ctrl.project.projectTitle" required
+                                project-title ng-model-options="{ updateOn: 'default blur', debounce: {'default': 800, 'blur': 0} }" />
 
+                            <md-hints>
+                                <md-hint ng-if="form.title.$pending">Checking if projectTitle
+                                    is available...</md-hint>
+                            </md-hints>
                             <div ng-messages="form.title.$error">
                                 <div ng-message="required">This field is required.</div>
+                                <div ng-message="projectTitle">A project with this title already
+                                    exists.</div>
                             </div>
                         </md-input-container>
                         <!-- 
@@ -46,7 +53,7 @@
                     </md-step-body>
                     <md-step-actions>
                         <md-button class="md-primary md-raised" ng-click="$mdStep.$stepper.next()"
-                            ng-disabled="form.description.$invalid || form.title.$invalid">Next</md-button>
+                            ng-disabled="form.description.$invalid || form.title.$invalid || form.title.$pending">Next</md-button>
                     </md-step-actions>
                 </md-step>
                 <md-step md-label="Project Config" md-order="1">

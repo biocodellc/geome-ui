@@ -57,8 +57,8 @@ class CreateProjectController {
 
   $onInit() {
     this.project = {
-      projectTitle: 'New Project',
-      description: "so I don't have to type",
+      projectTitle: undefined,
+      description: undefined,
       public: true,
     };
     this.newConfig = false;

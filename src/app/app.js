@@ -3,6 +3,7 @@ import uirouter from '@uirouter/angularjs';
 import bootstrap from 'angular-ui-bootstrap';
 import ngMaterial from 'angular-material';
 import ngAnimate from 'angular-animate';
+import ngMessages from 'angular-messages';
 import filter from 'angular-filter';
 
 // todo remove the following and use only angular-ui-bootstrap
@@ -25,6 +26,7 @@ import mdSticky from './directives/mdSticky.directive';
 import mdHint from './directives/mdHint.directive';
 import mdAutocomplete from './directives/mdAutocomplete.directive';
 import ngImageGallery from './directives/ngImageGallery.directive';
+import formValidators from './directives/formValidators.directive';
 import trustedHtml from './filters/html.filter';
 import excludeFilter from './filters/exclude.filter';
 
@@ -77,11 +79,13 @@ const dependencies = [
   mdHint,
   mdAutocomplete,
   ngImageGallery,
+  formValidators,
   trustedHtml,
   excludeFilter,
   bootstrap,
   ngMaterial,
   ngAnimate,
+  ngMessages,
   filter,
   projectService,
   projectConfigurationService,

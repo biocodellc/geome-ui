@@ -9,7 +9,7 @@ function getStates() {
         loginRequired: true,
         resolve: {
           configurations: /* @ngInject */ ProjectConfigurationService =>
-            ProjectConfigurationService.all(true),
+            ProjectConfigurationService.all(true, true),
         },
       },
     },

@@ -97,6 +97,17 @@ class ProjectService extends EventEmitter {
       .catch(angular.catcher('Failed to load projects'));
   }
 
+  find(includePublic, projectTitle) {
+    return this.$http
+      .get(
+        `${restRoot}projects?includePublic=${includePublic}&projectTitle=${projectTitle}`,
+        {
+          cache: this.PROJECT_CACHE,
+        },
+      )
+      .catch(angular.catcher('Failed to find projects by projectTitle'));
+  }
+
   create(project) {
     return this.$http({
       method: 'POST',

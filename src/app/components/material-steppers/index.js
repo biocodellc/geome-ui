@@ -322,7 +322,11 @@ export default angular
               addOverlay();
               // scroll after the step has rendered
               $timeout(() => {
-                iElement[0].scrollIntoView();
+                iElement[0].scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'start',
+                  inline: 'nearest',
+                });
               });
             } else {
               iElement.removeClass('md-active');
