@@ -1,76 +1,48 @@
-<div class="row">
-    <div class="col-md-6 col-md-offset-3">
-        <div class="panel panel-login">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <a ng-show="!$ctrl.resetPass" href="#" class="active" id="login-form-link">Login</a>
-                        <a ng-show="$ctrl.resetPass" href="#" class="active" id="reset-form-link">Reset Password</a>
+<div layout="row" layout-align="center center" class="login-card">
+    <md-card flex-xs="100" flex-sm="80" flex-md="70" flex="60" class="md-whiteframe-2dp">
+        <md-card-title>
+            <md-card-title-text>
+                <h4 ng-if="!$ctrl.resetPass" md-colors="{color: 'primary-700'}">Login</h4>
+                <h4 ng-if="$ctrl.resetPass" md-colors="{color: 'primary-700'}">Reset Password</h4>
+            </md-card-title-text>
+        </md-card-title>
+        <md-card-content>
+            <form id="login-form" name="form" role="form" layout="column" novalidate>
+                <md-input-container>
+                    <label>Username</label>
+                    <input name="username" ng-model="$ctrl.credentials.username" required autofocus
+                        tabindex="1">
+                    <div ng-messages="form.username.$error">
+                        <div ng-message="required">Username is required.</div>
                     </div>
-                </div>
-                <hr>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div ng-show="!$ctrl.resetPass" class="col-lg-12">
-                        <form id="login-form" ng-submit="$ctrl.submit()" method="post" role="form" style="display: block;">
-                            <div class="form-group">
-                                <input type="text" name="username" ng-model="$ctrl.credentials.username" id="username" autofocus tabindex="1" class="form-control"
-                                    placeholder="Username">
-                            </div>
-                            <div class="form-group">
-                                <input type="password" name="password" ng-model="$ctrl.credentials.password" id="password" tabindex="2" class="form-control"
-                                    placeholder="Password">
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-6 col-sm-offset-3">
-                                        <input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-primary text-uppercase"
-                                            value="Log In">
-                                    </div>
-                                    <div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
-                                        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <div class="text-center">
-                                            <a href="#" tabindex="5" ng-click="$ctrl.resetPass=!$ctrl.resetPass" class="forgot-password">Forgot Password?</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
+                </md-input-container>
+                <md-input-container ng-if="!$ctrl.resetPass">
+                    <label>Password</label>
+                    <input name="password" type="password" ng-model="$ctrl.credentials.password" required
+                        tabindex="2">
+                    <div ng-messages="form.password.$error">
+                        <div ng-message="required">Password is required.</div>
                     </div>
+                </md-input-container>
+            </form>
 
-                    <div ng-show="$ctrl.resetPass" class="col-lg-12">
-                        <form id="reset-pass-form" ng-submit="$ctrl.resetPassword()" role="form" style="display: block;">
-                            <div class="form-group">
-                                <input type="text" name="username" ng-model="$ctrl.credentials.username" id="reset-username" autofocus tabindex="1" class="form-control"
-                                    placeholder="Username">
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-6 col-sm-offset-3">
-                                        <input type="submit" name="login-submit" id="reset-submit" tabindex="4" class="form-control btn btn-login btn-primary" value="Reset Password">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <div class="text-center">
-                                            <a href="#" tabindex="5" ng-click="$ctrl.resetPass=!$ctrl.resetPass" class="forgot-password">Login?</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+            <div layout="row" layout-align="center center">
+                <md-button class="md-block md-primary md-raised" ng-click="$ctrl.submit()" layout="row" tabindex="3"
+                    layout-align="center center" flex="33">
+                    <span ng-show="!$ctrl.loading">
+                        <span ng-if="!$ctrl.resetPass">Login</span>
+                        <span ng-if="$ctrl.resetPass">Reset Password</span>
+                    </span>
+                    <md-progress-circular ng-show="$ctrl.loading" md-mode="indeterminate"
+                        md-diameter="18" class="md-accent md-hue-3"></md-progress-circular>
+                </md-button>
             </div>
-        </div>
-    </div>
+            <div layout="row" layout-align="center center" class="text-center forgot-password">
+                <a href="#" tabindex="4" ng-click="$ctrl.resetPass=!$ctrl.resetPass; $event.preventDefault();">
+                    <span ng-if="$ctrl.resetPass">Login?</span>
+                    <span ng-if="!$ctrl.resetPass">Forgot Password?</span>
+                </a>
+            </div>
+        </md-card-content>
+    </md-card>
 </div>

@@ -139,6 +139,10 @@ md-menu-content.md-menu-bar-menu.md-dense a.md-button {
   font-weight: 700;
 }
 
+a:focus {
+  outline: none;
+}
+
 // page header
 .page-header {
   margin: 0 0 35px 0;
