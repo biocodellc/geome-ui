@@ -2,10 +2,12 @@ import { AUTH_ERROR_EVENT } from './services/auth.service';
 import { PROJECT_CHANGED_EVENT } from './services/project.service';
 import { USER_CHANGED_EVENT } from './services/user.service';
 import {
-  ProjectLoadingEmitter,
+  ProjectViewHookEmitter,
   LOADING_PROJECT_EVENT,
   FINISHED_LOADING_PROJECT_EVENT,
   checkProjectViewPresent,
+  STARTED_HOOK_EVENT,
+  ENDED_HOOK_EVENT,
 } from './projectView.hook';
 
 const template = require('./app.html');
@@ -25,26 +27,43 @@ class AppCtrl {
 
   $onInit() {
     this.loading = true;
+    this.preventReload = false;
 
     this.AuthService.on(AUTH_ERROR_EVENT, () => this.signout());
     this.ProjectService.on(PROJECT_CHANGED_EVENT, p => {
       this.currentProject = p;
-      if (!this.$state.current.abstract) this.$state.reload();
+      if (!this.preventReload && !this.$state.current.abstract) {
+        this.$state.reload();
+      }
     });
     this.UserService.on(USER_CHANGED_EVENT, u => {
       this.currentUser = u;
       this.userHasProject = true;
       this.setUserHasProject();
       const { current } = this.$state;
-      if (!current.abstract && current.name !== 'login') this.$state.reload();
+      if (
+        !this.preventReload &&
+        !current.abstract &&
+        current.name !== 'login'
+      ) {
+        this.$state.reload();
+      }
     });
-    ProjectLoadingEmitter.on(
+    ProjectViewHookEmitter.on(
       LOADING_PROJECT_EVENT,
       () => (this.loading = true),
     );
-    ProjectLoadingEmitter.on(
+    ProjectViewHookEmitter.on(
       FINISHED_LOADING_PROJECT_EVENT,
       () => (this.loading = false),
+    );
+    ProjectViewHookEmitter.on(
+      STARTED_HOOK_EVENT,
+      () => (this.preventReload = true),
+    );
+    ProjectViewHookEmitter.on(
+      ENDED_HOOK_EVENT,
+      () => (this.preventReload = false),
     );
 
     // show spinner on transitions

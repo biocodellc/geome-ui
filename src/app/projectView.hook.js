@@ -1,5 +1,7 @@
 import { EventEmitter } from 'events';
 
+export const STARTED_HOOK_EVENT = 'started_hook';
+export const ENDED_HOOK_EVENT = 'ended_hook';
 export const LOADING_PROJECT_EVENT = 'loading_project';
 export const FINISHED_LOADING_PROJECT_EVENT = 'finished_loading_project';
 
@@ -16,7 +18,7 @@ export function checkProjectViewPresent(state) {
   return false;
 }
 
-export const ProjectLoadingEmitter = new EventEmitter();
+export const ProjectViewHookEmitter = new EventEmitter();
 
 export default (
   $rootScope,
@@ -35,10 +37,15 @@ export default (
     async trans => {
       if (ProjectService.currentProject()) return Promise.resolve();
 
+      ProjectViewHookEmitter.emit(STARTED_HOOK_EVENT);
+      trans.onFinish({}, () => {
+        ProjectViewHookEmitter.emit(ENDED_HOOK_EVENT);
+      });
+
       const setProject = project => {
-        ProjectLoadingEmitter.emit(LOADING_PROJECT_EVENT);
+        ProjectViewHookEmitter.emit(LOADING_PROJECT_EVENT);
         return ProjectService.setCurrentProject(project).then(() => {
-          ProjectLoadingEmitter.emit(FINISHED_LOADING_PROJECT_EVENT);
+          ProjectViewHookEmitter.emit(FINISHED_LOADING_PROJECT_EVENT);
         });
       };
 
