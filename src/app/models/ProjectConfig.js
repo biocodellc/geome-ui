@@ -2,15 +2,21 @@ import Rule from './Rule';
 
 export default class ProjectConfig {
   constructor(config) {
-    Object.assign(this, config);
+    if (config) {
+      Object.assign(this, config);
 
-    this.entities = this.entities.slice();
-    this.lists = this.lists.slice();
-    this.expeditionMetadataProperties = this.expeditionMetadataProperties.slice();
+      this.entities = this.entities.slice();
+      this.lists = this.lists.slice();
+      this.expeditionMetadataProperties = this.expeditionMetadataProperties.slice();
 
-    this.entities.forEach(e => {
-      e.rules = e.rules.map(r => new Rule(r));
-    });
+      this.entities.forEach(e => {
+        e.rules = e.rules.map(r => new Rule(r));
+      });
+    } else {
+      this.entities = [];
+      this.lists = [];
+      this.expeditionMetadataProperties = [];
+    }
   }
 
   worksheets() {
@@ -145,16 +151,29 @@ export default class ProjectConfig {
   }
 
   requiredAttributes(sheetName) {
-    return this._requiredValueAttributes(sheetName, 'ERROR');
+    return this._requiredValueAttributes('ERROR', undefined, sheetName);
   }
 
   suggestedAttributes(sheetName) {
-    return this._requiredValueAttributes(sheetName, 'WARNING');
+    return this._requiredValueAttributes('WARNING', undefined, sheetName);
   }
 
-  _requiredValueAttributes(sheetName, level) {
+  requiredAttributesForEntity(conceptAlias) {
+    return this._requiredValueAttributes('ERROR', conceptAlias);
+  }
+
+  _requiredValueAttributes(level, conceptAlias, sheetName) {
     return this.entities
-      .filter(e => e.worksheet === sheetName)
+      .filter(e => {
+        let match = true;
+        if (sheetName) {
+          match = e.worksheet === sheetName;
+        }
+        if (conceptAlias) {
+          match = match && e.conceptAlias === conceptAlias;
+        }
+        return match;
+      })
       .map(e => {
         const requiredColumns = Array.from(
           new Set(
@@ -180,20 +199,10 @@ export default class ProjectConfig {
           ),
         );
 
-        // hack for photo entity for now
-        // would be better to come up w/ solution in backend
-        // these don't show up b/c the PhotoEntity default rules
-        // are enforced by the PhotoValidator, and not stored on the entity itself
+        // hack for photo entity. originalUrl is RequiredValueInGroup w/ buldLoadFile,
+        // but for any template, we can consider it required
         if (level === 'ERROR' && e.type === 'Photo') {
-          requiredColumns.push('photoID');
           requiredColumns.push('originalUrl');
-
-          const parent = this.entities.find(
-            entity => entity.conceptAlias === e.parentEntity,
-          );
-          if (parent) {
-            requiredColumns.push(parent.uniqueKey);
-          }
         }
 
         return e.attributes.filter(a => requiredColumns.includes(a.column));

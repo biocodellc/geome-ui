@@ -1,41 +1,67 @@
 /* NOTE: Check the demo's HTML to see some additional RTL support CSS */
 /* Setup animations similar to the ng-messages */
+
 md-input-container {
-  .hint {
-    /* Position the hint */
-    position: absolute;
-    left: 2px;
-    right: auto;
-    bottom: 7px;
-    /* Copy styles from ng-messages */
+  margin-bottom: 16px;
+
+  .md-errors-spacer {
+    display: none;
+  }
+}
+
+md-checkbox,
+md-input-container {
+  &.md-input-invalid {
+    md-hints:not(.no-ng-messages) {
+      margin-top: 0;
+      md-hint {
+        opacity: 0;
+        margin-top: -100px;
+      }
+    }
+  }
+  md-hints {
+    position: relative;
+    display: block;
+    -webkit-box-ordinal-group: 5;
+    -ms-flex-order: 4;
+    order: 4;
+    overflow: hidden;
+    float: left;
+    clear: left;
+    margin-top: 5px;
     font-size: 12px;
     line-height: 14px;
+  }
+  md-hint {
+    padding-top: 5px;
+    /* Copy styles from ng-messages */
     transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
     /* Set our own color */
     color: grey;
 
-    &.ng-hide,
-    &.ng-enter,
-    &.ng-leave.ng-leave-active {
-      bottom: 26px;
-      opacity: 0;
-    }
-    &.ng-leave,
-    &.ng-enter.ng-enter-active {
-      bottom: 7px;
-      opacity: 1;
+    a:hover,
+    a:focus {
+      text-decoration: none;
+      color: #4d4d4d;
     }
   }
+}
 
-  a:hover.hint,
-  a:focus.hint {
-    text-decoration: none;
-    color: #4d4d4d;
+md-autocomplete {
+  md-hints {
+    float: none;
+    &:before {
+      content: ' ';
+      display: table;
+      height: 5px;
+    }
   }
+}
 
-  .hint-right {
-    @extend .hint;
-    left: auto;
-    right: 2px;
+md-checkbox {
+  md-hints {
+    display: block;
+    float: none;
   }
 }

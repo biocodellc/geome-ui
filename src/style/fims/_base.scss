@@ -132,11 +132,15 @@ md-menu-content.md-menu-bar-menu.md-dense a.md-button {
 }
 
 .text-center {
-  text-align: center;
+  text-align: center !important;
 }
 
 .bold {
   font-weight: 700;
+}
+
+a:focus {
+  outline: none;
 }
 
 // page header
@@ -253,6 +257,14 @@ md-autocomplete {
       font-size: 13px;
       -webkit-transform: scaleY(0.5) scaleX(1);
       transform: scaleY(0.5) scaleX(1);
+    }
+  }
+}
+
+md-chips {
+  md-autocomplete {
+    .md-select-icon {
+      margin-top: 0;
     }
   }
 }

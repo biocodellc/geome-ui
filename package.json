@@ -5,7 +5,7 @@
   "main": "index.js",
   "private": true,
   "repository": "https://github.com/biocodellc/biscicol-ui",
-  "author": "RJ Ewing <ewing.rj@gmail.com>",
+  "author": "RJ Ewing <rodney757@protonmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/biocodellc/biscicol-ui/issues"
@@ -34,8 +34,10 @@
     "angular-drag-and-drop-lists": "^2.1.0",
     "angular-filter": "^0.5.17",
     "angular-material": "^1.1.10",
+    "angular-messages": "^1.7.4",
     "angular-sanitize": "^1.6.8",
     "angular-ui-bootstrap": "^2.5.6",
+    "biocode-angular-material-data-table": "^0.10.10",
     "bootstrap-sass": "^3.3.1",
     "jquery": "^1.12.4",
     "jquery-ui": "^1.12.1",

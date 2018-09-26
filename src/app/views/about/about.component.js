@@ -8,7 +8,8 @@ class AboutController {
     this.$location = $location;
   }
 
-  openProjects() {
+  openProjects($event) {
+    $event.preventDefault();
     this.$location.hash('projects');
     this.$onChanges();
   }
@@ -18,6 +19,7 @@ class AboutController {
     if (accordionSection === 'userHelp') this.userHelp = true;
     else if (accordionSection === 'projects') this.projects = true;
     else if (accordionSection === 'dataPolicy') this.dataPolicy = true;
+    else this.gettingStarted = true;
   }
 }
 

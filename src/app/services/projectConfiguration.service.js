@@ -12,16 +12,19 @@ class ProjectConfigurationService {
     this.$http = $http;
   }
 
-  all(networkApproved = false) {
+  all(networkApproved = false, includeUser = false) {
     return this.$http
       .get(
         `${restRoot}projects/configs${
-          networkApproved ? '?networkApproved=true' : ''
-        }`,
+          networkApproved ? '?networkApproved=true&' : '?'
+        }${includeUser ? 'user=true' : ''}`,
       )
       .then(({ data }) =>
-        data.map(d =>
-          Object.assign({}, d, { config: new ProjectConfig(d.config) }),
+        data.map(
+          d =>
+            d.config
+              ? Object.assign({}, d, { config: new ProjectConfig(d.config) })
+              : d,
         ),
       );
   }

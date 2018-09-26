@@ -53,10 +53,10 @@ class UserService extends EventEmitter {
       .catch(angular.catcher('Error loading user.'));
   }
 
-  create(inviteId, user) {
+  create(user, inviteId) {
     return this.$http({
       method: 'POST',
-      url: `${restRoot}users?id=${inviteId}`,
+      url: `${restRoot}users/${inviteId || ''}`,
       data: user,
       keepJson: true,
     }).catch(angular.catcher('Error creating user.'));

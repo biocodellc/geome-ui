@@ -1,0 +1,38 @@
+<div class="md-stepper" ng-class="{
+            'md-active': $mdStep.isActive(),
+            'md-step-disabled': $mdStep.$stepper.preventSkip && !$mdStep.hasVisited(),
+    }">
+  <md-steppers-header class="md-steppers-header md-steppers-vertical">
+    <button class="md-stepper-indicator" ng-class="{
+                    'md-active': $mdStep.stepNumber === $mdStep.$stepper.currentStep,
+                    'md-completed': $mdStep.$stepper.isCompleted($mdStep.stepNumber),
+                    'md-error': $mdStep.hasError,
+                    'md-stepper-optional': $mdStep.optional || $mdStep.hasError
+                }"
+      ng-click="$mdStep.$stepper.goto($mdStep.stepNumber)" ng-disabled="$mdStep.$stepper.linear || $mdStep.stepNumber === $mdStep.$stepper.currentStep">
+      <div class="md-stepper-indicator-wrapper">
+        <div class="md-stepper-number" ng-hide="$mdStep.hasError">
+          <span ng-if="!$mdStep.$stepper.isCompleted($mdStep.stepNumber)">{{ $mdStep.stepNumber + 1
+            }}</span>
+          <md-icon md-svg-icon="steppers-check" class="md-stepper-icon" ng-if="$mdStep.$stepper.isCompleted($mdStep.stepNumber)"></md-icon>
+        </div>
+        <div class="md-stepper-error-indicator" ng-show="$mdStep.hasError">
+          <md-icon md-svg-icon="steppers-warning"></md-icon>
+        </div>
+
+        <div class="md-stepper-title">
+          <span>{{ $mdStep.label }}</span>
+          <small ng-if="$mdStep.optional && !$mdStep.hasError">{{ $mdStep.optional }}</small>
+          <small class="md-stepper-error-message" ng-show="$mdStep.hasError">
+            {{ $mdStep.message }}
+          </small>
+        </div>
+      </div>
+    </button>
+    <div class="md-stepper-feedback-message" ng-show="stepper.hasFeedback">
+      {{stepper.feedbackMessage}}
+    </div>
+  </md-steppers-header>
+  <md-steppers-scope layout="column" class="md-steppers-scope" ng-show="$mdStep.isActive()"
+    ng-transclude></md-steppers-scope>
+</div>

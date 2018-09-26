@@ -1,0 +1,21 @@
+<md-dialog id="edit-property-dialog">
+  <md-dialog-content layout="column">
+    <md-input-container class="md-block">
+      <label>Name</label>
+      <input name="group" ng-model="$ctrl.property.name" required md-autofocus placeholder="Property Name" />
+    </md-input-container>
+
+    <md-checkbox ng-model="$ctrl.property.required" class="md-align-top-left" name="required">
+      required?
+      <md-hints>
+        <md-hint>Require this property for all expeditions?</md-hint>
+      </md-hints>
+    </md-checkbox>
+
+    <md-dialog-actions>
+      <md-button ng-click="$ctrl.$mdDialog.cancel()" class="md-primary">Cancel</md-button>
+      <md-button ng-click="$ctrl.$mdDialog.hide($ctrl.property)" ng-disabled="!$ctrl.property.name"
+        class="md-primary">Save</md-button>
+    </md-dialog-actions>
+  </md-dialog-content>
+</md-dialog>

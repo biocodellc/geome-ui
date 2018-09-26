@@ -43,7 +43,13 @@ const css = (extend = []) => {
         },
     isProd
       ? 'postcss-loader'
-      : { loader: 'postcss-loader', options: { sourceMap: false } },
+      : {
+          loader: 'postcss-loader',
+          options: {
+            sourceMap: false,
+            config: { path: './postcss.config.js' },
+          },
+        },
   ].concat(extend);
 };
 
@@ -319,6 +325,7 @@ module.exports = (function makeWebpackConfig() {
     contentBase: './src/public',
     historyApiFallback: true,
     // hot: true,
+    hotOnly: true, // no page reload as fallback
     // stats: 'minimal',
     port: PORT,
   };

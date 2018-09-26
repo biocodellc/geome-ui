@@ -1,0 +1,36 @@
+<md-table-container id="expedition-metadata-table">
+    <table md-table order-by="$ctrl.orderBy" class="table table-condensed">
+        <thead fix-head md-head md-order="$ctrl.orderBy">
+            <tr md-row>
+                <th md-column class="action-row"></th>
+                <th md-column md-order-by="name">Name</th>
+                <th md-column md-order-by="level">
+                    <span>Required</span>
+                    <!-- md-button here breaks due to the fix-head directive, so we use a regular button and 
+                            manually add the md-button classes -->
+                    <button ng-click="$ctrl.addProperty($event)" class="md-primary md-button md-ink-ripple add-button">
+                        <md-icon md-font-icon="fa fa-plus fa-fw"></md-icon>
+                        Add Property
+                    </button>
+                </th>
+            </tr>
+        </thead>
+        <tbody md-body>
+            <tr md-row ng-repeat="p in $ctrl.properties |  orderBy: $ctrl.orderBy">
+                <td md-cell class="action-row">
+                    <div layout="row">
+                        <md-icon ng-click="$ctrl.editProperty($event, p)" md-font-icon="fa fa-pencil fa-fw"></md-icon>
+                        <md-icon ng-click="$ctrl.deleteProperty($event, p)" md-font-icon="fa fa-trash text-danger fa-fw"></md-icon>
+                    </div>
+                </td>
+                <td md-cell>{{p.name}}</td>
+                <td md-cell class="md-checkbox-cell">
+                    <md-checkbox ng-click="$ctrl.handleChange()" ng-model="p.required"></md-checkbox>
+                </td>
+            </tr>
+            <tr md-row ng-if="$ctrl.properties.length === 0">
+                <td md-cell class="text-center" colspan=3>No metdata properties.</td>
+            </tr>
+        </tbody>
+    </table>
+</md-table-container>

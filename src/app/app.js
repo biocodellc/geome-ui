@@ -3,6 +3,7 @@ import uirouter from '@uirouter/angularjs';
 import bootstrap from 'angular-ui-bootstrap';
 import ngMaterial from 'angular-material';
 import ngAnimate from 'angular-animate';
+import ngMessages from 'angular-messages';
 import filter from 'angular-filter';
 
 // todo remove the following and use only angular-ui-bootstrap
@@ -22,8 +23,12 @@ import textOverflowTooltip from './directives/textOverflowTooltip.directive';
 import showErrors from './directives/showErrors.directive';
 import mdPopover from './directives/mdPopover.directive';
 import mdSticky from './directives/mdSticky.directive';
+import mdHint from './directives/mdHint.directive';
+import mdAutocomplete from './directives/mdAutocomplete.directive';
 import ngImageGallery from './directives/ngImageGallery.directive';
+import formValidators from './directives/formValidators.directive';
 import trustedHtml from './filters/html.filter';
+import excludeFilter from './filters/exclude.filter';
 
 import about from './views/about';
 import home from './views/home';
@@ -31,8 +36,10 @@ import containerPage from './components/container-page';
 import notFound from './views/not-found';
 import contact from './views/contact';
 import login from './views/login';
+import register from './views/register';
 import templates from './views/templates';
 import project from './views/project';
+import createProject from './views/create-project';
 import projectConfig from './views/project-config';
 import expeditions from './views/expeditions';
 import validation from './views/validation';
@@ -44,6 +51,7 @@ import plateViewer from './views/plate-viewer';
 
 import projectService from './services/project.service';
 import projectConfigurationService from './services/projectConfiguration.service';
+import networkConfigurationService from './services/networkConfiguration.service';
 import userService from './services/user.service';
 
 import app from './app.component';
@@ -69,14 +77,20 @@ const dependencies = [
   showErrors,
   mdPopover,
   mdSticky,
+  mdHint,
+  mdAutocomplete,
   ngImageGallery,
+  formValidators,
   trustedHtml,
+  excludeFilter,
   bootstrap,
   ngMaterial,
   ngAnimate,
+  ngMessages,
   filter,
   projectService,
   projectConfigurationService,
+  networkConfigurationService,
   userService,
   containerPage,
   header,
@@ -87,6 +101,7 @@ const dependencies = [
   contact,
   notFound,
   login,
+  register,
   query,
   dashboard,
   record,
@@ -97,6 +112,7 @@ const dependencies = [
   expeditions,
   validation,
   project,
+  createProject,
   projectConfig,
   users,
   projectSelectorDialog,
@@ -105,6 +121,11 @@ const dependencies = [
 
 // attach global objects for easy access throughout app
 angular.catcher = catcher;
+
+// allow hot module replacement for development
+if (module.hot) {
+  module.hot.accept();
+}
 
 export default angular
   .module('biscicolApp', dependencies)

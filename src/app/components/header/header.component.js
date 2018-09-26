@@ -32,5 +32,6 @@ export default {
     onProjectChange: '&',
     onSignout: '&',
     showProjectSelector: '<',
+    showCreateProject: '<',
   },
 };

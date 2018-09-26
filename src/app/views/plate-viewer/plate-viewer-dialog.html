@@ -16,11 +16,10 @@
           <span flex />
           <md-autocomplete md-no-cache md-selected-item="$ctrl.displayColumn" md-items="c in $ctrl.metadataColumns | filter:searchText"
             md-floating-label="Display Column" md-require-match md-search-text="searchText" class="no-floating-label"
-            md-min-length="0" ng-click="searchText = ''">
+            md-min-length="0" ng-click="searchText = ''" md-show-arrow="true">
             <md-item-template>
               <span md-highlight-text="searchText" md-highlight-flags="i">{{c}}</span>
             </md-item-template>
-            <span class="md-select-icon" aria-hidden="true" ng-click="$mdAutocompleteCtrl.focus($event)"></span>
           </md-autocomplete>
           <span flex />
         </div>
