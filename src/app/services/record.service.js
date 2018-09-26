@@ -16,6 +16,13 @@ class RecordService {
       url: `${restRoot}records/${identifier}?includeParent&includeChildren`,
     });
   }
+
+  delete(identifier) {
+    return this.$http({
+      method: 'DELETE',
+      url: `${restRoot}records/${identifier}`,
+    });
+  }
 }
 
 export default angular

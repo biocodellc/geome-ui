@@ -22,9 +22,11 @@ class PlateViewerController {
     $mdDialog,
     QueryService,
     PlateService,
+    RecordService,
     plateName,
     plateData,
     currentProject,
+    currentUser,
     canEdit,
     newPlate,
     expeditions,
@@ -34,10 +36,12 @@ class PlateViewerController {
     this.$mdDialog = $mdDialog;
     this.QueryService = QueryService;
     this.PlateService = PlateService;
+    this.RecordService = RecordService;
     this.plateName = plateName;
     this.origPlateData = plateData;
     this.plateData = angular.copy(plateData);
     this.currentProject = currentProject;
+    this.currentUser = currentUser;
     this.canEdit = canEdit;
     this.newPlate = newPlate || false;
     this.expeditions = expeditions;
@@ -56,7 +60,23 @@ class PlateViewerController {
           .concat(sampleEntity.attributes.map(a => a.column)),
       ),
     );
+    this.nonBaseTissueAttributes = tissueEntity.attributes.filter(
+      a =>
+        !['tissueID', 'tissueWell', 'tissuePlate', 'materialSampleID'].includes(
+          a.column,
+        ),
+    );
     this.metadataColumns.sort();
+  }
+
+  canDelete(row, column) {
+    const t = this.plateData[row][column];
+    return (
+      t &&
+      t.tissueID &&
+      (this.currentUser.userId === this.currentProject.user.userId ||
+        this.expeditions.includes(this.plateData[row][column].expeditionCode))
+    );
   }
 
   dataChanged(row, column) {
@@ -108,6 +128,47 @@ class PlateViewerController {
       .catch(() => {})
       .finally(() => angular.element('.md-dialog-backdrop').css('z-index', 79));
   }
+
+  deleteTissue(row, column) {
+    const t = this.plateData[row][column];
+
+    const remove = () => {
+      delete this.plateData[row][column];
+      this.RecordService.delete(t.bcid).catch(e => {
+        angular.catcher('Failed to delete tissue')(e);
+        this.plateData[row][column] = t;
+      });
+    };
+
+    // when we create a new tissue in a plate, we only create
+    // a few attributes ('materialSampleID', 'tissueID', 'tissuePlate', 'tissueWell')
+    // if the tissue contains more then these keys, inform the user
+    if (this.nonBaseTissueAttributes.some(a => !!t[a.column])) {
+      this.$mdDialog
+        .show(
+          this.$mdDialog
+            .confirm()
+            .htmlContent(
+              `This tissue contains additional metadata. If you delete this tissue,
+               the metadata will be lost. To preserve the metadata, re-upload the tissue
+               via a spreadsheet, and alter the tissuePlate and/or tissueWell columns.
+               <br/><br/><strong>Are you sure you want to delete it?</strong>`,
+            )
+            .title('Delete Tissue?')
+            .css('delete-tissue-dialog')
+            .multiple(true)
+            .ok('Delete')
+            .cancel('Cancel'),
+        )
+        .then(() => {
+          remove();
+        })
+        .catch(() => {});
+    } else {
+      remove();
+    }
+  }
+
   save() {
     this.isSaving = true;
     const p = this.newPlate
@@ -148,6 +209,7 @@ class PlateViewerController {
         this.newPlate = this.newPlate && !resp.plate;
         this.origPlateData = resp.plate || angular.copy(NEW_PLATE);
         this.hasChanges = !angular.equals(this.origPlateData, this.plateData);
+        this.searchTexts = {};
       })
       .finally(() => (this.isSaving = false));
   }
@@ -188,6 +250,7 @@ class PlatesController {
     $mdDialog,
     $state,
     PlateService,
+    RecordService,
     ExpeditionService,
     QueryService,
   ) {
@@ -196,6 +259,7 @@ class PlatesController {
     this.$mdDialog = $mdDialog;
     this.$state = $state;
     this.PlateService = PlateService;
+    this.RecordService = RecordService;
     this.ExpeditionService = ExpeditionService;
     this.QueryService = QueryService;
     this.hasExpeditions = false;
@@ -242,7 +306,9 @@ class PlatesController {
           $mdDialog: this.$mdDialog,
           QueryService: this.QueryService,
           PlateService: this.PlateService,
+          RecordService: this.RecordService,
           currentProject: this.currentProject,
+          currentUser: this.currentUser,
           canEdit: !!this.currentUser,
           newPlate: this.isNewPlate,
         },

@@ -31,10 +31,16 @@
           td {
             min-width: 100px;
             padding: 8px 4px;
+            padding-top: 0;
+            margin-top: 8px;
             text-align: center;
             vertical-align: middle;
+            position: relative;
             &:focus {
               outline: none;
+            }
+            md-autocomplete {
+              margin-top: 8px;
             }
           }
           th:first-of-type,
@@ -95,6 +101,29 @@
       }
     }
   }
+
+  md-icon.delete-tissue {
+    min-width: 12px;
+    min-height: 12px;
+    width: 12px;
+    height: 12px;
+    line-height: 12px;
+    font-size: 12px;
+    color: $brand-danger;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+
+    &:hover {
+      color: darken($brand-danger, 10%);
+    }
+
+    + div {
+      margin-top: 16px;
+      cursor: pointer;
+    }
+  }
+
   .sub-column {
     margin-top: 2px;
     font-size: 86%;
@@ -109,6 +138,10 @@
   md-input-container {
     margin-bottom: 0;
   }
+}
+
+.delete-tissue-dialog {
+  max-width: 450px;
 }
 
 .tissue-dialog {
