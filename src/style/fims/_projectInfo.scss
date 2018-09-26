@@ -1,4 +1,10 @@
 .project-info {
+  margin-bottom: 16px;
+  min-height: 46px;
+  max-height: 330px;
+  overflow-y: auto;
+  border: solid 1px rgba(0, 0, 0, 0.12);
+
   .panel-heading {
     padding: 13px 15px;
   }
@@ -7,15 +13,32 @@
     margin-bottom: 0;
   }
 
-  md-virtual-repeat-container {
-    height: 330px;
-    border: solid 1px rgba(0, 0, 0, 0.12);
+  .config-item {
+    border-bottom: solid 1px rgba(0, 0, 0, 0.12);
 
-    ul {
-      border-bottom: solid 1px rgba(0, 0, 0, 0.12);
-      .heading {
-        font-weight: 500;
+    .panel-body {
+      padding: 0;
+    }
+
+    .config-item {
+      margin-left: 36px;
+
+      .panel-title {
+        font-size: 14px;
       }
+
+      .panel-body {
+        font-size: 12px;
+        padding-left: 15px;
+      }
+
+      &:last-of-type {
+        border-bottom: none;
+      }
+    }
+
+    .heading {
+      font-weight: 500;
     }
   }
 }

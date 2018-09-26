@@ -1,50 +1,42 @@
 <div class="project-info">
-	<md-virtual-repeat-container>
-		<div layout="row" class="loading-overlay" layout-align="center top" ng-show="$ctrl.loading">
-			<md-progress-circular md-mode="indeterminate"></md-progress-circular>
-		</div>
+	<div layout="row" class="loading-overlay" layout-align="center top" ng-show="$ctrl.loading">
+		<md-progress-circular md-mode="indeterminate"></md-progress-circular>
+	</div>
 
-		<uib-accordion>
-			<div ng-repeat="(key,value) in $ctrl.data | groupBy: 'projectConfiguration.name'">
-				<ul uib-accordion-group>
+	<uib-accordion>
+		<div ng-repeat="(key,value) in $ctrl.data | groupBy: 'projectConfiguration.name'"
+		 uib-accordion-group class="config-item">
+			<uib-accordion-heading>
+				<a href="#">{{key}} Configuration</a>
+			</uib-accordion-heading>
+			{{value[0].projectConfiguration.description}}
+			<uib-accordion>
+				<div ng-repeat="p in value | orderBy:'projectTitle'" class="config-item" uib-accordion-group>
 					<uib-accordion-heading>
-						<a href="#">{{key}} (a network approved configuration)</a>
+						<i><a href="#">{{p.projectTitle}}</a></i>
 					</uib-accordion-heading>
-					{{value[0].projectConfiguration.description}}
+
 					<ul class="list-unstyled">
-						<uib-accordion>
-							<li ng-repeat="x in value | orderBy:'projectTitle'">
-								<ul uib-accordion-group class="list-unstyled">
-									<uib-accordion-heading>
-										<i><a href="#">{{x.projectTitle}}</a></i>
-									</uib-accordion-heading>
-
-
-									<li>
-										<p><i>{{x.description}}</i></p>
-									</li>
-									<li>
-										<span class="heading">Administrator:</span>
-										<span class="text-capitalize">{{x.user.firstName}} {{x.user.lastName}} </span>
-										<a href="mailto:{{x.user.email}}">{{x.user.email}}</a>
-									</li>
-									<li>
-										<span class="heading">Status:</span>
-										<span ng-if="!x.public">Not </span>Visible To Public
-									</li>
-									<li>
-										<span class="heading">Network Status:</span>
-										<span ng-if="!x.projectConfiguration.networkApproved">Not </span>Synchronized with
-										{{x.projectConfiguration.name}} network configuration
-									</li>
-
-
-								</ul>
-							</li>
-						</uib-accordion>
+						<li>
+							<p><i>{{p.description}}</i></p>
+						</li>
+						<li>
+							<span class="heading">Administrator:</span>
+							<span class="text-capitalize">{{p.user.firstName}} {{p.user.lastName}} </span>
+							<a href="mailto:{{p.user.email}}">{{p.user.email}}</a>
+						</li>
+						<li>
+							<span class="heading">Status:</span>
+							<span ng-if="!p.public">Not </span>Visible To Public
+						</li>
+						<li>
+							<span class="heading">Network Status:</span>
+							<span ng-if="!p.projectConfiguration.networkApproved">Not </span>Synchronized with
+							{{x.projectConfiguration.name}} network configuration
+						</li>
 					</ul>
-				</ul>
-			</div>
-		</uib-accordion>
-	</md-virtual-repeat-container>
+				</div>
+			</uib-accordion>
+		</div>
+	</uib-accordion>
 </div>

@@ -11,7 +11,9 @@ class ProjectInfoController {
   $onInit() {
     this.loading = true;
     this.ProjectService.all(true)
-      .then(({ data }) => (this.data = data))
+      .then(({ data }) => {
+        this.data = data.filter(p => p.projectConfiguration.networkApproved);
+      })
       .finally(() => (this.loading = false));
   }
 }
