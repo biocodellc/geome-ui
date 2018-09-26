@@ -11,7 +11,7 @@
 </div>
 <br>
 <uib-accordion>
-  <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="Getting Started">
+  <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="Getting Started" is-open="$ctrl.gettingStarted">
     <p>
     Welcome to GeOMe! There are several routes you can take to get started.  The path you take depends on if you need to
     read data, write data, or specify attributes and rules in a new project.  The following describes routes you can choose 
@@ -27,7 +27,7 @@
 
     <p>
       <strong><u>Route 2</u>: I want to contribute data to an existing project</strong>
-      <br>See the <a ng-click="$ctrl.openProjects()">GeOMe projects page</a> to read about current GeOMe projects. 
+      <br>See the <a href='#' ng-click="$ctrl.openProjects($event)">GeOMe projects page</a> to read about current GeOMe projects. 
       Contact the project administrator of the project you would like to join and they will either create a new account 
       for you or associate your existing account to their project.  Read the 
       <a href='docs/helpDocumentation.pdf' target=_blank>GeOMe Help Document</a> to get started using the web interface.</br>
@@ -37,8 +37,7 @@
       <strong><u>Route 3</u>: I want to create a new project, synchronized with a network approved configuration</strong>
       <br>If you choose to create a project that is synchronized with a network approved configuration, you will receive all
       updates and additions of data attributes, rules, and lookup lists of the network approved configuration. 
-      Creating any new project currently requires sending an email request to <a href="mailto:geome.help@gmail.com">geome.help@gmail.com</a> 
-      with a brief statement of what your project involves.</br>
+      After you <a ui-sref="register">create an account</a> you will be able to create a new project.
     </p>
 
     <p>
@@ -46,8 +45,7 @@
       <br>If you choose to create a project that is un-synchronized with a network approved configuration, you will either start
       from scratch or you can choose to clone a network approved configuration.  If your project is un-syncrhonized, then you are
       free to make your own changes and additions to your project configuration and you will not receive any changes made by the
-      network approved configuration.  Creating a new project currently requires sending an email request to 
-      <a href="mailto:geome.help@gmail.com">geome.help@gmail.com</a> with a brief statement of what your project involves.</br>
+      network approved configuration. After you <a ui-sref="register">create an account</a> you will be able to create a new project.
     </p>
 
     <p><b><u>Glossary</u></b>:</p>
@@ -60,17 +58,16 @@
 
     <p><i>Load Data</i> (see Workbench -> "Load Data") enables the user to submit data for a project that you have access to.</p>
 
-    <p><i>Create project</i> (interface functions in development) tools enables the user to manage their own project data within GeOMe.
-    We are working on a project creation wizard to guide users into easily creating their own projects on the website.  Meanwhile users can
-    contact send an email to <a href="mailto:geome.help@gmail.com">geome.help@gmail.com</a> to create a new project. Projects can either
-    adopt a network approved configuration, clone an existing project, or build a project from scratch. </p>
+    <p><i>Create project</i> (see user menu -> "Create Project" ) enables the user to create and manage their own projects within GeOMe.
+      <a ui-sref="register">Registered</a> users are able to use the <a ui-sref="create-project">Create Project Wizard</a> to easily create
+    a new project. Projects can either adopt a network approved configuration, clone an existing project, or build a project from scratch.</p>
 
-    <p><i>Newtork approved configurations</i> are templates adopted by a set of projects that share a common set of rules and attributes.
+    <p><i>Network approved configurations</i> are templates adopted by a set of projects that share a common set of rules and attributes.
     If a project adopts a network approved configuration, then that project accepts all rules, attributes, and lists from the network 
     approved configuration.  During project creation, if the project creator chooses to synchronize with the network approved configuration then
-    when all updates to rules, attributes and lists are controlled by the network administrator.  On the other hand, if the project creator chooses
+    all updates to rules, attributes and lists are controlled by the network administrator.  On the other hand, if the project creator chooses
     to NOT synchronize with the network approved configuration then the project can control its own rules, attributes, and lists.
-    Currently deployed network approved configurations are visible on the <a ng-click="$ctrl.openProjects()">GeOMe projects page</a>.
+    Currently deployed network approved configurations are visible on the <a href='#' ng-click="$ctrl.openProjects($event)">GeOMe projects page</a>.
 These projects follow on the spirit and principals of the Diversity of the IndoPacific project.
 
   </div>
@@ -93,7 +90,7 @@ These projects follow on the spirit and principals of the Diversity of the IndoP
       that the user interacts with, such as generating templates and loading data. The white boxes with a green border
       are
       functions that happen outside of the GeOMe environment, such as data entry into a spreadsheet. </p>
-    <div flex>
+    <div layout="row" layout-align="center">
       <img id='workflowImage ' class="img-responsive" style="max-height: 350px;" src='docs/geomeWorkflow.png '>
     </div>
   </div>
@@ -139,8 +136,11 @@ These projects follow on the spirit and principals of the Diversity of the IndoP
       sequence data and loading to the Sequence Read Archive.
     </p>
 
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/rdoP7xqDyhQ" frameborder="0" allowfullscreen></iframe>
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/GgPsFnoinZc" frameborder="0" allowfullscreen></iframe>
+
+    <div layout="row" layout-align="center">
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/rdoP7xqDyhQ" frameborder="0" allowfullscreen></iframe>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/GgPsFnoinZc" frameborder="0" allowfullscreen></iframe>
+    </div>
   </div>
 
   <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="History">

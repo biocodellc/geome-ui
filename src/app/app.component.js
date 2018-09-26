@@ -20,6 +20,7 @@ class AppCtrl {
     this.$state = $state;
     this.$transitions = $transitions;
     this.projectView = false;
+    this.userHasProject = true;
   }
 
   $onInit() {
@@ -32,6 +33,8 @@ class AppCtrl {
     });
     this.UserService.on(USER_CHANGED_EVENT, u => {
       this.currentUser = u;
+      this.userHasProject = true;
+      this.setUserHasProject();
       const { current } = this.$state;
       if (!current.abstract && current.name !== 'login') this.$state.reload();
     });
@@ -62,6 +65,12 @@ class AppCtrl {
     this.$transitions.onSuccess({}, transition => {
       this.loading = false;
       this.projectView = checkProjectViewPresent(transition.$to());
+    });
+  }
+
+  setUserHasProject() {
+    this.ProjectService.all().then(({ data }) => {
+      this.userHasProject = data.length > 0;
     });
   }
 

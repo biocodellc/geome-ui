@@ -1,6 +1,5 @@
 import angular from 'angular';
 
-import compareTo from '../../directives/compareTo.directive';
 import routing from './users.routes';
 import userService from '../../services/user.service';
 
@@ -9,7 +8,7 @@ import newUser from './new-user.component';
 import resetPass from './reset-pass.component';
 
 export default angular
-  .module('fims.users', [compareTo, userService])
+  .module('fims.users', [userService])
   .run(routing)
   .component('fimsProfile', profile)
   .component('fimsNewUser', newUser)

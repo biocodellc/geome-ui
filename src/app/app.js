@@ -36,6 +36,7 @@ import containerPage from './components/container-page';
 import notFound from './views/not-found';
 import contact from './views/contact';
 import login from './views/login';
+import register from './views/register';
 import templates from './views/templates';
 import project from './views/project';
 import createProject from './views/create-project';
@@ -100,6 +101,7 @@ const dependencies = [
   contact,
   notFound,
   login,
+  register,
   query,
   dashboard,
   record,

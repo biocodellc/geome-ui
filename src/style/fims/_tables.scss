@@ -28,8 +28,11 @@ table.clone + md-table-container table tbody tr:first-child td {
       }
 
       tbody.md-body {
-        > tr.md-row.md-selected {
-          background-color: inherit;
+        > tr.md-row {
+          &:not([disabled]):hover,
+          &.md-selected {
+            background-color: inherit !important;
+          }
         }
       }
     }

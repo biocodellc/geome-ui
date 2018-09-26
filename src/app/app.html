@@ -1,8 +1,8 @@
 <md-content layout="column" layout-fill>
-  <fims-header show-project-selector="$ctrl.projectView" current-user="$ctrl.currentUser" current-project="$ctrl.currentProject"
+  <fims-header show-create-project="$ctrl.currentUser && !$ctrl.userHasProject"
+    show-project-selector="$ctrl.projectView" current-user="$ctrl.currentUser" current-project="$ctrl.currentProject"
     on-project-change="$ctrl.handleProjectChange(project)" on-signout="$ctrl.signout()">
   </fims-header>
-
 
   <div flex layout="row" ng-if="$ctrl.projectView">
     <!-- Sidebar navigation -->

@@ -18,8 +18,8 @@
                 </md-input-container>
                 <md-input-container ng-if="!$ctrl.resetPass">
                     <label>Password</label>
-                    <input name="password" type="password" ng-model="$ctrl.credentials.password" required
-                        tabindex="2">
+                    <input name="password" type="password" ng-model="$ctrl.credentials.password"
+                        required tabindex="2">
                     <div ng-messages="form.password.$error">
                         <div ng-message="required">Password is required.</div>
                     </div>
@@ -27,8 +27,8 @@
             </form>
 
             <div layout="row" layout-align="center center">
-                <md-button class="md-block md-primary md-raised" ng-click="$ctrl.submit()" layout="row" tabindex="3"
-                    layout-align="center center" flex="33">
+                <md-button class="md-block md-primary md-raised" ng-click="$ctrl.submit()" layout="row"
+                    tabindex="3" layout-align="center center" flex="33">
                     <span ng-show="!$ctrl.loading">
                         <span ng-if="!$ctrl.resetPass">Login</span>
                         <span ng-if="$ctrl.resetPass">Reset Password</span>
@@ -37,11 +37,17 @@
                         md-diameter="18" class="md-accent md-hue-3"></md-progress-circular>
                 </md-button>
             </div>
-            <div layout="row" layout-align="center center" class="text-center forgot-password">
+            <div layout="row" layout-align="center center" class="text-center help-link">
                 <a href="#" tabindex="4" ng-click="$ctrl.resetPass=!$ctrl.resetPass; $event.preventDefault();">
                     <span ng-if="$ctrl.resetPass">Login?</span>
                     <span ng-if="!$ctrl.resetPass">Forgot Password?</span>
                 </a>
+            </div>
+            <div layout="row" layout-align="center center" class="text-center help-link">
+                <span>
+                    New to GeOMe?
+                    <a ui-sref="register" tabindex="5">Sign up!</a>
+                </span>
             </div>
         </md-card-content>
     </md-card>
