@@ -7,7 +7,7 @@ const loadSession = (
   UserService,
   ProjectService,
 ) => {
-  const projectId = $location.search().projectId;
+  const projectId = parseInt($location.search().projectId, 10);
   const loadUser = () =>
     AuthService.getAccessToken() ? UserService.loadFromSession() : undefined;
   return Promise.all([ProjectService.loadFromSession(projectId), loadUser()]);

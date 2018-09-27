@@ -22,6 +22,7 @@ export const ProjectViewHookEmitter = new EventEmitter();
 
 export default (
   $rootScope,
+  $location,
   $transitions,
   $mdDialog,
   ProjectService,
@@ -35,7 +36,13 @@ export default (
   $transitions.onBefore(
     { to: checkProjectViewPresent },
     async trans => {
-      if (ProjectService.currentProject()) return Promise.resolve();
+      const projectId = parseInt($location.search().projectId, 10);
+      if (
+        ProjectService.currentProject() &&
+        (!projectId || ProjectService.currentProject().projectId === projectId)
+      ) {
+        return Promise.resolve();
+      }
 
       ProjectViewHookEmitter.emit(STARTED_HOOK_EVENT);
       trans.onFinish({}, () => {
@@ -48,6 +55,13 @@ export default (
           ProjectViewHookEmitter.emit(FINISHED_LOADING_PROJECT_EVENT);
         });
       };
+
+      if (projectId) {
+        try {
+          const project = await ProjectService.get(projectId, false);
+          if (project) return setProject(project);
+        } catch (e) {}
+      }
 
       const isAuthenticated = !!UserService.currentUser();
       // if there is only a single project the currentUser is a member, auto-select that project

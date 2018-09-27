@@ -6,7 +6,7 @@
 
   <div class="main-details" layout="row" layout-align="center center">
     <div ng-if="$ctrl.record.img1024" flex="100">
-      <img ng-src="{{$ctrl.record.img1024}}" href="{{$ctrl.record.originalUrl}}"/>
+      <img ng-src="{{$ctrl.record.img1024}}" href="{{$ctrl.record.originalUrl}}" />
     </div>
     <table ng-if="!$ctrl.record.originalUrl" flex="100" class="table table-condensed">
       <tbody>
@@ -53,8 +53,12 @@
           <th>{{key}}:</th>
           <td>
             <div class="truncate">
-              <md-tooltip md-direction="top" class="fix-placement" text-overflow-tooltip md-visible="false">{{value}}</md-tooltip>
-              {{value}}
+              <md-tooltip md-direction="top" class="fix-placement" text-overflow-tooltip md-visible="false">{{value.text
+                || value}}</md-tooltip>
+              <span ng-if="!value.href">{{value}}</span>
+              <span ng-if="value.href">
+                <a href="{{value.href}}">{{value.text}}</a>
+              </span>
             </div>
           </td>
         </tr>

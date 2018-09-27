@@ -40,13 +40,13 @@ class RecordController {
       this.children = this.record.children;
       const { projectId } = this.record;
       this.record = this.record.record;
-      this.fetchConfig(projectId);
+      this.fetchProject(projectId);
     }
   }
 
   getIdentifier(record) {
-    const key = this.config
-      ? this.config.entityUniqueKey(record.entity)
+    const key = this.project
+      ? this.project.config.entityUniqueKey(record.entity)
       : undefined;
     return key ? record[key] : record.bcid;
   }
@@ -86,7 +86,7 @@ class RecordController {
       detailCacheNumCols = numCols;
     }
 
-    const e = this.config.entities.find(
+    const e = this.project.config.entities.find(
       entity => entity.conceptAlias === this.record.entity,
     );
 
@@ -123,7 +123,21 @@ class RecordController {
       }
     }
     detailCache[index] = view.reduce((accumulator, key) => {
-      accumulator[key] = this.record[key];
+      if (key === 'projectId') {
+        accumulator.project = {
+          text: this.project.projectTitle,
+          href: `/workbench/overview?projectId=${this.project.projectId}`,
+        };
+      } else if (key === 'expeditionCode') {
+        accumulator[key] = {
+          text: this.record[key],
+          href: `/query?q=_projects_:${
+            this.project.projectId
+          } and _expeditions_:${this.record[key]}`,
+        };
+      } else {
+        accumulator[key] = this.record[key];
+      }
       return accumulator;
     }, {});
 
@@ -131,7 +145,7 @@ class RecordController {
   }
 
   setPhotos() {
-    const photoEntities = this.config.entities
+    const photoEntities = this.project.config.entities
       .filter(e => e.type === 'Photo')
       .map(e => e.conceptAlias);
 
@@ -194,18 +208,18 @@ class RecordController {
     );
   }
 
-  fetchConfig(projectId) {
+  fetchProject(projectId) {
     this.loading = true;
-    // short-circuit if the config is already loaded
+    // short-circuit if the project is already loaded
     if (this.currentProject && this.currentProject.projectId === projectId) {
-      this.config = this.currentProject.config;
+      this.project = this.currentProject;
       this.loading = false;
       return;
     }
 
-    this.ProjectService.getConfig(projectId)
-      .then(config => {
-        this.config = config;
+    this.ProjectService.get(projectId)
+      .then(project => {
+        this.project = project;
         this.setPhotos();
         this.sortChildren();
       })
@@ -221,7 +235,7 @@ class RecordController {
     if (!this.childDetails) return;
 
     Object.keys(this.childDetails).forEach(conceptAlias => {
-      const e = this.config.entities.find(
+      const e = this.project.config.entities.find(
         entity => entity.conceptAlias === conceptAlias,
       );
       this.childDetails[conceptAlias] = this.childDetails[conceptAlias].sort(
