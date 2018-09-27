@@ -157,7 +157,7 @@ class PlateViewerController {
                <br/><br/><strong>Are you sure you want to delete it?</strong>`,
             )
             .title('Delete Tissue?')
-            .css('delete-tissue-dialog')
+            .css('confirmation-dialog')
             .multiple(true)
             .ok('Delete')
             .cancel('Cancel'),

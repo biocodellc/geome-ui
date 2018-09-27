@@ -4,7 +4,7 @@
             <div class="form-group clearfix">
                 <div class="col-xs-9">
                     <label>Title</label>
-                    <input type="text" required class="form-control" ng-model="$ctrl.project.projectTitle"/>
+                    <input type="text" required class="form-control" ng-model="$ctrl.project.projectTitle" />
                 </div>
             </div>
 
@@ -19,7 +19,7 @@
                 <div class="col-xs-3">
                     <label>Visibility</label>
                     <select ng-model="$ctrl.project.public" class="form-control" required
-                            ng-options="(item?'public':'private') for item in [true, false]">
+                        ng-options="(item?'public':'private') for item in [true, false]">
                     </select>
                 </div>
             </div>
@@ -34,18 +34,22 @@
         </fieldset>
     </form>
 
-    <!--<div class="panel panel-danger">-->
-        <!--<div class="panel-body vertical-align">-->
-            <!--<div class="col-xs-9">-->
-                <!--<p><strong>Delete this project</strong></p>-->
-                <!--<p class="small"><span class="text-danger">Warning! This will delete all records associated with this-->
-                    <!--expeditions.</span> Please <a href ng-click="$parent.$ctrl.export()">export your data</a> before deleting this expedition.</p>-->
-            <!--</div>-->
-            <!--<div class="col-xs-3">-->
-                <!--<div>-->
-                    <!--<button class="btn btn-danger pull-right" ng-click="$ctrl.delete()">Delete</button>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
+    <div class="panel panel-danger">
+        <div class="panel-body vertical-align">
+            <div class="col-xs-9">
+                <p><strong>Delete this project</strong></p>
+                <p class="small"><span class="text-danger">Warning! This will delete all
+                        expeditions and records associated with this project.</span> Please 
+                        export your data before deleting this
+                        <!-- expeditions and records associated with this project.</span> Please <a href -->
+                        <!-- ng-click="$parent.$ctrl.export()">export your data</a> before deleting this -->
+                    project.</p>
+            </div>
+            <div class="col-xs-3">
+                <div>
+                    <button class="btn btn-danger pull-right" ng-click="$ctrl.onProjectDelete({project: $ctrl.project})">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

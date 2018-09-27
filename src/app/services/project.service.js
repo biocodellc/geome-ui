@@ -127,6 +127,16 @@ class ProjectService extends EventEmitter {
     }).catch(angular.catcher('Failed to update the project.'));
   }
 
+  delete(project) {
+    this.PROJECT_CACHE.removeAll();
+    return this.$http({
+      method: 'DELETE',
+      url: `${restRoot}projects/${project.projectId}`,
+    })
+      .then(() => this.setCurrentProject())
+      .catch(angular.catcher('Failed to delete the project.'));
+  }
+
   loadFromSession(projectId) {
     if (!projectId) {
       projectId = this.StorageService.get('projectId');

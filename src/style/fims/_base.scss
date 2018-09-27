@@ -290,6 +290,10 @@ md-dialog {
   }
 }
 
+.confirmation-dialog {
+  max-width: 450px;
+}
+
 // TODO: remove when we remove bootstrap
 //////////////////////
 // bootstrap overrides
