@@ -10,7 +10,10 @@ const mdAutocomplete = /* ngInject */ ($timeout, $mdUtil) => {
     restrict: 'E',
     require: 'mdAutocomplete',
     link: (scope, element, attrs, ctrl) => {
-      const mdShowArrow = scope.$eval(attrs.mdShowArrow);
+      const mdShowArrow =
+        scope.$eval(attrs.mdShowArrow) || attrs.mdShowArrow === '';
+      const mdClearOnBlur =
+        scope.$eval(attrs.mdClearOnBlur) || attrs.mdClearOnBlur === '';
 
       if (mdShowArrow) {
         $timeout(() => {
@@ -36,6 +39,7 @@ const mdAutocomplete = /* ngInject */ ($timeout, $mdUtil) => {
       ctrl.keydown = (event, ...args) => {
         // default behavior in md-stepper when "enter" key was pressed was not working correctly
         // here we fix that behavior and also add the ability to select
+        // return key
         if (event.keyCode === 13) {
           // select item if highlighted in dropdown
           if (
@@ -54,14 +58,24 @@ const mdAutocomplete = /* ngInject */ ($timeout, $mdUtil) => {
           element.find('input').blur();
           event.preventDefault();
           return;
+          // tab key
+        } else if (event.keyCode === 9) {
+          // if list isn't open, allow tab to behave normally
+          if (ctrl.hidden) return;
+          if (ctrl.loading) {
+            event.preventDefault();
+            return;
+          }
+          // 38 up arrow
+          // 40 down arrow
+          event.keyCode = event.shiftKey ? 38 : 40; // act like up/down arrow
         }
         origKeydown(event, ...args);
       };
 
-      if (!ctrl.scope.requireMatch && attrs.mdOnAddNewItem) {
-        const origBlur = ctrl.blur;
-
-        ctrl.blur = (...args) => {
+      const origBlur = ctrl.blur;
+      ctrl.blur = (...args) => {
+        if (!ctrl.scope.requireMatch && attrs.mdOnAddNewItem) {
           // if md-on-add-new-item cb is present, evaluate the expression and add the return value as the selectedItem
           if (ctrl.scope.searchText && !ctrl.scope.selectedItem) {
             const newItem = scope.$eval(attrs.mdOnAddNewItem, {
@@ -75,10 +89,14 @@ const mdAutocomplete = /* ngInject */ ($timeout, $mdUtil) => {
               });
             }
           }
+        }
 
-          origBlur(...args);
-        };
-      }
+        if (mdClearOnBlur && !ctrl.scope.selectedItem) {
+          ctrl.scope.searchText = '';
+        }
+
+        origBlur(...args);
+      };
     },
   };
 };

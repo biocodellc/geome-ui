@@ -55,9 +55,9 @@
                 </div>
                 <md-autocomplete ng-if="$ctrl.canEdit && (!$ctrl.plateData[r][c] || $ctrl.editedData[r][c])"
                   required md-selected-item="$ctrl.plateData[r][c]" md-items="s in $ctrl.query(r, c)"
-                  placeholder="Create Tissue" md-item-text="s.materialSampleID" md-require-match
-                  md-search-text="$ctrl.searchTexts[r][c]" md-delay="200" md-min-length="2"
-                  md-menu-container-class="md-autocomplete-suggestions-container-plate-viewer-dialog"
+                  md-clear-on-blur md-autoselect placeholder="Create Tissue" md-item-text="s.materialSampleID"
+                  md-require-match md-search-text="$ctrl.searchTexts[r][c]" md-delay="200"
+                  md-min-length="2" md-menu-container-class="md-autocomplete-suggestions-container-plate-viewer-dialog"
                   md-selected-item-change="$ctrl.dataChanged(r, c)">
                   <span md-highlight-text="$ctrl.searchTexts[r][c]" md-highlight-flags="i">{{s.materialSampleID}}</span>
                 </md-autocomplete>
