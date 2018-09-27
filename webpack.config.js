@@ -187,7 +187,7 @@ module.exports = (function makeWebpackConfig() {
   };
 
   // creates an alias "config" that we can use to import a config file
-  // dependent on the current NODE_ENV
+  // dependent on the current CONFIG_ENV
   const fallbackConfig = fs.existsSync(
     path.join(__dirname, 'config', 'local.js'),
   )
@@ -199,7 +199,7 @@ module.exports = (function makeWebpackConfig() {
       config: path.join(
         __dirname,
         'config',
-        process.env.NODE_ENV ? process.env.NODE_ENV : fallbackConfig,
+        process.env.CONFIG_ENV ? process.env.CONFIG_ENV : fallbackConfig,
       ),
     },
   };
