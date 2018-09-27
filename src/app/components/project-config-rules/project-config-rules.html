@@ -1,0 +1,41 @@
+<md-table-container id="rules-table">
+    <table md-table order-by="$ctrl.orderBy" class="table table-condensed">
+        <thead fix-head md-head md-order="$ctrl.orderBy">
+            <tr md-row>
+                <th md-column class="action-row"></th>
+                <th md-column md-order-by="name">Name</th>
+                <th md-column md-order-by="level">Level</th>
+                <th md-column>
+                    <span>Metadata</span>
+                    <!-- md-button here breaks due to the fix-head directive, so we use a regular button and 
+                            manually add the md-button classes -->
+                    <button ng-click="$ctrl.addRule($event)" class="md-primary md-button md-ink-ripple add-button">
+                        <md-icon md-font-icon="fa fa-plus fa-fw"></md-icon>
+                        Add Rule
+                    </button>
+                </th>
+            </tr>
+        </thead>
+        <tbody md-body>
+            <tr md-row ng-repeat="r in $ctrl.rules |  orderBy: $ctrl.orderBy track by $index">
+                <td md-cell class="action-row">
+                    <div layout="row" ng-if="$ctrl.canEdit(r)">
+                        <md-icon ng-click="$ctrl.editRule($event, r)" md-font-icon="fa fa-pencil fa-fw"></md-icon>
+                        <md-icon ng-click="$ctrl.deleteRule($event, r)" md-font-icon="fa fa-trash text-danger fa-fw"></md-icon>
+                    </div>
+                </td>
+                <td md-cell>{{r.name}}</td>
+                <td md-cell>{{r.level}}</td>
+                <td md-cell>
+                    <ul class="list-inline">
+                        <li ng-repeat="(key, value) in r.metadata()">
+                            <strong class="text-capitalize">{{ key }}:</strong>
+                            <span ng-if="$ctrl.isArray(value)">{{ value.join(', ') }}</span>
+                            <span ng-if="!$ctrl.isArray(value)">{{ value }}</span>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</md-table-container>

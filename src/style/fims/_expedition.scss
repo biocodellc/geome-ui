@@ -1,0 +1,23 @@
+.right-column {
+  md-list-item {
+    padding: 0;
+    border-bottom: 1px solid #ddd;
+    &:first-of-type {
+      border-top: 1px solid #ddd;
+    }
+    .md-list-item-inner {
+      font-weight: 700;
+    }
+    .md-button {
+      .md-list-item-inner {
+        md-icon {
+          margin-right: 0 !important;
+          margin-top: 12px !important;
+        }
+      }
+    }
+    .md-icon-button {
+      padding-right: 0;
+    }
+  }
+}

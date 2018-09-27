@@ -1,0 +1,168 @@
+.md-autocomplete-suggestions-container-plate-viewer-dialog {
+  min-width: 160px !important;
+}
+
+.plate-viewer-dialog {
+  max-width: 90%;
+  width: 90%;
+  max-height: 90%;
+  height: 90%;
+  a:hover,
+  a:focus {
+    text-decoration: none;
+  }
+  md-dialog-content {
+    margin: 16px;
+    margin-bottom: 8px;
+    height: 100%;
+    table {
+      height: 100%;
+      margin-bottom: 0;
+      thead {
+        tr {
+          th {
+            text-align: center;
+          }
+        }
+      }
+      tbody {
+        tr {
+          th,
+          td {
+            min-width: 100px;
+            padding: 8px 4px;
+            padding-top: 0;
+            margin-top: 8px;
+            text-align: center;
+            vertical-align: middle;
+            position: relative;
+            &:focus {
+              outline: none;
+            }
+            md-autocomplete {
+              margin-top: 8px;
+            }
+          }
+          th:first-of-type,
+          td:first-of-type {
+            min-width: 0;
+          }
+        }
+      }
+    }
+  }
+  .plate-viewer-details {
+    margin-bottom: 8px;
+    .errors {
+      max-height: 100px;
+      ul {
+        margin-bottom: 0;
+      }
+    }
+    md-autocomplete {
+      md-input-container {
+        margin-bottom: 0;
+      }
+      .md-errors-spacer {
+        display: none;
+      }
+    }
+  }
+  md-dialog-actions {
+    border-top: none !important;
+    min-height: 36px;
+    padding-right: 0;
+    .md-button {
+      margin-bottom: 0;
+    }
+  }
+  .plate {
+    md-autocomplete {
+      // min-width: 150px;
+      min-width: 100px;
+      height: 30px;
+      md-autocomplete-wrap {
+        box-shadow: none;
+        border-color: rgba(0, 0, 0, 0.12);
+        border-width: 0 0 1px 0;
+        border-style: solid;
+        border-radius: 0;
+        height: 30px;
+        padding-bottom: 2px;
+        input {
+          height: 30px;
+          padding: 0 0 0 2px;
+          text-overflow: ellipsis;
+        }
+        button {
+          margin: 0;
+          width: 22px;
+        }
+      }
+    }
+  }
+
+  md-icon.delete-tissue {
+    min-width: 12px;
+    min-height: 12px;
+    width: 12px;
+    height: 12px;
+    line-height: 12px;
+    font-size: 12px;
+    color: $brand-danger;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+
+    &:hover {
+      color: darken($brand-danger, 10%);
+    }
+
+    + div {
+      margin-top: 16px;
+      cursor: pointer;
+    }
+  }
+
+  .sub-column {
+    margin-top: 2px;
+    font-size: 86%;
+  }
+}
+
+.new-plate-dialog {
+  min-width: 400px;
+  md-dialog-content {
+    margin: 16px;
+  }
+  md-input-container {
+    margin-bottom: 0;
+  }
+}
+
+.delete-tissue-dialog {
+  max-width: 450px;
+}
+
+.tissue-dialog {
+  md-dialog-content {
+    padding: 16px 8px;
+  }
+  table {
+    margin: 0;
+    tbody {
+      tr:first-of-type {
+        th,
+        td {
+          border-top: none;
+        }
+      }
+    }
+  }
+  md-dialog-actions {
+    min-height: 36px;
+    button {
+      margin: 0;
+    }
+  }
+}

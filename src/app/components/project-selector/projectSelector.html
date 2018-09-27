@@ -5,21 +5,32 @@
     <md-icon md-font-icon="fa fa-angle-down fa-sm"></md-icon>
   </md-button>
   <md-menu-content width="4" class="md-menu-bar-menu md-dense">
-    <md-menu-item>
-      <span layout="row" layout-align="center center">
-        Switch Project
-        <div class="project-selector-action">
-          <md-button class="small" ng-click="$ctrl.signIn()" ng-show="!$ctrl.isAuthenticated" align="center">Sign In
-          </md-button>
-          <md-tooltip md-direction="bottom">Sign In to see your projects</md-tooltip>
+    <md-menu-item class="project-selector-header">
+      <div layout="row" layout-align="center center">
+        <div layout="column">
+          Switch Project
+          <!-- pointer-events is a workaround for https://github.com/angular/material/issues/6662 -->
+          <div ng-if="!$ctrl.userHasProject && $ctrl.isAuthenticated" class="hint" style="pointer-events: auto">
+            Showing public projects
+            <md-tooltip md-delay="200" md-direction="bottom">You are not a member
+              of any projects</md-tooltip>
+          </div>
         </div>
-        <md-checkbox class="small include-public" ng-change="$ctrl.filterProjects()" ng-model="$ctrl.includePublicProjects" ng-show="$ctrl.isAuthenticated">
-          <!-- <md-tooltip ng-show="$ctrl.isAuthenticated && $ctrl.currentProject.public && $ctrl.includePublicProjects" md-delay="500" -->
-          <!-- md-direction="bottom">The current selected project is a public project that you are not a member of. Select a project -->
-          <!-- you are a member of to uncheck this</md-tooltip> -->
+        <div class="project-selector-action">
+          <!-- pointer-events is a workaround for https://github.com/angular/material/issues/6662 -->
+          <md-button class="small" ng-click="$ctrl.signIn()" ng-show="!$ctrl.isAuthenticated" align="center"
+            style="pointer-events: auto">Sign In
+            <md-tooltip md-delay="600" md-direction="bottom">Sign In to see your projects</md-tooltip>
+          </md-button>
+        </div>
+        <md-checkbox class="small include-public" ng-change="$ctrl.filterProjects()" ng-model="$ctrl.includePublicProjects"
+          ng-show="$ctrl.userHasProject && $ctrl.isAuthenticated" style="pointer-events: auto">
           include public
+          <md-tooltip md-direction="bottom" ng-if="$ctrl.notMemberOfCurrentProject">You are not a
+            member of the current project. You must change projects before you can hide public
+            projects.</md-tooltip>
         </md-checkbox>
-      </span>
+      </div>
     </md-menu-item>
     <md-menu-divider></md-menu-divider>
     <md-menu-item ng-repeat="project in $ctrl.projects track by project.projectId">

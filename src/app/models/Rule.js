@@ -1,3 +1,18 @@
+const METADATA_TYPES = {
+  column: 'column',
+  columns: 'columns',
+  uniqueAcrossProject: 'boolean',
+  listName: 'list',
+  minimumColumn: 'column',
+  maximumColumn: 'column',
+  pattern: 'string',
+  caseInsensitive: 'boolean',
+  range: 'string',
+  otherColumn: 'column',
+};
+
+export const RULE_LEVELS = ['ERROR', 'WARNING'];
+
 export default class Rule {
   constructor(props) {
     this.name = undefined;
@@ -16,6 +31,10 @@ export default class Rule {
     }, {});
   }
 
+  metadataType(key) {
+    return METADATA_TYPES[key] || 'string';
+  }
+
   static newRule(name) {
     return Object.assign({}, AVAILABLE_RULES.find(r => r.name === name));
   }
@@ -23,16 +42,7 @@ export default class Rule {
 
 export const AVAILABLE_RULES = [
   new Rule({
-    name: 'UniqueValue',
-    column: undefined,
-    uniqueAcrossProject: false,
-  }),
-  new Rule({
     name: 'CompositeUniqueValue',
-    columns: [],
-  }),
-  new Rule({
-    name: 'RequiredValue',
     columns: [],
   }),
   new Rule({
@@ -51,8 +61,28 @@ export const AVAILABLE_RULES = [
     range: undefined,
   }),
   new Rule({
+    name: 'RegExp',
+    column: undefined,
+    pattern: undefined,
+    caseInsensitive: true,
+  }),
+  new Rule({
     name: 'RequiredValueInGroup',
     columns: [],
+  }),
+  new Rule({
+    name: 'RequiredValue',
+    columns: [],
+  }),
+  new Rule({
+    name: 'RequireValueIfOtherColumn',
+    column: undefined,
+    otherColumn: undefined,
+  }),
+  new Rule({
+    name: 'UniqueValue',
+    column: undefined,
+    uniqueAcrossProject: false,
   }),
   new Rule({
     name: 'ValidForURI',
@@ -62,11 +92,4 @@ export const AVAILABLE_RULES = [
     name: 'ValidURL',
     column: undefined,
   }),
-  new Rule({
-    name: 'RequireValueIfOtherColumn',
-    column: undefined,
-    otherColumn: undefined,
-  }),
 ];
-
-export const RULE_LEVELS = ['ERROR', 'WARNING'];

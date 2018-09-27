@@ -5,7 +5,7 @@
   "main": "index.js",
   "private": true,
   "repository": "https://github.com/biocodellc/biscicol-ui",
-  "author": "RJ Ewing <ewing.rj@gmail.com>",
+  "author": "RJ Ewing <rodney757@protonmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/biocodellc/biscicol-ui/issues"
@@ -19,8 +19,12 @@
     "start": "npm run server",
     "eslint": "eslint 'src/app/**/*.js'",
     "eslint:fix": "eslint 'src/app/**/*.js' --fix",
-    "prettier": "prettier 'src/app/**/*.js' --single-quote --trailing-comma all -l",
-    "prettier:write": "prettier 'src/app/**/*.js' --single-quote --trailing-comma all --write"
+    "prettier": "npm run prettier:js && npm run prettier:sass",
+    "prettier:write": "npm run prettier:js:write && npm run prettier:sass:write",
+    "prettier:js": "prettier 'src/app/**/*.js' --single-quote --trailing-comma all -l",
+    "prettier:js:write": "prettier 'src/app/**/*.js' --single-quote --trailing-comma all --write",
+    "prettier:sass": "prettier 'src/style/**/*.scss' --parser scss -l",
+    "prettier:sass:write": "prettier 'src/style/**/*.scss' --parser scss --write"
   },
   "dependencies": {
     "@uirouter/angularjs": "^1.0.4",
@@ -28,18 +32,20 @@
     "angular-animate": "^1.6.9",
     "angular-aria": "^1.6.9",
     "angular-drag-and-drop-lists": "^2.1.0",
-    "angular-material": "^1.1.8",
+    "angular-filter": "^0.5.17",
+    "angular-material": "^1.1.10",
+    "angular-messages": "^1.7.4",
     "angular-sanitize": "^1.6.8",
     "angular-ui-bootstrap": "^2.5.6",
+    "biocode-angular-material-data-table": "^0.10.10",
     "bootstrap-sass": "^3.3.1",
     "jquery": "^1.12.4",
     "jquery-ui": "^1.12.1",
-    "leaflet": "^1.0.3",
+    "leaflet": "^1.3.4",
     "leaflet-draw": "^1.0.2",
-    "leaflet.markercluster": "^1.0.3",
+    "leaflet.markercluster": "^1.4.0",
     "lodash": "^3.9.3",
     "ng-file-upload": "^12.2.13",
-    "ng-image-gallery": "^2.1.4",
     "papaparse": "^4.1.0",
     "ui-select": "^0.19.7",
     "xlsx": "^0.11.10"
@@ -84,6 +90,7 @@
     "style-loader": "^0.20.3",
     "webpack": "^4.4.1",
     "webpack-cli": "^2.0.13",
-    "webpack-dev-server": "^3.1.1"
+    "webpack-dev-server": "^3.1.1",
+    "worker-loader": "^2.0.0"
   }
 }

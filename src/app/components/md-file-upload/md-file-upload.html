@@ -1,0 +1,22 @@
+<label for="input-file" class="md-button md-raised md-primary">{{ $ctrl.text }}</label>
+
+<input type="file" id="input-file" name="file" class="ng-hide" ngf-pattern="{{$ctrl.pattern}}"
+    ng-required="$ctrl.required" ngf-model-invalid="invalidFile" ng-model="$ctrl.file" ngf-select="$ctrl.handleSelect($files)"
+    ngf-drop />
+
+<div flex class="file-content">
+    <input type="text" ng-value="$ctrl.file.name || invalidFile.name" ngf-drop disabled placeholder="No file selected" />
+
+    <div ng-messages="$ctrl.form.file.$error" ng-if="!$ctrl.isValid" class="error-messages">
+        <div ng-if="invalidFile" ng-message="ng-pattern">File must have one of the following
+            extensions:
+            {{ $ctrl.pattern }}
+        </div>
+        <div ng-if="!invalidFile" ng-message="required">A file is required.</div>
+    </div>
+
+    <md-hints>
+        <md-hint ng-if="$ctrl.isValid" ng-repeat="hint in $ctrl.hints">{{ hint }}</md-hint>
+    </md-hints>
+
+</div>

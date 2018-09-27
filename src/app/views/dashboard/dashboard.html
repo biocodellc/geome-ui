@@ -1,12 +1,23 @@
 <div layout-fill layout="column">
   <h2 class="page-header">Project Overview</h2>
-  <p class="text-center">In this system an “Expedition” includes the metadata (and Sanger sequences if applicable) from a single
-    dataset. The GUID is the globally unique persistent identifier for the expedition and should be acknowledged
-    in the original publication of the dataset and accredited when any part of that dataset is downloaded
-    for reuse.</p>
+  <p class="text-center">In this system an “Expedition” includes the metadata (and Sanger sequences if
+    applicable) from a single dataset. The GUID is the globally unique persistent identifier for the
+    expedition and should be acknowledged in the original publication of the dataset and accredited when
+    any part of that dataset is downloaded for reuse.</p>
 
   <div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
     <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+  </div>
+
+  <div layout="row" ng-show="!$ctrl.loading && $ctrl.totalItems" layout-align="center center">
+    <md-button class="md-primary md-raised project-download-button" ng-click="$ctrl.downloadCsv()" layout="row"
+      layout-align="center center">
+      <!-- Download -->
+      <span>Project CSV Archive</span>
+      <md-icon ng-show="$ctrl.loadingExpedition !== 'project'" md-font-icon="fa fa-download fa-xs"></md-icon>
+      <md-progress-circular ng-show="$ctrl.loadingExpedition === 'project'" md-mode="indeterminate" md-diameter="18"
+        class="md-accent md-hue-3"></md-progress-circular>
+    </md-button>
   </div>
 
   <!-- <table class="table table-hover table-condensed text-center" ng-show="!$ctrl.loading"> -->

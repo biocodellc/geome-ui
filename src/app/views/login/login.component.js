@@ -19,17 +19,24 @@ class LoginController {
     };
   }
 
+  submit() {
+    if (this.resetPass) this.resetPassword();
+    else this.login();
+  }
+
   resetPassword() {
+    this.loading = true;
     this.UserService.sendResetPasswordToken(this.credentials.username)
       .then(() =>
         angular.toaster.success(
           'If you have provided a valid username, check your email for further instructions.',
         ),
       )
-      .catch(angular.catcher('Error sending reset password token'));
+      .catch(angular.catcher('Error sending reset password token'))
+      .finally(() => (this.loading = false));
   }
 
-  submit() {
+  login() {
     this.loading = true;
     this.AuthService.authenticate(
       this.credentials.username,

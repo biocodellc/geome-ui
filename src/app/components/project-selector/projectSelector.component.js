@@ -30,9 +30,10 @@ class ProjectSelectorController {
     if (filterProjects) this.filterProjects();
   }
 
-  filterProjects() {
+  filterProjects(notMember = false) {
     // TODO can we define a schema on the User?
     // then we can return the ids of the projects a user is a member of, and make this a dumb component, just filtering here which is faster
+    this.notMemberOfCurrentProject = notMember;
     this.ProjectService.all(this.includePublicProjects).then(({ data }) => {
       if (
         !this.includePublicProjects &&
@@ -40,7 +41,8 @@ class ProjectSelectorController {
         !data.find(p => p.projectId === this.currentProject.projectId)
       ) {
         this.includePublicProjects = true;
-        this.filterProjects();
+        this.notMemberOfCurrentProject = true;
+        this.filterProjects(true);
         return;
       }
       this.projects = data;
@@ -72,6 +74,7 @@ export default {
     buttonClass: '@',
     currentProject: '<',
     onChange: '&',
+    userHasProject: '<',
     isAuthenticated: '<',
   },
 };

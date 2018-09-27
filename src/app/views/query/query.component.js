@@ -5,13 +5,13 @@ import QueryParams from './QueryParams';
 
 const template = require('./query.html');
 
-const POLICY_STORAGE_KEY = 'informedOfDataPolicy';
+//const POLICY_STORAGE_KEY = 'informedOfDataPolicy';
 
 class QueryController {
   constructor(
     $state,
     $timeout,
-    $window,
+    $location,
     QueryService,
     ExpeditionService,
     ProjectService,
@@ -21,7 +21,7 @@ class QueryController {
 
     this.$state = $state;
     this.$timeout = $timeout;
-    this.$window = $window;
+    this.$location = $location;
     this.QueryService = QueryService;
     this.ExpeditionService = ExpeditionService;
     this.ProjectService = ProjectService;
@@ -39,7 +39,7 @@ class QueryController {
     if (this.currentProject) {
       this.handleProjectChange(this.currentProject);
     }
-
+    /*
     const informed = this.StorageService.get(POLICY_STORAGE_KEY);
     if (!informed) {
       angular.toaster(
@@ -47,38 +47,22 @@ class QueryController {
         {
           name: 'View',
           fn: () => {
-            const newWin = this.$window.open(
-              'http://diversityindopacific.net/data-usage-agreement/',
-              '_blank',
-            );
-
-            if (
-              !newWin ||
-              newWin.closed ||
-              typeof newWin.closed === 'undefined'
-            ) {
-              angular.toaster('It appears you have a popup blocker enabled');
-            }
+            this.$location.path('/about').hash('dataPolicy');
           },
         },
         { hideDelay: 7000 },
       );
       this.StorageService.set(POLICY_STORAGE_KEY, true);
-    }
+    } */
 
     this.showSidebar = true;
     this.showMap = true;
     this.loading = false;
-    this.hasFastqData = false;
     this.sidebarToggleToolTip = 'hide sidebar';
   }
 
   handleNewResults(results) {
     this.results = results;
-    this.hasFastqData =
-      results &&
-      results.data.fastqMetadata &&
-      results.data.fastqMetadata.length > 0;
   }
 
   downloadExcel() {
@@ -99,46 +83,21 @@ class QueryController {
     ).finally(() => (this.loading = false));
   }
 
-  downloadKml() {
-    this.loading = true;
-    const { projectId } = this.currentProject;
-    this.QueryService.downloadKml(
-      this.params.buildQuery(projectId, this.selectEntities()),
-      'Event',
-    ).finally(() => (this.loading = false));
-  }
-
   downloadFasta() {
     this.loading = true;
     const { projectId } = this.currentProject;
     this.QueryService.downloadFasta(
       this.params.buildQuery(
         projectId,
-        this.selectEntities(false).concat(['Event']),
+        this.selectEntities().concat(['Event']),
       ),
       'fastaSequence',
     ).finally(() => (this.loading = false));
   }
 
-  downloadFastq() {
-    this.loading = true;
-    const { projectId } = this.currentProject;
-    this.QueryService.downloadFastq(
-      this.params.buildQuery(
-        projectId,
-        this.selectEntities().concat(['Event']),
-      ),
-      'fastqMetadata',
-    ).finally(() => (this.loading = false));
-  }
-
-  selectEntities(includeFastq = true) {
+  selectEntities() {
     return this.currentProject.config.entities
-      .filter(
-        e =>
-          (includeFastq && e.type === 'Fastq') ||
-          ['Sample', 'Tissue'].includes(e.conceptAlias),
-      )
+      .filter(e => ['Sample', 'Tissue'].includes(e.conceptAlias))
       .map(e => e.conceptAlias);
   }
 

@@ -176,7 +176,7 @@ class TemplateController {
         ? Object.keys(this.selected).reduce((accumulator, worksheet) => {
             if (this.selected[worksheet].length > 0) {
               accumulator.push({
-                name: worksheet,
+                worksheet,
                 columns: this.selected[worksheet].map(
                   attribute => attribute.column,
                 ),
@@ -186,7 +186,7 @@ class TemplateController {
           }, [])
         : [
             {
-              name: this.worksheet,
+              worksheet: this.worksheet,
               columns: this.selected[this.worksheet].map(
                 attribute => attribute.column,
               ),
@@ -227,14 +227,6 @@ class TemplateController {
   }
 
   populateAttributesCache() {
-    const blacklist = [
-      'processed',
-      'imageProcessingErrors',
-      'img128',
-      'img512',
-      'img1024',
-    ];
-
     this.attributes = this.projectConfig.entities.reduce(
       (accumulator, entity) => {
         const { worksheet } = entity;
@@ -262,7 +254,7 @@ class TemplateController {
           ).reduce(
             (result, [group, attributes]) =>
               Object.assign({}, result, {
-                [group]: attributes.filter(a => !blacklist.includes(a.column)),
+                [group]: attributes.filter(a => !a.internal),
               }),
             {},
           );

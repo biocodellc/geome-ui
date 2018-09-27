@@ -51,21 +51,6 @@ class ExpeditionService {
       .catch(angular.catcher('Failed to delete the expedition.'));
   }
 
-  userExpeditions(projectId, includePrivate) {
-    if (!projectId) {
-      return Promise.reject({ data: { error: 'No project is selected' } });
-    }
-
-    if (!includePrivate) {
-      includePrivate = false;
-    }
-    return this.$http
-      .get(
-        `${restRoot}projects/${projectId}/expeditions?user&includePrivate=${includePrivate}`,
-      )
-      .catch(angular.catcher('Failed to load your expeditions.'));
-  }
-
   all(projectId) {
     if (!projectId) {
       return Promise.reject({ data: { error: 'No project is selected' } });
@@ -82,17 +67,26 @@ class ExpeditionService {
     );
   }
 
-  stats(projectId) {
+  stats(projectId, expeditionCode) {
     if (!projectId) {
       return Promise.reject({ data: { error: 'No project is selected' } });
     }
 
+    let url = `${restRoot}projects/${projectId}/expeditions/stats`;
+    if (expeditionCode) {
+      url += `?expeditionCode=${expeditionCode}`;
+    }
+
     return this.$http
-      .get(`${restRoot}projects/${projectId}/expeditions/stats`)
+      .get(url)
       .catch(angular.catcher('Failed to load expedition stats.'));
   }
 
   getExpeditionsForUser(projectId, includePrivate) {
+    if (!projectId) {
+      return Promise.reject({ data: { error: 'No project is selected' } });
+    }
+
     if (!includePrivate) {
       includePrivate = false;
     }
@@ -102,6 +96,10 @@ class ExpeditionService {
   }
 
   getExpeditionsForAdmin(projectId) {
+    if (!projectId) {
+      return Promise.reject({ data: { error: 'No project is selected' } });
+    }
+
     return this.$http.get(`${restRoot}projects/${projectId}/expeditions?admin`);
   }
 

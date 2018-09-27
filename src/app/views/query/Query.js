@@ -1,8 +1,8 @@
 export class Query {
-  constructor(queryString, source, projectId) {
+  constructor(queryString, source) {
     this.q = queryString;
     this.source = source;
-    this.projectId = projectId;
+    this.networkId = 1; // GeOMe Network
   }
 }
 
@@ -20,14 +20,10 @@ export class QueryBuilder {
     this.source = source;
   }
 
-  setProjectId(projectId) {
-    this.projectId = projectId;
-  }
-
   build() {
     if (this.queryString.trim().length === 0) {
       this.queryString = '*';
     }
-    return new Query(this.queryString, this.source, this.projectId);
+    return new Query(this.queryString, this.source);
   }
 }

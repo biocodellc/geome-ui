@@ -1,0 +1,20 @@
+#attributes-table {
+  max-height: 400px;
+  .table {
+    margin-bottom: 0;
+  }
+}
+
+#edit-attribute-dialog {
+  min-width: 400px;
+  padding: 16px;
+  padding-bottom: 0;
+
+  md-checkbox {
+    margin-top: 0;
+  }
+
+  md-dialog-content:not([layout='row']) > *:first-child:not(.md-subheader) {
+    margin-top: 18px;
+  }
+}

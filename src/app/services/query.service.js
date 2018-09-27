@@ -8,10 +8,22 @@ function transformResults(data) {
   const records = [];
 
   if (data.Sample) {
+    const events = data.Event
+      ? data.Event.reduce((accumulator, event) => {
+          accumulator[event.eventID] = event;
+          return accumulator;
+        }, {})
+      : undefined;
     data.Sample.forEach(s => {
       const record = s;
-      record.event = data.Event.find(e => e.eventID === s.eventID);
+      if (events) {
+        record.event = events[s.eventID];
+      }
       records.push(record);
+    });
+  } else if (data.Event) {
+    data.Event.forEach(e => {
+      records.push({ event: e });
     });
   }
 
@@ -19,19 +31,22 @@ function transformResults(data) {
 }
 
 class QueryService {
-  constructor($http, $window, FileService) {
+  constructor($cacheFactory, $http, $window, FileService) {
     'ngInject';
+
+    this.JSON_QUERY_CACHE = $cacheFactory('json_query');
 
     this.$http = $http;
     this.$window = $window;
     this.FileService = FileService;
   }
 
-  queryJson(query, entity, page, limit) {
+  queryJson(query, entity, page, limit, warnOnLimit = true) {
     return this.$http({
       method: 'GET',
       url: `${restRoot}records/${entity}/json?limit=${limit}&page=${page}`,
       params: query,
+      cache: this.JSON_QUERY_CACHE,
       keepJson: true,
     }).then(response => {
       const results = {
@@ -53,9 +68,9 @@ class QueryService {
 
         // TODO: Remove this, and implement dynamic loading. Set limit to 1000
         // and if 1k results are returned, ask the user if they want to load more.
-        if (results.totalElements === limit) {
+        if (warnOnLimit && results.totalElements === limit) {
           angular.toaster(
-            'Query results are limited to 10,000. Either narrow your search or download the results to view everything.',
+            `Query results are limited to ${limit}. Either narrow your search or download the results to view everything.`,
           );
         }
       }

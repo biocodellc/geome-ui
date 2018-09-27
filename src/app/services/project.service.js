@@ -2,7 +2,9 @@ import angular from 'angular';
 import { EventEmitter } from 'events';
 
 import storageService from './storage.service';
+import projectConfigurationService from './projectConfiguration.service';
 import config from '../utils/config';
+import ProjectConfig from '../models/ProjectConfig';
 
 const { restRoot } = config;
 
@@ -15,7 +17,7 @@ class ProjectService extends EventEmitter {
     $http,
     $timeout,
     StorageService,
-    ProjectConfigService,
+    ProjectConfigurationService,
   ) {
     'ngInject';
 
@@ -25,7 +27,7 @@ class ProjectService extends EventEmitter {
     this.$http = $http;
     this.$timeout = $timeout;
     this.StorageService = StorageService;
-    this.ProjectConfigService = ProjectConfigService;
+    this.ProjectConfigurationService = ProjectConfigurationService;
   }
 
   /**
@@ -62,6 +64,7 @@ class ProjectService extends EventEmitter {
       return Promise.resolve();
     }
 
+    // TODO this will need to change when there are lots of projects
     return this.all(true)
       .then(({ data }) => data.find(p => p.projectId === projectId))
       .then(project => {
@@ -69,11 +72,21 @@ class ProjectService extends EventEmitter {
           return project;
         }
 
-        return this.ProjectConfigService.get(project.projectId)
-          .then(config => Object.assign({}, project, { config }))
+        return this.getConfig(project.projectId)
+          .then(c => Object.assign({}, project, { config: c }))
           .catch(angular.catcher('Failed to load project configuration'));
       })
       .catch(response => angular.catcher('Failed to project')(response));
+  }
+
+  getConfig(projectId) {
+    if (!projectId) {
+      return Promise.resolve();
+    }
+    return this.$http
+      .get(`${restRoot}projects/${projectId}/config`)
+      .then(({ data }) => new ProjectConfig(data))
+      .catch(angular.catcher('Failed to load project configuration'));
   }
 
   all(includePublic) {
@@ -82,6 +95,26 @@ class ProjectService extends EventEmitter {
         cache: this.PROJECT_CACHE,
       })
       .catch(angular.catcher('Failed to load projects'));
+  }
+
+  find(includePublic, projectTitle) {
+    return this.$http
+      .get(
+        `${restRoot}projects?includePublic=${includePublic}&projectTitle=${projectTitle}`,
+        {
+          cache: this.PROJECT_CACHE,
+        },
+      )
+      .catch(angular.catcher('Failed to find projects by projectTitle'));
+  }
+
+  create(project) {
+    return this.$http({
+      method: 'POST',
+      url: `${restRoot}projects`,
+      data: project,
+      keepJson: true,
+    }).catch(angular.catcher('Failed to create the project.'));
   }
 
   update(project) {
@@ -104,5 +137,5 @@ class ProjectService extends EventEmitter {
 }
 
 export default angular
-  .module('fims.projectService', [storageService])
+  .module('fims.projectService', [storageService, projectConfigurationService])
   .service('ProjectService', ProjectService).name;

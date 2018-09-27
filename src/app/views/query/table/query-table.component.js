@@ -16,8 +16,9 @@ class QueryTableController {
       'decimalLatitude',
       'decimalLongitude',
       'yearCollected',
+      'phylum',
       'genus',
-      'species',
+      'specificEpithet',
       'bcid',
     ];
     this.tableData = [];

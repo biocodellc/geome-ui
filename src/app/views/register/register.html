@@ -1,0 +1,80 @@
+<div layout="row" layout-align="center center" class="register-card">
+  <md-card flex-xs="100" flex-sm="80" flex-md="70" flex="60" class="md-whiteframe-2dp">
+    <md-card-title>
+      <md-card-title-text>
+        <h4 md-colors="{color: 'primary-700'}">Create account</h4>
+      </md-card-title-text>
+    </md-card-title>
+    <md-card-content>
+      <form name="form" role="form" layout="column" novalidate>
+        <md-input-container>
+          <label>First Name</label>
+          <input name="firstName" ng-model="$ctrl.user.firstName" required autofocus tabindex="1">
+          <div ng-messages="form.firstName.$error">
+            <div ng-message="required">First Name is required.</div>
+          </div>
+        </md-input-container>
+        <md-input-container>
+          <label>Last Name</label>
+          <input name="lastName" ng-model="$ctrl.user.lastName" required tabindex="2">
+          <div ng-messages="form.lastName.$error">
+            <div ng-message="required">Last Name is required.</div>
+          </div>
+        </md-input-container>
+        <md-input-container>
+          <label>Email</label>
+          <input name="email" type="email" ng-model="$ctrl.user.email" required tabindex="3"
+            ng-model-options="{ updateOn: 'default blur', debounce: {'default': 800, 'blur': 0} }" />
+          <div ng-messages="form.email.$error">
+            <div ng-message="required">Email is required.</div>
+            <div ng-message="email">Please enter a valid email address.</div>
+          </div>
+        </md-input-container>
+        <md-input-container>
+          <label>Institution</label>
+          <input name="institution" ng-model="$ctrl.user.institution" tabindex="4">
+        </md-input-container>
+        <md-input-container>
+          <label>Username</label>
+          <input name="username" ng-model="$ctrl.user.username" required tabindex="5" username
+            ng-model-options="{ updateOn: 'default blur', debounce: {'default': 800, 'blur': 0} }" />
+          <div ng-messages="form.username.$error">
+            <div ng-message="required">Username is required.</div>
+            <div ng-message="username">That username already exists.</div>
+          </div>
+        </md-input-container>
+        <md-input-container>
+          <label>Password</label>
+          <input name="password" type="password" ng-model="$ctrl.user.password" required tabindex="6">
+          <div ng-messages="form.password.$error">
+            <div ng-message="required">Password is required.</div>
+          </div>
+        </md-input-container>
+        <md-input-container>
+          <label>Verify Password</label>
+          <input name="verifyPassword" type="password" ng-model="verifyPassword" required tabindex="7"
+            compare-to="$ctrl.user.password">
+          <div ng-messages="form.verifyPassword.$error">
+            <div ng-message="required">Password verification is required.</div>
+            <div ng-message="compareTo">Passwords do not match.</div>
+          </div>
+        </md-input-container>
+      </form>
+
+      <div layout="row" layout-align="center center">
+        <md-button class="md-block md-primary md-raised" ng-click="$ctrl.register()" layout="row"
+          tabindex="8" layout-align="center center" flex="33" ng-disabled="form.$invalid || form.username.$pending">
+          <span ng-show="!$ctrl.loading">Create account</span>
+          <md-progress-circular ng-show="$ctrl.loading" md-mode="indeterminate" md-diameter="18"
+            class="md-accent md-hue-3"></md-progress-circular>
+        </md-button>
+      </div>
+      <div layout="row" layout-align="center center" class="text-center help-link">
+        <span>
+          Already have an account?
+          <a ui-sref="login" tabindex="9">Login!</a>
+        </span>
+      </div>
+    </md-card-content>
+  </md-card>
+</div>

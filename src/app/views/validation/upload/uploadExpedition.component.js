@@ -5,6 +5,8 @@ export default {
   bindings: {
     userExpeditions: '<',
     expeditionCode: '<',
+    multiExpeditionAllowed: '<',
+    canCreate: '<',
     onChange: '&',
   },
 };

@@ -4,12 +4,17 @@
   <a class="brand" ui-sref="home">
     <img src="img/geome-logo.png" alt="geome-db" />
   </a>
-  <md-divider></md-divider>
 
-  <div flex ng-show="!$ctrl.showProjectSelector"></div>
-  <project-selector flex layout="row" layout-align="center center" ng-show="$ctrl.showProjectSelector" is-authenticated="!!($ctrl.currentUser)"
-    current-project="$ctrl.currentProject" on-change="$ctrl.onProjectChange({ project: project })" offset="0 12" button-class="md-primary">
+  <div flex ng-show="!$ctrl.showProjectSelector && !$ctrl.showCreateProject"></div>
+  <project-selector flex layout="row" layout-align="center center" ng-show="$ctrl.showProjectSelector" user-has-project="!$ctrl.showCreateProject"
+    is-authenticated="!!($ctrl.currentUser)" current-project="$ctrl.currentProject" on-change="$ctrl.onProjectChange({ project: project })"
+    offset="0 12" button-class="md-primary">
   </project-selector>
+  <div flex ng-show="$ctrl.showCreateProject" layout="row" layout-align="center">
+    <md-button ui-sref="create-project" class="md-primary md-raised">
+      Create Project
+    </md-button>
+  </div>
 
   <md-button ui-sref="query">Query</md-button>
   <md-button ui-sref="about">About</md-button>
@@ -19,7 +24,8 @@
 
   <md-menu md-position-mode="right bottom" md-offset="0 12">
     <md-button aria-label="Open user profile menu" class="md-icon-button md-primary" ng-click="console.log($mdMenu); $mdMenu.open($event)">
-      <span ng-show="$ctrl.currentUser" style="padding-right: 5px;text-transform: none">HI, {{ $ctrl.currentUser.username }}!</span>
+      <span ng-show="$ctrl.currentUser" style="padding-right: 5px;text-transform: none">HI, {{
+        $ctrl.currentUser.username }}!</span>
       <md-icon md-font-icon="fa fa-user-circle-o fa-md"></md-icon>
       <md-icon md-font-icon="fa fa-angle-down fa-sm"></md-icon>
     </md-button>
@@ -30,15 +36,27 @@
           Sign In
         </md-button>
       </md-menu-item>
+      <md-menu-item ng-show="!$ctrl.currentUser">
+        <md-button ui-sref="register">
+          <md-icon md-font-icon="fa fa-user fa-fw"></md-icon>
+          Create an account
+        </md-button>
+      </md-menu-item>
       <md-menu-item ng-show="$ctrl.currentUser">
         <md-button ui-sref="profile">
           <md-icon md-font-icon="fa fa-user fa-fw"></md-icon>
           User Profile
         </md-button>
       </md-menu-item>
+      <md-menu-item ng-show="$ctrl.currentUser">
+        <md-button ui-sref="create-project">
+          <md-icon md-font-icon="fa fa-laptop fa-fw"></md-icon>
+          Create a new project
+        </md-button>
+      </md-menu-item>
       <md-menu-divider ng-show="$ctrl.currentUser"></md-menu-divider>
       <md-menu-item ng-show="$ctrl.currentUser">
-        <md-button ng-click="$ctrl.onSignout()" ui-sref="home">
+        <md-button ng-click="$ctrl.onSignout()">
           <md-icon md-font-icon="fa fa-sign-out fa-fw"></md-icon>
           Sign Out
         </md-button>
@@ -61,7 +79,7 @@
         </md-button>
       </md-menu-item>
       <md-menu-item>
-        <md-button ng-href="https://api.geome-db.org/apidocs" target="_blank">
+        <md-button ng-href="{{$ctrl.restRoot}}/apidocs" target="_blank">
           <md-icon md-font-icon="fa fa-code fa-fw"></md-icon>
           Api Docs
         </md-button>
@@ -69,7 +87,7 @@
       <md-menu-item>
         <md-button ng-href="https://fims.readthedocs.org/en/latest/">
           <md-icon md-font-icon="fa fa-question fa-fw"></md-icon>
-          Developers 
+          Developers
         </md-button>
       </md-menu-item>
       <md-menu-divider></md-menu-divider>

@@ -43,7 +43,13 @@ const css = (extend = []) => {
         },
     isProd
       ? 'postcss-loader'
-      : { loader: 'postcss-loader', options: { sourceMap: false } },
+      : {
+          loader: 'postcss-loader',
+          options: {
+            sourceMap: false,
+            config: { path: './postcss.config.js' },
+          },
+        },
   ].concat(extend);
 };
 
@@ -80,7 +86,6 @@ module.exports = (function makeWebpackConfig() {
     : {
         // Absolute output directory
         path: `${__dirname}/dist`,
-
         // Output path from the view of the page
         // Uses webpack-dev-server in development
         // publicPath: isProd ? '/' : `http://0.0.0.0:${PORT}/`,
@@ -95,6 +100,9 @@ module.exports = (function makeWebpackConfig() {
         chunkFilename: isProd ? '[name].[hash].js' : '[name].bundle.js',
 
         pathinfo: !isProd,
+
+        // needed for Web Workers
+        globalObject: 'this',
       };
 
   /**
@@ -125,6 +133,11 @@ module.exports = (function makeWebpackConfig() {
           path.resolve(__dirname, 'src', 'app'),
           path.resolve(__dirname, 'config'),
         ],
+      },
+      // WebWorker loader
+      {
+        test: /\.worker\.js$/,
+        use: { loader: 'worker-loader' },
       },
       {
         // support for .scss files
@@ -312,6 +325,7 @@ module.exports = (function makeWebpackConfig() {
     contentBase: './src/public',
     historyApiFallback: true,
     // hot: true,
+    hotOnly: true, // no page reload as fallback
     // stats: 'minimal',
     port: PORT,
   };

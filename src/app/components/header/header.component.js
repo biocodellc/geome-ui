@@ -1,11 +1,18 @@
+import config from '../../utils/config';
+
 const template = require('./header.html');
 
+const { restRoot } = config;
+
 class HeaderController {
-  constructor($location, $state) {
+  constructor($state) {
     'ngInject';
 
-    this.$location = $location;
     this.$state = $state;
+  }
+
+  $onInit() {
+    this.restRoot = restRoot;
   }
 
   login() {
@@ -25,5 +32,6 @@ export default {
     onProjectChange: '&',
     onSignout: '&',
     showProjectSelector: '<',
+    showCreateProject: '<',
   },
 };

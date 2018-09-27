@@ -1,0 +1,42 @@
+<div class="project-info">
+	<div layout="row" class="loading-overlay" layout-align="center top" ng-show="$ctrl.loading">
+		<md-progress-circular md-mode="indeterminate"></md-progress-circular>
+	</div>
+
+	<uib-accordion>
+		<div ng-repeat="(key,value) in $ctrl.data | groupBy: 'projectConfiguration.name'"
+		 uib-accordion-group class="config-item">
+			<uib-accordion-heading>
+				<a href="#">{{key}} Configuration</a>
+			</uib-accordion-heading>
+			{{value[0].projectConfiguration.description}}
+			<uib-accordion>
+				<div ng-repeat="p in value | orderBy:'projectTitle'" class="config-item" uib-accordion-group>
+					<uib-accordion-heading>
+						<i><a href="#">{{p.projectTitle}}</a></i>
+					</uib-accordion-heading>
+
+					<ul class="list-unstyled">
+						<li>
+							<p><i>{{p.description}}</i></p>
+						</li>
+						<li>
+							<span class="heading">Administrator:</span>
+							<span class="text-capitalize">{{p.user.firstName}} {{p.user.lastName}} </span>
+							<a href="mailto:{{p.user.email}}">{{p.user.email}}</a>
+						</li>
+						<li>
+							<span class="heading">Status:</span>
+							<span ng-if="!p.public">Not </span>Visible To Public
+						</li>
+						<li>
+							<span class="heading">Network Status:</span>
+							<span ng-if="!p.projectConfiguration.networkApproved">Not </span>Synchronized with
+							{{x.projectConfiguration.name}} network configuration
+						</li>
+					</ul>
+				</div>
+			</uib-accordion>
+		</div>
+	</uib-accordion>
+</div>

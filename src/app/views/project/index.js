@@ -22,7 +22,7 @@ import fimsProject from './project.component';
 import fimsProjectSettings from './project-settings';
 import fimsProjectExpeditions from './project-expeditions';
 import fimsProjectMembers from './members';
-import fimsProjectConfig from './config';
+// import fimsProjectConfig from './config';
 
 const dependencies = [
   modal,
@@ -37,7 +37,7 @@ const dependencies = [
   fimsProjectSettings,
   fimsProjectExpeditions,
   fimsProjectMembers,
-  fimsProjectConfig,
+  // fimsProjectConfig,
 ];
 
 export default angular
