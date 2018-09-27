@@ -70,6 +70,8 @@ class PlateViewerController {
   }
 
   canDelete(row, column) {
+    if (!this.canEdit) return false;
+
     const t = this.plateData[row][column];
     return (
       t &&
@@ -309,7 +311,7 @@ class PlatesController {
           RecordService: this.RecordService,
           currentProject: this.currentProject,
           currentUser: this.currentUser,
-          canEdit: !!this.currentUser,
+          canEdit: this.currentProject.currentUserIsMember,
           newPlate: this.isNewPlate,
         },
         resolve: {

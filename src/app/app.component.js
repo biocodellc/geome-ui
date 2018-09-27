@@ -32,6 +32,7 @@ class AppCtrl {
     this.AuthService.on(AUTH_ERROR_EVENT, () => this.signout());
     this.ProjectService.on(PROJECT_CHANGED_EVENT, p => {
       this.currentProject = p;
+      this.setUserIsMember();
       if (!this.preventReload && !this.$state.current.abstract) {
         this.$state.reload();
       }
@@ -40,6 +41,7 @@ class AppCtrl {
       this.currentUser = u;
       this.userHasProject = true;
       this.setUserHasProject();
+      this.setUserIsMember();
       const { current } = this.$state;
       if (
         !this.preventReload &&
@@ -91,6 +93,21 @@ class AppCtrl {
     this.ProjectService.all().then(({ data }) => {
       this.userHasProject = data.length > 0;
     });
+  }
+
+  setUserIsMember() {
+    if (this.currentProject) {
+      if (!this.currentUser) {
+        this.currentProject.currentUserIsMember = false;
+        return;
+      }
+
+      this.ProjectService.all().then(({ data }) => {
+        this.currentProject.currentUserIsMember = data.some(
+          p => p.projectId === this.currentProject.projectId,
+        );
+      });
+    }
   }
 
   handleProjectChange(project) {

@@ -1,10 +1,10 @@
 {
-  "name": "biscicol-ui",
+  "name": "geome-ui",
   "version": "0.0.1",
-  "description": "biscicol-fims ui",
+  "description": "GeOMe ui",
   "main": "index.js",
   "private": true,
-  "repository": "https://github.com/biocodellc/biscicol-ui",
+  "repository": "https://github.com/biocodellc/geome-ui",
   "author": "RJ Ewing <rodney757@protonmail.com>",
   "license": "MIT",
   "bugs": {

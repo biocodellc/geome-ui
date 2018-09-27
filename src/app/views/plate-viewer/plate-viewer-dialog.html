@@ -46,7 +46,7 @@
               <th>{{r}}</th>
               <td ng-repeat="c in [0,1,2,3,4,5,6,7,8,9,10,11]">
                 <md-icon class="delete-tissue" md-font-icon="fa fa-trash" ng-click="$ctrl.deleteTissue(r, c)"
-                  ng-if="$ctrl.canDelete(r, c)"></md-icon>
+                  ng-show="$ctrl.canDelete(r, c)"></md-icon>
                 <div ng-if="$ctrl.plateData[r][c].tissueID">
                   <div ng-click="$ctrl.tissueDetails($ctrl.plateData[r][c])">{{$ctrl.plateData[r][c].tissueID}}</div>
                   <div class="sub-column" ng-if="$ctrl.displayColumn && $ctrl.displayColumn !== 'tissueID'">
