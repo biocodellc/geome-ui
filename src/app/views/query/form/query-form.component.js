@@ -34,13 +34,32 @@ const queryTypes = {
   integer: ['=', '<', '<=', '>', '>=', 'has'],
 };
 
+const PROJECT_RE = new RegExp(/_projects_:\s*(\d+)|(\[[\s\d,]+])/);
+const EXPEDITION_RE = new RegExp(/_expeditions_:\s*(\w+)|(\[[\s\w,]+])/);
+
+const parseExpeditionQueryString = s =>
+  s
+    .replace('[', '')
+    .replace(']', '')
+    .split(',');
+
 class QueryFormController {
-  constructor($timeout, $window, QueryService) {
+  constructor(
+    $scope,
+    $timeout,
+    $window,
+    $location,
+    QueryService,
+    ProjectService,
+  ) {
     'ngInject';
 
+    this.$scope = $scope;
     this.$timeout = $timeout;
     this.$window = $window;
+    this.$location = $location;
     this.QueryService = QueryService;
+    this.ProjectService = ProjectService;
   }
 
   $onInit() {
@@ -56,8 +75,40 @@ class QueryFormController {
     this.showDWC = true;
     this.showExpeditions = true;
     this.showFilters = true;
+    this.resetExpeditions = true;
 
     this.drawing = false;
+
+    const { q } = this.$location.search();
+
+    if (q) {
+      const projectMatch = PROJECT_RE.exec(q);
+      if (projectMatch) {
+        if (projectMatch[1]) {
+          // single project
+          this.ProjectService.get(parseInt(projectMatch[1], 10), false).then(
+            p => {
+              this.onProjectChange({ project: p });
+            },
+          );
+        } else {
+          // TODO handle this case
+          // projects array
+          // const projects = this.$scope.$eval(projectMatch[2]);
+        }
+        // const expeditionMatch = EXPEDITION_RE.exec(q);
+        // if (expeditionMatch) {
+        //   this.resetExpeditions = false;
+        //   const e =
+        //     expeditionMatch[1] ||
+        //     parseExpeditionQueryString(expeditionMatch[2]);
+
+        //   this.params.expeditions.push(...e);
+        // }
+      }
+      this.params.queryString = q;
+      this.queryJson();
+    }
   }
 
   $onChanges(changesObj) {
@@ -69,7 +120,12 @@ class QueryFormController {
       this.hasFastqEntity = config.entities.some(e => e.type === 'Fastq');
 
       this.generateFilterOptions();
-      this.params.expeditions = [];
+      if (this.resetExpeditions) {
+        console.log('resetting');
+        this.params.expeditions = [];
+      } else {
+        this.resetExpeditions = true;
+      }
       // if (this.params.filters.length === 0) this.addFilter();
     }
 
@@ -97,11 +153,11 @@ class QueryFormController {
   queryJson() {
     this.toggleLoading({ val: true });
 
-    const { projectId } = this.currentProject;
+    const projectId = this.currentProject
+      ? this.currentProject.projectId
+      : undefined;
 
-    const selectEntities = this.currentProject.config.entities
-      .filter(e => e.type === 'Fastq' || e.conceptAlias === 'Sample')
-      .map(e => e.conceptAlias);
+    const selectEntities = ['Sample', 'fastqMetadata'];
 
     this.QueryService.queryJson(
       this.params.buildQuery(projectId, selectEntities, SOURCE.join()),

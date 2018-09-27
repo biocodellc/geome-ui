@@ -12,6 +12,14 @@ export class ExpeditionController extends FimsExpeditionController {
     super($state, $uibModal, ExpeditionService, DataService, QueryService);
   }
 
+  viewData() {
+    this.$state.go('query', {
+      q: `_projects_:${this.currentProject.projectId} and _expeditions_:[${
+        this.expedition.expeditionCode
+      }]`,
+    });
+  }
+
   handleExpeditionUpdate(expedition) {
     if (!angular.equals(this.expedition, expedition)) {
       this.ExpeditionService.update(
