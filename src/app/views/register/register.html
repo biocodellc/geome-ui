@@ -63,7 +63,7 @@
 
       <div layout="row" layout-align="center center">
         <md-button class="md-block md-primary md-raised" ng-click="$ctrl.register()" layout="row"
-          tabindex="8" layout-align="center center" flex="33">
+          tabindex="8" layout-align="center center" flex="33" ng-disabled="form.$invalid || form.username.$pending">
           <span ng-show="!$ctrl.loading">Create account</span>
           <md-progress-circular ng-show="$ctrl.loading" md-mode="indeterminate" md-diameter="18"
             class="md-accent md-hue-3"></md-progress-circular>

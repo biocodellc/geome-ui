@@ -25,7 +25,8 @@ class RegisterController {
   async register() {
     this.loading = true;
     try {
-      const user = await this.UserService.create(this.user);
+      const response = await this.UserService.create(this.user);
+      const user = response.data;
       await this.AuthService.authenticate(
         this.user.username,
         this.user.password,
