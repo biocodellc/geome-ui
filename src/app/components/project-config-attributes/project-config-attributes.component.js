@@ -13,6 +13,7 @@ class ProjectConfigAttributesController {
         this.handleChange();
       }
     });
+    this.requiredUris = [];
   }
 
   $onInit() {
@@ -21,7 +22,7 @@ class ProjectConfigAttributesController {
 
   $onChanges(changesObj) {
     if ('required' in changesObj) {
-      this.requiredUris = this.required.map(a => a.uri);
+      this.requiredUris = this.required ? this.required.map(a => a.uri) : [];
     }
   }
 
