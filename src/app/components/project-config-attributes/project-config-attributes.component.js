@@ -16,7 +16,6 @@ class ProjectConfigAttributesController {
   }
 
   $onInit() {
-    this.selected = this.selected.map(a => Object.assign({}, a));
     this.orderBy = 'required';
   }
 

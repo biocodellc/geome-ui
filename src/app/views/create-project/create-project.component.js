@@ -40,6 +40,7 @@ class CreateProjectController {
   constructor(
     $state,
     $anchorScroll,
+    $location,
     $mdDialog,
     NetworkConfigurationService,
     ProjectConfigurationService,
@@ -49,6 +50,7 @@ class CreateProjectController {
 
     this.$state = $state;
     this.$anchorScroll = $anchorScroll;
+    this.$location = $location;
     this.$mdDialog = $mdDialog;
     this.NetworkConfigurationService = NetworkConfigurationService;
     this.ProjectConfigurationService = ProjectConfigurationService;
@@ -84,8 +86,12 @@ class CreateProjectController {
         return this.ProjectService.setCurrentProject(data);
       })
       .then(() => this.$state.go('validate'))
-      .catch(e => {
-        console.log(e);
+      .catch(resp => {
+        if (resp.status === 400 && resp.data.errors) {
+          this.errors = resp.data.errors;
+          this.$location.hash('errors');
+          this.$anchorScroll();
+        }
       })
       .finally(() => {
         this.creatingProject = false;
@@ -129,7 +135,7 @@ class CreateProjectController {
     this.fetchNetworkConfig();
 
     this.networkPromise.then(() => {
-      this.setRequiredAttributes();
+      this.setRequiredAttributes(this.networkConfig);
       this.setRequiredRules();
       BASE_CONFIG.lists = this.networkConfig.lists.slice();
       BASE_CONFIG.entities.forEach(e => {
@@ -149,13 +155,27 @@ class CreateProjectController {
 
       if (!this.config) return;
       this.selectModulesForExistingConfig();
+      this.setRequiredAttributes(this.config);
     }
 
     $mdStep.$stepper.next();
   }
 
+  hashChanged(e) {
+    if (e.hashed) {
+      const ne = this.networkConfig.entities.find(
+        entity => e.conceptAlias === entity.conceptAlias,
+      );
+
+      if (ne.uniqueKey !== e.uniqueKey) {
+        e.uniqueKey = ne.uniqueKey;
+        this.uniqueKeyChange(e);
+      }
+    }
+  }
+
   uniqueKeyChange(e) {
-    this.setEntityRequiredAttributes(e);
+    this.setRequiredAttributes(this.config);
 
     const validForUriRule = e.rules.find(
       r => r.name === 'ValidForURI' && r.level === 'ERROR',
@@ -171,6 +191,42 @@ class CreateProjectController {
 
     if (uniqueValueRule) {
       uniqueValueRule.column = e.uniqueKey;
+    }
+
+    if (e.conceptAlias === 'Tissue' && e.uniqueKey === 'tissueID') {
+      const unselectMaterialSampleID = conceptAlias => {
+        const entity = this.config.entities.find(
+          en => en.conceptAlias === conceptAlias,
+        );
+        const { attributes } = entity;
+
+        const i = attributes.findIndex(a => a.uri === 'urn:materialSampleID');
+        if (i > -1) {
+          attributes.splice(i, 1);
+
+          // also need to remove any rules that reference materialSampleID
+          let changedRule = false;
+          const ruleIndexesToRemove = [];
+          entity.rules.forEach((r, index) => {
+            if (r.columns) {
+              const idx = r.columns.indexOf('materialSampleID');
+              if (idx > -1) {
+                r.columns.splice(idx, 1);
+                changedRule = true;
+              }
+            } else if (r.column && r.column === 'materialSampleID') {
+              ruleIndexesToRemove.push(index);
+            }
+          });
+          ruleIndexesToRemove.forEach(index => entity.rules.splice(index, 1));
+          if (changedRule || ruleIndexesToRemove.length) {
+            entity.rules = entity.rules.slice();
+          }
+        }
+      };
+
+      if (this.barcode) unselectMaterialSampleID('fastaSequence');
+      if (this.nextgen) unselectMaterialSampleID('fastqMetadata');
     }
   }
 
@@ -384,29 +440,49 @@ class CreateProjectController {
     return sheetName;
   }
 
-  setRequiredAttributes() {
-    this.networkConfig.entities.forEach(e => {
+  setRequiredAttributes(config) {
+    config.entities.forEach(e => {
       this.setEntityRequiredAttributes(e);
     });
   }
 
   setEntityRequiredAttributes(e) {
-    if (e.worksheet) {
-      this.requiredAttributes[
-        e.conceptAlias
-      ] = this.networkConfig.requiredAttributesForEntity(e.conceptAlias);
-    } else {
-      this.requiredAttributes[e.conceptAlias] = [];
+    const requiredAttributes = e.worksheet
+      ? this.networkConfig.requiredAttributesForEntity(e.conceptAlias)
+      : [];
+
+    const ne = this.networkConfig.entities.find(
+      entity => entity.conceptAlias === e.conceptAlias,
+    );
+
+    const addUniqueKey = entity => {
+      const attribute = ne.attributes.find(a => a.column === entity.uniqueKey);
+      requiredAttributes.push(attribute);
+      if (!e.attributes.find(attr => attribute.uri === attr.uri)) {
+        e.attributes.push(attribute);
+      }
+    };
+
+    if (!requiredAttributes.find(a => a.column === e.uniqueKey)) {
+      addUniqueKey(e);
     }
 
-    if (
-      !this.requiredAttributes[e.conceptAlias].find(
-        a => a.column === e.uniqueKey,
-      )
-    ) {
-      const attribute = e.attributes.find(a => a.column === e.uniqueKey);
-      this.requiredAttributes[e.conceptAlias].push(attribute);
+    if (ne.uniqueKey !== e.uniqueKey) {
+      const i = requiredAttributes.findIndex(a => a.column === ne.uniqueKey);
+      if (i > -1) requiredAttributes.splice(i, 1);
     }
+
+    if (e.parentEntity) {
+      const p = (this.config || this.networkConfig).entities.find(
+        entity => e.parentEntity === entity.conceptAlias,
+      );
+
+      if (!requiredAttributes.find(a => a.column === p.uniqueKey)) {
+        addUniqueKey(p);
+      }
+    }
+
+    this.requiredAttributes[e.conceptAlias] = requiredAttributes;
   }
 
   setRequiredRules() {

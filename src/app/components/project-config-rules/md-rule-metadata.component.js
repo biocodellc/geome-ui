@@ -1,20 +1,18 @@
 import angular from 'angular';
 
 const listTemplate = `
-      <md-autocomplete md-selected-item="$ctrl.rule[$ctrl.key]" md-no-cache
+      <md-autocomplete md-selected-item="$ctrl.rule[$ctrl.key]" md-no-cache md-clear-on-blur
         md-search-text="searchText" md-items="l in $ctrl.lists | filter: searchText"
-        md-min-length="0" md-floating-label="{{$ctrl.key}}" required md-show-arrow="true"
-        ng-click="searchText = ''">
+        md-min-length="0" md-floating-label="{{$ctrl.key}}" required md-show-arrow="true">
         <md-item-template>
             <span md-highlight-text="searchText">{{l}}</span>
         </md-item-template>
       </md-autocomplete>`;
 
 const columnTemplate = `
-      <md-autocomplete md-selected-item="$ctrl.rule[$ctrl.key]" md-no-cache
+      <md-autocomplete md-selected-item="$ctrl.rule[$ctrl.key]" md-no-cache md-clear-on-blur
         md-search-text="searchText" md-items="col in $ctrl.columns | filter: searchText"
-        md-min-length="0" md-floating-label="{{$ctrl.key}}" required md-show-arrow="true"
-        ng-click="searchText = ''">
+        md-min-length="0" md-floating-label="{{$ctrl.key}}" required md-show-arrow="true">
         <md-item-template>
             <span md-highlight-text="searchText">{{col}}</span>
         </md-item-template>
@@ -22,9 +20,9 @@ const columnTemplate = `
 
 const columnsTemplate = `
     <md-chips ng-model="$ctrl.rule[$ctrl.key]" md-require-match>
-      <md-autocomplete md-selected-item="selectedItem" md-no-cache md-autocomplete-snap="width"
+      <md-autocomplete md-selected-item="selectedItem" md-no-cache md-autocomplete-snap="width" md-clear-on-blur
         md-search-text="searchText" md-items="col in $ctrl.columns | exclude: $ctrl.rule[$ctrl.key] | filter: searchText"
-        md-min-length="0" placeholder="Add {{$ctrl.key}}" required md-show-arrow="true"
+        md-min-length="0" placeholder="Add {{$ctrl.key}}" required md-show-arrow="true">
         <md-item-template>
             <span md-highlight-text="searchText">{{col}}</span>
         </md-item-template>

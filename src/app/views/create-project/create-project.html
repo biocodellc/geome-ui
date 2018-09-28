@@ -2,6 +2,15 @@
     <h2 class="text-center">New Project</h2>
     <p class="text-center">Welcome the the GeOMe project creation wizard</p>
 
+    <div ng-show="$ctrl.errors" class="errors" id="errors">
+        <p><strong>The following errors occurred when creating the configuration.</strong></p>
+        <md-virtual-repeat-container md-auto-shrink="true">
+            <ul flex>
+                <li md-virtual-repeat="msg in $ctrl.errors" class="repeated-item">{{msg}}</li>
+            </ul>
+        </md-virtual-repeat-container>
+    </div>
+
     <div layout="row">
         <form flex name="form" novalidate>
             <md-stepper flex id="create-project-stepper" md-vertical="true" md-prevent-skip="true">
@@ -193,7 +202,8 @@
                     <md-step-body>
                         <!-- <p>{{e.conceptAlias}} Configuration</p> -->
 
-                        <md-checkbox ng-if="e.type === 'DefaultEntity'" ng-model="e.hashed" class="md-align-top-left"
+                        <md-checkbox ng-if="e.type === 'DefaultEntity' && e.conceptAlias !== 'Tissue'"
+                            ng-change="$ctrl.hashChanged(e)" ng-model="e.hashed" class="md-align-top-left"
                             name="{{e.conceptAlias}}-hashed">
                             Hashed Entity?
                             <md-hints>
@@ -229,7 +239,7 @@
                             class="worksheet-autocomplete" md-floating-label="Worksheet"
                             md-on-add-new-item="$ctrl.addWorksheet(e, item)" md-search-text="$ctrl.worksheetSearchText[e.conceptAlias]"
                             md-selected-item-change="$ctrl.worksheetSelected(e.worksheet)"
-                            md-min-length="0" ng-click="$ctrl.worksheetSearchText[e.conceptAlias] = ''">
+                            md-min-length="0" md-clear-on-blur>
                             <md-item-template>
                                 <span md-highlight-text="$ctrl.worksheetSearchText[e.conceptAlias]">{{w}}</span>
                             </md-item-template>
