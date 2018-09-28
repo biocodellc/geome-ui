@@ -142,14 +142,14 @@ class CreateProjectController {
       BASE_CONFIG.lists = this.networkConfig.lists.slice();
       BASE_CONFIG.entities.forEach(e => {
         e.attributes = this.requiredAttributes[e.conceptAlias].slice();
-        e.rules = this.networkConfig.entities
-          .find(entity => entity.conceptAlias === e.conceptAlias)
-          .rules.slice();
       });
     });
 
     if (this.newConfig) {
+      this.loading = true;
+      await this.networkPromise;
       this.config = new ProjectConfig(BASE_CONFIG);
+      this.loading = false;
     } else {
       this.loading = true;
       await this.fetchConfig();
@@ -250,9 +250,7 @@ class CreateProjectController {
           attributes: this.requiredAttributes.Tissue.map(a =>
             Object.assign({}, a),
           ),
-          rules: this.networkConfig.entities
-            .find(entity => entity.conceptAlias === 'Tissue')
-            .rules.slice(),
+          rules: [],
           conceptURI: 'http://rs.tdwg.org/dwc/terms/MaterialSample',
           parentEntity: 'Sample',
         };
@@ -277,9 +275,7 @@ class CreateProjectController {
           attributes: this.requiredAttributes.fastqMetadata.map(a =>
             Object.assign({}, a),
           ),
-          rules: this.networkConfig.entities
-            .find(entity => entity.conceptAlias === 'fastqMetadata')
-            .rules.slice(),
+          rules: [],
           conceptURI: 'urn:fastqMetadata',
           parentEntity: 'Tissue',
         };
@@ -304,9 +300,7 @@ class CreateProjectController {
           attributes: this.requiredAttributes.fastaSequence.map(a =>
             Object.assign({}, a),
           ),
-          rules: this.networkConfig.entities
-            .find(entity => entity.conceptAlias === 'fastaSequence')
-            .rules.slice(),
+          rules: [],
           conceptURI: 'urn:fastaSequence',
           parentEntity: 'Tissue',
         };
@@ -340,9 +334,7 @@ class CreateProjectController {
           attributes: this.requiredAttributes.Event_Photo.map(a =>
             Object.assign({}, a),
           ),
-          rules: this.networkConfig.entities
-            .find(entity => entity.conceptAlias === 'Event_Photo')
-            .rules.slice(),
+          rules: [],
           worksheet: 'event_photos',
           uniqueKey: 'photoID',
           conceptURI: 'http://rs.tdwg.org/dwc/terms/associatedMedia',
@@ -369,9 +361,7 @@ class CreateProjectController {
           attributes: this.requiredAttributes.Sample_Photo.map(a =>
             Object.assign({}, a),
           ),
-          rules: this.networkConfig.entities
-            .find(entity => entity.conceptAlias === 'Sample_Photo')
-            .rules.slice(),
+          rules: [],
           worksheet: 'sample_photos',
           uniqueKey: 'photoID',
           conceptURI: 'http://rs.tdwg.org/dwc/terms/associatedMedia',

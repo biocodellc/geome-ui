@@ -7,7 +7,7 @@ class ProjectConfigAttributesController {
 
     this.$filter = $filter;
     this.$mdDialog = $mdDialog;
-    $scope.$watchCollection('$ctrl.selected', (newVal, oldVal) => {
+    $scope.$watchCollection('$ctrl.selectedAttributes', (newVal, oldVal) => {
       // call handleChange if an attribute was selected/deselected
       if (newVal && oldVal && newVal.length !== oldVal.length) {
         this.handleChange();
@@ -21,8 +21,10 @@ class ProjectConfigAttributesController {
   }
 
   $onChanges(changesObj) {
-    if ('required' in changesObj) {
-      this.requiredUris = this.required ? this.required.map(a => a.uri) : [];
+    if ('requiredAttributes' in changesObj) {
+      this.requiredUris = this.requiredAttributes
+        ? this.requiredAttributes.map(a => a.uri)
+        : [];
     }
   }
 
@@ -67,7 +69,7 @@ class ProjectConfigAttributesController {
   }
 
   handleChange() {
-    this.onChange({ attributes: this.selected });
+    this.onChange({ attributes: this.selectedAttributes });
   }
 }
 
@@ -75,9 +77,9 @@ export default {
   template,
   controller: ProjectConfigAttributesController,
   bindings: {
-    selected: '<',
+    selectedAttributes: '<',
     available: '<',
-    required: '<',
+    requiredAttributes: '<',
     onChange: '&',
   },
 };

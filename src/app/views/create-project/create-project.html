@@ -263,16 +263,18 @@
                             can also edit a the group, description, etc. Attributes that are
                             required by GeOMe can not be disabled.</p>
 
-                        <fims-project-config-attributes selected="e.attributes" available="$ctrl.availableAttributes(e.conceptAlias)"
-                            required="$ctrl.requiredAttributes[e.conceptAlias]" on-change="$ctrl.updateAttributes(e, attributes)"></fims-project-config-attributes>
+                        <fims-project-config-attributes selected-attributes="e.attributes"
+                            available="$ctrl.availableAttributes(e.conceptAlias)"
+                            required-attributes="$ctrl.requiredAttributes[e.conceptAlias]"
+                            on-change="$ctrl.updateAttributes(e, attributes)"></fims-project-config-attributes>
 
                         <h4>Rules</h4>
                         <p class="small">Here you can configure the validation rules for this
-                            entity.</p>
+                            entity. Note: required GeOMe rules will be added upon creation.</p>
 
                         <fims-project-config-rules rules="e.rules" required="$ctrl.requiredRules[e.conceptAlias]"
                             attributes="e.attributes" lists="$ctrl.networkConfig.lists" on-change="$ctrl.updateRules(e, rules)">
-                            </fims-project-config-attributes>
+                        </fims-project-config-rules>
 
                     </md-step-body>
                     <md-step-actions>
