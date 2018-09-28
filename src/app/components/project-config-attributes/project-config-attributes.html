@@ -10,7 +10,7 @@
             </tr>
         </thead>
         <tbody md-body>
-            <tr md-row md-select="a" md-select-id="uri" ng-repeat="a in $ctrl.getAvailable()|  orderBy: $ctrl.orderBy track by a.uri"
+            <tr md-row md-select="a" md-select-id="uri" ng-repeat="a in $ctrl.getAvailable() | orderBy: $ctrl.orderBy track by a.uri"
                 ng-disabled="$ctrl.requiredUris.includes(a.uri)" ng-if="!a.internal">
                 <td md-cell class="action-row" ng-click="$ctrl.editAttribute($event, a)">
                     <md-icon md-font-icon="fa fa-pencil fa-fw"></md-icon>

@@ -215,6 +215,16 @@ class StepperCtrl {
     return this.visitedSteps.has(this.steps[stepNum]);
   }
 
+  resetVisitedTo(stepNum) {
+    if (stepNum === undefined) this.visitedSteps = new Set();
+    else {
+      this.visitedSteps = this.steps.reduce((accumulator, step, i) => {
+        if (i <= stepNum) accumulator.add(step);
+        return accumulator;
+      }, new Set());
+    }
+  }
+
   isCompleted(stepNumber) {
     return this.linear && stepNumber < this.currentStep;
   }

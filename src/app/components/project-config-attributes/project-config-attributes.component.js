@@ -13,16 +13,16 @@ class ProjectConfigAttributesController {
         this.handleChange();
       }
     });
+    this.requiredUris = [];
   }
 
   $onInit() {
-    this.selected = this.selected.map(a => Object.assign({}, a));
     this.orderBy = 'required';
   }
 
   $onChanges(changesObj) {
     if ('required' in changesObj) {
-      this.requiredUris = this.required.map(a => a.uri);
+      this.requiredUris = this.required ? this.required.map(a => a.uri) : [];
     }
   }
 

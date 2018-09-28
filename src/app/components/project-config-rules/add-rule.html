@@ -10,7 +10,7 @@
       </md-select>
     </md-input-container>
 
-    <fims-md-rule-form ng-if="$ctrl.rule" rule="$ctrl.rule" lists="$ctrl.lists" columns="$ctrl.columns"></fims-md-rule-form>
+    <fims-md-rule-form layout="column" ng-if="$ctrl.rule" rule="$ctrl.rule" lists="$ctrl.lists" columns="$ctrl.columns"></fims-md-rule-form>
 
     <md-dialog-actions>
       <md-button ng-click="$ctrl.$mdDialog.cancel()" class="md-primary">Cancel</md-button>

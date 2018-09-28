@@ -1,13 +1,13 @@
 import angular from 'angular';
 
-import Rule, { AVAILABLE_RULES, METADATA_TYPES } from '../../models/Rule';
+import Rule, { AVAILABLE_RULES } from '../../models/Rule';
 
 const template = require('./project-config-rules.html');
 const editTemplate = require('./edit-rule.html');
 const addTemplate = require('./add-rule.html');
 
 class ProjectConfigRulesController {
-  constructor($scope, $filter, $mdDialog) {
+  constructor($filter, $mdDialog) {
     'ngInject';
 
     this.$filter = $filter;
@@ -15,8 +15,13 @@ class ProjectConfigRulesController {
   }
 
   $onInit() {
-    this.rules = this.rules.map(r => new Rule(angular.copy(r)));
     this.orderBy = 'level';
+  }
+
+  $onChanges(changesObj) {
+    if ('rules' in changesObj) {
+      this.rules = this.rules.map(r => new Rule(angular.copy(r)));
+    }
   }
 
   isArray(v) {
