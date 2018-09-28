@@ -29,12 +29,12 @@ export default function(
 
   $http.defaults.headers.common = { 'Fims-App': 'GeOMe-db' };
 
-  // const transErrorHandler = $state.defaultErrorHandler();
-  // $state.defaultErrorHandler(err => {
-  // console.log('transition error', err);
-  // if (err && err.message.includes('transition has been superseded')) return;
-  // transErrorHandler(err);
-  // });
+  const transErrorHandler = $state.defaultErrorHandler();
+  $state.defaultErrorHandler(err => {
+    console.log('transition error', err);
+    if (err && err.message.includes('transition has been superseded')) return;
+    transErrorHandler(err);
+  });
 
   $transitions.onBefore({}, () => {
     // disable animations on transitions.

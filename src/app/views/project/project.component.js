@@ -42,7 +42,6 @@ class ProjectCtrl {
       .then(() => this.ProjectService.delete(project))
       .then(() => {
         angular.toaster.success('Successfully deleted project!');
-        // this.$state.reload();
       })
       .catch(() => {});
   }
