@@ -4,6 +4,38 @@ import Rule from '../../models/Rule';
 
 const template = require('./create-project.html');
 
+const BASE_CONFIG = {
+  entities: [
+    {
+      conceptAlias: 'Event',
+      type: 'DefaultEntity',
+      worksheet: 'Events',
+      uniqueKey: 'eventID',
+      attributes: [],
+      rules: [],
+      conceptURI: 'http://rs.tdwg.org/dwc/terms/Event',
+    },
+    {
+      conceptAlias: 'Sample',
+      type: 'DefaultEntity',
+      worksheet: 'Samples',
+      uniqueKey: 'materialSampleID',
+      attributes: [],
+      rules: [],
+      conceptURI: 'http://rs.tdwg.org/dwc/terms/MaterialSample',
+      parentEntity: 'Event',
+    },
+  ],
+  lists: [],
+  expeditionMetadataProperties: [],
+};
+
+const UNIQUE_KEYS = {
+  Event: ['eventID'],
+  Sample: ['materialSampleID'],
+  Tissue: ['tissueID'],
+};
+
 class CreateProjectController {
   constructor(
     $state,
@@ -31,13 +63,15 @@ class CreateProjectController {
       description: undefined,
       public: false,
     };
+    this.newConfig = false;
     this.syncConfig = true;
+    this.worksheetSearchText = {};
     this.requiredAttributes = {};
     this.requiredRules = {};
   }
 
   createProject() {
-    if (this.syncConfig) {
+    if (!this.newConfig && this.syncConfig) {
       this.project.projectConfiguration = this.existingConfig;
     } else {
       // creating a new ProjectConfiguration
@@ -51,7 +85,9 @@ class CreateProjectController {
         delete data.projectConfig;
         return this.ProjectService.setCurrentProject(data);
       })
-      .then(() => this.$state.go('validate'))
+      .then(() =>
+        this.$state.go('validate', {}, { reload: true, inherit: false }),
+      )
       .catch(resp => {
         if (resp.status === 400 && resp.data.errors) {
           this.errors = resp.data.errors;
@@ -62,6 +98,17 @@ class CreateProjectController {
       .finally(() => {
         this.creatingProject = false;
       });
+  }
+
+  getPossibleUniqueKeys(entity) {
+    const keys = UNIQUE_KEYS[entity.conceptAlias].slice();
+    if (entity.parentEntity) {
+      const parent = this.config.entities.find(
+        e => e.conceptAlias === entity.parentEntity,
+      );
+      keys.push(parent.uniqueKey);
+    }
+    return keys;
   }
 
   updateAttributes(e, attributes) {
@@ -86,28 +133,313 @@ class CreateProjectController {
     return this.requiredAttributes[conceptAlias].includes(attribute);
   }
 
-  resetVisitedSteps($mdStep) {
-    if (
-      this.configName &&
-      this.existingConfig &&
-      this.existingConfig.name !== this.configName
-    ) {
-      $mdStep.$stepper.resetVisitedTo($mdStep.stepNumber);
-    }
-  }
-
   async toConfigStep($mdStep) {
     this.fetchNetworkConfig();
 
-    this.loading = true;
-    await Promise.all([this.fetchConfig(), this.networkPromise]);
-    this.loading = false;
+    this.networkPromise.then(() => {
+      this.setRequiredAttributes(this.networkConfig);
+      this.setRequiredRules();
+      BASE_CONFIG.lists = this.networkConfig.lists.slice();
+      BASE_CONFIG.entities.forEach(e => {
+        e.attributes = this.requiredAttributes[e.conceptAlias].slice();
+        e.rules = this.networkConfig.entities
+          .find(entity => entity.conceptAlias === e.conceptAlias)
+          .rules.slice();
+      });
+    });
 
-    if (!this.config) return;
-    this.setRequiredRules();
-    this.setRequiredAttributes(this.config);
+    if (this.newConfig) {
+      this.config = new ProjectConfig(BASE_CONFIG);
+    } else {
+      this.loading = true;
+      await this.fetchConfig();
+      this.loading = false;
+
+      if (!this.config) return;
+      this.selectModulesForExistingConfig();
+      this.setRequiredAttributes(this.config);
+    }
 
     $mdStep.$stepper.next();
+  }
+
+  hashChanged(e) {
+    if (e.hashed) {
+      const ne = this.networkConfig.entities.find(
+        entity => e.conceptAlias === entity.conceptAlias,
+      );
+
+      if (ne.uniqueKey !== e.uniqueKey) {
+        e.uniqueKey = ne.uniqueKey;
+        this.uniqueKeyChange(e);
+      }
+    }
+  }
+
+  uniqueKeyChange(e) {
+    this.setRequiredAttributes(this.config);
+
+    const validForUriRule = e.rules.find(
+      r => r.name === 'ValidForURI' && r.level === 'ERROR',
+    );
+
+    if (validForUriRule) {
+      validForUriRule.column = e.uniqueKey;
+    }
+
+    const uniqueValueRule = e.rules.find(
+      r => r.name === 'UniqueValue' && r.level === 'ERROR',
+    );
+
+    if (uniqueValueRule) {
+      uniqueValueRule.column = e.uniqueKey;
+    }
+
+    if (e.conceptAlias === 'Tissue' && e.uniqueKey === 'tissueID') {
+      const unselectMaterialSampleID = conceptAlias => {
+        const entity = this.config.entities.find(
+          en => en.conceptAlias === conceptAlias,
+        );
+        const { attributes } = entity;
+
+        const i = attributes.findIndex(a => a.uri === 'urn:materialSampleID');
+        if (i > -1) {
+          attributes.splice(i, 1);
+
+          // also need to remove any rules that reference materialSampleID
+          let changedRule = false;
+          const ruleIndexesToRemove = [];
+          entity.rules.forEach((r, index) => {
+            if (r.columns) {
+              const idx = r.columns.indexOf('materialSampleID');
+              if (idx > -1) {
+                r.columns.splice(idx, 1);
+                changedRule = true;
+              }
+            } else if (r.column && r.column === 'materialSampleID') {
+              ruleIndexesToRemove.push(index);
+            }
+          });
+          ruleIndexesToRemove.forEach(index => entity.rules.splice(index, 1));
+          if (changedRule || ruleIndexesToRemove.length) {
+            entity.rules = entity.rules.slice();
+          }
+        }
+      };
+
+      if (this.barcode) unselectMaterialSampleID('fastaSequence');
+      if (this.nextgen) unselectMaterialSampleID('fastqMetadata');
+    }
+  }
+
+  tissuesChanged() {
+    if (!this.tissues) this.removeEntity('Tissue');
+    else {
+      let e;
+      if (this.existingConfig) {
+        e = this.existingConfig.config.entities.find(
+          entity => entity.conceptAlias === 'Tissue',
+        );
+      }
+      if (!e) {
+        e = {
+          conceptAlias: 'Tissue',
+          type: 'DefaultEntity',
+          worksheet: 'Tissues',
+          uniqueKey: 'tissueID',
+          attributes: this.requiredAttributes.Tissue.map(a =>
+            Object.assign({}, a),
+          ),
+          rules: this.networkConfig.entities
+            .find(entity => entity.conceptAlias === 'Tissue')
+            .rules.slice(),
+          conceptURI: 'http://rs.tdwg.org/dwc/terms/MaterialSample',
+          parentEntity: 'Sample',
+        };
+      }
+      this.config.entities.push(e);
+    }
+  }
+
+  nextgenChanged() {
+    if (!this.nextgen) this.removeEntity('fastqMetadata');
+    else {
+      let e;
+      if (this.existingConfig) {
+        e = this.existingConfig.config.entities.find(
+          entity => entity.conceptAlias === 'fastqMetadata',
+        );
+      }
+      if (!e) {
+        e = {
+          conceptAlias: 'fastqMetadata',
+          type: 'Fastq',
+          attributes: this.requiredAttributes.fastqMetadata.map(a =>
+            Object.assign({}, a),
+          ),
+          rules: this.networkConfig.entities
+            .find(entity => entity.conceptAlias === 'fastqMetadata')
+            .rules.slice(),
+          conceptURI: 'urn:fastqMetadata',
+          parentEntity: 'Tissue',
+        };
+      }
+      this.config.entities.push(e);
+    }
+  }
+
+  barcodeChanged() {
+    if (!this.barcode) this.removeEntity('fastaSequence');
+    else {
+      let e;
+      if (this.existingConfig) {
+        e = this.existingConfig.config.entities.find(
+          entity => entity.conceptAlias === 'fastaSequence',
+        );
+      }
+      if (!e) {
+        e = {
+          conceptAlias: 'fastaSequence',
+          type: 'Fasta',
+          attributes: this.requiredAttributes.fastaSequence.map(a =>
+            Object.assign({}, a),
+          ),
+          rules: this.networkConfig.entities
+            .find(entity => entity.conceptAlias === 'fastaSequence')
+            .rules.slice(),
+          conceptURI: 'urn:fastaSequence',
+          parentEntity: 'Tissue',
+        };
+      }
+      this.config.entities.push(e);
+    }
+  }
+
+  photosChanged() {
+    if (!this.photos) {
+      this.samplePhotos = false;
+      this.eventPhotos = false;
+      this.eventPhotosChanged();
+      this.samplePhotosChanged();
+    }
+  }
+
+  eventPhotosChanged() {
+    if (!this.eventPhotos) this.removeEntity('Event_Photo');
+    else {
+      let e;
+      if (this.existingConfig) {
+        e = this.existingConfig.config.entities.find(
+          entity => entity.conceptAlias === 'EventPhoto',
+        );
+      }
+      if (!e) {
+        e = {
+          conceptAlias: 'Event_Photo',
+          type: 'Photo',
+          attributes: this.requiredAttributes.Event_Photo.map(a =>
+            Object.assign({}, a),
+          ),
+          rules: this.networkConfig.entities
+            .find(entity => entity.conceptAlias === 'Event_Photo')
+            .rules.slice(),
+          worksheet: 'event_photos',
+          uniqueKey: 'photoID',
+          conceptURI: 'http://rs.tdwg.org/dwc/terms/associatedMedia',
+          parentEntity: 'Event',
+        };
+      }
+      this.config.entities.push(e);
+    }
+  }
+
+  samplePhotosChanged() {
+    if (!this.samplePhotos) this.removeEntity('Sample_Photo');
+    else {
+      let e;
+      if (this.existingConfig) {
+        e = this.existingConfig.config.entities.find(
+          entity => entity.conceptAlias === 'Sample_Photo',
+        );
+      }
+      if (!e) {
+        e = {
+          conceptAlias: 'Sample_Photo',
+          type: 'Photo',
+          attributes: this.requiredAttributes.Sample_Photo.map(a =>
+            Object.assign({}, a),
+          ),
+          rules: this.networkConfig.entities
+            .find(entity => entity.conceptAlias === 'Sample_Photo')
+            .rules.slice(),
+          worksheet: 'sample_photos',
+          uniqueKey: 'photoID',
+          conceptURI: 'http://rs.tdwg.org/dwc/terms/associatedMedia',
+          parentEntity: 'Sample',
+        };
+      }
+      this.config.entities.push(e);
+    }
+  }
+
+  removeEntity(conceptAlias) {
+    const i = this.config.entities.findIndex(
+      e => e.conceptAlias === conceptAlias,
+    );
+
+    if (i > -1) this.config.entities.splice(i, 1);
+  }
+
+  selectModulesForExistingConfig() {
+    // reset selected modules
+    this.tissues = false;
+    this.photos = false;
+    this.eventPhotos = false;
+    this.samplePhotos = false;
+    this.nextgen = false;
+    this.barcode = false;
+
+    this.config.entities.forEach(e => {
+      switch (e.conceptAlias) {
+        case 'Tissue':
+          this.tissues = true;
+          break;
+        case 'Event_Photo':
+          this.photos = true;
+          this.eventPhotos = true;
+          break;
+        case 'Sample_Photo':
+          this.photos = true;
+          this.samplePhotos = true;
+          break;
+        case 'fastaSequence':
+          this.barcode = true;
+          break;
+        case 'fastqMetadata':
+          this.nextgen = true;
+          break;
+        default:
+      }
+    });
+  }
+
+  getWorksheets() {
+    if (!this.worksheetChange && this.worksheets) return this.worksheets;
+
+    const worksheets = new Set();
+    this.config.entities.map(e => e.worksheet).forEach(w => worksheets.add(w));
+    this.worksheetChange = false;
+    this.worksheets = Array.from(worksheets);
+    return this.worksheets;
+  }
+
+  worksheetSelected(item) {
+    if (item) this.worksheetChange = true;
+  }
+
+  addWorksheet(entity, sheetName) {
+    entity.worksheet = sheetName;
+    return sheetName;
   }
 
   setRequiredAttributes(config) {
@@ -192,8 +524,7 @@ class CreateProjectController {
     }
 
     return this.ProjectConfigurationService.get(this.existingConfig.id)
-      .then(async data => {
-        await this.networkPromise;
+      .then(data => {
         this.existingConfig = data;
         this.config = new ProjectConfig(data.config);
         this.configName = this.existingConfig.name;
@@ -229,5 +560,6 @@ export default {
   bindings: {
     currentUser: '<',
     configurations: '<',
+    isNetworkAdmin: '<',
   },
 };

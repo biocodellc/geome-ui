@@ -52,6 +52,7 @@ import plateViewer from './views/plate-viewer';
 import projectService from './services/project.service';
 import projectConfigurationService from './services/projectConfiguration.service';
 import networkConfigurationService from './services/networkConfiguration.service';
+import networkService from './services/network.service';
 import userService from './services/user.service';
 
 import app from './app.component';
@@ -91,6 +92,7 @@ const dependencies = [
   projectService,
   projectConfigurationService,
   networkConfigurationService,
+  networkService,
   userService,
   containerPage,
   header,
