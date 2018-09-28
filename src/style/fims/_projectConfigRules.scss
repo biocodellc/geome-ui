@@ -25,7 +25,14 @@
     align-self: center;
   }
 
+  fims-md-rule-form {
+    overflow-y: auto;
+  }
+
   .metadata {
+    &:not(:first-of-type) {
+      margin-top: 16px;
+    }
     md-input-container {
       margin-bottom: 0;
     }

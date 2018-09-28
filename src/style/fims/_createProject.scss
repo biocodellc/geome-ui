@@ -1,3 +1,15 @@
+fims-create-project {
+  .errors {
+    md-virtual-repeat-container {
+      max-height: 300px;
+    }
+    ul {
+      margin-bottom: 0;
+    }
+    margin-bottom: 16px;
+  }
+}
+
 md-step-body {
   overflow: visible !important;
   margin-top: 8px;
