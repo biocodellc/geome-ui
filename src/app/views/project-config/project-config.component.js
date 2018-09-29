@@ -5,21 +5,28 @@ import displayConfigErrors from '../../utils/displayConfigErrors';
 const template = require('./config.html');
 const unsavedConfigConfirmationTemplate = require('./unsaved-config-confirmation.html');
 
-function configConfirmationController($mdDialog) {
-  'ngInject';
-
-  const vm = this;
-
-  vm.continue = $mdDialog.hide;
-  vm.cancel = $mdDialog.cancel;
-}
-
 class ConfigController {
-  constructor($mdDialog, ProjectConfigurationService) {
+  constructor($mdDialog, $transitions, ProjectConfigurationService) {
     'ngInject';
 
     this.$mdDialog = $mdDialog;
     this.ProjectConfigurationService = ProjectConfigurationService;
+
+    // show spinner on transitions
+    $transitions.onStart({ to: 'project-config.entities.**' }, trans => {
+      const hasResolvables = s => {
+        if (s.resolvables.length > 0) return true;
+        if (!s.parent) return false;
+        return hasResolvables(s.parent);
+      };
+
+      if (hasResolvables(trans.$to())) this.loading = true;
+    });
+    const finished = () => {
+      this.loading = false;
+    };
+    $transitions.onFinish({ to: 'project-config.entities.**' }, finished);
+    $transitions.onError({ to: 'project-config.entities.**' }, finished);
   }
 
   $onInit() {
@@ -32,12 +39,19 @@ class ConfigController {
       .then(configuration => {
         this.config = new ProjectConfig(configuration.config);
         this.configuration = configuration;
+        this.name = configuration.name;
+        this.description = configuration.description;
       })
-      .finally(() => (this.loading = false));
+      .finally(() => {
+        this.loading = false;
+      });
   }
 
   updateShowSave() {
-    this.showSave = !angular.equals(this.configuration.config, this.config);
+    this.showSave =
+      !angular.equals(this.configuration.config, this.config) ||
+      this.name !== this.configuration.name ||
+      this.description !== this.configuration.description;
   }
 
   handleUpdateEntities(entities) {
@@ -51,55 +65,44 @@ class ConfigController {
     this.updateShowSave();
   }
 
-  handleUpdateLists(lists) {
-    this.config.lists = lists;
-    this.updateShowSave();
-  }
-
-  handleUpdateList(alias, list) {
-    const i = this.config.lists.findIndex(l => l.alias === alias);
-    this.config.lists.splice(i, 1, list);
-    this.updateShowSave();
-  }
-
-  handleUpdateMetadata(config) {
-    delete config.entities;
-    delete config.lists;
-    Object.assign(this.config, config);
+  handleUpdateSettings(configuration) {
+    delete configuration.config;
+    Object.assign(this.configuration, configuration);
     this.updateShowSave();
   }
 
   handleNewWorksheet(sheetName) {
     this.config.addWorksheet(sheetName);
-    // this.showSave = true;
     this.updateShowSave();
   }
 
-  handleUpdateExpeditionMetadata(expeditionMetadata) {
-    this.config.expeditionMetadataProperties = expeditionMetadata;
+  handleUpdateExpeditionMetadata(properties) {
+    this.config.expeditionMetadataProperties = properties;
     this.updateShowSave();
   }
 
-  handleOnSave() {
-    this.loading = true;
+  onSave() {
+    this.saving = true;
     return this.ProjectConfigurationService.save(
       Object.assign({}, this.configuration, { config: this.config }),
     )
       .then(configuration => {
         this.configuration = configuration;
+        this.name = configuration.name;
+        this.description = configuration.description;
         angular.toaster.success('Successfully updated project configuration!');
         this.config = new ProjectConfig(configuration.config);
         this.updateShowSave();
       })
       .catch(response => {
         if (response.status === 400) {
-          displayConfigErrors(this.$mdDialog, response.data.config.errors);
+          displayConfigErrors(this.$mdDialog, response.data.errors);
         } else {
           angular.toaster.error('Error saving project configuration!');
         }
       })
       .finally(() => {
-        this.loading = false;
+        this.saving = false;
       });
   }
 
@@ -107,13 +110,17 @@ class ConfigController {
     if (this.showSave) {
       return this.$mdDialog
         .show({
+          locals: {
+            $mdDialog: this.$mdDialog,
+          },
           template: unsavedConfigConfirmationTemplate,
-          controller: configConfirmationController,
-          controllerAs: 'vm',
+          bindToController: true,
+          controller: function Controller() {},
+          controllerAs: '$ctrl',
         })
         .then(shouldSave => {
           if (shouldSave) {
-            return this.handleOnSave();
+            return this.onSave();
           }
         });
     }

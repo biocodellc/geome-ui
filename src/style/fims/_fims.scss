@@ -14,6 +14,7 @@
 @import 'projectConfigAttributes';
 @import 'projectConfigRules';
 @import 'projectConfigExpeditionMetadata';
+@import 'networkConfigList';
 
 // views
 @import 'query';
@@ -25,3 +26,4 @@
 @import 'createProject';
 @import 'login';
 @import 'register';
+@import 'projectConfig';

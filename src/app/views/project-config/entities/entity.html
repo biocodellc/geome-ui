@@ -1,42 +1,43 @@
-<li class="settings-list-item"
-    uib-popover-template="'editEntityPopover.html'"
-    popover-is-open="$ctrl.editing"
-    popover-placement="auto bottom"
-    popover-trigger="'none'"
-    popover-class="edit-popover">
+<li class="settings-list-item" uib-popover-template="'editEntityPopover.html'" popover-is-open="$ctrl.editing"
+    popover-placement="auto bottom" popover-trigger="'none'" popover-class="edit-popover">
 
     <div class="row-actions">
         <a href="#" ng-click="$ctrl.onToggleEdit()"><i class="fa fa-pencil fa-fw"></i></a>
-        <a href="#" ng-click="$ctrl.onRemove({ entity: $ctrl.entity })"><i class="fa fa-trash text-danger fa-fw"></i></a>
     </div>
 
     <div class="info">
         <div class="row">
-            <div class="col-xs-6 col-lg-4">
-                <a ui-sref="project-config.entities.detail({ alias: $ctrl.entity.conceptAlias, entity: $ctrl.entity })"
-                   href class="title">
-                    {{ $ctrl.entity.conceptAlias }}
-                </a>
-            </div>
-            <div class="col-xs-6 col-lg-2">
-                <ul class="list-unstyled pull-right">
-                    <li>
-                        <a href ui-sref=".detail.attributes({ alias: $ctrl.entity.conceptAlias, entity: $ctrl.entity })">
-                            <span class="badge">{{ $ctrl.entity.attributes.length }}</span> Attributes
-                        </a>
-                    </li>
-                    <li>
-                        <a href ui-sref=".detail.rules({ alias: $ctrl.entity.conceptAlias, entity: $ctrl.entity })">
-                            <span class="badge">{{ $ctrl.entity.rules.length }}</span> Rules
-                        </a>
-                    </li>
-                </ul>
+            <div layout="row" class="col-xs-12">
+                <div flex>
+                    <a ui-sref="project-config.entities.detail({ alias: $ctrl.entity.conceptAlias, entity: $ctrl.entity })"
+                        href class="title">
+                        {{ $ctrl.entity.conceptAlias }}
+                    </a>
+                </div>
+                <div flex flex-gt-sm="25" flex-gt-md="35">
+                    <ul class="list-unstyled">
+                        <li>
+                            <a href ui-sref=".detail.attributes({ alias: $ctrl.entity.conceptAlias, entity: $ctrl.entity })">
+                                <span class="badge">{{ $ctrl.entity.attributes.length }}</span>
+                                Attributes
+                            </a>
+                        </li>
+                        <li>
+                            <a href ui-sref=".detail.rules({ alias: $ctrl.entity.conceptAlias, entity: $ctrl.entity })">
+                                <span class="badge">{{ $ctrl.entity.rules.length }}</span> Rules
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div class="col-xs-12">
                 <ul class="list-inline metadata" ng-click="$ctrl.onToggleEdit()">
-                    <li ng-show="$ctrl.entity.worksheet"><strong>worksheet:</strong> {{ $ctrl.entity.worksheet }}</li>
-                    <li ng-show="$ctrl.entity.parentEntity"><strong>parentEntity:</strong> {{ $ctrl.entity.parentEntity }}</li>
-                    <li><strong>uniqueAcrossProject:</strong> {{ $ctrl.entity.uniqueAcrossProject }}</li>
+                    <li ng-show="$ctrl.entity.worksheet"><strong>worksheet:</strong> {{
+                        $ctrl.entity.worksheet }}</li>
+                    <li ng-show="$ctrl.entity.parentEntity"><strong>parentEntity:</strong> {{
+                        $ctrl.entity.parentEntity }}</li>
+                    <li><strong>uniqueAcrossProject:</strong> {{ $ctrl.entity.uniqueAcrossProject
+                        }}</li>
                 </ul>
             </div>
         </div>
@@ -45,10 +46,8 @@
     <script type="text/ng-template" id="editEntityPopover.html">
         <fims-edit-entity
             entity="$ctrl.entity"
-            existing-worksheets="$ctrl.worksheets"
             on-update="$ctrl.handleOnUpdate(entity)"
-            on-close="$ctrl.onToggleEdit()"
-            on-new-worksheet="$ctrl.onNewWorksheet(sheetName)">
+            on-close="$ctrl.onToggleEdit()">
         </fims-edit-entity>
     </script>
 </li>

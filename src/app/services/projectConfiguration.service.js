@@ -43,16 +43,9 @@ class ProjectConfigurationService {
       url: `${restRoot}projects/configs/${projectConfiguration.id}`,
       data: projectConfiguration,
       keepJson: true,
-    })
-      .then(({ data }) =>
-        Object.assign({}, data, { config: new ProjectConfig(data.config) }),
-      )
-      .catch(response => {
-        if (response.status !== 400 || !response.data.config.errors) {
-          angular.catcher('Error updating config')(response);
-        }
-        throw response;
-      });
+    }).then(({ data }) =>
+      Object.assign({}, data, { config: new ProjectConfig(data.config) }),
+    );
   }
 }
 

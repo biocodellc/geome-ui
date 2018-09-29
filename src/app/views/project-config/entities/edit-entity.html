@@ -36,21 +36,14 @@
                 <div class="form-group">
                     <label class="control-label col-xs-3">Worksheet</label>
                     <div class="col-xs-9">
-                        <ui-select ng-model="$ctrl.entity.worksheet" tagging="$ctrl.newWorksheet" tagging-label="false"
-                                   ng-disabled="!$ctrl.entity.editable && !$ctrl.entity.uniqueKey">
-                            <ui-select-match>{{ $select.selected }}</ui-select-match>
-                            <ui-select-choices position="down"
-                                               repeat="worksheet in $ctrl.existingWorksheets | filter: $select.search">
-                                <div ng-bind-html="worksheet | highlight: $select.search | trusted_html"></div>
-                            </ui-select-choices>
-                        </ui-select>
+                        <input type="text" class="form-control" disabled ng-model="$ctrl.entity.conceptAlias" />
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="control-label col-xs-3">Concept URI</label>
                     <div class="col-xs-9">
-                        <input type="text" class="form-control" ng-model="$ctrl.entity.conceptURI"/>
+                        <input type="text" disabled class="form-control" ng-model="$ctrl.entity.conceptURI"/>
                     </div>
                 </div>
 

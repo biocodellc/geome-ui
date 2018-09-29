@@ -1,22 +1,21 @@
 <div class="settings">
     <div ui-view on-invite-user="$ctrl.handleInviteUser(email)" on-add-member="$ctrl.handleAddMember(username)">
         <div class="settings-bar">
-<div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
-	<md-progress-circular md-mode="indeterminate"></md-progress-circular>
-</div> 
+            <div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
+                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </div>
             <div class="settings-bar-container">
                 <ul class="actions">
                     <li>
                         <div class="dropdown">
                             <a href="#" data-toggle="dropdown" class="dropdown-toggle">
-                                Order by: <span class="order-by">{{ $ctrl.orderBy }} <i
-                                    class="fa fa-angle-down"></i></span>
+                                Order by: <span class="order-by">{{ $ctrl.orderBy }} <i class="fa fa-angle-down"></i></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li ng-repeat="orderBy in $ctrl.orderByList">
                                     <a href='#' class="text-capitalize" ng-click="$ctrl.orderBy = orderBy">
                                         {{ ::orderBy }} <i ng-show="$ctrl.orderBy === orderBy"
-                                                           class="fa fa-check fa-after"></i>
+                                            class="fa fa-check fa-after"></i>
                                     </a>
                                 </li>
                             </ul>
@@ -34,7 +33,8 @@
         <ul class="settings-list">
             <li class="settings-list-item" ng-repeat="member in $ctrl.members | orderBy:$ctrl.orderBy">
                 <div class="row-actions">
-                    <a href ng-class="{disabled: member.username === $ctrl.currentUser.username}" ng-click="$ctrl.remove(member)">
+                    <a href ng-class="{disabled: member.username === $ctrl.currentUser.username}"
+                        ng-click="$ctrl.remove(member)">
                         <i class="fa fa-ban text-danger fa-fw"></i></a>
                 </div>
 

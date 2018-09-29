@@ -1,24 +1,15 @@
 const template = require('./entities.html');
 
 class EntitiesController {
-  constructor($uibModal, $anchorScroll, ConfirmationService) {
+  constructor($uibModal) {
     'ngInject';
 
     this.$uibModal = $uibModal;
-    this.$anchorScroll = $anchorScroll;
-    this.ConfirmationService = ConfirmationService;
   }
 
   $onChanges(changesObj) {
     if (this.config && 'config' in changesObj) {
       this.entities = this.config.entities.slice(); // make a copy of the array
-
-      const newEntityIndex = this.entities.findIndex(e => e.isNew);
-      if (newEntityIndex > -1) {
-        this.editEntity = newEntityIndex;
-        this.$anchorScroll(`entity_${newEntityIndex}`);
-        delete this.entities[newEntityIndex].isNew;
-      }
     }
   }
 
@@ -28,19 +19,6 @@ class EntitiesController {
     } else {
       this.editEntity = index;
     }
-  }
-
-  handleRemoveEntity(entity) {
-    this.ConfirmationService.confirm(
-      `Are you sure you want to delete this entity?
-        <strong>It is strongly recommended that you export your data first. All data associated with this attribute will
-            be lost.</strong>`,
-      () => {
-        const i = this.entities.indexOf(entity);
-        this.entities.splice(i, 1);
-        this.onUpdateEntities({ entities: this.entities });
-      },
-    );
   }
 
   handleUpdateEntity($index, entity) {

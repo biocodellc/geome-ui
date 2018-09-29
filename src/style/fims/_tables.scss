@@ -1,8 +1,16 @@
-table.clone thead tr:last-child th {
-  border-bottom: 1px rgba(0, 0, 0, 0.12) solid;
+table.clone {
+  + md-table-container table tbody tr:first-child td {
+    border-top: none;
+  }
+  thead tr:last-child th {
+    border-bottom: 1px rgba(0, 0, 0, 0.12) solid;
+  }
+
+  border-left: 1px solid transparent;
 }
 
-table.clone + md-table-container table tbody tr:first-child td {
+md-table-container {
+  border: 1px rgba(0, 0, 0, 0.12) solid;
   border-top: none;
 }
 

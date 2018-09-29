@@ -124,7 +124,6 @@ export default {
     attributes: '<',
     lists: '<',
     uniqueKey: '<',
-    required: '<',
     onChange: '&',
   },
 };

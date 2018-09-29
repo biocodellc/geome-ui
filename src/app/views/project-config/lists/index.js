@@ -1,14 +1,9 @@
 import angular from 'angular';
 
 import fimsProjectConfigLists from './lists.component';
-import fimsConfigList from './list.component';
-import fimsAddList from './add-list.component';
 import fimsListDetail from './list-detail.component';
+import fimsNetworkConfigList from '../../../components/network-config-list';
 
 export default angular
-  .module('fims.projectConfigLists', [
-    fimsConfigList,
-    fimsAddList,
-    fimsListDetail,
-  ])
+  .module('fims.projectConfigLists', [fimsNetworkConfigList, fimsListDetail])
   .component('fimsProjectConfigLists', fimsProjectConfigLists).name;

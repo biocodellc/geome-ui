@@ -5,7 +5,7 @@ import angular from 'angular';
  * slightly modified version of https://github.com/daniel-nagy/fixed-table-header/blob/master/src/fixed-table-header.js
  */
 
-const fixHead = /* ngInject */ ($compile, $window) => ({
+const fixHead = /* ngInject */ ($compile, $window, $timeout) => ({
   restrict: 'A',
   link: (scope, element) => {
     var table = {
@@ -73,6 +73,8 @@ const fixHead = /* ngInject */ ($compile, $window) => ({
       table.original.css('marginTop', '-' + height + 'px');
     }
 
+    let hasSetWidth = false;
+
     function updateCells() {
       var cells = {
         clone: getCells(header.clone),
@@ -102,6 +104,14 @@ const fixHead = /* ngInject */ ($compile, $window) => ({
         var listener = scope.$watch(getWidth, setWidth);
 
         $window.addEventListener('resize', setWidth);
+
+        // hack to set correct width when used as child of ng-cloak
+        if (!hasSetWidth) {
+          $timeout(() => {
+            hasSetWidth = true;
+            setWidth();
+          }, 100);
+        }
 
         clone.on('$destroy', function() {
           listener();

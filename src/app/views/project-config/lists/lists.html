@@ -1,12 +1,32 @@
 <ul class="settings-list lists">
-    <div ng-repeat="list in $ctrl.lists">
-        <fims-list
-                list="list"
-                id="list_{{ $index }}"
-                editing="$index===$ctrl.editList"
-                on-toggle-edit="$ctrl.handleToggleEdit($index)"
-                on-update="$ctrl.handleUpdateList($index, list)"
-                on-remove="$ctrl.handleRemoveList(alias)">
-        </fims-list>
+    <div ng-repeat="list in $ctrl.lists | orderBy: 'alias'">
+        <li class="settings-list-item">
+            <div class="info">
+                <div class="row">
+                    <div layout="row" class="col-xs-12">
+                        <div flex>
+                            <a ui-sref=".detail({ alias: list.alias, list: list })" href class="title">
+                                {{ list.alias }}
+                            </a>
+                        </div>
+                        <div flex flex-gt-sm="25" flex-gt-md="35">
+                            <ul class="list-unstyled">
+                                <li>
+                                    <a href ui-sref=".detail({ alias: list.alias, list: list })">
+                                        <span class="badge">{{ list.fields.length }}</span>
+                                        Fields
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <ul class="list-inline metadata">
+                            <li><strong>case-sensitive:</strong> {{ !list.caseInsensitive }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </li>
     </div>
 </ul>
