@@ -1,7 +1,48 @@
 <form method="POST" name="queryForm" layout="column">
 
-  <project-selector layout="row" layout-align="center" is-authenticated="!!($ctrl.currentUser)"
-    current-project="$ctrl.currentProject" on-change="$ctrl.onProjectChange({ project: project })"></project-selector>
+  <section class="projects">
+    <a href="#" ng-click="$ctrl.showProjects = !$ctrl.showProjects" class="md-subhead bold">Projects</a>
+    <br>
+    <div class="md-form-group" ng-show="$ctrl.showProjects" layout="column" layout-margin>
+      <md-checkbox ng-click="$ctrl.showGroups = !$ctrl.showGroups;$ctrl.clearParams()" class="projectGroups">Search by
+        project family</md-checkbox>
+
+      <div ng-if="$ctrl.showGroups">
+
+        <md-chips ng-model="$ctrl.params.configGroups" md-require-match>
+          <md-autocomplete md-selected-item="$ctrl.selectedItem" md-no-cache md-autocomplete-snap="width"
+            md-search-text="searchText" md-items="item in $ctrl.filterGroups(searchText)" md-item-text="item"
+            md-dropdown-position="bottom" md-min-length="0" placeholder="Configuration Name ...">
+            <span md-highlight-text="searchText" md-highlight-flags="i">{{item}}</span>
+          </md-autocomplete>
+          <md-chip-template>
+            <span>
+              <strong>{{$chip}}</strong>
+            </span>
+          </md-chip-template>
+        </md-chips>
+      </div>
+
+      <div ng-if="!$ctrl.showGroups">
+        <md-chips ng-model="$ctrl.params.projects" md-require-match>
+          <md-autocomplete md-selected-item="$ctrl.selectedItem" md-no-cache md-autocomplete-snap="width"
+            md-search-text="searchText" md-items="item in $ctrl.filterProjects(searchText)" md-item-text="item.projectTitle"
+            md-dropdown-position="bottom" md-min-length="0" placeholder="Project Name ...">
+            <md-autocomplete-template>
+              <span md-highlight-text="searchText" md-highlight-flags="i">{{item.projectTitle}}</span>
+            </md-autocomplete-template>
+          </md-autocomplete>
+          <md-chip-template>
+            <span>
+              <strong ng-if="$chip.projectTitle.includes($chip.projectCode)">{{$chip.projectTitle}}</strong>
+              <strong ng-if="!$chip.projectTitle.includes($chip.projectCode)">{{$chip.projectCode}}::{{$chip.projectTitle}}</strong>
+            </span>
+          </md-chip-template>
+        </md-chips>
+      </div>
+
+    </div>
+  </section>
 
   <md-input-container ng-show="$ctrl.currentProject" class="md-icon-float md-icon-right md-block">
     <input type="text" placeholder="Query String..." ng-model="$ctrl.params.queryString" />
@@ -22,9 +63,8 @@
       <div class="md-form-group" ng-show="$ctrl.showExpeditions" layout="column" layout-margin>
         <md-chips ng-model="$ctrl.params.expeditions" md-require-match>
           <md-autocomplete md-selected-item="$ctrl.selectedItem" md-no-cache md-autocomplete-snap="width"
-            md-search-text="$ctrl.searchText" md-items="item in $ctrl.filterExpeditions($ctrl.searchText)"
-            md-item-text="item.expeditionTitle" md-dropdown-position="bottom" md-min-length="0"
-            placeholder="Expedition Name ...">
+            md-search-text="$ctrl.searchText" md-items="item in $ctrl.filterExpeditions($ctrl.searchText)" md-item-text="item.expeditionTitle"
+            md-dropdown-position="bottom" md-min-length="0" placeholder="Expedition Name ...">
             <span md-highlight-text="$ctrl.searchText" md-highlight-flags="i">{{item.expeditionTitle}}</span>
           </md-autocomplete>
           <md-chip-template>
@@ -70,8 +110,8 @@
             </div>
             <md-button class="md-raised md-warn md-hue-2 md-button-sm" ng-click="$ctrl.clearBounds()">Clear</md-button>
           </div>
-          <md-button class="md-raised md-accent md-button-sm" ng-class="{'active': $ctrl.drawing}"
-            ng-show="!$ctrl.params.bounds" ng-click="$ctrl.drawBounds()">Draw</md-button>
+          <md-button class="md-raised md-accent md-button-sm" ng-class="{'active': $ctrl.drawing}" ng-show="!$ctrl.params.bounds"
+            ng-click="$ctrl.drawBounds()">Draw</md-button>
         </div>
       </div>
     </section>
@@ -138,8 +178,7 @@
       <a href="#" flex="30" ng-click="$ctrl.showFilters = !$ctrl.showFilters" class="md-subhead bold">Column
         Filters</a>
       <div class="md-form-group" ng-show="$ctrl.showFilters" layout="column" layout-margin>
-        <md-chips ng-model="$ctrl.params.filters" readonly="true" md-removable="true"
-          md-transform-chip="$ctrl.transformChip($chip)">
+        <md-chips ng-model="$ctrl.params.filters" readonly="true" md-removable="true" md-transform-chip="$ctrl.transformChip($chip)">
           <md-chip-template layout="row">
             <div flex="40" class="filter-select">
               <md-select ng-model="$chip.column" md-container-class="query-form">
@@ -150,8 +189,7 @@
               </md-select>
             </div>
             <div flex="15" class="filter-select">
-              <md-select ng-model="$chip.type" ng-model-options="{trackBy: '$value'}"
-                md-container-class="query-form">
+              <md-select ng-model="$chip.type" ng-model-options="{trackBy: '$value'}" md-container-class="query-form">
                 <md-option ng-value="t" ng-repeat="t in $ctrl.getQueryTypes($chip.column)">{{t}}</md-option>
               </md-select>
             </div>

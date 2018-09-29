@@ -76,6 +76,7 @@ class QueryFormController {
     this.showExpeditions = true;
     this.showFilters = true;
     this.resetExpeditions = true;
+    this.showProjects = true;
 
     this.drawing = false;
 
@@ -112,6 +113,9 @@ class QueryFormController {
   }
 
   $onChanges(changesObj) {
+    this.params.projects = [];
+    this.params.configGroups = [];
+
     if ('currentProject' in changesObj && this.currentProject) {
       const { config } = this.currentProject;
       const list = config.getList('markers');
@@ -140,6 +144,39 @@ class QueryFormController {
         return 0;
       });
     }
+  }
+
+  clearParams() {
+    this.params.projects = [];
+    this.params.configGroups = [];
+  }
+
+  filterGroups(searchText) {
+    return this.ProjectService.all(true).then(({ data }) => {
+      this.data = data;
+      let configs = new Set();
+      this.data.forEach(e => {
+        configs.add(e.projectConfiguration.name);
+        return configs;
+      });
+      configs = Array.from(configs);
+      return configs.filter(
+        e =>
+          !this.params.configGroups.includes(e) &&
+          (!searchText || e.toLowerCase().includes(searchText.toLowerCase())),
+      );
+    });
+  }
+
+  filterProjects(searchText) {
+    return this.ProjectService.all(true).then(({ data }) => {
+      return data.filter(
+        e =>
+          !this.params.projects.includes(e) &&
+          (!searchText ||
+            e.projectTitle.toLowerCase().includes(searchText.toLowerCase())),
+      );
+    });
   }
 
   addFilter() {
@@ -250,7 +287,7 @@ export default {
     queryMap: '<',
     expeditions: '<', // list of expeditions
     currentUser: '<',
-    currentProject: '<',
+    //currentProject: '<',
     onProjectChange: '&',
     onNewResults: '&',
     toggleLoading: '&',

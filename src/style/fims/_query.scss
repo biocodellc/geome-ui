@@ -142,6 +142,24 @@ $query-form-toggle-width: 40px;
     }
   }
 
+  .projects {
+    .projectGroups {
+    
+    }
+
+    md-chips {
+      margin-top: 0;
+    }
+
+    md-autocomplete[md-floating-label] .md-show-clear-button button {
+      top: 0;
+    }
+
+    .md-chip-input-container {
+      width: 100%;
+    }
+  }
+
   .filters {
     .filter-button {
       margin-top: 0;
