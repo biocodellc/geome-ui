@@ -101,7 +101,9 @@ class PlateViewerController {
   tissueDetails(tissue) {
     if (!tissue || !tissue.tissueID) return;
     // make backdrop cover plate viewer
-    angular.element('.md-dialog-backdrop').css('z-index', 82);
+    angular
+      .element(document.querySelector('.md-dialog-backdrop'))
+      .css('z-index', 82);
     this.$mdDialog
       .show({
         template: tissueDialogTemplate,
@@ -128,7 +130,11 @@ class PlateViewerController {
         onShowing: (scope, el) => el.css('z-index', 85),
       })
       .catch(() => {})
-      .finally(() => angular.element('.md-dialog-backdrop').css('z-index', 79));
+      .finally(() =>
+        angular
+          .element(document.querySelector('.md-dialog-backdrop'))
+          .css('z-index', 79),
+      );
   }
 
   deleteTissue(row, column) {
@@ -213,7 +219,9 @@ class PlateViewerController {
         this.hasChanges = !angular.equals(this.origPlateData, this.plateData);
         this.searchTexts = {};
       })
-      .finally(() => (this.isSaving = false));
+      .finally(() => {
+        this.isSaving = false;
+      });
   }
 
   query(row, column) {
