@@ -87,6 +87,7 @@
                         </div>
 
                         <md-checkbox ng-show="!$ctrl.newConfig && $ctrl.existingConfig" ng-model="$ctrl.syncConfig"
+                            ng-disabled="!$ctrl.isNetworkAdmin && !$ctrl.currentUser.subscribed"
                             class="md-align-top-left" name="syncConfigs">
                             Keep configuration in sync?
                             <md-hints>
@@ -97,6 +98,10 @@
                                     configuration, however any changes made to the original config
                                     will not be propagated to your configuration.</md-hint>
                             </md-hints>
+                            <md-tooltip ng-show="!$ctrl.isNetworkAdmin && !$ctrl.currentUser.subscribed">Only
+                                subscribed
+                                users can customize project configurations. See <a href="/about">our
+                                    about page</a> for more information</md-tooltip>
                         </md-checkbox>
                     </md-step-body>
                     <md-step-actions>
@@ -263,7 +268,7 @@
                             can also edit a the group, description, etc. Attributes that are
                             required by GeOMe can not be disabled.</p>
 
-                        <fims-project-config-attributes selected-attributes="e.attributes"
+                        <fims-project-config-attributes selected-attributes="e.attributes" can-edit="true"
                             available="$ctrl.availableAttributes(e.conceptAlias)"
                             required-attributes="$ctrl.requiredAttributes[e.conceptAlias]"
                             on-change="$ctrl.updateAttributes(e, attributes)"></fims-project-config-attributes>
@@ -273,7 +278,8 @@
                             entity. Note: required GeOMe rules will be added upon creation.</p>
 
                         <fims-project-config-rules rules="e.rules" required="$ctrl.requiredRules[e.conceptAlias]"
-                            attributes="e.attributes" lists="$ctrl.networkConfig.lists" on-change="$ctrl.updateRules(e, rules)">
+                            can-edit="true" attributes="e.attributes" lists="$ctrl.networkConfig.lists"
+                            on-change="$ctrl.updateRules(e, rules)">
                         </fims-project-config-rules>
 
                     </md-step-body>
@@ -289,7 +295,7 @@
                             when an expedition is created</p>
 
                         <fims-project-config-expedition-metadata properties="$ctrl.config.expeditionMetadataProperties"
-                            on-change="$ctrl.updateProperties(properties)">
+                            can-edit="true" on-change="$ctrl.updateProperties(properties)">
                         </fims-project-config-expedition-metadata>
                     </md-step-body>
                     <md-step-actions>

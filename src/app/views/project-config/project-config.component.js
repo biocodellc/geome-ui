@@ -41,6 +41,7 @@ class ConfigController {
         this.configuration = configuration;
         this.name = configuration.name;
         this.description = configuration.description;
+        this.networkApproved = configuration.networkApproved;
       })
       .finally(() => {
         this.loading = false;
@@ -49,9 +50,11 @@ class ConfigController {
 
   updateShowSave() {
     this.showSave =
-      !angular.equals(this.configuration.config, this.config) ||
-      this.name !== this.configuration.name ||
-      this.description !== this.configuration.description;
+      (this.isNetworkAdmin || this.currentUser.subscribed) &&
+      (!angular.equals(this.configuration.config, this.config) ||
+        this.name !== this.configuration.name ||
+        this.description !== this.configuration.description ||
+        this.networkApproved !== this.configuration.networkApproved);
   }
 
   handleUpdateEntities(entities) {
@@ -90,6 +93,7 @@ class ConfigController {
         this.configuration = configuration;
         this.name = configuration.name;
         this.description = configuration.description;
+        this.networkApproved = configuration.networkApproved;
         angular.toaster.success('Successfully updated project configuration!');
         this.config = new ProjectConfig(configuration.config);
         this.updateShowSave();
@@ -133,5 +137,7 @@ export default {
   controller: ConfigController,
   bindings: {
     currentProject: '<',
+    currentUser: '<',
+    isNetworkAdmin: '<',
   },
 };

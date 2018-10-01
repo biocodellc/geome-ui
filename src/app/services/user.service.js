@@ -104,7 +104,11 @@ class UserService extends EventEmitter {
 
   loadFromSession() {
     const username = this.StorageService.get('username');
-    return this.get(username);
+    return this.get(username).then(user => {
+      // public user profile is 'userId' and 'username'
+      if (!Object.keys(user).includes('email')) return undefined;
+      return user;
+    });
   }
 }
 

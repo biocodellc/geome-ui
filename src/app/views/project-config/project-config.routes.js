@@ -11,6 +11,18 @@ function getStates() {
         parent: 'projectView',
         projectRequired: true,
         loginRequired: true,
+        resolve: {
+          isNetworkAdmin: /* @ngInject */ (UserService, NetworkService) =>
+            NetworkService.get()
+              .then(
+                network =>
+                  network.user.userId === UserService.currentUser().userId,
+              )
+              .catch(r => {
+                angular.catcher('Failed to load network')(r);
+                return false;
+              }),
+        },
       },
     },
 
