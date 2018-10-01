@@ -1,5 +1,4 @@
 <form method="POST" name="queryForm" layout="column">
-
   <section class="projects">
     <a href="#" ng-click="$ctrl.showProjects = !$ctrl.showProjects" class="md-subhead bold">Projects</a>
     <br>
@@ -8,10 +7,10 @@
         project family</md-checkbox>
 
       <div ng-if="$ctrl.showGroups">
-
-        <md-chips ng-model="$ctrl.params.configGroups" md-require-match>
+        <md-chips ng-model="$ctrl.configGroups" md-on-add="$ctrl.addGroup($chip)" md-on-remove="$ctrl.removeGroup($chip)"
+          md-require-match>
           <md-autocomplete md-selected-item="$ctrl.selectedItem" md-no-cache md-autocomplete-snap="width"
-            md-search-text="searchText" md-items="item in $ctrl.filterGroups(searchText)" md-item-text="item"
+            md-search-text="searchText" md-items="item in $ctrl.configNames | filter: {$: searchText}" md-item-text="item"
             md-dropdown-position="bottom" md-min-length="0" placeholder="Configuration Name ...">
             <span md-highlight-text="searchText" md-highlight-flags="i">{{item}}</span>
           </md-autocomplete>
@@ -23,11 +22,13 @@
         </md-chips>
       </div>
 
+
       <div ng-if="!$ctrl.showGroups">
-        <md-chips ng-model="$ctrl.params.projects" md-require-match>
+        <md-chips ng-model="$ctrl.params.projects" md-on-add="$ctrl.addSingleProj($chip)" md-on-remove="$ctrl.removeSingleProj($chip)"
+          md-require-match>
           <md-autocomplete md-selected-item="$ctrl.selectedItem" md-no-cache md-autocomplete-snap="width"
-            md-search-text="searchText" md-items="item in $ctrl.filterProjects(searchText)" md-item-text="item.projectTitle"
-            md-dropdown-position="bottom" md-min-length="0" placeholder="Project Name ...">
+            md-search-text="searchText" md-items="item in $ctrl.projects | filter: {projectTitle: searchText}"
+            md-item-text="item.projectTitle" md-dropdown-position="bottom" md-min-length="0" placeholder="Project Name ...">
             <md-autocomplete-template>
               <span md-highlight-text="searchText" md-highlight-flags="i">{{item.projectTitle}}</span>
             </md-autocomplete-template>

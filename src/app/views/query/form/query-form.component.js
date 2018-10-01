@@ -60,6 +60,7 @@ class QueryFormController {
     this.$location = $location;
     this.QueryService = QueryService;
     this.ProjectService = ProjectService;
+    this.configGroups = [];
   }
 
   $onInit() {
@@ -114,7 +115,16 @@ class QueryFormController {
 
   $onChanges(changesObj) {
     this.params.projects = [];
-    this.params.configGroups = [];
+
+    this.ProjectService.all(true).then(({ data }) => {
+      this.projects = data;
+      let configs = new Set();
+      this.projects.forEach(e => {
+        configs.add(e.projectConfiguration.name);
+        return configs;
+      });
+      this.configNames = Array.from(configs);
+    });
 
     if ('currentProject' in changesObj && this.currentProject) {
       const { config } = this.currentProject;
@@ -148,35 +158,41 @@ class QueryFormController {
 
   clearParams() {
     this.params.projects = [];
-    this.params.configGroups = [];
+    this.configGroups = [];
   }
 
-  filterGroups(searchText) {
-    return this.ProjectService.all(true).then(({ data }) => {
-      this.data = data;
-      let configs = new Set();
-      this.data.forEach(e => {
-        configs.add(e.projectConfiguration.name);
-        return configs;
-      });
-      configs = Array.from(configs);
-      return configs.filter(
-        e =>
-          !this.params.configGroups.includes(e) &&
-          (!searchText || e.toLowerCase().includes(searchText.toLowerCase())),
-      );
-    });
+  addSingleProj(chip) {
+    //update md-autocomplete array
+    var index = this.projects.indexOf(chip);
+    this.projects.splice(index, 1);
   }
 
-  filterProjects(searchText) {
-    return this.ProjectService.all(true).then(({ data }) => {
-      return data.filter(
-        e =>
-          !this.params.projects.includes(e) &&
-          (!searchText ||
-            e.projectTitle.toLowerCase().includes(searchText.toLowerCase())),
-      );
+  removeSingleProj(chip) {
+    //update md-autocomplete array
+    this.projects.unshift(chip);
+  }
+
+  addGroup(chip) {
+    //update parameters
+    this.projects.forEach(p => {
+      if (p.projectConfiguration.name === chip) this.params.projects.push(p);
     });
+    //update autocomplete
+    const index = this.configNames.indexOf(chip);
+    this.configNames.splice(index, 1);
+  }
+
+  removeGroup(chip) {
+    // update parameters
+    this.projects.forEach(p => {
+      if (p.projectConfiguration.name === chip)
+        var index = this.params.projects.indexOf(p);
+      if (index > -1) {
+        this.params.projects.splice(index, 1);
+      }
+    });
+    //update md-autocomplete
+    this.configNames.unshift(chip);
   }
 
   addFilter() {
