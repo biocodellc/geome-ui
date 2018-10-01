@@ -8,9 +8,9 @@ class AboutController {
     this.$location = $location;
   }
 
-  openProjects($event) {
+  openSections($event,page) {
     $event.preventDefault();
-    this.$location.hash('projects');
+    this.$location.hash(page);
     this.$onChanges();
   }
 
@@ -18,6 +18,7 @@ class AboutController {
     const accordionSection = this.$location.hash();
     if (accordionSection === 'userHelp') this.userHelp = true;
     else if (accordionSection === 'projects') this.projects = true;
+    else if (accordionSection === 'subscriptions') this.subscriptions = true;
     else if (accordionSection === 'dataPolicy') this.dataPolicy = true;
     else this.gettingStarted = true;
   }
