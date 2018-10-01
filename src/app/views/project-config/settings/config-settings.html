@@ -1,0 +1,51 @@
+<div class="settings">
+    <form>
+        <fieldset>
+            <div class="form-group clearfix">
+                <div class="col-xs-9">
+                    <label>Name</label>
+                    <input type="text" required class="form-control" ng-model="$ctrl.config.name"
+                        ng-change="$ctrl.onUpdate({ configuration: $ctrl.config })" />
+                </div>
+            </div>
+
+            <div class="form-group clearfix">
+                <div class="col-xs-9">
+                    <label>Description</label>
+                    <textarea required class="form-control" rows="3" ng-model="$ctrl.config.description"
+                        ng-change="$ctrl.onUpdate({ configuration: $ctrl.config })"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group clearfix">
+                <div class="checkbox col-xs-9">
+                    <label>
+                        <input type="checkbox" disabled ng-mode='$ctrl.config.networkApproved' />
+                        Network Approved? <span class="help-block">Network approved configurations
+                            are controlled by the GeOMe admin and are available for all users to
+                            clone/use. If you think your configuration should be "network approved"
+                            send an email to <a href="mailto:geome.help@gmail.com">geome.help@gmail.com</a></span></label>
+                </div>
+            </div>
+        </fieldset>
+
+        <!-- <fieldset> -->
+        <!-- <div class="form-group clearfix"> -->
+        <!-- <div class="col-xs-9"> -->
+        <!-- <label>Expedition Forwarding Address</label> -->
+        <!-- <input type="text" required class="form-control" ng-model="$ctrl.config.config.expeditionForwardingAddress" -->
+        <!-- ng-change="$ctrl.onUpdate({ config: $ctrl.config })" /> -->
+        <!-- </div> -->
+        <!-- </div> -->
+        <!--  -->
+        <!-- <div class="form-group clearfix"> -->
+        <!-- <div class="col-xs-9"> -->
+        <!-- <label>Record Forwarding Address</label> -->
+        <!-- <input type="text" required class="form-control" ng-model="$ctrl.config.config.datasetForwardingAddress" -->
+        <!-- ng-change="$ctrl.onUpdate({ config: $ctrl.config })" /> -->
+        <!-- </div> -->
+        <!-- </div> -->
+        <!-- </fieldset> -->
+    </form>
+
+</div>

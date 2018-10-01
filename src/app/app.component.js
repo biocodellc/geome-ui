@@ -71,6 +71,7 @@ class AppCtrl {
     // show spinner on transitions
     this.$transitions.onStart({}, trans => {
       const hasResolvables = s => {
+        if (!s.showLoading) return false;
         if (s.resolvables.length > 0) return true;
         if (!s.parent) return false;
         return hasResolvables(s.parent);
