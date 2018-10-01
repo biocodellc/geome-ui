@@ -24,7 +24,7 @@
 
 
       <div ng-if="!$ctrl.showGroups">
-        <md-chips ng-model="$ctrl.params.projects" md-on-add="$ctrl.addSingleProj($chip)" md-on-remove="$ctrl.removeSingleProj($chip)"
+        <md-chips ng-model="$ctrl.params.projects" md-on-add="$ctrl.updateList($chip)" md-on-remove="$ctrl.updateList($chip)"
           md-require-match>
           <md-autocomplete md-selected-item="$ctrl.selectedItem" md-no-cache md-autocomplete-snap="width"
             md-search-text="searchText" md-items="item in $ctrl.projects | filter: {projectTitle: searchText}"
@@ -221,7 +221,9 @@
   </div>
 
   <div class="search-row" layout="row" layout-align="end center">
-    <md-button type="submit" ng-click="$ctrl.currentProject ? $ctrl.queryJson() : '';" class="md-raised md-primary">
+    <md-button type="submit" ng-click="$ctrl.queryJson()">
+      <!--	    ng-click="$ctrl.currentProject ? $ctrl.queryJson() : '';" 
+	    class="md-raised md-primary"-->
       <md-tooltip ng-show="!$ctrl.currentProject" md-direction="top">Select a project</md-tooltip>
       <span class="fa fa-search"></span> Search
     </md-button>

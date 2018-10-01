@@ -161,23 +161,20 @@ class QueryFormController {
     this.configGroups = [];
   }
 
-  addSingleProj(chip) {
-    //update md-autocomplete array
-    var index = this.projects.indexOf(chip);
-    this.projects.splice(index, 1);
-  }
-
-  removeSingleProj(chip) {
-    //update md-autocomplete array
-    this.projects.unshift(chip);
+  // update autocomplete list
+  updateList(chip) {
+    const index = this.projects.indexOf(chip);
+    this.projects.includes(chip)
+      ? this.projects.splice(index, 1)
+      : this.projects.unshift(chip);
   }
 
   addGroup(chip) {
-    //update parameters
+    // update parameters
     this.projects.forEach(p => {
       if (p.projectConfiguration.name === chip) this.params.projects.push(p);
     });
-    //update autocomplete
+    // update autocomplete
     const index = this.configNames.indexOf(chip);
     this.configNames.splice(index, 1);
   }
@@ -191,7 +188,7 @@ class QueryFormController {
         this.params.projects.splice(index, 1);
       }
     });
-    //update md-autocomplete
+    // update md-autocomplete
     this.configNames.unshift(chip);
   }
 
@@ -209,6 +206,12 @@ class QueryFormController {
     const projectId = this.currentProject
       ? this.currentProject.projectId
       : undefined;
+
+    /*
+    const projectIds = new Set();
+    this.params.projects.forEach((p) => projectIds.add(p.projectId))
+    console.log(projectIds)
+    */
 
     const selectEntities = ['Sample', 'fastqMetadata'];
 
@@ -303,7 +306,7 @@ export default {
     queryMap: '<',
     expeditions: '<', // list of expeditions
     currentUser: '<',
-    //currentProject: '<',
+    currentProject: '<',
     onProjectChange: '&',
     onNewResults: '&',
     toggleLoading: '&',
