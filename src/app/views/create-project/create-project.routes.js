@@ -1,3 +1,5 @@
+import angular from 'angular';
+
 function getStates() {
   return [
     {
@@ -10,6 +12,16 @@ function getStates() {
         resolve: {
           configurations: /* @ngInject */ ProjectConfigurationService =>
             ProjectConfigurationService.all(true, true),
+          isNetworkAdmin: /* @ngInject */ (UserService, NetworkService) =>
+            NetworkService.get()
+              .then(
+                network =>
+                  network.user.userId === UserService.currentUser().userId,
+              )
+              .catch(r => {
+                angular.catcher('Failed to load network')(r);
+                return false;
+              }),
         },
       },
     },

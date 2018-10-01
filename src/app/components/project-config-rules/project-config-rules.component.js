@@ -32,7 +32,7 @@ class ProjectConfigRulesController {
     this.onChange({ rules: this.rules });
   }
 
-  canEdit(r) {
+  canEditRule(r) {
     if (
       r.name === 'ValidForURI' &&
       r.column === this.uniqueKey &&
@@ -124,7 +124,7 @@ export default {
     attributes: '<',
     lists: '<',
     uniqueKey: '<',
-    required: '<',
+    canEdit: '<',
     onChange: '&',
   },
 };

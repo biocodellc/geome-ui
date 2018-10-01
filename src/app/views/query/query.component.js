@@ -1,11 +1,7 @@
-import angular from 'angular';
-
 import QueryMap from './QueryMap';
 import QueryParams from './QueryParams';
 
 const template = require('./query.html');
-
-//const POLICY_STORAGE_KEY = 'informedOfDataPolicy';
 
 class QueryController {
   constructor(
@@ -39,21 +35,6 @@ class QueryController {
     if (this.currentProject) {
       this.handleProjectChange(this.currentProject);
     }
-    /*
-    const informed = this.StorageService.get(POLICY_STORAGE_KEY);
-    if (!informed) {
-      angular.toaster(
-        'Data is subject to our data usage policy',
-        {
-          name: 'View',
-          fn: () => {
-            this.$location.path('/about').hash('dataPolicy');
-          },
-        },
-        { hideDelay: 7000 },
-      );
-      this.StorageService.set(POLICY_STORAGE_KEY, true);
-    } */
 
     this.showSidebar = true;
     this.showMap = true;
@@ -71,7 +52,9 @@ class QueryController {
     this.QueryService.downloadExcel(
       this.params.buildQuery(projectId, this.selectEntities()),
       'Event',
-    ).finally(() => (this.loading = false));
+    ).finally(() => {
+      this.loading = false;
+    });
   }
 
   downloadCsv() {
@@ -80,7 +63,9 @@ class QueryController {
     this.QueryService.downloadCsv(
       this.params.buildQuery(projectId, this.selectEntities()),
       'Event',
-    ).finally(() => (this.loading = false));
+    ).finally(() => {
+      this.loading = false;
+    });
   }
 
   downloadFasta() {
@@ -92,7 +77,9 @@ class QueryController {
         this.selectEntities().concat(['Event']),
       ),
       'fastaSequence',
-    ).finally(() => (this.loading = false));
+    ).finally(() => {
+      this.loading = false;
+    });
   }
 
   selectEntities() {

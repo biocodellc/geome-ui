@@ -1,13 +1,10 @@
+<p ng-if="!$ctrl.canEdit">Note: only subscribed users can edit a project configuration</p>
 <ul class="settings-list entities">
     <div ng-repeat="entity in $ctrl.entities">
-        <fims-entity
-                entity="entity"
-                editing="$index===$ctrl.editEntity"
-                worksheets="$ctrl.config.worksheets()"
-                on-toggle-edit="$ctrl.handleToggleEdit($index)"
-                on-update="$ctrl.handleUpdateEntity($index, entity)"
-                on-remove="$ctrl.handleRemoveEntity(entity)"
-                on-new-worksheet="$ctrl.onNewWorksheet(sheetName)">
+        <fims-entity entity="entity" editing="$index===$ctrl.editEntity" can-edit="$ctrl.canEdit"
+            worksheets="$ctrl.config.worksheets()" on-toggle-edit="$ctrl.handleToggleEdit($index)"
+            on-update="$ctrl.handleUpdateEntity($index, entity)" on-remove="$ctrl.handleRemoveEntity(entity)"
+            on-new-worksheet="$ctrl.onNewWorksheet(sheetName)">
         </fims-entity>
     </div>
 </ul>

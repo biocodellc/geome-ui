@@ -41,7 +41,7 @@
       </div>
       <div class="row">
         <div class="col-xs-12" ui-view="details" on-update="$ctrl.handleExpeditionUpdate(expedition)" on-export-data="$ctrl.exportData()"
-          current-project="$ctrl.currentProject" on-delete="$ctrl.handleExpeditionDelete(expedition)">
+          current-project="$ctrl.currentProject" on-delete="$ctrl.handleExpeditionDelete(expedition)" ng-cloak>
         </div>
       </div>
 
@@ -51,7 +51,7 @@
   <div class="col-xs-3 right-column">
     <section>
       <md-list>
-        <md-list-item ng-click="$ctrl.$state.go('query')">
+        <md-list-item ng-click="$ctrl.viewData()">
           View Data
           <md-icon md-font-icon="fa fa-map-marker fa-xs md-secondary"></md-icon>
         </md-list-item>

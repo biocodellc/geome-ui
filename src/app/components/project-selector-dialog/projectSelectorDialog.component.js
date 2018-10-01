@@ -23,5 +23,6 @@ export default {
   controller: ProjectSelectorDialogController,
   bindings: {
     isAuthenticated: '<',
+    userHasProject: '<',
   },
 };

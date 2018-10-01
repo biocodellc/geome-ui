@@ -4,16 +4,10 @@ class EditEntityController {
   $onInit() {
     this.entity = Object.assign({}, this.entity);
     this.columns = this.entity.attributes.map(a => a.column);
-    console.log(this.existingWorksheets);
   }
 
   $onDestroy() {
     this.onUpdate({ entity: this.entity });
-  }
-
-  newWorksheet(sheetName) {
-    this.onNewWorksheet({ sheetName });
-    return sheetName;
   }
 }
 
@@ -22,10 +16,8 @@ const fimsEntityEdit = {
   controller: EditEntityController,
   bindings: {
     entity: '<',
-    existingWorksheets: '<',
     onUpdate: '&',
     onClose: '&',
-    onNewWorksheet: '&',
   },
 };
 
@@ -43,8 +35,8 @@ const fimsEntity = {
   bindings: {
     entity: '<',
     editing: '<',
+    canEdit: '<',
     worksheets: '<',
-    onRemove: '&',
     onToggleEdit: '&',
     onUpdate: '&',
     onNewWorksheet: '&',

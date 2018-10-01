@@ -6,6 +6,17 @@
   }
 }
 
+.query-button {
+  @extend .download-button;
+  min-width: 24px;
+  margin-right: 5px;
+  md-icon {
+    min-width: 22px;
+    width: 22px;
+    font-size: 22px;
+  }
+}
+
 .project-download-button {
   @extend .download-button;
   span {

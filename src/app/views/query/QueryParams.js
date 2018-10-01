@@ -27,7 +27,9 @@ export default class QueryParams {
   buildQuery(projectId, selectEntities, source) {
     const builder = new QueryBuilder();
 
-    builder.add(`_projects_:${projectId}`);
+    if (projectId) {
+      builder.add(`_projects_:${projectId}`);
+    }
 
     if (this.expeditions.length > 0) {
       builder.add(

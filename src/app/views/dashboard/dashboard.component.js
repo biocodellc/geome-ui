@@ -4,9 +4,10 @@ import QueryParams from '../query/QueryParams';
 const template = require('./dashboard.html');
 
 class DashboardController {
-  constructor(ExpeditionService, DataService, QueryService) {
+  constructor($state, ExpeditionService, DataService, QueryService) {
     'ngInject';
 
+    this.$state = $state;
     this.ExpeditionService = ExpeditionService;
     this.DataService = DataService;
     this.QueryService = QueryService;
@@ -30,6 +31,14 @@ class DashboardController {
     ) {
       this.fetchPage();
     }
+  }
+
+  viewData(expeditionCode) {
+    this.$state.go('query', {
+      q: `_projects_:${
+        this.currentProject.projectId
+      } and _expeditions_:[${expeditionCode}]`,
+    });
   }
 
   worksheetEntities() {

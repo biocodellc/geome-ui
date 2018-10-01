@@ -1,3 +1,5 @@
+import { executeIfTransitionValid } from '../../utils/router';
+
 export function checkProjectRequired(state) {
   let s = state;
 
@@ -17,7 +19,9 @@ export default ($transitions, ProjectService) => {
   $transitions.onBefore({}, trans => {
     const to = trans.$to();
     if (checkProjectRequired(to) && !ProjectService.currentProject()) {
-      return trans.router.stateService.target('home');
+      return executeIfTransitionValid(trans, $transitions, () =>
+        trans.router.stateService.target('home'),
+      );
     }
   });
 };

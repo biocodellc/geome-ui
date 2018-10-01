@@ -6,7 +6,6 @@ import modal from 'angular-ui-bootstrap/src/modal';
 
 // dndLists doesn't export anything. we import here so webpack will bundle/load the file
 // then we use the angular module loader to list as a dependency
-import 'angular-drag-and-drop-lists';
 import router from '../../utils/router';
 import projectService from '../../services/project.service';
 import storageService from '../../services/storage.service';
@@ -22,14 +21,12 @@ import fimsProject from './project.component';
 import fimsProjectSettings from './project-settings';
 import fimsProjectExpeditions from './project-expeditions';
 import fimsProjectMembers from './members';
-// import fimsProjectConfig from './config';
 
 const dependencies = [
   modal,
   router,
   select,
   sanitize,
-  'dndLists',
   projectService,
   expeditionService,
   userService,
@@ -37,7 +34,6 @@ const dependencies = [
   fimsProjectSettings,
   fimsProjectExpeditions,
   fimsProjectMembers,
-  // fimsProjectConfig,
 ];
 
 export default angular

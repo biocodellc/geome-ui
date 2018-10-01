@@ -18,11 +18,11 @@ class NavigationController {
       });
     }
 
-    this.showProjectConfig = false;
-    // this.currentUser &&
-    // this.currentProject &&
-    // this.currentProject.projectConfiguration.user.userId ===
-    // this.currentUser.userId;
+    this.showProjectConfig =
+      this.currentUser &&
+      this.currentProject &&
+      this.currentProject.projectConfiguration.user.userId ===
+        this.currentUser.userId;
 
     this.showPhotoUpload =
       this.currentUser &&

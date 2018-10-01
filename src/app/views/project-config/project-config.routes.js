@@ -1,23 +1,39 @@
+import angular from 'angular';
+
 function getStates() {
   return [
     {
       state: 'project-config',
       config: {
         url: '/config',
-        redirectTo: 'project-config.entities',
+        redirectTo: 'project-config.settings',
         component: 'fimsProjectConfig',
         parent: 'projectView',
         projectRequired: true,
         loginRequired: true,
+        resolve: {
+          isNetworkAdmin: /* @ngInject */ (UserService, NetworkService) =>
+            NetworkService.get()
+              .then(
+                network =>
+                  network.user.userId === UserService.currentUser().userId,
+              )
+              .catch(r => {
+                angular.catcher('Failed to load network')(r);
+                return false;
+              }),
+        },
       },
     },
+
+    // Settings
     {
-      state: 'project-config.metadata',
+      state: 'project-config.settings',
       config: {
-        url: '/metadata',
+        url: '/settings',
         views: {
-          metadata: {
-            component: 'fimsProjectConfigMetadata',
+          settings: {
+            component: 'fimsProjectConfigSettings',
           },
         },
       },
@@ -30,7 +46,7 @@ function getStates() {
         url: '/expedition/properties/',
         views: {
           expeditionMetadata: {
-            component: 'fimsExpeditionMetadataPropertiesList',
+            component: 'fimsProjectConfigExpeditionMetadata',
           },
         },
       },
@@ -49,18 +65,6 @@ function getStates() {
       },
     },
     {
-      state: 'project-config.entities.add',
-      config: {
-        url: '/add',
-        views: {
-          'entities@project-config': {
-            component: 'fimsProjectConfigEntityAdd',
-          },
-        },
-      },
-    },
-
-    {
       state: 'project-config.entities.detail',
       config: {
         url: '/:alias/',
@@ -70,10 +74,15 @@ function getStates() {
             const currentProject = ProjectService.currentProject();
             let e = $transition$.params('to').entity;
 
-            if (!e.conceptAlias) {
-              const alias = $transition$.params('to').alias;
+            // to === from on a reload. This typically means the project changed
+            // so we need to lookup the entity
+            if (
+              $transition$.$to() === $transition$.$from() ||
+              !e.conceptAlias
+            ) {
+              const { alias } = $transition$.params('to');
               e = currentProject.config.entities.find(
-                e => e.conceptAlias === alias,
+                entity => entity.conceptAlias === alias,
               );
             }
 
@@ -83,9 +92,19 @@ function getStates() {
 
             return e;
           },
+          networkConfig: /* @ngInject */ (
+            $state,
+            NetworkConfigurationService,
+          ) =>
+            NetworkConfigurationService.get().catch(r => {
+              angular.catcher(
+                'Failed to load the network configuration. Please try again later.',
+              )(r);
+              return $state.go('project-config.entities');
+            }),
         },
         views: {
-          'detail@project-config': {
+          'entities@project-config': {
             component: 'fimsEntityDetail',
           },
         },
@@ -102,14 +121,10 @@ function getStates() {
       state: 'project-config.entities.detail.attributes',
       config: {
         url: 'attributes',
+        showLoading: false,
         views: {
           attributes: {
-            component: 'fimsEntityAttributes',
-          },
-        },
-        params: {
-          addAttribute: {
-            type: 'bool',
+            component: 'fimsProjectConfigAttributes',
           },
         },
       },
@@ -119,26 +134,10 @@ function getStates() {
       state: 'project-config.entities.detail.rules',
       config: {
         url: 'rules',
-        resolve: {
-          lists: /* @ngInject */ ProjectService =>
-            ProjectService.currentProject().config.lists.map(l => l.alias),
-          columns: /* @ngInject */ entity =>
-            entity.attributes.map(a => a.column),
-        },
+        showLoading: false,
         views: {
           rules: {
-            component: 'fimsEntityRules',
-          },
-        },
-      },
-    },
-    {
-      state: 'project-config.entities.detail.rules.add',
-      config: {
-        url: '/add',
-        views: {
-          'rules@project-config.entities.detail': {
-            component: 'fimsProjectConfigRuleAdd',
+            component: 'fimsProjectConfigRules',
           },
         },
       },
@@ -166,8 +165,10 @@ function getStates() {
             let l = $transition$.params('to').list;
 
             if (!l.alias) {
-              const alias = $transition$.params('to').alias;
-              l = currentProject.config.lists.find(l => l.alias === alias);
+              const { alias } = $transition$.params('to');
+              l = currentProject.config.lists.find(
+                list => list.alias === alias,
+              );
             }
 
             if (!l) {
@@ -176,11 +177,9 @@ function getStates() {
 
             return l;
           },
-          addField: /* @ngInject */ $transition$ =>
-            $transition$.params('to').addField,
         },
         views: {
-          'detail@project-config': {
+          'lists@project-config': {
             component: 'fimsListDetail',
           },
         },
@@ -188,21 +187,7 @@ function getStates() {
           alias: {
             type: 'string',
           },
-          addField: {
-            type: 'bool',
-          },
           list: {},
-        },
-      },
-    },
-    {
-      state: 'project-config.lists.add',
-      config: {
-        url: '/add',
-        views: {
-          'lists@project-config': {
-            component: 'fimsAddList',
-          },
         },
       },
     },

@@ -62,8 +62,14 @@
                             use an existing configuration or to clone an existing configuration to
                             use as a template.</p>
 
-                        <md-autocomplete flex required md-no-cache md-show-arrow="true" md-selected-item-change="$ctrl.resetVisitedSteps($mdStep)"
-                            md-selected-item="$ctrl.existingConfig" md-items="c in $ctrl.configurations | filter:{name: configSearchText}"
+                        <md-switch ng-if="$ctrl.isNetworkAdmin" ng-model="$ctrl.newConfig"
+                            ng-true-value="false" ng-false-value="true" class="md-primary"
+                            aria-label="Clone Existing Project Config?">
+                            Clone Existing Project Config?
+                        </md-switch>
+
+                        <md-autocomplete ng-show="!$ctrl.newConfig" flex required md-no-cache
+                            md-show-arrow="true" md-selected-item="$ctrl.existingConfig" md-items="c in $ctrl.configurations | filter:{name: configSearchText}"
                             md-floating-label="Existing Configuration" md-require-match
                             md-search-text="configSearchText" md-min-length="0" md-item-text="c.name"
                             ng-click="configSearchText = ''">
@@ -75,12 +81,13 @@
                             </md-hints>
                         </md-autocomplete>
 
-                        <div ng-show="$ctrl.existingConfig" class="config-description">
+                        <div ng-show="!$ctrl.newConfig && $ctrl.existingConfig" class="config-description">
                             <h6>Configuration Description</h6>
                             {{$ctrl.existingConfig.description}}
                         </div>
 
-                        <md-checkbox ng-show="$ctrl.existingConfig" ng-model="$ctrl.syncConfig"
+                        <md-checkbox ng-show="!$ctrl.newConfig && $ctrl.existingConfig" ng-model="$ctrl.syncConfig"
+                            ng-disabled="!$ctrl.isNetworkAdmin && !$ctrl.currentUser.subscribed"
                             class="md-align-top-left" name="syncConfigs">
                             Keep configuration in sync?
                             <md-hints>
@@ -91,18 +98,22 @@
                                     configuration, however any changes made to the original config
                                     will not be propagated to your configuration.</md-hint>
                             </md-hints>
+                            <md-tooltip ng-show="!$ctrl.isNetworkAdmin && !$ctrl.currentUser.subscribed">Only
+                                subscribed
+                                users can customize project configurations. See <a href="/about">our
+                                    about page</a> for more information</md-tooltip>
                         </md-checkbox>
                     </md-step-body>
                     <md-step-actions>
-                        <md-button ng-if="$ctrl.existingConfig && !$ctrl.syncConfig" ng-disabled="!$ctrl.existingConfig"
-                            class="md-primary md-raised" ng-click="$ctrl.toConfigStep($mdStep)"
-                            layout="row" layout-align="center center">
+                        <md-button ng-if="$ctrl.newConfig || ($ctrl.existingConfig && !$ctrl.syncConfig)"
+                            ng-disabled="!$ctrl.newConfig && !$ctrl.existingConfig" class="md-primary md-raised"
+                            ng-click="$ctrl.toConfigStep($mdStep)" layout="row" layout-align="center center">
                             <span ng-show="!$ctrl.loading">Next</span>
                             <md-progress-circular ng-show="$ctrl.loading" md-mode="indeterminate"
                                 md-diameter="18" class="md-accent md-hue-3"></md-progress-circular>
                         </md-button>
                         <md-button class="md-primary md-raised" ng-click="$ctrl.createProject()"
-                            ng-disabled="!$ctrl.existingConfig" ng-if="$ctrl.syncConfig || !$ctrl.existingConfig"
+                            ng-disabled="!$ctrl.existingConfig" ng-if="($ctrl.syncConfig || !$ctrl.existingConfig) && !$ctrl.newConfig"
                             layout="row" layout-align="center center">
                             <span ng-show="!$ctrl.creatingProject">Create Project</span>
                             <md-progress-circular ng-show="$ctrl.creatingProject" md-mode="indeterminate"
@@ -110,27 +121,166 @@
                         </md-button>
                     </md-step-actions>
                 </md-step>
+                <md-step ng-if="$ctrl.isNetworkAdmin" md-label="Project Config Modules" ng-show="$ctrl.newConfig || !$ctrl.syncConfig"
+                    class="config-modules-step" md-order="2">
+                    <md-step-body>
+                        <p>Select the modules that you would like to use in your project.</p>
+
+                        <md-checkbox value="true" ng-disabled="true" ng-checked="true" class="md-align-top-left"
+                            name="core">
+                            Core Module
+                            <md-hints>
+                                <md-hint>Includes Event and Sample metadata</md-hint>
+                            </md-hints>
+                        </md-checkbox>
+
+                        <md-checkbox ng-model="$ctrl.tissues" class="md-align-top-left" name="tissues"
+                            ng-change="$ctrl.tissuesChanged()">
+                            Tissues Module
+                            <md-hints>
+                                <md-hint>Necessary for including NextGen or Barcoding
+                                    modules</md-hint>
+                            </md-hints>
+                        </md-checkbox>
+
+                        <md-checkbox ng-model="$ctrl.nextgen" ng-disabled="!$ctrl.tissues" class="md-align-top-left"
+                            name="nextgen" ng-change="$ctrl.nextgenChanged()">
+                            <md-tooltip md-delay="500" ng-if="!$ctrl.tissues">Enable the Tissues
+                                Module.</md-tooltip>
+                            NextGen Module
+                            <md-hints>
+                                <md-hint>Include fields for associating NextGen sequencing
+                                    data with your tissues. Adds the ability to generate <a target="_blank"
+                                        href="https://ncbi.nlm.nih.gov/sra/">NCBI
+                                        SRA</a>
+                                    submission packages from uploaded metadata
+                                </md-hint>
+                            </md-hints>
+                        </md-checkbox>
+
+                        <md-checkbox ng-model="$ctrl.barcode" ng-disabled="!$ctrl.tissues" class="md-align-top-left"
+                            name="barcode" ng-change="$ctrl.barcodeChanged()">
+                            <md-tooltip md-delay="500" ng-if="!$ctrl.tissues">Enable the Tissues
+                                Module.</md-tooltip>
+                            Barcoding Module
+                            <md-hints>
+                                <md-hint>Adds the ability to upload FASTA sequences
+                                </md-hint>
+                            </md-hints>
+                        </md-checkbox>
+
+                        <md-checkbox ng-model="$ctrl.photos" class="md-align-top-left" name="photos"
+                            ng-change="$ctrl.photosChanged()">
+                            Photos Module
+                            <md-hints>
+                                <md-hint>Upload and associate photos with your metadata.</md-hint>
+                            </md-hints>
+                        </md-checkbox>
+
+                        <div class="photo-modules" ng-show="$ctrl.photos">
+                            <md-checkbox ng-model="$ctrl.eventPhotos" class="small" name="eventPhotos"
+                                ng-change="$ctrl.eventPhotosChanged()">
+                                Event Photos</md-checkbox>
+                            <md-checkbox ng-model="$ctrl.samplePhotos" class="small" name="samplePhotos"
+                                ng-change="$ctrl.samplePhotosChanged()">
+                                Sample Photos</md-checkbox>
+                            <!-- <md-checkbox ng-model="$ctrl.tissuePhotos" class="md-align-top-left" -->
+                            <!-- ng-show="$ctrl.tissues" name="tissuePhotos"> Tissue Photos -->
+                            <!-- </md-checkbox> -->
+                        </div>
+                    </md-step-body>
+                    <md-step-actions>
+                        <md-button class="md-primary md-raised" ng-click="$mdStep.$stepper.next()">Next</md-button>
+                    </md-step-actions>
+                </md-step>
 
                 <md-step ng-repeat="e in $ctrl.config.entities track by e.conceptAlias" md-label="Entity - {{e.conceptAlias}}"
-                    ng-show="!$ctrl.syncConfig" md-order="$index + 2">
+                    ng-show="$ctrl.newConfig || !$ctrl.syncConfig" md-order="$index + ($ctrl.isNetworkAdmin ? 3 : 2)">
                     <md-step-body>
+                        <!-- <p>{{e.conceptAlias}} Configuration</p> -->
+
+                        <md-checkbox ng-if="$ctrl.isNetworkAdmin && e.type === 'DefaultEntity' && e.conceptAlias !== 'Tissue'"
+                            ng-change="$ctrl.hashChanged(e)" ng-model="e.hashed" class="md-align-top-left"
+                            name="{{e.conceptAlias}}-hashed">
+                            Hashed Entity?
+                            <md-hints>
+                                <md-hint>If selected, the uniqueKey for this entity will
+                                    be generated by hashing (unique fingerprint) the record's
+                                    metadata. This is typically used in a flat spreadsheet model
+                                    where you don't want the user to have to think about the
+                                    {{e.conceptAlias}}.</md-hint>
+                            </md-hints>
+                        </md-checkbox>
+
+                        <md-input-container ng-if="$ctrl.isNetworkAdmin && !e.hashed && e.type == 'DefaultEntity'">
+                            <label>Unique Key</label>
+                            <md-select name="{{e.conceptAlias}}-uniqueKey" ng-model="e.uniqueKey"
+                                ng-change="$ctrl.uniqueKeyChange(e)" required>
+                                <md-option ng-repeat="k in $ctrl.getPossibleUniqueKeys(e)" ng-value="k">
+                                    {{k}}
+                                </md-option>
+                            </md-select>
+
+                            <md-hints>
+                                <md-hint>The column to use as a uniqueKey. <span ng-if="e.parentEntity">If
+                                        you choose to use the {{e.parentEntity}}'s uniqueKey, you
+                                        will be limited to 1 {{e.conceptAlias}} for every
+                                        {{e.parentEntity}}.</span>
+                                </md-hint>
+                            </md-hints>
+                        </md-input-container>
+
+                        <md-autocomplete ng-if="$ctrl.isNetworkAdmin && ['DefaultEntity', 'Photo'].includes(e.type)"
+                            flex md-show-arrow="true" required md-no-cache md-selected-item="e.worksheet"
+                            md-select-on-focus="true" md-autofocus="true" md-items="w in $ctrl.getWorksheets() | filter: $ctrl.worksheetSearchText[e.conceptAlias]"
+                            class="worksheet-autocomplete" md-floating-label="Worksheet"
+                            md-on-add-new-item="$ctrl.addWorksheet(e, item)" md-search-text="$ctrl.worksheetSearchText[e.conceptAlias]"
+                            md-selected-item-change="$ctrl.worksheetSelected(e.worksheet)"
+                            md-min-length="0" ng-click="$ctrl.worksheetSearchText[e.conceptAlias] = ''">
+                            <md-item-template>
+                                <span md-highlight-text="$ctrl.worksheetSearchText[e.conceptAlias]">{{w}}</span>
+                            </md-item-template>
+                            <md-hints>
+                                <md-hint>What worksheet do you want users to enter data
+                                    on?. You can choose an existing worksheet, or create a new one.
+                                    The advantage of using multiple worksheets is that you reduce
+                                    duplicate data entry for "parent" entities (You only need to
+                                    enter a row 1 time and the uniqueKey can be referenced in other
+                                    worksheets). The disadvantage is that it requires more work on
+                                    the users part by needing to associate identifier keys between
+                                    sheets.</md-hint>
+                            </md-hints>
+                        </md-autocomplete>
+
+                        <md-checkbox ng-if="$ctrl.isNetworkAdmin && !e.hashed" ng-model="e.uniqueAcrossProject"
+                            class="md-align-top-left" name="{{e.conceptAlias}}-uniqueAcrossProject">
+                            Unique Across Project?
+                            <md-hints>
+                                <md-hint>By default, the uniqueKey is only unique within
+                                    an expedition. When selected, the uniqueKey will be unique
+                                    across all expeditions within the project.</md-hint>
+                            </md-hints>
+                        </md-checkbox>
+
                         <h4>Attributes</h4>
                         <p class="small">The available attributes for {{e.conceptAlias}} are listed
                             below. You can choose which attributes you would like to collect. You
                             can also edit a the group, description, etc. Attributes that are
                             required by GeOMe can not be disabled.</p>
 
-                        <fims-project-config-attributes selected="e.attributes" available="$ctrl.availableAttributes(e.conceptAlias)"
-                            required="$ctrl.requiredAttributes[e.conceptAlias]" on-change="$ctrl.updateAttributes(e, attributes)"></fims-project-config-attributes>
+                        <fims-project-config-attributes selected-attributes="e.attributes" can-edit="true"
+                            available="$ctrl.availableAttributes(e.conceptAlias)"
+                            required-attributes="$ctrl.requiredAttributes[e.conceptAlias]"
+                            on-change="$ctrl.updateAttributes(e, attributes)"></fims-project-config-attributes>
 
                         <h4>Rules</h4>
                         <p class="small">Here you can configure the validation rules for this
-                            entity. Note: any rule required by GeOMe will be automatically added
-                            upon creation.</p>
+                            entity. Note: required GeOMe rules will be added upon creation.</p>
 
                         <fims-project-config-rules rules="e.rules" required="$ctrl.requiredRules[e.conceptAlias]"
-                            attributes="e.attributes" lists="$ctrl.networkConfig.lists" on-change="$ctrl.updateRules(e, rules)">
-                            </fims-project-config-attributes>
+                            can-edit="true" attributes="e.attributes" lists="$ctrl.networkConfig.lists"
+                            on-change="$ctrl.updateRules(e, rules)">
+                        </fims-project-config-rules>
 
                     </md-step-body>
                     <md-step-actions>
@@ -139,13 +289,13 @@
                     </md-step-actions>
                 </md-step>
 
-                <md-step md-label="Expedition Metadata Properties" ng-if="$ctrl.config" md-order="$ctrl.config.entities.length + 2">
+                <md-step md-label="Expedition Metadata Properties" ng-if="$ctrl.config" md-order="$ctrl.config.entities.length + ($ctrl.isNetworkAdmin ? 3 : 2)">
                     <md-step-body>
                         <p class="small">Specify any additional metadata you would like to collect
                             when an expedition is created</p>
 
                         <fims-project-config-expedition-metadata properties="$ctrl.config.expeditionMetadataProperties"
-                            on-change="$ctrl.updateProperties(properties)">
+                            can-edit="true" on-change="$ctrl.updateProperties(properties)">
                         </fims-project-config-expedition-metadata>
                     </md-step-body>
                     <md-step-actions>

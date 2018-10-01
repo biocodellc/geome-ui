@@ -1,53 +1,72 @@
 import angular from 'angular';
 
-import entityAttributes from './attributes/entity-attributes.component';
-import fimsAttribute from './attributes/attribute.component';
-import entityRules from './rules/entity-rules.component';
-
 const template = require('./entity-detail.html');
 
 class EntityDetailController {
-  constructor($scope, $state) {
+  constructor($state) {
     'ngInject';
 
-    this.$scope = $scope;
     this.$state = $state;
-
-    $scope.$watch(
-      () => $state.current.name,
-      name => {
-        if (name === 'project-config.entities.detail.attributes') {
-          this.addText = 'Attribute';
-        } else if (name === 'project-config.entities.detail.rules') {
-          this.addText = 'Rule';
-        }
-      },
-    );
   }
 
   $onInit() {
-    this.addText = undefined;
+    this.type =
+      this.$state.current.name === 'project-config.entities.detail.attributes'
+        ? 'attributes'
+        : 'rules';
     this.entity = angular.copy(this.entity); // angular.copy performs a deep copy
-
-    if (this.$state.params.addAttribute) {
-      this.newAttribute();
-    }
   }
 
-  handleOnAdd() {
-    if (
-      this.$state.current.name === 'project-config.entities.detail.attributes'
-    ) {
-      this.newAttribute();
-    } else if (
-      this.$state.current.name === 'project-config.entities.detail.rules'
-    ) {
-      this.$state.go('.add');
+  requiredAttributes() {
+    if (this.cachedRequiredAttributes) return this.cachedRequiredAttributes;
+
+    const requiredAttributes = this.networkConfig.requiredAttributesForEntity(
+      this.entity.conceptAlias,
+    );
+
+    const ne = this.networkConfig.entities.find(
+      entity => entity.conceptAlias === this.entity.conceptAlias,
+    );
+
+    const addUniqueKey = entity => {
+      const attribute = ne.attributes.find(a => a.column === entity.uniqueKey);
+      requiredAttributes.push(attribute);
+      if (!this.entity.attributes.find(attr => attribute.uri === attr.uri)) {
+        this.entity.attributes.push(attribute);
+      }
+    };
+
+    if (!requiredAttributes.find(a => a.column === this.entity.uniqueKey)) {
+      addUniqueKey(this.entity);
     }
+
+    if (ne.uniqueKey !== this.entity.uniqueKey) {
+      const i = requiredAttributes.findIndex(a => a.column === ne.uniqueKey);
+      if (i > -1) requiredAttributes.splice(i, 1);
+    }
+
+    if (this.entity.parentEntity) {
+      const p = (this.config || this.networkConfig).entities.find(
+        entity => this.entity.parentEntity === entity.conceptAlias,
+      );
+
+      if (!requiredAttributes.find(a => a.column === p.uniqueKey)) {
+        addUniqueKey(p);
+      }
+    }
+
+    this.cachedRequiredAttributes = requiredAttributes;
+    return this.cachedRequiredAttributes;
+  }
+
+  availableAttributes() {
+    return this.networkConfig.entities.find(
+      e => e.conceptAlias === this.entity.conceptAlias,
+    ).attributes;
   }
 
   handleUpdateAttributes(attributes) {
-    this.entity.attributes = attributes;
+    this.entity.attributes = attributes.slice();
     this.onUpdateEntity({
       alias: this.entity.conceptAlias,
       entity: this.entity,
@@ -71,43 +90,6 @@ class EntityDetailController {
       entity: this.entity,
     });
   }
-
-  handleAddRule(rule) {
-    const metadata = rule.metadata();
-    const invalidMetadata = Object.keys(metadata).filter(
-      k =>
-        !metadata[k] ||
-        (Array.isArray(metadata[k]) && metadata[k].length === 0),
-    );
-
-    if (invalidMetadata.length !== 0) {
-      const msg =
-        invalidMetadata.length > 1 ? ' are all required' : ' is required';
-
-      angular.toaster.error(invalidMetadata.join(', ') + msg);
-      return;
-    }
-
-    if (this.entity.rules.find(r => angular.equals(r, rule))) {
-      angular.toaster.error('That rule already exists.');
-      return;
-    }
-
-    this.entity.rules.push(rule);
-    this.onUpdateEntity({
-      alias: this.entity.conceptAlias,
-      entity: this.entity,
-    });
-    this.$state.go('^');
-  }
-
-  newAttribute() {
-    this.entity.attributes = this.entity.attributes.concat({
-      dataType: 'STRING',
-      group: 'Default',
-      isNew: true,
-    });
-  }
 }
 
 const fimsEntityDetail = {
@@ -116,16 +98,14 @@ const fimsEntityDetail = {
   bindings: {
     config: '<',
     entity: '<',
-    addText: '<',
-    showSave: '<',
+    canEdit: '<',
+    networkConfig: '<',
     currentProject: '<',
     onSave: '&',
     onUpdateEntity: '&',
   },
 };
 
-const dependencies = [entityAttributes, fimsAttribute, entityRules];
-
 export default angular
-  .module('fims.projectConfigEntityDetail', dependencies)
+  .module('fims.projectConfigEntityDetail', [])
   .component('fimsEntityDetail', fimsEntityDetail).name;

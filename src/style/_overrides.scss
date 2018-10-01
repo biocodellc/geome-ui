@@ -328,33 +328,11 @@ $adminnav-border-bottom: 1px solid $gray-light;
 
   margin-left: 30px;
   margin-right: 30px;
-}
-
-.attributes-table {
-  > thead {
-    > tr {
-      > th {
-        padding: 10px 15px;
-        font-weight: 700;
-        font-size: $font-size-large;
-      }
-    }
-  }
-
-  > tbody {
-    > tr {
-      border-top: 1px solid $list-group-border;
-      border-bottom: 1px solid $list-group-border;
-
-      > td {
-        border-top: none;
-        padding: 10px 15px;
-      }
-    }
-  }
-
-  .dndPlaceholder {
-    height: 40px;
+  min-width: 125px;
+  text-align: center;
+  md-progress-circular {
+    display: inline-block;
+    margin-bottom: -3px;
   }
 }
 

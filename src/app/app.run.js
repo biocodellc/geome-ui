@@ -7,7 +7,7 @@ const loadSession = (
   UserService,
   ProjectService,
 ) => {
-  const projectId = $location.search().projectId;
+  const projectId = parseInt($location.search().projectId, 10);
   const loadUser = () =>
     AuthService.getAccessToken() ? UserService.loadFromSession() : undefined;
   return Promise.all([ProjectService.loadFromSession(projectId), loadUser()]);
@@ -29,12 +29,12 @@ export default function(
 
   $http.defaults.headers.common = { 'Fims-App': 'GeOMe-db' };
 
-  // const transErrorHandler = $state.defaultErrorHandler();
-  // $state.defaultErrorHandler(err => {
-  // console.log('transition error', err);
-  // if (err && err.message.includes('transition has been superseded')) return;
-  // transErrorHandler(err);
-  // });
+  const transErrorHandler = $state.defaultErrorHandler();
+  $state.defaultErrorHandler(err => {
+    console.log('transition error', err);
+    if (err && err.message.includes('transition has been superseded')) return;
+    transErrorHandler(err);
+  });
 
   $transitions.onBefore({}, () => {
     // disable animations on transitions.

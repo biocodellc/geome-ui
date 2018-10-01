@@ -94,7 +94,10 @@
 //////////
 [ng\:cloak],
 [ng-cloak],
-.ng-cloak {
+[data-ng-cloak],
+[x-ng-cloak],
+.ng-cloak,
+.x-ng-cloak {
   display: none !important;
 }
 
@@ -287,6 +290,25 @@ md-autocomplete {
 md-dialog {
   md-content {
     background-color: inherit;
+  }
+}
+
+.confirmation-dialog {
+  max-width: 450px;
+
+  md-dialog-content {
+    &.layout-margin {
+      margin-bottom: 0;
+      > md-dialog-actions {
+        margin: 0;
+      }
+    }
+    &.layout-padding {
+      padding-bottom: 0;
+      > md-dialog-actions {
+        padding: 0;
+      }
+    }
   }
 }
 
