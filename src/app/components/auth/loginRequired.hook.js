@@ -1,3 +1,5 @@
+import { executeIfTransitionValid } from '../../utils/router';
+
 function checkLoginRequired(state) {
   let s = state;
 
@@ -18,11 +20,14 @@ export default ($transitions, UserService) => {
     {},
     trans => {
       const to = trans.$to();
+      console.log('login required');
       if (checkLoginRequired(to) && !UserService.currentUser()) {
-        return trans.router.stateService.target('login', {
-          nextState: to.name,
-          nextStateParams: to.params,
-        });
+        return executeIfTransitionValid(trans, $transitions, () =>
+          trans.router.stateService.target('login', {
+            nextState: to.name,
+            nextStateParams: to.params,
+          }),
+        );
       }
     },
     { priority: 100 },

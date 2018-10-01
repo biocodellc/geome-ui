@@ -1,4 +1,5 @@
 import { EventEmitter } from 'events';
+import { executeIfTransitionValid, isTransitionValid } from './utils/router';
 
 export const STARTED_HOOK_EVENT = 'started_hook';
 export const ENDED_HOOK_EVENT = 'ended_hook';
@@ -44,16 +45,33 @@ export default (
         return Promise.resolve();
       }
 
+      const unWatch = $rootScope.$watch(
+        () => isTransitionValid(trans, $transitions),
+        valid => {
+          if (!valid) {
+            $mdDialog.hide();
+            unWatch();
+          }
+        },
+      );
+
       ProjectViewHookEmitter.emit(STARTED_HOOK_EVENT);
-      trans.onFinish({}, () => {
-        ProjectViewHookEmitter.emit(ENDED_HOOK_EVENT);
-      });
+      trans.onFinish(
+        {},
+        () => {
+          ProjectViewHookEmitter.emit(ENDED_HOOK_EVENT);
+          unWatch();
+        },
+        { invokeLimit: 1 },
+      );
 
       const setProject = project => {
         ProjectViewHookEmitter.emit(LOADING_PROJECT_EVENT);
-        return ProjectService.setCurrentProject(project).then(() => {
-          ProjectViewHookEmitter.emit(FINISHED_LOADING_PROJECT_EVENT);
-        });
+        return executeIfTransitionValid(trans, $transitions, () =>
+          ProjectService.setCurrentProject(project).then(() => {
+            ProjectViewHookEmitter.emit(FINISHED_LOADING_PROJECT_EVENT);
+          }),
+        );
       };
 
       if (projectId) {
@@ -64,6 +82,7 @@ export default (
       }
       const currentUser = UserService.currentUser();
       const isAuthenticated = !!currentUser;
+
       // if there is only a single project the currentUser is a member, auto-select that project
       // project loads are cached so we don't fetch 2x if there are multiple projects
       try {
@@ -75,6 +94,7 @@ export default (
         isAuthenticated,
         userHasProject: isAuthenticated && currentUser.userHasProject,
       });
+
       return $mdDialog
         .show({
           template:
@@ -82,22 +102,24 @@ export default (
           scope,
         })
         .then(setProject)
-        .catch(targetState => {
-          if (targetState && targetState.withParams) {
-            return targetState.withParams({
-              nextState: trans.to(),
-              nextStateParams: trans.to().params,
-            });
-          }
+        .catch(targetState =>
+          executeIfTransitionValid(trans, $transitions, () => {
+            if (targetState && targetState.withParams) {
+              return targetState.withParams({
+                nextState: trans.to(),
+                nextStateParams: trans.to().params,
+              });
+            }
 
-          let state = prevState || 'query';
+            let state = prevState || 'query';
 
-          if (!UserService.currentUser() && checkProjectViewPresent(state)) {
-            state = 'query';
-          }
+            if (!UserService.currentUser() && checkProjectViewPresent(state)) {
+              state = 'query';
+            }
 
-          return trans.router.stateService.target(state);
-        });
+            return trans.router.stateService.target(state);
+          }),
+        );
     },
     { priority: 50 },
   );
