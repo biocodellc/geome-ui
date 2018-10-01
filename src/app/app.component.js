@@ -22,7 +22,6 @@ class AppCtrl {
     this.$state = $state;
     this.$transitions = $transitions;
     this.projectView = false;
-    this.userHasProject = true;
   }
 
   $onInit() {
@@ -39,8 +38,10 @@ class AppCtrl {
     });
     this.UserService.on(USER_CHANGED_EVENT, u => {
       this.currentUser = u;
-      this.userHasProject = true;
-      this.setUserHasProject();
+      if (u) {
+        this.currentUser.userHasProject = true;
+        this.setUserHasProject();
+      }
       this.setUserIsMember();
       const { current } = this.$state;
       if (
@@ -92,7 +93,7 @@ class AppCtrl {
 
   setUserHasProject() {
     this.ProjectService.all().then(({ data }) => {
-      this.userHasProject = data.length > 0;
+      this.currentUser.userHasProject = data.length > 0;
     });
   }
 
