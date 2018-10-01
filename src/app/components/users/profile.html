@@ -17,28 +17,32 @@
                                 <div class="col-xs-12 col-md-6">
                                     <div class="form-group" show-errors="">
                                         <label class="control-label">First Name</label>
-                                        <input type="text" required name="firstName" class="form-control" ng-model="$ctrl.user.firstName" />
+                                        <input type="text" required name="firstName" class="form-control"
+                                            ng-model="$ctrl.user.firstName" />
                                     </div>
                                 </div>
 
                                 <div class="col-xs-12 col-md-6">
                                     <div class="form-group" show-errors>
                                         <label class="control-label">Last Name</label>
-                                        <input type="text" required name="lastName" class="form-control" ng-model="$ctrl.user.lastName" />
+                                        <input type="text" required name="lastName" class="form-control"
+                                            ng-model="$ctrl.user.lastName" />
                                     </div>
                                 </div>
 
                                 <div class="col-xs-12 col-md-6">
                                     <div class="form-group" show-errors>
                                         <label class="control-label">Email</label>
-                                        <input type="email" required name="email" class="form-control" ng-model="$ctrl.user.email" />
+                                        <input type="email" required name="email" class="form-control"
+                                            ng-model="$ctrl.user.email" />
                                     </div>
                                 </div>
 
                                 <div class="col-xs-12 col-md-6">
                                     <div class="form-group" show-errors>
                                         <label class="control-label">Institution</label>
-                                        <input type="text" required name="institution" class="form-control" ng-model="$ctrl.user.institution" />
+                                        <input type="text" required name="institution" class="form-control"
+                                            ng-model="$ctrl.user.institution" />
                                     </div>
                                 </div>
 
@@ -57,31 +61,33 @@
                         <form name="passwordForm" ng-submit="$ctrl.updatePassword()" class="form-inline change-password-form">
                             <div class="form-group" show-errors="">
                                 <label class="control-label">Current Password</label>
-                                <input type="password" required name="currentPassword" class="form-control" ng-model="$ctrl.currentPassword" />
+                                <input type="password" required name="currentPassword" class="form-control"
+                                    ng-model="$ctrl.currentPassword" />
                             </div>
-                            <div class="form-group" ng-class="{'has-error' : passStrength < 50 && passwordForm.newPassword.$touched}">
-                                <div class="input">
-                                    <label class="control-label">New Password</label>
-                                    <input type="password" name="newPassword" class="form-control" ng-model="$ctrl.newPassword" />
-                                    <i ng-if="passStrength > 50" class="fa fa-check fa-xs"></i>
-                                    <i ng-if="passStrength < 50 && passwordForm.newPassword.$touched" class="fa fa-close fa-xs"></i>
-                                </div>
-                                <div ng-password-strength="$ctrl.newPassword" strength="passStrength" ng-hide="true">
+                            <div class="form-group" show-errors>
+                                <label class="control-label">New Password</label>
+                                <input type="password" name="newPassword" class="form-control"
+                                    ng-model="$ctrl.newPassword" password-strength="passStrength"
+                                    min-password-strength="50" password-strength-icons />
+                                <div ng-password-strength="$ctrl.newPassword" strength="passStrength"
+                                    ng-hide="true">
                                     <!--if this is not hidden, empty progress bar appears-->
                                 </div>
-                                <div class="help-block" ng-if="passStrength < 50 && passwordForm.newPassword.$touched">
+                                <div class="help-block" ng-if="passwordForm.newPassword.$error.passwordStrength && passwordForm.newPassword.$touched">
                                     Password is not strong enough.</div>
                             </div>
 
                             <div class="form-group" show-errors="">
                                 <label class="control-label">Verify Password</label>
-                                <input type="password" ng-required="true" name="verifyPassword" class="form-control"
-                                    ng-model="$ctrl.verifyPassword" compare-to="$ctrl.newPassword" ng-disabled="passStrength < 50" />
+                                <input type="password" ng-required="true" name="verifyPassword"
+                                    class="form-control" ng-model="$ctrl.verifyPassword" compare-to="$ctrl.newPassword"
+                                    ng-disabled="passStrength < 50" />
                                 <p class="help-block" ng-if="passwordForm.verifyPassword.$error.compareTo && passwordForm.verifyPassword.$touched">
                                     Passwords do not match.</p>
                             </div>
                             <div class="form-group">
-                                <input type="submit" class="btn btn-primary" ng-disabled="passwordForm.$invalid" value="Change Password" />
+                                <input type="submit" class="btn btn-primary" ng-disabled="passwordForm.$invalid"
+                                    value="Change Password" />
                             </div>
 
                         </form>

@@ -21,16 +21,16 @@ class ProfileController {
   }
 
   updatePassword() {
-      this.UserService.updatePassword(
-        this.user.username,
-        this.currentPassword,
-        this.newPassword,
-      ).then(() => {
-        angular.toaster.success('Successfully saved your profile!');
-        this.currentPassword = undefined;
-        this.newPassword = undefined;
-        this.verifyPassword = undefined;
-      });
+    this.UserService.updatePassword(
+      this.user.username,
+      this.currentPassword,
+      this.newPassword,
+    ).then(() => {
+      angular.toaster.success('Successfully saved your profile!');
+      this.currentPassword = undefined;
+      this.newPassword = undefined;
+      this.verifyPassword = undefined;
+    });
   }
 }
 

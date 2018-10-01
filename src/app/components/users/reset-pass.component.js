@@ -16,12 +16,10 @@ class ResetPassController {
   }
 
   resetPassword() {
-      this.UserService.resetPassword(this.password, this.resetToken).then(
-        () => {
-          angular.toaster.success('Successfully reset your password');
-          this.$state.go('login');
-        },
-      );
+    this.UserService.resetPassword(this.password, this.resetToken).then(() => {
+      angular.toaster.success('Successfully reset your password');
+      this.$state.go('login');
+    });
   }
 }
 
