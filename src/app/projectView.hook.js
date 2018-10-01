@@ -32,7 +32,9 @@ export default (
   'ngInject';
 
   let prevState;
-  $transitions.onSuccess({}, trans => (prevState = trans.to().name));
+  $transitions.onSuccess({}, trans => {
+    prevState = trans.to().name;
+  });
   // setup dialog for workbench states if no project is selected
   $transitions.onBefore(
     { to: checkProjectViewPresent },
@@ -111,13 +113,19 @@ export default (
               });
             }
 
-            let state = prevState || 'query';
+            const state = prevState || 'home';
 
-            if (!UserService.currentUser() && checkProjectViewPresent(state)) {
-              state = 'query';
+            const { stateService } = trans.router;
+            let target = stateService.target(state);
+
+            if (
+              !UserService.currentUser() &&
+              checkProjectViewPresent(target.state().$$state())
+            ) {
+              target = stateService.target('home');
             }
 
-            return trans.router.stateService.target(state);
+            return target;
           }),
         );
     },

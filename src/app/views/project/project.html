@@ -1,4 +1,4 @@
-<div ui-view class="admin" current-project="$ctrl.currentProject">
+<div ui-view ng-cloak class="admin" current-project="$ctrl.currentProject">
     <!-- <div class="admin"> -->
     <div class="row">
         <div class="col-xs-12">
@@ -26,7 +26,7 @@
                 </ul>
 
                 <div class="row">
-                    <div ui-view="details" class="col-xs-12" current-project="$ctrl.currentProject"
+                    <div ui-view="details" class="col-xs-12" current-project="$ctrl.currentProject" ng-cloak
                         on-project-update="$ctrl.handleProjectUpdate(project)" on-project-delete="$ctrl.handleProjectDelete(project)">
                     </div>
                 </div>

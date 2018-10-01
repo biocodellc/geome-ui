@@ -20,7 +20,6 @@ export default ($transitions, UserService) => {
     {},
     trans => {
       const to = trans.$to();
-      console.log('login required');
       if (checkLoginRequired(to) && !UserService.currentUser()) {
         return executeIfTransitionValid(trans, $transitions, () =>
           trans.router.stateService.target('login', {

@@ -10,10 +10,10 @@
     </div>
     <p ng-if="!$ctrl.canEdit">Note: only subscribed users can edit a project configuration</p>
 
-    <div ui-view="attributes" selected-attributes="$ctrl.entity.attributes" available="$ctrl.availableAttributes()"
+    <div ui-view="attributes" ng-cloak selected-attributes="$ctrl.entity.attributes" available="$ctrl.availableAttributes()"
         can-edit="$ctrl.canEdit" required-attributes="$ctrl.requiredAttributes()" on-change="$ctrl.handleUpdateAttributes(attributes)"></div>
 
-    <div ui-view="rules" rules="$ctrl.entity.rules" on-change="$ctrl.handleUpdateRules(rules)"
+    <div ui-view="rules" ng-cloak rules="$ctrl.entity.rules" on-change="$ctrl.handleUpdateRules(rules)"
         can-edit="$ctrl.canEdit" lists="$ctrl.networkConfig.lists" attributes="$ctrl.entity.attributes"></div>
 
 </div>

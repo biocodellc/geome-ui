@@ -1,12 +1,12 @@
 <md-content layout="column" layout-fill>
-  <fims-header show-create-project="$ctrl.currentUser && !$ctrl.currentUser.userHasProject"
+  <fims-header show-create-project="$ctrl.currentUser && !$ctrl.currentUser.userHasProject" ng-cloak
     show-project-selector="$ctrl.projectView" current-user="$ctrl.currentUser" current-project="$ctrl.currentProject"
     on-project-change="$ctrl.handleProjectChange(project)" on-signout="$ctrl.signout()">
   </fims-header>
 
   <div flex layout="row" ng-if="$ctrl.projectView">
     <!-- Sidebar navigation -->
-    <fims-navigation layout="column" current-project="$ctrl.currentProject" current-user="$ctrl.currentUser"></fims-navigation>
+    <fims-navigation layout="column" current-project="$ctrl.currentProject" current-user="$ctrl.currentUser" ng-cloak></fims-navigation>
 
     <md-content flex layout-fill layout="row">
       <div layout="row" layout-fill layout-sm="column" ng-show="$ctrl.loading" layout-align="center center">
@@ -15,7 +15,7 @@
 
       <main ng-show="!$ctrl.loading" flex layout="column">
         <div class="project-view layout-fill" flex ui-view="projectView" current-project="$ctrl.currentProject"
-          current-user="$ctrl.currentUser"></div>
+          current-user="$ctrl.currentUser" ng-cloak></div>
       </main>
     </md-content>
   </div>
@@ -26,7 +26,8 @@
     </div>
 
     <main layout-fill ng-show="!$ctrl.loading">
-      <div ui-view layout-fill current-project="$ctrl.currentProject" current-user="$ctrl.currentUser"></div>
+      <div ui-view layout-fill current-project="$ctrl.currentProject" current-user="$ctrl.currentUser"
+        ng-cloak></div>
     </main>
   </div>
 </md-content>
