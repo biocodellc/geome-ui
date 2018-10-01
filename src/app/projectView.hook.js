@@ -62,8 +62,8 @@ export default (
           if (project) return setProject(project);
         } catch (e) {}
       }
-
-      const isAuthenticated = !!UserService.currentUser();
+      const currentUser = UserService.currentUser();
+      const isAuthenticated = !!currentUser;
       // if there is only a single project the currentUser is a member, auto-select that project
       // project loads are cached so we don't fetch 2x if there are multiple projects
       try {
@@ -73,11 +73,12 @@ export default (
 
       const scope = Object.assign($rootScope.$new(true), {
         isAuthenticated,
+        userHasProject: isAuthenticated && currentUser.userHasProject,
       });
       return $mdDialog
         .show({
           template:
-            '<project-selector-dialog is-authenticated="isAuthenticated"></project-selector-dialog>',
+            '<project-selector-dialog is-authenticated="isAuthenticated" user-has-project="userHasProject"></project-selector-dialog>',
           scope,
         })
         .then(setProject)

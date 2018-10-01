@@ -8,8 +8,8 @@
 
   <md-dialog-content flex layout="column">
     <div flex></div>
-    <project-selector layout="row" layout-align="center center" is-authenticated="$ctrl.isAuthenticated" on-change="$ctrl.select(project)"
-      button-class="">
+    <project-selector layout="row" layout-align="center center" is-authenticated="$ctrl.isAuthenticated"
+      user-has-project="$ctrl.userHasProject" on-change="$ctrl.select(project)" button-class="">
     </project-selector>
     <div flex></div>
     <md-dialog-actions>

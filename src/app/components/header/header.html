@@ -6,8 +6,9 @@
   </a>
 
   <div flex ng-show="!$ctrl.showProjectSelector && !$ctrl.showCreateProject"></div>
-  <project-selector flex layout="row" layout-align="center center" ng-show="$ctrl.showProjectSelector" user-has-project="!$ctrl.showCreateProject"
-    is-authenticated="!!($ctrl.currentUser)" current-project="$ctrl.currentProject" on-change="$ctrl.onProjectChange({ project: project })"
+  <project-selector flex layout="row" layout-align="center center" ng-show="$ctrl.showProjectSelector"
+    user-has-project="$ctrl.currentUser && $ctrl.currentUser.userHasProject" is-authenticated="!!($ctrl.currentUser)"
+    current-project="$ctrl.currentProject" on-change="$ctrl.onProjectChange({ project: project })"
     offset="0 12" button-class="md-primary">
   </project-selector>
   <div flex ng-show="$ctrl.showCreateProject" layout="row" layout-align="center">
