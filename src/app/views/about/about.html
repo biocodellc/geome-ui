@@ -64,7 +64,7 @@
     the chosen network approved configuration.  Currently deployed network approved configurations are visible on the 
     <a href='#' ng-click="$ctrl.openSections($event,'projects')">GeOMe projects page</a>.  
     It is possible to modify project rules and attributes of created proejcts or create a new network approved 
-    configurations by <a href='#' ng-click="$ctrl.openSections($event,'projects')">subscribing to GeOMe</a>.
+    configurations by <a href='#' ng-click="$ctrl.openSections($event,'subscriptions')">subscribing to GeOMe</a>.
     </p>
     
   </div>
@@ -72,12 +72,14 @@
   <div uib-accordion-group id="network" class="panel-default md-whiteframe-2dp" heading="Minimum Information Standards">
     <p>
     GeOMe is an implementation of the <a href="http://gensc.org/projects/migo/" target="_blank">“Minimum Information about a Genomic Observatory” (MIGO)</a> checklist, requiring the following columns for all configurations and projects:
+    </p>
 
+    <ul>
         <li>materialSampleID</li>
         <li>yearCollected</li>
         <li>Either decimalLatitude and decimalLongitude or Locality</li>
         <li>phylum</li>
-    </p>
+        </ul>
 
     <p>
     In addition, there are numerous rules that are enforced at the network level concerning incoming data.  For instance “dayCollected” requires an integer between 1 and 31 and if a user enters a decimalLatitude they must also enter a decimalLongitude.  A full list of GeOMe network configuration rules, data attributes, and definitions is available in JSON format at <a href=”https://api.geome-db.org/v1/network/1/config“ target="_blank">https://api.geome-db.org/v1/network/1/config</a>
