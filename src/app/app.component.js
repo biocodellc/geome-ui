@@ -73,15 +73,9 @@ class AppCtrl {
         return hasResolvables(s.parent);
       };
 
-      console.log('start', trans.$id);
       if (hasResolvables(trans.$to())) this.loading = true;
     });
-    // this.$transitions.onError({}, trans => {
-    // const err = trans.error();
-    // if (err && err.message.includes('superseded')) return;
-    // });
     this.$transitions.onFinish({}, trans => {
-      console.log('finish', trans.$id);
       const err = trans.error();
       if (err && err.message.includes('superseded')) return;
       this.loading = false;
