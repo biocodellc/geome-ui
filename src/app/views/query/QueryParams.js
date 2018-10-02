@@ -24,13 +24,13 @@ export default class QueryParams {
     Object.assign(this, defaultParams);
   }
 
-  buildQuery(projectId, selectEntities, source) {
+  buildQuery(projectIds, selectEntities, source) {
     const builder = new QueryBuilder();
 
-    if (projectId) {
-      builder.add(`_projects_:${projectId}`);
+    if (Array.isArray(projectIds)) {
+      builder.add(`_projects_:${projectIds}`)
     }
-
+    
     if (this.expeditions.length > 0) {
       builder.add(
         `and _expeditions_:[${this.expeditions.map(e => e.expeditionCode)}]`,

@@ -45,7 +45,7 @@
     </div>
   </section>
 
-  <md-input-container ng-show="$ctrl.currentProject" class="md-icon-float md-icon-right md-block">
+  <md-input-container ng-if="$ctrl.currentProject" class="md-icon-float md-icon-right md-block">
     <input type="text" placeholder="Query String..." ng-model="$ctrl.params.queryString" />
     <md-icon md-font-icon="fa fa-question-circle fa-sm" ng-click="$ctrl.helpDocs()">
     </md-icon>

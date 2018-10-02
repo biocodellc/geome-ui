@@ -203,20 +203,15 @@ class QueryFormController {
   queryJson() {
     this.toggleLoading({ val: true });
 
-    const projectId = this.currentProject
-      ? this.currentProject.projectId
-      : undefined;
-
-    /*
-    const projectIds = new Set();
-    this.params.projects.forEach((p) => projectIds.add(p.projectId))
-    console.log(projectIds)
-    */
+    const projectIds = [];
+    this.params.projects.length > 0	
+    ? this.params.projects.forEach((p) => projectIds.push(p.projectId))
+    : undefined; 
 
     const selectEntities = ['Sample', 'fastqMetadata'];
 
     this.QueryService.queryJson(
-      this.params.buildQuery(projectId, selectEntities, SOURCE.join()),
+      this.params.buildQuery(projectIds, selectEntities, SOURCE.join()),
       'Event',
       0,
       10000,
