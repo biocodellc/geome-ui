@@ -138,6 +138,7 @@ export default {
     selectedAttributes: '<',
     available: '<',
     requiredAttributes: '<',
+    canEdit: '<',
     onChange: '&',
   },
 };

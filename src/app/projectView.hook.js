@@ -1,4 +1,5 @@
 import { EventEmitter } from 'events';
+import { executeIfTransitionValid, isTransitionValid } from './utils/router';
 
 export const STARTED_HOOK_EVENT = 'started_hook';
 export const ENDED_HOOK_EVENT = 'ended_hook';
@@ -31,7 +32,9 @@ export default (
   'ngInject';
 
   let prevState;
-  $transitions.onSuccess({}, trans => (prevState = trans.to().name));
+  $transitions.onSuccess({}, trans => {
+    prevState = trans.to().name;
+  });
   // setup dialog for workbench states if no project is selected
   $transitions.onBefore(
     { to: checkProjectViewPresent },
@@ -44,16 +47,33 @@ export default (
         return Promise.resolve();
       }
 
+      const unWatch = $rootScope.$watch(
+        () => isTransitionValid(trans, $transitions),
+        valid => {
+          if (!valid) {
+            $mdDialog.hide();
+            unWatch();
+          }
+        },
+      );
+
       ProjectViewHookEmitter.emit(STARTED_HOOK_EVENT);
-      trans.onFinish({}, () => {
-        ProjectViewHookEmitter.emit(ENDED_HOOK_EVENT);
-      });
+      trans.onFinish(
+        {},
+        () => {
+          ProjectViewHookEmitter.emit(ENDED_HOOK_EVENT);
+          unWatch();
+        },
+        { invokeLimit: 1 },
+      );
 
       const setProject = project => {
         ProjectViewHookEmitter.emit(LOADING_PROJECT_EVENT);
-        return ProjectService.setCurrentProject(project).then(() => {
-          ProjectViewHookEmitter.emit(FINISHED_LOADING_PROJECT_EVENT);
-        });
+        return executeIfTransitionValid(trans, $transitions, () =>
+          ProjectService.setCurrentProject(project).then(() => {
+            ProjectViewHookEmitter.emit(FINISHED_LOADING_PROJECT_EVENT);
+          }),
+        );
       };
 
       if (projectId) {
@@ -62,8 +82,9 @@ export default (
           if (project) return setProject(project);
         } catch (e) {}
       }
+      const currentUser = UserService.currentUser();
+      const isAuthenticated = !!currentUser;
 
-      const isAuthenticated = !!UserService.currentUser();
       // if there is only a single project the currentUser is a member, auto-select that project
       // project loads are cached so we don't fetch 2x if there are multiple projects
       try {
@@ -73,30 +94,40 @@ export default (
 
       const scope = Object.assign($rootScope.$new(true), {
         isAuthenticated,
+        userHasProject: isAuthenticated && currentUser.userHasProject,
       });
+
       return $mdDialog
         .show({
           template:
-            '<project-selector-dialog is-authenticated="isAuthenticated"></project-selector-dialog>',
+            '<project-selector-dialog is-authenticated="isAuthenticated" user-has-project="userHasProject"></project-selector-dialog>',
           scope,
         })
         .then(setProject)
-        .catch(targetState => {
-          if (targetState && targetState.withParams) {
-            return targetState.withParams({
-              nextState: trans.to(),
-              nextStateParams: trans.to().params,
-            });
-          }
+        .catch(targetState =>
+          executeIfTransitionValid(trans, $transitions, () => {
+            if (targetState && targetState.withParams) {
+              return targetState.withParams({
+                nextState: trans.to(),
+                nextStateParams: trans.to().params,
+              });
+            }
 
-          let state = prevState || 'query';
+            const state = prevState || 'home';
 
-          if (!UserService.currentUser() && checkProjectViewPresent(state)) {
-            state = 'query';
-          }
+            const { stateService } = trans.router;
+            let target = stateService.target(state);
 
-          return trans.router.stateService.target(state);
-        });
+            if (
+              !UserService.currentUser() &&
+              checkProjectViewPresent(target.state().$$state())
+            ) {
+              target = stateService.target('home');
+            }
+
+            return target;
+          }),
+        );
     },
     { priority: 50 },
   );

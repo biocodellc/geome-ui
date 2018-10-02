@@ -14,47 +14,35 @@
   <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="Getting Started" is-open="$ctrl.gettingStarted">
     <p>
     Welcome to GeOMe! There are several routes you can take to get started.  The path you take depends on if you need to
-    read data, write data, or specify attributes and rules in a new project.  The following describes routes you can choose 
-    to get started:</p>
+    read data, write data, or specify attributes and rules in a new project.  While all of the options discussed below are offered free
+    of charge, additional features are listed on our
+    <a href='#' ng-click="$ctrl.openSections($event,'subscriptions')">Subscription Information</a> page.
+    </p>
 
     <p>
-      <strong><u>Route 1</u>: I want to query public data or generate a template</strong>
-      <br>Most GeOMe projects are marked as "public", which means that anyone can query public data or generate that
-      project's templates.  Most projects let any visitor dynamically create spreadsheet templates without an obligation
-      to load data later.  This is useful, for example, if a project designates one person for data loading or if the 
-      data will be loaded elsewhere.
+      <strong>I want to query public data or generate a template</strong>
+      <br>Many GeOMe projects are marked as "public", which means that anyone can query public data or generate that
+      project's templates without an obligation to load data later.  This is useful, for example, if a project 
+      designates one person for data loading or if the user does not intend to immediately load data into GeOMe.
       Read the <a href='docs/helpDocumentation.pdf' target=_blank>GeOMe Help Document</a> to get started 
       using the web interface for generating templates and querying data.</br>
     </p>
 
     <p>
-      <strong><u>Route 2</u>: I want to contribute data to an existing project</strong>
-      <br>See the <a href='#' ng-click="$ctrl.openProjects($event)">GeOMe projects page</a> to read about current GeOMe projects. 
+      <strong>I want to contribute data to an existing project</strong>
+      <br>See the <a href='#' ng-click="$ctrl.openSections($event,'projects')">GeOMe projects page</a> to read about current GeOMe projects. 
       Contact the project administrator of the project you would like to join and they will either create a new account 
       for you or associate your existing account to their project.  Read the 
       <a href='docs/helpDocumentation.pdf' target=_blank>GeOMe Help Document</a> to get started using the web interface.</br>
     </p>
 
     <p>
-      <strong><u>Route 3</u>: I want to create a new project, synchronized with a network approved configuration</strong>
-      <br>If you choose to create a project that is synchronized with a network approved configuration, you will receive all
-      updates and additions of data attributes, rules, and lookup lists of the network approved configuration. 
+      <strong>I want to create a new project</strong>
+      <p>
       After you <a ui-sref="register">create an account</a> you will be able to create a new project.  If you already have an 
-      account, you can create a project by clicking the user sign-in graphic in the upper right corner and selecting <b>"Create
-      a new project"</b>.  When you navigate through the account creation process, select the Existing Configuration 
-      you wish to clone.  After you choose the Configuration to clone, make sure you check the box 
-      that says "Keep configuration in sync"
-    </p>
-
-    <p>
-      <strong><u>Route 4</u>: I want to create a new project, un-synchronized with a network approved configuration</strong>
-      <br>If you choose to create a project that is un-synchronized with a network approved configuration, you will either start
-      from scratch or you can choose to clone a network approved configuration.  After you <a ui-sref="register">create an account</a> 
-      you will be able to create a new project.  Creating a project from scratch is recommended for 
-      advanced users only and is accomplished by <b>not</b> choosing the <b>"Clone Existing Project Config</b>.
-      You can also create an unsynchronized project by selecting the <b>"Clone Existing Project Config</b> and then unchecking the box
-      which indicates you want to "Keep configuration in sync".  If your project is un-syncrhonized, then you are free to make your 
-      own changes and additions to your project configuration and you will not receive any changes made by the network approved configuration. 
+      account, you can create a project by clicking the user sign-in graphic in the upper right corner and selecting "Create
+      a new project".  When creating a new project you will have the option to select an "Existing Configuration"
+      you wish to clone.  
     </p>
 
     <p><b><u>Glossary</u></b>:</p>
@@ -72,13 +60,37 @@
     a new project. Projects can either adopt a network approved configuration, clone an existing project, or build a project from scratch.</p>
 
     <p><i>Network approved configurations</i> are templates adopted by a set of projects that share a common set of rules and attributes.
-    If a project adopts a network approved configuration, then that project accepts all rules, attributes, and lists from the network 
-    approved configuration.  During project creation, if the project creator chooses to synchronize with the network approved configuration then
-    all updates to rules, attributes and lists are controlled by the network administrator.  On the other hand, if the project creator chooses
-    to NOT synchronize with the network approved configuration then the project can control its own rules, attributes, and lists.
-    Currently deployed network approved configurations are visible on the <a href='#' ng-click="$ctrl.openProjects($event)">GeOMe projects page</a>.
-These projects follow on the spirit and principles of the Diversity of the IndoPacific project.
+    When a project is created from a network approved configuration, the new project adopts all of the rules, attributes, and lists from 
+    the chosen network approved configuration.  Currently deployed network approved configurations are visible on the 
+    <a href='#' ng-click="$ctrl.openSections($event,'projects')">GeOMe projects page</a>.  
+    It is possible to modify project rules and attributes of created proejcts or create a new network approved 
+    configurations by <a href='#' ng-click="$ctrl.openSections($event,'subscriptions')">subscribing to GeOMe</a>.
+    </p>
+    
+  </div>
 
+  <div uib-accordion-group id="network" class="panel-default md-whiteframe-2dp" heading="Minimum Information Standards">
+    <p>
+    GeOMe is an implementation of the <a href="http://gensc.org/projects/migo/" target="_blank">“Minimum Information about a Genomic Observatory” (MIGO)</a> checklist, requiring the following columns for all configurations and projects:
+    </p>
+
+    <ul>
+        <li>materialSampleID</li>
+        <li>yearCollected</li>
+        <li>Either decimalLatitude and decimalLongitude or Locality</li>
+        <li>phylum</li>
+        </ul>
+
+    <p>
+    In addition, there are numerous rules that are enforced at the network level concerning incoming data.  For instance “dayCollected” requires an integer between 1 and 31 and if a user enters a decimalLatitude they must also enter a decimalLongitude.  A full list of GeOMe network configuration rules, data attributes, and definitions is available in JSON format at <a href=”https://api.geome-db.org/v1/network/1/config“ target="_blank">https://api.geome-db.org/v1/network/1/config</a>
+    </p>
+
+    <p>
+    Each network approved configurations may choose to enforce additional rules that extend the GeOMe network rules.   For example, 
+    the Biocode configuration also requires “EnteredBy, Country, TaxTeam, institutionCode”.  
+    See the <a href='#' ng-click="$ctrl.openSections($event,'projects')">GeOMe projects page</a> for information about GeOMe network 
+    approved configurations and individual projects.
+    </p>
   </div>
 
   <div uib-accordion-group id="projects" class="panel-default md-whiteframe-2dp" heading="Projects and Configurations" is-open="$ctrl.projects">
@@ -90,6 +102,27 @@ These projects follow on the spirit and principles of the Diversity of the IndoP
     </p>
 
     <project-info ng-if="$ctrl.projects"></project-info>
+
+  </div>
+
+  <div uib-accordion-group id="subscriptions" class="panel-default md-whiteframe-2dp" heading="Subscription Information" is-open="$ctrl.subscriptions">
+      <p>While the majority of GeOMe is free for users, certain options are available to subscribers only.  Please contact us at <a href="mailto:geome.help@gmail.com">geome.help@gmail.com</a> to become a subscriber and to access the following features:
+      </p>
+
+      <p>
+      <b>Create unsynchronized projects</b>
+      <br>This option lets users create customized rules, attributes, or data lists.  By default, new projects clone what is available from an existing network approved configuration.  With an unsynchronized project you have the option to add your own attributes, rules, and lists.
+      </p>
+
+      <p>
+      <b>Build a new network approved configuration</b>
+      <br>Each network approved configurations is constructed from GeOMe network entities (samples, tissues, events, photos, sequences) with a carefully constructed design, built in consultation with users.
+      </p>
+
+      <p>
+      <b>New features</b>
+      <br>GeOMe is a dynamic network with new features being added on a regular basis. We welcome the opportunity to discuss new features with users.
+      </p>
 
   </div>
 

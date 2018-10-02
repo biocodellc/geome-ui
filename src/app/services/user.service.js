@@ -25,7 +25,7 @@ class UserService extends EventEmitter {
 
   setCurrentUser(user) {
     currentUser = user ? new User(user) : undefined;
-    this.emit(USER_CHANGED_EVENT, user);
+    this.emit(USER_CHANGED_EVENT, currentUser);
     return currentUser;
   }
 
@@ -104,7 +104,11 @@ class UserService extends EventEmitter {
 
   loadFromSession() {
     const username = this.StorageService.get('username');
-    return this.get(username);
+    return this.get(username).then(user => {
+      // public user profile is 'userId' and 'username'
+      if (!Object.keys(user).includes('email')) return undefined;
+      return user;
+    });
   }
 }
 

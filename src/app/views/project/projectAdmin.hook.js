@@ -1,3 +1,5 @@
+import { executeIfTransitionValid } from '../../utils/router';
+
 export default ($transitions, UserService, ProjectService) => {
   'ngInject';
 
@@ -8,9 +10,15 @@ export default ($transitions, UserService, ProjectService) => {
     Promise.all([UserService.currentUser(), ProjectService.currentProject()])
       .then(([user, project]) => {
         if (user.userId !== project.user.userId) {
-          return trans.router.stateService.target('home');
+          return executeIfTransitionValid(trans, $transitions, () =>
+            trans.router.stateService.target('home'),
+          );
         }
       })
-      .catch(() => trans.router.stateService.target('home')),
+      .catch(() =>
+        executeIfTransitionValid(trans, $transitions, () =>
+          trans.router.stateService.target('home'),
+        ),
+      ),
   );
 };

@@ -14,5 +14,6 @@ export default {
   bindings: {
     config: '<',
     onUpdate: '&',
+    isNetworkAdmin: '<',
   },
 };
