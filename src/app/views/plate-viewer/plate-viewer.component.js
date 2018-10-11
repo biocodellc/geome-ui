@@ -129,10 +129,17 @@ class PlateViewerController {
 
     const remove = () => {
       delete this.plateData[row][column];
-      this.RecordService.delete(t.bcid).catch(e => {
-        angular.catcher('Failed to delete tissue')(e);
-        this.plateData[row][column] = t;
-      });
+      this.RecordService.delete(t.bcid)
+        .then(() => {
+          // new plate if there are no more tissues
+          this.newPlate = !Object.keys(this.plateData).some(r =>
+            Object.keys(this.plateData[r]).some(c => this.plateData[r][c]),
+          );
+        })
+        .catch(e => {
+          angular.catcher('Failed to delete tissue')(e);
+          this.plateData[row][column] = t;
+        });
     };
 
     // when we create a new tissue in a plate, we only create
