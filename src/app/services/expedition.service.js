@@ -82,14 +82,11 @@ class ExpeditionService {
       .catch(angular.catcher('Failed to load expedition stats.'));
   }
 
-  getExpeditionsForUser(projectId, includePrivate) {
+  getExpeditionsForUser(projectId, includePrivate = false) {
     if (!projectId) {
       return Promise.reject({ data: { error: 'No project is selected' } });
     }
 
-    if (!includePrivate) {
-      includePrivate = false;
-    }
     return this.$http.get(
       `${restRoot}projects/${projectId}/expeditions?user&includePrivate=${includePrivate}`,
     );

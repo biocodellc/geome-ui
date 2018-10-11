@@ -27,11 +27,8 @@
         <div flex layout="row">
           <span flex></span>
           <div>
-            <md-button ng-show="$ctrl.currentUser" ng-disabled="$ctrl.loadingExpeditions || !$ctrl.hasExpeditions"
-              ng-click="$ctrl.newPlate($event)" class="md-raised md-primary">New Plate</md-button>
-            <md-tooltip ng-if="ctrl.loadingExpeditions">Loading...</md-tooltip>
-            <md-tooltip ng-if="!ctrl.loadingExpeditions && !$ctrl.hasExpeditions">You must create
-              an expedition before you can create a Tissue plate</md-tooltip>
+            <md-button ng-show="$ctrl.currentUser && !$ctrl.hashedSample" ng-click="$ctrl.newPlate($event)" class="md-raised md-primary">New
+              Plate</md-button>
           </div>
           <md-button ng-show="$ctrl.plate" ng-click="$ctrl.viewPlate()" class="md-raised md-primary"
             layout="row" layout-align="center center">
