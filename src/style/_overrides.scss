@@ -253,6 +253,10 @@ $adminnav-border-bottom: 1px solid $gray-light;
 .settings-list {
   @extend .list-group;
 
+  .dndPlaceholder {
+    height: 89px;
+  }
+
   .settings-list-item {
     @extend .list-group-item;
 

@@ -13,6 +13,30 @@ class EntitiesController {
     }
   }
 
+  dndDrop(index, item) {
+    const currentIndex = this.entities.findIndex(
+      e => e.conceptAlias === item.conceptAlias,
+    );
+
+    // drag to the same place
+    if (index === currentIndex || index === currentIndex + 1) {
+      return false;
+    }
+
+    // remove the item from the current position
+    this.entities.splice(currentIndex, 1);
+
+    // 'fix' the new position index if it was shifted after the removing
+    if (currentIndex < index) {
+      index--;
+    }
+
+    // insert the item into the new position
+    this.entities.splice(index, 0, item);
+    this.onUpdateEntities({ entities: this.entities });
+    return true;
+  }
+
   handleToggleEdit(index) {
     if (!this.canEdit) return;
     if (this.editEntity === index) {
