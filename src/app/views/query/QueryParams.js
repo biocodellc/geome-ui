@@ -95,6 +95,11 @@ export default class QueryParams {
       builder.add(`Sample.family = "${this.family}"`);
     }
 
+    if (this.phylum) {
+      if (builder.queryString.length > 0) builder.add('and');
+      builder.add(`Sample.phylum = "${this.phylum}"`);
+    }
+
     if (this.specificEpithet) {
       if (builder.queryString.length > 0) builder.add('and');
       builder.add(`Sample.specificEpithet = "${this.specificEpithet}"`);
