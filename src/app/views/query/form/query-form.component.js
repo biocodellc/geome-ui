@@ -73,9 +73,11 @@ class QueryFormController {
     this.loading = true;
     this.resetExpeditions = true;
     this.params.projects = [];
+    this.groupedProjects = [];
+    this.individualProjects = [];
     this.params.events = [];
-    this.configGroups = [];
-    this.individualProject = [];
+    this.params.specimens = [];
+    this.params.tissues = [];
     this.events = [];
     this.specimens = [];
     this.tissues = [];
@@ -133,39 +135,17 @@ class QueryFormController {
 
   clearParams() {
     this.params.projects = [];
-    this.individualProject = [];
-    this.configGroups = [];
-    this.projectsChosen = this.params.projects.length > 0;
+    this.individualProjects = []; // need to remove selected chips
+    this.groupedProjects = []; // need to remove selected chips
+    this.projectsChosen = false;
   }
 
   // TODO: update autocomplete
   chipChanged(chip, removal) {
-    // this.showFilters = false;
     this.params.expeditions = [];
-    this.groupAdded = typeof chip === 'string' ? true : false;
-
-    // If all chosen projects share the same configuration, retrieve specific config
-    this.sharedConfigs = new Set();
-    // check for uniqueness
-    this.params.projects.forEach(p =>
-      this.sharedConfigs.add(p.projectConfiguration.id),
-    );
-    const sharedConfigs = [...this.sharedConfigs];
-    if (this.params.projects.length === 1 || sharedConfigs.length === 1) {
-      this.ProjectConfigurationService.get(sharedConfigs[0]).then(
-        ({ config }) => {
-          return (this.config = config);
-        },
-      );
-      // if single project selected retrieve expeditions
-      if (this.params.projects.length === 1)
-        this.ExpeditionService.all(this.params.projects[0].projectId).then(
-          ({ data }) => (this.expeditions = data),
-        );
-    } else {
-      this.config = this.networkConfig;
-      this.expeditions = false;
-    }
+    this.groupAdded = typeof chip === 'string';
+    this.projectsChosen = this.individualProjects.length > 0 || this.groupedProjects.length > 0
+    this.singleProject = this.individualProjects.length === 1;
 
     // update parameters on add and remove chips
     if (!removal && this.groupAdded) {
@@ -189,10 +169,33 @@ class QueryFormController {
         this.params.projects.splice(index, 1);
       });
     }
-    this.projectsChosen = this.params.projects.length > 0;
+
+    // If all selected projects share the same configuration, retrieve specific config
+    // TODO: this will not work if projects with shared config are added as individuals
+    if (this.singleProject || this.groupedProjects.length === 1) {
+      this.match = this.projects.find(p => { 
+	return p.projectConfiguration.name === (this.groupedProjects[0] || this.individualProjects[0].projectConfiguration.name) 
+      })
+      this.ProjectConfigurationService.get(this.match.projectConfiguration.id).then(
+        ({ config }) => {
+          this.config = config;
+        },
+      );
+    }
+    else this.config = this.networkConfig;
+
+    // retrieve expeditions for single projects only
+    if (this.singleProject){
+      this.ExpeditionService.all(this.individualProjects[0].projectId).then(
+        ({ data }) => {
+          this.expeditions = data;
+        },
+      );
+    }
+    else this.expeditions = undefined; 
   }
 
-  addFilter() {
+  addFilter(filterType) {
     this.generateFilterOptions();
 
     const list = this.config.getList('markers');
@@ -200,21 +203,13 @@ class QueryFormController {
     this.markers = list ? list.fields : [];
     this.hasFastqEntity = this.config.entities.some(e => e.type === 'Fastq');
 
-    /*	  
-    if (this.resetExpeditions) {
-      console.log('resetting');
-      this.params.expeditions = [];
-    } else {
-      this.resetExpeditions = true;
-    } 
-
-*/
     const filter = Object.assign({}, defaultFilter, {
       column: this.filterOptions[0].column,
       type: this.getQueryTypes(this.filterOptions[0].column)[0],
     });
-    //    this.params.filters.push(filter);
-    this.params.events.push(filter);
+    if (filterType === 'event') this.params.events.push(filter);
+    if (filterType === 'specimen') this.params.specimens.push(filter);
+    if (filterType === 'tissue') this.params.tissues.push(filter);
   }
 
   queryJson() {
@@ -245,17 +240,6 @@ class QueryFormController {
       .finally(() => {
         this.toggleLoading({ val: false });
       });
-  }
-
-  helpDocs() {
-    const newWin = this.$window.open(
-      'http://fims.readthedocs.io/en/latest/fims/query.html',
-      '_blank',
-    );
-
-    if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
-      angular.toaster('It appears you have a popup blocker enabled');
-    }
   }
 
   getQueryTypes(column) {
@@ -293,10 +277,6 @@ class QueryFormController {
         ),
       [],
     );
-    this.filterOptionsGroups = this.filterOptions.reduce((accumulator, a) => {
-      if (!accumulator.includes(a.group)) accumulator.push(a.group);
-      return accumulator;
-    }, []);
     this.filterOptions.forEach(o => {
       if (o.group.includes('Event')) this.events.push(o);
       if (o.group.includes('Sample')) this.specimens.push(o);
