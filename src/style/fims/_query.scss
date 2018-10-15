@@ -267,6 +267,8 @@ $query-form-toggle-width: 40px;
 
   .search-row {
     flex-shrink: 0;
+    //TODO: this is related to the map drawing section, why it doesnt make its neighbors adjust? 
+    margin-top: 40px;
   }
 
   .data-policy {

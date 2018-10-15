@@ -68,6 +68,7 @@ class QueryFormController {
     this.ExpeditionService = ExpeditionService;
   }
 
+  // TODO: return table view by default on advanced search
   $onInit() {
     this.showGroups = true;
     this.loading = true;
@@ -86,7 +87,7 @@ class QueryFormController {
     this.ProjectService.all(true)
       .then(({ data }) => {
         this.projects = data;
-        let names = new Set();
+        const names = new Set();
         this.projects.forEach(e => {
           names.add(e.projectConfiguration.name);
           return names;
@@ -100,7 +101,7 @@ class QueryFormController {
       this.networkConfig = config;
     });
 
-    //Can you explain this?
+    // Can you explain this?
     const { q } = this.$location.search();
 
     if (q) {
@@ -135,64 +136,66 @@ class QueryFormController {
 
   clearParams() {
     this.params.projects = [];
+    this.projectsChosen = false;
     this.individualProjects = []; // need to remove selected chips
     this.groupedProjects = []; // need to remove selected chips
-    this.projectsChosen = false;
   }
 
-  // TODO: update autocomplete
+  // TODO: update autocomplete to remove selected chips
   chipChanged(chip, removal) {
     this.params.expeditions = [];
-    this.groupAdded = typeof chip === 'string';
-    this.projectsChosen = this.individualProjects.length > 0 || this.groupedProjects.length > 0
+    this.groupChip = typeof chip === 'string';
+    this.projectsChosen =
+      this.individualProjects.length > 0 || this.groupedProjects.length > 0;
     this.singleProject = this.individualProjects.length === 1;
 
     // update parameters on add and remove chips
-    if (!removal && this.groupAdded) {
+    if (!removal && this.groupChip) {
       this.projects.forEach(p => {
         if (p.projectConfiguration.name === chip) this.params.projects.push(p);
       });
-    } else if (!removal && !this.groupAdded) {
+    } else if (!removal && !this.groupChip) {
       this.projects.forEach(p => {
         if (p.projectId === chip.projectId) this.params.projects.push(p);
       });
-    } else if (removal && this.groupAdded) {
+    } else if (removal && this.groupChip) {
       this.projects.forEach(p => {
+        const index = this.params.projects.indexOf(p);
         if (p.projectConfiguration.name === chip)
-          var index = this.params.projects.indexOf(p);
-        this.params.projects.splice(index, 1);
+          this.params.projects.splice(index, 1);
       });
-    } else if (removal && !this.groupAdded) {
+    } else if (removal && !this.groupChip) {
       this.projects.forEach(p => {
+        const index = this.params.projects.indexOf(p);
         if (p.projectId === chip.projectId)
-          var index = this.params.projects.indexOf(p);
-        this.params.projects.splice(index, 1);
+          this.params.projects.splice(index, 1);
       });
     }
 
-    // If all selected projects share the same configuration, retrieve specific config
-    // TODO: this will not work if projects with shared config are added as individuals
+    // TODO: this will not work if projects with shared config are added individually
+    // If all selected projects share configuration, retrieve their specific configuration
     if (this.singleProject || this.groupedProjects.length === 1) {
-      this.match = this.projects.find(p => { 
-	return p.projectConfiguration.name === (this.groupedProjects[0] || this.individualProjects[0].projectConfiguration.name) 
-      })
-      this.ProjectConfigurationService.get(this.match.projectConfiguration.id).then(
-        ({ config }) => {
-          this.config = config;
-        },
+      this.firstMatchingConfig = this.projects.find(
+        p =>
+          p.projectConfiguration.name ===
+          (this.groupedProjects[0] ||
+            this.individualProjects[0].projectConfiguration.name),
       );
-    }
-    else this.config = this.networkConfig;
+      this.ProjectConfigurationService.get(
+        this.firstMatchingConfig.projectConfiguration.id,
+      ).then(({ config }) => {
+        this.config = config;
+      });
+    } else this.config = this.networkConfig;
 
     // retrieve expeditions for single projects only
-    if (this.singleProject){
+    if (this.singleProject) {
       this.ExpeditionService.all(this.individualProjects[0].projectId).then(
         ({ data }) => {
           this.expeditions = data;
         },
       );
-    }
-    else this.expeditions = undefined; 
+    } else this.expeditions = undefined;
   }
 
   addFilter(filterType) {
@@ -207,39 +210,10 @@ class QueryFormController {
       column: this.filterOptions[0].column,
       type: this.getQueryTypes(this.filterOptions[0].column)[0],
     });
+
     if (filterType === 'event') this.params.events.push(filter);
     if (filterType === 'specimen') this.params.specimens.push(filter);
     if (filterType === 'tissue') this.params.tissues.push(filter);
-  }
-
-  queryJson() {
-    this.toggleLoading({ val: true });
-
-    const projectIds = [];
-    this.params.projects.length > 0
-      ? this.params.projects.forEach(p => projectIds.push(p.projectId))
-      : undefined;
-
-    const selectEntities = ['Sample', 'fastqMetadata'];
-
-    this.QueryService.queryJson(
-      this.params.buildQuery(projectIds, selectEntities, SOURCE.join()),
-      'Event',
-      0,
-      10000,
-    )
-      .then(results => {
-        this.onNewResults({ results });
-        this.queryMap.clearBounds();
-        this.queryMap.setMarkers(results.data);
-      })
-      .catch(response => {
-        angular.catcher('Failed to load query results')(response);
-        this.onNewResults({ results: undefined });
-      })
-      .finally(() => {
-        this.toggleLoading({ val: false });
-      });
   }
 
   getQueryTypes(column) {
@@ -282,6 +256,35 @@ class QueryFormController {
       if (o.group.includes('Sample')) this.specimens.push(o);
       if (o.group.includes('Tissue')) this.tissues.push(o);
     });
+  }
+
+  queryJson() {
+    this.toggleLoading({ val: true });
+    const projectIds = [];
+    const selectEntities = ['Sample', 'fastqMetadata'];
+
+    if (this.params.projects.length > 0) {
+      this.params.projects.forEach(p => projectIds.push(p.projectId));
+    }
+
+    this.QueryService.queryJson(
+      this.params.buildQuery(projectIds, selectEntities, SOURCE.join()),
+      'Event',
+      0,
+      10000,
+    )
+      .then(results => {
+        this.onNewResults({ results });
+        this.queryMap.clearBounds();
+        this.queryMap.setMarkers(results.data);
+      })
+      .catch(response => {
+        angular.catcher('Failed to load query results')(response);
+        this.onNewResults({ results: undefined });
+      })
+      .finally(() => {
+        this.toggleLoading({ val: false });
+      });
   }
 }
 

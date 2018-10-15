@@ -13,8 +13,9 @@
     </div>
     <div ng-show="$ctrl.moreSearchOptions" class="radio" ng-click="$ctrl.clearParams()">
       <a ng-click="$ctrl.showGroups = !$ctrl.showGroups">
-        <span ng-show="!$ctrl.showGroups">Search by project family</span>
-        <span ng-show="$ctrl.showGroups">Search by individual project</span>
+	<!-- what icon would be more informative here? -->
+        <span class="fa fa-chevron-up fa-xs" ng-show="!$ctrl.showGroups"> Search by project family</span>
+        <span class="fa fa-chevron-down fa-xs" ng-show="$ctrl.showGroups"> Search by individual project</span>
       </a>
     </div>
 
@@ -290,9 +291,9 @@
     </section>
 
 
-  <section class="sequences" ng-show="$ctrl.hasFastqEntity || $ctrl.markers">
-    <a href="#" ng-click="$ctrl.showSequences = !$ctrl.showSequences" class="md-subhead bold">Sequences</a>
-    <div class="md-form-group" ng-show="$ctrl.showSequences" layout="column" layout-margin>
+  <section class="sequences" ng-show="$ctrl.hasFastqEntity || $ctrl.markers" layout-gt-sm="row" layout-padding>
+    <a href="#" class="md-subhead bold" flex>Sequences</a>
+    <div class="md-form-group" layout="column" layout-margin flex="65">
       <div layout="row" ng-show="$ctrl.hasFastqEntity">
         <md-checkbox class="small" ng-model="$ctrl.params.hasSRAAccessions" name="hasSraAccessions">
           has NCBI
@@ -314,11 +315,11 @@
 
   <div class="search-row" layout="row" layout-align="end center">
     <md-button type="submit" ng-click="$ctrl.params.projects.length > 0 ? $ctrl.queryJson() : '';" class="md-raised md-primary">
-      <md-tooltip ng-show="$ctrl.params.projects.length < 1" md-direction="top">Select a project</md-tooltip>
+      <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
       <span class="fa fa-search"></span> Search
     </md-button>
   </div>
-  <span flex></span>
+
   <div class="data-policy" layout="column" layout-align="center center">
     <md-divider></md-divider>
     <i>Data is subject to our <a ui-sref="about({'#':'dataPolicy'})"> Data Usage Policy</a>.</i>
