@@ -29,7 +29,6 @@ class PlateViewerController {
     currentUser,
     canEdit,
     newPlate,
-    expeditions,
   ) {
     'ngInject';
 
@@ -44,7 +43,6 @@ class PlateViewerController {
     this.currentUser = currentUser;
     this.canEdit = canEdit;
     this.newPlate = newPlate || false;
-    this.expeditions = expeditions;
 
     this.searchTexts = {};
     this.editedData = {};
@@ -73,12 +71,7 @@ class PlateViewerController {
     if (!this.canEdit) return false;
 
     const t = this.plateData[row][column];
-    return (
-      t &&
-      t.tissueID &&
-      (this.currentUser.userId === this.currentProject.user.userId ||
-        this.expeditions.includes(this.plateData[row][column].expeditionCode))
-    );
+    return t && t.tissueID;
   }
 
   dataChanged(row, column) {
@@ -136,10 +129,17 @@ class PlateViewerController {
 
     const remove = () => {
       delete this.plateData[row][column];
-      this.RecordService.delete(t.bcid).catch(e => {
-        angular.catcher('Failed to delete tissue')(e);
-        this.plateData[row][column] = t;
-      });
+      this.RecordService.delete(t.bcid)
+        .then(() => {
+          // new plate if there are no more tissues
+          this.newPlate = !Object.keys(this.plateData).some(r =>
+            Object.keys(this.plateData[r]).some(c => this.plateData[r][c]),
+          );
+        })
+        .catch(e => {
+          angular.catcher('Failed to delete tissue')(e);
+          this.plateData[row][column] = t;
+        });
     };
 
     // when we create a new tissue in a plate, we only create
@@ -228,9 +228,7 @@ class PlateViewerController {
 
     const builder = new QueryBuilder();
     builder.add(
-      `_projects_:${
-        this.currentProject.projectId
-      } AND _expeditions_:[${this.expeditions.join()}] AND ${
+      `_projects_:${this.currentProject.projectId} AND ${
         parentEntity.conceptAlias
       }.${parentEntity.uniqueKey}::"%${searchText}%"`,
     );
@@ -264,7 +262,6 @@ class PlatesController {
     this.RecordService = RecordService;
     this.ExpeditionService = ExpeditionService;
     this.QueryService = QueryService;
-    this.hasExpeditions = false;
     this.validationMessages = {};
   }
 
@@ -283,17 +280,10 @@ class PlatesController {
       }
       this.plates = [];
       this.plateData = undefined;
+      this.hashedSample = this.currentProject.config.entities.some(
+        e => e.conceptAlias === 'Sample' && e.hashed,
+      );
       this.fetchPlates();
-      if (this.currentUser) {
-        this.fetchExpeditions();
-      }
-    }
-
-    if (
-      'currentUser' in changesObj &&
-      changesObj.currentUser.previousValue !== this.currentUser
-    ) {
-      this.fetchExpeditions();
     }
   }
 
@@ -311,11 +301,9 @@ class PlatesController {
           RecordService: this.RecordService,
           currentProject: this.currentProject,
           currentUser: this.currentUser,
-          canEdit: this.currentProject.currentUserIsMember,
+          canEdit:
+            this.currentProject.currentUserIsMember && !this.hashedSample,
           newPlate: this.isNewPlate,
-        },
-        resolve: {
-          expeditions: () => this.expeditionPromise,
         },
         controller: PlateViewerController,
         controllerAs: '$ctrl',
@@ -344,6 +332,7 @@ class PlatesController {
   }
 
   newPlate(ev) {
+    if (this.hashedSample) return;
     this.$mdDialog
       .show({
         targetEvent: ev,
@@ -395,34 +384,6 @@ class PlatesController {
         this.plates = plates.sort();
       })
       .finally(() => (this.loading = false));
-  }
-
-  fetchExpeditions() {
-    if (!this.currentUser || !this.currentProject || this.loadingExpeditions) {
-      if (!this.loadingExpeditions) {
-        this.expeditionPromise = Promise.resolve([]);
-      }
-      return;
-    }
-
-    this.loadingExpeditions = true;
-
-    const p =
-      this.currentProject.user.userId === this.currentUser.userId
-        ? this.ExpeditionService.getExpeditionsForAdmin(
-            this.currentProject.projectId,
-          )
-        : this.ExpeditionService.getExpeditionsForUser(
-            this.currentProject.projectId,
-            true,
-          );
-
-    this.expeditionPromise = p
-      .then(resp => {
-        this.hasExpeditions = resp.data.length > 0;
-        return resp.data.map(e => e.expeditionCode);
-      })
-      .finally(() => (this.loadingExpeditions = false));
   }
 }
 
