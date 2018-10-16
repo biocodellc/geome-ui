@@ -214,6 +214,10 @@ class QueryFormController {
     if (filterType === 'event') this.params.events.push(filter);
     if (filterType === 'specimen') this.params.specimens.push(filter);
     if (filterType === 'tissue') this.params.tissues.push(filter);
+    this.params.filters = this.params.events.concat(
+      this.params.specimens,
+      this.params.tissues,
+    ); 
   }
 
   getQueryTypes(column) {
@@ -285,6 +289,7 @@ class QueryFormController {
       .finally(() => {
         this.toggleLoading({ val: false });
       });
+    // console.log(this.params.filters)
   }
 }
 
