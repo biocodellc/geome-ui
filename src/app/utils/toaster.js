@@ -12,7 +12,7 @@ export default $mdToast => {
       .simple()
       .textContent(msg)
       .position('bottom right')
-      .parent(angular.element('#toast-container'));
+      .parent(angular.element(document.querySelector('#toast-container')));
 
     Object.assign(t._options, opts);
 

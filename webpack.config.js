@@ -233,11 +233,7 @@ module.exports = (function makeWebpackConfig() {
    * List: http://webpack.github.io/docs/list-of-plugins.html
    */
   config.plugins = [
-    // todo remove the jquery and use only angular-ui-bootstrap
     new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-      'window.jQuery': 'jquery',
       L: 'leaflet',
     }),
 
