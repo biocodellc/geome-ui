@@ -73,6 +73,19 @@ const mdAutocomplete = /* ngInject */ ($timeout, $mdUtil) => {
         origKeydown(event, ...args);
       };
 
+      // track when mouse is in the suggestions list & prevent bluring
+      let inList = false;
+      const origListEnter = ctrl.listEnter;
+      ctrl.listEnter = (...args) => {
+        inList = true;
+        origListEnter(args);
+      };
+      const origListLeave = ctrl.listLeave;
+      ctrl.listLeave = (...args) => {
+        inList = false;
+        origListLeave(args);
+      };
+
       const origBlur = ctrl.blur;
       ctrl.blur = (...args) => {
         if (!ctrl.scope.requireMatch && attrs.mdOnAddNewItem) {
@@ -91,7 +104,12 @@ const mdAutocomplete = /* ngInject */ ($timeout, $mdUtil) => {
           }
         }
 
-        if (mdClearOnBlur && !ctrl.scope.selectedItem) {
+        // mdAutocomplete uses the ng-blur directive on the input & ng-click directive to select the
+        // item in the list. ng-blur will fire before the ng-click causing the following code to run before
+        // the selection has occurred, thus resulting in the autocomplete being closed & cleared w/o selecting
+        // the item we clicked. We prevent clearing searchText here if the mouse is in the suggestions list
+        // to ensure that ng-click can run appropriately
+        if (mdClearOnBlur && !inList && !ctrl.scope.selectedItem) {
           ctrl.scope.searchText = '';
         }
 
