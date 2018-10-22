@@ -26,9 +26,9 @@
         <div flex layout="row">
           <span flex></span>
           <div>
-            <md-button ng-show="!$ctrl.loading && $ctrl.plates.length === 0 && !$ctrl.currentUser" ng-click="$ctrl.login()"
-              class="md-raised md-primary">Sign In
-            </md-button>
+	    <p ng-show="!$ctrl.loading && !$ctrl.currentUser">If you'd like to add a plate, please <a href="" ng-click="$ctrl.login()"
+		class="md-raised md-primary">Sign In</a>
+            </p>
             <md-button ng-show="$ctrl.currentUser && !$ctrl.hashedSample" ng-click="$ctrl.newPlate($event)" class="md-raised md-primary">New
               Plate</md-button>
           </div>
