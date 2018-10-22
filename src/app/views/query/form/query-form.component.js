@@ -73,12 +73,8 @@ class QueryFormController {
     this.showGroups = true;
     this.loading = true;
     this.resetExpeditions = true;
-    this.params.projects = [];
     this.groupedProjects = [];
     this.individualProjects = [];
-    this.params.events = [];
-    this.params.specimens = [];
-    this.params.tissues = [];
     this.events = [];
     this.specimens = [];
     this.tissues = [];
@@ -90,7 +86,6 @@ class QueryFormController {
         const names = new Set();
         this.projects.forEach(e => {
           names.add(e.projectConfiguration.name);
-          return names;
         });
         this.configNames = Array.from(names);
       })
@@ -101,7 +96,6 @@ class QueryFormController {
       this.networkConfig = config;
     });
 
-    // Can you explain this?
     const { q } = this.$location.search();
 
     if (q) {
@@ -184,9 +178,9 @@ class QueryFormController {
       this.ProjectConfigurationService.get(
         this.firstMatchingConfig.projectConfiguration.id,
       ).then(({ config }) => {
-        this.config = config;
+        this.params.config = config;
       });
-    } else this.config = this.networkConfig;
+    } else this.params.config = this.networkConfig;
 
     // retrieve expeditions for single projects only
     if (this.singleProject) {
@@ -201,10 +195,12 @@ class QueryFormController {
   addFilter(filterType) {
     this.generateFilterOptions();
 
-    const list = this.config.getList('markers');
+    const list = this.params.config.getList('markers');
 
     this.markers = list ? list.fields : [];
-    this.hasFastqEntity = this.config.entities.some(e => e.type === 'Fastq');
+    this.hasFastqEntity = this.params.config.entities.some(
+      e => e.type === 'Fastq',
+    );
 
     const filter = Object.assign({}, defaultFilter, {
       column: this.filterOptions[0].column,
@@ -217,7 +213,7 @@ class QueryFormController {
     this.params.filters = this.params.events.concat(
       this.params.specimens,
       this.params.tissues,
-    ); 
+    );
   }
 
   getQueryTypes(column) {
@@ -241,7 +237,7 @@ class QueryFormController {
   }
 
   generateFilterOptions() {
-    this.filterOptions = this.config.entities.reduce(
+    this.filterOptions = this.params.config.entities.reduce(
       (accumulator, entity) =>
         accumulator.concat(
           entity.attributes.filter(a => !a.internal).map(a => ({
@@ -250,7 +246,7 @@ class QueryFormController {
               : `${entity.conceptAlias} Default Group`,
             column: `${entity.conceptAlias}.${a.column}`,
             dataType: a.dataType,
-            list: this.config.findListForColumn(entity, a.column),
+            list: this.params.config.findListForColumn(entity, a.column),
           })),
         ),
       [],
@@ -264,15 +260,10 @@ class QueryFormController {
 
   queryJson() {
     this.toggleLoading({ val: true });
-    const projectIds = [];
     const selectEntities = ['Sample', 'fastqMetadata'];
 
-    if (this.params.projects.length > 0) {
-      this.params.projects.forEach(p => projectIds.push(p.projectId));
-    }
-
     this.QueryService.queryJson(
-      this.params.buildQuery(projectIds, selectEntities, SOURCE.join()),
+      this.params.buildQuery(selectEntities, SOURCE.join()),
       'Event',
       0,
       10000,
@@ -289,7 +280,6 @@ class QueryFormController {
       .finally(() => {
         this.toggleLoading({ val: false });
       });
-    // console.log(this.params.filters)
   }
 }
 
@@ -300,7 +290,6 @@ export default {
     params: '<',
     queryMap: '<',
     currentUser: '<',
-    onProjectChange: '&',
     onNewResults: '&',
     toggleLoading: '&',
   },

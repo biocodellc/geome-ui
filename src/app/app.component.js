@@ -103,7 +103,7 @@ class AppCtrl {
       });
     }
   }
-
+  // I believe this can be removed now?
   handleProjectChange(project) {
     this.loading = true;
     this.ProjectService.setCurrentProject(project);

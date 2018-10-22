@@ -33,9 +33,8 @@
   <md-sidenav flex="33" class="md-sidenav-left sidebar" md-component-id='left' md-disable-backdrop md-is-locked-open="$ctrl.showSidebar"
     md-whiteframe="4">
     <fims-query-form params="$ctrl.params" on-new-results="$ctrl.handleNewResults(results)" query-map="$ctrl.queryMap"
-      class="query-form" current-project="$ctrl.currentProject" expeditions="$ctrl.expeditions" markers="$ctrl.markers"
-      filter-options="$ctrl.filterOptions" current-user="$ctrl.currentUser" on-project-change="$ctrl.handleProjectChange(project)"
-      toggle-loading="$ctrl.toggleLoading(val)" layout-padding></fims-query-form>
+      class="query-form" expeditions="$ctrl.expeditions" markers="$ctrl.markers" filter-options="$ctrl.filterOptions"
+      current-user="$ctrl.currentUser" toggle-loading="$ctrl.toggleLoading(val)" layout-padding></fims-query-form>
   </md-sidenav>
 
   <!-- sidebar toggle -->

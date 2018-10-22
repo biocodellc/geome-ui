@@ -4,23 +4,13 @@ import QueryParams from './QueryParams';
 const template = require('./query.html');
 
 class QueryController {
-  constructor(
-    $state,
-    $timeout,
-    $location,
-    QueryService,
-    ExpeditionService,
-    ProjectService,
-    StorageService,
-  ) {
+  constructor($state, $timeout, $location, QueryService, StorageService) {
     'ngInject';
 
     this.$state = $state;
     this.$timeout = $timeout;
     this.$location = $location;
     this.QueryService = QueryService;
-    this.ExpeditionService = ExpeditionService;
-    this.ProjectService = ProjectService;
     this.StorageService = StorageService;
   }
 
@@ -31,10 +21,6 @@ class QueryController {
       'event.decimalLatitude',
       'event.decimalLongitude',
     );
-
-    if (this.currentProject) {
-      this.handleProjectChange(this.currentProject);
-    }
 
     this.showSidebar = true;
     this.showMap = true;
@@ -48,9 +34,8 @@ class QueryController {
 
   downloadExcel() {
     this.loading = true;
-    const { projectId } = this.currentProject;
     this.QueryService.downloadExcel(
-      this.params.buildQuery(projectId, this.selectEntities()),
+      this.params.buildQuery(this.selectEntities()),
       'Event',
     ).finally(() => {
       this.loading = false;
@@ -59,9 +44,8 @@ class QueryController {
 
   downloadCsv() {
     this.loading = true;
-    const { projectId } = this.currentProject;
     this.QueryService.downloadCsv(
-      this.params.buildQuery(projectId, this.selectEntities()),
+      this.params.buildQuery(this.selectEntities()),
       'Event',
     ).finally(() => {
       this.loading = false;
@@ -70,12 +54,8 @@ class QueryController {
 
   downloadFasta() {
     this.loading = true;
-    const { projectId } = this.currentProject;
     this.QueryService.downloadFasta(
-      this.params.buildQuery(
-        projectId,
-        this.selectEntities().concat(['Event']),
-      ),
+      this.params.buildQuery(this.selectEntities().concat(['Event'])),
       'fastaSequence',
     ).finally(() => {
       this.loading = false;
@@ -83,7 +63,7 @@ class QueryController {
   }
 
   selectEntities() {
-    return this.currentProject.config.entities
+    return this.params.config.entities
       .filter(e => ['Sample', 'Tissue'].includes(e.conceptAlias))
       .map(e => e.conceptAlias);
   }
@@ -106,21 +86,6 @@ class QueryController {
     this.$timeout(() => this.queryMap.refreshSize(), 500);
   }
 
-  handleProjectChange(project) {
-    if (!project.config) {
-      this.toggleLoading(true);
-      this.ProjectService.get(project.projectId).then(p => {
-        this.currentProject = p;
-        this.toggleLoading(false);
-      });
-    } else {
-      this.currentProject = project;
-    }
-    this.ExpeditionService.all(project.projectId).then(expeditions => {
-      this.expeditions = expeditions.data;
-    });
-  }
-
   toggleLoading(val) {
     this.loading = val;
   }
@@ -131,7 +96,6 @@ export default {
   controller: QueryController,
   bindings: {
     currentUser: '<',
-    currentProject: '<',
     layout: '@',
     layoutFill: '@',
   },
