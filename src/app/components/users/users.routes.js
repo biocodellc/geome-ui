@@ -8,14 +8,6 @@ function getStates() {
       },
     },
     {
-      state: 'create',
-      config: {
-        parent: 'containerPageView',
-        url: '/user/create?id&email',
-        component: 'fimsNewUser',
-      },
-    },
-    {
       state: 'profile',
       config: {
         parent: 'projectView',

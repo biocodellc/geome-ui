@@ -45,9 +45,12 @@
         </md-input-container>
         <md-input-container>
           <label>Password</label>
-          <input name="password" type="password" ng-model="$ctrl.user.password" required tabindex="6">
+          <input name="password" type="password" ng-model="$ctrl.user.password" required tabindex="6"
+            password-strength="passStrength" min-password-strength="50" />
+          <div ng-password-strength="$ctrl.user.password" strength="passStrength" ng-hide="true"></div>
           <div ng-messages="form.password.$error">
             <div ng-message="required">Password is required.</div>
+            <div ng-message="passwordStrength">Password is not strong enough.</div>
           </div>
         </md-input-container>
         <md-input-container>

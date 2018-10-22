@@ -6,9 +6,6 @@ import ngAnimate from 'angular-animate';
 import ngMessages from 'angular-messages';
 import filter from 'angular-filter';
 
-// todo remove the following and use only angular-ui-bootstrap
-import 'jquery-ui';
-
 // this loads the css for the app
 import '../style/bootstrap.scss';
 import '../style/app.scss';

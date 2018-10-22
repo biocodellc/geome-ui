@@ -19,6 +19,86 @@ const compareTo = () => ({
 });
 
 /**
+ * custom form validator to check password strength
+ */
+const passwordStrength = /* ngInject */ $compile => ({
+  restrict: 'A',
+  require: 'ngModel',
+  scope: {
+    passwordStrength: '<',
+    minPasswordStrength: '<',
+    passwordStrengthIcons: '=',
+  },
+  link(scope, element, attrs, ctrl) {
+    const ngModelOptions = scope.$eval(attrs.ngModelOptions);
+    if (!ngModelOptions || ngModelOptions.allowInvalid === undefined) {
+      ctrl.$options.$$options.allowInvalid = true;
+    }
+
+    const showIcons =
+      scope.$eval(scope.passwordStrengthIcons) ||
+      attrs.passwordStrengthIcons === '';
+
+    const validElement = $compile(
+      angular.element(
+        '<md-icon md-font-icon="fa fa-check fa-xs" class="strong-password"></md-icon>',
+      ),
+    )(scope);
+
+    const invalidElement = $compile(
+      angular.element(
+        '<md-icon md-font-icon="fa fa-close fa-xs" class="weak-password"></md-icon>',
+      ),
+    )(scope);
+
+    const wrapper = angular.element('<div class="password-wrapper"></div>');
+    element.wrap(wrapper);
+
+    const checkValidity = modelValue => {
+      if (ctrl.$isEmpty(modelValue)) {
+        if (ctrl.$touched && showIcons) {
+          invalidElement.remove();
+        }
+        ctrl.$setValidity('passwordStrength', true);
+      }
+
+      if (scope.passwordStrength >= parseInt(scope.minPasswordStrength, 10)) {
+        if (ctrl.$touched && showIcons) {
+          invalidElement.remove();
+          element.after(validElement);
+        }
+        ctrl.$setValidity('passwordStrength', true);
+        return;
+      }
+
+      if (ctrl.$touched && showIcons) {
+        validElement.remove();
+        element.after(invalidElement);
+      }
+      ctrl.$setValidity('passwordStrength', false);
+    };
+
+    // we use a watch instead of ctrl.$validators.passwordStrength b/c we need to validator to be called
+    // after the passwordStrength val is updated. Using $validators, it is called before
+    scope.$watch('passwordStrength', () => {
+      checkValidity(ctrl.$modelValue);
+    });
+
+    element.on('blur', () => {
+      if (!ctrl.$touched && showIcons) {
+        if (scope.passwordStrength >= parseInt(scope.minPasswordStrength, 10)) {
+          invalidElement.remove();
+          element.after(validElement);
+        } else {
+          validElement.remove();
+          element.after(invalidElement);
+        }
+      }
+    });
+  },
+});
+
+/**
  * Custom form validator for username
  */
 const username = /* ngInject */ UserService => ({
@@ -26,7 +106,7 @@ const username = /* ngInject */ UserService => ({
   require: 'ngModel',
   link: (scope, element, attrs, ctrl) => {
     ctrl.$asyncValidators.username = modelValue => {
-      if (ctrl.$isEmpty(modelValue)) return true;
+      if (ctrl.$isEmpty(modelValue)) return Promise.resolve();
 
       return UserService.get(modelValue).then(user => {
         // user exists
@@ -45,7 +125,7 @@ const projectTitle = /* ngInject */ ProjectService => ({
   require: 'ngModel',
   link: (scope, element, attrs, ctrl) => {
     ctrl.$asyncValidators.projectTitle = modelValue => {
-      if (ctrl.$isEmpty(modelValue)) return true;
+      if (ctrl.$isEmpty(modelValue)) return Promise.resolve();
 
       return ProjectService.find(true, modelValue).then(({ data }) => {
         // rejected promises are invalid
@@ -58,5 +138,6 @@ const projectTitle = /* ngInject */ ProjectService => ({
 export default angular
   .module('fims.formValidators', [])
   .directive('compareTo', compareTo)
+  .directive('passwordStrength', passwordStrength)
   .directive('username', username)
   .directive('projectTitle', projectTitle).name;
