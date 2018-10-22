@@ -54,8 +54,7 @@
             </md-autocomplete>
             <md-chip-template>
               <span>
-                <strong ng-if="$chip.projectTitle.includes($chip.projectCode)">{{$chip.projectTitle}}</strong>
-                <strong ng-if="!$chip.projectTitle.includes($chip.projectCode)">{{$chip.projectCode}}::{{$chip.projectTitle}}</strong>
+                <strong>{{$chip.projectTitle}}</strong>
               </span>
             </md-chip-template>
           </md-chips>
@@ -64,13 +63,34 @@
     </section>
   </div>
 
-  <section layout-gt-sm="row" layout-align="center center" layout-padding>
+  <section class="expeditions" ng-show="$ctrl.moreSearchOptions&&$ctrl.singleProject" layout-gt-sm="row" layout-align="center center"
+      layout-padding>
+      <a href="#" class="md-subhead bold" flex>Expeditions</a>
+        <md-chips ng-model="$ctrl.params.expeditions" md-require-match flex="65">
+          <md-autocomplete md-selected-item="$ctrl.selectedExpedition" md-no-cache md-autocomplete-snap="width"
+            md-search-text="$ctrl.searchText" md-items="item in $ctrl.expeditions | filter: {projectTitle: searchText}"
+            md-item-text="item.expeditionTitle" md-dropdown-position="bottom" md-min-length="0" placeholder="Expedition Name ...">
+            <span md-highlight-text="$ctrl.searchText" md-highlight-flags="i">{{item.expeditionTitle}}</span>
+          </md-autocomplete>
+          <md-chip-template>
+            <span>
+              <strong>{{$chip.expeditionTitle}}</strong>
+            </span>
+          </md-chip-template>
+        </md-chips>
+  </section>
+
+
+  <section class="term" layout-gt-sm="row" layout-align="center center" layout-padding>
     <a href="#" class="md-subhead bold" flex>Any Term</a>
-    <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
       <md-input-container flex="65" class="md-icon-float md-icon-right md-block" layout="row">
         <input type="text" placeholder="Query String..." ng-model="$ctrl.params.queryString" flex="70"/>
-	<a href="http://fims.readthedocs.io/en/latest/fims/query.html" target="_blank"><md-icon md-font-icon="fa fa-question-circle fa-sm">
-        </md-icon></a>
+	<md-button class="md-icon-button help-link md-popover-button">
+                    <md-popover md-popover-class="fastq-help-filenames" md-direction="below">
+			    <div>Hi! I'm a popover</div>
+                    </md-popover>
+                    <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
+        </md-button>
       </md-input-container>
   </section>
 
@@ -150,28 +170,7 @@
 
   <div ng-show="$ctrl.moreSearchOptions">
 
-    <section class="expeditions" ng-show="$ctrl.moreSearchOptions" layout-gt-sm="row" layout-align="center center"
-      layout-padding>
-      <a href="#" class="md-subhead bold" flex>Expeditions</a>
-      <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
-      <md-tooltip ng-show="!$ctrl.singleProject&&$ctrl.projectsChosen">Select a single project</md-tooltip>
-      <div flex="65">
-        <md-chips ng-model="$ctrl.params.expeditions" md-require-match>
-          <md-autocomplete ng-disabled="!$ctrl.expeditions" md-selected-item="$ctrl.selectedExpedition" md-no-cache md-autocomplete-snap="width"
-            md-search-text="$ctrl.searchText" md-items="item in $ctrl.expeditions | filter: {projectTitle: searchText}"
-            md-item-text="item.expeditionTitle" md-dropdown-position="bottom" md-min-length="0" placeholder="Expedition Name ...">
-            <span md-highlight-text="$ctrl.searchText" md-highlight-flags="i">{{item.expeditionTitle}}</span>
-          </md-autocomplete>
-          <md-chip-template>
-            <span>
-              <strong ng-if="$chip.expeditionTitle.includes($chip.expeditionCode)">{{$chip.expeditionTitle}}</strong>
-              <strong ng-if="!$chip.expeditionTitle.includes($chip.expeditionCode)">{{$chip.expeditionCode}}::{{$chip.expeditionTitle}}</strong>
-            </span>
-          </md-chip-template>
-        </md-chips>
-      </div>
-    </section>
-
+	  <div class="filters">
     <section layout-gt-sm="row" layout-align="center center" layout-padding>
       <a href="#" class="md-subhead bold" flex>Events</a>
       <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
@@ -285,6 +284,7 @@
         </div>
       </div>
     </section>
+	  </div>
 
 
   <section class="sequences" ng-show="$ctrl.hasFastqEntity || $ctrl.markers" layout-gt-sm="row" layout-padding>
@@ -310,8 +310,7 @@
   </div>
 
   <div class="search-row" layout="row" layout-align="end center">
-    <md-button type="submit" ng-click="$ctrl.params.projects.length > 0 ? $ctrl.queryJson() : '';" class="md-raised md-primary">
-      <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
+    <md-button type="submit" ng-click="$ctrl.queryJson()" class="md-raised md-primary">
       <span class="fa fa-search"></span> Search
     </md-button>
   </div>

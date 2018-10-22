@@ -94,10 +94,6 @@ $query-form-toggle-width: 40px;
     position: relative;
     z-index: 1; //z-index of loading-overlay class will only affect this element
   }
-  //TODO: fix this with better solution
-  .expeditions {
-    margin-top: 60px;
-  }
 
   section {
     margin-bottom: $layout-gutter-width * 2;
@@ -166,8 +162,16 @@ $query-form-toggle-width: 40px;
       width: 100%;
     }
   }
+  // TODO:this has got to expand when expeditions are added 
+  .term {
+     margin-top: 0; 
+   }
 
   .filters {
+
+   // TODO: this has got to expand without forcing the margin 
+
+    margin-top: 60px;
     .filter-button {
       margin-top: 0;
     }
@@ -214,7 +218,7 @@ $query-form-toggle-width: 40px;
         }
       }
     }
-  }
+  } 
 
   md-optgroup {
     label {

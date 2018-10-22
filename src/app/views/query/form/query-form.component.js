@@ -193,6 +193,7 @@ class QueryFormController {
   }
 
   addFilter(filterType) {
+    // TODO: fix bug with adding filters. ex: eventID is added automatically, but none of the others are??
     this.generateFilterOptions();
 
     const list = this.params.config.getList('markers');
