@@ -13,7 +13,7 @@
     <div ng-show="$ctrl.loading" class="loading-overlay">
       <md-progress-circular md-mode="indeterminate"></md-progress-circular>
     </div>
-    <div ng-show="$ctrl.moreSearchOptions" class="radio" ng-click="$ctrl.clearParams()">
+    <div ng-show="$ctrl.moreSearchOptions" ng-click="$ctrl.clearParams()">
       <a ng-click="$ctrl.showGroups = !$ctrl.showGroups">
 	<!-- what icon would be more informative here? -->
         <span class="fa fa-chevron-up fa-xs" ng-show="!$ctrl.showGroups"> Search by project family</span>
@@ -62,8 +62,9 @@
       </div>
     </section>
   </div>
-
-  <section class="expeditions" ng-show="$ctrl.moreSearchOptions&&$ctrl.singleProject" layout-gt-sm="row" layout-align="center center"
+ 
+  <div class="expeditions">
+    <section ng-show="$ctrl.moreSearchOptions&&$ctrl.expeditions" layout-gt-sm="row" layout-align="center center"
       layout-padding>
       <a href="#" class="md-subhead bold" flex>Expeditions</a>
         <md-chips ng-model="$ctrl.params.expeditions" md-require-match flex="65">
@@ -78,7 +79,8 @@
             </span>
           </md-chip-template>
         </md-chips>
-  </section>
+     </section>
+  </div>
 
 
   <section class="term" layout-gt-sm="row" layout-align="center center" layout-padding>
@@ -87,7 +89,7 @@
         <input type="text" placeholder="Query String..." ng-model="$ctrl.params.queryString" flex="70"/>
 	<md-button class="md-icon-button help-link md-popover-button">
                     <md-popover md-popover-class="fastq-help-filenames" md-direction="below">
-			    <div>Hi! I'm a popover</div>
+			    <div>Type any word or phrase here to query all collecting event, sample, and tissue fields</div>
                     </md-popover>
                     <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
         </md-button>

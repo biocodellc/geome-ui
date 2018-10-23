@@ -149,26 +149,7 @@ $query-form-toggle-width: 40px;
     }
   }
 
-  .expeditions {
-    md-chips {
-      margin-top: 0;
-    }
-
-    md-autocomplete[md-floating-label] .md-show-clear-button button {
-      top: 0;
-    }
-
-    .md-chip-input-container {
-      width: 100%;
-    }
-  }
-  // TODO:this has got to expand when expeditions are added 
-  .term {
-     margin-top: 0; 
-   }
-
   .filters {
-
    // TODO: this has got to expand without forcing the margin 
 
     margin-top: 60px;

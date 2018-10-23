@@ -130,6 +130,7 @@ class QueryFormController {
 
   clearParams() {
     this.params.projects = [];
+    this.params.expeditions = [];
     this.projectsChosen = false;
     this.individualProjects = []; // need to remove selected chips
     this.groupedProjects = []; // need to remove selected chips
