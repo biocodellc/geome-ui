@@ -94,7 +94,9 @@ class QueryFormController {
     // Retrieve General Configurations
     this.NetworkConfigurationService.get().then(config => {
       this.networkConfig = config;
-    });
+      this.phylums = this.networkConfig.getList('phylum').fields
+      this.countries = this.networkConfig.getList('country').fields
+    })
 
     const { q } = this.$location.search();
 
@@ -131,6 +133,10 @@ class QueryFormController {
   clearParams() {
     this.params.projects = [];
     this.params.expeditions = [];
+    this.params.filters = [];
+    this.params.events = [];
+    this.params.specimens = [];
+    this.params.tissues = []; //easier way to clear all these guys?
     this.projectsChosen = false;
     this.individualProjects = []; // need to remove selected chips
     this.groupedProjects = []; // need to remove selected chips

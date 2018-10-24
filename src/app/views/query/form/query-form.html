@@ -23,8 +23,8 @@
 
     <!--TODO: fix format issues when multiple chips are selected-->
     <section class="groups" layout-gt-sm="row" layout-align="center center" layout-padding ng-show="$ctrl.showGroups">
-      <a href="#" class="md-subhead bold" flex>Project Family</a>
-        <md-content flex="65">
+      <h3 class="md-subhead bold" flex>Project Family</h3>
+        <div flex="65">
           <md-chips ng-model="$ctrl.groupedProjects" md-on-add="$ctrl.chipChanged($chip)"
             md-on-remove="$ctrl.chipChanged($chip,$event)" md-require-match>
             <md-autocomplete md-selected-item="$ctrl.selectedGroup" md-no-cache md-autocomplete-snap="width"
@@ -38,12 +38,11 @@
               </span>
             </md-chip-template>
           </md-chips>
-        </md-content>
+        </div>
     </section>
     <section class="individual" layout-gt-sm="row" layout-align="center center" layout-padding ng-show="$ctrl.moreSearchOptions && !$ctrl.showGroups">
-      <a href="#" class="md-subhead bold" flex>Individual Projects</a>
+      <h3 class="md-subhead bold" flex>Individual Projects</h3>
       <div flex="65">
-        <md-content>
           <md-chips ng-model="$ctrl.individualProjects" md-on-add="$ctrl.chipChanged($chip)"
             md-on-remove="$ctrl.chipChanged($chip,$event)" md-require-match>
             <md-autocomplete md-selected-item="$ctrl.selectedProject" md-no-cache md-autocomplete-snap="width"
@@ -58,7 +57,6 @@
               </span>
             </md-chip-template>
           </md-chips>
-        </md-content>
       </div>
     </section>
   </div>
@@ -66,7 +64,7 @@
   <div class="expeditions">
     <section ng-show="$ctrl.moreSearchOptions&&$ctrl.expeditions" layout-gt-sm="row" layout-align="center center"
       layout-padding>
-      <a href="#" class="md-subhead bold" flex>Expeditions</a>
+      <h3 class="md-subhead bold" flex>Expeditions</h3>
         <md-chips ng-model="$ctrl.params.expeditions" md-require-match flex="65">
           <md-autocomplete md-selected-item="$ctrl.selectedExpedition" md-no-cache md-autocomplete-snap="width"
             md-search-text="$ctrl.searchText" md-items="item in $ctrl.expeditions | filter: {projectTitle: searchText}"
@@ -84,7 +82,7 @@
 
 
   <section class="term" layout-gt-sm="row" layout-align="center center" layout-padding>
-    <a href="#" class="md-subhead bold" flex>Any Term</a>
+    <h3 class="md-subhead bold" flex>Any Term</h3>
       <md-input-container flex="65" class="md-icon-float md-icon-right md-block" layout="row">
         <input type="text" placeholder="Query String..." ng-model="$ctrl.params.queryString" flex="70"/>
 	<md-button class="md-icon-button help-link md-popover-button">
@@ -99,7 +97,7 @@
   <div class="simple" ng-show="!$ctrl.moreSearchOptions">
 
     <section layout-gt-sm="row" layout-align="center center" layout-padding>
-      <a href="#" class="md-subhead bold" flex>Country</a>
+      <h3 class="md-subhead bold" flex>Country</h3>
       <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
       <div flex="65">
         <md-input-container>
@@ -109,7 +107,7 @@
     </section>
 
     <section layout-gt-sm="row" layout-align="center center" layout-padding>
-      <a href="#" class="md-subhead bold" flex>Year</a>
+      <h3 class="md-subhead bold" flex>Year</h3>
       <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
       <div flex="65">
         <div layout="row" layout-align="start center">
@@ -126,11 +124,19 @@
     </section>
 
     <section layout-gt-sm="row" layout-align="center center" layout-padding>
-      <a href="#" class="md-subhead bold" flex>Phylum</a>
+      <h3 class="md-subhead bold" flex>Phylum</h3>
       <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
       <div flex="65">
         <md-input-container>
-          <input ng-model="$ctrl.params.phylum" type="text" placeholder="Phylum" />
+		<!--md-autocomplete md-item-text="phylum" placeholder="Phylum"
+	          md-selected-item="$ctrl.params.phylum"
+	   	  md-search-text="searchText"
+	          md-items="phylum in $ctrl.phylums | filter: {value: searchText}"
+          	  md-item-text="phylum.value"> 
+	        <md-item-template>
+                  <span md-highlight-text="searchText">{{phylum.value}}</span>
+                </md-item-template>
+		</md-autocomplete-->
         </md-input-container>
       </div>
     </section>
@@ -138,7 +144,6 @@
   </div>
   
   <section layout-gt-sm="row" layout-padding layout-wrap>
-    <a href="#" class="md-subhead bold" flex>Map</a>
     <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
     <a href="" ng-class="{'active': $ctrl.drawing}" ng-show="!$ctrl.params.bounds" ng-click="$ctrl.drawBounds()" layout="row" flex="100" layout-align="center"><u>Draw
         Bounding Box</u></a>
@@ -174,7 +179,7 @@
 
 	  <div class="filters">
     <section layout-gt-sm="row" layout-align="center center" layout-padding>
-      <a href="#" class="md-subhead bold" flex>Events</a>
+      <h3 class="md-subhead bold" flex>Events</h3>
       <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
       <div layout="column" layout-margin flex="65">
 	<md-chips ng-model="$ctrl.params.events" readonly="true" md-removable="true">
@@ -212,7 +217,7 @@
     </section>
 
     <section layout-gt-sm="row" layout-align="center center" layout-padding>
-      <a href="#" class="md-subhead bold" flex>Specimens</a>
+      <h3 class="md-subhead bold" flex>Specimens</h3>
       <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
       <div layout="column" layout-margin flex="65">
 	<md-chips ng-model="$ctrl.params.specimens" readonly="true" md-removable="true">
@@ -250,7 +255,7 @@
     </section>
 
     <section layout-gt-sm="row" layout-align="center center" layout-padding>
-      <a href="#" class="md-subhead bold" flex>Tissues</a>
+      <h3 class="md-subhead bold" flex>Tissues</h3>
       <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
       <div layout="column" layout-margin flex="65">
 	<md-chips ng-model="$ctrl.params.tissues" readonly="true" md-removable="true">
