@@ -10,6 +10,7 @@ const defaultParams = {
   genus: null,
   locality: null,
   family: null,
+  phylum: null,
   specificEpithet: null,
   country: null,
   fromYear: null,
@@ -82,7 +83,7 @@ export default class QueryParams {
 
     if (this.country) {
       if (builder.queryString.length > 0) builder.add('and');
-      builder.add(`Event.country = "${this.country}"`);
+      builder.add(`Event.country = "${this.country.value}"`);
     }
 
     if (this.genus) {
@@ -102,7 +103,7 @@ export default class QueryParams {
 
     if (this.phylum) {
       if (builder.queryString.length > 0) builder.add('and');
-      builder.add(`Sample.phylum = "${this.phylum}"`);
+      builder.add(`Sample.phylum = "${this.phylum.value}"`);
     }
 
     if (this.specificEpithet) {

@@ -13,7 +13,7 @@ class MapController {
 
     this.$timeout(() => {
       this.mapInstance.init(this.mapId);
-    }, 0);
+    }, 50);
   }
 
   toggleMapView(tiles) {
