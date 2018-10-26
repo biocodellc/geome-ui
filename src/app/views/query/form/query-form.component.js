@@ -94,9 +94,13 @@ class QueryFormController {
     // Retrieve General Configurations
     this.NetworkConfigurationService.get().then(config => {
       this.networkConfig = config;
-      this.phylums = this.networkConfig.getList('phylum').fields
-      this.countries = this.networkConfig.getList('country').fields
-    })
+      this.phylums = this.networkConfig.getList('phylum').fields;
+      this.countries = this.networkConfig.getList('country').fields;
+      this.markers = this.networkConfig.getList('markers').fields;
+      // this.hasFastqEntity = this.params.config.entities.some(
+      // e => e.type === 'Fastq',
+      // );
+    });
 
     const { q } = this.$location.search();
 
@@ -200,15 +204,9 @@ class QueryFormController {
   }
 
   addFilter(filterType) {
+    if (this.params.config.length < 1) this.params.config = this.networkConfig;
     // TODO: fix bug with adding filters. ex: eventID is added automatically, but none of the others are??
     this.generateFilterOptions();
-
-    const list = this.params.config.getList('markers');
-
-    this.markers = list ? list.fields : [];
-    this.hasFastqEntity = this.params.config.entities.some(
-      e => e.type === 'Fastq',
-    );
 
     const filter = Object.assign({}, defaultFilter, {
       column: this.filterOptions[0].column,

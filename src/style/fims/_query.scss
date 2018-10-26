@@ -102,19 +102,25 @@ $query-form-toggle-width: 40px;
     .md-form-group {
       // margin: 0;
     }
-    md-chips * {
+    md-chips {
       margin: 0px;
       padding: 0px;
-    }
-    * {
-      margin: 0px;
-      padding: 0px;
+      position: relative;
+
+      md-select {
+        position: absolute;
+      }
     }
 
     //TODO: fix this with better solution
     .checkboxes {
-      //margin-left: 6px;
+      margin: 0px;
+      padding: 0px;
       margin-top: 10px;
+    }
+    md-floating-label {
+      z-index: 10;
+      text-color: red;
     }
   }
 
@@ -145,7 +151,7 @@ $query-form-toggle-width: 40px;
   }
 
   .filters {
-   // TODO: this has got to expand without forcing the margin 
+    // TODO: this has got to expand without forcing the margin
 
     margin-top: 60px;
     .filter-button {
@@ -194,7 +200,7 @@ $query-form-toggle-width: 40px;
         }
       }
     }
-  } 
+  }
 
   md-optgroup {
     label {
@@ -247,7 +253,7 @@ $query-form-toggle-width: 40px;
 
   .search-row {
     flex-shrink: 0;
-    //TODO: this is related to the map drawing section, why it doesnt make its neighbors adjust? 
+    //TODO: this is related to the map drawing section, why it doesnt make its neighbors adjust?
     margin-top: 40px;
   }
 

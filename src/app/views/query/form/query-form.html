@@ -1,6 +1,6 @@
 <form method="POST" name="queryForm" layout="column">
-	<!--TODO: autocomplete and md-select snaps-->
-	<!--TODO: filters to take up more space -->
+  <!--TODO: autocomplete and md-select snaps-->
+  <!--TODO: filters to take up more space -->
   <md-hints>
     <md-hint class="pull-right">
       <a class="text-upper" href="" ng-click="$ctrl.moreSearchOptions = !$ctrl.moreSearchOptions;$ctrl.showGroups = true;$ctrl.clearParams()">
@@ -15,7 +15,7 @@
     </div>
     <div ng-show="$ctrl.moreSearchOptions" ng-click="$ctrl.clearParams()">
       <a ng-click="$ctrl.showGroups = !$ctrl.showGroups">
-	<!-- what icon would be more informative here? -->
+        <!-- what icon would be more informative here? -->
         <span class="fa fa-chevron-up fa-xs" ng-show="!$ctrl.showGroups"> Search by project family</span>
         <span class="fa fa-chevron-down fa-xs" ng-show="$ctrl.showGroups"> Search by individual project</span>
       </a>
@@ -24,74 +24,73 @@
     <!--TODO: fix format issues when multiple chips are selected-->
     <section class="groups" layout-gt-sm="row" layout-align="center center" layout-padding ng-show="$ctrl.showGroups">
       <h3 class="md-subhead bold" flex>Project Family</h3>
-        <div flex="65">
-          <md-chips ng-model="$ctrl.groupedProjects" md-on-add="$ctrl.chipChanged($chip)"
-            md-on-remove="$ctrl.chipChanged($chip,$event)" md-require-match>
-            <md-autocomplete md-selected-item="$ctrl.selectedGroup" md-no-cache md-autocomplete-snap="width"
-              md-search-text="searchText" md-items="item in $ctrl.configNames | filter: {$: searchText}" md-item-text="item"
-              md-dropdown-position="bottom" md-min-length="0" placeholder="Configuration Name ...">
-              <span md-highlight-text="searchText" md-highlight-flags="i">{{item}}</span>
-            </md-autocomplete>
-            <md-chip-template>
-              <span>
-                <strong>{{$chip}}</strong>
-              </span>
-            </md-chip-template>
-          </md-chips>
-        </div>
+      <div flex="65">
+        <md-chips ng-model="$ctrl.groupedProjects" md-on-add="$ctrl.chipChanged($chip)" md-on-remove="$ctrl.chipChanged($chip,$event)"
+          md-require-match md-autocomplete-snap="width">
+          <md-autocomplete md-selected-item="$ctrl.selectedGroup" md-no-cache md-search-text="searchText" md-items="item in $ctrl.configNames | filter: {$: searchText}"
+            md-item-text="item" md-dropdown-position="bottom" md-min-length="0" placeholder="Configuration Name ...">
+            <span md-highlight-text="searchText" md-highlight-flags="i">{{item}}</span>
+          </md-autocomplete>
+          <md-chip-template>
+            <span>
+              <strong>{{$chip}}</strong>
+            </span>
+          </md-chip-template>
+        </md-chips>
+      </div>
     </section>
     <section class="individual" layout-gt-sm="row" layout-align="center center" layout-padding ng-show="$ctrl.moreSearchOptions && !$ctrl.showGroups">
       <h3 class="md-subhead bold" flex>Individual Projects</h3>
       <div flex="65">
-          <md-chips ng-model="$ctrl.individualProjects" md-on-add="$ctrl.chipChanged($chip)"
-            md-on-remove="$ctrl.chipChanged($chip,$event)" md-require-match>
-            <md-autocomplete md-selected-item="$ctrl.selectedProject" md-no-cache md-autocomplete-snap="width"
-              md-search-text="searchText" md-items="item in $ctrl.projects | filter: {projectTitle: searchText}"
-              md-item-text="item.projectTitle" md-dropdown-position="bottom" md-min-length="0" placeholder="Project Name ...">
-		    <!-- TODO: why is autocomplete-snap not working? -->
-              <span md-highlight-text="searchText" md-highlight-flags="i">{{item.projectTitle}}</span>
-            </md-autocomplete>
-            <md-chip-template>
-              <span>
-                <strong>{{$chip.projectTitle}}</strong>
-              </span>
-            </md-chip-template>
-          </md-chips>
+        <md-chips ng-model="$ctrl.individualProjects" md-on-add="$ctrl.chipChanged($chip)" md-on-remove="$ctrl.chipChanged($chip,$event)"
+          md-require-match>
+          <md-autocomplete md-selected-item="$ctrl.selectedProject" md-no-cache md-autocomplete-snap="width"
+            md-search-text="searchText" md-items="item in $ctrl.projects | filter: {projectTitle: searchText}"
+            md-item-text="item.projectTitle" md-dropdown-position="bottom" md-min-length="0" placeholder="Project Name ...">
+            <!-- TODO: why is autocomplete-snap not working? -->
+            <span md-highlight-text="searchText" md-highlight-flags="i">{{item.projectTitle}}</span>
+          </md-autocomplete>
+          <md-chip-template>
+            <span>
+              <strong>{{$chip.projectTitle}}</strong>
+            </span>
+          </md-chip-template>
+        </md-chips>
       </div>
     </section>
   </div>
- 
+
   <div class="expeditions">
     <section ng-show="$ctrl.moreSearchOptions&&$ctrl.expeditions" layout-gt-sm="row" layout-align="center center"
       layout-padding>
       <h3 class="md-subhead bold" flex>Expeditions</h3>
-        <md-chips ng-model="$ctrl.params.expeditions" md-require-match flex="65">
-          <md-autocomplete md-selected-item="$ctrl.selectedExpedition" md-no-cache md-autocomplete-snap="width"
-            md-search-text="$ctrl.searchText" md-items="item in $ctrl.expeditions | filter: {expeditionTitle: $ctrl.searchText}"
-            md-item-text="item.expeditionTitle" md-dropdown-position="bottom" md-min-length="0" placeholder="Expedition Name ...">
-            <span md-highlight-text="$ctrl.searchText" md-highlight-flags="i">{{item.expeditionTitle}}</span>
-          </md-autocomplete>
-          <md-chip-template>
-            <span>
-              <strong>{{$chip.expeditionTitle}}</strong>
-            </span>
-          </md-chip-template>
-        </md-chips>
-     </section>
+      <md-chips ng-model="$ctrl.params.expeditions" md-require-match flex="65">
+        <md-autocomplete md-selected-item="$ctrl.selectedExpedition" md-no-cache md-autocomplete-snap="width"
+          md-search-text="$ctrl.searchText" md-items="item in $ctrl.expeditions | filter: {expeditionTitle: $ctrl.searchText}"
+          md-item-text="item.expeditionTitle" md-dropdown-position="bottom" md-min-length="0" placeholder="Expedition Name ...">
+          <span md-highlight-text="$ctrl.searchText" md-highlight-flags="i">{{item.expeditionTitle}}</span>
+        </md-autocomplete>
+        <md-chip-template>
+          <span>
+            <strong>{{$chip.expeditionTitle}}</strong>
+          </span>
+        </md-chip-template>
+      </md-chips>
+    </section>
   </div>
 
 
   <section class="term" layout-gt-sm="row" layout-align="center center" layout-padding>
     <h3 class="md-subhead bold" flex>Any Term</h3>
-      <md-input-container flex="65" class="md-icon-float md-icon-right md-block" layout="row">
-        <input type="text" placeholder="Query String..." ng-model="$ctrl.params.queryString" flex="70"/>
-	<md-button class="md-icon-button help-link md-popover-button">
-                    <md-popover md-popover-class="fastq-help-filenames" md-direction="below">
-			    <div>Type any word or phrase here to query all collecting event, sample, and tissue fields</div>
-                    </md-popover>
-                    <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
-        </md-button>
-      </md-input-container>
+    <md-input-container flex="65" class="md-icon-float md-icon-right md-block" layout="row">
+      <input type="text" placeholder="Query String..." ng-model="$ctrl.params.queryString" flex="70" />
+      <md-button class="md-icon-button help-link md-popover-button">
+        <md-popover md-popover-class="fastq-help-filenames" md-direction="below">
+          <div>Type any word or phrase here to query all collecting event, sample, and tissue fields</div>
+        </md-popover>
+        <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
+      </md-button>
+    </md-input-container>
   </section>
 
   <div class="simple" ng-show="!$ctrl.moreSearchOptions">
@@ -100,19 +99,14 @@
       <h3 class="md-subhead bold" flex>Country</h3>
       <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
       <div flex="65">
-	      <md-content>
-		<md-autocomplete placeholder="Country"
-	          md-selected-item="$ctrl.params.country"
-	   	  md-search-text="searchCountry"
-	          md-items="country in $ctrl.countries | filter: {value: searchCountry}"
-          	  md-item-text="country.value"
-		  md-no-cache
-		  md-min-length="0"> 
-	        <md-item-template>
-                  <span md-highlight-text="searchCountry" md-highlight-flags="i">{{country.value}}</span>
-                </md-item-template>
-		</md-autocomplete>
-		</md-content>
+        <md-content>
+          <md-autocomplete md-selected-item="$ctrl.params.country" md-search-text="searchCountry" md-items="country in $ctrl.countries | filter: {value: searchCountry}"
+            md-item-text="country.value" md-no-cache md-min-length="0" md-floating-label="Country">
+            <md-item-template>
+              <span md-highlight-text="searchCountry" md-highlight-flags="i">{{country.value}}</span>
+            </md-item-template>
+          </md-autocomplete>
+        </md-content>
       </div>
     </section>
 
@@ -137,29 +131,24 @@
       <h3 class="md-subhead bold" flex>Phylum</h3>
       <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
       <div flex="65">
-	      <md-content>
-	<!-- Note: this binds the phylum object to params.phylum, and are forced to deconstruct the object in QueryParams.js there might be a better solution, similiar to ng-model or ng-value?-->
-		<md-autocomplete 
-	          md-selected-item="$ctrl.params.phylum" 
-	   	  md-search-text="searchPhy"
-	          md-items="phylum in $ctrl.phylums | filter: {value: searchPhy}"
-          	  md-item-text="phylum.value"
-		  md-no-cache
-	          placeholder="Phylum"
-		  md-min-length="0"> 
-	        <md-item-template>
-                  <span md-highlight-text="searchPhy" md-highlight-flags="i">{{phylum.value}}</span>
-                </md-item-template>
-		</md-autocomplete>
-	      </md-content>
+        <md-content>
+          <!-- Note: this binds the phylum object to params.phylum, and are forced to deconstruct the object in QueryParams.js there might be a better solution, similiar to ng-model or ng-value?-->
+          <md-autocomplete md-selected-item="$ctrl.params.phylum" md-search-text="searchPhy" md-items="phylum in $ctrl.phylums | filter: {value: searchPhy}"
+            md-item-text="phylum.value" md-no-cache md-min-length="0" md-floating-label="Phylum">
+            <md-item-template>
+              <span md-highlight-text="searchPhy" md-highlight-flags="i">{{phylum.value}}</span>
+            </md-item-template>
+          </md-autocomplete>
+        </md-content>
       </div>
     </section>
 
   </div>
-  
+
   <section layout-gt-sm="row" layout-padding layout-wrap>
     <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
-    <a href="" ng-class="{'active': $ctrl.drawing}" ng-show="!$ctrl.params.bounds" ng-click="$ctrl.drawBounds()" layout="row" flex="100" layout-align="center"><u>Draw
+    <a href="" ng-class="{'active': $ctrl.drawing}" ng-show="!$ctrl.params.bounds" ng-click="$ctrl.drawBounds()" layout="row"
+      flex="100" layout-align="center"><u>Draw
         Bounding Box</u></a>
 
     <div flex="100" layout="row" layout-align="center center" ng-show="$ctrl.params.bounds">
@@ -180,153 +169,151 @@
       <a href="" ng-click="$ctrl.clearBounds()">Clear Bounding Box</a>
     </div>
     <div ng-show="$ctrl.moreSearchOptions" layout="row" class="checkboxes">
-        <md-checkbox class="small" ng-model="$ctrl.params.isMappable" name="isMappable"> is
-          Mappable</md-checkbox>
-        <md-checkbox class="small" ng-model="$ctrl.params.hasCoordinateUncertaintyInMeters" name="coordinateUncertaintyInMeters">
-          has coordinateUncertaintyInMeters</md-checkbox>
-        <md-checkbox class="small" ng-model="$ctrl.params.hasPermitInfo" name="hasPermitInfo">
-          has permitInfo</md-checkbox>
+      <md-checkbox class="small" ng-model="$ctrl.params.isMappable" name="isMappable"> is
+        Mappable</md-checkbox>
+      <md-checkbox class="small" ng-model="$ctrl.params.hasCoordinateUncertaintyInMeters" name="coordinateUncertaintyInMeters">
+        has coordinateUncertaintyInMeters</md-checkbox>
+      <md-checkbox class="small" ng-model="$ctrl.params.hasPermitInfo" name="hasPermitInfo">
+        has permitInfo</md-checkbox>
     </div>
   </section>
 
   <div ng-show="$ctrl.moreSearchOptions">
 
-	  <div class="filters">
-    <section layout-gt-sm="row" layout-align="center center" layout-padding>
-      <h3 class="md-subhead bold" flex>Events</h3>
-      <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
-      <div layout="column" layout-margin flex="65">
-	<md-chips ng-model="$ctrl.params.events" readonly="true" md-removable="true">
-          <md-chip-template layout="row">
-            <div flex="40" class="filter-select">
-              <md-select ng-model="$chip.column" md-container-class="query-form" class="md-no-underline" aria-label="event">
-		<md-optgroup label="Events">
-			<md-option ng-value="event.column" ng-repeat="event in $ctrl.events">{{event.column.split('.')[1]}}</md-option>
-		</md-optgroup>
-              </md-select>
-            </div>
-            <div flex="15" class="filter-select">
-              <md-select ng-model="$chip.type" ng-model-options="{trackBy: '$value'}" md-container-class="query-form" aria-label="event">
-                <md-option ng-value="t" ng-repeat="t in $ctrl.getQueryTypes($chip.column)">{{t}}</md-option>
-              </md-select>
-            </div>
-          <div flex="45">
-            <div ng-show="$chip.type !== 'has'">
-              <md-input-container ng-show="!$chip.list">
-                <input type="text" ng-model="$chip.value" aria-label="event"/>
-              </md-input-container>
-              <md-select ng-model="$chip.value" ng-show="$chip.list" md-container-class="query-form" aria-label="event">
-                <md-option>-- Choose value --</md-option>
-                <md-option ng-value="item" ng-repeat="item in $chip.list track by item">{{item}}</md-option>
-              </md-select>
-            </div>
+    <div class="filters">
+      <section layout-gt-sm="row" layout-align="center center" layout-padding>
+        <h3 class="md-subhead bold" flex>Events</h3>
+        <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
+        <div layout="column" layout-margin flex="65">
+          <md-chips ng-model="$ctrl.params.events" readonly="true" md-removable="true">
+            <md-chip-template layout="row">
+              <div flex="40" class="filter-select">
+                <md-select ng-model="$chip.column" md-container-class aria-label="event">
+                  <md-optgroup label="Events">
+                    <md-option ng-value="event.column" ng-repeat="event in $ctrl.events">{{event.column.split('.')[1]}}</md-option>
+                  </md-optgroup>
+                </md-select>
+              </div>
+              <div flex="15" class="filter-select">
+                <md-select ng-model="$chip.type" ng-model-options="{trackBy: '$value'}" md-container-class aria-label="event">
+                  <md-option ng-value="t" ng-repeat="t in $ctrl.getQueryTypes($chip.column)">{{t}}</md-option>
+                </md-select>
+              </div>
+              <div flex="45">
+                <div ng-show="$chip.type !== 'has'">
+                  <md-input-container ng-show="!$chip.list">
+                    <input type="text" ng-model="$chip.value" aria-label="event" />
+                  </md-input-container>
+                  <md-select ng-model="$chip.value" ng-show="$chip.list" md-container-class aria-label="event">
+                    <md-option>-- Choose value --</md-option>
+                    <md-option ng-value="item" ng-repeat="item in $chip.list track by item">{{item}}</md-option>
+                  </md-select>
+                </div>
+              </div>
+            </md-chip-template>
+          </md-chips>
+          <div class="filter-button">
+            <md-button class="md-accent md-raised md-button-sm" ng-click="$ctrl.addFilter('event')">
+              <span class="fa fa-plus"></span> Add Filter</md-button>
           </div>
-          </md-chip-template>
-        </md-chips>
-        <div class="filter-button">
-	  <md-button class="md-accent md-raised md-button-sm" ng-disabled="!$ctrl.projectsChosen" ng-click="$ctrl.addFilter('event')">
-          <span class="fa fa-plus"></span> Add Filter</md-button>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section layout-gt-sm="row" layout-align="center center" layout-padding>
-      <h3 class="md-subhead bold" flex>Specimens</h3>
-      <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
-      <div layout="column" layout-margin flex="65">
-	<md-chips ng-model="$ctrl.params.specimens" readonly="true" md-removable="true">
-          <md-chip-template layout="row">
-            <div flex="40" class="filter-select">
-              <md-select ng-model="$chip.column" md-container-class="query-form" class="md-no-underline" aria-label="specimen">
-		<md-optgroup label="Specimens">
-			<md-option ng-value="specimen.column" ng-repeat="specimen in $ctrl.specimens">{{specimen.column.split('.')[1]}}</md-option>
-		</md-optgroup>
-              </md-select>
-            </div>
-            <div flex="15" class="filter-select">
-              <md-select ng-model="$chip.type" ng-model-options="{trackBy: '$value'}" md-container-class="query-form" aria-label="specimen">
-                <md-option ng-value="t" ng-repeat="t in $ctrl.getQueryTypes($chip.column)">{{t}}</md-option>
-              </md-select>
-            </div>
-          <div flex="45">
-            <div ng-show="$chip.type !== 'has'">
-              <md-input-container ng-show="!$chip.list">
-                <input type="text" ng-model="$chip.value" aria-label="specimen"/>
-              </md-input-container>
-              <md-select ng-model="$chip.value" ng-show="$chip.list" md-container-class="query-form" aria-label="specimen">
-                <md-option>-- Choose value --</md-option>
-                <md-option ng-value="item" ng-repeat="item in $chip.list track by item">{{item}}</md-option>
-              </md-select>
-            </div>
+      <section layout-gt-sm="row" layout-align="center center" layout-padding>
+        <h3 class="md-subhead bold" flex>Specimens</h3>
+        <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
+        <div layout="column" layout-margin flex="65">
+          <md-chips ng-model="$ctrl.params.specimens" readonly="true" md-removable="true">
+            <md-chip-template layout="row">
+              <div flex="40" class="filter-select">
+                <md-select ng-model="$chip.column" md-container-class aria-label="specimen">
+                  <md-optgroup label="Specimens">
+                    <md-option ng-value="specimen.column" ng-repeat="specimen in $ctrl.specimens">{{specimen.column.split('.')[1]}}</md-option>
+                  </md-optgroup>
+                </md-select>
+              </div>
+              <div flex="15" class="filter-select">
+                <md-select ng-model="$chip.type" ng-model-options="{trackBy: '$value'}" md-container-class aria-label="specimen">
+                  <md-option ng-value="t" ng-repeat="t in $ctrl.getQueryTypes($chip.column)">{{t}}</md-option>
+                </md-select>
+              </div>
+              <div flex="45">
+                <div ng-show="$chip.type !== 'has'">
+                  <md-input-container ng-show="!$chip.list">
+                    <input type="text" ng-model="$chip.value" aria-label="specimen" />
+                  </md-input-container>
+                  <md-select ng-model="$chip.value" ng-show="$chip.list" md-container-class aria-label="specimen">
+                    <md-option>-- Choose value --</md-option>
+                    <md-option ng-value="item" ng-repeat="item in $chip.list track by item">{{item}}</md-option>
+                  </md-select>
+                </div>
+              </div>
+            </md-chip-template>
+          </md-chips>
+          <div class="filter-button">
+            <md-button class="md-accent md-raised md-button-sm" ng-click="$ctrl.addFilter('specimen')">
+              <span class="fa fa-plus"></span> Add Filter</md-button>
           </div>
-          </md-chip-template>
-        </md-chips>
-        <div class="filter-button">
-          <md-button class="md-accent md-raised md-button-sm" ng-disabled="!$ctrl.projectsChosen" ng-click="$ctrl.addFilter('specimen')">
-            <span class="fa fa-plus"></span> Add Filter</md-button>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section layout-gt-sm="row" layout-align="center center" layout-padding>
-      <h3 class="md-subhead bold" flex>Tissues</h3>
-      <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
-      <div layout="column" layout-margin flex="65">
-	<md-chips ng-model="$ctrl.params.tissues" readonly="true" md-removable="true">
-          <md-chip-template layout="row">
-            <div flex="40" class="filter-select">
-              <md-select ng-model="$chip.column" md-container-class="query-form" class="md-no-underline" aria-label="tissue">
-		<md-optgroup label="Tissues">
-			<md-option ng-value="tissue.column" ng-repeat="tissue in $ctrl.tissues">{{tissue.column.split('.')[1]}}</md-option>
-		</md-optgroup>
-              </md-select>
-            </div>
-            <div flex="15" class="filter-select">
-              <md-select ng-model="$chip.type" ng-model-options="{trackBy: '$value'}" md-container-class="query-form" aria-label="tissue">
-                <md-option ng-value="t" ng-repeat="t in $ctrl.getQueryTypes($chip.column)">{{t}}</md-option>
-              </md-select>
-            </div>
-          <div flex="45">
-            <div ng-show="$chip.type !== 'has'">
-              <md-input-container ng-show="!$chip.list">
-                <input type="text" ng-model="$chip.value" aria-label="tissue"/>
-              </md-input-container>
-              <md-select ng-model="$chip.value" ng-show="$chip.list" md-container-class="query-form" aria-label="tissue">
-                <md-option>-- Choose value --</md-option>
-                <md-option ng-value="item" ng-repeat="item in $chip.list track by item">{{item}}</md-option>
-              </md-select>
-            </div>
+      <section layout-gt-sm="row" layout-align="center center" layout-padding>
+        <h3 class="md-subhead bold" flex>Tissues</h3>
+        <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
+        <div layout="column" layout-margin flex="65">
+          <md-chips ng-model="$ctrl.params.tissues" readonly="true" md-removable="true">
+            <md-chip-template layout="row">
+              <div flex="60" class="filter-select">
+                <md-select ng-model="$chip.column" md-container-class aria-label="tissue">
+                  <md-optgroup label="Tissues">
+                    <md-option ng-value="tissue.column" ng-repeat="tissue in $ctrl.tissues">{{tissue.column.split('.')[1]}}</md-option>
+                  </md-optgroup>
+                </md-select>
+              </div>
+              <div flex="15" class="filter-select">
+                <md-select ng-model="$chip.type" ng-model-options="{trackBy: '$value'}" md-container-class aria-label="tissue">
+                  <md-option ng-value="t" ng-repeat="t in $ctrl.getQueryTypes($chip.column)">{{t}}</md-option>
+                </md-select>
+              </div>
+              <div ng-show="$chip.type !== 'has'" flex="60">
+                <md-input-container ng-show="!$chip.list">
+                  <input type="text" ng-model="$chip.value" aria-label="tissue" />
+                </md-input-container>
+                <md-select ng-model="$chip.value" ng-show="$chip.list" md-container-class aria-label="tissue">
+                  <md-option>-- Choose value --</md-option>
+                  <md-option ng-value="item" ng-repeat="item in $chip.list track by item">{{item}}</md-option>
+                </md-select>
+              </div>
+            </md-chip-template>
+          </md-chips>
+          <div class="filter-button">
+            <md-button class="md-accent md-raised md-button-sm" ng-click="$ctrl.addFilter('tissue')">
+              <span class="fa fa-plus"></span> Add Filter</md-button>
           </div>
-          </md-chip-template>
-        </md-chips>
-        <div class="filter-button">
-          <md-button class="md-accent md-raised md-button-sm" ng-disabled="!$ctrl.projectsChosen" ng-click="$ctrl.addFilter('tissue')">
-            <span class="fa fa-plus"></span> Add Filter</md-button>
         </div>
-      </div>
-    </section>
-	  </div>
-
-
-  <section class="sequences" ng-show="$ctrl.hasFastqEntity || $ctrl.markers" layout-gt-sm="row" layout-padding>
-    <a href="#" class="md-subhead bold" flex>Sequences</a>
-    <div class="md-form-group" layout="column" layout-margin flex="65">
-      <div layout="row" ng-show="$ctrl.hasFastqEntity">
-        <md-checkbox class="small" ng-model="$ctrl.params.hasSRAAccessions" name="hasSraAccessions">
-          has NCBI
-          Sequence Read Archive Accession Numbers</md-checkbox>
-      </div>
-      <div layout="row" ng-show="$ctrl.markers">
-        <md-input-container flex="80">
-          <label>marker</label>
-          <md-select ng-model="$ctrl.params.marker" md-container-class="query-form">
-            <md-option ng-value="undefined">-- Clear Selection --</md-option>
-            <md-option ng-value="marker.value" ng-repeat="marker in $ctrl.markers track by marker.value">{{marker.value}}</md-option>
-          </md-select>
-        </md-input-container>
-      </div>
+      </section>
     </div>
-  </section>
+
+
+    <section class="sequences" layout-gt-sm="row" layout-padding>
+      <a href="#" class="md-subhead bold" flex>Sequences</a>
+      <div class="md-form-group" layout="column" layout-margin flex="65">
+        <div layout="row">
+          <md-checkbox class="small" ng-model="$ctrl.params.hasSRAAccessions" name="hasSraAccessions">
+            has NCBI
+            Sequence Read Archive Accession Numbers</md-checkbox>
+        </div>
+        <div layout="row">
+          <md-input-container flex="80">
+            <label>marker</label>
+            <md-select ng-model="$ctrl.params.marker" md-container-class>
+              <md-option ng-value="undefined">-- Clear Selection --</md-option>
+              <md-option ng-value="marker.value" ng-repeat="marker in $ctrl.markers track by marker.value">{{marker.value}}</md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+      </div>
+    </section>
 
   </div>
 
