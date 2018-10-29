@@ -78,7 +78,7 @@ class QueryFormController {
     this.events = [];
     this.specimens = [];
     this.tissues = [];
-
+    
     // Retrieve Projects
     this.ProjectService.all(true)
       .then(({ data }) => {
