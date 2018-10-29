@@ -24,13 +24,11 @@ export default class QueryParams {
     this.expeditions = [];
     this.config = []; // we dont need to bind config inside params object, but i dont know how to bind it on its own
     this.filters = [];
-    this.events = [];
-    this.specimens = [];
-    this.tissues = [];
     Object.assign(this, defaultParams);
   }
 
   buildQuery(selectEntities, source) {
+	  console.log(this)
     const builder = new QueryBuilder();
 
     if (this.projects.length > 0) {
