@@ -1,5 +1,4 @@
 <form method="POST" name="queryForm" layout="column">
-  <!--TODO: autocomplete and md-select snaps-->
   <!--TODO: filters to take up more space -->
   <md-hints>
     <md-hint class="pull-right">
@@ -97,7 +96,6 @@
 
     <section layout-gt-sm="row" layout-align="center center" layout-padding>
       <h3 class="md-subhead bold" flex>Country</h3>
-      <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
       <div flex="65">
         <md-content>
           <md-autocomplete md-selected-item="$ctrl.params.country" md-search-text="searchCountry" md-items="country in $ctrl.countries | filter: {value: searchCountry}"
@@ -112,7 +110,6 @@
 
     <section layout-gt-sm="row" layout-align="center center" layout-padding>
       <h3 class="md-subhead bold" flex>Year</h3>
-      <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
       <div flex="65">
         <div layout="row" layout-align="start center">
           <span flex="30" class="small">yearCollected</span>
@@ -129,9 +126,8 @@
 
     <section layout-gt-sm="row" layout-align="center center" layout-padding>
       <h3 class="md-subhead bold" flex>Phylum</h3>
-      <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
       <div flex="65">
-        <md-content>
+        <md-content md-autocomplete-snap="width">
           <!-- Note: this binds the phylum object to params.phylum, and are forced to deconstruct the object in QueryParams.js there might be a better solution, similiar to ng-model or ng-value?-->
           <md-autocomplete md-selected-item="$ctrl.params.phylum" md-search-text="searchPhy" md-items="phylum in $ctrl.phylums | filter: {value: searchPhy}"
             md-item-text="phylum.value" md-no-cache md-min-length="0" md-floating-label="Phylum">
@@ -146,7 +142,6 @@
   </div>
 
   <section layout-gt-sm="row" layout-padding layout-wrap>
-    <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
     <a href="" ng-class="{'active': $ctrl.drawing}" ng-show="!$ctrl.params.bounds" ng-click="$ctrl.drawBounds()" layout="row"
       flex="100" layout-align="center"><u>Draw
         Bounding Box</u></a>
@@ -168,7 +163,7 @@
       </div>
       <a href="" ng-click="$ctrl.clearBounds()">Clear Bounding Box</a>
     </div>
-    <div ng-show="$ctrl.moreSearchOptions" layout="row" class="checkboxes">
+    <div ng-show="$ctrl.moreSearchOptions" layout="column" class="checkboxes">
       <md-checkbox class="small" ng-model="$ctrl.params.isMappable" name="isMappable"> is
         Mappable</md-checkbox>
       <md-checkbox class="small" ng-model="$ctrl.params.hasCoordinateUncertaintyInMeters" name="coordinateUncertaintyInMeters">
@@ -183,7 +178,6 @@
     <div class="filters">
       <section layout-gt-sm="row" layout-align="center center" layout-padding>
         <h3 class="md-subhead bold" flex>Events</h3>
-        <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
         <div layout="column" layout-margin flex="65">
           <md-chips ng-model="$ctrl.params.events" readonly="true" md-removable="true">
             <md-chip-template layout="row">
@@ -221,7 +215,6 @@
 
       <section layout-gt-sm="row" layout-align="center center" layout-padding>
         <h3 class="md-subhead bold" flex>Specimens</h3>
-        <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
         <div layout="column" layout-margin flex="65">
           <md-chips ng-model="$ctrl.params.specimens" readonly="true" md-removable="true">
             <md-chip-template layout="row">
@@ -259,7 +252,6 @@
 
       <section layout-gt-sm="row" layout-align="center center" layout-padding>
         <h3 class="md-subhead bold" flex>Tissues</h3>
-        <md-tooltip ng-show="!$ctrl.projectsChosen" md-direction="top">Select a project</md-tooltip>
         <div layout="column" layout-margin flex="65">
           <md-chips ng-model="$ctrl.params.tissues" readonly="true" md-removable="true">
             <md-chip-template layout="row">

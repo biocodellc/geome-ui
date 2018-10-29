@@ -141,7 +141,6 @@ class QueryFormController {
     this.params.events = [];
     this.params.specimens = [];
     this.params.tissues = []; //easier way to clear all these guys?
-    this.projectsChosen = false;
     this.individualProjects = []; // need to remove selected chips
     this.groupedProjects = []; // need to remove selected chips
   }
@@ -150,8 +149,6 @@ class QueryFormController {
   chipChanged(chip, removal) {
     this.params.expeditions = [];
     this.groupChip = typeof chip === 'string';
-    this.projectsChosen =
-      this.individualProjects.length > 0 || this.groupedProjects.length > 0;
     this.singleProject = this.individualProjects.length === 1;
 
     // update parameters on add and remove chips
