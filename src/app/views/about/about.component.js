@@ -8,7 +8,7 @@ class AboutController {
     this.$location = $location;
   }
 
-  openSections($event,page) {
+  openSections($event, page) {
     $event.preventDefault();
     this.$location.hash(page);
     this.$onChanges();
