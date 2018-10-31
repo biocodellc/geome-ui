@@ -78,7 +78,7 @@ class QueryFormController {
     this.events = [];
     this.specimens = [];
     this.tissues = [];
-    
+
     // Retrieve Projects
     this.ProjectService.all(true)
       .then(({ data }) => {
@@ -135,14 +135,19 @@ class QueryFormController {
   }
 
   clearParams() {
-    this.params.projects = [];
-    this.params.expeditions = [];
-    this.params.filters = [];
-    this.params.events = [];
-    this.params.specimens = [];
-    this.params.tissues = []; //easier way to clear all these guys?
+    // reset params to default
+    Object.keys(this.params).forEach(key => {
+      if (Array.isArray(this.params[key])) {
+        this.params[key] = [];
+      } else if (typeof this.params[key] === 'boolean') {
+        this.params[key] = false;
+      } else if (typeof this.params[key] === 'string') {
+        this.params[key] = null;
+      }
+    });
     this.individualProjects = []; // need to remove selected chips
     this.groupedProjects = []; // need to remove selected chips
+    // TODO: remove country, phylum, markers, and filter chips
   }
 
   // TODO: update autocomplete to remove selected chips
