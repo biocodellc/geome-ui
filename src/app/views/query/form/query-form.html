@@ -8,6 +8,18 @@
   </md-hints>
 
   <div class="projects">
+	  
+    <div ng-show="$ctrl.moreSearchOptions" ng-click="$ctrl.clearParams()">
+	    <md-radio-group ng-model="$ctrl.showGroups" layout-gt-sm="row" class="md-primary">
+	    <md-radio-button ng-value="false" flex> Search by individual project
+	    </md-radio-button>
+	    <md-radio-button ng-value="true" flex> Search by project family
+	    </md-radio-button>
+	    </md-radio-group>
+        <!--i class="fa fa-square fa-xs" ng-show="!$ctrl.showGroups"> Search by project family</i>
+        <i class="fa fa-square fa-xs" ng-show="$ctrl.showGroups"> Search by individual project</i-->
+    </div>
+
     <div ng-show="$ctrl.loading" class="loading-overlay">
       <md-progress-circular md-mode="indeterminate"></md-progress-circular>
     </div>
@@ -48,17 +60,6 @@
         </md-chips>
       </div>
     </section>
-
-    <!--TODO: this will need to be changed as clicking on the div and clicking in the checkbox give different behavior --> 
-    <div ng-show="$ctrl.moreSearchOptions" ng-click="$ctrl.clearParams();$ctrl.showGroups = !$ctrl.showGroups" layout-padding>
-	    <md-checkbox>
-		    <span ng-show="$ctrl.showGroups"> Search by individual project</span>
-		    <span ng-show="!$ctrl.showGroups"> Search by project family</span>
-	    </md-checkbox>
-        <!--i class="fa fa-square fa-xs" ng-show="!$ctrl.showGroups"> Search by project family</i>
-        <i class="fa fa-square fa-xs" ng-show="$ctrl.showGroups"> Search by individual project</i-->
-    </div>
-
   </div>
 
   <div class="expeditions">
