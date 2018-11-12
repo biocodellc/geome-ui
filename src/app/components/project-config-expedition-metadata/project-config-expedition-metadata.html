@@ -4,6 +4,7 @@
             <tr md-row>
                 <th md-column class="action-row" ng-show="$ctrl.canEdit"></th>
                 <th md-column md-order-by="name">Name</th>
+                <th md-column md-order-by="type">Type</th>
                 <th md-column md-order-by="level">
                     <span>Required</span>
                     <!-- md-button here breaks due to the fix-head directive, so we use a regular button and 
@@ -25,6 +26,7 @@
                     </div>
                 </td>
                 <td md-cell>{{p.name}}</td>
+                <td md-cell>{{p.type}}</td>
                 <td md-cell class="md-checkbox-cell">
                     <md-checkbox ng-change="$ctrl.handleChange()" ng-model="p.required"></md-checkbox>
                 </td>

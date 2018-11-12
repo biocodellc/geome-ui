@@ -11,17 +11,11 @@ import fimsMetadata from './fimsMetadata/fimsMetadata.component';
 import fimsFastaData from './upload/fasta/fastaData.component';
 import fimsWorksheetData from './upload/worksheet/worksheet.component';
 import fimsFastqData from './upload/fastq/fastqData.component';
-import expeditionCreateModal from '../../components/expeditions/create-expedition-modal.component';
 import uploadMapDialog from '../../components/upload-map-dialog';
 import results from './results';
 
 export default angular
-  .module('fims.validation', [
-    ngFileUpload,
-    results,
-    expeditionCreateModal,
-    uploadMapDialog,
-  ])
+  .module('fims.validation', [ngFileUpload, results, uploadMapDialog])
   .run(routing)
   .component('fimsMetadata', fimsMetadata)
   .component('fimsValidation', fimsValidation)

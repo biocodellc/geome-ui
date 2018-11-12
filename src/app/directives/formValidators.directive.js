@@ -135,9 +135,41 @@ const projectTitle = /* ngInject */ ProjectService => ({
   },
 });
 
+/**
+ * Custom form validator for expeditionCode
+ */
+const expeditionCode = /* ngInject */ ExpeditionService => ({
+  restrict: 'A',
+  require: 'ngModel',
+  link: (scope, element, attrs, ctrl) => {
+    if (!attrs.projectId) {
+      throw new Error(
+        'project-id is a required attribute to use the expedition-code directive',
+      );
+    }
+
+    ctrl.$asyncValidators.validExpeditionCode = modelValue => {
+      if (ctrl.$isEmpty(modelValue)) return Promise.resolve();
+
+      const projectId = scope.$eval(attrs.projectId);
+      if (!projectId) {
+        throw new Error('missing projectId');
+      }
+
+      return ExpeditionService.getExpedition(projectId, modelValue).then(
+        ({ data }) => {
+          // rejected promises are invalid
+          if (data) throw new Error();
+        },
+      );
+    };
+  },
+});
+
 export default angular
   .module('fims.formValidators', [])
   .directive('compareTo', compareTo)
   .directive('passwordStrength', passwordStrength)
   .directive('username', username)
+  .directive('validExpeditionCode', expeditionCode)
   .directive('projectTitle', projectTitle).name;
