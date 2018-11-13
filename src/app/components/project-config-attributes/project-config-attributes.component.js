@@ -110,7 +110,7 @@ class ProjectConfigAttributesController {
         template: editTemplate,
         locals: {
           attribute: Object.assign({}, attribute),
-          showAllowUnknown: attribute.datType !== 'STRING', // TODO also show if NumericRangeRule is detected
+          showAllowUnknown: attribute.dataType !== 'STRING', // TODO also show if NumericRangeRule is detected
           $mdDialog: this.$mdDialog,
         },
         bindToController: true,

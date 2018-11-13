@@ -25,6 +25,14 @@
       </md-hints>
     </md-checkbox>
 
+    <md-checkbox ng-model="$ctrl.attribute.allowTBD" class="md-align-top-left" name="allowTBD"
+      ng-show="$ctrl.showAllowUnknown">
+      allow TBD?
+      <md-hints>
+        <md-hint>Allow "TBD"/"To Be Determined" (case-insensitive) as a valid value</md-hint>
+      </md-hints>
+    </md-checkbox>
+
     <md-dialog-actions>
       <md-button ng-click="$ctrl.$mdDialog.cancel()" class="md-primary">Cancel</md-button>
       <md-button ng-click="$ctrl.$mdDialog.hide($ctrl.attribute)" class="md-primary">Save</md-button>
