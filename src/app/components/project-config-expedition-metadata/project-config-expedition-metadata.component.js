@@ -1,6 +1,8 @@
 const template = require('./project-config-expedition-metadata.html');
 const editTemplate = require('./edit-property.html');
 
+const PROPERTY_TYPES = ['STRING', 'LIST', 'BOOLEAN'];
+
 class ProjectConfigExpeditionMetadataController {
   constructor($mdDialog) {
     'ngInject';
@@ -36,11 +38,13 @@ class ProjectConfigExpeditionMetadataController {
   }
 
   editProperty($event, property) {
+    if (!property.values) property.values = [];
     this.$mdDialog
       .show({
         template: editTemplate,
         locals: {
           property: angular.copy(property),
+          propertyTypes: PROPERTY_TYPES,
           $mdDialog: this.$mdDialog,
         },
         bindToController: true,
@@ -50,6 +54,7 @@ class ProjectConfigExpeditionMetadataController {
         autoWrap: false,
       })
       .then(p => {
+        if (p.values && p.values.length === 0) delete p.values;
         const i = this.properties.indexOf(property);
         this.properties.splice(i, 1, p);
         this.handleChange();
@@ -61,7 +66,12 @@ class ProjectConfigExpeditionMetadataController {
   }
 
   addProperty($event) {
-    const p = { name: undefined, required: false };
+    const p = {
+      name: undefined,
+      required: false,
+      type: 'STRING',
+      values: [],
+    };
     this.properties.push(p);
     this.editProperty($event, p);
   }

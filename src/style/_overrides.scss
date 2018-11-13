@@ -253,6 +253,10 @@ $adminnav-border-bottom: 1px solid $gray-light;
 .settings-list {
   @extend .list-group;
 
+  .dndPlaceholder {
+    height: 89px;
+  }
+
   .settings-list-item {
     @extend .list-group-item;
 
@@ -462,26 +466,6 @@ $adminnav-border-bottom: 1px solid $gray-light;
     margin-bottom: $form-group-margin-bottom;
     margin-right: 15px;
   }
-}
-
-.pw-label,
-.pw-weak .label,
-.pw-good .label,
-.pw-strong .label {
-  font-size: 100%;
-  display: block;
-}
-
-.pw-weak .label {
-  color: #b94a48;
-}
-
-.pw-good .label {
-  color: #3c761e;
-}
-
-.pw-strong .label {
-  color: #3c761e;
 }
 
 .has-warning {

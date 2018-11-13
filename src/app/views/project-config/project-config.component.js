@@ -96,6 +96,7 @@ class ConfigController {
         this.networkApproved = configuration.networkApproved;
         angular.toaster.success('Successfully updated project configuration!');
         this.config = new ProjectConfig(configuration.config);
+        this.currentProject.config = new ProjectConfig(configuration.config);
         this.updateShowSave();
       })
       .catch(response => {

@@ -15,6 +15,7 @@
 @import 'projectConfigRules';
 @import 'projectConfigExpeditionMetadata';
 @import 'networkConfigList';
+@import 'passwordStrength';
 
 // views
 @import 'query';
@@ -24,6 +25,7 @@
 @import 'photoUpload';
 @import 'plateViewer';
 @import 'createProject';
+@import 'createExpedition';
 @import 'login';
 @import 'register';
 @import 'projectConfig';

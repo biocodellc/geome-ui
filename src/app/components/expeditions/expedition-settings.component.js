@@ -7,7 +7,7 @@ const template = require('./expedition-settings.html');
 class ExpeditionSettingsController {
   $onInit() {
     this.visibilities = visibilities;
-    this.expedition = Object.assign({}, this.expedition);
+    this.expedition = angular.copy(this.expedition);
     this.hasMetadata =
       Object.keys(this.currentProject.config.expeditionMetadataProperties)
         .length > 0;

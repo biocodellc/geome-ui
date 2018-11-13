@@ -19,9 +19,15 @@
     <fieldset ng-show="$ctrl.hasMetadata">
       <div class="form-group clearfix" ng-repeat="p in $ctrl.currentProject.config.expeditionMetadataProperties"
         show-errors>
-        <div class="col-xs-9">
+        <div class="checkbox col-xs-9" ng-if="p.type === 'BOOLEAN'">
+          <label>
+            <input type="checkbox" ng-model="$ctrl.expedition.metadata[p.name]"> {{p.name}}
+          </label>
+        </div>
+        <div class="col-xs-9" ng-if="p.type !== 'BOOLEAN'">
           <label for="expedition{{p.name}}">{{p.name}}</label>
-          <input type="text" class="form-control" name="expedition{{p.name}}" ng-required="{{p.required}}" ng-model="$ctrl.expedition.metadata[p.name]"></input>
+          <input ng-if="p.type === 'STRING'" type="text" class="form-control" name="expedition{{p.name}}" ng-required="{{p.required}}" ng-model="$ctrl.expedition.metadata[p.name]"></input>
+          <select ng-if="p.type === 'LIST'" ng-model="$ctrl.expedition.metadata[p.name]" class="form-control" ng-required="{{p.required}}" ng-options="v for v in p.values"></select>
         </div>
       </div>
 

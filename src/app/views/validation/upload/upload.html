@@ -2,11 +2,6 @@
     <fims-upload-datatypes class="clearfix" data-types="$ctrl.dataTypes" on-update="$ctrl.handleDatatypes(dataTypes)"
         available-types="$ctrl.availableDataTypes"></fims-upload-datatypes>
 
-    <fims-upload-expedition ng-if="$ctrl.showExpeditions" user-expeditions="$ctrl.userExpeditions"
-        expedition-code="$ctrl.expeditionCode" can-create="!!$ctrl.currentUser"
-        multi-expedition-allowed="$ctrl.multiExpeditionAllowed" on-change="$ctrl.handleExpeditionChange(expeditionCode)">
-    </fims-upload-expedition>
-
     <div class="clearfix">
         <div class="col-sm-8" ng-if="$ctrl.currentUser">
             <div class="checkbox col-xs-offset-3 col-xs-9">
@@ -47,6 +42,14 @@
         <fims-fastq-data on-change="$ctrl.handleFastqDataChange(data)" form="$ctrl.uploadForm"
             config="$ctrl.currentProject.config" data="$ctrl.fastqData">
         </fims-fastq-data>
+    </div>
+
+    <div class="clearfix" ng-if="$ctrl.showExpeditions">
+        <hr class="separator" />
+        <fims-upload-expedition user-expeditions="$ctrl.userExpeditions"
+            expedition-code="$ctrl.expeditionCode" can-create="!!$ctrl.currentUser"
+            multi-expedition-allowed="$ctrl.multiExpeditionAllowed" on-change="$ctrl.handleExpeditionChange(expeditionCode)">
+        </fims-upload-expedition>
     </div>
 
     <div class="col-xs-8">
