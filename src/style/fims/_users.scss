@@ -34,6 +34,17 @@
   .form-group {
     margin-bottom: $form-group-margin-bottom;
     margin-right: 15px;
+    position: relative;
+    .btn {
+      margin-top: 20px;
+    }
+  }
+
+  md-icon.password-indicator {
+    position: absolute;
+    top: 28px;
+    right: 5px;
+    font-size: 18px;
   }
 
   .control-label {
@@ -41,19 +52,22 @@
   }
 }
 
-// Password Indicators
-md-icon.password-indicator {
-  position: absolute;
-  top: 10px;
-  right: 20px;
-  width: 18px;
-  min-width: 18px;
-  height: 18px;
-  min-height: 18px;
-  font-size: 18px;
-  line-height: 18px;
+// Reset Password Page
+.reset-pass-form {
+  md-icon.password-indicator {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    width: 18px;
+    min-width: 18px;
+    height: 18px;
+    min-height: 18px;
+    font-size: 18px;
+    line-height: 18px;
+  }
 }
 
+// Both Password Indicators
 .weak-password {
   @extend .password-indicator;
   color: #d9230f;
@@ -61,15 +75,4 @@ md-icon.password-indicator {
 .strong-password {
   @extend .password-indicator;
   color: #468847;
-}
-
-.password-input {
-  position: relative;
-  input {
-    padding-right: 30px;
-  }
-  .fa {
-    right: 10px;
-    top: 10px;
-  }
 }
