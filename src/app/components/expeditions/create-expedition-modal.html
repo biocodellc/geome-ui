@@ -1,44 +1,75 @@
-<div class="modal-header">
-  <h3 class="modal-title">New Expedition</h3>
-</div>
-<div class="modal-body">
-  <form role="form" name="$ctrl.form">
-
-    <div class="form-group" show-errors>
-      <label for="expeditionTitle">Expedition Title</label>
-      <input type="text" class="form-control" name="expeditionTitle" required ng-model="$ctrl.expedition.expeditionTitle"></input>
-    </div>
-
-    <div class="form-group" show-errors>
-      <label for="expeditionCode">Expedition Code</label>
-      <input type="text" class="form-control" name="expeditionCode" required ng-model="$ctrl.expedition.expeditionCode"
-        ng-change="$ctrl.expeditionCodeChanged()" ng-pattern=/^[a-zA-Z0-9_-]{4,50}$/></input>
-
-      <p class="help-block" ng-if="$ctrl.form.expeditionCode.$error.pattern && $ctrl.form.expeditionCode.$touched">
-        <b>Expedition Name</b> must contain only numbers, letters, or underscores and be 4 to 50 characters
-        long
-      </p>
-
-      <p class="help-block col-xs-12" style="padding-left:0px;" ng-show="$ctrl.form.expeditionCode.$error.exists !== undefined">
-        Expedition with that name already exists
-      </p>
-    </div>
-
-    <!-- <div class="form-group clearfix"> -->
-    <!-- <label>Visibility</label> -->
-    <!-- <select ng-model="$ctrl.expedition.visibility" class="form-control" required ng-options="v for v in $ctrl.visibilities"></select> -->
+<md-dialog id="create-expedition-dialog">
+  <md-dialog-content>
+    <!-- <div class="modal-header"> -->
+    <h2 class="md-title">New Expedition</h2>
     <!-- </div> -->
+    <!-- <div class="modal-body"> -->
+    <form novalidate role="form" name="$ctrl.form" layout="column">
 
-    <div class="form-group" ng-repeat="p in $ctrl.metadataProperties" show-errors>
-      <label for="expedition{{p.name}}">{{p.name}}</label>
-      <input type="text" class="form-control" name="expedition{{p.name}}" ng-required="{{p.required}}" ng-model="$ctrl.expedition.metadata[p.name]"></input>
-    </div>
+      <md-input-container flex-gt-sm>
+        <label>Expedition Title</label>
+        <input name="expeditionTitle" ng-model="$ctrl.expedition.expeditionTitle" required />
+      </md-input-container>
+      <!-- <div class="form-group" show-errors> -->
+      <!-- <label for="expeditionTitle">Expedition Title</label> -->
+      <!-- <input type="text" class="form-control" name="expeditionTitle" required ng-model="$ctrl.expedition.expeditionTitle"></input> -->
+      <!-- </div> -->
 
-  </form>
-  <div class="modal-footer" layout="row" layout-fill layout-sm="column" ng-show="$ctrl.loading" layout-align="end center">
-    <md-progress-circular md-diameter=30 md-mode="indeterminate"></md-progress-circular>
-  </div>
-  <div ng-show="!$ctrl.loading" class="modal-footer">
-    <button class="btn btn-success" type="button" ng-click="$ctrl.submit()">Create</button>
-    <button class="btn btn-danger" type="button" ng-click="$ctrl.dismiss()">Cancel</button>
-  </div>
+      <md-input-container flex-gt-sm>
+        <label>Expedition Code</label>
+        <input name="expeditionCode" ng-model="$ctrl.expedition.expeditionCode" required
+          ng-model-options="{ updateOn: 'default blur', debounce: {'default': 800, 'blur': 0} }"
+          valid-expedition-code project-id="$ctrl.projectId" ng-pattern=/^[a-zA-Z0-9_-]{4,50}$/ />
+        <div ng-messages="$ctrl.form.expeditionCode.$error">
+          <div ng-message="pattern"><b>Expedition Code</b> must contain only numbers, letters, or
+            underscores and be 4 to 50 characters long.</div>
+          <div ng-message="validExpeditionCode">Expedition with that code already exists</div>
+        </div>
+      </md-input-container>
+      <!-- <div class="form-group" show-errors> -->
+      <!-- <label for="expeditionCode">Expedition Code</label> -->
+      <!-- <input type="text" class="form-control" name="expeditionCode" required ng-model="$ctrl.expedition.expeditionCode" -->
+      <!-- ng-change="$ctrl.expeditionCodeChanged()" ng-pattern=/^[a-zA-Z0-9_-]{4,50}$/> </input> <p -->
+      <!-- class="help-block" ng-if="$ctrl.form.expeditionCode.$error.pattern && $ctrl.form.expeditionCode.$touched"> -->
+      <!-- <b>Expedition Name</b> must contain only numbers, letters, or underscores and be 4 to 50 -->
+      <!-- characters -->
+      <!-- long -->
+      <!-- </p> -->
+
+      <!-- <p class="help-block col-xs-12" style="padding-left:0px;" ng-show="$ctrl.form.expeditionCode.$error.exists !== undefined"> -->
+      <!-- Expedition with that name already exists -->
+      <!-- </p> -->
+      <!-- </div> -->
+
+      <!-- <div class="form-group clearfix"> -->
+      <!-- <label>Visibility</label> -->
+      <!-- <select ng-model="$ctrl.expedition.visibility" class="form-control" required ng-options="v for v in $ctrl.visibilities"></select> -->
+      <!-- </div> -->
+
+      <!-- <div class="form-group" ng-repeat="p in $ctrl.metadataProperties" show-errors> -->
+      <div ng-repeat="p in $ctrl.metadataProperties" layout="column">
+        <md-checkbox ng-if="p.type === 'BOOLEAN'" ng-model="$ctrl.expedition.metadata[p.name]"
+          class="md-align-top-left" name="required">{{p.name}}</md-checkbox>
+
+        <md-input-container ng-if="p.type !== 'BOOLEAN'">
+          <label for="expedition{{p.name}}">{{p.name}}</label>
+          <input ng-if="p.type === 'STRING'" type="text" name="expedition{{p.name}}" ng-required="{{p.required}}"
+            ng-model="$ctrl.expedition.metadata[p.name]"></input>
+          <md-select ng-if="p.type === 'LIST'" name="expedition{{p.name}}" ng-model="$ctrl.expedition.metadata[p.name]"
+            ng-required="{{p.required}}">
+            <md-option ng-repeat="value in p.values" ng-value="value">{{value}}</md-option>
+          </md-select>
+        </md-input-container>
+      </div>
+
+    </form>
+
+    <md-dialog-actions>
+      <md-button ng-click="$ctrl.submit()" class="md-primary md-raised" layout="row" layout-align="center center">
+        <span ng-if='!$ctrl.loading'>Create</span>
+        <md-progress-circular ng-show="$ctrl.loading" md-mode="indeterminate" md-diameter="18"
+          class="md-accent md-hue-3"></md-progress-circular>
+      </md-button>
+      <md-button ng-click="$ctrl.$mdDialog.cancel()" class="md-primary">Cancel</md-button>
+    </md-dialog-actions>
+</md-dialog>

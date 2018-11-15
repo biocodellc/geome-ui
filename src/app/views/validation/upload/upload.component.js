@@ -6,6 +6,9 @@ import {
   workbookToJson,
 } from '../../../utils/tabReader';
 import appConfig from '../../../utils/config';
+import CreateExpeditionController, {
+  createExpeditionTemplate,
+} from '../../../components/expeditions/CreateExpeditionController';
 
 const { naan } = appConfig;
 const template = require('./upload.html');
@@ -118,22 +121,42 @@ class UploadController {
 
   handleExpeditionChange(expeditionCode) {
     if (expeditionCode === 'CREATE') {
-      this.$uibModal
-        .open({
-          component: 'fimsCreateExpeditionModal',
-          size: 'md',
-          windowClass: 'app-modal-window',
-          backdrop: 'static',
-          resolve: {
-            metadataProperties: () =>
-              this.currentProject.config.expeditionMetadataProperties,
-            projectId: () => this.currentProject.projectId,
+      this.$mdDialog
+        .show({
+          // targetEvent: ev,
+          template: createExpeditionTemplate,
+          locals: {
+            metadataProperties: this.currentProject.config
+              .expeditionMetadataProperties,
+            projectId: this.currentProject.projectId,
+            // $mdDialog: this.$mdDialog,
           },
+          bindToController: true,
+          controller: CreateExpeditionController,
+          controllerAs: '$ctrl',
+          autoWrap: false,
         })
-        .result.then(expedition => {
+        .then(expedition => {
           this.userExpeditions = this.userExpeditions.concat([expedition]);
           this.expeditionCode = expedition.expeditionCode;
         })
+        // .catch(() => {});
+        // this.$uibModal
+        //   .open({
+        //     component: 'fimsCreateExpeditionModal',
+        //     size: 'md',
+        //     windowClass: 'app-modal-window',
+        //     backdrop: 'static',
+        //     resolve: {
+        //       // metadataProperties: () =>
+        //       // ,
+        //       // projectId: () => this.currentProject.projectId,
+        //     },
+        //   })
+        // .result.then(expedition => {
+        // this.userExpeditions = this.userExpeditions.concat([expedition]);
+        // this.expeditionCode = expedition.expeditionCode;
+        // })
         .catch(() => {
           this.expeditionCode = undefined;
         });

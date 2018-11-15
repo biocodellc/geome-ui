@@ -5,7 +5,21 @@
       <input name="group" ng-model="$ctrl.property.name" required md-autofocus placeholder="Property Name" />
     </md-input-container>
 
-    <md-checkbox ng-model="$ctrl.property.required" class="md-align-top-left" name="required">
+    <md-input-container>
+      <label>Property Type</label>
+      <md-select name="type" ng-model="$ctrl.property.type" required>
+        <md-option ng-repeat="type in $ctrl.propertyTypes" ng-value="type">
+          {{type}}
+        </md-option>
+      </md-select>
+    </md-input-container>
+
+    <md-input-container ng-if="$ctrl.property.type === 'LIST'">
+      <label>List Values</label>
+      <md-chips ng-required="true" ng-model="$ctrl.property.values" md-add-on-blur="true"></md-chips>
+    </md-input-container>
+
+    <md-checkbox ng-model="$ctrl.property.required" class="md-align-top-left" name="required" ng-if="$ctrl.property.type !== 'BOOLEAN'">
       required?
       <md-hints>
         <md-hint>Require this property for all expeditions?</md-hint>
