@@ -79,6 +79,9 @@ class QueryFormController {
     this.events = [];
     this.specimens = [];
     this.tissues = [];
+    this.params.events = [];
+    this.params.specimens = [];
+    this.params.tissues = [];
 
     // Retrieve Projects
     this.ProjectService.all(true)

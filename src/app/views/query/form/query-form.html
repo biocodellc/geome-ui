@@ -172,112 +172,103 @@
     <div class="filters">
       <!--TODO: filters to take up enough space for longer text -->
       <section layout-gt-sm="row" layout-align="center center" layout-padding>
-        <h3 class="md-subhead bold" flex>Events</h3>
-        <div layout="column" layout-margin flex="65">
-          <div class="filter-button">
-            <md-button class="md-accent md-raised md-button-sm" ng-click="$ctrl.addFilter('event')">
-              <span class="fa fa-plus"></span> Add Filter</md-button>
-          </div>
-          <md-chips ng-model="$ctrl.params.events" readonly="true" md-removable="true">
-            <md-chip-template layout="row">
-              <div flex="40" class="filter-select">
-                <md-select ng-model="$chip.column" md-container-class aria-label="event">
-                  <md-optgroup label="Events">
-                    <md-option ng-value="event.column" ng-repeat="event in $ctrl.events">{{event.column.split('.')[1]}}</md-option>
-                  </md-optgroup>
-                </md-select>
-              </div>
-              <div flex="15" class="filter-select">
-                <md-select ng-model="$chip.type" ng-model-options="{trackBy: '$value'}" md-container-class aria-label="event">
-                  <md-option ng-value="t" ng-repeat="t in $ctrl.getQueryTypes($chip.column)">{{t}}</md-option>
-                </md-select>
-              </div>
-              <div flex="45">
-                <div ng-show="$chip.type !== 'has'">
-                  <md-input-container ng-show="!$chip.list">
-                    <input type="text" ng-model="$chip.value" aria-label="event" />
-                  </md-input-container>
-                  <md-select ng-model="$chip.value" ng-show="$chip.list" md-container-class aria-label="event">
-                    <md-option>-- Choose value --</md-option>
-                    <md-option ng-value="item" ng-repeat="item in $chip.list track by item">{{item}}</md-option>
-                  </md-select>
-                </div>
-              </div>
-            </md-chip-template>
-          </md-chips>
+        <div class="filter-button" flex>
+          <md-button class="md-accent md-raised md-button-sm" ng-click="$ctrl.addFilter('event')">
+            <span class="fa fa-plus"></span> Add Event Filter</md-button>
         </div>
-      </section>
-
-      <section layout-gt-sm="row" layout-align="center center" layout-padding>
-        <h3 class="md-subhead bold" flex>Specimens</h3>
-        <div layout="column" layout-margin flex="65">
-          <div class="filter-button">
-            <md-button class="md-accent md-raised md-button-sm" ng-click="$ctrl.addFilter('specimen')">
-              <span class="fa fa-plus"></span> Add Filter</md-button>
-          </div>
-          <md-chips ng-model="$ctrl.params.specimens" readonly="true" md-removable="true">
-            <md-chip-template layout="row">
-              <div flex="40" class="filter-select">
-                <md-select ng-model="$chip.column" md-container-class aria-label="specimen">
-                  <md-optgroup label="Specimens">
-                    <md-option ng-value="specimen.column" ng-repeat="specimen in $ctrl.specimens">{{specimen.column.split('.')[1]}}</md-option>
-                  </md-optgroup>
-                </md-select>
-              </div>
-              <div flex="15" class="filter-select">
-                <md-select ng-model="$chip.type" ng-model-options="{trackBy: '$value'}" md-container-class aria-label="specimen">
-                  <md-option ng-value="t" ng-repeat="t in $ctrl.getQueryTypes($chip.column)">{{t}}</md-option>
-                </md-select>
-              </div>
-              <div flex="45">
-                <div ng-show="$chip.type !== 'has'">
-                  <md-input-container ng-show="!$chip.list">
-                    <input type="text" ng-model="$chip.value" aria-label="specimen" />
-                  </md-input-container>
-                  <md-select ng-model="$chip.value" ng-show="$chip.list" md-container-class aria-label="specimen">
-                    <md-option>-- Choose value --</md-option>
-                    <md-option ng-value="item" ng-repeat="item in $chip.list track by item">{{item}}</md-option>
-                  </md-select>
-                </div>
-              </div>
-            </md-chip-template>
-          </md-chips>
-        </div>
-      </section>
-
-      <section layout-gt-sm="row" layout-align="center center" layout-padding>
-        <h3 class="md-subhead bold" flex>Tissues</h3>
-        <div layout="column" layout-margin flex="65">
-          <div class="filter-button">
-            <md-button class="md-accent md-raised md-button-sm" ng-click="$ctrl.addFilter('tissue')">
-              <span class="fa fa-plus"></span> Add Filter</md-button>
-          </div>
-          <md-chips ng-model="$ctrl.params.tissues" readonly="true" md-removable="true">
-            <md-chip-template layout="row">
-              <div flex="60" class="filter-select">
-                <md-select ng-model="$chip.column" md-container-class aria-label="tissue">
-                  <md-optgroup label="Tissues">
-                    <md-option ng-value="tissue.column" ng-repeat="tissue in $ctrl.tissues">{{tissue.column.split('.')[1]}}</md-option>
-                  </md-optgroup>
-                </md-select>
-              </div>
-              <div flex="15" class="filter-select">
-                <md-select ng-model="$chip.type" ng-model-options="{trackBy: '$value'}" md-container-class aria-label="tissue">
-                  <md-option ng-value="t" ng-repeat="t in $ctrl.getQueryTypes($chip.column)">{{t}}</md-option>
-                </md-select>
-              </div>
-              <div ng-show="$chip.type !== 'has'" flex="60">
+        <md-chips ng-model="$ctrl.params.events" readonly="true" md-removable="true" flex>
+          <md-chip-template layout="row">
+            <div flex="40" class="filter-select">
+              <md-select ng-model="$chip.column" md-container-class aria-label="event">
+                <md-optgroup label="Events">
+                  <md-option ng-value="event.column" ng-repeat="event in $ctrl.events">{{event.column.split('.')[1]}}</md-option>
+                </md-optgroup>
+              </md-select>
+            </div>
+            <div flex="15" class="filter-select">
+              <md-select ng-model="$chip.type" ng-model-options="{trackBy: '$value'}" md-container-class aria-label="event">
+                <md-option ng-value="t" ng-repeat="t in $ctrl.getQueryTypes($chip.column)">{{t}}</md-option>
+              </md-select>
+            </div>
+            <div flex="45">
+              <div ng-show="$chip.type !== 'has'">
                 <md-input-container ng-show="!$chip.list">
-                  <input type="text" ng-model="$chip.value" aria-label="tissue" />
+                  <input type="text" ng-model="$chip.value" aria-label="event" />
                 </md-input-container>
-                <md-select ng-model="$chip.value" ng-show="$chip.list" md-container-class aria-label="tissue">
+                <md-select ng-model="$chip.value" ng-show="$chip.list" md-container-class aria-label="event">
                   <md-option>-- Choose value --</md-option>
                   <md-option ng-value="item" ng-repeat="item in $chip.list track by item">{{item}}</md-option>
                 </md-select>
               </div>
-            </md-chip-template>
-          </md-chips>
+            </div>
+          </md-chip-template>
+        </md-chips>
+      </section>
+
+      <section layout-gt-sm="row" layout-align="center center" layout-padding>
+        <div class="filter-button" flex>
+          <md-button class="md-accent md-raised md-button-sm" ng-click="$ctrl.addFilter('specimen')">
+            <span class="fa fa-plus"></span> Add Specimen Filter</md-button>
         </div>
+        <md-chips ng-model="$ctrl.params.specimens" readonly="true" md-removable="true" flex>
+          <md-chip-template layout="row">
+            <div flex="40" class="filter-select">
+              <md-select ng-model="$chip.column" md-container-class aria-label="specimen">
+                <md-optgroup label="Specimens">
+                  <md-option ng-value="specimen.column" ng-repeat="specimen in $ctrl.specimens">{{specimen.column.split('.')[1]}}</md-option>
+                </md-optgroup>
+              </md-select>
+            </div>
+            <div flex="15" class="filter-select">
+              <md-select ng-model="$chip.type" ng-model-options="{trackBy: '$value'}" md-container-class aria-label="specimen">
+                <md-option ng-value="t" ng-repeat="t in $ctrl.getQueryTypes($chip.column)">{{t}}</md-option>
+              </md-select>
+            </div>
+            <div flex="45">
+              <div ng-show="$chip.type !== 'has'">
+                <md-input-container ng-show="!$chip.list">
+                  <input type="text" ng-model="$chip.value" aria-label="specimen" />
+                </md-input-container>
+                <md-select ng-model="$chip.value" ng-show="$chip.list" md-container-class aria-label="specimen">
+                  <md-option>-- Choose value --</md-option>
+                  <md-option ng-value="item" ng-repeat="item in $chip.list track by item">{{item}}</md-option>
+                </md-select>
+              </div>
+            </div>
+          </md-chip-template>
+        </md-chips>
+      </section>
+
+      <section layout-gt-sm="row" layout-align="center center" layout-padding>
+        <div class="filter-button" flex>
+          <md-button class="md-accent md-raised md-button-sm" ng-click="$ctrl.addFilter('tissue')">
+            <span class="fa fa-plus"></span> Add Tissue Filter</md-button>
+        </div>
+        <md-chips ng-model="$ctrl.params.tissues" readonly="true" md-removable="true" flex>
+          <md-chip-template layout="row">
+            <div flex="60" class="filter-select">
+              <md-select ng-model="$chip.column" md-container-class aria-label="tissue">
+                <md-optgroup label="Tissues">
+                  <md-option ng-value="tissue.column" ng-repeat="tissue in $ctrl.tissues">{{tissue.column.split('.')[1]}}</md-option>
+                </md-optgroup>
+              </md-select>
+            </div>
+            <div flex="15" class="filter-select">
+              <md-select ng-model="$chip.type" ng-model-options="{trackBy: '$value'}" md-container-class aria-label="tissue">
+                <md-option ng-value="t" ng-repeat="t in $ctrl.getQueryTypes($chip.column)">{{t}}</md-option>
+              </md-select>
+            </div>
+            <div ng-show="$chip.type !== 'has'" flex="60">
+              <md-input-container ng-show="!$chip.list">
+                <input type="text" ng-model="$chip.value" aria-label="tissue" />
+              </md-input-container>
+              <md-select ng-model="$chip.value" ng-show="$chip.list" md-container-class aria-label="tissue">
+                <md-option>-- Choose value --</md-option>
+                <md-option ng-value="item" ng-repeat="item in $chip.list track by item">{{item}}</md-option>
+              </md-select>
+            </div>
+          </md-chip-template>
+        </md-chips>
       </section>
     </div>
 
