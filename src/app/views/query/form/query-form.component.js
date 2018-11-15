@@ -70,6 +70,7 @@ class QueryFormController {
 
   // TODO: return table view by default on advanced search
   $onInit() {
+    //  this.initialParams = Object.freeze(this.params); // TODO: check this out (config is the only one that needs to change, which can be done by unbinding config fromt he params object)
     this.showGroups = true;
     this.loading = true;
     this.resetExpeditions = true;
@@ -84,10 +85,10 @@ class QueryFormController {
       .then(({ data }) => {
         this.projects = data;
         const names = new Set();
-        this.projects.forEach(e => {
-          names.add(e.projectConfiguration.name);
+        this.projects.forEach(p => {
+          names.add(p.projectConfiguration.name);
         });
-        this.configNames = Array.from(names);
+        this.configNames = [...names];
       })
       .finally(() => (this.loading = false));
 
@@ -134,8 +135,86 @@ class QueryFormController {
     }
   }
 
+  familyToggle(name, groupedProjects) {
+    const nameIdx = groupedProjects.indexOf(name);
+    if (nameIdx > -1) {
+      groupedProjects.splice(nameIdx, 1);
+      this.projects.forEach(p => {
+        const projIdx = this.params.projects.indexOf(p);
+        if (p.projectConfiguration.name === name)
+          this.params.projects.splice(projIdx, 1);
+      });
+    } else {
+      groupedProjects.push(name);
+      this.projects.forEach(p => {
+        if (p.projectConfiguration.name === name) {
+          this.params.projects.push(p);
+        }
+      });
+    }
+    // call configs for matching projects
+    if (groupedProjects.length === 1) {
+      this.firstMatchingConfig = this.projects.find(
+        p => p.projectConfiguration.name === this.groupedProjects[0],
+      );
+      this.ProjectConfigurationService.get(
+        this.firstMatchingConfig.projectConfiguration.id,
+      ).then(({ config }) => {
+        this.params.config = config;
+      });
+    } else this.params.config = this.networkConfig;
+  }
+
+  familySelected(name, groupedProjects) {
+    return groupedProjects.indexOf(name) > -1;
+  }
+
+  individualToggle(chip, removal) {
+    this.params.expeditions = [];
+    this.singleProject = this.individualProjects.length === 1;
+
+    // update parameters on add and remove chips
+    if (!removal) {
+      this.projects.forEach(p => {
+        if (p.projectId === chip.projectId) this.params.projects.push(p);
+      });
+    } else if (removal) {
+      this.projects.forEach(p => {
+        const index = this.params.projects.indexOf(p);
+        if (p.projectId === chip.projectId)
+          this.params.projects.splice(index, 1);
+      });
+    }
+
+    // call config for single project
+    // TODO: this needs to work for multiple projects with shared config added individually
+    if (this.singleProject) {
+      this.firstMatchingConfig = this.projects.find(
+        p =>
+          p.projectConfiguration.name ===
+          this.individualProjects[0].projectConfiguration.name,
+      );
+      this.ProjectConfigurationService.get(
+        this.firstMatchingConfig.projectConfiguration.id,
+      ).then(({ config }) => {
+        this.params.config = config;
+      });
+
+      // retrieve expeditions for single projects only
+      this.ExpeditionService.all(this.individualProjects[0].projectId).then(
+        ({ data }) => {
+          this.expeditions = data;
+        },
+      );
+    } else {
+      this.params.config = this.networkConfig;
+      this.expeditions = undefined;
+    }
+  }
+
   clearParams() {
     // reset params to default
+    // this.params = this.initialParams;
     Object.keys(this.params).forEach(key => {
       if (Array.isArray(this.params[key])) {
         this.params[key] = [];
@@ -145,64 +224,10 @@ class QueryFormController {
         this.params[key] = null;
       }
     });
+    this.expeditions = undefined;
     this.individualProjects = []; // need to remove selected chips
     this.groupedProjects = []; // need to remove selected chips
     // TODO: remove country, phylum, markers, and filter chips
-  }
-
-  // TODO: update autocomplete to remove selected chips
-  chipChanged(chip, removal) {
-    this.params.expeditions = [];
-    this.groupChip = typeof chip === 'string';
-    this.singleProject = this.individualProjects.length === 1;
-
-    // update parameters on add and remove chips
-    if (!removal && this.groupChip) {
-      this.projects.forEach(p => {
-        if (p.projectConfiguration.name === chip) this.params.projects.push(p);
-      });
-    } else if (!removal && !this.groupChip) {
-      this.projects.forEach(p => {
-        if (p.projectId === chip.projectId) this.params.projects.push(p);
-      });
-    } else if (removal && this.groupChip) {
-      this.projects.forEach(p => {
-        const index = this.params.projects.indexOf(p);
-        if (p.projectConfiguration.name === chip)
-          this.params.projects.splice(index, 1);
-      });
-    } else if (removal && !this.groupChip) {
-      this.projects.forEach(p => {
-        const index = this.params.projects.indexOf(p);
-        if (p.projectId === chip.projectId)
-          this.params.projects.splice(index, 1);
-      });
-    }
-
-    // TODO: this will not work if projects with shared config are added individually
-    // If all selected projects share configuration, retrieve their specific configuration
-    if (this.singleProject || this.groupedProjects.length === 1) {
-      this.firstMatchingConfig = this.projects.find(
-        p =>
-          p.projectConfiguration.name ===
-          (this.groupedProjects[0] ||
-            this.individualProjects[0].projectConfiguration.name),
-      );
-      this.ProjectConfigurationService.get(
-        this.firstMatchingConfig.projectConfiguration.id,
-      ).then(({ config }) => {
-        this.params.config = config;
-      });
-    } else this.params.config = this.networkConfig;
-
-    // retrieve expeditions for single projects only
-    if (this.singleProject) {
-      this.ExpeditionService.all(this.individualProjects[0].projectId).then(
-        ({ data }) => {
-          this.expeditions = data;
-        },
-      );
-    } else this.expeditions = undefined;
   }
 
   addFilter(filterType) {
@@ -269,7 +294,6 @@ class QueryFormController {
   queryJson() {
     this.toggleLoading({ val: true });
     const selectEntities = ['Sample', 'fastqMetadata'];
-
     this.QueryService.queryJson(
       this.params.buildQuery(selectEntities, SOURCE.join()),
       'Event',

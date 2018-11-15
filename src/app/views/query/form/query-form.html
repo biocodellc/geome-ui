@@ -8,43 +8,33 @@
   </md-hints>
 
   <div class="projects">
-	  
+    <!--TODO: move loading indicator so that the flex doesnt move on page load-->
     <div ng-show="$ctrl.moreSearchOptions" ng-click="$ctrl.clearParams()">
-	    <md-radio-group ng-model="$ctrl.showGroups" layout-gt-sm="row" class="md-primary">
-	    <md-radio-button ng-value="false" flex> Search by individual project
-	    </md-radio-button>
-	    <md-radio-button ng-value="true" flex> Search by project family
-	    </md-radio-button>
-	    </md-radio-group>
-        <!--i class="fa fa-square fa-xs" ng-show="!$ctrl.showGroups"> Search by project family</i>
-        <i class="fa fa-square fa-xs" ng-show="$ctrl.showGroups"> Search by individual project</i-->
+      <md-radio-group ng-model="$ctrl.showGroups" layout-gt-sm="row" class="md-primary">
+        <md-radio-button ng-value="false" flex> Search by individual project
+        </md-radio-button>
+        <md-radio-button ng-value="true" flex> Search by project family
+        </md-radio-button>
+      </md-radio-group>
     </div>
 
     <div ng-show="$ctrl.loading" class="loading-overlay">
       <md-progress-circular md-mode="indeterminate"></md-progress-circular>
     </div>
-    <!--TODO: fix format issues when multiple chips are selected-->
+
     <section class="groups" layout-gt-sm="row" layout-align="center center" layout-padding ng-show="$ctrl.showGroups">
-      <h3 class="md-subhead bold" flex>Project Family</h3>
-      <div flex="65">
-        <md-chips ng-model="$ctrl.groupedProjects" md-on-add="$ctrl.chipChanged($chip)" md-on-remove="$ctrl.chipChanged($chip,$event)"
-          md-require-match md-autocomplete-snap="width">
-          <md-autocomplete md-selected-item="$ctrl.selectedGroup" md-no-cache md-search-text="searchText" md-items="item in $ctrl.configNames | filter: {$: searchText}"
-            md-item-text="item" md-dropdown-position="bottom" md-min-length="0" placeholder="Configuration Name ...">
-            <span md-highlight-text="searchText" md-highlight-flags="i">{{item}}</span>
-          </md-autocomplete>
-          <md-chip-template>
-            <span>
-              <strong>{{$chip}}</strong>
-            </span>
-          </md-chip-template>
-        </md-chips>
+      <h3 class="md-subhead bold" flex="50">Project Family</h3>
+      <div flex="65" ng-repeat="name in $ctrl.configNames">
+        <md-checkbox ng-checked="$ctrl.familySelected(name, $ctrl.groupedProjects)" ng-click="$ctrl.familyToggle(name, $ctrl.groupedProjects)">
+          {{ name }}
+        </md-checkbox>
       </div>
     </section>
+
     <section class="individual" layout-gt-sm="row" layout-align="center center" layout-padding ng-show="$ctrl.moreSearchOptions && !$ctrl.showGroups">
       <h3 class="md-subhead bold" flex>Individual Projects</h3>
       <div flex="65">
-        <md-chips ng-model="$ctrl.individualProjects" md-on-add="$ctrl.chipChanged($chip)" md-on-remove="$ctrl.chipChanged($chip,$event)"
+        <md-chips ng-model="$ctrl.individualProjects" md-on-add="$ctrl.individualToggle($chip)" md-on-remove="$ctrl.individualToggle($chip,$event)"
           md-require-match>
           <md-autocomplete md-selected-item="$ctrl.selectedProject" md-no-cache md-autocomplete-snap="width"
             md-search-text="searchText" md-items="item in $ctrl.projects | filter: {projectTitle: searchText}"
@@ -127,7 +117,7 @@
       </div>
     </section>
 
-    <!-- TODO: Phylum and country floating labels dissapear when input box is touched --> 
+    <!-- TODO: Phylum and country floating labels dissapear when input box is touched -->
     <section layout-gt-sm="row" layout-align="center center" layout-padding>
       <h3 class="md-subhead bold" flex>Phylum</h3>
       <div flex="65">
