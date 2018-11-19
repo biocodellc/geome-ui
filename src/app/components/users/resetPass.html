@@ -11,37 +11,32 @@
             </div>
             <div class="panel-body">
                 <div class="row">
-                    <div ng-show="!$ctrl.resetPass" class="col-lg-12">
-                        <form class="reset-pass-form" name="resetPassForm" ng-submit="$ctrl.resetPassword()"
-                            method="post" role="form">
+                    <div class="col-lg-12">
+                        <form class="reset-pass-form" name="resetPassForm" ng-submit="$ctrl.resetPassword()" method="post"
+                            role="form">
                             <div class="form-group" show-errors>
-                                <input type="password" name="password" ng-model="$ctrl.password"
-                                    required tabindex="1" class="form-control" placeholder="New Password"
-                                    password-strength="passStrength" min-password-strength="50"
-                                    password-strength-icons />
-                                <div ng-password-strength="$ctrl.password" strength="passStrength"
-                                    ng-hide="true"></div>
-                                <div class="help-block" ng-if="passwordForm.newPassword.$error.passwordStrength && passwordForm.newPassword.$touched">
+                                <input type="password" name="password" ng-model="$ctrl.password" required tabindex="1"
+                                    class="form-control" placeholder="New Password" password-strength="passStrength"
+                                    min-password-strength="50" password-strength-icons />
+                                <div ng-password-strength="$ctrl.password" strength="passStrength" ng-hide="true"></div>
+                                <div class="help-block" ng-if="resetPassForm.password.$error.passwordStrength && resetPassForm.password.$touched">
                                     Password is not strong enough.</div>
-
                             </div>
                             <div class="form-group">
                                 <div class="row">
-                                    <div class="col-sm-12 alert alert-error alert-dismissable" role="alert"
-                                        ng-show="$ctrl.error">
-                                        <button type="button" class="close" data-dismiss="alert"
-                                            aria-label="Close">
+                                    <div class="col-sm-12 alert alert-error alert-dismissable" role="alert" ng-show="$ctrl.error">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                         </button>
                                         <strong>Error!</strong> {{ $ctrl.error }}
                                     </div>
-                                    <div class="col-sm-12 alert alert-success alert-dismissable"
-                                        role="alert" ng-show="$ctrl.success" ng-bind-html="$ctrl.success">
+                                    <div class="col-sm-12 alert alert-success alert-dismissable" role="alert" ng-show="$ctrl.success"
+                                        ng-bind-html="$ctrl.success">
                                     </div>
                                     <div class="col-sm-6 col-sm-offset-3">
-                                        <input type="submit" name="reset-pass-submit" id="reset-pass-submit"
-                                            tabindex="2" class="form-control btn btn-login btn-primary"
-                                            ng-disabled="passStrength < 50" value="Reset Password">
+                                        <input type="submit" name="reset-pass-submit" id="reset-pass-submit" tabindex="2"
+                                            class="form-control btn btn-login btn-primary" ng-disabled="passStrength < 50"
+                                            value="Reset Password">
                                     </div>
                                 </div>
                             </div>
