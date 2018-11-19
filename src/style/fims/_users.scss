@@ -69,10 +69,8 @@
 
 // Both Password Indicators
 .weak-password {
-  @extend .password-indicator;
   color: #d9230f;
 }
 .strong-password {
-  @extend .password-indicator;
   color: #468847;
 }
