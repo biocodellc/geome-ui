@@ -22,7 +22,6 @@ export default class QueryParams {
   constructor() {
     this.projects = [];
     this.expeditions = [];
-    //this.config = []; // we dont need to bind config inside params object, but i dont know how to bind it on its own
     this.filters = [];
     Object.assign(this, defaultParams);
   }
