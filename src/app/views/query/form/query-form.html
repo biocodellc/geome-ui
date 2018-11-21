@@ -8,7 +8,6 @@
   </md-hints>
 
   <div class="projects">
-    <!--TODO: move loading indicator so that the flex doesnt move on page load-->
     <div ng-show="$ctrl.moreSearchOptions" ng-click="$ctrl.clearParams()">
       <md-radio-group ng-model="$ctrl.showGroups" layout-gt-sm="row" class="md-primary">
         <md-radio-button ng-value="false" flex> Search by individual project
@@ -16,10 +15,6 @@
         <md-radio-button ng-value="true" flex> Search by project family
         </md-radio-button>
       </md-radio-group>
-    </div>
-
-    <div ng-show="$ctrl.loading" class="loading-overlay">
-      <md-progress-circular md-mode="indeterminate"></md-progress-circular>
     </div>
 
     <section class="groups" layout-gt-sm="row" layout-align="center center" layout-padding ng-show="$ctrl.showGroups">

@@ -36,7 +36,7 @@ class QueryController {
   downloadExcel() {
     this.loading = true;
     this.QueryService.downloadExcel(
-      this.params.buildQuery(this.selectEntities()),
+      this.params.buildQuery(this.entities),
       'Event',
     ).finally(() => {
       this.loading = false;
@@ -46,7 +46,7 @@ class QueryController {
   downloadCsv() {
     this.loading = true;
     this.QueryService.downloadCsv(
-      this.params.buildQuery(this.selectEntities()),
+      this.params.buildQuery(this.entities),
       'Event',
     ).finally(() => {
       this.loading = false;
@@ -56,17 +56,15 @@ class QueryController {
   downloadFasta() {
     this.loading = true;
     this.QueryService.downloadFasta(
-      this.params.buildQuery(this.selectEntities().concat(['Event'])),
+      this.params.buildQuery(this.entities.concat(['Event'])),
       'fastaSequence',
     ).finally(() => {
       this.loading = false;
     });
   }
 
-  selectEntities() {
-    return this.params.config.entities
-      .filter(e => ['Sample', 'Tissue'].includes(e.conceptAlias))
-      .map(e => e.conceptAlias);
+  selectEntities(entities) {
+    this.entities = entities;
   }
 
   toggleSidebar() {

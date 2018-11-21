@@ -72,7 +72,6 @@ class QueryFormController {
   $onInit() {
     //  this.initialParams = Object.freeze(this.params); // TODO: check this out (config is the only one that needs to change, which can be done by unbinding config fromt he params object)
     this.showGroups = true;
-    this.loading = true;
     this.resetExpeditions = true;
     this.groupedProjects = [];
     this.individualProjects = [];
@@ -93,17 +92,15 @@ class QueryFormController {
         });
         this.configNames = [...names];
       })
-      .finally(() => (this.loading = false));
 
     // Retrieve General Configurations
     this.NetworkConfigurationService.get().then(config => {
       this.networkConfig = config;
+      this.config = config;
       this.phylums = this.networkConfig.getList('phylum').fields;
       this.countries = this.networkConfig.getList('country').fields;
       this.markers = this.networkConfig.getList('markers').fields;
-      // this.hasFastqEntity = this.params.config.entities.some(
-      // e => e.type === 'Fastq',
-      // );
+      this.hasFastqEntity = this.config.entities.some(e => e.type === 'Fastq');
     });
 
     const { q } = this.$location.search();
@@ -155,17 +152,9 @@ class QueryFormController {
         }
       });
     }
-    // call configs for matching projects
     if (groupedProjects.length === 1) {
-      this.firstMatchingConfig = this.projects.find(
-        p => p.projectConfiguration.name === this.groupedProjects[0],
-      );
-      this.ProjectConfigurationService.get(
-        this.firstMatchingConfig.projectConfiguration.id,
-      ).then(({ config }) => {
-        this.params.config = config;
-      });
-    } else this.params.config = this.networkConfig;
+      this.specificConfigCall();
+    } else this.config = this.networkConfig;
   }
 
   familySelected(name, groupedProjects) {
@@ -189,20 +178,9 @@ class QueryFormController {
       });
     }
 
-    // call config for single project
     // TODO: this needs to work for multiple projects with shared config added individually
     if (this.singleProject) {
-      this.firstMatchingConfig = this.projects.find(
-        p =>
-          p.projectConfiguration.name ===
-          this.individualProjects[0].projectConfiguration.name,
-      );
-      this.ProjectConfigurationService.get(
-        this.firstMatchingConfig.projectConfiguration.id,
-      ).then(({ config }) => {
-        this.params.config = config;
-      });
-
+      this.specificConfigCall();
       // retrieve expeditions for single projects only
       this.ExpeditionService.all(this.individualProjects[0].projectId).then(
         ({ data }) => {
@@ -210,9 +188,26 @@ class QueryFormController {
         },
       );
     } else {
-      this.params.config = this.networkConfig;
       this.expeditions = undefined;
+      this.config = this.networkConfig;
     }
+  }
+
+  specificConfigCall() {
+    var specificName;
+    if (this.groupedProjects.length === 1) {
+      specificName = this.groupedProjects[0];
+    } else if (this.singleProject) {
+      specificName = this.individualProjects[0].projectConfiguration.name;
+    }
+    var firstMatchingConfig = this.projects.find(
+      p => p.projectConfiguration.name === specificName,
+    );
+    this.ProjectConfigurationService.get(
+      firstMatchingConfig.projectConfiguration.id,
+    ).then(({ config }) => {
+      this.config = config;
+    });
   }
 
   clearParams() {
@@ -234,7 +229,6 @@ class QueryFormController {
   }
 
   addFilter(filterType) {
-    if (this.params.config.length < 1) this.params.config = this.networkConfig;
     // TODO: fix bug with adding filters. ex: eventID is added automatically, but none of the others are??
     this.generateFilterOptions();
 
@@ -273,7 +267,7 @@ class QueryFormController {
   }
 
   generateFilterOptions() {
-    this.filterOptions = this.params.config.entities.reduce(
+    this.filterOptions = this.config.entities.reduce(
       (accumulator, entity) =>
         accumulator.concat(
           entity.attributes.filter(a => !a.internal).map(a => ({
@@ -282,7 +276,7 @@ class QueryFormController {
               : `${entity.conceptAlias} Default Group`,
             column: `${entity.conceptAlias}.${a.column}`,
             dataType: a.dataType,
-            list: this.params.config.findListForColumn(entity, a.column),
+            list: this.config.findListForColumn(entity, a.column),
           })),
         ),
       [],
@@ -296,6 +290,10 @@ class QueryFormController {
 
   queryJson() {
     this.toggleLoading({ val: true });
+    const entities = this.config.entities
+      .filter(e => ['Sample', 'Tissue'].includes(e.conceptAlias))
+      .map(e => e.conceptAlias);
+    this.entitiesForDownload({ entities });
     const selectEntities = ['Sample', 'fastqMetadata'];
     this.QueryService.queryJson(
       this.params.buildQuery(selectEntities, SOURCE.join()),
@@ -327,5 +325,6 @@ export default {
     currentUser: '<',
     onNewResults: '&',
     toggleLoading: '&',
+    entitiesForDownload: '&',
   },
 };
