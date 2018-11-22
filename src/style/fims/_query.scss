@@ -87,68 +87,52 @@ $query-form-toggle-width: 40px;
   > form {
     height: 100%;
   }
-  md-hints {
-    margin-bottom: $layout-gutter-width;
+
+  h3 {
+    margin: 0px;
   }
-  .projects {
+
+  md-checkbox {
+    margin-bottom: 0px;
+  }
+
+  .term {
     position: relative;
-    z-index: 1; //z-index of loading-overlay class will only affect this element
+    button {
+      position: absolute;
+    }
   }
 
-  section {
-    margin-bottom: $layout-gutter-width * 2;
-    // margin-bottom: 10px;
-
-    .md-form-group {
-      // margin: 0;
-    }
-    md-chips {
-      margin: 0px;
-      padding: 0px;
-      position: relative;
-
-      md-select {
-        position: absolute;
-      }
-    }
-
-    .checkboxes {
-      margin: 0px;
-      padding: 0px;
-      margin-top: 10px;
-    }
+  .country,
+  .term,
+  .phylum,
+  .year,
+  .groups,
+  .projects {
+    padding-top: 0px;
+    padding-bottom: 0px;
   }
 
   md-input-container {
-    margin: 0;
-    margin-top: 5px;
-
-    .md-errors-spacer {
-      min-height: 0;
-    }
+    margin: 0px;
   }
 
   .sequences {
-    //@extend .md-input-container-dense;
+    md-input-container {
+      margin-top: 20px;
+    }
   }
 
-  .dwc-terms {
-    //@extend .md-input-container-dense;
+  md-option {
+    font-size: 14px;
+    height: 38px;
+  }
 
-    .md-form-group > div:first-of-type {
-      margin-top: 3px;
-    }
-
-    md-input-container.md-input-focused label:not(.md-container-ignore),
-    md-input-container.md-input-has-value label:not(.md-container-ignore) {
-      bottom: 75%;
-    }
+  md-chips-wrap {
+    padding: 0px;
   }
 
   .filters {
-    // TODO: this has got to expand without forcing the margin
-
-    margin-top: 60px;
     .filter-button {
       margin-top: 0;
     }
@@ -197,59 +181,8 @@ $query-form-toggle-width: 40px;
     }
   }
 
-  md-optgroup {
-    label {
-      @extend .bold;
-      padding-bottom: 4px;
-    }
-
-    md-divider {
-      margin-top: 4px;
-    }
-  }
-
-  md-option {
-    font-size: 14px;
-    height: 38px;
-  }
-
-  md-select-menu {
-    md-select-content {
-      min-width: 0;
-    }
-  }
-
-  md-checkbox {
-    margin-bottom: 4px;
-
-    .md-label {
-      margin-left: 22px;
-    }
-  }
-
-  //  project-selector {
-  //   flex-shrink: 0;
-  //}
-
-  //.project-selector {
-  // margin: 10px 0;
-
-  // .md-button {
-  //margin-left: 0;
-  //padding-left: 0;
-  //text-transform: none;
-  //color: grey;
-  // font-size: 18px;
-  //line-height: 18px;
-  // font-weight: 600;
-  //  border-radius: 35%;
-  // }
-  //}
-
   .search-row {
     flex-shrink: 0;
-    //TODO: this is related to the map drawing section, why it doesnt make its neighbors adjust?
-    margin-top: 40px;
   }
 
   .data-policy {

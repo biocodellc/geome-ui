@@ -68,7 +68,7 @@ class QueryFormController {
     this.ExpeditionService = ExpeditionService;
   }
 
-  // TODO: return table view by default on advanced search
+  // TODO: return table view by default on advanced search, and on results with no lat lng coordinates 
   $onInit() {
     //  this.initialParams = Object.freeze(this.params); // TODO: check this out (config is the only one that needs to change, which can be done by unbinding config fromt he params object)
     this.showGroups = true;
