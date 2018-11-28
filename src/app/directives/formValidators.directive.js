@@ -127,9 +127,9 @@ const projectTitle = /* ngInject */ ProjectService => ({
     ctrl.$asyncValidators.projectTitle = modelValue => {
       if (ctrl.$isEmpty(modelValue)) return Promise.resolve();
 
-      return ProjectService.find(true, modelValue).then(({ data }) => {
+      return ProjectService.checkExists(modelValue).then(({ data }) => {
         // rejected promises are invalid
-        if (data.length > 0) throw new Error();
+        if (data) throw new Error();
       });
     };
   },
