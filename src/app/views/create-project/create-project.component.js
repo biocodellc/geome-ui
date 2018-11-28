@@ -70,7 +70,28 @@ class CreateProjectController {
     this.requiredRules = {};
   }
 
-  createProject() {
+  async createProject() {
+    if (this.newConfig || !this.syncConfig) {
+      try {
+        await this.$mdDialog.show(
+          this.$mdDialog
+            .confirm()
+            .title('Create Project Configuration')
+            .textContent(
+              `Once a configuration is created, you will no longer be able to change the 
+              "uniqueKey" or "worksheet" for an entity. If you would like to change these
+              please do this before creating the project.`,
+            )
+            .ok('Create Project!')
+            .cancel('Cancel'),
+        );
+        // user accepted, proceed
+      } catch (e) {
+        // user canceled
+        return;
+      }
+    }
+
     if (!this.newConfig && this.syncConfig) {
       this.project.projectConfiguration = this.existingConfig;
     } else {
@@ -124,6 +145,7 @@ class CreateProjectController {
   }
 
   availableAttributes(conceptAlias) {
+    if (!this.networkConfig) return [];
     return this.networkConfig.entities.find(
       e => e.conceptAlias === conceptAlias,
     ).attributes;
@@ -174,6 +196,21 @@ class CreateProjectController {
         this.uniqueKeyChange(e);
       }
     }
+  }
+
+  disableGenerateID(e) {
+    if (e.type !== 'Tissue' || e.uniqueKey !== 'tissueID') return true;
+
+    const sampleEntity = this.config.entities.find(
+      entity => entity.conceptAlias === e.parentEntity,
+    );
+    return !sampleEntity || sampleEntity.worksheet !== e.worksheet;
+  }
+
+  getEntity(conceptAlias) {
+    return (
+      this.config.entities.find(e => e.conceptAlias === conceptAlias) || {}
+    );
   }
 
   uniqueKeyChange(e) {
@@ -244,7 +281,7 @@ class CreateProjectController {
       if (!e) {
         e = {
           conceptAlias: 'Tissue',
-          type: 'DefaultEntity',
+          type: 'Tissue',
           worksheet: 'Tissues',
           uniqueKey: 'tissueID',
           attributes: this.requiredAttributes.Tissue.map(a =>
