@@ -4,7 +4,16 @@
             <tr md-row>
                 <th md-column md-order-by="value">Value</th>
                 <th md-column>Defined By</th>
-                <th md-column>Definition</th>
+                <th md-column>
+                    <span>Definition</span>
+                    <!-- md-button here breaks due to the fix-head directive, so we use a regular button and 
+                                            manually add the md-button classes -->
+                    <button ng-click="$ctrl.addField($event)" class="md-primary md-button md-ink-ripple add-button"
+                        ng-show="$ctrl.canEdit">
+                        <md-icon md-font-icon="fa fa-plus fa-fw"></md-icon>
+                        Add Field
+                    </button>
+                </th>
             </tr>
         </thead>
         <tbody md-body>

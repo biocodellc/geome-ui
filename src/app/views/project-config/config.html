@@ -49,7 +49,11 @@
                                 on-new-worksheet="$ctrl.handleNewWorksheet(sheetName)">
                             </div>
 
-                            <div ui-view="lists" ng-cloak lists="$ctrl.config.lists"></div>
+                            <div ui-view="lists" ng-cloak lists="$ctrl.config.lists"
+                                can-edit="$ctrl.isNetworkAdmin || $ctrl.currentUser.subscribed"
+                                on-update-list="$ctrl.handleUpdateList(list)"
+                                on-update-lists="$ctrl.handleUpdateLists(lists)">
+                            </div>
 
                             <div ui-view="expeditionMetadata" ng-cloak properties="$ctrl.config.expeditionMetadataProperties"
                                 can-edit="$ctrl.isNetworkAdmin || $ctrl.currentUser.subscribed"

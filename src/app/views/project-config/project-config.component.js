@@ -68,6 +68,17 @@ class ConfigController {
     this.updateShowSave();
   }
 
+  handleUpdateLists(lists) {
+    this.config.lists = lists;
+    this.updateShowSave();
+  }
+
+  handleUpdateList(list) {
+    const i = this.config.lists.findIndex(l => l.alias === list.alias);
+    this.config.lists.splice(i, 1, list);
+    this.updateShowSave();
+  }
+
   handleUpdateSettings(configuration) {
     delete configuration.config;
     Object.assign(this.configuration, configuration);

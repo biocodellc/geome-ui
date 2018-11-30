@@ -6,6 +6,8 @@ const fimsListDetail = {
   template,
   bindings: {
     list: '<',
+    canEdit: '<',
+    onUpdateList: '&',
   },
 };
 
