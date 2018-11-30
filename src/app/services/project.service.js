@@ -108,6 +108,12 @@ class ProjectService extends EventEmitter {
       .catch(angular.catcher('Failed to find projects by projectTitle'));
   }
 
+  checkExists(projectTitle) {
+    return this.$http
+      .get(`${restRoot}projects/exists/${projectTitle}`)
+      .catch(angular.catcher('Failed to check if projectTitle exists'));
+  }
+
   create(project) {
     return this.$http({
       method: 'POST',

@@ -1,0 +1,21 @@
+#list-fields-table {
+  max-height: 400px;
+  .table {
+    margin-bottom: 0;
+  }
+}
+
+.list-dialog {
+  min-width: 400px;
+  max-width: 650px;
+  padding: 16px;
+  padding-bottom: 0;
+
+  md-checkbox {
+    margin-top: 0;
+  }
+
+  .md-title {
+    align-self: center;
+  }
+}

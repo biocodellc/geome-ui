@@ -9,12 +9,24 @@ class EditEntityController {
   $onDestroy() {
     this.onUpdate({ entity: this.entity });
   }
+
+  disableGenerateID() {
+    if (this.entity.type !== 'Tissue' || this.entity.uniqueKey !== 'tissueID') {
+      return true;
+    }
+
+    const sampleEntity = this.config.entities.find(
+      entity => entity.conceptAlias === this.entity.parentEntity,
+    );
+    return !sampleEntity || sampleEntity.worksheet !== this.entity.worksheet;
+  }
 }
 
 const fimsEntityEdit = {
   template: require('./edit-entity.html'),
   controller: EditEntityController,
   bindings: {
+    config: '<',
     entity: '<',
     onUpdate: '&',
     onClose: '&',

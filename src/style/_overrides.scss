@@ -429,45 +429,6 @@ $adminnav-border-bottom: 1px solid $gray-light;
   display: none;
 }
 
-// Profile
-.profile {
-  .heading {
-    margin-top: 10px;
-    min-height: 0;
-
-    .username {
-      margin-top: 0px;
-
-      .fa {
-        margin-right: 10px;
-      }
-    }
-  }
-
-  .settings {
-    margin-top: 35px;
-    border-top: 1px solid $gray-lighter;
-
-    .section {
-      border-bottom: 1px solid $gray-lighter;
-
-      .title {
-        font-weight: 500;
-        margin-bottom: $line-height-computed;
-      }
-    }
-  }
-}
-
-.change-password-form {
-  display: flex;
-
-  .form-group {
-    margin-bottom: $form-group-margin-bottom;
-    margin-right: 15px;
-  }
-}
-
 .has-warning {
   .help-block,
   .control-label,

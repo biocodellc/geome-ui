@@ -11,10 +11,10 @@
 
     <div class="row">
         <div class="col-xs-12">
-            <p>List fields are controlled by the GeOMe admin. If you would like to request a
+            <p ng-if="$ctrl.list.networkList">This list's fields are controlled by the GeOMe admin. If you would like to request a
                 modification feel free to send an email to <a href="mailto:geome.help@gmail.com">geome.help@gmail.com</a></p>
 
-            <fims-network-config-list list="$ctrl.list"></fims-network-config-list>
+            <fims-project-config-list list="$ctrl.list" can-edit="$ctrl.canEdit && !$ctrl.list.networkList" on-change="$ctrl.onUpdateList({ list: list })"></fims-project-config-list>
         </div>
     </div>
 </div>
