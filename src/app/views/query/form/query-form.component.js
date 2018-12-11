@@ -68,9 +68,8 @@ class QueryFormController {
     this.ExpeditionService = ExpeditionService;
   }
 
-  // TODO: return table view by default on advanced search, and on results with no lat lng coordinates 
+  // TODO: return table view by default on advanced search, and on results with no lat lng coordinates
   $onInit() {
-    //  this.initialParams = Object.freeze(this.params); // TODO: check this out (config is the only one that needs to change, which can be done by unbinding config fromt he params object)
     this.showGroups = true;
     this.resetExpeditions = true;
     this.groupedProjects = [];
@@ -101,6 +100,7 @@ class QueryFormController {
       this.countries = this.networkConfig.getList('country').fields;
       this.markers = this.networkConfig.getList('markers').fields;
       this.hasFastqEntity = this.config.entities.some(e => e.type === 'Fastq');
+      //TODO: remove fastq metadata from url when there is none 
     });
 
     const { q } = this.$location.search();
@@ -212,7 +212,6 @@ class QueryFormController {
 
   clearParams() {
     // reset params to default
-    // this.params = this.initialParams;
     Object.keys(this.params).forEach(key => {
       if (Array.isArray(this.params[key])) {
         this.params[key] = [];
@@ -221,15 +220,18 @@ class QueryFormController {
       } else if (typeof this.params[key] === 'string') {
         this.params[key] = null;
       }
-    });
+    }); 
+
     this.expeditions = undefined;
     this.individualProjects = []; // need to remove selected chips
     this.groupedProjects = []; // need to remove selected chips
-    // TODO: remove country, phylum, markers, and filter chips
+    this.params.phylum = null;
+    this.params.country = null;
+    // TODO: remove markers, and filter chips
   }
 
   addFilter(filterType) {
-    // TODO: fix bug with adding filters. ex: eventID is added automatically, but none of the others are??
+    // TODO: eventID is added automatically ONLY in user view not in query
     this.generateFilterOptions();
 
     const filter = Object.assign({}, defaultFilter, {
@@ -240,10 +242,12 @@ class QueryFormController {
     if (filterType === 'event') this.params.events.push(filter);
     if (filterType === 'specimen') this.params.specimens.push(filter);
     if (filterType === 'tissue') this.params.tissues.push(filter);
+
     this.params.filters = this.params.events.concat(
       this.params.specimens,
       this.params.tissues,
     );
+    // TODO: These get added but never removed 
   }
 
   getQueryTypes(column) {
