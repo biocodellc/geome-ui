@@ -82,15 +82,14 @@ class QueryFormController {
     this.params.tissues = [];
 
     // Retrieve Projects
-    this.ProjectService.all(true)
-      .then(({ data }) => {
-        this.projects = data;
-        const names = new Set();
-        this.projects.forEach(p => {
-          names.add(p.projectConfiguration.name);
-        });
-        this.configNames = [...names];
-      })
+    this.ProjectService.all(true).then(({ data }) => {
+      this.projects = data;
+      const names = new Set();
+      this.projects.forEach(p => {
+        names.add(p.projectConfiguration.name);
+      });
+      this.configNames = [...names];
+    });
 
     // Retrieve General Configurations
     this.NetworkConfigurationService.get().then(config => {
@@ -100,7 +99,7 @@ class QueryFormController {
       this.countries = this.networkConfig.getList('country').fields;
       this.markers = this.networkConfig.getList('markers').fields;
       this.hasFastqEntity = this.config.entities.some(e => e.type === 'Fastq');
-      //TODO: remove fastq metadata from url when there is none 
+      //TODO: remove fastq metadata from url when there is none
     });
 
     const { q } = this.$location.search();
@@ -220,7 +219,7 @@ class QueryFormController {
       } else if (typeof this.params[key] === 'string') {
         this.params[key] = null;
       }
-    }); 
+    });
 
     this.expeditions = undefined;
     this.individualProjects = []; // need to remove selected chips
@@ -230,24 +229,14 @@ class QueryFormController {
     // TODO: remove markers, and filter chips
   }
 
-  addFilter(filterType) {
-    // TODO: eventID is added automatically ONLY in user view not in query
-    this.generateFilterOptions();
-
-    const filter = Object.assign({}, defaultFilter, {
-      column: this.filterOptions[0].column,
-      type: this.getQueryTypes(this.filterOptions[0].column)[0],
-    });
-
-    if (filterType === 'event') this.params.events.push(filter);
-    if (filterType === 'specimen') this.params.specimens.push(filter);
-    if (filterType === 'tissue') this.params.tissues.push(filter);
-
-    this.params.filters = this.params.events.concat(
-      this.params.specimens,
-      this.params.tissues,
-    );
-    // TODO: These get added but never removed 
+  // TODO: eventID can never be added, yet is displayed as if it is added. also appears in specimen list  
+  filterToggle(chip, removal) {
+    if (!removal) {
+      this.params.filters.push(chip);
+    } else if (removal) {
+      const index = this.params.filters.indexOf(chip);
+      this.params.filters.splice(index, 1);
+    }
   }
 
   getQueryTypes(column) {
@@ -270,26 +259,46 @@ class QueryFormController {
     this.params.bounds = null;
   }
 
-  generateFilterOptions() {
+  generateFilterOptions(type) {
     this.filterOptions = this.config.entities.reduce(
       (accumulator, entity) =>
         accumulator.concat(
-          entity.attributes.filter(a => !a.internal).map(a => ({
-            group: a.group
-              ? `${entity.conceptAlias} ${a.group}`
-              : `${entity.conceptAlias} Default Group`,
-            column: `${entity.conceptAlias}.${a.column}`,
-            dataType: a.dataType,
-            list: this.config.findListForColumn(entity, a.column),
-          })),
+          entity.attributes
+            .filter(a => !a.internal)
+            .map(a => ({
+              group: a.group
+                ? `${entity.conceptAlias} ${a.group}`
+                : `${entity.conceptAlias} Default Group`,
+              column: `${entity.conceptAlias}.${a.column}`,
+              dataType: a.dataType,
+              list: this.config.findListForColumn(entity, a.column),
+            })),
         ),
       [],
     );
-    this.filterOptions.forEach(o => {
-      if (o.group.includes('Event')) this.events.push(o);
-      if (o.group.includes('Sample')) this.specimens.push(o);
-      if (o.group.includes('Tissue')) this.tissues.push(o);
+    if (this.events.length === 0) {
+      this.filterOptions.forEach(o => {
+        if (o.group.includes('Event')) this.events.push(o);
+      });
+    }
+    if (this.specimens.length === 0) {
+      this.filterOptions.forEach(o => {
+        if (o.group.includes('Sample')) this.specimens.push(o);
+      });
+    }
+    if (this.tissues.length === 0) {
+      this.filterOptions.forEach(o => {
+        if (o.group.includes('Tissue')) this.tissues.push(o);
+      });
+    }
+    const filter = Object.assign({}, defaultFilter, {
+      column: this.filterOptions[0].column,
+      type: this.getQueryTypes(this.filterOptions[0].column)[0],
     });
+
+    if (type === 'event') this.params.events.push(filter);
+    if (type === 'specimen') this.params.specimens.push(filter);
+    if (type === 'tissue') this.params.tissues.push(filter);
   }
 
   queryJson() {

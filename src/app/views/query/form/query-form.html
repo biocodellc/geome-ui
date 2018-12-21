@@ -21,6 +21,7 @@
       <div layout="column">
         <h3 class="md-subhead bold" flex>Project Family</h3>
         <div layout-gt-sm="row">
+		<!-- TODO: Checkbox formatting with newly added projects --> 
           <div ng-repeat="name in $ctrl.configNames">
             <div layout-margin>
               <md-checkbox ng-checked="$ctrl.familySelected(name, $ctrl.groupedProjects)" ng-click="$ctrl.familyToggle(name, $ctrl.groupedProjects)">
@@ -36,8 +37,7 @@
     <div class="individual" layout="column" ng-show="$ctrl.moreSearchOptions && !$ctrl.showGroups">
       <h3 class="md-subhead bold" flex>Individual Projects</h3>
       <div flex>
-        <md-chips ng-model="$ctrl.individualProjects" md-on-add="$ctrl.individualToggle($chip)" md-on-remove="$ctrl.individualToggle($chip,$event)"
-          md-require-match>
+        <md-chips ng-model="$ctrl.individualProjects" md-on-add="$ctrl.individualToggle($chip)" md-on-remove="$ctrl.individualToggle($chip,$event)" md-require-match>
           <md-autocomplete md-selected-item="$ctrl.selectedProject" md-no-cache md-autocomplete-snap="width"
             md-search-text="searchText" md-items="item in $ctrl.projects | filter: {projectTitle: searchText}"
             md-item-text="item.projectTitle" md-dropdown-position="bottom" md-min-length="0">
@@ -180,17 +180,18 @@
   <div ng-show="$ctrl.moreSearchOptions">
 
     <div class="filters">
+	    <!--TODO: investigate WHY does EventId get displayed automatically but none of the rest do?-->
       <div class="events">
         <div layout="column">
           <div class="filter-button" flex>
-            <md-button class="md-accent md-raised md-button-sm" ng-click="$ctrl.addFilter('event')">
+            <md-button class="md-accent md-raised md-button-sm" ng-click="$ctrl.generateFilterOptions('event')">
               <span class="fa fa-plus"></span> Add Event Filter</md-button>
           </div>
           <div flex>
-            <md-chips ng-model="$ctrl.params.events" readonly="true" md-removable="true">
+            <md-chips ng-model="$ctrl.params.events" readonly="true" md-removable="true" md-on-remove="$ctrl.filterToggle($chip, $event)">
               <md-chip-template layout="row">
                 <div flex="40" class="filter-select">
-                  <md-select ng-model="$chip.column" md-container-class aria-label="event">
+                  <md-select ng-model="$chip.column" md-container-class aria-label="event" ng-change="$ctrl.filterToggle($chip)">
                     <md-optgroup label="Events">
                       <md-option ng-value="event.column" ng-repeat="event in $ctrl.events">{{event.column.split('.')[1]}}</md-option>
                     </md-optgroup>
@@ -221,14 +222,14 @@
       <div class="specimens">
         <div layout="column">
           <div class="filter-button" flex>
-            <md-button class="md-accent md-raised md-button-sm" ng-click="$ctrl.addFilter('specimen')">
+            <md-button class="md-accent md-raised md-button-sm" ng-click="$ctrl.generateFilterOptions('specimen')">
               <span class="fa fa-plus"></span> Add Specimen Filter</md-button>
           </div>
           <div flex>
-            <md-chips ng-model="$ctrl.params.specimens" readonly="true" md-removable="true">
+            <md-chips ng-model="$ctrl.params.specimens" readonly="true" md-removable="true" md-on-remove="$ctrl.filterToggle($chip, $event)">
               <md-chip-template layout="row">
                 <div flex="40" class="filter-select">
-                  <md-select ng-model="$chip.column" md-container-class aria-label="specimen">
+                  <md-select ng-model="$chip.column" md-container-class aria-label="specimen" ng-change="$ctrl.filterToggle($chip)">
                     <md-optgroup label="Specimens">
                       <md-option ng-value="specimen.column" ng-repeat="specimen in $ctrl.specimens">{{specimen.column.split('.')[1]}}</md-option>
                     </md-optgroup>
@@ -259,14 +260,14 @@
       <div class="tissues">
         <div layout="column">
           <div class="filter-button" flex>
-            <md-button class="md-accent md-raised md-button-sm" ng-click="$ctrl.addFilter('tissue')">
+            <md-button class="md-accent md-raised md-button-sm" ng-click="$ctrl.generateFilterOptions('tissue')">
               <span class="fa fa-plus"></span> Add Tissue Filter</md-button>
           </div>
           <div flex>
-            <md-chips ng-model="$ctrl.params.tissues" readonly="true" md-removable="true">
+            <md-chips ng-model="$ctrl.params.tissues" readonly="true" md-removable="true" md-on-remove="$ctrl.filterToggle($chip, $event)">
               <md-chip-template layout="row">
                 <div flex="60" class="filter-select">
-                  <md-select ng-model="$chip.column" md-container-class aria-label="tissue">
+                  <md-select ng-model="$chip.column" md-container-class aria-label="tissue" ng-change="$ctrl.filterToggle($chip)">
                     <md-optgroup label="Tissues">
                       <md-option ng-value="tissue.column" ng-repeat="tissue in $ctrl.tissues">{{tissue.column.split('.')[1]}}</md-option>
                     </md-optgroup>
@@ -277,7 +278,8 @@
                     <md-option ng-value="t" ng-repeat="t in $ctrl.getQueryTypes($chip.column)">{{t}}</md-option>
                   </md-select>
                 </div>
-                <div ng-show="$chip.type !== 'has'" flex="60">
+                <div flex="45">
+                <div ng-show="$chip.type !== 'has'">
                   <md-input-container ng-show="!$chip.list">
                     <input type="text" ng-model="$chip.value" aria-label="tissue" />
                   </md-input-container>
@@ -285,6 +287,7 @@
                     <md-option>-- Choose value --</md-option>
                     <md-option ng-value="item" ng-repeat="item in $chip.list track by item">{{item}}</md-option>
                   </md-select>
+                </div>
                 </div>
               </md-chip-template>
             </md-chips>
