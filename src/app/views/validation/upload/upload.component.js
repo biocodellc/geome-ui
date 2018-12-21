@@ -123,7 +123,6 @@ class UploadController {
     if (expeditionCode === 'CREATE') {
       this.$mdDialog
         .show({
-          // targetEvent: ev,
           template: createExpeditionTemplate,
           locals: {
             metadataProperties: this.currentProject.config
@@ -187,7 +186,6 @@ class UploadController {
                   .alert('naanDialog')
                   .clickOutsideToClose(true)
                   .title('Incorrect NAAN')
-                  .css('naan-dialog')
                   .htmlContent(
                     `Spreadsheet appears to have been created using a different FIMS/BCID system.
                    <br/>
@@ -588,7 +586,7 @@ class UploadController {
           this.$mdDialog
             .show({
               template:
-                '<upload-map-dialog layout="column" unique-key="uniqueKey" lat-column="latColumn" lng-column="lngColumn" data="d"></upload-map-dialog>',
+                '<md-dialog class="upload-map-dialog"><upload-map-dialog layout="column" unique-key="uniqueKey" lat-column="latColumn" lng-column="lngColumn" data="d"></upload-map-dialog></md-dialog>',
               scope,
             })
             .then(() => {

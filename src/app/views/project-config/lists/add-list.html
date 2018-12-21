@@ -1,0 +1,25 @@
+<md-dialog class="list-dialog">
+  <md-dialog-content>
+    <h4 class="md-title">New List</h4>
+    <form layout="column" name="form" novalidate>
+      <md-input-container>
+        <label>List Name</label>
+        <input type="text" name="alias" ng-model="$ctrl.list.alias" required exclusion-list="$ctrl.existingAliases"
+          md-autofocus />
+
+        <div ng-messages="form.alias.$error">
+          <div ng-message="exclusionList">A list with this alias already exists.</div>
+        </div>
+      </md-input-container>
+
+      <md-checkbox ng-model="$ctrl.list.caseInsensitive" class="md-align-top-left" name="public">
+        Case Insensitive?
+      </md-checkbox>
+
+      <md-dialog-actions>
+        <md-button ng-click="$ctrl.$mdDialog.cancel()" class="md-primary">Cancel</md-button>
+        <md-button ng-click="$ctrl.$mdDialog.hide($ctrl.list)" ng-disabled="form.$invalid" class="md-primary">Add</md-button>
+      </md-dialog-actions>
+    </form>
+  </md-dialog-content>
+</md-dialog>

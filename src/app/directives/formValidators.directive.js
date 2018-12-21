@@ -19,6 +19,26 @@ const compareTo = () => ({
 });
 
 /**
+ * form validator to compare model against an exclusion list
+ */
+const exclusionList = () => ({
+  restrict: 'A',
+  require: 'ngModel',
+  scope: {
+    exclusionList: '<',
+    ignoreCase: '<',
+  },
+  link(scope, elm, attr, ctrl) {
+    ctrl.$validators.exclusionList = modelValue =>
+      scope.ignoreCase
+        ? !scope.exclusionList.some(
+            v => !modelValue || v.toLowerCase() === modelValue.toLowerCase(),
+          )
+        : !scope.exclusionList.some(v => v === modelValue);
+  },
+});
+
+/**
  * custom form validator to check password strength
  */
 const passwordStrength = /* ngInject */ $compile => ({
@@ -127,9 +147,9 @@ const projectTitle = /* ngInject */ ProjectService => ({
     ctrl.$asyncValidators.projectTitle = modelValue => {
       if (ctrl.$isEmpty(modelValue)) return Promise.resolve();
 
-      return ProjectService.find(true, modelValue).then(({ data }) => {
+      return ProjectService.checkExists(modelValue).then(({ data }) => {
         // rejected promises are invalid
-        if (data.length > 0) throw new Error();
+        if (data) throw new Error();
       });
     };
   },
@@ -169,6 +189,7 @@ const expeditionCode = /* ngInject */ ExpeditionService => ({
 export default angular
   .module('fims.formValidators', [])
   .directive('compareTo', compareTo)
+  .directive('exclusionList', exclusionList)
   .directive('passwordStrength', passwordStrength)
   .directive('username', username)
   .directive('validExpeditionCode', expeditionCode)

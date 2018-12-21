@@ -288,13 +288,13 @@ md-autocomplete {
 }
 
 md-dialog {
+  max-width: 500px;
   md-content {
     background-color: inherit;
   }
 }
 
 .confirmation-dialog {
-  max-width: 450px;
 
   md-dialog-content {
     &.layout-margin {

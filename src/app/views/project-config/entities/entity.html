@@ -46,6 +46,7 @@
 
     <script type="text/ng-template" id="editEntityPopover.html">
         <fims-edit-entity
+            config="$ctrl.config"
             entity="$ctrl.entity"
             on-update="$ctrl.handleOnUpdate(entity)"
             on-close="$ctrl.onToggleEdit()">
