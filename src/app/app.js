@@ -23,6 +23,7 @@ import mdSticky from './directives/mdSticky.directive';
 import mdHint from './directives/mdHint.directive';
 import mdAutocomplete from './directives/mdAutocomplete.directive';
 import ngImageGallery from './directives/ngImageGallery.directive';
+import ngEnter from './directives/ngEnter.directive';
 import formValidators from './directives/formValidators.directive';
 import trustedHtml from './filters/html.filter';
 import excludeFilter from './filters/exclude.filter';
@@ -78,6 +79,7 @@ const dependencies = [
   mdHint,
   mdAutocomplete,
   ngImageGallery,
+  ngEnter,
   formValidators,
   trustedHtml,
   excludeFilter,

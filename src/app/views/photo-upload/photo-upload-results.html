@@ -8,8 +8,9 @@
   <md-dialog-content>
     <div class="tab-content" ng-show="$ctrl.results.errors.length > 0">
       <p>
-        <b>1 or more errors found. Files that contain errors were excluded from the upload. Click each
-          message for details</b>
+        <b>1 or more errors found. The following files contained errors and were excluded from the
+          upload. Click
+          each message for details</b>
       </p>
     </div>
     <div class="tab-content" ng-show="$ctrl.results.errors.length === 0 && $ctrl.results.warnings.length > 0">
@@ -19,6 +20,9 @@
     </div>
     <div ng-show="$ctrl.results.errors.length === 0 && $ctrl.results.warnings.length === 0">
       <p><strong>Successfully uploaded all files!</strong></p>
+    </div>
+    <div>
+      You will need to wait up to 30 minutes for images to process and to be visible in Geome.
     </div>
 
     <!--we use template-url here to override the default uib-accordian template-->

@@ -19,7 +19,7 @@
                 <md-input-container ng-if="!$ctrl.resetPass">
                     <label>Password</label>
                     <input name="password" type="password" ng-model="$ctrl.credentials.password"
-                        required tabindex="2">
+                        required tabindex="2" ng-enter="$ctrl.submit()">
                     <div ng-messages="form.password.$error">
                         <div ng-message="required">Password is required.</div>
                     </div>

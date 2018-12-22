@@ -74,39 +74,46 @@ const passwordStrength = /* ngInject */ $compile => ({
     const wrapper = angular.element('<div class="password-wrapper"></div>');
     element.wrap(wrapper);
 
+    const re = /\W|\d/;
+    const re2 = /[a-zA-Z]/;
+
     const checkValidity = modelValue => {
       if (ctrl.$isEmpty(modelValue)) {
         if (ctrl.$touched && showIcons) {
           invalidElement.remove();
         }
-        ctrl.$setValidity('passwordStrength', true);
+        return true;
       }
 
-      if (scope.passwordStrength >= parseInt(scope.minPasswordStrength, 10)) {
+      if (
+        modelValue.length > 15 ||
+        (re.test(modelValue) && re2.test(modelValue) && modelValue.length >= 8)
+      ) {
         if (ctrl.$touched && showIcons) {
           invalidElement.remove();
           element.after(validElement);
         }
-        ctrl.$setValidity('passwordStrength', true);
-        return;
+        return true;
       }
 
       if (ctrl.$touched && showIcons) {
         validElement.remove();
         element.after(invalidElement);
       }
-      ctrl.$setValidity('passwordStrength', false);
+      return false;
     };
 
-    // we use a watch instead of ctrl.$validators.passwordStrength b/c we need to validator to be called
-    // after the passwordStrength val is updated. Using $validators, it is called before
-    scope.$watch('passwordStrength', () => {
-      checkValidity(ctrl.$modelValue);
-    });
+    ctrl.$validators.passwordStrength = checkValidity;
 
     element.on('blur', () => {
       if (!ctrl.$touched && showIcons) {
-        if (scope.passwordStrength >= parseInt(scope.minPasswordStrength, 10)) {
+        const modelValue = element.val();
+        if (
+          modelValue.length > 15 ||
+          (re.test(modelValue) &&
+            re2.test(modelValue) &&
+            modelValue.length >= 8)
+        ) {
           invalidElement.remove();
           element.after(validElement);
         } else {

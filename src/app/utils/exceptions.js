@@ -1,6 +1,10 @@
 import angular from 'angular';
 
-export default defaultMsg => response => {
+export default (
+  defaultMsg,
+  toastAction = undefined,
+  toastOpts = {},
+) => response => {
   console.error(response);
   angular.toaster.error(
     response.status !== 404 && response.data
@@ -9,6 +13,8 @@ export default defaultMsg => response => {
         response.data.message ||
         defaultMsg
       : defaultMsg,
+    toastAction,
+    toastOpts,
   );
   return Promise.reject(response);
 };
