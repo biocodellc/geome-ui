@@ -22,7 +22,13 @@ class PhotosService {
       errors: res.data.messages.errors || [],
       warnings: res.data.messages.warnings || [],
     });
-    const onFail = angular.catcher('Photo upload failed');
+    const onFail = angular.catcher(
+      'Photo upload failed',
+      { name: 'close', fn: () => {} },
+      {
+        hideDelay: 0,
+      },
+    );
     const onProgress = event => progressCallbacks.forEach(fn => fn(event));
 
     const p = this.Upload.http({

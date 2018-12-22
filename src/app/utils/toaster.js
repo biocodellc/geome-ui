@@ -36,20 +36,22 @@ export default $mdToast => {
   };
 
   const ext = {
-    error(msg, action, opts = {}) {
-      if (action && typeof action === 'object') {
+    error(msg, action, opts) {
+      if (!opts && action && typeof action === 'object') {
         opts = action;
         action = undefined;
       }
+      if (!opts) opts = {};
       opts.toastClass = opts.toastClass ? `${opts.toastClass} error` : 'error';
       return toast(msg, action, opts);
     },
 
-    success(msg, action, opts = {}) {
-      if (action && typeof action === 'object') {
+    success(msg, action, opts) {
+      if (!opts && action && typeof action === 'object') {
         opts = action;
         action = undefined;
       }
+      if (!opts) opts = {};
       opts.toastClass = opts.toastClass
         ? `${opts.toastClass} success`
         : 'success';
