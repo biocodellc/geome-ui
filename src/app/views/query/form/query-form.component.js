@@ -73,6 +73,7 @@ class QueryFormController {
     this.showGroups = true;
     this.resetExpeditions = true;
     this.groupedProjects = [];
+    this.families = [];
     this.individualProjects = [];
     this.events = [];
     this.specimens = [];
@@ -229,18 +230,20 @@ class QueryFormController {
     // TODO: remove markers, and filter chips
   }
 
-  // TODO: eventID can never be added, yet is displayed as if it is added. also appears in specimen list  
+  // TODO: eventID can never be added, yet is displayed as if it is added. also appears in specimen list
+  // TODO: put params.events, params.spec, params.tissue etc on controller
   filterToggle(chip, removal) {
     if (!removal) {
       this.params.filters.push(chip);
     } else if (removal) {
+      //console.log('remove')
       const index = this.params.filters.indexOf(chip);
       this.params.filters.splice(index, 1);
     }
   }
 
-  getQueryTypes(column) {
-    const opt = this.filterOptions.find(o => o.column === column);
+  getQueryTypes(conceptAlias, column) {
+    const opt = this.filterOptions[conceptAlias].find(o => o.column === column);
     return opt ? queryTypes[opt.dataType.toLowerCase()] : [];
   }
 
@@ -259,46 +262,31 @@ class QueryFormController {
     this.params.bounds = null;
   }
 
-  generateFilterOptions(type) {
-    this.filterOptions = this.config.entities.reduce(
-      (accumulator, entity) =>
-        accumulator.concat(
-          entity.attributes
-            .filter(a => !a.internal)
-            .map(a => ({
-              group: a.group
-                ? `${entity.conceptAlias} ${a.group}`
-                : `${entity.conceptAlias} Default Group`,
-              column: `${entity.conceptAlias}.${a.column}`,
-              dataType: a.dataType,
-              list: this.config.findListForColumn(entity, a.column),
-            })),
-        ),
-      [],
-    );
-    if (this.events.length === 0) {
-      this.filterOptions.forEach(o => {
-        if (o.group.includes('Event')) this.events.push(o);
+  generateFilterOptions(conceptAlias) {
+    if (!this.filterOptions) {
+      this.filterOptions = {};
+      this.config.entities.forEach(e => {
+        const alias = e.conceptAlias;
+        const opts = e.attributes
+          .filter(a => !a.internal)
+          .map(a => ({
+            column: `${alias}.${a.column}`,
+            dataType: a.dataType,
+            list: this.config.findListForColumn(e, a.column),
+          }));
+        this.filterOptions[alias] = opts;
       });
     }
-    if (this.specimens.length === 0) {
-      this.filterOptions.forEach(o => {
-        if (o.group.includes('Sample')) this.specimens.push(o);
-      });
-    }
-    if (this.tissues.length === 0) {
-      this.filterOptions.forEach(o => {
-        if (o.group.includes('Tissue')) this.tissues.push(o);
-      });
-    }
+
     const filter = Object.assign({}, defaultFilter, {
-      column: this.filterOptions[0].column,
-      type: this.getQueryTypes(this.filterOptions[0].column)[0],
+      column: this.filterOptions[conceptAlias][0].column,
+      type: this.getQueryTypes(conceptAlias, this.filterOptions[conceptAlias][0].column)[0],
     });
 
-    if (type === 'event') this.params.events.push(filter);
-    if (type === 'specimen') this.params.specimens.push(filter);
-    if (type === 'tissue') this.params.tissues.push(filter);
+    if (conceptAlias === 'Event') this.params.events.push(filter);
+    if (conceptAlias === 'Sample') this.params.specimens.push(filter);
+    if (conceptAlias === 'Tissue') this.params.tissues.push(filter);
+    this.filterToggle(filter);
   }
 
   queryJson() {
