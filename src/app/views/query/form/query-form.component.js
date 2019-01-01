@@ -1,6 +1,4 @@
-//TODO: Rename specimen to sample
 // TODO: adding and removing projects isnt remaking searches 
-// TODO: clear family from params and make chips again
 import angular from 'angular';
 
 const template = require('./query-form.html');
@@ -78,11 +76,11 @@ class QueryFormController {
     this.families = [];
     this.individualProjects = [];
     this.events = [];
-    this.specimens = [];
+    this.sample = [];
     this.tissues = [];
-    this.params.events = [];
-    this.params.specimens = [];
-    this.params.tissues = [];
+    this.eventFilters = [];
+    this.sampleFilters = [];
+    this.tissueFilters = [];
 
     // Retrieve Projects
     this.ProjectService.all(true).then(({ data }) => {
@@ -160,7 +158,6 @@ class QueryFormController {
     this.params.expeditions = [];
     this.singleProject = this.individualProjects.length === 1;
 
-    // update parameters on add and remove chips
     if (!removal) {
       this.projects.forEach(p => {
         if (p.projectId === chip.projectId) this.params.projects.push(p);
@@ -187,7 +184,6 @@ class QueryFormController {
       this.config = this.networkConfig;
     }
   }
-
   specificConfigCall() {
     var specificName;
     if (this.families.length === 1) {
@@ -225,12 +221,11 @@ class QueryFormController {
     // TODO: remove markers, and filter chips
   }
 
-  // TODO: put params.events, params.spec, params.tissue etc on controller
   filterToggle(chip, removal) {
     if (!removal) {
       this.params.filters.push(chip);
+    //TODO: each filter is sometimes added twice 
     } else if (removal) {
-      //console.log('remove')
       const index = this.params.filters.indexOf(chip);
       this.params.filters.splice(index, 1);
     }
@@ -277,9 +272,9 @@ class QueryFormController {
       type: this.getQueryTypes(conceptAlias, this.filterOptions[conceptAlias][0].column)[0],
     });
 
-    if (conceptAlias === 'Event') this.params.events.push(filter);
-    if (conceptAlias === 'Sample') this.params.specimens.push(filter);
-    if (conceptAlias === 'Tissue') this.params.tissues.push(filter);
+    if (conceptAlias === 'Event') this.eventFilters.push(filter);
+    if (conceptAlias === 'Sample') this.sampleFilters.push(filter);
+    if (conceptAlias === 'Tissue') this.tissueFilters.push(filter);
     this.filterToggle(filter);
   }
 
