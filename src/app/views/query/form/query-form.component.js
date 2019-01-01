@@ -1,3 +1,6 @@
+//TODO: Rename specimen to sample
+// TODO: adding and removing projects isnt remaking searches 
+// TODO: clear family from params and make chips again
 import angular from 'angular';
 
 const template = require('./query-form.html');
@@ -72,7 +75,6 @@ class QueryFormController {
   $onInit() {
     this.showGroups = true;
     this.resetExpeditions = true;
-    this.groupedProjects = [];
     this.families = [];
     this.individualProjects = [];
     this.events = [];
@@ -135,30 +137,23 @@ class QueryFormController {
     }
   }
 
-  familyToggle(name, groupedProjects) {
-    const nameIdx = groupedProjects.indexOf(name);
-    if (nameIdx > -1) {
-      groupedProjects.splice(nameIdx, 1);
+  familyToggle(chip, removal) {
+    if (!removal) {
       this.projects.forEach(p => {
-        const projIdx = this.params.projects.indexOf(p);
-        if (p.projectConfiguration.name === name)
-          this.params.projects.splice(projIdx, 1);
-      });
-    } else {
-      groupedProjects.push(name);
-      this.projects.forEach(p => {
-        if (p.projectConfiguration.name === name) {
+        if (p.projectConfiguration.name === chip) {
           this.params.projects.push(p);
         }
       });
+    } else {
+      this.projects.forEach(p => {
+        const projIdx = this.params.projects.indexOf(p);
+        if (p.projectConfiguration.name === chip)
+          this.params.projects.splice(projIdx, 1);
+      });
     }
-    if (groupedProjects.length === 1) {
+    if (this.families.length === 1) {
       this.specificConfigCall();
     } else this.config = this.networkConfig;
-  }
-
-  familySelected(name, groupedProjects) {
-    return groupedProjects.indexOf(name) > -1;
   }
 
   individualToggle(chip, removal) {
@@ -195,8 +190,8 @@ class QueryFormController {
 
   specificConfigCall() {
     var specificName;
-    if (this.groupedProjects.length === 1) {
-      specificName = this.groupedProjects[0];
+    if (this.families.length === 1) {
+      specificName = this.families[0];
     } else if (this.singleProject) {
       specificName = this.individualProjects[0].projectConfiguration.name;
     }
@@ -223,14 +218,13 @@ class QueryFormController {
     });
 
     this.expeditions = undefined;
-    this.individualProjects = []; // need to remove selected chips
-    this.groupedProjects = []; // need to remove selected chips
+    this.individualProjects = []; // remove selected chips
+    this.families = []; // remove selected chips
     this.params.phylum = null;
     this.params.country = null;
     // TODO: remove markers, and filter chips
   }
 
-  // TODO: eventID can never be added, yet is displayed as if it is added. also appears in specimen list
   // TODO: put params.events, params.spec, params.tissue etc on controller
   filterToggle(chip, removal) {
     if (!removal) {
