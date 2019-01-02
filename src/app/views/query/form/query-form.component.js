@@ -1,4 +1,4 @@
-// TODO: adding and removing projects isnt remaking searches 
+// TODO: adding and removing projects isnt remaking searches
 import angular from 'angular';
 
 const template = require('./query-form.html');
@@ -184,6 +184,7 @@ class QueryFormController {
       this.config = this.networkConfig;
     }
   }
+
   specificConfigCall() {
     var specificName;
     if (this.families.length === 1) {
@@ -210,21 +211,23 @@ class QueryFormController {
         this.params[key] = false;
       } else if (typeof this.params[key] === 'string') {
         this.params[key] = null;
+      } else if (typeof this.params[key] === 'object') {
+        this.params[key] = null;
       }
     });
 
     this.expeditions = undefined;
     this.individualProjects = []; // remove selected chips
     this.families = []; // remove selected chips
-    this.params.phylum = null;
-    this.params.country = null;
-    // TODO: remove markers, and filter chips
+    this.tissueFilters = []; //remove selected chips
+    this.eventFilters = []; //remove selected chips
+    this.sampleFilters = []; //remove selected chips
   }
 
   filterToggle(chip, removal) {
     if (!removal) {
       this.params.filters.push(chip);
-    //TODO: each filter is sometimes added twice 
+      //TODO: each filter is sometimes added twice
     } else if (removal) {
       const index = this.params.filters.indexOf(chip);
       this.params.filters.splice(index, 1);
@@ -269,7 +272,10 @@ class QueryFormController {
 
     const filter = Object.assign({}, defaultFilter, {
       column: this.filterOptions[conceptAlias][0].column,
-      type: this.getQueryTypes(conceptAlias, this.filterOptions[conceptAlias][0].column)[0],
+      type: this.getQueryTypes(
+        conceptAlias,
+        this.filterOptions[conceptAlias][0].column,
+      )[0],
     });
 
     if (conceptAlias === 'Event') this.eventFilters.push(filter);
