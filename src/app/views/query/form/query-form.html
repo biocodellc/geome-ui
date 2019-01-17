@@ -34,7 +34,7 @@
     </div>
 
     <!-- TODO: close autocomplete on item select-->
-    <!-- TODO: why is autocomplete-snap not working? -->
+    <!-- TODO: autocomplete-snap not working -->
     <div class="individual" layout="column" ng-show="$ctrl.moreSearchOptions && !$ctrl.showGroups">
       <h3 class="md-subhead bold" flex>Individual Projects</h3>
         <md-chips flex ng-model="$ctrl.individualProjects" md-on-add="$ctrl.individualToggle($chip)" md-on-remove="$ctrl.individualToggle($chip,$event)" md-require-match>

@@ -1,4 +1,3 @@
-// TODO: adding and removing projects isnt remaking searches
 import angular from 'angular';
 
 const template = require('./query-form.html');
@@ -69,10 +68,10 @@ class QueryFormController {
     this.ExpeditionService = ExpeditionService;
   }
 
-  // TODO: return table view by default on advanced search, and on results with no lat lng coordinates
   $onInit() {
     this.showGroups = true;
     this.resetExpeditions = true;
+    this.moreSearchOptions = false;
     this.families = [];
     this.individualProjects = [];
     this.events = [];
@@ -100,7 +99,7 @@ class QueryFormController {
       this.countries = this.networkConfig.getList('country').fields;
       this.markers = this.networkConfig.getList('markers').fields;
       this.hasFastqEntity = this.config.entities.some(e => e.type === 'Fastq');
-      //TODO: remove fastq metadata from url when there is none
+      //TODO: remove fastq metadata from url when there is none, issue #214. Update: cannot replicate query failure.
     });
 
     const { q } = this.$location.search();
@@ -286,6 +285,7 @@ class QueryFormController {
 
   queryJson() {
     this.toggleLoading({ val: true });
+    // if query is made too fast, this.config does not have time to populate
     const entities = this.config.entities
       .filter(e => ['Sample', 'Tissue'].includes(e.conceptAlias))
       .map(e => e.conceptAlias);
@@ -298,7 +298,10 @@ class QueryFormController {
       10000,
     )
       .then(results => {
-        this.onNewResults({ results });
+        this.onNewResults({
+          results,
+          isAdvancedSearch: this.moreSearchOptions,
+        });
         this.queryMap.clearBounds();
         this.queryMap.setMarkers(results.data);
       })
@@ -318,7 +321,7 @@ export default {
   bindings: {
     params: '<',
     queryMap: '<',
-    currentUser: '<',
+    //currentUser: '<',
     onNewResults: '&',
     toggleLoading: '&',
     entitiesForDownload: '&',
