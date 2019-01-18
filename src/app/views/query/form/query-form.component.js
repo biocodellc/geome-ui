@@ -74,9 +74,6 @@ class QueryFormController {
     this.moreSearchOptions = false;
     this.families = [];
     this.individualProjects = [];
-    this.events = [];
-    this.sample = [];
-    this.tissues = [];
     this.eventFilters = [];
     this.sampleFilters = [];
     this.tissueFilters = [];
@@ -226,7 +223,6 @@ class QueryFormController {
   filterToggle(chip, removal) {
     if (!removal) {
       this.params.filters.push(chip);
-      //TODO: each filter is sometimes added twice
     } else if (removal) {
       const index = this.params.filters.indexOf(chip);
       this.params.filters.splice(index, 1);
@@ -284,8 +280,14 @@ class QueryFormController {
   }
 
   queryJson() {
+    /* If query is made before this.config is returned in onInit (only on slow network), 
+     * entities wont be available when attempting to download fasta fastq or csv archives. 
+     * if (!this.config){
+      this.$timeout(() => {
+        this.queryJson();
+      });
+    } */
     this.toggleLoading({ val: true });
-    // if query is made too fast, this.config does not have time to populate
     const entities = this.config.entities
       .filter(e => ['Sample', 'Tissue'].includes(e.conceptAlias))
       .map(e => e.conceptAlias);
@@ -321,7 +323,7 @@ export default {
   bindings: {
     params: '<',
     queryMap: '<',
-    //currentUser: '<',
+    currentUser: '<',
     onNewResults: '&',
     toggleLoading: '&',
     entitiesForDownload: '&',

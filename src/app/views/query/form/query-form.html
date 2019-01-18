@@ -185,10 +185,10 @@
               <span class="fa fa-plus"></span> Add Event Filter</md-button>
           </div>
           <div flex>
-            <md-chips ng-model="$ctrl.eventFilters" readonly="true" md-removable="true" md-on-remove="$ctrl.filterToggle($chip, true)">
+            <md-chips ng-model="$ctrl.eventFilters" readonly="true" md-removable="true" md-on-remove="$ctrl.filterToggle($chip, true)" md-on-add="$ctrl.filterToggle($chip)">
               <md-chip-template layout="row">
                 <div flex="40" class="filter-select">
-                  <md-select ng-model="$chip.column" md-container-class aria-label="event" ng-change="$ctrl.filterToggle($chip)">
+			<md-select ng-model="$chip.column" md-container-class aria-label="event">
                     <md-optgroup label="Events">
                       <md-option ng-value="event.column" ng-repeat="event in $ctrl.filterOptions['Event']">{{event.column.split('.')[1]}}</md-option>
                     </md-optgroup>
@@ -223,10 +223,10 @@
               <span class="fa fa-plus"></span> Add Sample Filter</md-button>
           </div>
           <div flex>
-            <md-chips ng-model="$ctrl.sampleFilters" readonly="true" md-removable="true" md-on-remove="$ctrl.filterToggle($chip, $event)">
+            <md-chips ng-model="$ctrl.sampleFilters" readonly="true" md-removable="true" md-on-remove="$ctrl.filterToggle($chip, true)" md-on-add="$ctrl.filterToggle($chip)">
               <md-chip-template layout="row">
                 <div flex="40" class="filter-select">
-                  <md-select ng-model="$chip.column" md-container-class aria-label="sample" ng-change="$ctrl.filterToggle($chip)">
+                  <md-select ng-model="$chip.column" md-container-class aria-label="sample">
                     <md-optgroup label="Sample">
                       <md-option ng-value="sample.column" ng-repeat="sample in $ctrl.filterOptions['Sample']">{{sample.column.split('.')[1]}}</md-option>
                     </md-optgroup>
@@ -261,10 +261,10 @@
               <span class="fa fa-plus"></span> Add Tissue Filter</md-button>
           </div>
           <div flex>
-            <md-chips ng-model="$ctrl.tissueFilters" readonly="true" md-removable="true" md-on-remove="$ctrl.filterToggle($chip, $event)">
+            <md-chips ng-model="$ctrl.tissueFilters" readonly="true" md-removable="true" md-on-remove="$ctrl.filterToggle($chip, true)" md-on-add="$ctrl.filterToggle($chip)">
               <md-chip-template layout="row">
                 <div flex="60" class="filter-select">
-                  <md-select ng-model="$chip.column" md-container-class aria-label="tissue" ng-change="$ctrl.filterToggle($chip)">
+                  <md-select ng-model="$chip.column" md-container-class aria-label="tissue">
                     <md-optgroup label="Tissues">
                       <md-option ng-value="tissue.column" ng-repeat="tissue in $ctrl.filterOptions['Tissue']">{{tissue.column.split('.')[1]}}</md-option>
                     </md-optgroup>
