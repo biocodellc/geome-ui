@@ -24,6 +24,7 @@ class QueryTableController {
     this.tableData = [];
     this.currentPage = 1;
     this.pageSize = 50;
+    this.revert = true;
   }
 
   $onChanges(changesObj) {
@@ -51,7 +52,7 @@ class QueryTableController {
       }),
     );
   }
-
+ 
   /*
   transform the data into an array so we can use sly-repeat to display it. sly-repeat bypasses the $watches
   greatly improving the performance of sizable tables
@@ -68,5 +69,6 @@ export default {
   controller: QueryTableController,
   bindings: {
     results: '<',
+    revert: '<',
   },
 };

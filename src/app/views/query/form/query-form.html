@@ -1,7 +1,7 @@
 <form method="POST" name="queryForm" layout="column">
   <md-hints>
     <md-hint class="pull-right">
-      <a class="text-upper" href="" ng-click="$ctrl.moreSearchOptions = !$ctrl.moreSearchOptions;$ctrl.showGroups = true;$ctrl.clearParams()">
+      <a class="text-upper" href="" ng-click="$ctrl.showGroups = true;$ctrl.switchQueryMethod()">
         <span ng-if="!$ctrl.moreSearchOptions">Switch to Advanced Search</span><span ng-if="$ctrl.moreSearchOptions">Switch
           to Simple Search</span></a>
     </md-hint>
@@ -313,7 +313,7 @@
   </div>
 
   <div class="search-row" layout="row" layout-align="end center">
-    <md-button type="submit" ng-click="$ctrl.queryJson()" class="md-raised md-primary">
+    <md-button type="submit" ng-disabled="!$ctrl.config" ng-click="$ctrl.queryJson()" class="md-raised md-primary">
       <span class="fa fa-search"></span> Search
     </md-button>
   </div>

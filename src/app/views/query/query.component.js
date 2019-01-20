@@ -30,6 +30,13 @@ class QueryController {
   }
 
   handleNewResults(results, isAdvancedSearch) {
+    // when switching between simple and advanced searches
+    if (!results) {
+      this.revert = true; // clears table data
+      this.toggleMap(true); 
+     // return;
+    } else {
+    this.revert = false; // allows table data to be displayed
     this.results = results;
     this.hasCoordinates = this.results.data.some(
       d => d.event.decimalLatitude || d.event.decimalLongitude,
@@ -39,6 +46,7 @@ class QueryController {
       this.toggleMap(false);
     } else {
       this.toggleMap(true);
+      }
     }
   }
 

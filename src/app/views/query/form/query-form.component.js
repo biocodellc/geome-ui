@@ -46,6 +46,7 @@ const parseExpeditionQueryString = s =>
 class QueryFormController {
   constructor(
     $scope,
+    $mdDialog,
     $timeout,
     $window,
     $location,
@@ -58,6 +59,7 @@ class QueryFormController {
     'ngInject';
 
     this.$scope = $scope;
+    this.$mdDialog = $mdDialog;
     this.$timeout = $timeout;
     this.$window = $window;
     this.$location = $location;
@@ -96,7 +98,6 @@ class QueryFormController {
       this.countries = this.networkConfig.getList('country').fields;
       this.markers = this.networkConfig.getList('markers').fields;
       this.hasFastqEntity = this.config.entities.some(e => e.type === 'Fastq');
-      //TODO: remove fastq metadata from url when there is none, issue #214. Update: cannot replicate query failure.
     });
 
     const { q } = this.$location.search();
@@ -129,6 +130,61 @@ class QueryFormController {
       this.params.queryString = q;
       this.queryJson();
     }
+
+    // copy default/original params for later reference
+    this.paramCopy = angular.copy(this.params);
+  }
+
+  switchQueryMethod() {
+    if (!_.isEqual(this.params, this.paramCopy)) {
+      this.$mdDialog
+        .show(
+          this.$mdDialog
+            .confirm()
+            .title('Change Query Method')
+            .textContent(
+              'Switching between queries will erase your previous search data',
+            )
+            .ariaLabel('Query change dialog')
+            .ok('OK')
+            .cancel('Cancel'),
+        )
+        .then(() => {
+          this.clearPreviousResults();
+          this.clearParams();
+          this.clearBounds();
+        })
+        .catch(() => {});
+    } else {
+      this.clearPreviousResults();
+    }
+  }
+
+  clearPreviousResults() {
+    this.queryMap._clearMap();
+    this.onNewResults(); // call results function in parent component to switch to map view and clear table data
+    this.moreSearchOptions = !this.moreSearchOptions;
+  }
+
+  clearParams() {
+    // reset params to default
+    Object.keys(this.params).forEach(key => {
+      if (Array.isArray(this.params[key])) {
+        this.params[key] = [];
+      } else if (typeof this.params[key] === 'boolean') {
+        this.params[key] = false;
+      } else if (typeof this.params[key] === 'string') {
+        this.params[key] = null;
+      } else if (typeof this.params[key] === 'object') {
+        this.params[key] = null;
+      }
+    });
+    this.expeditions = undefined;
+    this.individualProjects = []; // remove selected chips
+    this.families = []; // remove selected chips
+    this.tissueFilters = []; // remove selected chips
+    this.eventFilters = []; // remove selected chips
+    this.sampleFilters = []; // remove selected chips
   }
 
   familyToggle(chip, removal) {
@@ -166,7 +222,6 @@ class QueryFormController {
       });
     }
 
-    // TODO: this needs to work for multiple projects with shared config added individually
     if (this.singleProject) {
       this.specificConfigCall();
       // retrieve expeditions for single projects only
@@ -196,28 +251,6 @@ class QueryFormController {
     ).then(({ config }) => {
       this.config = config;
     });
-  }
-
-  clearParams() {
-    // reset params to default
-    Object.keys(this.params).forEach(key => {
-      if (Array.isArray(this.params[key])) {
-        this.params[key] = [];
-      } else if (typeof this.params[key] === 'boolean') {
-        this.params[key] = false;
-      } else if (typeof this.params[key] === 'string') {
-        this.params[key] = null;
-      } else if (typeof this.params[key] === 'object') {
-        this.params[key] = null;
-      }
-    });
-
-    this.expeditions = undefined;
-    this.individualProjects = []; // remove selected chips
-    this.families = []; // remove selected chips
-    this.tissueFilters = []; //remove selected chips
-    this.eventFilters = []; //remove selected chips
-    this.sampleFilters = []; //remove selected chips
   }
 
   filterToggle(chip, removal) {
@@ -280,13 +313,6 @@ class QueryFormController {
   }
 
   queryJson() {
-    /* If query is made before this.config is returned in onInit (only on slow network), 
-     * entities wont be available when attempting to download fasta fastq or csv archives. 
-     * if (!this.config){
-      this.$timeout(() => {
-        this.queryJson();
-      });
-    } */
     this.toggleLoading({ val: true });
     const entities = this.config.entities
       .filter(e => ['Sample', 'Tissue'].includes(e.conceptAlias))
@@ -325,6 +351,7 @@ export default {
     queryMap: '<',
     currentUser: '<',
     onNewResults: '&',
+    clearTableData: '&',
     toggleLoading: '&',
     entitiesForDownload: '&',
   },

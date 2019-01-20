@@ -69,7 +69,7 @@
       layout-padding
     ></fims-query-form>
   </md-sidenav>
-  <!-- TODO: remove currentUser?-->
+
   <!-- sidebar toggle -->
   <div class="sidebar-toggle">
     <md-button class="md-raised" ng-click="$ctrl.toggleSidebar()">
@@ -106,7 +106,8 @@
         class="query-table"
         ng-class="{'full-page-query-table': !$ctrl.showSidebar}"
         results="$ctrl.results"
-      ></fims-query-table>
+        revert="$ctrl.revert"
+	></fims-query-table>
     </md-content>
   </div>
 </div>

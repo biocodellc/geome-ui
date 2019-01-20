@@ -1,10 +1,10 @@
 <div layout="column" layout-margin>
-  <div class="help-block" ng-show="!$ctrl.results">Click
+  <div class="help-block" ng-show="!$ctrl.results;$ctrl.revert">Click
     <strong>Search</strong> on sidebar to display query results
   </div>
 
-  <div ng-show="$ctrl.results">
-
+  <div ng-show="$ctrl.results;!$ctrl.revert">
+   
     <table class="table table-condensed table-striped table-hover text-nowrap">
       <thead>
         <tr class="text-capitalize">
