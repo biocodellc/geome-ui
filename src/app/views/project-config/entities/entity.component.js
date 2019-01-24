@@ -46,6 +46,7 @@ const fimsEntity = {
   controller: EntityController,
   bindings: {
     entity: '<',
+    config: '<',
     editing: '<',
     canEdit: '<',
     worksheets: '<',

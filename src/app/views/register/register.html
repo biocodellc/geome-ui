@@ -46,12 +46,15 @@
         <md-input-container>
           <label>Password</label>
           <input name="password" type="password" ng-model="$ctrl.user.password" required tabindex="6"
-            password-strength="passStrength" min-password-strength="50" />
-          <div ng-password-strength="$ctrl.user.password" strength="passStrength" ng-hide="true"></div>
+            password-strength />
           <div ng-messages="form.password.$error">
             <div ng-message="required">Password is required.</div>
             <div ng-message="passwordStrength">Password is not strong enough.</div>
           </div>
+          <md-hints class="md-hints-keep">
+            <md-hint>Password must contain more than 15 characters OR at least 8
+              characters including a number and a letter.</md-hint>
+          </md-hints>
         </md-input-container>
         <md-input-container>
           <label>Verify Password</label>

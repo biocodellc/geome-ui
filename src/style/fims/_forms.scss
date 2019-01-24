@@ -19,6 +19,11 @@ md-input-container {
         margin-top: -100px;
       }
     }
+    md-hints.md-hints-keep {
+      md-hint {
+        opacity: 1;
+      }
+    }
   }
   md-hints {
     position: relative;

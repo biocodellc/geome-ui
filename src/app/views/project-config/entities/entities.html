@@ -2,7 +2,7 @@
 <ul class="settings-list entities" dnd-drop="$ctrl.dndDrop(index, item)" dnd-list="$ctrl.entities">
     <div ng-repeat="entity in $ctrl.entities">
         <fims-entity entity="entity" editing="$index===$ctrl.editEntity" can-edit="$ctrl.canEdit"
-            worksheets="$ctrl.config.worksheets()" on-toggle-edit="$ctrl.handleToggleEdit($index)"
+            config="$ctrl.config" worksheets="$ctrl.config.worksheets()" on-toggle-edit="$ctrl.handleToggleEdit($index)"
             on-update="$ctrl.handleUpdateEntity($index, entity)" on-remove="$ctrl.handleRemoveEntity(entity)"
             on-new-worksheet="$ctrl.onNewWorksheet(sheetName)" dnd-draggable="entity">
         </fims-entity>

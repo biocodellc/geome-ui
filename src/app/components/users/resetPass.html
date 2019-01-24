@@ -1,50 +1,39 @@
-<div class="row">
-    <div class="col-md-6 col-md-offset-3">
-        <div class="panel panel-login">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <a href="#" class="active" id="reset-pass-form-link">Reset Password</a>
+<div layout="row" layout-align="center center" class="login-card">
+    <md-card flex-xs="100" flex-sm="80" flex-md="70" flex="60" class="md-whiteframe-2dp">
+        <md-card-title>
+            <md-card-title-text>
+                <h4 md-colors="{color: 'primary-700'}">Reset Password</h4>
+            </md-card-title-text>
+        </md-card-title>
+        <md-card-content>
+            <form id="login-form" name="form" role="form" layout="column" novalidate>
+                <md-input-container>
+                    <label>New Password</label>
+                    <input name="password" type="password" ng-model="$ctrl.password" required
+                        tabindex="1" password-strength ng-enter="$ctrl.resetPassword()"
+                        ng-enter-disabled="form.$invalid" />
+                    <div ng-messages="form.password.$error">
+                        <div ng-message="required">Password is required.</div>
+                        <div ng-message="passwordStrength">Password is not strong enough.</div>
                     </div>
-                </div>
-                <hr>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <form class="reset-pass-form" name="resetPassForm" ng-submit="$ctrl.resetPassword()" method="post"
-                            role="form">
-                            <div class="form-group" show-errors>
-                                <input type="password" name="password" ng-model="$ctrl.password" required tabindex="1"
-                                    class="form-control" placeholder="New Password" password-strength="passStrength"
-                                    min-password-strength="50" password-strength-icons />
-                                <div ng-password-strength="$ctrl.password" strength="passStrength" ng-hide="true"></div>
-                                <div class="help-block" ng-if="resetPassForm.password.$error.passwordStrength && resetPassForm.password.$touched">
-                                    Password is not strong enough.</div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12 alert alert-error alert-dismissable" role="alert" ng-show="$ctrl.error">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                        </button>
-                                        <strong>Error!</strong> {{ $ctrl.error }}
-                                    </div>
-                                    <div class="col-sm-12 alert alert-success alert-dismissable" role="alert" ng-show="$ctrl.success"
-                                        ng-bind-html="$ctrl.success">
-                                    </div>
-                                    <div class="col-sm-6 col-sm-offset-3">
-                                        <input type="submit" name="reset-pass-submit" id="reset-pass-submit" tabindex="2"
-                                            class="form-control btn btn-login btn-primary" ng-disabled="passStrength < 50"
-                                            value="Reset Password">
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+                    <md-hints class="md-hints-keep">
+                        <md-hint>Password must contain more than 15 characters OR at least 8
+                            characters including a number and a letter.</md-hint>
+                    </md-hints>
+                </md-input-container>
+            </form>
 
-                </div>
+            <div layout="row" layout-align="center center">
+                <md-button class="md-block md-primary md-raised" ng-click="$ctrl.resetPassword()"
+                    ng-disabled="form.$invalid" layout="row" tabindex="3" layout-align="center center"
+                    flex="33">
+                    <span ng-show="!$ctrl.loading">
+                        <span>Reset Password</span>
+                    </span>
+                    <md-progress-circular ng-show="$ctrl.loading" md-mode="indeterminate"
+                        md-diameter="18" class="md-accent md-hue-3"></md-progress-circular>
+                </md-button>
             </div>
-        </div>
-    </div>
+        </md-card-content>
+    </md-card>
 </div>
