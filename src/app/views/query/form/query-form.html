@@ -303,7 +303,7 @@
           <md-input-container flex="50">
             <label>marker</label>
             <md-select ng-model="$ctrl.params.marker" md-container-class>
-              <md-option ng-value="undefined">-- Clear Selection --</md-option>
+              <md-option ng-value="null">-- Clear Selection --</md-option>
               <md-option ng-value="marker.value" ng-repeat="marker in $ctrl.markers track by marker.value">{{marker.value}}</md-option>
             </md-select>
           </md-input-container>
