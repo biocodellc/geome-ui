@@ -2,7 +2,7 @@
   <div class="actions" layout="row" layout-align="end center">
     <!-- download menu -->
     <md-menu
-      ng-show="$ctrl.results"
+      ng-show="$ctrl.results&&$ctrl.results.totalElements!==0"
       class="md-dense"
       md-position-mode="target-right target"
     >
@@ -107,7 +107,7 @@
         ng-class="{'full-page-query-table': !$ctrl.showSidebar}"
         results="$ctrl.results"
         revert="$ctrl.revert"
-	></fims-query-table>
+      ></fims-query-table>
     </md-content>
   </div>
 </div>

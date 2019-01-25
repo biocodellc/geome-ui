@@ -3,7 +3,6 @@ import QueryParams from './QueryParams';
 
 const template = require('./query.html');
 
-// TODO: disable download button if no results are found
 class QueryController {
   constructor($state, $timeout, $location, QueryService, StorageService) {
     'ngInject';
