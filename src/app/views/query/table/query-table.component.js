@@ -24,7 +24,6 @@ class QueryTableController {
     this.tableData = [];
     this.currentPage = 1;
     this.pageSize = 50;
-    this.revert = true;
   }
 
   $onChanges(changesObj) {
@@ -69,6 +68,5 @@ export default {
   controller: QueryTableController,
   bindings: {
     results: '<',
-    revert: '<',
   },
 };
