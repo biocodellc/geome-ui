@@ -33,19 +33,19 @@ class QueryController {
     // when switching between simple and advanced searches
     if (!results) {
       this.revert = true; // clears table data
-      this.toggleMap(true); 
-     // return;
-    } else {
-    this.revert = false; // allows table data to be displayed
-    this.results = results;
-    this.hasCoordinates = this.results.data.some(
-      d => d.event.decimalLatitude || d.event.decimalLongitude,
-    );
-    // return table view for advanced queries and queries with no lat lng data, return map view for simple queries
-    if (!this.hasCoordinates || isAdvancedSearch) {
-      this.toggleMap(false);
-    } else {
       this.toggleMap(true);
+      // return;
+    } else {
+      this.revert = false; // allows table data to be displayed
+      this.results = results;
+      const hasCoordinates = this.results.data.some(
+        d => d.event.decimalLatitude && d.event.decimalLongitude,
+      );
+      // return table view for advanced queries and queries with no lat lng data, return map view for simple queries
+      if (!hasCoordinates || isAdvancedSearch) {
+        this.toggleMap(false);
+      } else {
+        this.toggleMap(true);
       }
     }
   }
