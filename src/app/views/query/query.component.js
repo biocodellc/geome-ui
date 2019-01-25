@@ -77,7 +77,7 @@ class QueryController {
     });
   }
 
-  selectEntities(entities) {
+  downloadableEntities(entities) {
     this.entities = entities;
   }
 

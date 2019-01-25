@@ -57,7 +57,7 @@
   >
     <fims-query-form
       params="$ctrl.params"
-      entities-for-download="$ctrl.selectEntities(entities)"
+      entities-for-download="$ctrl.downloadableEntities(entities)"
       on-new-results="$ctrl.handleNewResults(results, isAdvancedSearch)"
       query-map="$ctrl.queryMap"
       class="query-form"
