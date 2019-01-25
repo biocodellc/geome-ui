@@ -7,7 +7,7 @@
     </md-hint>
   </md-hints>
 
-  <div class="projects" layout-padding>
+  <div layout-padding>
     <div ng-show="$ctrl.moreSearchOptions" ng-click="$ctrl.clearParams()">
       <md-radio-group ng-model="$ctrl.showGroups" layout-gt-sm="row" class="md-primary">
         <md-radio-button ng-value="false" flex> Search by individual project
@@ -17,7 +17,7 @@
       </md-radio-group>
     </div>
 
-    <div class="groups" layout="column" ng-show="$ctrl.showGroups">
+    <div layout="column" ng-show="$ctrl.showGroups">
       <h3 class="md-subhead bold" flex>Project Configurations</h3>
         <md-chips flex ng-model="$ctrl.families" md-on-add="$ctrl.familyToggle($chip)" md-on-remove="$ctrl.familyToggle($chip,$event)" md-require-match>
           <md-autocomplete md-selected-item="$ctrl.selectedGroup" md-no-cache md-autocomplete-snap="width"
@@ -88,7 +88,7 @@
   </div>
 
   <div class="simple" ng-show="!$ctrl.moreSearchOptions">
-    <div class="country" layout-padding>
+    <div layout-padding>
       <div layout="column">
         <h3 class="md-subhead bold" flex>Country</h3>
         <div flex>
@@ -104,7 +104,7 @@
       </div>
     </div>
 
-    <div class="year" layout-padding>
+    <div layout-padding>
       <div layout="column">
         <h3 class="md-subhead bold" flex>Year</h3>
         <div flex>
@@ -121,7 +121,7 @@
       </div>
     </div>
 
-    <div class="phylum" layout-padding>
+    <div layout-padding>
       <div layout="column">
         <h3 class="md-subhead bold" flex>Phylum</h3>
         <div flex>
