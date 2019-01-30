@@ -14,6 +14,7 @@ class MapController {
     this.$timeout(() => {
       this.mapInstance.init(this.mapId);
     }, 50); // TODO: this should work w/ 0, git blame to find out why
+
   }
 
   toggleMapView(tiles) {

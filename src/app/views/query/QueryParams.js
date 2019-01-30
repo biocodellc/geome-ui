@@ -10,6 +10,7 @@ const defaultParams = {
   genus: null,
   locality: null,
   family: null,
+  phylum: null,
   specificEpithet: null,
   country: null,
   fromYear: null,
@@ -19,16 +20,17 @@ const defaultParams = {
 
 export default class QueryParams {
   constructor() {
+    this.projects = [];
     this.expeditions = [];
     this.filters = [];
     Object.assign(this, defaultParams);
   }
 
-  buildQuery(projectId, selectEntities, source) {
+  buildQuery(selectEntities, source) {
     const builder = new QueryBuilder();
 
-    if (projectId) {
-      builder.add(`_projects_:${projectId}`);
+    if (this.projects.length > 0) {
+      builder.add(`_projects_:${this.projects.map(p => p.projectId)}`);
     }
 
     if (this.expeditions.length > 0) {
@@ -77,7 +79,7 @@ export default class QueryParams {
 
     if (this.country) {
       if (builder.queryString.length > 0) builder.add('and');
-      builder.add(`Event.country = "${this.country}"`);
+      builder.add(`Event.country = "${this.country.value}"`);
     }
 
     if (this.genus) {
@@ -93,6 +95,11 @@ export default class QueryParams {
     if (this.family) {
       if (builder.queryString.length > 0) builder.add('and');
       builder.add(`Sample.family = "${this.family}"`);
+    }
+
+    if (this.phylum) {
+      if (builder.queryString.length > 0) builder.add('and');
+      builder.add(`Sample.phylum = "${this.phylum.value}"`);
     }
 
     if (this.specificEpithet) {
