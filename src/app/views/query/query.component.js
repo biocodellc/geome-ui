@@ -4,12 +4,11 @@ import QueryParams from './QueryParams';
 const template = require('./query.html');
 
 class QueryController {
-  constructor($state, $timeout, $location, QueryService, StorageService) {
+  constructor($state, $timeout, QueryService, StorageService) {
     'ngInject';
 
     this.$state = $state;
     this.$timeout = $timeout;
-    this.$location = $location;
     this.QueryService = QueryService;
     this.StorageService = StorageService;
   }
