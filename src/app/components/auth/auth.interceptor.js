@@ -24,7 +24,7 @@ export default class AuthInterceptor {
   responseError = response => {
     if (
       !this.triedToRefresh &&
-      (response.status === 401 ||
+      ([401, 403].includes(response.status) ||
         (response.status === 400 &&
           response.data.usrMessage === 'invalid_grant'))
     ) {
