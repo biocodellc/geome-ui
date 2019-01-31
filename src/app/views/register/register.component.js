@@ -3,19 +3,22 @@ import angular from 'angular';
 const template = require('./register.html');
 
 class RegisterController {
-  constructor($state, UserService, AuthService) {
+  constructor($state, $location, UserService, AuthService) {
     'ngInject';
 
     this.state = $state;
     this.UserService = UserService;
     this.AuthService = AuthService;
+    this.$location = $location;
   }
 
   $onInit() {
+    const { email, inviteId } = this.$location.search();
+    if (inviteId) this.inviteId = inviteId;
     this.user = {
       username: undefined,
       password: undefined,
-      email: undefined,
+      email,
       institution: undefined,
       firstName: undefined,
       lastName: undefined,
@@ -25,7 +28,7 @@ class RegisterController {
   async register() {
     this.loading = true;
     try {
-      const response = await this.UserService.create(this.user);
+      const response = await this.UserService.create(this.user, this.inviteId);
       const user = response.data;
       await this.AuthService.authenticate(
         this.user.username,

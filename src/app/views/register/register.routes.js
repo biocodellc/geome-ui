@@ -4,7 +4,7 @@ function getStates() {
       state: 'register',
       config: {
         parent: 'containerPageView',
-        url: '/register',
+        url: '/register?inviteId&email',
         component: 'fimsRegister',
       },
     },
