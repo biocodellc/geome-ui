@@ -318,10 +318,10 @@ class QueryFormController {
       .filter(e => ['Sample', 'Tissue'].includes(e.conceptAlias))
       .map(e => e.conceptAlias);
     this.entitiesForDownload({ entities });
-    const selectEntities = ['Sample', 'fastqMetadata'];
+    const selectEntities = ['Event', 'Sample', 'fastqMetadata'];
     this.QueryService.queryJson(
       this.params.buildQuery(selectEntities, SOURCE.join()),
-      'Event',
+      'Tissue',
       0,
       10000,
     )
