@@ -19,6 +19,7 @@ class QueryTableController {
       'phylum',
       'genus',
       'specificEpithet',
+      'expeditionCode',
       'bcid',
     ];
     this.tableData = [];
@@ -51,7 +52,7 @@ class QueryTableController {
       }),
     );
   }
- 
+
   /*
   transform the data into an array so we can use sly-repeat to display it. sly-repeat bypasses the $watches
   greatly improving the performance of sizable tables

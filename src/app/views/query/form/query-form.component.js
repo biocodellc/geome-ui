@@ -18,6 +18,7 @@ const SOURCE = [
   'Event.bcid',
   'Sample.bcid',
   'Sample.phylum',
+  'Sample.expeditionCode',
 ];
 
 const defaultFilter = {
@@ -237,13 +238,13 @@ class QueryFormController {
   }
 
   specificConfigCall() {
-    var specificName;
+    let specificName;
     if (this.families.length === 1) {
       specificName = this.families[0];
     } else if (this.singleProject) {
       specificName = this.individualProjects[0].projectConfiguration.name;
     }
-    var firstMatchingConfig = this.projects.find(
+    const firstMatchingConfig = this.projects.find(
       p => p.projectConfiguration.name === specificName,
     );
     this.ProjectConfigurationService.get(
@@ -287,13 +288,11 @@ class QueryFormController {
       this.filterOptions = {};
       this.config.entities.forEach(e => {
         const alias = e.conceptAlias;
-        const opts = e.attributes
-          .filter(a => !a.internal)
-          .map(a => ({
-            column: `${alias}.${a.column}`,
-            dataType: a.dataType,
-            list: this.config.findListForColumn(e, a.column),
-          }));
+        const opts = e.attributes.filter(a => !a.internal).map(a => ({
+          column: `${alias}.${a.column}`,
+          dataType: a.dataType,
+          list: this.config.findListForColumn(e, a.column),
+        }));
         this.filterOptions[alias] = opts;
       });
     }
