@@ -67,7 +67,8 @@ class UploadController {
     this.sampleLocationsVerified = false;
     this.multiExpeditionAllowed = true;
     this.showExpeditions = false;
-    this.canValidate = false;
+    this.requireExpedition =
+      this.currentProject.config.worksheets().length !== 1;
     this.parsing = false;
   }
 
@@ -78,6 +79,8 @@ class UploadController {
 
     if (this.currentProject && 'currentProject' in changesObj) {
       this.availableDataTypes = this.getAvailableDataTypes();
+      this.requireExpedition =
+        this.currentProject.config.worksheets().length !== 1;
     }
   }
 
@@ -214,8 +217,15 @@ class UploadController {
         this.coordinateWorksheets.splice(i, 1);
       }
     }
+  }
 
-    this.canValidate = this.worksheetData.some(d => d.file);
+  canValidate() {
+    return (
+      !this.parsing &&
+      this.worksheetData.some(d => d.file) &&
+      (!this.requireExpedition || this.expeditionCode) &&
+      (!this.currentUser || this.validateOnly)
+    );
   }
 
   /**

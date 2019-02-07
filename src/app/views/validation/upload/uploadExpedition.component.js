@@ -7,6 +7,7 @@ export default {
     expeditionCode: '<',
     multiExpeditionAllowed: '<',
     canCreate: '<',
+    isRequired: '<',
     onChange: '&',
   },
 };
