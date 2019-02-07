@@ -82,7 +82,7 @@ class QueryFormController {
     this.tissueFilters = [];
 
     // Retrieve Projects
-    this.ProjectService.all(true).then(({ data }) => {
+    const projectsPromise = this.ProjectService.all(true).then(({ data }) => {
       this.projects = data;
       const names = new Set();
       this.projects.forEach(p => {
@@ -92,7 +92,7 @@ class QueryFormController {
     });
 
     // Retrieve General Configurations
-    this.NetworkConfigurationService.get().then(config => {
+    let configPromise = this.NetworkConfigurationService.get().then(config => {
       this.networkConfig = config;
       this.config = config;
       this.phylums = this.networkConfig.getList('phylum').fields;
@@ -104,15 +104,29 @@ class QueryFormController {
     const { q } = this.$location.search();
 
     if (q) {
+      this.params.queryString = q;
+
       const projectMatch = PROJECT_RE.exec(q);
       if (projectMatch) {
         if (projectMatch[1]) {
           // single project
-          this.ProjectService.get(parseInt(projectMatch[1], 10), false).then(
-            p => {
-              this.onProjectChange({ project: p });
-            },
-          );
+          configPromise = projectsPromise.then(() => {
+            const projectId = parseInt(projectMatch[1], 10);
+            const project = this.projects.find(p => p.projectId === projectId);
+            if (project) {
+              return this.ProjectConfigurationService.get(
+                project.projectConfiguration.id,
+              ).then(({ config }) => {
+                this.config = config;
+              });
+            }
+            return undefined;
+          });
+          // this.ProjectService.get(parseInt(projectMatch[1], 10), false).then(
+          // p => {
+          // this.onProjectChange({ project: p });
+          // },
+          // );
         } else {
           // TODO handle this case
           // projects array
@@ -128,8 +142,8 @@ class QueryFormController {
         //   this.params.expeditions.push(...e);
         // }
       }
-      this.params.queryString = q;
-      this.queryJson();
+
+      configPromise.then(() => this.queryJson());
     }
 
     // copy default/original params for later reference
