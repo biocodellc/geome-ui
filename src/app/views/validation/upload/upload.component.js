@@ -110,6 +110,10 @@ class UploadController {
     this.dataTypes = Object.assign({}, dataTypes);
     this.multiExpeditionAllowed = !(dataTypes.Fastq || dataTypes.Fasta);
 
+    if (!this.showExpeditions && (dataTypes.Fasta || dataTypes.Fastq)) {
+      this.showExpeditions = true;
+    }
+
     if (
       !this.multiExpeditionAllowed &&
       this.expeditionCode === MULTI_EXPEDITION
@@ -222,9 +226,11 @@ class UploadController {
   canValidate() {
     return (
       !this.parsing &&
-      this.worksheetData.some(d => d.file) &&
+      (this.worksheetData.some(d => d.file) ||
+        this.fastaData.some(d => d.file) ||
+        this.fastqMetadata.file) &&
       (!this.requireExpedition || this.expeditionCode) &&
-      (!this.currentUser || this.validateOnly)
+      (!this.currentUser || this.validateOnly || this.expeditionCode)
     );
   }
 
