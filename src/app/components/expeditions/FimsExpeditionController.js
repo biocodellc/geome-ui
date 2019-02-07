@@ -81,7 +81,8 @@ export default class FimsExpeditionController {
   getQuery(selectEntities) {
     const params = new QueryParams();
     params.expeditions.push({ expeditionCode: this.expedition.expeditionCode });
-    return params.buildQuery(this.currentProject.projectId, selectEntities);
+    params.projects.push(this.currentProject);
+    return params.buildQuery(selectEntities);
   }
 
   downloadFastq() {

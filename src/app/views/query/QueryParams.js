@@ -34,8 +34,11 @@ export default class QueryParams {
     }
 
     if (this.expeditions.length > 0) {
+      if (builder.queryString.length > 0) {
+        builder.add('and');
+      }
       builder.add(
-        `and _expeditions_:[${this.expeditions.map(e => e.expeditionCode)}]`,
+        `_expeditions_:[${this.expeditions.map(e => e.expeditionCode)}]`,
       );
     }
 

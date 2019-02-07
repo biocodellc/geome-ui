@@ -94,7 +94,8 @@ class DashboardController {
     if (expeditionCode) {
       params.expeditions.push({ expeditionCode });
     }
-    return params.buildQuery(this.currentProject.projectId, selectEntities);
+    params.projects.push(this.currentProject);
+    return params.buildQuery(selectEntities);
   }
 
   downloadFastq(expeditionCode) {
