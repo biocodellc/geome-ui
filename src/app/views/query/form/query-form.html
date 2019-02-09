@@ -8,18 +8,26 @@
   </md-hints>
 
   <div layout-padding>
-    <div ng-show="$ctrl.moreSearchOptions" ng-click="$ctrl.clearParams()">
+    <!--<div ng-show="$ctrl.moreSearchOptions" ng-click="$ctrl.clearParams()">
       <md-radio-group ng-model="$ctrl.showGroups" layout-gt-sm="row" class="md-primary">
         <md-radio-button ng-value="false" flex> Search by individual project
         </md-radio-button>
         <md-radio-button ng-value="true" flex> Search by project configuration 
         </md-radio-button>
       </md-radio-group>
-    </div>
+    </div>-->
 
     <div layout="column" ng-show="$ctrl.showGroups">
-      <h3 class="md-subhead bold" flex>Project Configuration</h3>
-        <md-chips flex ng-model="$ctrl.families" md-on-add="$ctrl.familyToggle($chip)" md-on-remove="$ctrl.familyToggle($chip,$event)" md-require-match>
+      <h3 class="md-subhead bold" flex>Project Configuration
+        <md-button class="md-icon-button help-link md-popover-button">
+          <md-popover md-popover-class="fastq-help-filenames" md-direction="right">
+            <div>Project configuration families represent a group of projects sharing the same fields,validation rules, and data entry templates.</div>
+          </md-popover>
+          <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
+        </md-button>
+      </h3>
+      <md-input-container class="md-icon-float md-icon-right">
+        <md-chips class="md-icon-float md-icon-right" flex ng-model="$ctrl.families" md-on-add="$ctrl.familyToggle($chip)" md-on-remove="$ctrl.familyToggle($chip,$event)" md-require-match>
           <md-autocomplete md-selected-item="$ctrl.selectedGroup" md-no-cache md-autocomplete-snap="width"
             md-search-text="searchText" md-items="name in $ctrl.configNames | filter: {$: searchText}"
             md-item-text="name" md-dropdown-position="bottom" md-min-length="0">
@@ -35,7 +43,7 @@
 
     <!-- TODO: close autocomplete on item select-->
     <!-- TODO: autocomplete-snap not working -->
-    <div class="individual" layout="column" ng-show="$ctrl.moreSearchOptions && !$ctrl.showGroups">
+    <div class="individual" layout="column" ng-show="$ctrl.moreSearchOptions">
       <h3 class="md-subhead bold" flex>Individual Projects</h3>
         <md-chips flex ng-model="$ctrl.individualProjects" md-on-add="$ctrl.individualToggle($chip)" md-on-remove="$ctrl.individualToggle($chip,$event)" md-require-match>
           <md-autocomplete md-selected-item="$ctrl.selectedProject" md-no-cache md-autocomplete-snap="width"
@@ -91,10 +99,17 @@
   <div class="simple" ng-show="!$ctrl.moreSearchOptions">
     <div layout-padding>
       <div layout="column">
-        <h3 class="md-subhead bold" flex>MaterialSampleID</h3>
+        <h3 class="md-subhead bold" flex>MaterialSampleID
+        <md-button class="md-icon-button help-link md-popover-button">
+          <md-popover md-popover-class="fastq-help-filenames" md-direction="right">
+            <div>The Material Sample Identifier is the unique identifier assigned by the collector in the field.</div>
+          </md-popover>
+          <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
+        </md-button>
+	</h3>
         <div flex>
           <div layout="row" layout-align="start center">
-            <md-input-container md-no-float flex="100" >
+            <md-input-container md-no-float >
               <input ng-model="$ctrl.params.materialSampleID" type="text"/>
             </md-input-container>
           </div>
@@ -104,7 +119,14 @@
 
     <div layout-padding>
       <div layout="column">
-        <h3 class="md-subhead bold" flex>Country</h3>
+        <h3 class="md-subhead bold" flex>Country
+        <md-button class="md-icon-button help-link md-popover-button">
+          <md-popover md-popover-class="fastq-help-filenames" md-direction="right">
+            <div>Click the Input line below country to get a list of valid country names to query on.  The country name list is derived from NCBI.</div>
+          </md-popover>
+          <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
+        </md-button>
+	</h3>
         <div flex>
           <md-content>
             <md-autocomplete md-selected-item="$ctrl.params.country" md-search-text="searchCountry" md-items="country in $ctrl.countries | filter: {value: searchCountry}"
@@ -137,7 +159,14 @@
 
     <div layout-padding>
       <div layout="column">
-        <h3 class="md-subhead bold" flex>Phylum</h3>
+        <h3 class="md-subhead bold" flex>Phylum
+        <md-button class="md-icon-button help-link md-popover-button">
+          <md-popover md-popover-class="fastq-help-filenames" md-direction="right">
+            <div>Click the Input line below phylum to get a list of valid phylum names to query on.</div>
+          </md-popover>
+          <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
+        </md-button>
+	</h3>
         <div flex>
           <md-content md-autocomplete-snap="width">
             <!-- Note: this binds the phylum object to params.phylum, and are forced to deconstruct the object in QueryParams.js there might be a better solution, similiar to ng-model or ng-value?-->
