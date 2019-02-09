@@ -17,8 +17,7 @@ class QueryTableController {
       'decimalLongitude',
       'yearCollected',
       'phylum',
-      'genus',
-      'specificEpithet',
+      'scientificName',
       'expeditionCode',
       'bcid',
     ];
