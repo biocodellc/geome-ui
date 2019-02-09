@@ -16,6 +16,7 @@ const defaultParams = {
   fromYear: null,
   toYear: null,
   bounds: null,
+  materialSampleID: null
 };
 
 export default class QueryParams {
@@ -83,6 +84,10 @@ export default class QueryParams {
     if (this.country) {
       if (builder.queryString.length > 0) builder.add('and');
       builder.add(`Event.country = "${this.country.value}"`);
+    }
+    if (this.materialSampleID) {
+      if (builder.queryString.length > 0) builder.add('and');
+      builder.add(`Sample.materialSampleID = "${this.materialSampleID.value}"`);
     }
 
     if (this.genus) {
