@@ -19,7 +19,6 @@ class QueryTableController {
       'phylum',
       'scientificName',
       'expeditionCode',
-      'bcid',
     ];
     this.tableData = [];
     this.currentPage = 1;
