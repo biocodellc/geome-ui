@@ -18,7 +18,7 @@
     </div>
 
     <div layout="column" ng-show="$ctrl.showGroups">
-      <h3 class="md-subhead bold" flex>Project Configurations</h3>
+      <h3 class="md-subhead bold" flex>Project Configuration</h3>
         <md-chips flex ng-model="$ctrl.families" md-on-add="$ctrl.familyToggle($chip)" md-on-remove="$ctrl.familyToggle($chip,$event)" md-require-match>
           <md-autocomplete md-selected-item="$ctrl.selectedGroup" md-no-cache md-autocomplete-snap="width"
             md-search-text="searchText" md-items="name in $ctrl.configNames | filter: {$: searchText}"
@@ -71,7 +71,7 @@
   </div>
 
 
-  <div class="term" layout-padding>
+  <!--<div class="term" layout-padding>
     <div layout="column">
       <h3 class="md-subhead bold" flex>Any Term</h3>
       <md-input-container class="md-icon-float md-icon-right">
@@ -86,8 +86,22 @@
       </md-input-container>
     </div>
   </div>
+  -->
 
   <div class="simple" ng-show="!$ctrl.moreSearchOptions">
+    <div layout-padding>
+      <div layout="column">
+        <h3 class="md-subhead bold" flex>MaterialSampleID</h3>
+        <div flex>
+          <div layout="row" layout-align="start center">
+            <md-input-container md-no-float flex="100" >
+              <input ng-model="$ctrl.params.materialSampleID" type="text"/>
+            </md-input-container>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div layout-padding>
       <div layout="column">
         <h3 class="md-subhead bold" flex>Country</h3>
