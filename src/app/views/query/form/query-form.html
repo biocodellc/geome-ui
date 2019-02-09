@@ -314,7 +314,7 @@
 
   <div class="bounding-box" layout-padding>
     <div layout="column" layout-wrap>
-      <h3 class="md-subhead bold" ng-if="$ctrl.moreSearchOptions" flex>Map</h3>
+      <h3 class="md-subhead bold" ng-if="$ctrl.moreSearchOptions" flex>Filter Options</h3>
       <a href="" ng-class="{'active': $ctrl.drawing}" ng-show="!$ctrl.params.bounds" ng-click="$ctrl.drawBounds()"
         layout="row" flex="100"><u>Draw
           Bounding Box</u></a>
@@ -338,11 +338,14 @@
       </div>
       <div ng-show="$ctrl.moreSearchOptions" layout="column" class="checkboxes">
         <md-checkbox class="small" ng-model="$ctrl.params.isMappable" name="isMappable"> is
-          Mappable</md-checkbox>
+          mappable</md-checkbox>
         <md-checkbox class="small" ng-model="$ctrl.params.hasCoordinateUncertaintyInMeters" name="coordinateUncertaintyInMeters">
           has coordinateUncertaintyInMeters</md-checkbox>
         <md-checkbox class="small" ng-model="$ctrl.params.hasPermitInfo" name="hasPermitInfo">
           has permitInfo</md-checkbox>
+        <md-checkbox class="small" ng-model="$ctrl.params.hasTissue" name="hasTissue"> has tissue</md-checkbox>
+        <md-checkbox class="small" ng-model="$ctrl.params.hasSamplePhoto" name="hasSamplePhoto"> has sample photos</md-checkbox>
+        <md-checkbox class="small" ng-model="$ctrl.params.hasEventPhoto" name="hasEventPhoto"> has event photos</md-checkbox>
       </div>
     </div>
   </div>
