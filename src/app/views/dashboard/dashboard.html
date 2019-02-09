@@ -1,12 +1,8 @@
 <div layout-fill layout="column">
   <h2 class="page-header">Project Overview</h2>
-  <p class="text-center">In this system an “Expedition” includes the metadata (and Sanger sequences
-    if
-    applicable) from a single dataset. The GUID is the globally unique persistent identifier for
-    the
-    expedition and should be acknowledged in the original publication of the dataset and accredited
-    when
-    any part of that dataset is downloaded for reuse.</p>
+  <p class="text-center">Click on the rows below to view data for each expedition. An “Expedition” includes the metadata (and Sanger sequences
+    if applicable) from a single dataset, with a persistent GUID to acknowledged any part 
+    of this dataset when downloaded for reuse.</p>
 
   <div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
     <md-progress-circular md-mode="indeterminate"></md-progress-circular>
@@ -33,21 +29,20 @@
     </thead>
 
     <tbody>
-      <tr ng-repeat="expedition in $ctrl.displayResults track by expedition.expeditionCode">
+      <tr ng-repeat="expedition in $ctrl.displayResults track by expedition.expeditionCode" ng-click="$ctrl.viewData(expedition.expeditionCode)">
         <td>{{ expedition.expeditionTitle}}</td>
         <td ng-repeat="header in $ctrl.headers">{{ expedition[header] }}</td>
         <td ng-show="expedition.expeditionIdentifier">
-          <a href="https://n2t.net/{{expedition.expeditionIdentifier}}">https://n2t.net/{{
-            expedition.expeditionIdentifier}}
-          </a>
+          <!--<a href="https://n2t.net/{{expedition.expeditionIdentifier}}">https://n2t.net/{{ expedition.expeditionIdentifier}} </a>-->
+          https://n2t.net/{{ expedition.expeditionIdentifier}} 
         </td>
         <td ng-show="!expedition.expeditionIdentifier"></td>
         <td ng-show="$ctrl.menuOptions(expedition).length == 0"></td>
         <td ng-show="$ctrl.menuOptions(expedition).length > 0" layout="row" class="md-dense">
-          <md-button aria-label="View expedition data" ng-click="$ctrl.viewData(expedition.expeditionCode)"
+          <!--<md-button aria-label="View expedition data" ng-click="$ctrl.viewData(expedition.expeditionCode)"
             class="md-primary md-raised query-button">
             <md-icon md-font-icon="fa fa-map-marker fa-sm"></md-icon>
-          </md-button>
+          </md-button>-->
           <md-menu ng-show="$ctrl.results" class="md-dense" md-position-mode="target-right target">
             <md-button aria-label="Open expedition download menu" ng-click="$mdMenu.open($event)"
               class="md-primary md-raised download-button">
