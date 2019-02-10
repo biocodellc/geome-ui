@@ -5,17 +5,19 @@
 
   <div ng-show="$ctrl.results">
     Total Number of Results: {{$ctrl.results.totalElements}}
-    <table class="table table-condensed table-striped table-hover text-nowrap">
-      <thead>
-        <tr class="text-capitalize">
-          <th sly-repeat="column in $ctrl.tableColumns">{{ column }}</th>
+    <md-table-container>
+
+    <table md-table class="table table-condensed table-striped table-hover text-nowrap"  ng-model="$ctrl.tableData" >
+      <thead md-head md-order="$ctrl.EventID">
+        <tr md-row class="text-capitalize">
+          <th md-column md-order-by="{{column}}" ng-repeat="column in $ctrl.tableColumns">{{ column }}</th>
         </tr>
       </thead>
       <tbody>
-        <tr sly-repeat="resource in $ctrl.tableData" ng-click="$ctrl.detailView(resource)">
-          <td uib-popover-html="value | trusted_html" popover-enable="value.length > 35" popover-trigger="mouseenter"
+        <tr md-row md-select="resource" ng-repeat="resource in $ctrl.tableData" ng-click="$ctrl.detailView(resource)">
+          <td md-cell uib-popover-html="value | trusted_html" popover-enable="value.length > 35" popover-trigger="mouseenter"
             ng-class="{hideOverflow: value.length > 35}" popover-placement="bottom" popover-append-to-body="true"
-            sly-repeat="value in resource" ng-bind-html="value | trusted_html">
+            ng-repeat="value in resource" ng-bind-html="value | trusted_html">
           </td>
         </tr>
         <tr ng-show="$ctrl.results.totalElements == 0" class="h4">
@@ -23,6 +25,7 @@
         </tr>
       </tbody>
     </table>
+    </md-table-container>
     <div class="text-center" ng-show="$ctrl.results.totalElements > 0">
       <ul uib-pagination total-items="$ctrl.results.totalElements" ng-model="$ctrl.currentPage" ng-change="$ctrl.updatePage()"
         max-size="10" force-ellipses="true" boundary-link-numbers="true" items-per-page="$ctrl.pageSize"></ul>
