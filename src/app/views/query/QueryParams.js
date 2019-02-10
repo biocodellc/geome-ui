@@ -87,7 +87,7 @@ export default class QueryParams {
     }
     if (this.materialSampleID) {
       if (builder.queryString.length > 0) builder.add('and');
-      builder.add(`Sample.materialSampleID = "${this.materialSampleID.value}"`);
+      builder.add(`Sample.materialSampleID = "${this.materialSampleID}"`);
     }
 
     if (this.genus) {
