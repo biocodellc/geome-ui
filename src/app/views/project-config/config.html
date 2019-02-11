@@ -2,9 +2,9 @@
     <div class="row">
         <div class="col-xs-12">
             <section class="heading">
-                <h3>{{ $ctrl.name }}</h3>
-                <p>{{ $ctrl.currentProject.description }}</p>
-		<p><strong>Project owned by user: </strong>{{ $ctrl.currentProject.user.username}} ({{$ctrl.currentProject.user.email}})</p>
+                <h3>{{ $ctrl.currentProject.projectConfiguration.name }}</h3>
+		Every project has a master configuration, either synchronized with a network approved configuration, or pointing to a clone of a network approved configuration. This configuration screen is for the Master project configuration.
+		<p><strong>Master configuration owned by user: </strong>{{ $ctrl.currentProject.projectConfiguration.user.username}} </p>
             </section>
         </div>
     </div>
