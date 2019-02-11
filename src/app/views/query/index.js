@@ -14,8 +14,6 @@ import fimsQuery from './query.component';
 import fimsQueryForm from './form/query-form.component';
 import fimsQueryTable from './table/query-table.component';
 
-import mdDataTable from 'biocode-angular-material-data-table';
-
 const dependencies = ['sly', router, QueryService, projectService, fimsMap];
 
 export default angular
