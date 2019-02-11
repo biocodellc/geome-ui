@@ -2,9 +2,6 @@
   <h3 class="text-center">{{$ctrl.currentProject.projectTitle}} Overview</h3>
   <p class="text-center">{{ $ctrl.currentProject.description}}</p>
   <p class="text-center"><strong>Project owned by user: </strong> {{ $ctrl.currentProject.user.username}} ({{$ctrl.currentProject.user.email}})</p>
-  <!--<p class="text-center">Click on the rows below to view data for each expedition. An “Expedition” includes the metadata (and Sanger sequences
-    if applicable) from a single dataset, with a persistent GUID to acknowledged any part 
-    of this dataset when downloaded for reuse.</p>-->
 
   <div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
     <md-progress-circular md-mode="indeterminate"></md-progress-circular>
