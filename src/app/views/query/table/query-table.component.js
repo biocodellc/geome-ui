@@ -17,10 +17,9 @@ class QueryTableController {
       'decimalLongitude',
       'yearCollected',
       'phylum',
-      'genus',
-      'specificEpithet',
+      'scientificName',
       'expeditionCode',
-      'bcid',
+      'bcid'
     ];
     this.tableData = [];
     this.currentPage = 1;

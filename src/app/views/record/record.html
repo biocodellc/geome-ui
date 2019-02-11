@@ -6,9 +6,9 @@
 
   <div class="main-details" layout="row" layout-align="center center">
     <div ng-if="$ctrl.record.img1024" flex="100">
-      <img ng-src="{{$ctrl.record.img1024}}" href="{{$ctrl.record.originalUrl}}" />
+      <a href="{{$ctrl.record.img1024}}"><img ng-src="{{$ctrl.record.img512}}"></a>
     </div>
-    <table ng-if="!$ctrl.record.originalUrl" flex="100" class="table table-condensed">
+    <table ng-if="!$ctrl.record.originalUrl" flex="100" >
       <tbody>
         <tr ng-repeat="(key, value) in $ctrl.mainRecordDetails() track by key">
           <th>{{key}}:</th>
@@ -29,10 +29,10 @@
     </div>
   </div>
 
-  <md-divider ng-if="$ctrl.auxiliaryRecordDetails(0)"></md-divider>
+  <!--<md-divider ng-if="$ctrl.auxiliaryRecordDetails(0)"></md-divider>-->
 
-  <div class="auxiliary-details" ng-if="$ctrl.auxiliaryRecordDetails(0)" layout="row">
-    <table flex class="table table-condensed">
+  <div ng-if="$ctrl.auxiliaryRecordDetails(0)" layout="row">
+    <table flex >
       <tbody>
         <tr ng-repeat="(key, value) in $ctrl.auxiliaryRecordDetails(0) track by key">
           <th>{{key}}:</th>
@@ -51,7 +51,7 @@
     </table>
     <!-- Not sure why the following isn't working, but works on the angularjs material docs website -->
     <!-- <table hide show-gt-sm flex class="table table-condensed"> -->
-    <table ng-show="$ctrl.$mdMedia('gt-sm')" flex class="table table-condensed">
+    <table ng-show="$ctrl.$mdMedia('gt-sm')" flex >
       <tbody>
         <tr ng-repeat="(key, value) in $ctrl.auxiliaryRecordDetails(1) track by key">
           <th>{{key}}:</th>
@@ -70,7 +70,7 @@
     </table>
   </div>
 
-  <md-divider ng-if="$ctrl.parentDetail"></md-divider>
+  <!--<md-divider ng-if="$ctrl.parentDetail"></md-divider>-->
 
   <div class="parent-details horizontal-description-list" ng-if="$ctrl.parentDetail">
     <h3>Parent {{$ctrl.parent.entity}}</h3>
@@ -88,7 +88,7 @@
   </div>
 
 
-  <md-divider ng-if="$ctrl.childDetails"></md-divider>
+  <!--<md-divider ng-if="$ctrl.childDetails"></md-divider>-->
 
   <div class="child-details horizontal-description-list" ng-if="$ctrl.childDetails">
     <h3>Child Entities</h3>

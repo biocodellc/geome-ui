@@ -32,6 +32,7 @@ import about from './views/about';
 import home from './views/home';
 import containerPage from './components/container-page';
 import notFound from './views/not-found';
+import forbidden from './views/forbidden';
 import contact from './views/contact';
 import login from './views/login';
 import register from './views/register';
@@ -100,6 +101,7 @@ const dependencies = [
   about,
   home,
   contact,
+  forbidden,
   notFound,
   login,
   register,

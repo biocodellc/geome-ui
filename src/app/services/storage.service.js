@@ -7,8 +7,8 @@ class StorageService {
     this.storage = {};
 
     this.window = $window;
-    if (angular.isDefined(this.window.sessionStorage[STORAGE_KEY])) {
-      this.storage = JSON.parse(this.window.sessionStorage[STORAGE_KEY]);
+    if (angular.isDefined(this.window.localStorage[STORAGE_KEY])) {
+      this.storage = JSON.parse(this.window.localStorage[STORAGE_KEY]);
     }
   }
 
@@ -19,13 +19,13 @@ class StorageService {
   set(key, val) {
     this.storage[key] = val;
 
-    this.window.sessionStorage[STORAGE_KEY] = JSON.stringify(this.storage);
+    this.window.localStorage[STORAGE_KEY] = JSON.stringify(this.storage);
   }
 
   extend(obj) {
     angular.extend(this.storage, obj);
 
-    this.window.sessionStorage[STORAGE_KEY] = JSON.stringify(this.storage);
+    this.window.localStorage[STORAGE_KEY] = JSON.stringify(this.storage);
   }
 }
 
