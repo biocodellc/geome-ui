@@ -27,9 +27,9 @@ function getStates() {
                 if (response.status === 204) {
                     $state.go('notFound', { path: '404' });
 		} 
-		// TODO: fix response status codes so we can reliably evaluate them
+		// TODO: fix response status codes  so we can search for 403 here.  Currently this will throw a forbidden message even for 404 situations.
 		else if (!response.status ) {
-                    $state.go('notFound', { path: '404' });
+                    $state.go('forbidden', { path: '403' });
 		} else {
                     return response.data;
 		}
