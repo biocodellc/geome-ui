@@ -28,7 +28,7 @@
     </thead>
 
     <tbody>
-      <tr ng-repeat="expedition in $ctrl.displayResults track by expedition.expeditionCode" ng-click="$ctrl.viewData(expedition.expeditionCode)">
+      <tr ng-repeat="expedition in $ctrl.displayResults track by expedition.expeditionCode" ng-click="$ctrl.results && $ctrl.viewData(expedition.expeditionCode)">
         <td>{{ expedition.expeditionTitle}}</td>
         <td ng-repeat="header in $ctrl.headers">{{ expedition[header] }}</td>
         <td ng-show="expedition.expeditionIdentifier">
