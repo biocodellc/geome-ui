@@ -23,17 +23,17 @@ function getStates() {
             }
             return RecordService.get(bcid.trim())
               .then(response => {
-		// If the response.status is anything other than 200,
-		//  it is most likely that the it is  a 403 error (forbidden)
-		// or the resource does not exist.  It would be better to trap by 
-		// specific status codes, however, i've found that status codes get
-		// mangled when exceptions occurr, so in this case, we politely 
 		// fail using the 404 route
-                if (response.status != 200) {
+                if (response.status === 204) {
                     $state.go('notFound', { path: '404' });
+		} 
+		// TODO: fix response status codes so we can reliably evaluate them
+		else if (!response.status ) {
+                    $state.go('notFound', { path: '404' });
+		} else {
+                    return response.data;
 		}
 
-                return response.data;
               })
               .catch(() => $state.go('notFound', { path: '404' }));
           },
