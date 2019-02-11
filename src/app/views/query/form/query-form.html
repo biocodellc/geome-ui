@@ -197,7 +197,7 @@
           <div class="filter-button" flex>
             <md-button class="md-accent md-raised md-button-sm" ng-click="$ctrl.generateFilterOptions('Event')">
               <span class="fa fa-plus"></span> Add Event Filter</md-button>
-        <md-button class="md-icon-button help-link md-popover-button"> <md-popover md-popover-class="fastq-help-filenames" md-direction="right"> <div>Filter on Event related fields</div> </md-popover> <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon> </md-button>
+        <md-button class="md-icon-button help-link md-popover-button"> <md-popover md-popover-class="fastq-help-filenames" md-direction="right"> <div>Filter on Event related fields. The "has" option can be used to look for any values. E.g. "has" a scientificName.</div> </md-popover> <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon> </md-button>
           </div>
           <div flex>
             <md-chips ng-model="$ctrl.eventFilters" readonly="true" md-removable="true" md-on-remove="$ctrl.filterToggle($chip, true)" md-on-add="$ctrl.filterToggle($chip)">
@@ -236,7 +236,7 @@
           <div class="filter-button" flex>
             <md-button class="md-accent md-raised md-button-sm" ng-click="$ctrl.generateFilterOptions('Sample')">
               <span class="fa fa-plus"></span> Add Sample Filter</md-button>
-        <md-button class="md-icon-button help-link md-popover-button"> <md-popover md-popover-class="fastq-help-filenames" md-direction="right"> <div>Filter on Sample related fields</div> </md-popover> <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon> </md-button>
+        <md-button class="md-icon-button help-link md-popover-button"> <md-popover md-popover-class="fastq-help-filenames" md-direction="right"> <div>Filter on Sample related fields. The "has" option can be used to look for any values. E.g. "has" a scientificName.</div> </md-popover> <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon> </md-button>
           </div>
           <div flex>
             <md-chips ng-model="$ctrl.sampleFilters" readonly="true" md-removable="true" md-on-remove="$ctrl.filterToggle($chip, true)" md-on-add="$ctrl.filterToggle($chip)">
@@ -275,7 +275,7 @@
           <div class="filter-button" flex>
             <md-button class="md-accent md-raised md-button-sm" ng-click="$ctrl.generateFilterOptions('Tissue')">
               <span class="fa fa-plus"></span> Add Tissue Filter</md-button>
-        <md-button class="md-icon-button help-link md-popover-button"> <md-popover md-popover-class="fastq-help-filenames" md-direction="right"> <div>Filter on Tissue related fields</div> </md-popover> <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon> </md-button>
+        <md-button class="md-icon-button help-link md-popover-button"> <md-popover md-popover-class="fastq-help-filenames" md-direction="right"> <div>Filter on Tissue related fields. The "has" option can be used to look for any values. E.g. "has" a scientificName.</div> </md-popover> <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon> </md-button>
           </div>
           <div flex>
             <md-chips ng-model="$ctrl.tissueFilters" readonly="true" md-removable="true" md-on-remove="$ctrl.filterToggle($chip, true)" md-on-add="$ctrl.filterToggle($chip)">
