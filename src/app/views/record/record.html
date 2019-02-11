@@ -6,7 +6,7 @@
 
   <div class="main-details" layout="row" layout-align="center center">
     <div ng-if="$ctrl.record.img1024" flex="100">
-      <img ng-src="{{$ctrl.record.img1024}}" href="{{$ctrl.record.originalUrl}}" />
+      <a href="{{$ctrl.record.img1024}}"><img ng-src="{{$ctrl.record.img512}}"></a>
     </div>
     <table ng-if="!$ctrl.record.originalUrl" flex="100" >
       <tbody>

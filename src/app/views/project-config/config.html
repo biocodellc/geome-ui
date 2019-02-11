@@ -3,8 +3,8 @@
         <div class="col-xs-12">
             <section class="heading">
                 <h3>{{ $ctrl.name }}</h3>
-                <p>
-                    <strong>Description: </strong> {{ $ctrl.description }}</p>
+                <p>{{ $ctrl.currentProject.description }}</p>
+		<p><strong>Project owned by user: </strong>{{ $ctrl.currentProject.user.username}} ({{$ctrl.currentProject.user.email}})</p>
             </section>
         </div>
     </div>

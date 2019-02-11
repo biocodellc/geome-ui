@@ -21,8 +21,10 @@ export const parentRecordDetails = {
       text: tissue.tissueID,
       href: `/record/${tissue.bcid}`,
     }),
-    tissueType: getKey('tissueType'),
-    tissueInstitution: getKey('tissueInstitution'),
+    tissuePlate: getKey('tissuePlate'),
+    tissueWell: getKey('tissueWell'),
+    //tissueType: getKey('tissueType'),
+    //tissueInstitution: getKey('tissueInstitution'),
   },
 };
 
@@ -40,8 +42,14 @@ export const childRecordDetails = {
       text: tissue.tissueID,
       href: `/record/${tissue.bcid}`,
     }),
-    tissueType: getKey('tissueType'),
-    tissueInstitution: getKey('tissueInstitution'),
+    // Here is a sample call to the tissuePlate Viewer, if we had a call...
+    // Need to research how to make this call....
+    //tissuePlate: tissue => ({
+   // 	text: tissue.tissuePlate,
+//	href: `http://www.google.com`,
+ //   }),
+    tissuePlate: getKey('tissuePlate'),
+    tissueWell: getKey('tissueWell'),
   },
   fastaSequence: {
     marker: sq => ({
@@ -84,6 +92,52 @@ export const mainRecordDetails = {
       text: e.bcid,
       href: `https://n2t.net/${e.bcid}`,
     }),
+  },
+  // For photos, i'm putting some of the auxillary data in the main element, appears better
+  Event_Photo: {
+    materialSampleID: getKey('materialSampleID'),
+    photoID: getKey('photoID'),
+    originalUrl: getKey('originalUrl'),
+    original: getKey('photoID'),
+    img1024: Sample_Photo => ({
+    	text: '1024 pixel wide image',
+	href: `${Event_Photo.img1024}`
+    }),
+    img512: Sample_Photo => ({
+    	text: '512 pixel wide image',
+	href: `${Event_Photo.img512}`
+    }),
+    img128: Sample_Photo => ({
+    	text: '128 pixel wide image',
+	href: `${Event_Photo.img128}`
+    }),
+    expeditionCode: Sample_Photo => ({
+   	text: `${Event_Photo.expeditionCode}`,
+        href: `/query?q=_projects_:${Event_Photo.projectId} and _expeditions_:${Event_Photo.expeditionCode}`
+    }),
+    processed: getKey('processed'),
+  },
+  Sample_Photo: {
+    materialSampleID: getKey('materialSampleID'),
+    photoID: getKey('photoID'),
+    originalUrl: getKey('originalUrl'),
+    img1024: Sample_Photo => ({
+    	text: '1024 pixel wide image',
+	href: `${Sample_Photo.img1024}`
+    }),
+    img512: Sample_Photo => ({
+    	text: '512 pixel wide image',
+	href: `${Sample_Photo.img512}`
+    }),
+    img128: Sample_Photo => ({
+    	text: '128 pixel wide image',
+	href: `${Sample_Photo.img128}`
+    }),
+    expeditionCode: Sample_Photo => ({
+   	text: `${Sample_Photo.expeditionCode}`,
+        href: `/query?q=_projects_:${Sample_Photo.projectId} and _expeditions_:${Sample_Photo.expeditionCode}`
+    }),
+    processed: getKey('processed'),
   },
   Sample: {
     materialSampleID: getKey('materialSampleID'),
