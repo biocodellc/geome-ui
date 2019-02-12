@@ -41,6 +41,7 @@ export default class AuthInterceptor {
         })
         .catch(() => {
           this.triedToRefresh = false;
+          if (origRequestConfig.skipAuthRedirect) throw response;
           const $state = this.injector.get('$state');
           return $state.target('login', {
             nextState: $state.current.name,

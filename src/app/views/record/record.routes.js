@@ -21,21 +21,24 @@ function getStates() {
               $window.location.href = `https://ezid.cdlib.org/id/${bcid}`;
               return false;
             }
-            return RecordService.get(bcid.trim())
+            return RecordService.get(bcid.trim(), { skipAuthRedirect: true })
               .then(response => {
-		// fail using the 404 route
+                // fail using the 404 route
                 if (response.status === 204) {
-                    $state.go('notFound', { path: '404' });
-		} 
-		// TODO: fix response status codes  so we can search for 403 here.  Currently this will throw a forbidden message even for 404 situations.
-		else if (!response.status ) {
-                    $state.go('forbidden', { path: '403' });
-		} else {
-                    return response.data;
-		}
-
+                  $state.go('notFound', { path: '404' });
+                }
+                return response.data;
               })
-              .catch(() => $state.go('notFound', { path: '404' }));
+              .catch(response => {
+                if (response.status === 403) {
+                  return $state.go('forbidden', {
+                    path: '403',
+                    nextState: 'record',
+                    nextStateParams: $stateParams,
+                  });
+                }
+                return $state.go('notFound', { path: '404' });
+              });
           },
         },
       },

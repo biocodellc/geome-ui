@@ -1,4 +1,8 @@
 {
   "presets": ["env"],
-  "plugins": ["transform-class-properties", "angularjs-annotate"]
+  "plugins": [
+    "transform-class-properties",
+    "angularjs-annotate",
+    "transform-object-rest-spread"
+  ]
 }

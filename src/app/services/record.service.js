@@ -10,8 +10,9 @@ class RecordService {
     this.$http = $http;
   }
 
-  get(identifier) {
+  get(identifier, httpOpts) {
     return this.$http({
+      ...httpOpts,
       method: 'GET',
       url: `${restRoot}records/${identifier}?includeParent&includeChildren`,
     });

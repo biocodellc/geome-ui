@@ -5,6 +5,10 @@ function getStates() {
       config: {
         url: '*path',
         component: 'forbidden',
+        params: {
+          nextState: null,
+          nextStateParams: null,
+        },
       },
     },
   ];
