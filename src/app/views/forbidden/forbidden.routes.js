@@ -3,7 +3,7 @@ function getStates() {
     {
       state: 'forbidden',
       config: {
-        url: '*path',
+        url: '/403',
         component: 'forbidden',
         params: {
           nextState: null,
