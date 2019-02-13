@@ -18,7 +18,7 @@ class HeaderController {
   login() {
     this.$state.go('login', {
       nextState: this.$state.current.name,
-      nextStateParams: this.$state.params,
+      nextStateParams: Object.assign({}, this.$state.params),
     });
   }
 }

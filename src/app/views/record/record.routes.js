@@ -32,9 +32,8 @@ function getStates() {
               .catch(response => {
                 if (response.status === 403) {
                   return $state.go('forbidden', {
-                    path: '403',
                     nextState: 'record',
-                    nextStateParams: $stateParams,
+                    nextStateParams: Object.assign({}, $stateParams),
                   });
                 }
                 return $state.go('notFound', { path: '404' });
