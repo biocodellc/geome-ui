@@ -23,8 +23,8 @@ export const parentRecordDetails = {
     }),
     tissuePlate: getKey('tissuePlate'),
     tissueWell: getKey('tissueWell'),
-    //tissueType: getKey('tissueType'),
-    //tissueInstitution: getKey('tissueInstitution'),
+    // tissueType: getKey('tissueType'),
+    // tissueInstitution: getKey('tissueInstitution'),
   },
 };
 
@@ -44,10 +44,10 @@ export const childRecordDetails = {
     }),
     // Here is a sample call to the tissuePlate Viewer, if we had a call...
     // Need to research how to make this call....
-    //tissuePlate: tissue => ({
-   // 	text: tissue.tissuePlate,
-//	href: `http://www.google.com`,
- //   }),
+    // tissuePlate: tissue => ({
+    // 	text: tissue.tissuePlate,
+    //	href: `http://www.google.com`,
+    //   }),
     tissuePlate: getKey('tissuePlate'),
     tissueWell: getKey('tissueWell'),
   },
@@ -99,21 +99,23 @@ export const mainRecordDetails = {
     photoID: getKey('photoID'),
     originalUrl: getKey('originalUrl'),
     original: getKey('photoID'),
-    img1024: Sample_Photo => ({
-    	text: '1024 pixel wide image',
-	href: `${Event_Photo.img1024}`
+    img1024: eventPhoto => ({
+      text: '1024 pixel wide image',
+      href: `${eventPhoto.img1024}`,
     }),
-    img512: Sample_Photo => ({
-    	text: '512 pixel wide image',
-	href: `${Event_Photo.img512}`
+    img512: eventPhoto => ({
+      text: '512 pixel wide image',
+      href: `${eventPhoto.img512}`,
     }),
-    img128: Sample_Photo => ({
-    	text: '128 pixel wide image',
-	href: `${Event_Photo.img128}`
+    img128: eventPhoto => ({
+      text: '128 pixel wide image',
+      href: `${eventPhoto.img128}`,
     }),
-    expeditionCode: Sample_Photo => ({
-   	text: `${Event_Photo.expeditionCode}`,
-        href: `/query?q=_projects_:${Event_Photo.projectId} and _expeditions_:${Event_Photo.expeditionCode}`
+    expeditionCode: eventPhoto => ({
+      text: `${eventPhoto.expeditionCode}`,
+      href: `/query?q=_projects_:${eventPhoto.projectId} and _expeditions_:${
+        eventPhoto.expeditionCode
+      }`,
     }),
     processed: getKey('processed'),
   },
@@ -121,21 +123,23 @@ export const mainRecordDetails = {
     materialSampleID: getKey('materialSampleID'),
     photoID: getKey('photoID'),
     originalUrl: getKey('originalUrl'),
-    img1024: Sample_Photo => ({
-    	text: '1024 pixel wide image',
-	href: `${Sample_Photo.img1024}`
+    img1024: SamplePhoto => ({
+      text: '1024 pixel wide image',
+      href: `${SamplePhoto.img1024}`,
     }),
-    img512: Sample_Photo => ({
-    	text: '512 pixel wide image',
-	href: `${Sample_Photo.img512}`
+    img512: samplePhoto => ({
+      text: '512 pixel wide image',
+      href: `${samplePhoto.img512}`,
     }),
-    img128: Sample_Photo => ({
-    	text: '128 pixel wide image',
-	href: `${Sample_Photo.img128}`
+    img128: samplePhoto => ({
+      text: '128 pixel wide image',
+      href: `${samplePhoto.img128}`,
     }),
-    expeditionCode: Sample_Photo => ({
-   	text: `${Sample_Photo.expeditionCode}`,
-        href: `/query?q=_projects_:${Sample_Photo.projectId} and _expeditions_:${Sample_Photo.expeditionCode}`
+    expeditionCode: samplePhoto => ({
+      text: `${samplePhoto.expeditionCode}`,
+      href: `/query?q=_projects_:${samplePhoto.projectId} and _expeditions_:${
+        samplePhoto.expeditionCode
+      }`,
     }),
     processed: getKey('processed'),
   },
