@@ -1,7 +1,7 @@
 // Query View styles
 
 .md-chips .md-chip-input-container md-autocomplete input {
-    width: 400px;
+  width: 400px;
 }
 .md-raised-disabled {
   background-color: rgba(0, 0, 0, 0.3);
@@ -184,4 +184,8 @@ $query-form-toggle-width: 40px;
       margin: 16px 0;
     }
   }
+}
+
+#query-table {
+  border: none;
 }

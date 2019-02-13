@@ -10,28 +10,36 @@ export default class QueryMap extends Map {
     return super.setMarkers(data, this.generatePopupContent.bind(this));
   }
 
-  generatePopupContent({ bcid, phylum, genus, specificEpithet, event }) {
+  generatePopupContent({
+    bcid,
+    phylum,
+    genus,
+    specificEpithet,
+    locality,
+    country,
+    yearCollected,
+    eventBcid,
+  }) {
     let loc = '';
-    if (event.locality && event.country) {
-      loc = `<strong>Locality, Country</strong>:  ${event.locality}, ${
-        event.country
-      }<br>`;
-    } else if (event.locality) {
-      loc = `<strong>Locality</strong>:  ${event.locality}<br>`;
-    } else if (event.country) {
-      loc = `<strong>Country</strong>:  ${event.country}<br>`;
+    if (locality && country) {
+      loc = `<strong>Locality, Country</strong>:  ${locality}, ${country}<br>`;
+    } else if (locality) {
+      loc = `<strong>Locality</strong>:  ${locality}<br>`;
+    } else if (country) {
+      loc = `<strong>Country</strong>:  ${country}<br>`;
     }
     return (
       `${`<strong>Phylum</strong>:  ${phylum}<br>` +
         `<strong>Genus</strong>:  ${genus || 'N/A'}<br>` +
         `<strong>specificEpithet</strong>:  ${specificEpithet || 'N/A'}<br>` +
-        `<strong>Year Collected</strong>:  ${
-          event.yearCollected
-        }<br>`}${loc}<a href='${this.$state.href('record', {
-        bcid,
-      })}' target='_blank'>Sample details</a><br>` +
+        `<strong>Year Collected</strong>:  ${yearCollected}<br>`}${loc}<a href='${this.$state.href(
+        'record',
+        {
+          bcid,
+        },
+      )}' target='_blank'>Sample details</a><br>` +
       `<a href='${this.$state.href('record', {
-        bcid: event.bcid,
+        bcid: eventBcid,
       })}' target='_blank'>Event details</a>`
     );
   }

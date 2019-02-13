@@ -1,6 +1,10 @@
 table.clone {
-  + md-table-container table tbody tr:first-child td {
+  + md-table-container {
     border-top: none;
+
+    table tbody tr:first-child td {
+      border-top: none;
+    }
   }
   thead tr:last-child th {
     border-bottom: 1px rgba(0, 0, 0, 0.12) solid;
@@ -11,10 +15,11 @@ table.clone {
 
 md-table-container {
   border: 1px rgba(0, 0, 0, 0.12) solid;
-  border-top: none;
 }
 
 .md-table {
+  margin-bottom: inherit;
+
   &.table {
     &.md-row-select {
       th.md-column,
@@ -120,7 +125,7 @@ md-table-container {
             padding: 5px 32px 5px 0;
           }
           &:first-child {
-            padding: 5px 0 5px 16px;
+            padding: 5px 16px 5px 16px;
           }
           &:nth-child(2) {
             padding: 5px 32px 5px 0;
@@ -171,5 +176,17 @@ md-table-container {
         }
       }
     }
+  }
+}
+
+md-table-pagination {
+  .label {
+    display: block;
+    padding: 0;
+    font-size: 100%;
+    font-weight: normal;
+    line-height: inherit;
+    color: inherit;
+    border-radius: 0;
   }
 }

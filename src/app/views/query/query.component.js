@@ -17,8 +17,8 @@ class QueryController {
     this.params = new QueryParams();
     this.queryMap = new QueryMap(
       this.$state,
-      'event.decimalLatitude',
-      'event.decimalLongitude',
+      'decimalLatitude',
+      'decimalLongitude',
     );
 
     this.showSidebar = true;
@@ -32,10 +32,9 @@ class QueryController {
     this.results = results;
     if (!results) {
       this.toggleMap(true);
-      // return;
     } else {
       const hasCoordinates = this.results.data.some(
-        d => d.event.decimalLatitude && d.event.decimalLongitude,
+        d => d.decimalLatitude && d.decimalLongitude,
       );
       // return table view for advanced queries and queries with no lat lng data, return map view for simple queries
       if (!hasCoordinates || isAdvancedSearch) {
