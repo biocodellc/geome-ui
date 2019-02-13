@@ -12,7 +12,7 @@
   },
   "homepage": "https://biscicol.org",
   "scripts": {
-    "build": "rimraf dist && webpack --bail --progress --profile",
+    "build": "rimraf dist && webpack --bail --profile",
     "server": "webpack-dev-server",
     "test": "karma start",
     "test-watch": "karma start --auto-watch --no-single-run",
