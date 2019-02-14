@@ -303,11 +303,13 @@ class QueryFormController {
       this.filterOptions = {};
       this.config.entities.forEach(e => {
         const alias = e.conceptAlias;
-        const opts = e.attributes.filter(a => !a.internal).map(a => ({
-          column: `${alias}.${a.column}`,
-          dataType: a.dataType,
-          list: this.config.findListForColumn(e, a.column),
-        }));
+        const opts = e.attributes
+          .filter(a => !a.internal)
+          .map(a => ({
+            column: `${alias}.${a.column}`,
+            dataType: a.dataType,
+            list: this.config.findListForColumn(e, a.column),
+          }));
         this.filterOptions[alias] = opts;
       });
     }

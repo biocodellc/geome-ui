@@ -43,34 +43,38 @@ export default class ProjectConfig {
 
     const attributes = {};
 
-    this.entities.filter(entity => entity.worksheet === sheetName).forEach(e =>
-      e.attributes.forEach(attribute => {
-        // don't include the uniqueKey if this is a hashed entity
-        if (e.hashed && attribute.column === e.uniqueKey) return;
+    this.entities
+      .filter(entity => entity.worksheet === sheetName)
+      .forEach(e =>
+        e.attributes.forEach(attribute => {
+          // don't include the uniqueKey if this is a hashed entity
+          if (e.hashed && attribute.column === e.uniqueKey) return;
 
-        // don't include the parentEntity uniqueKey if the parent is a hashed entity
-        if (e.parentEntity) {
-          const parentEntity = this.entities.find(
-            en => en.conceptAlias === e.parentEntity,
-          );
-          if (
-            parentEntity.hashed &&
-            attribute.column === parentEntity.uniqueKey
-          )
+          // don't include the parentEntity uniqueKey if the parent is a hashed entity
+          if (e.parentEntity) {
+            const parentEntity = this.entities.find(
+              en => en.conceptAlias === e.parentEntity,
+            );
+            if (
+              parentEntity.hashed &&
+              attribute.column === parentEntity.uniqueKey
+            )
+              return;
+          }
+
+          const group = attribute.group || defaultGroup;
+
+          if (!(group in attributes)) {
+            attributes[group] = [];
+          } else if (
+            attributes[group].find(a => a.column === attribute.column)
+          ) {
             return;
-        }
+          }
 
-        const group = attribute.group || defaultGroup;
-
-        if (!(group in attributes)) {
-          attributes[group] = [];
-        } else if (attributes[group].find(a => a.column === attribute.column)) {
-          return;
-        }
-
-        attributes[group].push(attribute);
-      }),
-    );
+          attributes[group].push(attribute);
+        }),
+      );
 
     return attributes;
   }

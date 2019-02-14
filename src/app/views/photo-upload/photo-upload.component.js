@@ -50,7 +50,10 @@ class PhotoUploadController {
       resume,
     )
       .progress(event => {
-        this.uploadProgress = parseInt(100.0 * event.loaded / event.total, 10);
+        this.uploadProgress = parseInt(
+          (100.0 * event.loaded) / event.total,
+          10,
+        );
       })
       .then(res => {
         this.showResultDialog(res);
@@ -107,21 +110,23 @@ class PhotoUploadController {
 
   setPhotoEntities() {
     const { entities } = this.currentProject.config;
-    this.photoEntities = entities.filter(e => e.type === 'Photo').map(e => {
-      const parentEntity = entities.find(
-        p => p.conceptAlias === e.parentEntity,
-      );
+    this.photoEntities = entities
+      .filter(e => e.type === 'Photo')
+      .map(e => {
+        const parentEntity = entities.find(
+          p => p.conceptAlias === e.parentEntity,
+        );
 
-      const excludeCols = ['originalUrl', 'photoID', parentEntity.uniqueKey];
+        const excludeCols = ['originalUrl', 'photoID', parentEntity.uniqueKey];
 
-      return {
-        conceptAlias: e.conceptAlias,
-        additionalMetadata: e.attributes.filter(
-          a => !a.internal && !excludeCols.includes(a.column),
-        ),
-        requiresExpedition: !parentEntity.uniqueAcrossProject,
-      };
-    });
+        return {
+          conceptAlias: e.conceptAlias,
+          additionalMetadata: e.attributes.filter(
+            a => !a.internal && !excludeCols.includes(a.column),
+          ),
+          requiresExpedition: !parentEntity.uniqueAcrossProject,
+        };
+      });
     if (this.photoEntities.length === 1) this.entity = this.photoEntities[0];
   }
 }

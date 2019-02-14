@@ -16,7 +16,7 @@ const defaultParams = {
   fromYear: null,
   toYear: null,
   bounds: null,
-  materialSampleID: null
+  materialSampleID: null,
 };
 
 export default class QueryParams {
@@ -133,15 +133,15 @@ export default class QueryParams {
     }
     if (this.hasTissue) {
       if (builder.queryString.length > 0) builder.add('and');
-      builder.add( '_exists_:Tissue.tissueID');
+      builder.add('_exists_:Tissue.tissueID');
     }
     if (this.hasSamplePhoto) {
       if (builder.queryString.length > 0) builder.add('and');
-      builder.add( '_exists_:Sample_Photo.photoID');
+      builder.add('_exists_:Sample_Photo.photoID');
     }
     if (this.hasEventPhoto) {
       if (builder.queryString.length > 0) builder.add('and');
-      builder.add( '_exists_:Event_Photo.photoID');
+      builder.add('_exists_:Event_Photo.photoID');
     }
 
     if (this.hasCoordinateUncertaintyInMeters) {

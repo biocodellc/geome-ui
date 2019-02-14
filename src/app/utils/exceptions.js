@@ -9,9 +9,9 @@ export default (
   angular.toaster.error(
     response.status !== 404 && response.data
       ? response.data.error ||
-        response.data.usrMessage ||
-        response.data.message ||
-        defaultMsg
+          response.data.usrMessage ||
+          response.data.message ||
+          defaultMsg
       : defaultMsg,
     toastAction,
     toastOpts,

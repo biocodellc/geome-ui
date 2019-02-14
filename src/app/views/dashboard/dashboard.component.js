@@ -154,9 +154,8 @@ class DashboardController {
       .replace(/([A-Z])/g, match => ` ${match}`) // split on camelCase
       .replace(/^./, match => match.toUpperCase()) // uppercase each word
       .trim()
-      .replace(
-        /\w$/,
-        match => (match === 's' || match === 'a' ? match : `${match}s`),
+      .replace(/\w$/, match =>
+        match === 's' || match === 'a' ? match : `${match}s`,
       ); // end w/ 's'
   }
 

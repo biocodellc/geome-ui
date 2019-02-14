@@ -191,37 +191,35 @@ class PlateViewerController {
           this.plateData,
         );
 
-    p
-      .then(resp => {
-        this.errors = resp.validationMessages
-          ? resp.validationMessages.errors.reduce(
-              (accumulator, group) =>
-                accumulator.concat(group.messages.map(g => g.message)),
-              [],
-            )
-          : undefined;
-        if (resp.plate) {
-          angular.toaster.success(
-            `Successfully ${this.newPlate ? 'created' : 'updated'} the plate.`,
-          );
+    p.then(resp => {
+      this.errors = resp.validationMessages
+        ? resp.validationMessages.errors.reduce(
+            (accumulator, group) =>
+              accumulator.concat(group.messages.map(g => g.message)),
+            [],
+          )
+        : undefined;
+      if (resp.plate) {
+        angular.toaster.success(
+          `Successfully ${this.newPlate ? 'created' : 'updated'} the plate.`,
+        );
 
-          Object.keys(resp.plate).forEach(row =>
-            resp.plate[row].forEach((val, col) => {
-              this.plateData[row][col] = val;
-              if (this.editedData[row]) {
-                this.editedData[row][col] = false;
-              }
-            }),
-          );
-        }
-        this.newPlate = this.newPlate && !resp.plate;
-        this.origPlateData = resp.plate || angular.copy(NEW_PLATE);
-        this.hasChanges = !angular.equals(this.origPlateData, this.plateData);
-        this.searchTexts = {};
-      })
-      .finally(() => {
-        this.isSaving = false;
-      });
+        Object.keys(resp.plate).forEach(row =>
+          resp.plate[row].forEach((val, col) => {
+            this.plateData[row][col] = val;
+            if (this.editedData[row]) {
+              this.editedData[row][col] = false;
+            }
+          }),
+        );
+      }
+      this.newPlate = this.newPlate && !resp.plate;
+      this.origPlateData = resp.plate || angular.copy(NEW_PLATE);
+      this.hasChanges = !angular.equals(this.origPlateData, this.plateData);
+      this.searchTexts = {};
+    }).finally(() => {
+      this.isSaving = false;
+    });
   }
 
   query(row, column) {
