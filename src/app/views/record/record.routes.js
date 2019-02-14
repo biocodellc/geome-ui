@@ -21,16 +21,23 @@ function getStates() {
               $window.location.href = `https://ezid.cdlib.org/id/${bcid}`;
               return false;
             }
-
-            return RecordService.get(bcid.trim())
+            return RecordService.get(bcid.trim(), { skipAuthRedirect: true })
               .then(response => {
+                // fail using the 404 route
                 if (response.status === 204) {
                   $state.go('notFound', { path: '404' });
                 }
-
                 return response.data;
               })
-              .catch(() => $state.go('notFound', { path: '404' }));
+              .catch(response => {
+                if (response.status === 403) {
+                  return $state.go('forbidden', {
+                    nextState: 'record',
+                    nextStateParams: Object.assign({}, $stateParams),
+                  });
+                }
+                return $state.go('notFound', { path: '404' });
+              });
           },
         },
       },

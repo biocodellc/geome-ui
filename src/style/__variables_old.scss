@@ -44,8 +44,7 @@ $font-family-sans-serif: 'Roboto', 'Helvetica Neue', Helvetica, Arial,
   sans-serif !default;
 $font-family-serif: Georgia, 'Times New Roman', Times, serif !default;
 //** Default monospace fonts for `<code>`, `<kbd>`, and `<pre>`.
-$font-family-monospace: Menlo, Monaco, Consolas, 'Courier New',
-  monospace !default;
+$font-family-monospace: Menlo, Monaco, Consolas, 'Courier New', monospace !default;
 $font-family-base: $font-family-sans-serif !default;
 
 $font-size-base: 15px !default;
@@ -63,7 +62,9 @@ $font-size-h6: ceil(($font-size-base * 0.85)) !default; // ~12px
 //$line-height-base:        1.428571429 !default; // 20/14
 $line-height-base: 1.428571429 !default; // 20/14
 //** Computed "line-height" (`font-size` * `line-height`) for use with `margin`, `padding`, etc.
-$line-height-computed: floor(($font-size-base * $line-height-base)) !default; // ~20px
+$line-height-computed: floor(
+  ($font-size-base * $line-height-base)
+) !default; // ~20px
 
 //** By default, this inherits from the `<body>`.
 $headings-font-family: $font-family-base !default;
@@ -77,11 +78,10 @@ $headings-color: inherit !default;
 
 //** Load fonts from this directory.
 $icon-font-path: if(
-    $bootstrap-sass-asset-helper,
-    'bootstrap/',
-    '../fonts/bootstrap/'
-  )
-  !default;
+  $bootstrap-sass-asset-helper,
+  'bootstrap/',
+  '../fonts/bootstrap/'
+) !default;
 //** File name for all font files.
 $icon-font-name: 'glyphicons-halflings-regular' !default;
 //** Element ID within SVG icon file.
@@ -207,22 +207,19 @@ $input-border-focus: $brand-primary !default;
 $input-color-placeholder: #acb6c0 !default;
 
 //** Default `.form-control` height
-$input-height-base: ($line-height-computed + ($padding-base-vertical * 2) + 4)
-  !default;
+$input-height-base: (
+  $line-height-computed + ($padding-base-vertical * 2) + 4
+) !default;
 //** Large `.form-control` height
 $input-height-large: (
-    ceil($font-size-large * $line-height-large) + ($padding-large-vertical * 2) +
-      4
-  )
-  !default;
+  ceil($font-size-large * $line-height-large) + ($padding-large-vertical * 2) +
+    4
+) !default;
 //** Small `.form-control` height
 $input-height-small: (
-    floor($font-size-small * $line-height-small) +
-      (
-        $padding-small-vertical * 2
-      ) + 4
-  )
-  !default;
+  floor($font-size-small * $line-height-small) + ($padding-small-vertical * 2) +
+    4
+) !default;
 
 //** `.form-group` margin
 $form-group-margin-bottom: 15px !default;
@@ -370,8 +367,9 @@ $navbar-height: 50px !default;
 $navbar-margin-bottom: $line-height-computed !default;
 $navbar-border-radius: $border-radius-base !default;
 $navbar-padding-horizontal: floor(($grid-gutter-width / 2)) !default;
-$navbar-padding-vertical: (($navbar-height - $line-height-computed) / 2)
-  !default;
+$navbar-padding-vertical: (
+  ($navbar-height - $line-height-computed) / 2
+) !default;
 $navbar-collapse-max-height: 340px !default;
 
 $navbar-default-color: $brand-primary !default;
@@ -562,8 +560,10 @@ $popover-arrow-outer-width: ($popover-arrow-width + 1) !default;
 //** Popover outer arrow color
 $popover-arrow-outer-color: fadein($popover-border-color, 5%) !default;
 //** Popover outer arrow fallback color
-$popover-arrow-outer-fallback-color: darken($popover-fallback-border-color, 20%)
-  !default;
+$popover-arrow-outer-fallback-color: darken(
+  $popover-fallback-border-color,
+  20%
+) !default;
 
 //== Labels
 //

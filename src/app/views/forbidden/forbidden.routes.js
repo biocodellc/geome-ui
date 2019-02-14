@@ -1,13 +1,13 @@
 function getStates() {
   return [
     {
-      state: 'contact',
+      state: 'forbidden',
       config: {
-        parent: 'containerPageView',
-        url: '/contact',
-        component: 'contact',
-        resolve: {
-          layout: () => 'column',
+        url: '/403',
+        component: 'forbidden',
+        params: {
+          nextState: null,
+          nextStateParams: null,
         },
       },
     },

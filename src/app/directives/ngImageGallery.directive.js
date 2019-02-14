@@ -319,8 +319,8 @@ const ngImageGallery = /* ngInject */ (
     pre(scope, elem, attr) {
       let openInlineOnClose = false;
       /*
-               *	Operational functions
-              * */
+       *	Operational functions
+       * */
 
       // Show gallery loader
       scope._showLoader = () => {
@@ -452,8 +452,8 @@ const ngImageGallery = /* ngInject */ (
       /** ************************************************ */
 
       /*
-               *	Gallery settings
-              * */
+       *	Gallery settings
+       * */
 
       // Modify scope models
       scope.images = scope.images != undefined ? scope.images : [];
@@ -466,68 +466,68 @@ const ngImageGallery = /* ngInject */ (
           conf.thumbnails != undefined
             ? conf.thumbnails
             : scope.thumbnails != undefined
-              ? scope.thumbnails
-              : ngImageGalleryOpts.thumbnails;
+            ? scope.thumbnails
+            : ngImageGalleryOpts.thumbnails;
         scope.thumbSize =
           conf.thumbSize != undefined
             ? conf.thumbSize
             : scope.thumbSize != undefined
-              ? scope.thumbSize
-              : ngImageGalleryOpts.thumbSize;
+            ? scope.thumbSize
+            : ngImageGalleryOpts.thumbSize;
         scope.thumbLimit =
           conf.thumbLimit != undefined
             ? conf.thumbLimit
             : scope.thumbLimit != undefined
-              ? scope.thumbLimit
-              : ngImageGalleryOpts.thumbLimit;
+            ? scope.thumbLimit
+            : ngImageGalleryOpts.thumbLimit;
         scope.inline =
           conf.inline != undefined
             ? conf.inline
             : scope.inline != undefined
-              ? scope.inline
-              : ngImageGalleryOpts.inline;
+            ? scope.inline
+            : ngImageGalleryOpts.inline;
         scope.bubbles =
           conf.bubbles != undefined
             ? conf.bubbles
             : scope.bubbles != undefined
-              ? scope.bubbles
-              : ngImageGalleryOpts.bubbles;
+            ? scope.bubbles
+            : ngImageGalleryOpts.bubbles;
         scope.bubbleSize =
           conf.bubbleSize != undefined
             ? conf.bubbleSize
             : scope.bubbleSize != undefined
-              ? scope.bubbleSize
-              : ngImageGalleryOpts.bubbleSize;
+            ? scope.bubbleSize
+            : ngImageGalleryOpts.bubbleSize;
         scope.imgBubbles =
           conf.imgBubbles != undefined
             ? conf.imgBubbles
             : scope.imgBubbles != undefined
-              ? scope.imgBubbles
-              : ngImageGalleryOpts.imgBubbles;
+            ? scope.imgBubbles
+            : ngImageGalleryOpts.imgBubbles;
         scope.bgClose =
           conf.bgClose != undefined
             ? conf.bgClose
             : scope.bgClose != undefined
-              ? scope.bgClose
-              : ngImageGalleryOpts.bgClose;
+            ? scope.bgClose
+            : ngImageGalleryOpts.bgClose;
         scope.piracy =
           conf.piracy != undefined
             ? conf.piracy
             : scope.piracy != undefined
-              ? scope.piracy
-              : ngImageGalleryOpts.piracy;
+            ? scope.piracy
+            : ngImageGalleryOpts.piracy;
         scope.imgAnim =
           conf.imgAnim != undefined
             ? conf.imgAnim
             : scope.imgAnim != undefined
-              ? scope.imgAnim
-              : ngImageGalleryOpts.imgAnim;
+            ? scope.imgAnim
+            : ngImageGalleryOpts.imgAnim;
         scope.textValues =
           conf.textValues != undefined
             ? conf.textValues
             : scope.textValues != undefined
-              ? scope.textValues
-              : ngImageGalleryOpts.textValues;
+            ? scope.textValues
+            : ngImageGalleryOpts.textValues;
       });
 
       scope.onOpen = scope.onOpen != undefined ? scope.onOpen : angular.noop;
@@ -567,8 +567,8 @@ const ngImageGallery = /* ngInject */ (
       /** ************************************************ */
 
       /*
-               *	Methods
-              * */
+       *	Methods
+       * */
 
       // Open gallery modal
       scope.methods.open = function open(imgIndex) {
@@ -655,8 +655,8 @@ const ngImageGallery = /* ngInject */ (
       /** ************************************************ */
 
       /*
-               *	User interactions
-              * */
+       *	User interactions
+       * */
 
       // Key events
       angular.element(document).bind('keyup', event => {
@@ -703,8 +703,8 @@ const ngImageGallery = /* ngInject */ (
       /** ******************************************************** */
 
       /*
-               *	Actions on angular events
-              * */
+       *	Actions on angular events
+       * */
 
       const removeClassFromDocumentBody = () =>
         angular.element(document.body).removeClass('body-overflow-hidden');

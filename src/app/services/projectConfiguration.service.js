@@ -20,11 +20,10 @@ class ProjectConfigurationService {
         }${includeUser ? 'user=true' : ''}`,
       )
       .then(({ data }) =>
-        data.map(
-          d =>
-            d.config
-              ? Object.assign({}, d, { config: new ProjectConfig(d.config) })
-              : d,
+        data.map(d =>
+          d.config
+            ? Object.assign({}, d, { config: new ProjectConfig(d.config) })
+            : d,
         ),
       );
   }

@@ -22,7 +22,10 @@ export default class CreateExpeditionController {
   }
 
   submit() {
-    if (this.form.$invalid) return;
+    // perform explict check here b/c there is a race condition with
+    // asyncValidators where form.$invalid is undefined while the async
+    // code runs
+    if (this.form.$valid !== true) return;
 
     this.loading = true;
     this.ExpeditionService.create(this.projectId, this.expedition)

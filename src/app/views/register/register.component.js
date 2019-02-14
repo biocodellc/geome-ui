@@ -35,7 +35,11 @@ class RegisterController {
         this.user.password,
       );
       this.UserService.setCurrentUser(user);
-      this.state.go('create-project', {}, { reload: true, inherit: false });
+      this.state.go(
+        this.inviteId ? 'dashboard' : 'create-project',
+        {},
+        { reload: true, inherit: false },
+      );
     } catch (e) {
       angular.catcher('An error occurred creating your account.')(e);
     } finally {
@@ -47,4 +51,7 @@ class RegisterController {
 export default {
   template,
   controller: RegisterController,
+  bindings: {
+    layout: '@',
+  },
 };

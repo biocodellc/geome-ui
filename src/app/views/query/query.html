@@ -1,8 +1,16 @@
 <div class="query-bar">
   <div class="actions" layout="row" layout-align="end center">
     <!-- download menu -->
-    <md-menu ng-show="$ctrl.results" class="md-dense" md-position-mode="target-right target">
-      <md-button aria-label="Open query download menu" ng-click="$mdMenu.open($event)" class="md-primary md-raised download-button">
+    <md-menu
+      ng-show="$ctrl.results&&$ctrl.results.totalElements!==0"
+      class="md-dense"
+      md-position-mode="target-right target"
+    >
+      <md-button
+        aria-label="Open query download menu"
+        ng-click="$mdMenu.open($event)"
+        class="md-primary md-raised download-button"
+      >
         <!-- Download -->
         <md-icon md-font-icon="fa fa-download fa-xs"></md-icon>
       </md-button>
@@ -21,44 +29,84 @@
 
     <!-- query view toggle -->
     <div class="md-dense" layout="row" layout-align="center center">
-      <md-button ng-click="$ctrl.toggleMap(true)" ng-disabled="$ctrl.showMap" class="groupX left md-raised">Map</md-button>
-      <md-button ng-click="$ctrl.toggleMap(false)" ng-disabled="!$ctrl.showMap" class="groupX right md-raised">Table</md-button>
+      <md-button
+        ng-click="$ctrl.toggleMap(true)"
+        ng-disabled="$ctrl.showMap"
+        class="groupX left md-raised"
+        >Map</md-button
+      >
+      <md-button
+        ng-click="$ctrl.toggleMap(false)"
+        ng-disabled="!$ctrl.showMap"
+        class="groupX right md-raised"
+        >Table</md-button
+      >
     </div>
-
   </div>
 </div>
 
 <div layout="row" flex class="query-page">
   <!-- sidebar-->
-  <md-sidenav flex="33" class="md-sidenav-left sidebar" md-component-id='left' md-disable-backdrop md-is-locked-open="$ctrl.showSidebar"
-    md-whiteframe="4">
-    <fims-query-form params="$ctrl.params" on-new-results="$ctrl.handleNewResults(results)" query-map="$ctrl.queryMap"
-      class="query-form" current-project="$ctrl.currentProject" expeditions="$ctrl.expeditions" markers="$ctrl.markers"
-      filter-options="$ctrl.filterOptions" current-user="$ctrl.currentUser" on-project-change="$ctrl.handleProjectChange(project)"
-      toggle-loading="$ctrl.toggleLoading(val)" layout-padding></fims-query-form>
+  <md-sidenav
+    flex="33"
+    class="md-sidenav-left sidebar"
+    md-component-id="left"
+    md-disable-backdrop
+    md-is-locked-open="$ctrl.showSidebar"
+    md-whiteframe="4"
+  >
+    <fims-query-form
+      params="$ctrl.params"
+      entities-for-download="$ctrl.downloadableEntities(entities)"
+      on-new-results="$ctrl.handleNewResults(results, isAdvancedSearch)"
+      query-map="$ctrl.queryMap"
+      class="query-form"
+      expeditions="$ctrl.expeditions"
+      markers="$ctrl.markers"
+      filter-options="$ctrl.filterOptions"
+      current-user="$ctrl.currentUser"
+      toggle-loading="$ctrl.toggleLoading(val)"
+      layout-padding
+    ></fims-query-form>
   </md-sidenav>
 
   <!-- sidebar toggle -->
   <div class="sidebar-toggle">
     <md-button class="md-raised" ng-click="$ctrl.toggleSidebar()">
-      <md-tooltip md-direction="right">{{ $ctrl.sidebarToggleToolTip }}</md-tooltip>
-      <md-icon md-font-icon="fa {{ ($ctrl.showSidebar) ? 'fa-chevron-left' : 'fa-chevron-right' }}"></md-icon>
+      <md-tooltip md-direction="right">{{
+        $ctrl.sidebarToggleToolTip
+      }}</md-tooltip>
+      <md-icon
+        md-font-icon="fa {{
+          $ctrl.showSidebar ? 'fa-chevron-left' : 'fa-chevron-right'
+        }}"
+      ></md-icon>
     </md-button>
   </div>
 
   <!-- main content-->
   <div flex layout="column" class="query-content">
-
-    <md-progress-circular ng-show="$ctrl.loading" md-mode="indeterminate"></md-progress-circular>
+    <md-progress-circular
+      ng-show="$ctrl.loading"
+      md-mode="indeterminate"
+    ></md-progress-circular>
 
     <!-- map -->
-    <fims-map ng-show="$ctrl.showMap" flex layout="row" map-instance="$ctrl.queryMap"></fims-map>
+    <fims-map
+      ng-show="$ctrl.showMap"
+      flex
+      layout="row"
+      map-instance="$ctrl.queryMap"
+    ></fims-map>
 
     <!-- table -->
     <md-content>
-      <fims-query-table ng-show="!$ctrl.showMap" class="query-table" ng-class="{'full-page-query-table': !$ctrl.showSidebar}"
-        results="$ctrl.results"></fims-query-table>
+      <fims-query-table
+        ng-show="!$ctrl.showMap"
+        class="query-table"
+        ng-class="{'full-page-query-table': !$ctrl.showSidebar}"
+        results="$ctrl.results"
+      ></fims-query-table>
     </md-content>
-
   </div>
 </div>

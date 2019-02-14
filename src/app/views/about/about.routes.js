@@ -6,9 +6,6 @@ function getStates() {
         parent: 'containerPageView',
         url: '/about',
         component: 'about',
-        resolve: {
-          layout: () => 'column',
-        },
       },
     },
   ];

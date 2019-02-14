@@ -24,7 +24,7 @@ export default class AuthInterceptor {
   responseError = response => {
     if (
       !this.triedToRefresh &&
-      (response.status === 401 ||
+      ([401, 403].includes(response.status) ||
         (response.status === 400 &&
           response.data.usrMessage === 'invalid_grant'))
     ) {
@@ -41,6 +41,7 @@ export default class AuthInterceptor {
         })
         .catch(() => {
           this.triedToRefresh = false;
+          if (origRequestConfig.skipAuthRedirect) throw response;
           const $state = this.injector.get('$state');
           return $state.target('login', {
             nextState: $state.current.name,

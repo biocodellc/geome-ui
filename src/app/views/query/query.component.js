@@ -4,23 +4,12 @@ import QueryParams from './QueryParams';
 const template = require('./query.html');
 
 class QueryController {
-  constructor(
-    $state,
-    $timeout,
-    $location,
-    QueryService,
-    ExpeditionService,
-    ProjectService,
-    StorageService,
-  ) {
+  constructor($state, $timeout, QueryService, StorageService) {
     'ngInject';
 
     this.$state = $state;
     this.$timeout = $timeout;
-    this.$location = $location;
     this.QueryService = QueryService;
-    this.ExpeditionService = ExpeditionService;
-    this.ProjectService = ProjectService;
     this.StorageService = StorageService;
   }
 
@@ -28,13 +17,9 @@ class QueryController {
     this.params = new QueryParams();
     this.queryMap = new QueryMap(
       this.$state,
-      'event.decimalLatitude',
-      'event.decimalLongitude',
+      'decimalLatitude',
+      'decimalLongitude',
     );
-
-    if (this.currentProject) {
-      this.handleProjectChange(this.currentProject);
-    }
 
     this.showSidebar = true;
     this.showMap = true;
@@ -42,15 +27,28 @@ class QueryController {
     this.sidebarToggleToolTip = 'hide sidebar';
   }
 
-  handleNewResults(results) {
+  handleNewResults(results, isAdvancedSearch) {
+    // when switching between simple and advanced searches
     this.results = results;
+    if (!results) {
+      this.toggleMap(true);
+    } else {
+      const hasCoordinates = this.results.data.some(
+        d => d.decimalLatitude && d.decimalLongitude,
+      );
+      // return table view for advanced queries and queries with no lat lng data, return map view for simple queries
+      if (!hasCoordinates || isAdvancedSearch) {
+        this.toggleMap(false);
+      } else {
+        this.toggleMap(true);
+      }
+    }
   }
 
   downloadExcel() {
     this.loading = true;
-    const { projectId } = this.currentProject;
     this.QueryService.downloadExcel(
-      this.params.buildQuery(projectId, this.selectEntities()),
+      this.params.buildQuery(this.entities),
       'Event',
     ).finally(() => {
       this.loading = false;
@@ -59,9 +57,8 @@ class QueryController {
 
   downloadCsv() {
     this.loading = true;
-    const { projectId } = this.currentProject;
     this.QueryService.downloadCsv(
-      this.params.buildQuery(projectId, this.selectEntities()),
+      this.params.buildQuery(this.entities),
       'Event',
     ).finally(() => {
       this.loading = false;
@@ -70,22 +67,16 @@ class QueryController {
 
   downloadFasta() {
     this.loading = true;
-    const { projectId } = this.currentProject;
     this.QueryService.downloadFasta(
-      this.params.buildQuery(
-        projectId,
-        this.selectEntities().concat(['Event']),
-      ),
+      this.params.buildQuery(this.entities.concat(['Event'])),
       'fastaSequence',
     ).finally(() => {
       this.loading = false;
     });
   }
 
-  selectEntities() {
-    return this.currentProject.config.entities
-      .filter(e => ['Sample', 'Tissue'].includes(e.conceptAlias))
-      .map(e => e.conceptAlias);
+  downloadableEntities(entities) {
+    this.entities = entities;
   }
 
   toggleSidebar() {
@@ -106,21 +97,6 @@ class QueryController {
     this.$timeout(() => this.queryMap.refreshSize(), 500);
   }
 
-  handleProjectChange(project) {
-    if (!project.config) {
-      this.toggleLoading(true);
-      this.ProjectService.get(project.projectId).then(p => {
-        this.currentProject = p;
-        this.toggleLoading(false);
-      });
-    } else {
-      this.currentProject = project;
-    }
-    this.ExpeditionService.all(project.projectId).then(expeditions => {
-      this.expeditions = expeditions.data;
-    });
-  }
-
   toggleLoading(val) {
     this.loading = val;
   }
@@ -131,7 +107,6 @@ export default {
   controller: QueryController,
   bindings: {
     currentUser: '<',
-    currentProject: '<',
     layout: '@',
     layoutFill: '@',
   },

@@ -1,5 +1,8 @@
 // Query View styles
 
+.md-chips .md-chip-input-container md-autocomplete input {
+  width: 400px;
+}
 .md-raised-disabled {
   background-color: rgba(0, 0, 0, 0.3);
   color: #fff;
@@ -87,59 +90,39 @@ $query-form-toggle-width: 40px;
   > form {
     height: 100%;
   }
-  section {
-    margin-bottom: $layout-gutter-width / 2;
 
-    .md-form-group {
-      margin-bottom: 0;
-    }
+  h3 {
+    margin: 0px;
+  }
 
-    > a:focus,
-    > a:hover {
-      text-decoration: none;
+  md-checkbox {
+    margin-bottom: 0px;
+  }
+
+  .term {
+    position: relative;
+    button {
+      position: absolute;
     }
   }
 
-  .md-input-container-dense {
-    md-input-container {
-      margin: 0;
-      margin-top: 5px;
-
-      .md-errors-spacer {
-        min-height: 0;
-      }
-    }
+  md-input-container {
+    margin: 0px;
   }
 
   .sequences {
-    @extend .md-input-container-dense;
-  }
-
-  .dwc-terms {
-    @extend .md-input-container-dense;
-
-    .md-form-group > div:first-of-type {
-      margin-top: 3px;
-    }
-
-    md-input-container.md-input-focused label:not(.md-container-ignore),
-    md-input-container.md-input-has-value label:not(.md-container-ignore) {
-      bottom: 75%;
+    md-input-container {
+      margin-top: 20px;
     }
   }
 
-  .expeditions {
-    md-chips {
-      margin-top: 0;
-    }
+  md-option {
+    font-size: 14px;
+    height: 38px;
+  }
 
-    md-autocomplete[md-floating-label] .md-show-clear-button button {
-      top: 0;
-    }
-
-    .md-chip-input-container {
-      width: 100%;
-    }
+  md-chips-wrap {
+    padding: 0px;
   }
 
   .filters {
@@ -191,55 +174,6 @@ $query-form-toggle-width: 40px;
     }
   }
 
-  md-optgroup {
-    label {
-      @extend .bold;
-      padding-bottom: 4px;
-    }
-
-    md-divider {
-      margin-top: 4px;
-    }
-  }
-
-  md-option {
-    font-size: 14px;
-    height: 38px;
-  }
-
-  md-select-menu {
-    md-select-content {
-      min-width: 0;
-    }
-  }
-
-  md-checkbox {
-    margin-bottom: 4px;
-
-    .md-label {
-      margin-left: 22px;
-    }
-  }
-
-  project-selector {
-    flex-shrink: 0;
-  }
-
-  .project-selector {
-    margin: 10px 0;
-
-    .md-button {
-      margin-left: 0;
-      padding-left: 0;
-      text-transform: none;
-      color: grey;
-      font-size: 18px;
-      line-height: 18px;
-      font-weight: 600;
-      border-radius: 35%;
-    }
-  }
-
   .search-row {
     flex-shrink: 0;
   }
@@ -250,4 +184,8 @@ $query-form-toggle-width: 40px;
       margin: 16px 0;
     }
   }
+}
+
+#query-table {
+  border: none;
 }

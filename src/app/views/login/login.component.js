@@ -63,4 +63,7 @@ class LoginController {
 export default {
   template,
   controller: LoginController,
+  bindings: {
+    layout: '@',
+  },
 };

@@ -31,14 +31,13 @@ const defaultFastqMetadata = {
 
 const parseSpreadsheet = (regExpression, sheetName, file) => {
   if (isExcelFile(file)) {
-    return findExcelCell(file, regExpression, sheetName).then(
-      match =>
-        match
-          ? match
-              .toString()
-              .split('=')[1]
-              .slice(0, -1)
-          : match,
+    return findExcelCell(file, regExpression, sheetName).then(match =>
+      match
+        ? match
+            .toString()
+            .split('=')[1]
+            .slice(0, -1)
+        : match,
     );
   }
 
@@ -67,7 +66,8 @@ class UploadController {
     this.sampleLocationsVerified = false;
     this.multiExpeditionAllowed = true;
     this.showExpeditions = false;
-    this.canValidate = false;
+    this.requireExpedition =
+      this.currentProject.config.worksheets().length !== 1;
     this.parsing = false;
   }
 
@@ -78,6 +78,8 @@ class UploadController {
 
     if (this.currentProject && 'currentProject' in changesObj) {
       this.availableDataTypes = this.getAvailableDataTypes();
+      this.requireExpedition =
+        this.currentProject.config.worksheets().length !== 1;
     }
   }
 
@@ -106,6 +108,10 @@ class UploadController {
 
     this.dataTypes = Object.assign({}, dataTypes);
     this.multiExpeditionAllowed = !(dataTypes.Fastq || dataTypes.Fasta);
+
+    if (!this.showExpeditions && (dataTypes.Fasta || dataTypes.Fastq)) {
+      this.showExpeditions = true;
+    }
 
     if (
       !this.multiExpeditionAllowed &&
@@ -214,8 +220,17 @@ class UploadController {
         this.coordinateWorksheets.splice(i, 1);
       }
     }
+  }
 
-    this.canValidate = this.worksheetData.some(d => d.file);
+  canValidate() {
+    return (
+      !this.parsing &&
+      (this.worksheetData.some(d => d.file) ||
+        this.fastaData.some(d => d.file) ||
+        this.fastqMetadata.file) &&
+      (!this.requireExpedition || this.expeditionCode) &&
+      (!this.currentUser || this.validateOnly || this.expeditionCode)
+    );
   }
 
   /**

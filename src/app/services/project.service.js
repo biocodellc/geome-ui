@@ -115,6 +115,7 @@ class ProjectService extends EventEmitter {
   }
 
   create(project) {
+    this.PROJECT_CACHE.removeAll();
     return this.$http({
       method: 'POST',
       url: `${restRoot}projects`,

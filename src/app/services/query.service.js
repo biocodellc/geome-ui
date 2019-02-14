@@ -16,8 +16,12 @@ function transformResults(data) {
       : undefined;
     data.Sample.forEach(s => {
       const record = s;
+      const { bcid } = s;
       if (events) {
-        record.event = events[s.eventID];
+        const event = events[s.eventID];
+        const { bcid: eventBcid } = event;
+        Object.assign(record, event, { bcid, eventBcid });
+        // record.event = events[s.eventID];
       }
       records.push(record);
     });
