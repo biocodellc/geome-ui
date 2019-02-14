@@ -585,6 +585,7 @@ export default {
   template,
   controller: CreateProjectController,
   bindings: {
+    layout: '@',
     currentUser: '<',
     configurations: '<',
     isNetworkAdmin: '<',

@@ -6,6 +6,9 @@ function getStates() {
         parent: 'containerPageView',
         url: '/contact',
         component: 'contact',
+        resolve: {
+          layout: () => 'column',
+        },
       },
     },
   ];

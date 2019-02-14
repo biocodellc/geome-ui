@@ -51,4 +51,7 @@ class RegisterController {
 export default {
   template,
   controller: RegisterController,
+  bindings: {
+    layout: '@',
+  },
 };
