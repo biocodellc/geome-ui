@@ -31,14 +31,13 @@ const defaultFastqMetadata = {
 
 const parseSpreadsheet = (regExpression, sheetName, file) => {
   if (isExcelFile(file)) {
-    return findExcelCell(file, regExpression, sheetName).then(
-      match =>
-        match
-          ? match
-              .toString()
-              .split('=')[1]
-              .slice(0, -1)
-          : match,
+    return findExcelCell(file, regExpression, sheetName).then(match =>
+      match
+        ? match
+            .toString()
+            .split('=')[1]
+            .slice(0, -1)
+        : match,
     );
   }
 
