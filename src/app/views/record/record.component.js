@@ -157,11 +157,10 @@ class RecordController {
     const hasQualityScore = photos.some(p => p.qualityScore);
 
     this.photos = photos
-      .sort(
-        (a, b) =>
-          hasQualityScore
-            ? a.qualityScore > b.qualityScore
-            : a.photoID > b.photoID,
+      .sort((a, b) =>
+        hasQualityScore
+          ? a.qualityScore > b.qualityScore
+          : a.photoID > b.photoID,
       )
       .map(photo => ({
         id: photo.photoID,
@@ -249,6 +248,7 @@ export default {
   template,
   controller: RecordController,
   bindings: {
+    layout: '@',
     record: '<',
     currentProject: '<',
   },
