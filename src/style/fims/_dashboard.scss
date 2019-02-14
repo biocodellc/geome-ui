@@ -1,6 +1,7 @@
 .download-button {
-  min-width: 40px;
+  min-width: 24px;
   margin: 0;
+  padding: 0 3px;
   md-progress-circular {
     margin-left: 5px;
   }
@@ -11,19 +12,35 @@
   min-width: 24px;
   margin-right: 5px;
   md-icon {
-    min-width: 22px;
-    width: 22px;
-    font-size: 22px;
+    min-width: 18px;
+    width: 18px;
+    min-height: 18px;
+    height: 18px;
+    font-size: 18px;
   }
 }
 
 .project-download-button {
   @extend .download-button;
+  margin-bottom: 8px;
+  padding: 0 6px;
   span {
     margin-right: 5px;
   }
   md-progress-circular {
     display: inline-block;
     margin-left: 7px;
+  }
+}
+
+fims-dashboard {
+  .page-header {
+    margin-bottom: 4px;
+  }
+}
+
+.table-condensed {
+  td.md-dense.action-buttons {
+    padding: 3px !important;
   }
 }

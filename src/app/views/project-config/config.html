@@ -3,8 +3,12 @@
         <div class="col-xs-12">
             <section class="heading">
                 <h3>{{ $ctrl.currentProject.projectConfiguration.name }}</h3>
-		Every project has a master configuration, either synchronized with a network approved configuration, or pointing to a clone of a network approved configuration. This configuration screen is for the Master project configuration.
-		<p><strong>Master configuration owned by user: </strong>{{ $ctrl.currentProject.projectConfiguration.user.username}} </p>
+                <p>Every project has a master configuration, either synchronized with a network
+                    approved configuration, or pointing to a clone of a network approved
+                    configuration. This configuration screen is for the Master project
+                    configuration.</p>
+                <p><strong>Master configuration owned by user:
+                    </strong>{{ $ctrl.currentProject.projectConfiguration.user.username}} </p>
             </section>
         </div>
     </div>
@@ -23,7 +27,8 @@
                         <ul class="actions pull-right">
                             <li class="save-config" ng-show="$ctrl.showSave">
                                 <md-progress-circular ng-show="$ctrl.saving" md-mode="indeterminate"
-                                    md-diameter="18" class="md-accent md-hue-3"></md-progress-circular>
+                                    md-diameter="18" class="md-accent md-hue-3">
+                                </md-progress-circular>
                                 <a href="#" ng-click="$ctrl.onSave()" ng-show="!$ctrl.saving">
                                     <i class="fa fa-upload"></i> Save Config</a>
                             </li>
@@ -39,10 +44,12 @@
                         </div>
                         <div ng-if="!$ctrl.loading">
 
-                            <div ui-view="settings" ng-cloak config="$ctrl.configuration" on-update="$ctrl.handleUpdateSettings(configuration)"
+                            <div ui-view="settings" ng-cloak config="$ctrl.configuration"
+                                on-update="$ctrl.handleUpdateSettings(configuration)"
                                 is-network-admin="$ctrl.isNetworkAdmin"></div>
 
-                            <div ui-view="entities" ng-cloak config="$ctrl.config" entities="$ctrl.config.entities"
+                            <div ui-view="entities" ng-cloak config="$ctrl.config"
+                                entities="$ctrl.config.entities"
                                 can-edit="$ctrl.isNetworkAdmin || $ctrl.currentUser.subscribed"
                                 on-update-entities="$ctrl.handleUpdateEntities(entities)"
                                 on-update-entity="$ctrl.handleUpdateEntity(alias, entity)"
@@ -55,7 +62,8 @@
                                 on-update-lists="$ctrl.handleUpdateLists(lists)">
                             </div>
 
-                            <div ui-view="expeditionMetadata" ng-cloak properties="$ctrl.config.expeditionMetadataProperties"
+                            <div ui-view="expeditionMetadata" ng-cloak
+                                properties="$ctrl.config.expeditionMetadataProperties"
                                 can-edit="$ctrl.isNetworkAdmin || $ctrl.currentUser.subscribed"
                                 on-change="$ctrl.handleUpdateExpeditionMetadata(properties)">
                             </div>

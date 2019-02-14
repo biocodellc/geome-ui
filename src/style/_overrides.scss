@@ -72,6 +72,10 @@ $adminnav-border-bottom: 1px solid $gray-light;
     border: 1px solid hsla(184, 6%, 85%, 1);
     padding: 15px;
     padding-bottom: 50px;
+
+    &.heading {
+      padding-bottom: 12px;
+    }
   }
 
   .nav-pills {
@@ -122,6 +126,7 @@ $adminnav-border-bottom: 1px solid $gray-light;
     margin-bottom: 5px;
 
     .list-group-item {
+      padding: 8px 15px;
       border-left: none;
       border-right: none;
     }
@@ -264,7 +269,7 @@ $adminnav-border-bottom: 1px solid $gray-light;
 
     border-left: none;
     border-right: none;
-    padding: 8px 15px;
+    padding: 6px 15px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -307,7 +312,7 @@ $adminnav-border-bottom: 1px solid $gray-light;
   }
 
   .resource {
-    padding: 20px 15px;
+    padding: 15px;
   }
 }
 
