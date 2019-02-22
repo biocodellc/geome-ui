@@ -331,7 +331,7 @@ class QueryFormController {
   queryJson() {
     this.toggleLoading({ val: true });
     const entities = this.config.entities
-      .filter(e => ['Sample', 'Tissue'].includes(e.conceptAlias))
+      .filter(e => ['Event', 'Tissue'].includes(e.conceptAlias))
       .map(e => e.conceptAlias);
     this.entitiesForDownload({ entities });
     const selectEntities = ['Event', 'fastqMetadata'];
