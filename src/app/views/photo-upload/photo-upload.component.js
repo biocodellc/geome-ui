@@ -27,13 +27,34 @@ class PhotoUploadController {
     this.file = file;
   }
 
-  upload() {
+  async upload() {
     if (
       !this.file ||
       !this.entity ||
       (this.entity.requiresExpedition && !this.expeditionCode)
     ) {
       return;
+    }
+
+    if (this.currentProject.user.userId !== this.currentUser.userId) {
+      try {
+        await this.$mdDialog.show(
+          this.$mdDialog
+            .confirm()
+            .title('Upload Warning!')
+            .htmlContent(
+              `<p><strong>Do you own the expeditions you are uploading photos for?</strong></p>
+              <p>You can only only upload photos for data in expeditions that you own. If you do not own the expedition(s) that contain the ${
+                this.entity.parentEntity
+              }s you are uploading photos for, the upload will fail only after the file is completely uploaded.</p>
+              <p><strong>Would you like to continue?</strong></p>`,
+            )
+            .ok('Continue')
+            .cancel('Cancel'),
+        );
+      } catch (e) {
+        return;
+      }
     }
 
     this.uploadProgress = 0;
@@ -121,6 +142,7 @@ class PhotoUploadController {
 
         return {
           conceptAlias: e.conceptAlias,
+          parentEntity: e.parentEntity,
           additionalMetadata: e.attributes.filter(
             a => !a.internal && !excludeCols.includes(a.column),
           ),
@@ -136,6 +158,7 @@ export default {
   controller: PhotoUploadController,
   bindings: {
     currentProject: '<',
+    currentUser: '<',
     userExpeditions: '<',
   },
 };

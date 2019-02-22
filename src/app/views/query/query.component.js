@@ -49,7 +49,7 @@ class QueryController {
     this.loading = true;
     this.QueryService.downloadExcel(
       this.params.buildQuery(this.entities),
-      'Event',
+      'Sample',
     ).finally(() => {
       this.loading = false;
     });
@@ -59,7 +59,7 @@ class QueryController {
     this.loading = true;
     this.QueryService.downloadCsv(
       this.params.buildQuery(this.entities),
-      'Event',
+      'Sample',
     ).finally(() => {
       this.loading = false;
     });
@@ -68,7 +68,7 @@ class QueryController {
   downloadFasta() {
     this.loading = true;
     this.QueryService.downloadFasta(
-      this.params.buildQuery(this.entities.concat(['Event'])),
+      this.params.buildQuery(this.entities.concat(['Sample'])),
       'fastaSequence',
     ).finally(() => {
       this.loading = false;

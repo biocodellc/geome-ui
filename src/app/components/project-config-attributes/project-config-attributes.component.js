@@ -2,18 +2,16 @@ const template = require('./project-config-attributes.html');
 const editTemplate = require('./edit-attribute.html');
 
 class ProjectConfigAttributesController {
-  constructor($scope, $filter, $mdDialog) {
+  constructor($filter, $mdDialog) {
     'ngInject';
 
     this.$filter = $filter;
     this.$mdDialog = $mdDialog;
-    $scope.$watchCollection('$ctrl.selectedAttributes', (newVal, oldVal) => {
-      // call handleChange if an attribute was selected/deselected
-      if (newVal && oldVal && newVal.length !== oldVal.length) {
-        this.handleChange();
-      }
-    });
     this.requiredUris = [];
+    this.selectedAttributeMap = {};
+
+    this.onSelect = this.onSelect.bind(this);
+    this.onDeSelect = this.onDeSelect.bind(this);
   }
 
   $onInit() {
@@ -29,7 +27,52 @@ class ProjectConfigAttributesController {
     }
     if ('selectedAttributes' in changesObj) {
       this.orderedAttributes = this.selectedAttributes.map(a => a.uri);
+      this.selectedAttributeMap = this.selectedAttributes.reduce((map, a) => {
+        map[a.uri] = Object.assign({}, a);
+        return map;
+      }, {});
+
+      // make a copy of the available attributes, overriding any custom properties
+      // that our selectAttributes have set
+      // available is typically all network attributes, selected is the project attributes.
+      // There are a few properties that can be overriden by the project, such as group & description.
+      // In either md-data-table or dnd-lists the selectedAttribute is set to the available attribute props,
+      // thus not displaying any custom set attribute properties and instead displaying the network default.
+      // This is a bit of a hack but it works
+      this.available = this.available.reduce(
+        (accumulator, attribute) =>
+          accumulator.concat(
+            Object.assign(
+              {},
+              attribute,
+              this.selectedAttributeMap[attribute.uri],
+            ),
+          ),
+        [],
+      );
+    } else if ('available' in changesObj) {
+      this.available = this.available.reduce(
+        (accumulator, attribute) =>
+          accumulator.concat(
+            Object.assign(
+              {},
+              attribute,
+              this.selectedAttributeMap[attribute.uri],
+            ),
+          ),
+        [],
+      );
     }
+  }
+
+  onSelect(attribute) {
+    this.selectedAttributeMap[attribute.uri] = attribute;
+    this.handleChange();
+  }
+
+  onDeSelect(attribute) {
+    this.selectedAttributeMap[attribute.uri] = undefined;
+    this.handleChange();
   }
 
   orderedIndex(attribute) {
@@ -120,10 +163,21 @@ class ProjectConfigAttributesController {
         autoWrap: false,
       })
       .then(a => {
-        Object.assign(attribute, a);
+        // if we don't explicitly set a group, then the network group will be used.
+        // if !group then we assume the user wants the 'Default Group'
+        const i = this.selectedAttributes.findIndex(attr => attr.uri === a.uri);
+        this.selectedAttributes.splice(i, 1, {
+          ...a,
+          group: a.group || 'Default Group',
+        });
         this.handleChange();
       })
       .catch(() => {});
+  }
+
+  canEditAttribute(attribute) {
+    // only allow editing selected atributes
+    return this.canEdit && this.selectedAttributeMap[attribute.uri];
   }
 
   handleChange() {
