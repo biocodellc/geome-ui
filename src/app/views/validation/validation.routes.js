@@ -17,7 +17,10 @@ function getStates() {
           ) => {
             if (ProjectService.currentProject()) {
               let fetchExpeditions;
-              if (UserService.currentUser()) {
+              if (
+                UserService.currentUser() &&
+                ProjectService.currentProject().enforceExpeditionAccess
+              ) {
                 fetchExpeditions = ExpeditionService.getExpeditionsForUser(
                   ProjectService.currentProject().projectId,
                   true,
