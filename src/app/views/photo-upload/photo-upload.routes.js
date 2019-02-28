@@ -19,10 +19,15 @@ function getStates() {
             if (ProjectService.currentProject()) {
               let fetchExpeditions;
               if (UserService.currentUser()) {
-                fetchExpeditions = ExpeditionService.getExpeditionsForUser(
-                  ProjectService.currentProject().projectId,
-                  true,
-                );
+                fetchExpeditions = ProjectService.currentProject()
+                  .enforceExpeditionAccess
+                  ? ExpeditionService.getExpeditionsForUser(
+                      ProjectService.currentProject().projectId,
+                      true,
+                    )
+                  : ExpeditionService.all(
+                      ProjectService.currentProject().projectId,
+                    );
               } else {
                 fetchExpeditions = ExpeditionService.all(
                   ProjectService.currentProject().projectId,
