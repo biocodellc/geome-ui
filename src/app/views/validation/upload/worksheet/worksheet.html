@@ -22,7 +22,7 @@
         <label class="col-xs-3 control-label"></label>
         <div class="col-xs-9">
             <label class="checkbox-inline">
-                <input type="checkbox" ng-model="$ctrl.reload" name="{{$ctrl.worksheet}}_reload" ng-click="$ctrl.handleChange()"
+                <input type="checkbox" ng-model="$ctrl.reload" name="{{$ctrl.worksheet}}_reload" ng-change="$ctrl.handleChange()"
                 /> Reload Data
                 <md-button class="md-icon-button help-link md-popover-button">
                     <md-popover md-popover-class="fastq-help-filenames" md-popover-group="reloadHelp" md-direction="right">
