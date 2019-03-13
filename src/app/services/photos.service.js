@@ -14,7 +14,14 @@ class PhotosService {
     this.FileService = FileService;
   }
 
-  upload(projectId, expeditionCode, entity, file, isResume = false) {
+  upload(
+    projectId,
+    expeditionCode,
+    entity,
+    file,
+    isResume = false,
+    ignoreId = false,
+  ) {
     const progressCallbacks = [];
 
     const onSuccess = res => ({
@@ -42,6 +49,7 @@ class PhotosService {
       params: {
         projectId,
         expeditionCode,
+        ignoreId,
         type: isResume ? 'resume' : 'resumable',
       },
       resumeSize: isResume
