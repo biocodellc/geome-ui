@@ -11,6 +11,7 @@ class PhotoUploadController {
 
   $onInit() {
     this.canResume = false;
+    this.ignoreId = false;
   }
 
   $onChanges(changesObj) {
@@ -36,7 +37,10 @@ class PhotoUploadController {
       return;
     }
 
-    if (this.currentProject.user.userId !== this.currentUser.userId) {
+    if (
+      this.currentProject.enforceExpeditionAccess &&
+      this.currentProject.user.userId !== this.currentUser.userId
+    ) {
       try {
         await this.$mdDialog.show(
           this.$mdDialog
@@ -69,6 +73,7 @@ class PhotoUploadController {
       this.entity.conceptAlias,
       this.file,
       resume,
+      this.ignoreId,
     )
       .progress(event => {
         this.uploadProgress = parseInt(
@@ -143,6 +148,7 @@ class PhotoUploadController {
         return {
           conceptAlias: e.conceptAlias,
           parentEntity: e.parentEntity,
+          generateID: e.generateID,
           additionalMetadata: e.attributes.filter(
             a => !a.internal && !excludeCols.includes(a.column),
           ),

@@ -11,6 +11,7 @@ class EditEntityController {
   }
 
   disableGenerateID() {
+    if (this.entity.type === 'Photo') return false;
     if (this.entity.type !== 'Tissue' || this.entity.uniqueKey !== 'tissueID') {
       return true;
     }

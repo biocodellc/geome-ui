@@ -13,7 +13,8 @@
           each message for details</b>
       </p>
     </div>
-    <div class="tab-content" ng-show="$ctrl.results.errors.length === 0 && $ctrl.results.warnings.length > 0">
+    <div class="tab-content"
+      ng-show="$ctrl.results.errors.length === 0 && $ctrl.results.warnings.length > 0">
       <p>
         <b>1 or more warnings found. Click each message for details</b>
       </p>
@@ -21,12 +22,15 @@
     <div ng-show="$ctrl.results.errors.length === 0 && $ctrl.results.warnings.length === 0">
       <p><strong>Successfully uploaded all files!</strong></p>
     </div>
-    <div>
+    <p>
+      <strong ng-show="$ctrl.results.errors.length > 0">All files not listed below were successfully
+        uploaded.</strong>
       You will need to wait up to 30 minutes for images to process and to be visible in Geome.
-    </div>
+    </p>
 
     <!--we use template-url here to override the default uib-accordian template-->
-    <uib-accordion close-others="false" template-url="validation-result-messages.html"></uib-accordion>
+    <uib-accordion close-others="false" template-url="validation-result-messages.html">
+    </uib-accordion>
 
     <md-dialog-actions>
       <md-button ng-click="$ctrl.$mdDialog.hide()" class="md-primary">Ok</md-button>
