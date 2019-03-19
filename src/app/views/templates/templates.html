@@ -35,7 +35,7 @@
         </div>
         <div class="form-group">
             <div class="col-sm-6">
-                <button type="button" ng-click="$ctrl.generate()" class="md-button md-raised md-primary pull-right">Export Excel
+                <button type="button" ng-click="$ctrl.enerate()" class="md-button md-raised md-primary pull-right">Export Excel
                 </button>
             </div>
         </div>
@@ -54,10 +54,10 @@
             </div>
             <uib-accordion close-others="false" ng-repeat="(group, attributes) in data.attributes">
                 <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="{{ group }}" is-open="true">
-                    <div class="checkbox" ng-repeat="attribute in attributes">
+                    <div class="checkbox" ng-repeat="attribute in attributes | orderBy: 'column'">
                         <label>
                             <input type="checkbox" ng-disabled="data.required.indexOf(attribute) > -1" ng-checked="$ctrl.selected[worksheet].indexOf(attribute) > -1"
-                                ng-click="$ctrl.toggleSelected(worksheet, attribute)" /> {{ attribute.column }}
+			   ng-click="$ctrl.toggleSelected(worksheet, attribute)" /> {{ attribute.column }} 
                             <a ng-click="$ctrl.define(worksheet, attribute)">DEF</a>
                         </label>
                     </div>
