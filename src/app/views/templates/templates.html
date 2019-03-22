@@ -94,6 +94,41 @@
       </div>
       <uib-accordion
         close-others="false"
+      >
+      <div 
+	  uib-accordion-group
+          class="panel-default md-whiteframe-2dp"
+          is-open="true"
+      >  
+      <div 
+	  ng-if="$ctrl.worksheet === 'Workbook'" 
+	  uib-accordion-heading
+      >
+      {{ worksheet }} Worksheet Minimum Information Standard Items  
+      </div>
+      <div 
+	  ng-if="$ctrl.worksheet !== 'Workbook'" 
+          uib-accordion-heading
+      >
+      Minimum Information Standard Items  
+      </div>
+          <div
+            class="checkbox"
+            ng-repeat="attribute in data.required"
+          >
+            <label>
+              <input
+                type="checkbox"
+                ng-disabled="data.required.indexOf(attribute) > -1"
+                ng-checked="$ctrl.selected[worksheet].indexOf(attribute) > -1"
+                ng-click="$ctrl.toggleSelected(worksheet, attribute)"
+              />
+              {{ attribute.column }}
+              <a ng-click="$ctrl.define(worksheet, attribute)">DEF</a>
+            </label>
+          </div>
+      </div>
+      <div
         ng-repeat="(group, attributes) in data.attributes"
       >
         <div
@@ -106,7 +141,9 @@
             class="checkbox"
             ng-repeat="attribute in attributes | orderBy: 'column'"
           >
-            <label>
+            <label
+                ng-hide="data.required.indexOf(attribute) > -1"
+	     >
               <input
                 type="checkbox"
                 ng-disabled="data.required.indexOf(attribute) > -1"
@@ -116,6 +153,7 @@
               {{ attribute.column }}
               <a ng-click="$ctrl.define(worksheet, attribute)">DEF</a>
             </label>
+          </div>
           </div>
         </div>
       </uib-accordion>
