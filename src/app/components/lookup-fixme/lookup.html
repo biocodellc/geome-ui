@@ -1,29 +1,30 @@
 <div id="resolver" class="section">
-    <div class="sectioncontent row">
+  <div class="sectioncontent row">
+    <h1>Lookup</h1>
 
-        <h1>Lookup</h1>
-
-        <div class="col-sm-12 alert alert-error" role="alert" ng-show="vm.error"><strong>Error! </strong>{{ vm.error }}</div>
-
-        <form ng-submit="vm.submit()">
-            <table border=0>
-            <tr>
-                <td>Identifier</td>
-                <td>
-                    <input
-                        id="identifier"
-                        ng-model="vm.identifier"
-                        ng-change="vm.updateFactory()"
-                        size="40" />
-                </td>
-                <td>
-                    <input type="submit" class="btn btn-primary pull-right" value="Submit" />
-                </td>
-            </tr>
-            </table>
-        </form>
-
+    <div class="col-sm-12 alert alert-error" role="alert" ng-show="vm.error">
+      <strong>Error! </strong>{{ vm.error }}
     </div>
 
-    <div ui-view ng-cloak></div>
+    <form ng-submit="vm.submit()">
+      <table border="0">
+        <tr>
+          <td>Identifier</td>
+          <td>
+            <input
+              id="identifier"
+              ng-model="vm.identifier"
+              ng-change="vm.updateFactory()"
+              size="40"
+            />
+          </td>
+          <td>
+            <input type="submit" class="btn btn-primary pull-right" value="Submit" />
+          </td>
+        </tr>
+      </table>
+    </form>
+  </div>
+
+  <div ui-view ng-cloak></div>
 </div>

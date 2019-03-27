@@ -1,19 +1,33 @@
 <div class="col-sm-8">
-    <div class="form-group" show-errors="{trigger: 'change'}">
-        <label for="fimsData" class="col-sm-3 control-label">Samples</label>
-        <div class="col-sm-9">
-            <div class="input-group">
-                <label class="input-group-btn">
-                    <span class="btn btn-default form-control">Browse &hellip;</span>
-                    <input type="file" style="display:none;" id="fimsData" name="fimsMetadata" class="form-control" ngf-select="$ctrl.handleSelect($files)"
-                        ngf-pattern="'.xls,.xlsx,.txt,.csv,.tsv'" ng-required="$ctrl.required" ngf-model-invalid="invalidFimsMetadataFile"
-                        ng-model="$ctrl.selected" />
-                </label>
-                <input type="text" class="form-control" ng-value="$ctrl.selected.name || invalidFimsMetadataFile.name"
-                    readonly/>
-            </div>
-            <p class="help-block" ng-show="!$ctrl.valid">
-                File must have one of the following extensions: .xls, .xlsx, .csv, .tsv, or .txt</p>
-        </div>
+  <div class="form-group" show-errors="{trigger: 'change'}">
+    <label for="fimsData" class="col-sm-3 control-label">Samples</label>
+    <div class="col-sm-9">
+      <div class="input-group">
+        <label class="input-group-btn">
+          <span class="btn btn-default form-control">Browse &hellip;</span>
+          <input
+            type="file"
+            style="display:none;"
+            id="fimsData"
+            name="fimsMetadata"
+            class="form-control"
+            ngf-select="$ctrl.handleSelect($files)"
+            ngf-pattern="'.xls,.xlsx,.txt,.csv,.tsv'"
+            ng-required="$ctrl.required"
+            ngf-model-invalid="invalidFimsMetadataFile"
+            ng-model="$ctrl.selected"
+          />
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          ng-value="$ctrl.selected.name || invalidFimsMetadataFile.name"
+          readonly
+        />
+      </div>
+      <p class="help-block" ng-show="!$ctrl.valid">
+        File must have one of the following extensions: .xls, .xlsx, .csv, .tsv, or .txt
+      </p>
     </div>
+  </div>
 </div>

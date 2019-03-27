@@ -1,38 +1,43 @@
 <md-card>
-    <md-card-content>
-        <md-card-title class="md-headline" layout-align="center">
-            <span>Expeditions belong to user: {{ $ctrl.currentUser.username }}</span>
-        </md-card-title>
-        <p align="center">The following expeditions belong to
-            <strong>{{ $ctrl.currentUser.username }}</strong>
-            and may not represent a comprehensive list of expeditions for this project, which can be found under
-            <br>
-            <md-button href ui-sref='dashboard'>
-                <md-icon md-font-icon="fa fa-desktop fa-fw"></md-icon>
-                Project Overview
-            </md-button>
-            <br>Select each of your expeditions below to change title, permissions and collaborators.
-        </p>
-    </md-card-content>
+  <md-card-content>
+    <md-card-title class="md-headline" layout-align="center">
+      <span>Expeditions belong to user: {{ $ctrl.currentUser.username }}</span>
+    </md-card-title>
+    <p align="center">
+      The following expeditions belong to
+      <strong>{{ $ctrl.currentUser.username }}</strong>
+      and may not represent a comprehensive list of expeditions for this project, which can be found
+      under
+      <br />
+      <md-button href ui-sref="dashboard">
+        <md-icon md-font-icon="fa fa-desktop fa-fw"></md-icon>
+        Project Overview
+      </md-button>
+      <br />Select each of your expeditions below to change title, permissions and collaborators.
+    </p>
+  </md-card-content>
 </md-card>
 <md-card class="list-group">
-    <md-card-content>
-        <a class="list-group-item clearfix" ng-repeat="expedition in $ctrl.expeditions" href ui-sref="expeditions.detail({ id: expedition.expeditionId })">
-            <div class="col-xs-6">
-                <h4 class="list-group-item-heading">{{ expedition.expeditionTitle }}</h5>
-                    <strong>Code:</strong> {{ expedition.expeditionCode}}
-                </h4>
-            </div>
-            <div class="col-xs-6">
-                <ul class="list-unstyled">
-                    <li>
-                        <strong>Identifier: </strong>http://n2t.net/{{ expedition.identifier }}</li>
-                    <li>
-                        <strong>Visibility: </strong>
-                        {{ expedition.visibility }}
-                    </li>
-                </ul>
-            </div>
-        </a>
-    </md-card-content>
+  <md-card-content>
+    <a
+      class="list-group-item clearfix"
+      ng-repeat="expedition in $ctrl.expeditions"
+      href
+      ui-sref="expeditions.detail({ id: expedition.expeditionId })"
+    >
+      <div class="col-xs-6">
+        <h4 class="list-group-item-heading">{{ expedition.expeditionTitle }}</h4>
+        <strong>Code:</strong> {{ expedition.expeditionCode }}
+      </div>
+      <div class="col-xs-6">
+        <ul class="list-unstyled">
+          <li><strong>Identifier: </strong>http://n2t.net/{{ expedition.identifier }}</li>
+          <li>
+            <strong>Visibility: </strong>
+            {{ expedition.visibility }}
+          </li>
+        </ul>
+      </div>
+    </a>
+  </md-card-content>
 </md-card>

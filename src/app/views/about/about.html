@@ -4,102 +4,145 @@
     Click on the headings below to expand each topic with more information.
   </p>
 </div>
-<br>
+<br />
 <uib-accordion>
   <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="Getting Started">
     <p>
-    Welcome to GeOMe! There are several routes you can take to get started.  The path you take depends on if you need to
-    read data, write data, or specify attributes and rules in a new project.  While all of the options discussed below are offered free
-    of charge, additional features are listed on our
-    <a href='#' ng-click="$ctrl.openSections($event,'subscriptions')">Subscription Information</a> page.
+      Welcome to GeOMe! There are several routes you can take to get started. The path you take
+      depends on if you need to read data, write data, or specify attributes and rules in a new
+      project. While all of the options discussed below are offered free of charge, additional
+      features are listed on our
+      <a href="#" ng-click="$ctrl.openSections($event,'subscriptions')">Subscription Information</a>
+      page.
     </p>
 
     <p>
       <strong>I want to query public data or generate a template</strong>
-      <br>Many GeOMe projects are marked as "public", which means that anyone can query public data or generate that
-      project's templates without an obligation to load data later.  This is useful, for example, if a project 
-      designates one person for data loading or if the user does not intend to immediately load data into GeOMe.
-      Read the <a href='docs/helpDocumentation.pdf' target=_blank>GeOMe Help Document</a> to get started 
-      using the web interface for generating templates and querying data.</br>
+      <br />
+      Many GeOMe projects are marked as "public", which means that anyone can query public data or
+      generate that project's templates without an obligation to load data later. This is useful,
+      for example, if a project designates one person for data loading or if the user does not
+      intend to immediately load data into GeOMe. Read the
+      <a href="docs/helpDocumentation.pdf" target="_blank">GeOMe Help Document</a> to get started
+      using the web interface for generating templates and querying data.
     </p>
 
     <p>
       <strong>I want to contribute data to an existing project</strong>
-      <br>See the <a href='#' ng-click="$ctrl.openSections($event,'projects')">GeOMe projects page</a> to read about current GeOMe projects. 
-      Contact the project administrator of the project you would like to join and they will either create a new account 
-      for you or associate your existing account to their project.  Read the 
-      <a href='docs/helpDocumentation.pdf' target=_blank>GeOMe Help Document</a> to get started using the web interface.</br>
+      <br />
+      See the
+      <a href="#" ng-click="$ctrl.openSections($event,'projects')">GeOMe projects page</a> to read
+      about current GeOMe projects. Contact the project administrator of the project you would like
+      to join and they will either create a new account for you or associate your existing account
+      to their project. Read the
+      <a href="docs/helpDocumentation.pdf" target="_blank">GeOMe Help Document</a> to get started
+      using the web interface.
     </p>
 
     <p>
       <strong>I want to create a new project</strong>
-      <p>
-      After you <a ui-sref="register">create an account</a> you will be able to create a new project.  If you already have an 
-      account, you can create a project by clicking the user sign-in graphic in the upper right corner and selecting "Create
-      a new project".  When creating a new project you will have the option to select an "Existing Configuration"
-      you wish to clone.  
+      <br />
+      After you <a ui-sref="register">create an account</a> you will be able to create a new
+      project. If you already have an account, you can create a project by clicking the user sign-in
+      graphic in the upper right corner and selecting "Create a new project". When creating a new
+      project you will have the option to select an "Existing Configuration" you wish to clone.
     </p>
 
-    <p><b><u>Glossary</u></b>:</p>
-
-    <p><i>Generate a template</i> (see Workbench -> "Generate Template") enables the user to create and download a spreadsheet template useful for guiding
-    data entry.  For public proejcts, you do not need a user account to generate a template.</p>
-
-    <p><i>Validate Data</i> (see Workbench -> "Load Data") enables the user to validate data for selected projects.  For public projects, you can 
-    check the "Only validate data" box to validate your spreadsheet data without being a project member.  </p>
-
-    <p><i>Load Data</i> (see Workbench -> "Load Data") enables the user to submit data for a project that you have access to.</p>
-
-    <p><i>Create project</i> (see user menu -> "Create Project" ) enables the user to create and manage their own projects within GeOMe.
-      <a ui-sref="register">Registered</a> users are able to use the <a ui-sref="create-project">Create Project Wizard</a> to easily create
-    a new project. Projects can either adopt a network approved configuration, clone an existing project, or build a project from scratch.</p>
-
-    <p><i>Network approved configurations</i> are templates adopted by a set of projects that share a common set of rules and attributes.
-    When a project is created from a network approved configuration, the new project adopts all of the rules, attributes, and lists from 
-    the chosen network approved configuration.  Currently deployed network approved configurations are visible on the 
-    <a href='#' ng-click="$ctrl.openSections($event,'projects')">GeOMe projects page</a>.  
-    It is possible to modify project rules and attributes of created proejcts or create a new network approved 
-    configurations by <a href='#' ng-click="$ctrl.openSections($event,'subscriptions')">subscribing to GeOMe</a>.
+    <p>
+      <b><u>Glossary</u></b
+      >:
     </p>
-    
+
+    <p>
+      <i>Generate a template</i> (see Workbench -> "Generate Template") enables the user to create
+      and download a spreadsheet template useful for guiding data entry. For public proejcts, you do
+      not need a user account to generate a template.
+    </p>
+
+    <p>
+      <i>Validate Data</i> (see Workbench -> "Load Data") enables the user to validate data for
+      selected projects. For public projects, you can check the "Only validate data" box to validate
+      your spreadsheet data without being a project member.
+    </p>
+
+    <p>
+      <i>Load Data</i> (see Workbench -> "Load Data") enables the user to submit data for a project
+      that you have access to.
+    </p>
+
+    <p>
+      <i>Create project</i> (see user menu -> "Create Project" ) enables the user to create and
+      manage their own projects within GeOMe. <a ui-sref="register">Registered</a> users are able to
+      use the <a ui-sref="create-project">Create Project Wizard</a> to easily create a new project.
+      Projects can either adopt a network approved configuration, clone an existing project, or
+      build a project from scratch.
+    </p>
+
+    <p>
+      <i>Network approved configurations</i> are templates adopted by a set of projects that share a
+      common set of rules and attributes. When a project is created from a network approved
+      configuration, the new project adopts all of the rules, attributes, and lists from the chosen
+      network approved configuration. Currently deployed network approved configurations are visible
+      on the <a href="#" ng-click="$ctrl.openSections($event,'projects')">GeOMe projects page</a>.
+      It is possible to modify project rules and attributes of created proejcts or create a new
+      network approved configurations by
+      <a href="#" ng-click="$ctrl.openSections($event,'subscriptions')">subscribing to GeOMe</a>.
+    </p>
   </div>
 
-  <div uib-accordion-group id="network" class="panel-default md-whiteframe-2dp" heading="Minimum Information about a Genomic Observatory">
+  <div
+    uib-accordion-group
+    id="network"
+    class="panel-default md-whiteframe-2dp"
+    heading="Minimum Information about a Genomic Observatory"
+  >
     <p>
-    GeOMe is an implementation of the <a href="http://gensc.org/projects/migo/" target="_blank">“Minimum Information about a Genomic Observatory” (MIGO)</a> checklist, requiring the following fields at the very minimum for all implementing configurations and projects:
+      GeOMe is an implementation of the
+      <a href="http://gensc.org/projects/migo/" target="_blank"
+        >“Minimum Information about a Genomic Observatory” (MIGO)</a
+      >
+      checklist, requiring the following fields at the very minimum for all implementing
+      configurations and projects:
     </p>
 
     <ul>
-        <li>materialSampleID</li>
-        <li>yearCollected</li>
-        <li>Either decimalLatitude and decimalLongitude or Locality</li>
-        <li>phylum</li>
-        </ul>
+      <li>materialSampleID</li>
+      <li>yearCollected</li>
+      <li>Either decimalLatitude and decimalLongitude or Locality</li>
+      <li>phylum</li>
+    </ul>
+
+    <p>In addition, there are numerous rules that are enforced at the network level concerning incoming data.  For instance “dayCollected” requires an integer between 1 and 31 and if a user enters a decimalLatitude they must also enter a decimalLongitude.  A full list of GeOMe network configuration rules, data attributes, and definitions is available in JSON format at <a href=”https://api.geome-db.org/v1/network/1/config“ target="_blank">https://api.geome-db.org/v1/network/1/config</a></p>
 
     <p>
-    In addition, there are numerous rules that are enforced at the network level concerning incoming data.  For instance “dayCollected” requires an integer between 1 and 31 and if a user enters a decimalLatitude they must also enter a decimalLongitude.  A full list of GeOMe network configuration rules, data attributes, and definitions is available in JSON format at <a href=”https://api.geome-db.org/v1/network/1/config“ target="_blank">https://api.geome-db.org/v1/network/1/config</a>
-    </p>
-
-    <p>
-    Each network approved configurations may choose to enforce additional rules that extend the GeOMe network rules.   For example, 
-    the Biocode configuration also requires “EnteredBy, Country, TaxTeam, institutionCode”.  
-    See the <a href='#' ng-click="$ctrl.openSections($event,'projects')">GeOMe projects page</a> for information about GeOMe network 
-    approved configurations and individual projects.
+      Each network approved configurations may choose to enforce additional rules that extend the
+      GeOMe network rules. For example, the Biocode configuration also requires “EnteredBy, Country,
+      TaxTeam, institutionCode”. See the
+      <a href="#" ng-click="$ctrl.openSections($event,'projects')">GeOMe projects page</a> for
+      information about GeOMe network approved configurations and individual projects.
     </p>
   </div>
 
-  <div uib-accordion-group id="projects" class="panel-default md-whiteframe-2dp" heading="Project Configurations" is-open="$ctrl.projects">
+  <div
+    uib-accordion-group
+    id="projects"
+    class="panel-default md-whiteframe-2dp"
+    heading="Project Configurations"
+    is-open="$ctrl.projects"
+  >
     <p>
-    The following project configurations are active in the GeOMe database.  Here we describe the configurations that are available for use.  When creating a new project,
-    you will be asked to choose one of these configurations.  Click the headings in the following list to expand descriptions and read more about each configuration and some of the projects that have adopted each configuration.
-    <!--Please go through this list to see if you 
+      The following project configurations are active in the GeOMe database. Here we describe the
+      configurations that are available for use. When creating a new project, you will be asked to
+      choose one of these configurations. Click the headings in the following list to expand
+      descriptions and read more about each configuration and some of the projects that have adopted
+      each configuration.
+      <!--Please go through this list to see if you 
     can join an existing project before creating a new project. When joining a project you agree to work together with the project 
     administrator and project users.  The following list of network approved configurations and projects describes the network approved configuration,
     the project, and indicates whether it is public or not and gives a contact for getting started. Click the headings in the following list to expand descriptions:-->
     </p>
 
     <project-info ng-if="$ctrl.projects"></project-info>
-
   </div>
 
   <!--<div uib-accordion-group id="subscriptions" class="panel-default md-whiteframe-2dp" heading="Subscription Information" is-open="$ctrl.subscriptions">
@@ -124,16 +167,21 @@
   </div>-->
 
   <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="Workflow Diagram">
-    <p>The following diagram shows how data is managed in the GeOMe environment. Boxes in solid blue indicate GeOMe
-      functions
-      that the user interacts with, such as generating templates and loading data. The white boxes with a green border
-      are
-      functions that happen outside of the GeOMe environment, such as data entry into a spreadsheet. </p>
+    <p>
+      The following diagram shows how data is managed in the GeOMe environment. Boxes in solid blue
+      indicate GeOMe functions that the user interacts with, such as generating templates and
+      loading data. The white boxes with a green border are functions that happen outside of the
+      GeOMe environment, such as data entry into a spreadsheet.
+    </p>
     <div layout="row" layout-align="center">
-      <img id='workflowImage ' class="img-responsive" style="max-height: 350px;" src='docs/geomeWorkflow.png '>
+      <img
+        id="workflowImage "
+        class="img-responsive"
+        style="max-height: 350px;"
+        src="docs/geomeWorkflow.png "
+      />
     </div>
   </div>
-
 
   <!-- <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading='Query GeOMe using "R"'>
     <p>You can query datasets that have been loaded to the GeOMe database using our
@@ -153,107 +201,142 @@
       <ul>
         <li><strong>Field Database Connection:</strong> GeOMe FIMS</li>
         <li><strong>Host:</strong>https://api.geome-db.org/</li> 
-	<li><strong>Username/password:</strong> You will need to obtain a username and password in order to make any connection to the LIMS system.</li>
+        <li><strong>Username/password:</strong> You will need to obtain a username and password in order to make any connection to the LIMS system.</li>
       </ul>
     </p>
   </div>
 
   <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="Instructional Videos">
     <p>
-      While the content of these videos reference a prior version of the web interface, the functionality is still
-      applicable to the current interface. The videos cover generating templates, loading data, and associating FASTQ
-      sequence data and loading to the Sequence Read Archive.
+      While the content of these videos reference a prior version of the web interface, the
+      functionality is still applicable to the current interface. The videos cover generating
+      templates, loading data, and associating FASTQ sequence data and loading to the Sequence Read
+      Archive.
     </p>
 
-
     <div layout="row" layout-align="center">
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/rdoP7xqDyhQ" frameborder="0" allowfullscreen></iframe>
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/GgPsFnoinZc" frameborder="0" allowfullscreen></iframe>
+      <iframe
+        width="560"
+        height="315"
+        src="https://www.youtube.com/embed/rdoP7xqDyhQ"
+        frameborder="0"
+        allowfullscreen
+      ></iframe>
+      <iframe
+        width="560"
+        height="315"
+        src="https://www.youtube.com/embed/GgPsFnoinZc"
+        frameborder="0"
+        allowfullscreen
+      ></iframe>
     </div>
   </div>
 
   <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="History">
     <p>
-    GeOMe has its roots in the Moorea Biocode project database, developed from 2006 to 2011 to support data collection for the 
-    Moore Foundation funded Moorea Biocode Project: an all taxa biotic inventory of a single tropical island involving 6 teams, 50 researchers,
-    and thousands of collecting events.  The Moorea Biocode field information management system, also known as "FIMS1", was developed
-    to ingest spreadsheet data from researchers working on the project and employed data validation on data ingest.  The tools were
-    written in Perl and Java.  FIMS1 has been running from 2006 through 2018 and 
-    developed tools such as the Plate Matcher (to easily map tissues to 96 well plates), the bioValidator (for loading and validating spreadsheets), 
-    and a web interface for managing data.
+      GeOMe has its roots in the Moorea Biocode project database, developed from 2006 to 2011 to
+      support data collection for the Moore Foundation funded Moorea Biocode Project: an all taxa
+      biotic inventory of a single tropical island involving 6 teams, 50 researchers, and thousands
+      of collecting events. The Moorea Biocode field information management system, also known as
+      "FIMS1", was developed to ingest spreadsheet data from researchers working on the project and
+      employed data validation on data ingest. The tools were written in Perl and Java. FIMS1 has
+      been running from 2006 through 2018 and developed tools such as the Plate Matcher (to easily
+      map tissues to 96 well plates), the bioValidator (for loading and validating spreadsheets),
+      and a web interface for managing data.
     </p>
     <p>
-    From 2012 to 2015, the National Science Foundation funded the BiSciCol (Biological Sciences Collections) project.
-    While BiSciCol focused on identifiers, ontologies, and semantic technologies for linking biodiversity data, the primary use case
-    was to work on a solution for linking events, samples, and tissues across many different systems using linked data technology with the
-    Moorea Biocode Project data integration with member institution databases.  The project
-    had mixed results but did result in several achievements: a clearer understanding of the role of persistent identifiers, building 
-    a darwin core triplifier, the development
-    of the Biological Collections Ontology (BCO), and the development of FIMS2, also known as "BiSciCol FIMS" (http://biscicol.org/)   The BiSciCol FIMS 
-    adopted ARK identifiers (through California Digital Library's EZID system) for all samples, events and tissues.   In addition,
-    all data inserted into BiSciCol FIMS was backed by a Fuseki triplestore with metadata configurations specified using an XML configuration file, stored
-    and managed separately by each project. 
+      From 2012 to 2015, the National Science Foundation funded the BiSciCol (Biological Sciences
+      Collections) project. While BiSciCol focused on identifiers, ontologies, and semantic
+      technologies for linking biodiversity data, the primary use case was to work on a solution for
+      linking events, samples, and tissues across many different systems using linked data
+      technology with the Moorea Biocode Project data integration with member institution databases.
+      The project had mixed results but did result in several achievements: a clearer understanding
+      of the role of persistent identifiers, building a darwin core triplifier, the development of
+      the Biological Collections Ontology (BCO), and the development of FIMS2, also known as
+      "BiSciCol FIMS" (http://biscicol.org/) The BiSciCol FIMS adopted ARK identifiers (through
+      California Digital Library's EZID system) for all samples, events and tissues. In addition,
+      all data inserted into BiSciCol FIMS was backed by a Fuseki triplestore with metadata
+      configurations specified using an XML configuration file, stored and managed separately by
+      each project.
     </p>
     <p>
-    From 2014-2017, BiSciCol FIMS began hosting the Diversity of the IndoPacific Network (DIPNet) to develop a coherent metadata repository for
-    assembling metadata from across the IndoPacific region.  DIPNet added the ability to upload FASTA and FASTQ metadata to the FIMS2 site and also 
-    developed the name "GeOMe" (eventually becaming the brand name for FIMS3).
-    During this time-frame, another FIMS system was developed for the Smithosnian National Museum of Natural History ("NMNH FIMS") with the goal
-    of creating a centralized field data ingestion system for all NMNH field data.  The NMNH FIMS has since been discontinued with SI users 
-    using the BiSciCol FIMS (Barcode of Wildlife Project, ARMS portal, and Global Genome Initiative) and FIMS1 installations (Invertebrate Zoology and LAB applications).
+      From 2014-2017, BiSciCol FIMS began hosting the Diversity of the IndoPacific Network (DIPNet)
+      to develop a coherent metadata repository for assembling metadata from across the IndoPacific
+      region. DIPNet added the ability to upload FASTA and FASTQ metadata to the FIMS2 site and also
+      developed the name "GeOMe" (eventually becaming the brand name for FIMS3). During this
+      time-frame, another FIMS system was developed for the Smithosnian National Museum of Natural
+      History ("NMNH FIMS") with the goal of creating a centralized field data ingestion system for
+      all NMNH field data. The NMNH FIMS has since been discontinued with SI users using the
+      BiSciCol FIMS (Barcode of Wildlife Project, ARMS portal, and Global Genome Initiative) and
+      FIMS1 installations (Invertebrate Zoology and LAB applications).
     </p>
     <p>
-    Beginning in 2016, John Deck and RJ Ewing started work on a redesigned FIMS system, utilizing a Postgres backend to control project management features and JSON metadata 
-    objects to store data and configurations.   This FIMS system (FIMS3) assumed the name GeOMe.   It incorporates features from FIMS1 (including photo uploading,
-    specimen, tissue, and event pages, plate-matching tools) along with features of the BiSciCol FIMS (persistent id generation, flexible project configuration with attributes stored
-    in a non-relational system guided by a configuration file).  In addition, FIMS3 brings in the concept of a network which governs multiple configuration templates and the 
-    ability to easily create projects through a user interface.   The goal of GeOMe is to integrate all previous FIMS1 and FIMS2, with FIMS1 and FIMS2 projects removed from their
-    current hosting environment by Spring of 2019.  
+      Beginning in 2016, John Deck and RJ Ewing started work on a redesigned FIMS system, utilizing
+      a Postgres backend to control project management features and JSON metadata objects to store
+      data and configurations. This FIMS system (FIMS3) assumed the name GeOMe. It incorporates
+      features from FIMS1 (including photo uploading, specimen, tissue, and event pages,
+      plate-matching tools) along with features of the BiSciCol FIMS (persistent id generation,
+      flexible project configuration with attributes stored in a non-relational system guided by a
+      configuration file). In addition, FIMS3 brings in the concept of a network which governs
+      multiple configuration templates and the ability to easily create projects through a user
+      interface. The goal of GeOMe is to integrate all previous FIMS1 and FIMS2, with FIMS1 and
+      FIMS2 projects removed from their current hosting environment by Spring of 2019.
     </p>
   </div>
 
-  <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="Data usage policy" id="dataPolicy" is-open="$ctrl.dataPolicy">
+  <div
+    uib-accordion-group
+    class="panel-default md-whiteframe-2dp"
+    heading="Data usage policy"
+    id="dataPolicy"
+    is-open="$ctrl.dataPolicy"
+  >
     The Genomic Observatories Metadatabase has the following objectives:
 
     <ul>
       <li>To advance genetic diversity research worldwide</li>
-      <li>To aggregate sample and genetic data in raw formats in a searchable database such that original datasets can
-        be utilized for further investigation.</li>
-      <li>To promote and advocate open and collaborative science as a best practice for conducting biodiversity
-        research</li>
-      <li>To promote and provide capacity-building within developing countries for monitoring, study and protection of
-        their biodiversity resources.</li>
+      <li>
+        To aggregate sample and genetic data in raw formats in a searchable database such that
+        original datasets can be utilized for further investigation.
+      </li>
+      <li>
+        To promote and advocate open and collaborative science as a best practice for conducting
+        biodiversity research
+      </li>
+      <li>
+        To promote and provide capacity-building within developing countries for monitoring, study
+        and protection of their biodiversity resources.
+      </li>
     </ul>
 
     <p>
-      Recalling that access to and utilization of genetic resources and data taken should be consistent with the
-      provisions of the Convention on
-      Biological Diversity (CBD) taking into account their specifications by the Bonn Guidelines on Access to Genetic
-      Resources and the Fair and
-      Equitable Sharing of Benefits arising from their Utilization, and, where appropriate, the Nagoya Protocol on
-      Access to Genetic Resources and the
-      Fair and Equitable Sharing of Benefits arising from their Utilization (NP),
+      Recalling that access to and utilization of genetic resources and data taken should be
+      consistent with the provisions of the Convention on Biological Diversity (CBD) taking into
+      account their specifications by the Bonn Guidelines on Access to Genetic Resources and the
+      Fair and Equitable Sharing of Benefits arising from their Utilization, and, where appropriate,
+      the Nagoya Protocol on Access to Genetic Resources and the Fair and Equitable Sharing of
+      Benefits arising from their Utilization (NP),
     </p>
 
     <p>
-      Recalling that according to these provisions non-monetary and/or monetary benefits from the utilization of the
-      genetic resources shall be
-      shared with the Country of Origin if the same so requires and as it is set out in mutually agreed terms,
+      Recalling that according to these provisions non-monetary and/or monetary benefits from the
+      utilization of the genetic resources shall be shared with the Country of Origin if the same so
+      requires and as it is set out in mutually agreed terms,
     </p>
 
     <p>
-      Acknowledging that research and development on genetic resources can be for the public domain (non-commercial) or
-      for commercial purposes and,
+      Acknowledging that research and development on genetic resources can be for the public domain
+      (non-commercial) or for commercial purposes and,
     </p>
 
     <p>
-      Recalling that according to these provisions, non-commercial research purposes may contribute to the conservation
-      and sustainable use of biodiversity
+      Recalling that according to these provisions, non-commercial research purposes may contribute
+      to the conservation and sustainable use of biodiversity
     </p>
 
     <p>
-      By uploading data to or downloading data from the DIPnet database, DIPnet contributors and Recipients of DIPnet
-      data agree as follows:
+      By uploading data to or downloading data from the DIPnet database, DIPnet contributors and
+      Recipients of DIPnet data agree as follows:
     </p>
 
     <p><b>ARTICLE 1 – UPLOADING OF LEGAL AND ACCURATE GENETIC DATA AND ASSOCIATED METADATA</b></p>
@@ -268,63 +351,75 @@
 
     <p><b>ARTICLE 2 – USAGE OF DOWNLOADED GENETIC DATA AND ASSOCIATED METADATA</b></p>
 
-    <p><b>2.1</b> The Recipient shall be entitled to the Use of the Genetic Data and Associated Metadata for the Public
-      Domain.</p>
+    <p>
+      <b>2.1</b> The Recipient shall be entitled to the Use of the Genetic Data and Associated
+      Metadata for the Public Domain.
+    </p>
 
-    <p><b>2.2</b> Should the Recipient intend to utilize the Genetic Data and Associated Metadata for Commercial
-      Purposes they will seek consent of the Country of Origin, subject to the mutually agreed terms between the DIPnet
-      contributor and Country of Origin.</p>
+    <p>
+      <b>2.2</b> Should the Recipient intend to utilize the Genetic Data and Associated Metadata for
+      Commercial Purposes they will seek consent of the Country of Origin, subject to the mutually
+      agreed terms between the DIPnet contributor and Country of Origin.
+    </p>
 
-    <p><b>2.3</b> When used for Commercial Purposes or in the Public Domain, data should be recognized as follows:
-      “Data were made available through GeOMe (https://geome-db.org/)”.</p>
+    <p>
+      <b>2.3</b> When used for Commercial Purposes or in the Public Domain, data should be
+      recognized as follows: “Data were made available through GeOMe (https://geome-db.org/)”.
+    </p>
 
-    <p><b>2.4</b> Every attempt should be made to cite the original studies having contributed data to the new
-      analyses. Attribution would include any publications first describing these data as well as reference to
-      electronic depositions (such as DOI associated with dataDryad). This information may often be found in the
-      “associatedReferences” field of the database.</p>
+    <p>
+      <b>2.4</b> Every attempt should be made to cite the original studies having contributed data
+      to the new analyses. Attribution would include any publications first describing these data as
+      well as reference to electronic depositions (such as DOI associated with dataDryad). This
+      information may often be found in the “associatedReferences” field of the database.
+    </p>
 
-    <p><b>2.5</b> The Recipient may transfer downloaded Genetic Data and Associated Metadata to Subsequent Recipients
-      provided that Subsequent Recipients agree in writing to use the data under the terms of this agreement.</p>
+    <p>
+      <b>2.5</b> The Recipient may transfer downloaded Genetic Data and Associated Metadata to
+      Subsequent Recipients provided that Subsequent Recipients agree in writing to use the data
+      under the terms of this agreement.
+    </p>
 
-    <p><b>2.6</b> GeOMe does not undertake to monitor the rights of any Country of Origin for their Genetic Resources
-      downstream from our database portal.</p>
-
+    <p>
+      <b>2.6</b> GeOMe does not undertake to monitor the rights of any Country of Origin for their
+      Genetic Resources downstream from our database portal.
+    </p>
   </div>
 
   <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="Steering Committee">
     <p>
-    The GeOMe Steering Committee is responsible for guiding the development of GeOMe software, its implementation, 
-    and setting strategic direction.
-    
-    The GeOMe steering committee consists of Neil Davies (UC Berkeley), John Deck (UC Berkeley and Biocode, LLC), 
-    RJ Ewing (Biocode, LLC), Rob Toonen (University of Hawaii), Cynthia Riginos (University of Queensland), 
-    Eric Crandall (CSU Monterey), Chris Meyer (Smithsonian National Museum of Natural History), and 
-    Michelle Gaither (University of Central Florida).
+      The GeOMe Steering Committee is responsible for guiding the development of GeOMe software, its
+      implementation, and setting strategic direction. The GeOMe steering committee consists of Neil
+      Davies (UC Berkeley), John Deck (UC Berkeley and Biocode, LLC), RJ Ewing (Biocode, LLC), Rob
+      Toonen (University of Hawaii), Cynthia Riginos (University of Queensland), Eric Crandall (CSU
+      Monterey), Chris Meyer (Smithsonian National Museum of Natural History), and Michelle Gaither
+      (University of Central Florida).
     </p>
   </div>
-
 </uib-accordion>
 
 <div>
   <p>
     <a href="https://doi.org/10.1371/journal.pbio.2002925">
       <i>"The Genomic Observatories Metadatabase (GeOMe): A new repository for field and sampling event metadata
-        associated
-        with genetic samples"</a>, John Deck , Michelle R. Gaither, Rodney Ewing, Christopher E. Bird, Neil Davies,
-    Christopher
-    Meyer, Cynthia Riginos, Robert J. Toonen, Eric D. Crandall Published: August 3, 2017
-    <br>
+        associated with genetic samples"</a>, John Deck , Michelle R. Gaither, Rodney Ewing, Christopher E. Bird, Neil Davies, Christopher Meyer, Cynthia Riginos, Robert J. Toonen, Eric D. Crandall Published: August 3, 2017
+    <br />
     <a href="https://doi.org/10.1371/journal.pbio.2002925">https://doi.org/10.1371/journal.pbio.2002925</a>
     </i>
   </p>
 
   <p>
     Development of GeOMe has been supported by the
-    <a href='https://www.moore.org/article-detail?newsUrlName=ambitious-project-to-create-genetic-catalog-of-a-model-ecosystem-gets-$5-2-million-from-the-gordon-and-betty-moore-foundation '>Gordon
-      and Betty Moore Foundation</a>, 
-      the National Science Foundation ( <a href='https://www.nsf.gov/awardsearch/showAward?AWD_ID=0956426&HistoricalAwards=false '>DEB-0956426</a> and <a href='https://nsf.gov/awardsearch/showAward?AWD_ID=1457848 '>DEB-1457848</a>), 
-      the <a href='https://bnhm.berkeley.edu/ '>Berkeley Natural History Museums</a>, 
-      and contracts from the <a href='https://naturalhistory.si.edu/ '>Smithsonian National Museum of Natural History</a>.
+    <a
+      href="https://www.moore.org/article-detail?newsUrlName=ambitious-project-to-create-genetic-catalog-of-a-model-ecosystem-gets-$5-2-million-from-the-gordon-and-betty-moore-foundation "
+      >Gordon and Betty Moore Foundation</a
+    >, the National Science Foundation (
+    <a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=0956426&HistoricalAwards=false "
+      >DEB-0956426</a
+    >
+    and <a href="https://nsf.gov/awardsearch/showAward?AWD_ID=1457848 ">DEB-1457848</a>), the
+    <a href="https://bnhm.berkeley.edu/ ">Berkeley Natural History Museums</a>, and contracts from
+    the
+    <a href="https://naturalhistory.si.edu/ ">Smithsonian National Museum of Natural History</a>.
   </p>
 </div>
-

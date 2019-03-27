@@ -1,39 +1,48 @@
 <div id="warning"></div>
 <div class="row validation">
-    <h3 class="page-header" ng-if="$ctrl.currentUser">Load Data</h3>
-    <h3 class="page-header" ng-if="!$ctrl.currentUser">Validate Data</h3>
+  <h3 class="page-header" ng-if="$ctrl.currentUser">Load Data</h3>
+  <h3 class="page-header" ng-if="!$ctrl.currentUser">Validate Data</h3>
 
-    <p ng-show="!$ctrl.currentUser">
-        <strong>To upload data users must have an account.</strong> To set up an account send an email
-        with your name, title and affiliation to
-        <a href="mailto:geome.database@gmail.com">geome.database@gmail.com</a>
-    </p>
+  <p ng-show="!$ctrl.currentUser">
+    <strong>To upload data users must have an account.</strong> To set up an account send an email
+    with your name, title and affiliation to
+    <a href="mailto:geome.database@gmail.com">geome.database@gmail.com</a>
+  </p>
 
-    <p style="margin-top:20px;">Data is subject to our <a ui-sref="about({'#':'dataPolicy'})">Data Usage Policy.</a>
-    </p>
+  <p style="margin-top:20px;">
+    Data is subject to our <a ui-sref="about({'#':'dataPolicy'})">Data Usage Policy.</a>
+  </p>
 
-    <div class="col-xs-12">
-        <uib-tabset active="$ctrl.activeTab">
-            <uib-tab index="-1" heading="" disable="true" classes="col-xs-offset-1 hidden-tab"></uib-tab>
+  <div class="col-xs-12">
+    <uib-tabset active="$ctrl.activeTab">
+      <uib-tab index="-1" heading="" disable="true" classes="col-xs-offset-1 hidden-tab"></uib-tab>
 
-            <!-- Upload Tab -->
-            <uib-tab index="0">
-                <uib-tab-heading>
-                    <span ng-if="!$ctrl.currentUser">Validate</span>
-                    <span ng-if="$ctrl.currentUser">Load</span>
-                </uib-tab-heading>
-                <fims-upload is-visible="$ctrl.activeTab === 1" current-project="$ctrl.currentProject" user-expeditions="$ctrl.userExpeditions"
-                    current-user="$ctrl.currentUser" on-upload="$ctrl.handleUpload(data)">
-                </fims-upload>
+      <!-- Upload Tab -->
+      <uib-tab index="0">
+        <uib-tab-heading>
+          <span ng-if="!$ctrl.currentUser">Validate</span>
+          <span ng-if="$ctrl.currentUser">Load</span>
+        </uib-tab-heading>
+        <fims-upload
+          is-visible="$ctrl.activeTab === 1"
+          current-project="$ctrl.currentProject"
+          user-expeditions="$ctrl.userExpeditions"
+          current-user="$ctrl.currentUser"
+          on-upload="$ctrl.handleUpload(data)"
+        >
+        </fims-upload>
+      </uib-tab>
 
-            </uib-tab>
-
-            <!-- Results Tab -->
-            <uib-tab index="2" heading="Results" disable="!$ctrl.displayResults">
-                <fims-results show-genbank-download="$ctrl.showGenbankDownload" results="$ctrl.results" project-id="$ctrl.currentProject.projectId"
-                    expedition-code="$ctrl.latestExpeditionCode">
-                </fims-results>
-            </uib-tab>
-        </uib-tabset>
-    </div>
+      <!-- Results Tab -->
+      <uib-tab index="2" heading="Results" disable="!$ctrl.displayResults">
+        <fims-results
+          show-genbank-download="$ctrl.showGenbankDownload"
+          results="$ctrl.results"
+          project-id="$ctrl.currentProject.projectId"
+          expedition-code="$ctrl.latestExpeditionCode"
+        >
+        </fims-results>
+      </uib-tab>
+    </uib-tabset>
+  </div>
 </div>

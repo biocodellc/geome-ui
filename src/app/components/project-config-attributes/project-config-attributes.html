@@ -1,42 +1,61 @@
 <md-table-container id="attributes-table">
-    <table md-table md-row-select multiple ng-model="$ctrl.selectedAttributes"
-        order-by="$ctrl.orderBy" class="table table-condensed">
-        <thead fix-head md-head md-order="$ctrl.orderBy">
-            <tr md-row>
-                <th md-column class="action-row" ng-show="$ctrl.canEdit"></th>
-                <th md-column md-order-by="column">Column</th>
-                <th md-column md-order-by="group">Group</th>
-                <th md-column md-order-by="dataType">Data Type</th>
-                <th md-column md-order-by="required">Required</th>
-                <th md-column md-order-by="sheetOrder">sheetOrder</th>
-            </tr>
-        </thead>
-        <tbody md-body dnd-list="$ctrl.selectedAttributes" dnd-drop="$ctrl.dndDrop(index, item)">
-            <tr md-row md-select="a" md-select-id="uri" md-on-select="$ctrl.onSelect"
-                md-on-deselect="$ctrl.onDeSelect"
-                ng-repeat="a in $ctrl.getAvailable() track by a.uri"
-                ng-disabled="!$ctrl.canEdit || $ctrl.requiredUris.includes(a.uri)"
-                ng-if="!a.internal" dnd-draggable="a" dnd-dragstart="$ctrl.disableTooltips()"
-                dnd-disable-if="!$ctrl.canEditAttribute(a)" dnd-dragend="$ctrl.enableTooltips()">
-                <td md-cell class="action-row" ng-click="$ctrl.editAttribute($event, a)"
-                    ng-if="$ctrl.canEditAttribute(a)">
-                    <md-icon ng-if="$ctrl.orderBy && $ctrl.orderBy.contains('sheetOrder')"
-                        md-font-icon="fa fa-arrows fa-fw">
-                    </md-icon>
-                    <md-icon md-font-icon="fa fa-pencil fa-fw"></md-icon>
-                </td>
-                <td md-cell class="action-row" ng-if="$ctrl.canEdit && !$ctrl.canEditAttribute(a)">
-                </td>
-                <td md-cell>{{a.column}}</td>
-                <td md-cell>{{a.group || 'Default Group'}}</td>
-                <td md-cell>{{a.dataType}}</td>
-                <td md-cell>{{$ctrl.requiredUris.includes(a.uri)}}</td>
-                <td md-cell>{{$ctrl.orderedIndex(a)}}</td>
-            </tr>
-            <!--define a custom <tr> placeholder -->
-            <tr class="dndPlaceholder">
-                <td colspan="6"></td>
-            </tr>
-        </tbody>
-    </table>
+  <table
+    md-table
+    md-row-select
+    multiple
+    ng-model="$ctrl.selectedAttributes"
+    order-by="$ctrl.orderBy"
+    class="table table-condensed"
+  >
+    <thead fix-head md-head md-order="$ctrl.orderBy">
+      <tr md-row>
+        <th md-column class="action-row" ng-show="$ctrl.canEdit"></th>
+        <th md-column md-order-by="column">Column</th>
+        <th md-column md-order-by="group">Group</th>
+        <th md-column md-order-by="dataType">Data Type</th>
+        <th md-column md-order-by="required">Required</th>
+        <th md-column md-order-by="sheetOrder">sheetOrder</th>
+      </tr>
+    </thead>
+    <tbody md-body dnd-list="$ctrl.selectedAttributes" dnd-drop="$ctrl.dndDrop(index, item)">
+      <tr
+        md-row
+        md-select="a"
+        md-select-id="uri"
+        md-on-select="$ctrl.onSelect"
+        md-on-deselect="$ctrl.onDeSelect"
+        ng-repeat="a in $ctrl.getAvailable() track by a.uri"
+        ng-disabled="!$ctrl.canEdit || $ctrl.requiredUris.includes(a.uri)"
+        ng-if="!a.internal"
+        dnd-draggable="a"
+        dnd-dragstart="$ctrl.disableTooltips()"
+        dnd-disable-if="!$ctrl.canEditAttribute(a)"
+        dnd-dragend="$ctrl.enableTooltips()"
+      >
+        <td
+          md-cell
+          class="action-row"
+          ng-click="$ctrl.editAttribute($event, a)"
+          ng-if="$ctrl.canEditAttribute(a)"
+        >
+          <md-icon
+            ng-if="$ctrl.orderBy && $ctrl.orderBy.contains('sheetOrder')"
+            md-font-icon="fa fa-arrows fa-fw"
+          >
+          </md-icon>
+          <md-icon md-font-icon="fa fa-pencil fa-fw"></md-icon>
+        </td>
+        <td md-cell class="action-row" ng-if="$ctrl.canEdit && !$ctrl.canEditAttribute(a)"></td>
+        <td md-cell>{{a.column}}</td>
+        <td md-cell>{{a.group || 'Default Group'}}</td>
+        <td md-cell>{{a.dataType}}</td>
+        <td md-cell>{{$ctrl.requiredUris.includes(a.uri)}}</td>
+        <td md-cell>{{$ctrl.orderedIndex(a)}}</td>
+      </tr>
+      <!--define a custom <tr> placeholder -->
+      <tr class="dndPlaceholder">
+        <td colspan="6"></td>
+      </tr>
+    </tbody>
+  </table>
 </md-table-container>

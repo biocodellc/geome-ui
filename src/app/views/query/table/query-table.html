@@ -1,29 +1,41 @@
 <div layout="column" layout-margin>
-  <div class="help-block" ng-show="!$ctrl.results">Click
-    <strong>Search</strong> on sidebar to display query results
+  <div class="help-block" ng-show="!$ctrl.results">
+    Click <strong>Search</strong> on sidebar to display query results
   </div>
 
   <div ng-show="$ctrl.results">
-    <p>Total Number of Results: {{$ctrl.results.totalElements}}</p>
+    <p>Total Number of Results: {{ $ctrl.results.totalElements }}</p>
     <md-table-container id="query-table">
-      <table md-table ng-model="$ctrl.results" order-by="$ctrl.orderBy"
-        class="table table-condensed table-striped table-hover text-nowrap">
+      <table
+        md-table
+        ng-model="$ctrl.results"
+        order-by="$ctrl.orderBy"
+        class="table table-condensed table-striped table-hover text-nowrap"
+      >
         <thead md-head md-order="$ctrl.orderBy">
           <tr md-row class="text-capitalize">
-            <th md-column ng-repeat="column in $ctrl.tableColumns" md-order-by="{{column}}">
-              {{ column }}</th>
+            <th md-column ng-repeat="column in $ctrl.tableColumns" md-order-by="{{ column }}">
+              {{ column }}
+            </th>
           </tr>
         </thead>
         <tbody md-body>
-          <tr md-row
+          <tr
+            md-row
             ng-repeat="resource in $ctrl.results.data | orderBy: $ctrl.orderBy | limitTo: $ctrl.pageSize: ($ctrl.currentPage - 1) * $ctrl.pageSize"
-            ng-click="$ctrl.detailView(resource)">
-            <td md-cell uib-popover-html="resource[column] | trusted_html"
-              popover-enable="resource[column].length > 35" popover-trigger="mouseenter"
-              ng-class="{hideOverflow: resource[column].length > 35}" popover-placement="bottom"
-              popover-append-to-body="true" ng-repeat="column in $ctrl.tableColumns"
-              ng-bind-html="resource[column] | trusted_html">
-            </td>
+            ng-click="$ctrl.detailView(resource)"
+          >
+            <td
+              md-cell
+              uib-popover-html="resource[column] | trusted_html"
+              popover-enable="resource[column].length > 35"
+              popover-trigger="mouseenter"
+              ng-class="{hideOverflow: resource[column].length > 35}"
+              popover-placement="bottom"
+              popover-append-to-body="true"
+              ng-repeat="column in $ctrl.tableColumns"
+              ng-bind-html="resource[column] | trusted_html"
+            ></td>
           </tr>
           <tr ng-show="$ctrl.results.totalElements === 0" class="h4">
             <td class="text-primary" colspan="100">No Samples Found</td>
@@ -32,9 +44,12 @@
       </table>
     </md-table-container>
 
-    <md-table-pagination md-limit="$ctrl.pageSize" md-limit-options="$ctrl.limitOptions"
-      md-page="$ctrl.currentPage" md-total="{{$ctrl.results.totalElements}}" md-page-select></md-table-pagination>
-    </md-table-pagination>
-
+    <md-table-pagination
+      md-limit="$ctrl.pageSize"
+      md-limit-options="$ctrl.limitOptions"
+      md-page="$ctrl.currentPage"
+      md-total="{{ $ctrl.results.totalElements }}"
+      md-page-select
+    ></md-table-pagination>
   </div>
 </div>

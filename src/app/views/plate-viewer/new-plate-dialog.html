@@ -13,7 +13,7 @@
     <p>Enter a unique name for the plate.</p>
     <md-input-container class="md-block" flex-gt-sm md-is-error="$ctrl.error">
       <label>Plate Name</label>
-      <input name="plate" ng-model="$ctrl.plate" required md-autofocus/>
+      <input name="plate" ng-model="$ctrl.plate" required md-autofocus />
 
       <div ng-messages="$ctrl">
         <div ng-message="error">A plate with that name already exists.</div>
@@ -22,7 +22,9 @@
 
     <md-dialog-actions>
       <md-button ng-click="$ctrl.$mdDialog.cancel()" class="md-primary">Cancel</md-button>
-      <md-button ng-click="$ctrl.create()" class="md-primary" ng-disabled="!$ctrl.plate">Create</md-button>
+      <md-button ng-click="$ctrl.create()" class="md-primary" ng-disabled="!$ctrl.plate"
+        >Create</md-button
+      >
     </md-dialog-actions>
   </md-dialog-content>
 </md-dialog>

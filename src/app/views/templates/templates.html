@@ -1,76 +1,113 @@
 <h2 class="page-header">Generate Template</h2>
 
 <div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
-    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+  <md-progress-circular md-mode="indeterminate"></md-progress-circular>
 </div>
 
 <div class="row" id="template-form">
-    <form class="form-horizontal">
+  <form class="form-horizontal">
+    <div class="form-group">
+      <label class="control-label col-sm-3">Worksheet:</label>
 
-        <div class="form-group">
-            <label class="control-label col-sm-3">Worksheet:</label>
+      <div class="col-sm-4">
+        <select
+          class="form-control"
+          ng-disabled="$ctrl.worksheets.length <= 1"
+          ng-model="$ctrl.worksheet"
+          ng-options="sheet for sheet in $ctrl.worksheets"
+          ng-change="$ctrl.sheetChange()"
+        >
+        </select>
+      </div>
+    </div>
 
-            <div class="col-sm-4">
-                <select class="form-control" ng-disabled="$ctrl.worksheets.length <= 1" ng-model="$ctrl.worksheet" ng-options="sheet for sheet in $ctrl.worksheets"
-                    ng-change="$ctrl.sheetChange()">
-                </select>
-            </div>
+    <div class="form-group" ng-if="$ctrl.worksheet !== 'Workbook'">
+      <label class="control-label col-sm-3">Template Config:</label>
+      <div class="col-sm-4">
+        <div class="input-group col-sm-12">
+          <select
+            class="form-control"
+            ng-disabled="$ctrl.templates.length <= 1"
+            ng-model="$ctrl.template"
+            ng-options="t as t.name for t in $ctrl.templates track by t.name"
+            ng-change="$ctrl.templateChange()"
+          >
+          </select>
+
+          <div class="input-group-btn" ng-show="$ctrl.canRemoveTemplate()">
+            <button class="btn btn-danger" ng-click="$ctrl.removeConfig($event)">
+              <i class="fa fa-trash fa-fw"></i>
+            </button>
+          </div>
         </div>
-
-        <div class="form-group" ng-if="$ctrl.worksheet !== 'Workbook'">
-            <label class="control-label col-sm-3">Template Config:</label>
-            <div class="col-sm-4">
-                <div class="input-group col-sm-12">
-                    <select class="form-control" ng-disabled="$ctrl.templates.length <= 1" ng-model="$ctrl.template" ng-options="t as t.name for t in $ctrl.templates track by t.name"
-                        ng-change="$ctrl.templateChange()">
-                    </select>
-
-                    <div class="input-group-btn" ng-show="$ctrl.canRemoveTemplate()">
-                        <button class="btn btn-danger" ng-click="$ctrl.removeConfig($event)">
-                            <i class="fa fa-trash fa-fw"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-6">
-                <button type="button" ng-click="$ctrl.generate()" class="md-button md-raised md-primary pull-right">Export Excel
-                </button>
-            </div>
-        </div>
-    </form>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-6">
+        <button
+          type="button"
+          ng-click="$ctrl.generate()"
+          class="md-button md-raised md-primary pull-right"
+        >
+          Export Excel
+        </button>
+      </div>
+    </div>
+  </form>
 </div>
 
 <div class="row">
-
-    <div class="col-xs-6">
-        <div ng-repeat="(worksheet, data) in $ctrl.getAttributes()">
-            <h3 ng-if="$ctrl.worksheet === 'Workbook'">{{ worksheet }} Worksheet</h3>
-            <div class="btn-group btn-group-xs">
-                <button type="button" class="btn btn-link" ng-click="$ctrl.selectAll(worksheet)">Select ALL</button>
-                <button type="button" class="btn btn-link" ng-click="$ctrl.selectNone(worksheet)">Select None</button>
-                <button type="button" class="btn btn-link" ng-if="$ctrl.worksheet !== 'Workbook'" ng-click="$ctrl.saveConfig($event)">Save</button>
-            </div>
-            <uib-accordion close-others="false" ng-repeat="(group, attributes) in data.attributes">
-                <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="{{ group }}" is-open="true">
-                    <div class="checkbox" ng-repeat="attribute in attributes">
-                        <label>
-                            <input type="checkbox" ng-disabled="data.required.indexOf(attribute) > -1" ng-checked="$ctrl.selected[worksheet].indexOf(attribute) > -1"
-                                ng-click="$ctrl.toggleSelected(worksheet, attribute)" /> {{ attribute.column }}
-                            <a ng-click="$ctrl.define(worksheet, attribute)">DEF</a>
-                        </label>
-                    </div>
-                </div>
-            </uib-accordion>
+  <div class="col-xs-6">
+    <div ng-repeat="(worksheet, data) in $ctrl.getAttributes()">
+      <h3 ng-if="$ctrl.worksheet === 'Workbook'">{{ worksheet }} Worksheet</h3>
+      <div class="btn-group btn-group-xs">
+        <button type="button" class="btn btn-link" ng-click="$ctrl.selectAll(worksheet)">
+          Select ALL
+        </button>
+        <button type="button" class="btn btn-link" ng-click="$ctrl.selectNone(worksheet)">
+          Select None
+        </button>
+        <button
+          type="button"
+          class="btn btn-link"
+          ng-if="$ctrl.worksheet !== 'Workbook'"
+          ng-click="$ctrl.saveConfig($event)"
+        >
+          Save
+        </button>
+      </div>
+      <uib-accordion close-others="false" ng-repeat="(group, attributes) in data.attributes">
+        <div
+          uib-accordion-group
+          class="panel-default md-whiteframe-2dp"
+          heading="{{ group }}"
+          is-open="true"
+        >
+          <div class="checkbox" ng-repeat="attribute in attributes">
+            <label>
+              <input
+                type="checkbox"
+                ng-disabled="data.required.indexOf(attribute) > -1"
+                ng-checked="$ctrl.selected[worksheet].indexOf(attribute) > -1"
+                ng-click="$ctrl.toggleSelected(worksheet, attribute)"
+              />
+              {{ attribute.column }}
+              <a ng-click="$ctrl.define(worksheet, attribute)">DEF</a>
+            </label>
+          </div>
         </div>
+      </uib-accordion>
     </div>
+  </div>
 
-    <div class="col-xs-6 attribute-definition-container" md-sticky>
-        <p>{{ $ctrl.description }}</p>
+  <div class="col-xs-6 attribute-definition-container" md-sticky>
+    <p>{{ $ctrl.description }}</p>
 
-        <fims-attribute-definition current-project="$ctrl.currentProject" attribute="$ctrl.defAttribute" sheet-name="$ctrl.defWorksheet">
-        </fims-attribute-definition>
-    </div>
-
+    <fims-attribute-definition
+      current-project="$ctrl.currentProject"
+      attribute="$ctrl.defAttribute"
+      sheet-name="$ctrl.defWorksheet"
+    >
+    </fims-attribute-definition>
+  </div>
 </div>

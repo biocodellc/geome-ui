@@ -1,15 +1,22 @@
 <!-- Navbar -->
 <md-toolbar layout="row" layout-align="start center" class="md-menu-toolbar" md-whiteframe="1">
-
   <a class="brand" ui-sref="home">
     <img src="img/geome-logo.png" alt="geome-db" />
   </a>
 
   <div flex ng-show="!$ctrl.showProjectSelector && !$ctrl.showCreateProject"></div>
-  <project-selector flex layout="row" layout-align="center center" ng-show="$ctrl.showProjectSelector"
-    user-has-project="$ctrl.currentUser && $ctrl.currentUser.userHasProject" is-authenticated="!!($ctrl.currentUser)"
-    current-project="$ctrl.currentProject" on-change="$ctrl.onProjectChange({ project: project })"
-    offset="0 12" button-class="md-primary">
+  <project-selector
+    flex
+    layout="row"
+    layout-align="center center"
+    ng-show="$ctrl.showProjectSelector"
+    user-has-project="$ctrl.currentUser && $ctrl.currentUser.userHasProject"
+    is-authenticated="!!($ctrl.currentUser)"
+    current-project="$ctrl.currentProject"
+    on-change="$ctrl.onProjectChange({ project: project })"
+    offset="0 12"
+    button-class="md-primary"
+  >
   </project-selector>
   <div flex ng-show="$ctrl.showCreateProject" layout="row" layout-align="center">
     <md-button ui-sref="create-project" class="md-primary md-raised">
@@ -24,9 +31,14 @@
   <md-divider></md-divider>
 
   <md-menu md-position-mode="right bottom" md-offset="0 12">
-    <md-button aria-label="Open user profile menu" class="md-icon-button md-primary" ng-click="console.log($mdMenu); $mdMenu.open($event)">
-      <span ng-show="$ctrl.currentUser" style="padding-right: 5px;text-transform: none">HI, {{
-        $ctrl.currentUser.username }}!</span>
+    <md-button
+      aria-label="Open user profile menu"
+      class="md-icon-button md-primary"
+      ng-click="console.log($mdMenu); $mdMenu.open($event)"
+    >
+      <span ng-show="$ctrl.currentUser" style="padding-right: 5px;text-transform: none"
+        >HI, {{ $ctrl.currentUser.username }}!</span
+      >
       <md-icon md-font-icon="fa fa-user-circle-o fa-md"></md-icon>
       <md-icon md-font-icon="fa fa-angle-down fa-sm"></md-icon>
     </md-button>
@@ -68,7 +80,11 @@
   <md-divider></md-divider>
 
   <md-menu md-position-mode="right bottom" md-offset="0 12">
-    <md-button aria-label="Open user profile menu" class="md-icon-button md-primary" ng-click="$mdMenu.open($event)">
+    <md-button
+      aria-label="Open user profile menu"
+      class="md-icon-button md-primary"
+      ng-click="$mdMenu.open($event)"
+    >
       <md-icon md-font-icon="fa fa-cog fa-md"></md-icon>
       <md-icon md-font-icon="fa fa-angle-down fa-sm"></md-icon>
     </md-button>
@@ -100,7 +116,6 @@
       </md-menu-item>
     </md-menu-content>
   </md-menu>
-
 </md-toolbar>
 
 <!-- </div> -->

@@ -3,13 +3,24 @@
     <label class="col-xs-2 control-label">Data Type(s)</label>
     <div class="col-xs-10">
       <label class="checkbox-inline" ng-repeat="type in $ctrl.availableTypes track by type.name">
-        <input type="checkbox" ng-model="$ctrl.dataTypes[type.name]" name="{{type.name}}" ng-required="type.isRequired($ctrl.dataTypes) || !$ctrl.dataTypeSelected"
-          ng-change="$ctrl.handleChange(type.name)" />
-          <span ng-if="!type.isWorksheet"><span ng-if="type.name === 'Workbook'">Excel </span>{{type.name}}</span>
-          <span ng-if="type.isWorksheet">{{type.name}} CSV</span>
+        <input
+          type="checkbox"
+          ng-model="$ctrl.dataTypes[type.name]"
+          name="{{type.name}}"
+          ng-required="type.isRequired($ctrl.dataTypes) || !$ctrl.dataTypeSelected"
+          ng-change="$ctrl.handleChange(type.name)"
+        />
+        <span ng-if="!type.isWorksheet"
+          ><span ng-if="type.name === 'Workbook'">Excel </span>{{type.name}}</span
+        >
+        <span ng-if="type.isWorksheet">{{type.name}} CSV</span>
       </label>
-      <p class="help-block col-xs-12" style="padding-left:0px;" ng-repeat="type in $ctrl.availableTypes | filter:{help: '!!'} track by type.name"
-        ng-show="$ctrl.touched && type.isRequired($ctrl.dataTypes) && !$ctrl.dataTypes[type.name]">
+      <p
+        class="help-block col-xs-12"
+        style="padding-left:0px;"
+        ng-repeat="type in $ctrl.availableTypes | filter:{help: '!!'} track by type.name"
+        ng-show="$ctrl.touched && type.isRequired($ctrl.dataTypes) && !$ctrl.dataTypes[type.name]"
+      >
         {{type.help}}
       </p>
     </div>
