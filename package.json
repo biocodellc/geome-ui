@@ -20,11 +20,7 @@
     "eslint": "eslint 'src/app/**/*.js'",
     "eslint:fix": "eslint 'src/app/**/*.js' --fix",
     "prettier": "prettier -l 'src/app/**/*' 'src/style/**/*' 'src/public/*.html'",
-    "prettier:write": "prettier --write 'src/app/**/*' 'src/style/**/*' 'src/public/*.html'",
-    "prettier:js": "prettier 'src/app/**/*.js' --single-quote --trailing-comma all -l",
-    "prettier:js:write": "prettier 'src/app/**/*.js' --single-quote --trailing-comma all --write",
-    "prettier:sass": "prettier 'src/style/**/*.scss' --parser scss -l",
-    "prettier:sass:write": "prettier 'src/style/**/*.scss' --parser scss --write"
+    "prettier:write": "prettier --write 'src/app/**/*' 'src/style/**/*' 'src/public/*.html'"
   },
   "dependencies": {
     "@uirouter/angularjs": "^1.0.22",
