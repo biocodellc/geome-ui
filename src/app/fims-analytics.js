@@ -1,4 +1,5 @@
 // https://github.com/philipwalton/analyticsjs-boilerplate/blob/master/src/analytics/multiple-trackers.js
+import { analyticsId } from './utils/config';
 
 /* global gtag */
 
@@ -34,7 +35,7 @@ const custom_map = {
  * Initializes all the analytics setup. Creates trackers and sets initial
  * values on the trackers.
  */
-export const init = analyticsId => {
+export const init = () => {
   // Initialize the command queue in case analytics.js hasn't loaded yet.
   // window.ga = window.ga || ((...args) => (ga.q = ga.q || []).push(args));
   window.dataLayer = window.dataLayer || [];
@@ -42,11 +43,32 @@ export const init = analyticsId => {
     dataLayer.push(arguments);
   };
 
-  createTracker(analyticsId);
+  createTracker();
   trackErrors();
   trackCustomDimensions();
   // sendInitialPageview();
   sendNavigationTimingMetrics();
+};
+
+export const pageChange = path => {
+  gtag('config', analyticsId, {
+    // transport_type: 'beacon',
+    // custom_map,
+    HIT_SOURCE: 'pageload',
+    page_path: path,
+  });
+};
+
+export const setUser = username => {
+  gtag('config', analyticsId, {
+    user_id: username,
+  });
+};
+
+export const setProject = projectId => {
+  gtag('config', analyticsId, {
+    project_id: projectId,
+  });
 };
 
 /**
@@ -78,7 +100,7 @@ export const trackError = (err = {}, fieldsObj = {}) => {
  * Creates the trackers and sets the default transport and tracking
  * version fields. In non-production environments it also logs hits.
  */
-const createTracker = analyticsId => {
+const createTracker = () => {
   gtag('js', new Date());
 
   // Ensures all hits are sent via `navigator.sendBeacon()`.
