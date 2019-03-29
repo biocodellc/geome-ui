@@ -51,6 +51,7 @@ export const init = () => {
 };
 
 export const pageChange = path => {
+  return;
   gtag('config', analyticsId, {
     // transport_type: 'beacon',
     // custom_map,
@@ -60,12 +61,14 @@ export const pageChange = path => {
 };
 
 export const setUser = username => {
+  return;
   gtag('config', analyticsId, {
     user_id: username,
   });
 };
 
 export const setProject = projectId => {
+  return;
   gtag('config', analyticsId, {
     project_id: projectId,
   });
