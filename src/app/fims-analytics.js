@@ -1,5 +1,7 @@
 // https://github.com/philipwalton/analyticsjs-boilerplate/blob/master/src/analytics/multiple-trackers.js
-import { analyticsId } from './utils/config';
+import config from './utils/config';
+
+const { analyticsId } = config;
 
 /* global gtag */
 
@@ -51,7 +53,6 @@ export const init = () => {
 };
 
 export const pageChange = path => {
-  return;
   gtag('config', analyticsId, {
     // transport_type: 'beacon',
     // custom_map,
@@ -61,14 +62,12 @@ export const pageChange = path => {
 };
 
 export const setUser = username => {
-  return;
   gtag('config', analyticsId, {
     user_id: username,
   });
 };
 
 export const setProject = projectId => {
-  return;
   gtag('config', analyticsId, {
     project_id: projectId,
   });
