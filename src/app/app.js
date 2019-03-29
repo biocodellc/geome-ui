@@ -68,6 +68,8 @@ import Toaster from './utils/toaster';
 import projectViewHook from './projectView.hook';
 import fimsMdDialog from './utils/fimsMdDialog';
 
+import config from './utils/config';
+
 const dependencies = [
   uirouter,
   router,
@@ -138,6 +140,12 @@ export default angular
       angular.toaster = Toaster($mdToast);
     },
   )
+  .run(() => {
+    // Load custom tracking code lazily, so it's non-blocking.
+    import('./fims-analytics.js').then(analytics =>
+      analytics.init(config.analyticsId),
+    );
+  })
   .run(routing)
   .run(run)
   .run(projectViewHook)
