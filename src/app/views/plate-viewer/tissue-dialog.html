@@ -6,7 +6,9 @@
           <th>{{d.key}}:</th>
           <td>
             <span ng-if="d.key !== 'bcid'">{{d.value}}</span>
-            <span ng-if="d.key === 'bcid'"><a target="_blank" ui-sref="record({bcid: d.value})">{{d.value}}</a></span>
+            <span ng-if="d.key === 'bcid'"
+              ><a target="_blank" ui-sref="record({bcid: d.value})">{{d.value}}</a></span
+            >
           </td>
         </tr>
       </tbody>

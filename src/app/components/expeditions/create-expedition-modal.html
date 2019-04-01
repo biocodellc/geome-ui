@@ -5,7 +5,6 @@
     <!-- </div> -->
     <!-- <div class="modal-body"> -->
     <form novalidate role="form" name="$ctrl.form" layout="column">
-
       <md-input-container flex-gt-sm>
         <label>Expedition Title</label>
         <input name="expeditionTitle" ng-model="$ctrl.expedition.expeditionTitle" required />
@@ -18,11 +17,13 @@
       <md-input-container flex-gt-sm>
         <label>Expedition Code</label>
         <input name="expeditionCode" ng-model="$ctrl.expedition.expeditionCode" required
-          ng-model-options="{ updateOn: 'default blur', debounce: {'default': 400, 'blur': 0} }"
-          valid-expedition-code project-id="$ctrl.projectId" ng-pattern=/^[a-zA-Z0-9_-]{4,50}$/ />
+        ng-model-options="{ updateOn: 'default blur', debounce: {'default': 400, 'blur': 0} }"
+        valid-expedition-code project-id="$ctrl.projectId" ng-pattern=/^[a-zA-Z0-9_-]{4,50}$/ />
         <div ng-messages="$ctrl.form.expeditionCode.$error">
-          <div ng-message="pattern"><b>Expedition Code</b> must contain only numbers, letters, or
-            underscores and be 4 to 50 characters long.</div>
+          <div ng-message="pattern">
+            <b>Expedition Code</b> must contain only numbers, letters, or underscores and be 4 to 50
+            characters long.
+          </div>
           <div ng-message="validExpeditionCode">Expedition with that code already exists</div>
         </div>
       </md-input-container>
@@ -48,29 +49,52 @@
 
       <!-- <div class="form-group" ng-repeat="p in $ctrl.metadataProperties" show-errors> -->
       <div ng-repeat="p in $ctrl.metadataProperties" layout="column">
-        <md-checkbox ng-if="p.type === 'BOOLEAN'" ng-model="$ctrl.expedition.metadata[p.name]"
-          class="md-align-top-left" name="required">{{p.name}}</md-checkbox>
+        <md-checkbox
+          ng-if="p.type === 'BOOLEAN'"
+          ng-model="$ctrl.expedition.metadata[p.name]"
+          class="md-align-top-left"
+          name="required"
+          >{{ p.name }}</md-checkbox
+        >
 
         <md-input-container ng-if="p.type !== 'BOOLEAN'">
-          <label for="expedition{{p.name}}">{{p.name}}</label>
-          <input ng-if="p.type === 'STRING'" type="text" name="expedition{{p.name}}"
-            ng-required="{{p.required}}" ng-model="$ctrl.expedition.metadata[p.name]"></input>
-          <md-select ng-if="p.type === 'LIST'" name="expedition{{p.name}}"
-            ng-model="$ctrl.expedition.metadata[p.name]" ng-required="{{p.required}}">
-            <md-option ng-repeat="value in p.values" ng-value="value">{{value}}</md-option>
+          <label for="expedition{{ p.name }}">{{ p.name }}</label>
+          <input
+            ng-if="p.type === 'STRING'"
+            type="text"
+            name="expedition{{ p.name }}"
+            ng-required="{{ p.required }}"
+            ng-model="$ctrl.expedition.metadata[p.name]"
+          />
+          <md-select
+            ng-if="p.type === 'LIST'"
+            name="expedition{{ p.name }}"
+            ng-model="$ctrl.expedition.metadata[p.name]"
+            ng-required="{{ p.required }}"
+          >
+            <md-option ng-repeat="value in p.values" ng-value="value">{{ value }}</md-option>
           </md-select>
         </md-input-container>
       </div>
-
     </form>
 
     <md-dialog-actions>
-      <md-button ng-click="$ctrl.submit()" class="md-primary md-raised" layout="row"
-        layout-align="center center" ng-disabled="$ctrl.form.$invalid">
-        <span ng-if='!$ctrl.loading'>Create</span>
-        <md-progress-circular ng-show="$ctrl.loading" md-mode="indeterminate" md-diameter="18"
-          class="md-accent md-hue-3"></md-progress-circular>
+      <md-button
+        ng-click="$ctrl.submit()"
+        class="md-primary md-raised"
+        layout="row"
+        layout-align="center center"
+        ng-disabled="$ctrl.form.$invalid"
+      >
+        <span ng-if="!$ctrl.loading">Create</span>
+        <md-progress-circular
+          ng-show="$ctrl.loading"
+          md-mode="indeterminate"
+          md-diameter="18"
+          class="md-accent md-hue-3"
+        ></md-progress-circular>
       </md-button>
       <md-button ng-click="$ctrl.$mdDialog.cancel()" class="md-primary">Cancel</md-button>
     </md-dialog-actions>
+  </md-dialog-content>
 </md-dialog>

@@ -1,49 +1,52 @@
 <md-sidenav flex class="md-sidenav-left" md-is-locked-open="true" md-whiteframe="4">
-    <md-list>
-        <md-list-item ng-click="$ctrl.$state.go('validate')">
-            <md-icon md-font-icon="fa fa-upload fa-fw"></md-icon>
-            <p ng-if="$ctrl.currentUser">Load Data</p>
-            <p ng-if="!$ctrl.currentUser">Validate Data</p>
-        </md-list-item>
-        <md-list-item ng-if="$ctrl.showPhotoUpload" ng-click="$ctrl.$state.go('photo-upload')">
-            <md-icon md-font-icon="fa fa-photo fa-fw"></md-icon>
-            <p>Upload Photos</p>
-        </md-list-item>
-        <md-list-item ng-click="$ctrl.$state.go('template')">
-            <md-icon md-font-icon="fa fa-file-excel-o fa-fw"></md-icon>
-            <p>Generate Template</p>
-        </md-list-item>
-        <md-list-item ng-if="$ctrl.showPlateViewer" ng-click="$ctrl.$state.go('plates')">
-            <md-icon md-font-icon="fa fa-table fa-fw"></md-icon>
-            <p>Plate Viewer</p>
-        </md-list-item>
-        <md-list-item ng-click="$ctrl.$state.go('dashboard')">
-            <md-icon md-font-icon="fa fa-desktop fa-fw"></md-icon>
-            <p>Project Overview</p>
-        </md-list-item>
-    </md-list>
+  <md-list>
+    <md-list-item ng-click="$ctrl.$state.go('validate')">
+      <md-icon md-font-icon="fa fa-upload fa-fw"></md-icon>
+      <p ng-if="$ctrl.currentUser">Load Data</p>
+      <p ng-if="!$ctrl.currentUser">Validate Data</p>
+    </md-list-item>
+    <md-list-item ng-if="$ctrl.showPhotoUpload" ng-click="$ctrl.$state.go('photo-upload')">
+      <md-icon md-font-icon="fa fa-photo fa-fw"></md-icon>
+      <p>Upload Photos</p>
+    </md-list-item>
+    <md-list-item ng-click="$ctrl.$state.go('template')">
+      <md-icon md-font-icon="fa fa-file-excel-o fa-fw"></md-icon>
+      <p>Generate Template</p>
+    </md-list-item>
+    <md-list-item ng-if="$ctrl.showPlateViewer" ng-click="$ctrl.$state.go('plates')">
+      <md-icon md-font-icon="fa fa-table fa-fw"></md-icon>
+      <p>Plate Viewer</p>
+    </md-list-item>
+    <md-list-item ng-click="$ctrl.$state.go('dashboard')">
+      <md-icon md-font-icon="fa fa-desktop fa-fw"></md-icon>
+      <p>Project Overview</p>
+    </md-list-item>
+  </md-list>
 
-    <md-divider></md-divider>
+  <md-divider></md-divider>
 
-    <md-list ng-show="$ctrl.currentUser">
-        <md-subheader class="md-no-sticky">Admin</md-subheader>
-        <md-list-item ng-click="$ctrl.$state.go('expeditions.list')" ng-if="$ctrl.showMyExpeditions">
-            <md-icon md-font-icon="fa fa-cog fa-fw"></md-icon>
-            <p>My Expeditions</p>
-        </md-list-item>
-        <md-list-item ng-click="$ctrl.$state.go('project')" ng-show="$ctrl.currentUser.userId === $ctrl.currentProject.user.userId">
-            <md-icon md-font-icon="fa fa-wrench fa-fw"></md-icon>
-            <p>Project Settings</p>
-        </md-list-item>
-        <md-list-item ng-click="$ctrl.$state.go('project-config')" ng-show="$ctrl.showProjectConfig">
-            <md-icon md-font-icon="fa fa-cog fa-fw"></md-icon>
-            <p>Master Configuration</p>
-        </md-list-item>
-        <md-list-item ng-click="$ctrl.$state.go('profile')">
-            <md-icon md-font-icon="fa fa-user fa-fw"></md-icon>
-            <p>My Profile</p>
-        </md-list-item>
-    </md-list>
+  <md-list ng-show="$ctrl.currentUser">
+    <md-subheader class="md-no-sticky">Admin</md-subheader>
+    <md-list-item ng-click="$ctrl.$state.go('expeditions.list')" ng-if="$ctrl.showMyExpeditions">
+      <md-icon md-font-icon="fa fa-cog fa-fw"></md-icon>
+      <p>My Expeditions</p>
+    </md-list-item>
+    <md-list-item
+      ng-click="$ctrl.$state.go('project')"
+      ng-show="$ctrl.currentUser.userId === $ctrl.currentProject.user.userId"
+    >
+      <md-icon md-font-icon="fa fa-wrench fa-fw"></md-icon>
+      <p>Project Settings</p>
+    </md-list-item>
+    <md-list-item ng-click="$ctrl.$state.go('project-config')" ng-show="$ctrl.showProjectConfig">
+      <md-icon md-font-icon="fa fa-cog fa-fw"></md-icon>
+      <p>Master Configuration</p>
+    </md-list-item>
+    <md-list-item ng-click="$ctrl.$state.go('profile')">
+      <md-icon md-font-icon="fa fa-user fa-fw"></md-icon>
+      <p>My Profile</p>
+    </md-list-item>
+  </md-list>
 
-    <md-divider ng-show="$ctrl.currentUser"></md-divider>
+  <md-divider ng-show="$ctrl.currentUser"></md-divider>
 </md-sidenav>

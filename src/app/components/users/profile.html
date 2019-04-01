@@ -1,97 +1,144 @@
 <div class="admin">
-    <div class="row profile">
-        <div class="col-xs-12">
-            <section>
-                <div class="heading">
-                    <h2 class="username">
-                        <i class="fa fa-user"></i> {{ $ctrl.user.username }}</h2>
-                </div>
-
-                <div class="settings">
-
-                    <div class="section">
-                        <h3 class="title">Profile</h3>
-
-                        <form ng-submit="$ctrl.save()">
-                            <div class="row">
-                                <div class="col-xs-12 col-md-6">
-                                    <div class="form-group" show-errors="">
-                                        <label class="control-label">First Name</label>
-                                        <input type="text" required name="firstName" class="form-control"
-                                            ng-model="$ctrl.user.firstName" />
-                                    </div>
-                                </div>
-
-                                <div class="col-xs-12 col-md-6">
-                                    <div class="form-group" show-errors>
-                                        <label class="control-label">Last Name</label>
-                                        <input type="text" required name="lastName" class="form-control"
-                                            ng-model="$ctrl.user.lastName" />
-                                    </div>
-                                </div>
-
-                                <div class="col-xs-12 col-md-6">
-                                    <div class="form-group" show-errors>
-                                        <label class="control-label">Email</label>
-                                        <input type="email" required name="email" class="form-control"
-                                            ng-model="$ctrl.user.email" />
-                                    </div>
-                                </div>
-
-                                <div class="col-xs-12 col-md-6">
-                                    <div class="form-group" show-errors>
-                                        <label class="control-label">Institution</label>
-                                        <input type="text" required name="institution" class="form-control"
-                                            ng-model="$ctrl.user.institution" />
-                                    </div>
-                                </div>
-
-                                <div class="col-xs-12">
-                                    <div class="form-group">
-                                        <input type="submit" class="btn btn-primary" value="Save" />
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="section">
-                        <h3 class="title">Change Password</h3>
-
-                        <form name="passwordForm" ng-submit="$ctrl.updatePassword()" class="form-inline change-password-form">
-                            <div class="form-group" show-errors>
-                                <label class="control-label">Current Password</label>
-                                <input type="password" required name="currentPassword" class="form-control"
-                                    ng-model="$ctrl.currentPassword" />
-                            </div>
-                            <div class="form-group" show-errors>
-                                <label class="control-label">New Password</label>
-                                <input type="password" name="newPassword" class="form-control"
-                                    ng-model="$ctrl.newPassword" password-strength
-                                    password-strength-icons />
-                                <div class="help-block" ng-if="passwordForm.newPassword.$error.passwordStrength && passwordForm.newPassword.$touched">
-                                    Password is not strong enough.</div>
-                            </div>
-
-                            <div class="form-group" show-errors>
-                                <label class="control-label">Verify Password</label>
-                                <input type="password" ng-required="true" name="verifyPassword"
-                                    class="form-control" ng-model="$ctrl.verifyPassword" compare-to="$ctrl.newPassword"
-                                    ng-disabled="passStrength < 50" />
-                                <p class="help-block" ng-if="passwordForm.verifyPassword.$error.compareTo && passwordForm.verifyPassword.$touched">
-                                    Passwords do not match.</p>
-                            </div>
-                            <div class="form-group">
-                                <input type="submit" class="btn btn-primary" ng-disabled="passwordForm.$invalid"
-                                    value="Change Password" />
-                            </div>
-
-                        </form>
-                    </div>
-
-                </div>
-
-            </section>
+  <div class="row profile">
+    <div class="col-xs-12">
+      <section>
+        <div class="heading">
+          <h2 class="username"><i class="fa fa-user"></i> {{ $ctrl.user.username }}</h2>
         </div>
+
+        <div class="settings">
+          <div class="section">
+            <h3 class="title">Profile</h3>
+
+            <form ng-submit="$ctrl.save()">
+              <div class="row">
+                <div class="col-xs-12 col-md-6">
+                  <div class="form-group" show-errors="">
+                    <label class="control-label">First Name</label>
+                    <input
+                      type="text"
+                      required
+                      name="firstName"
+                      class="form-control"
+                      ng-model="$ctrl.user.firstName"
+                    />
+                  </div>
+                </div>
+
+                <div class="col-xs-12 col-md-6">
+                  <div class="form-group" show-errors>
+                    <label class="control-label">Last Name</label>
+                    <input
+                      type="text"
+                      required
+                      name="lastName"
+                      class="form-control"
+                      ng-model="$ctrl.user.lastName"
+                    />
+                  </div>
+                </div>
+
+                <div class="col-xs-12 col-md-6">
+                  <div class="form-group" show-errors>
+                    <label class="control-label">Email</label>
+                    <input
+                      type="email"
+                      required
+                      name="email"
+                      class="form-control"
+                      ng-model="$ctrl.user.email"
+                    />
+                  </div>
+                </div>
+
+                <div class="col-xs-12 col-md-6">
+                  <div class="form-group" show-errors>
+                    <label class="control-label">Institution</label>
+                    <input
+                      type="text"
+                      required
+                      name="institution"
+                      class="form-control"
+                      ng-model="$ctrl.user.institution"
+                    />
+                  </div>
+                </div>
+
+                <div class="col-xs-12">
+                  <div class="form-group">
+                    <input type="submit" class="btn btn-primary" value="Save" />
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="section">
+            <h3 class="title">Change Password</h3>
+
+            <form
+              name="passwordForm"
+              ng-submit="$ctrl.updatePassword()"
+              class="form-inline change-password-form"
+            >
+              <div class="form-group" show-errors>
+                <label class="control-label">Current Password</label>
+                <input
+                  type="password"
+                  required
+                  name="currentPassword"
+                  class="form-control"
+                  ng-model="$ctrl.currentPassword"
+                />
+              </div>
+              <div class="form-group" show-errors>
+                <label class="control-label">New Password</label>
+                <input
+                  type="password"
+                  name="newPassword"
+                  class="form-control"
+                  ng-model="$ctrl.newPassword"
+                  password-strength
+                  password-strength-icons
+                />
+                <div
+                  class="help-block"
+                  ng-if="passwordForm.newPassword.$error.passwordStrength && passwordForm.newPassword.$touched"
+                >
+                  Password is not strong enough.
+                </div>
+              </div>
+
+              <div class="form-group" show-errors>
+                <label class="control-label">Verify Password</label>
+                <input
+                  type="password"
+                  ng-required="true"
+                  name="verifyPassword"
+                  class="form-control"
+                  ng-model="$ctrl.verifyPassword"
+                  compare-to="$ctrl.newPassword"
+                  ng-disabled="passStrength < 50"
+                />
+                <p
+                  class="help-block"
+                  ng-if="passwordForm.verifyPassword.$error.compareTo && passwordForm.verifyPassword.$touched"
+                >
+                  Passwords do not match.
+                </p>
+              </div>
+              <div class="form-group">
+                <input
+                  type="submit"
+                  class="btn btn-primary"
+                  ng-disabled="passwordForm.$invalid"
+                  value="Change Password"
+                />
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
     </div>
+  </div>
 </div>

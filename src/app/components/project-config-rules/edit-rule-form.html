@@ -11,17 +11,37 @@
 </md-input-container>
 
 <div ng-repeat="(key, value) in $ctrl.rule.metadata()" class="metadata">
-  <fims-md-rule-metadata-list ng-if="$ctrl.rule.metadataType(key) === 'list'" key="key" lists="$ctrl.lists"
-    rule="$ctrl.rule">
+  <fims-md-rule-metadata-list
+    ng-if="$ctrl.rule.metadataType(key) === 'list'"
+    key="key"
+    lists="$ctrl.lists"
+    rule="$ctrl.rule"
+  >
   </fims-md-rule-metadata-list>
-  <fims-md-rule-metadata-columns ng-if="$ctrl.rule.metadataType(key) === 'columns'" key="key" columns="$ctrl.columns"
-    rule="$ctrl.rule">
+  <fims-md-rule-metadata-columns
+    ng-if="$ctrl.rule.metadataType(key) === 'columns'"
+    key="key"
+    columns="$ctrl.columns"
+    rule="$ctrl.rule"
+  >
   </fims-md-rule-metadata-columns>
-  <fims-md-rule-metadata-column ng-if="$ctrl.rule.metadataType(key) === 'column'" key="key" columns="$ctrl.columns"
-    rule="$ctrl.rule">
+  <fims-md-rule-metadata-column
+    ng-if="$ctrl.rule.metadataType(key) === 'column'"
+    key="key"
+    columns="$ctrl.columns"
+    rule="$ctrl.rule"
+  >
   </fims-md-rule-metadata-column>
-  <fims-md-rule-metadata-checkbox ng-if="$ctrl.rule.metadataType(key) === 'boolean'" key="key" rule="$ctrl.rule">
+  <fims-md-rule-metadata-checkbox
+    ng-if="$ctrl.rule.metadataType(key) === 'boolean'"
+    key="key"
+    rule="$ctrl.rule"
+  >
   </fims-md-rule-metadata-checkbox>
-  <fims-md-rule-metadata-string ng-if="$ctrl.rule.metadataType(key) === 'string'" key="key" rule="$ctrl.rule">
+  <fims-md-rule-metadata-string
+    ng-if="$ctrl.rule.metadataType(key) === 'string'"
+    key="key"
+    rule="$ctrl.rule"
+  >
   </fims-md-rule-metadata-string>
 </div>

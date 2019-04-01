@@ -4,33 +4,58 @@
       <div class="form-group clearfix">
         <div class="col-xs-9">
           <label>Title</label>
-          <input type="text" required class="form-control" ng-model="$ctrl.expedition.expeditionTitle" />
+          <input
+            type="text"
+            required
+            class="form-control"
+            ng-model="$ctrl.expedition.expeditionTitle"
+          />
         </div>
       </div>
 
       <div class="form-group clearfix">
         <div class="col-xs-4">
           <label>Visibility</label>
-          <select ng-model="$ctrl.expedition.visibility" class="form-control" required ng-options="v for v in $ctrl.visibilities"></select>
+          <select
+            ng-model="$ctrl.expedition.visibility"
+            class="form-control"
+            required
+            ng-options="v for v in $ctrl.visibilities"
+          ></select>
         </div>
       </div>
     </fieldset>
 
     <fieldset ng-show="$ctrl.hasMetadata">
-      <div class="form-group clearfix" ng-repeat="p in $ctrl.currentProject.config.expeditionMetadataProperties"
-        show-errors>
+      <div
+        class="form-group clearfix"
+        ng-repeat="p in $ctrl.currentProject.config.expeditionMetadataProperties"
+        show-errors
+      >
         <div class="checkbox col-xs-9" ng-if="p.type === 'BOOLEAN'">
           <label>
-            <input type="checkbox" ng-model="$ctrl.expedition.metadata[p.name]"> {{p.name}}
+            <input type="checkbox" ng-model="$ctrl.expedition.metadata[p.name]" /> {{ p.name }}
           </label>
         </div>
         <div class="col-xs-9" ng-if="p.type !== 'BOOLEAN'">
-          <label for="expedition{{p.name}}">{{p.name}}</label>
-          <input ng-if="p.type === 'STRING'" type="text" class="form-control" name="expedition{{p.name}}" ng-required="{{p.required}}" ng-model="$ctrl.expedition.metadata[p.name]"></input>
-          <select ng-if="p.type === 'LIST'" ng-model="$ctrl.expedition.metadata[p.name]" class="form-control" ng-required="{{p.required}}" ng-options="v for v in p.values"></select>
+          <label for="expedition{{ p.name }}">{{ p.name }}</label>
+          <input
+            ng-if="p.type === 'STRING'"
+            type="text"
+            class="form-control"
+            name="expedition{{ p.name }}"
+            ng-required="{{ p.required }}"
+            ng-model="$ctrl.expedition.metadata[p.name]"
+          />
+          <select
+            ng-if="p.type === 'LIST'"
+            ng-model="$ctrl.expedition.metadata[p.name]"
+            class="form-control"
+            ng-required="{{ p.required }}"
+            ng-options="v for v in p.values"
+          ></select>
         </div>
       </div>
-
     </fieldset>
 
     <!--<fieldset>-->
@@ -58,7 +83,12 @@
     <fieldset>
       <div class="form-group clearfix">
         <div class="col-xs-12">
-          <button class="btn btn-primary" ng-click="$ctrl.onUpdate({ expedition: $ctrl.expedition })">Save</button>
+          <button
+            class="btn btn-primary"
+            ng-click="$ctrl.onUpdate({ expedition: $ctrl.expedition })"
+          >
+            Save
+          </button>
         </div>
       </div>
     </fieldset>
@@ -71,9 +101,12 @@
           <strong>Delete this expedition</strong>
         </p>
         <p class="small">
-          <span class="text-danger">Warning! This will delete all records associated with this expeditions.
-          </span> Please
-          <a href ng-click="$ctrl.onExportData()">export your data</a> before deleting this expedition.</p>
+          <span class="text-danger"
+            >Warning! This will delete all records associated with this expeditions.
+          </span>
+          Please <a href ng-click="$ctrl.onExportData()">export your data</a> before deleting this
+          expedition.
+        </p>
       </div>
       <div class="col-xs-3">
         <div>

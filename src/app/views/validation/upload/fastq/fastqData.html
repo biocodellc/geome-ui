@@ -6,18 +6,41 @@
       <div class="input-group">
         <label class="input-group-btn">
           <span class="btn btn-default form-control">Browse &hellip;</span>
-          <input type="file" style="display:none;" id="fastq" name="fastqFilenames" class="form-control" ngf-select
-            ngf-model-invalid="invalidFastqFile" ngf-pattern="'.txt'" required ng-model="$ctrl.data.file"
-            ng-change="$ctrl.dataChanged()" />
+          <input
+            type="file"
+            style="display:none;"
+            id="fastq"
+            name="fastqFilenames"
+            class="form-control"
+            ngf-select
+            ngf-model-invalid="invalidFastqFile"
+            ngf-pattern="'.txt'"
+            required
+            ng-model="$ctrl.data.file"
+            ng-change="$ctrl.dataChanged()"
+          />
         </label>
-        <input type="text" class="form-control" ng-value="$ctrl.data.file.name || invalidFastqFile.name" readonly/>
+        <input
+          type="text"
+          class="form-control"
+          ng-value="$ctrl.data.file.name || invalidFastqFile.name"
+          readonly
+        />
       </div>
       <p class="small help-block">Upload your list of fastq filenames (1 per line) here</p>
-      <p class="small help-block col-sm-offset-3" ng-show="$ctrl.form.fastqFileNames.$error.pattern">
-        File must be a .txt file</p>
+      <p
+        class="small help-block col-sm-offset-3"
+        ng-show="$ctrl.form.fastqFileNames.$error.pattern"
+      >
+        File must be a .txt file
+      </p>
     </div>
     <md-button class="md-icon-button sequence-help-link md-popover-button">
-      <md-popover md-popover-class="fastq-help-filenames" md-popover-group="fastqHelp" md-direction="right">
+      <md-popover
+        md-popover-class="fastq-help-filenames"
+        md-popover-group="fastqHelp"
+        md-direction="right"
+      >
         <div ng-include="'fastq-filenames.popover.html'"></div>
       </md-popover>
       <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
@@ -30,21 +53,45 @@
       <div class="col-sm-6">
         <div class="input-group">
           <span class="input-group-addon">
-            <input type="radio" ng-model="$ctrl.data.libraryLayout" ng-required="!$ctrl.data.libraryLayout" name="single"
-              ng-change="$ctrl.dataChanged()" value="single" />
+            <input
+              type="radio"
+              ng-model="$ctrl.data.libraryLayout"
+              ng-required="!$ctrl.data.libraryLayout"
+              name="single"
+              ng-change="$ctrl.dataChanged()"
+              value="single"
+            />
           </span>
-          <input type="text" class="form-control" value="Single End" name="single" style="background-color: #fff;"
-            readonly/>
+          <input
+            type="text"
+            class="form-control"
+            value="Single End"
+            name="single"
+            style="background-color: #fff;"
+            readonly
+          />
         </div>
       </div>
       <div class="col-sm-6">
         <div class="input-group">
           <span class="input-group-addon">
-            <input type="radio" ng-model="$ctrl.data.libraryLayout" ng-required="!$ctrl.fastqMetadata.libraryLayout"
-              ng-change="$ctrl.dataChanged()" name="paired" value="paired" />
+            <input
+              type="radio"
+              ng-model="$ctrl.data.libraryLayout"
+              ng-required="!$ctrl.fastqMetadata.libraryLayout"
+              ng-change="$ctrl.dataChanged()"
+              name="paired"
+              value="paired"
+            />
           </span>
-          <input type="text" class="form-control" value="Paired End" name="paired" style="background-color: #fff;"
-            readonly/>
+          <input
+            type="text"
+            class="form-control"
+            value="Paired End"
+            name="paired"
+            style="background-color: #fff;"
+            readonly
+          />
         </div>
       </div>
     </div>
@@ -53,15 +100,24 @@
   <div class="form-group" show-errors>
     <label for="libraryStrategy" class="col-sm-3 control-label">Library Strategy</label>
     <div class="col-sm-9 pull-left">
-      <select class="form-control" name="libraryStrategy" ng-model="$ctrl.data.libraryStrategy" ng-options="field.value as field.value for field in $ctrl.libraryStrategies"
-        ng-change="$ctrl.dataChanged()" required>
+      <select
+        class="form-control"
+        name="libraryStrategy"
+        ng-model="$ctrl.data.libraryStrategy"
+        ng-options="field.value as field.value for field in $ctrl.libraryStrategies"
+        ng-change="$ctrl.dataChanged()"
+        required
+      >
         <option value="">-- Select a Library Strategy --</option>
       </select>
       <p class="small help-block">
         For instance if uploading using RADSeq data this is likely to be “WGS”
       </p>
     </div>
-    <md-button class="md-icon-button sequence-help-link md-popover-button" ng-click="list=$ctrl.libraryStrategies; name='Strategy'">
+    <md-button
+      class="md-icon-button sequence-help-link md-popover-button"
+      ng-click="list=$ctrl.libraryStrategies; name='Strategy'"
+    >
       <md-popover md-popover-class="fastq-help" md-popover-group="fastqHelp" md-direction="bottom">
         <div ng-include="'fastq-help.popover.html'"></div>
       </md-popover>
@@ -72,12 +128,21 @@
   <div class="form-group" show-errors>
     <label for="librarySource" class="col-sm-3 control-label">Library Source</label>
     <div class="col-sm-9">
-      <select class="form-control" name="librarySource" ng-model="$ctrl.data.librarySource" ng-options="field.value as field.value for field in $ctrl.librarySources"
-        ng-change="$ctrl.dataChanged()" required>
+      <select
+        class="form-control"
+        name="librarySource"
+        ng-model="$ctrl.data.librarySource"
+        ng-options="field.value as field.value for field in $ctrl.librarySources"
+        ng-change="$ctrl.dataChanged()"
+        required
+      >
         <option value="">-- Select a Library Source --</option>
       </select>
     </div>
-    <md-button class="md-icon-button sequence-help-link md-popover-button" ng-click="list=$ctrl.librarySources; name='Source'">
+    <md-button
+      class="md-icon-button sequence-help-link md-popover-button"
+      ng-click="list=$ctrl.librarySources; name='Source'"
+    >
       <md-popover md-popover-class="fastq-help" md-popover-group="fastqHelp" md-direction="bottom">
         <div ng-include="'fastq-help.popover.html'"></div>
       </md-popover>
@@ -88,15 +153,24 @@
   <div class="form-group" show-errors>
     <label for="librarySelection" class="col-sm-3 control-label">Library Selection</label>
     <div class="col-sm-9">
-      <select class="form-control" name="librarySelection" ng-model="$ctrl.data.librarySelection" ng-options="field.value as field.value for field in $ctrl.librarySelections"
-        ng-change="$ctrl.dataChanged()" required>
+      <select
+        class="form-control"
+        name="librarySelection"
+        ng-model="$ctrl.data.librarySelection"
+        ng-options="field.value as field.value for field in $ctrl.librarySelections"
+        ng-change="$ctrl.dataChanged()"
+        required
+      >
         <option value="">-- Select a Library Selection --</option>
       </select>
       <p class="small help-block">
         For instance if uploading using RADSeq data this is likely to be “Reduced Representation”
       </p>
     </div>
-    <md-button class="md-icon-button sequence-help-link md-popover-button" ng-click="list=$ctrl.librarySelections; name='Selection'">
+    <md-button
+      class="md-icon-button sequence-help-link md-popover-button"
+      ng-click="list=$ctrl.librarySelections; name='Selection'"
+    >
       <md-popover md-popover-class="fastq-help" md-popover-group="fastqHelp" md-direction="bottom">
         <div ng-include="'fastq-help.popover.html'"></div>
       </md-popover>
@@ -107,8 +181,14 @@
   <div class="form-group" show-errors>
     <label for="platform" class="col-sm-3 control-label">Platform</label>
     <div class="col-sm-9">
-      <select class="form-control" name="platform" ng-model="$ctrl.data.platform" ng-options="platform as platform for (platform, list) in $ctrl.platforms"
-        ng-change="$ctrl.dataChanged()" required>
+      <select
+        class="form-control"
+        name="platform"
+        ng-model="$ctrl.data.platform"
+        ng-options="platform as platform for (platform, list) in $ctrl.platforms"
+        ng-change="$ctrl.dataChanged()"
+        required
+      >
         <option value="">-- Select a Platform --</option>
       </select>
     </div>
@@ -117,19 +197,33 @@
   <div class="form-group" show-errors>
     <label for="instrumentModel" class="col-sm-3 control-label">Instrument Model</label>
     <div class="col-sm-9">
-      <select class="form-control" name="instrumentModel" ng-model="$ctrl.data.instrumentModel" ng-options="instrumentModel for instrumentModel in $ctrl.platforms[$ctrl.data.platform]"
-        ng-change="$ctrl.dataChanged()" required>
+      <select
+        class="form-control"
+        name="instrumentModel"
+        ng-model="$ctrl.data.instrumentModel"
+        ng-options="instrumentModel for instrumentModel in $ctrl.platforms[$ctrl.data.platform]"
+        ng-change="$ctrl.dataChanged()"
+        required
+      >
         <option value="">-- Select an Instrument Model --</option>
       </select>
     </div>
   </div>
 
   <div class="form-group" show-errors>
-    <label for="designDescription" class="col-sm-3 control-label">Protocol citation or website
+    <label for="designDescription" class="col-sm-3 control-label"
+      >Protocol citation or website
     </label>
     <div class="col-sm-9">
-      <input type="text" class="form-control" id="designDescription" name="designDescription" ng-model="$ctrl.data.designDescription"
-        ng-change="$ctrl.dataChanged()" required/>
+      <input
+        type="text"
+        class="form-control"
+        id="designDescription"
+        name="designDescription"
+        ng-model="$ctrl.data.designDescription"
+        ng-change="$ctrl.dataChanged()"
+        required
+      />
     </div>
   </div>
 </div>
@@ -141,20 +235,25 @@
     </li>
     <li>GeOMe will accept single and paired end read data</li>
     <li>Each fastq file should contain reads from a single individual</li>
-    <li>Names of fastq files must match the materialsampleIDs in the metadata file up to the file extension
-      (e.g., R1.fq.gz, .1.fq, etc)
+    <li>
+      Names of fastq files must match the materialsampleIDs in the metadata file up to the file
+      extension (e.g., R1.fq.gz, .1.fq, etc)
     </li>
-    <li>The actual fastq sequence files will not be uploaded here and stored on the GeOMe system. Instead
-      the metadata file will be uploaded and stored here.
+    <li>
+      The actual fastq sequence files will not be uploaded here and stored on the GeOMe system.
+      Instead the metadata file will be uploaded and stored here.
     </li>
-    <li>For validation purposes a text file of the fastq file names (one name per line and including the
-      file extension) will be uploaded here. If you are uploading PE data there should be two file names
-      per sample. This process ensures that required fields are complete, that each materialsampleID
-      is unique, and that the materialsampleIDs match the fastq file names.
+    <li>
+      For validation purposes a text file of the fastq file names (one name per line and including
+      the file extension) will be uploaded here. If you are uploading PE data there should be two
+      file names per sample. This process ensures that required fields are complete, that each
+      materialsampleID is unique, and that the materialsampleIDs match the fastq file names.
     </li>
-    <li>Once uploading is complete the GeOMe system will produce two files (SRA metadata and BioSample attributes
-      files) that will ease the upload process to NCBI’s Sequence Read Archive (SRA). When these files
-      are downloaded a set of simple instructions are included that will speed your SRA submission.
+    <li>
+      Once uploading is complete the GeOMe system will produce two files (SRA metadata and BioSample
+      attributes files) that will ease the upload process to NCBI’s Sequence Read Archive (SRA).
+      When these files are downloaded a set of simple instructions are included that will speed your
+      SRA submission.
     </li>
   </ul>
 </div>
@@ -164,35 +263,35 @@ help templates
  ---------------------------->
 
 <script type="text/ng-template" id="fastq-help.popover.html">
-<div>
-  <table class="table table-condensed">
-    <thead>
-      <tr>
-        <th>{{name}}</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr ng-repeat="field in list track by field.value">
-        <td>{{ ::field.value }}</td>
-        <td>{{ ::field.definition}}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+  <div>
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th>{{name}}</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="field in list track by field.value">
+          <td>{{ ::field.value }}</td>
+          <td>{{ ::field.definition}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </script>
 
 <script type="text/ng-template" id="fastq-filenames.popover.html">
-<div>
-  <h4>Ex. File Contents</h4>
-  <md-divider></md-divider>
-    <ol class="list-unstyled">
-        <li>Lutkas001.R1.fq.gz</li>
-        <li>Lutkas001.R2.fq.gz</li>
-        <li>Lutkas012.R1.fq.gz</li>
-        <li>Lutkas012.R2.fq.gz</li>
-        <li>Lutkas37.R1.fq.gz</li>
-        <li>Lutkas37.R2.fq.gz</li>
-    </ol>
-</div>
+  <div>
+    <h4>Ex. File Contents</h4>
+    <md-divider></md-divider>
+      <ol class="list-unstyled">
+          <li>Lutkas001.R1.fq.gz</li>
+          <li>Lutkas001.R2.fq.gz</li>
+          <li>Lutkas012.R1.fq.gz</li>
+          <li>Lutkas012.R2.fq.gz</li>
+          <li>Lutkas37.R1.fq.gz</li>
+          <li>Lutkas37.R2.fq.gz</li>
+      </ol>
+  </div>
 </script>

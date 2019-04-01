@@ -66,6 +66,7 @@ import projectSelectorDialog from './components/project-selector-dialog';
 import catcher from './utils/exceptions';
 import Toaster from './utils/toaster';
 import projectViewHook from './projectView.hook';
+import analyticsHook from './analytics.hook';
 import fimsMdDialog from './utils/fimsMdDialog';
 
 const dependencies = [
@@ -133,11 +134,16 @@ if (module.hot) {
 export default angular
   .module('biscicolApp', dependencies)
   .component('app', app)
+  .run(analyticsHook)
   .run(
     /* ngInject */ $mdToast => {
       angular.toaster = Toaster($mdToast);
     },
   )
+  .run(() => {
+    // Load custom tracking code lazily, so it's non-blocking.
+    import('./fims-analytics.js').then(analytics => analytics.init());
+  })
   .run(routing)
   .run(run)
   .run(projectViewHook)

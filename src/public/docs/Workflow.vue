@@ -4,10 +4,19 @@
 <!-- Do Not Remove: Saved date Sat Jun 14 09:58:48 PDT 2014 by jdeck on platform Mac OS X 10.8.5 in JVM 1.6.0_65-b14-462-11M4609 -->
 <!-- Do Not Remove: Saving version @(#)VUE: built May 23 2013 at 2146 by tomadm on Linux 2.6.18-348.2.1.el5 i386 JVM 1.7.0_21-b11(bits=32) -->
 <?xml version="1.0" encoding="US-ASCII"?>
-<LW-MAP xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="none" ID="0" label="Workflow.vue"
-    created="1397689845223" x="0.0" y="0.0" width="1.4E-45"
-    height="1.4E-45" strokeWidth="0.0" autoSized="false">
+<LW-MAP
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="none"
+  ID="0"
+  label="Workflow.vue"
+  created="1397689845223"
+  x="0.0"
+  y="0.0"
+  width="1.4E-45"
+  height="1.4E-45"
+  strokeWidth="0.0"
+  autoSized="false"
+>
     <resource referenceCreated="1402765128188" size="19867"
         spec="/Users/jdeck/IdeaProjects/biocode-fims/web/docs/Workflow.vue"
         type="1" xsi:type="URLResource">

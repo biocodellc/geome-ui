@@ -1,38 +1,71 @@
 <div class="col-sm-8">
-    <div class="form-group" show-errors="{trigger: 'change'}">
-        <label ng-if="$ctrl.worksheet === 'Workbook'" for="{{$ctrl.worksheet}}Data" class="col-sm-3 control-label">Excel {{$ctrl.worksheet}}</label>
-        <label ng-if="$ctrl.worksheet !== 'Workbook'" for="{{$ctrl.worksheet}}Data" class="col-sm-3 control-label">{{$ctrl.worksheet}} CSV</label>
-        <div class="col-sm-9">
-            <div class="input-group">
-                <label class="input-group-btn">
-                    <span class="btn btn-default form-control">Browse &hellip;</span>
-                    <input type="file" style="display:none;" name="{{$ctrl.worksheet}}Data" class="form-control" ngf-select="$ctrl.handleSelect($files)"
-                        ngf-pattern="{{$ctrl.fileTypes()}}" required ngf-model-invalid="invalidFile" ng-model="$ctrl.file"
-                    />
-                </label>
-                <input type="text" class="form-control" ng-value="$ctrl.file.name || invalidFile.name" readonly/>
-            </div>
-            <p class="help-block" ng-show="!$ctrl.valid">
-                File must have one of the following extensions: {{ $ctrl.fileTypes() }}</p>
-        </div>
+  <div class="form-group" show-errors="{trigger: 'change'}">
+    <label
+      ng-if="$ctrl.worksheet === 'Workbook'"
+      for="{{$ctrl.worksheet}}Data"
+      class="col-sm-3 control-label"
+      >Excel {{$ctrl.worksheet}}</label
+    >
+    <label
+      ng-if="$ctrl.worksheet !== 'Workbook'"
+      for="{{$ctrl.worksheet}}Data"
+      class="col-sm-3 control-label"
+      >{{$ctrl.worksheet}} CSV</label
+    >
+    <div class="col-sm-9">
+      <div class="input-group">
+        <label class="input-group-btn">
+          <span class="btn btn-default form-control">Browse &hellip;</span>
+          <input
+            type="file"
+            style="display:none;"
+            name="{{$ctrl.worksheet}}Data"
+            class="form-control"
+            ngf-select="$ctrl.handleSelect($files)"
+            ngf-pattern="{{$ctrl.fileTypes()}}"
+            required
+            ngf-model-invalid="invalidFile"
+            ng-model="$ctrl.file"
+          />
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          ng-value="$ctrl.file.name || invalidFile.name"
+          readonly
+        />
+      </div>
+      <p class="help-block" ng-show="!$ctrl.valid">
+        File must have one of the following extensions: {{ $ctrl.fileTypes() }}
+      </p>
     </div>
+  </div>
 </div>
 <div class="col-sm-8" ng-if="$ctrl.canReload">
-    <div class="form-group" show-errors>
-        <label class="col-xs-3 control-label"></label>
-        <div class="col-xs-9">
-            <label class="checkbox-inline">
-                <input type="checkbox" ng-model="$ctrl.reload" name="{{$ctrl.worksheet}}_reload" ng-change="$ctrl.handleChange()"
-                /> Reload Data
-                <md-button class="md-icon-button help-link md-popover-button">
-                    <md-popover md-popover-class="fastq-help-filenames" md-popover-group="reloadHelp" md-direction="right">
-                        <div ng-include="'reload-help.popover.html'"></div>
-                    </md-popover>
-                    <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
-                </md-button>
-            </label>
-        </div>
+  <div class="form-group" show-errors>
+    <label class="col-xs-3 control-label"></label>
+    <div class="col-xs-9">
+      <label class="checkbox-inline">
+        <input
+          type="checkbox"
+          ng-model="$ctrl.reload"
+          name="{{$ctrl.worksheet}}_reload"
+          ng-change="$ctrl.handleChange()"
+        />
+        Reload Data
+        <md-button class="md-icon-button help-link md-popover-button">
+          <md-popover
+            md-popover-class="fastq-help-filenames"
+            md-popover-group="reloadHelp"
+            md-direction="right"
+          >
+            <div ng-include="'reload-help.popover.html'"></div>
+          </md-popover>
+          <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
+        </md-button>
+      </label>
     </div>
+  </div>
 </div>
 
 <!----------------------------
@@ -40,8 +73,8 @@ help templates
  ---------------------------->
 
 <script type="text/ng-template" id="reload-help.popover.html">
-    <div>
-        <p ng-if="$ctrl.worksheet === 'Workbook'">For each data worksheet found in this workbook. All existing data will be removed and replaced with the data in the workbook. Data worksheets not found in this workbook will not be removed.</p>
-        <p ng-if="$ctrl.worksheet !== 'Workbook'">All existing {{$ctrl.worksheet.replace(' Worksheet', '')}} data will be removed and replaced with the data in this worksheet</p>
-    </div>
+  <div>
+      <p ng-if="$ctrl.worksheet === 'Workbook'">For each data worksheet found in this workbook. All existing data will be removed and replaced with the data in the workbook. Data worksheets not found in this workbook will not be removed.</p>
+      <p ng-if="$ctrl.worksheet !== 'Workbook'">All existing {{$ctrl.worksheet.replace(' Worksheet', '')}} data will be removed and replaced with the data in this worksheet</p>
+  </div>
 </script>
