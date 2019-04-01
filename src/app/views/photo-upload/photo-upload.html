@@ -4,18 +4,34 @@
 
     <div class="information">
       <p>
-        <strong
-          >The GeOMe bulk image loader accepts a directory of images zipped into a single
-          file.</strong
-        >
+        <strong>About Photo Uploading in GeOMe</strong>
+        <br>There are two primary methods for uploading photos to GeOME:
       </p>
 
       <p>
-        The max file size is 2GB. If you need to upload more then that, split the upload into
-        multiple uploads.
+        <strong>OPTION 1: Upload metadata that references images that are already online.</strong>
       </p>
 
-      <p>When uploading images, you have <strong>the following options:</strong></p>
+      <p>
+      This option is used when your photos are already accessible online.  You simply need to load a CSV file telling GeOMe where these photos are located along with relevant metadata.  Goto <i>Workbench->Load Data</i> and  select the <i>sample_photos_csv</i>or the <i>event_photos_csv</i> option.  
+      <ol>
+      <li>You can upload photos on a project by project basis</li>
+      <li>If your photos span multiple expeditions, select “multiple expeditions” in the expedition code option and specify the expeditionCode in the upload file.</li>
+      <li>Fields to include in the CSV file:</li>
+      <ul>
+	<li><u>photoID</u> (May be required.  A good idea to specify this so you can update photos using the ID later.).</li>
+	<li><u>originalUrl</u> (required. URL location of photo that GeOMe will obtain)</li>
+	<li><u>expeditionCode</u> (required if photos span multiple expeditions)</li>
+	<li><u>other fields</u> (see photo fields under <i>"Generate Template"</i>)</li>
+      </ul>
+      </ol>
+      </p>
+
+      <p>
+        <strong>OPTION 2: Upload photos from your hard-drive.</strong>
+      </p>
+
+      <p>The GeOMe bulk image loader accepts a directory of images zipped into a single file.  The max file size is 2GB. If you need to upload more then that, split the upload into multiple uploads.  When uploading images, you have the following options:</p>
       <ol>
         <li>
           Name each file according to the following template. Each file will then be parsed and
@@ -27,18 +43,18 @@
             If you select "Auto-Generate Ids" below, the parsed 'imgIdentifier' will be ignored.
           </p>
         </ul>
-        <li>Include a metadata.csv file with the following columns</li>
+        <li>Include a <i>metadata.csv</i> with the following fields:</li>
         <ul>
-          <li>parentIdentifier* - the identifier of the record to attach the photo to</li>
-          <li>fileName* - the name of the file in the directory</li>
-          <li ng-if="!$ctrl.entity">
-            any additional metadata - this is project specific. 1 entry per column.
-          </li>
-          <li ng-repeat="a in $ctrl.entity.additionalMetadata track by a.column">
-            {{a.column}} (optional) - {{a.description}}
-          </li>
+          <li><u>parentIdentifier</u> (required - the identifier of the record to attach the photo to)</li>
+          <li><u>fileName</u> (required -the name of the file in the directory)</li>
+	  <li><u>expeditionCode</u> (required if photos span multiple expeditions)</li>
+	  <li><u>other fields</u> (see photo fields under <i>"Generate Template"</i>)</li>
         </ul>
       </ol>
+
+      <p>
+      Once you upload it may take several minutes to an hour or more for all photos to appear. 
+      </p>
     </div>
 
     <div layout="row" layout-xs="column" layout-sm="column" layout-align="center center">
