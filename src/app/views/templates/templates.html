@@ -66,22 +66,42 @@
 
 <div class="row">
   <div class="col-xs-6">
+    <!-- if workbook is selected, display select all and select none for all worksheets. -->
     <div ng-repeat="(worksheet, data) in $ctrl.getAttributes()">
-      <h3 ng-if="$ctrl.worksheet === 'Workbook'">{{ worksheet }} Worksheet</h3>
+      <div ng-if="$ctrl.worksheet === 'Workbook'">
+        <h3>Workbook</h3>
+        <div class="btn-group-xs">
+          <button
+            type="button"
+            class="btn btn-link"
+            ng-click="$ctrl.selectAll('Workbook')"
+          >
+            Select ALL in Workbook
+          </button>
+          <button
+            type="button"
+            class="btn btn-link"
+            ng-click="$ctrl.selectNone('Workbook')"
+          >
+            Select NONE in Workbook
+          </button>
+        </div>
+        <h3>{{ worksheet }} Worksheet</h3>
+      </div>
       <div class="btn-group btn-group-xs">
         <button
           type="button"
           class="btn btn-link"
           ng-click="$ctrl.selectAll(worksheet)"
         >
-          Select ALL
+          Select all {{ worksheet }}
         </button>
         <button
           type="button"
           class="btn btn-link"
           ng-click="$ctrl.selectNone(worksheet)"
         >
-          Select None
+          Select None for {{ worksheet }}
         </button>
         <button
           type="button"
@@ -92,30 +112,19 @@
           Save
         </button>
       </div>
-      <uib-accordion
-        close-others="false"
-      >
-      <div 
-	  uib-accordion-group
+      <uib-accordion close-others="false">
+        <div
+          uib-accordion-group
           class="panel-default md-whiteframe-2dp"
           is-open="true"
-      >  
-      <div 
-	  ng-if="$ctrl.worksheet === 'Workbook'" 
-	  uib-accordion-heading
-      >
-      {{ worksheet }} Worksheet Minimum Information Standard Items  
-      </div>
-      <div 
-	  ng-if="$ctrl.worksheet !== 'Workbook'" 
-          uib-accordion-heading
-      >
-      Minimum Information Standard Items  
-      </div>
-          <div
-            class="checkbox"
-            ng-repeat="attribute in data.required"
-          >
+        >
+          <div ng-if="$ctrl.worksheet === 'Workbook'" uib-accordion-heading>
+            {{ worksheet }} Worksheet Minimum Information Standard Items
+          </div>
+          <div ng-if="$ctrl.worksheet !== 'Workbook'" uib-accordion-heading>
+            Minimum Information Standard Items
+          </div>
+          <div class="checkbox" ng-repeat="attribute in data.required">
             <label>
               <input
                 type="checkbox"
@@ -127,33 +136,29 @@
               <a ng-click="$ctrl.define(worksheet, attribute)">DEF</a>
             </label>
           </div>
-      </div>
-      <div
-        ng-repeat="(group, attributes) in data.attributes"
-      >
-        <div
-          uib-accordion-group
-          class="panel-default md-whiteframe-2dp"
-          heading="{{ group }}"
-          is-open="true"
-        >
+        </div>
+        <div ng-repeat="(group, attributes) in data.attributes">
           <div
-            class="checkbox"
-            ng-repeat="attribute in attributes | orderBy: 'column'"
+            uib-accordion-group
+            class="panel-default md-whiteframe-2dp"
+            heading="{{ group }}"
+            is-open="true"
           >
-            <label
-                ng-hide="data.required.indexOf(attribute) > -1"
-	     >
-              <input
-                type="checkbox"
-                ng-disabled="data.required.indexOf(attribute) > -1"
-                ng-checked="$ctrl.selected[worksheet].indexOf(attribute) > -1"
-                ng-click="$ctrl.toggleSelected(worksheet, attribute)"
-              />
-              {{ attribute.column }}
-              <a ng-click="$ctrl.define(worksheet, attribute)">DEF</a>
-            </label>
-          </div>
+            <div
+              class="checkbox"
+              ng-repeat="attribute in attributes | orderBy: 'column'"
+            >
+              <label ng-hide="data.required.indexOf(attribute) > -1">
+                <input
+                  type="checkbox"
+                  ng-disabled="data.required.indexOf(attribute) > -1"
+                  ng-checked="$ctrl.selected[worksheet].indexOf(attribute) > -1"
+                  ng-click="$ctrl.toggleSelected(worksheet, attribute)"
+                />
+                {{ attribute.column }}
+                <a ng-click="$ctrl.define(worksheet, attribute)">DEF</a>
+              </label>
+            </div>
           </div>
         </div>
       </uib-accordion>
