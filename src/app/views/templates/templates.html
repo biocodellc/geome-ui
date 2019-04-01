@@ -1,11 +1,6 @@
 <h2 class="page-header">Generate Template</h2>
 
-<div
-  layout="row"
-  class="loading-overlay"
-  ng-show="$ctrl.loading"
-  layout-align="center center"
->
+<div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
   <md-progress-circular md-mode="indeterminate"></md-progress-circular>
 </div>
 
@@ -40,10 +35,7 @@
           </select>
 
           <div class="input-group-btn" ng-show="$ctrl.canRemoveTemplate()">
-            <button
-              class="btn btn-danger"
-              ng-click="$ctrl.removeConfig($event)"
-            >
+            <button class="btn btn-danger" ng-click="$ctrl.removeConfig($event)">
               <i class="fa fa-trash fa-fw"></i>
             </button>
           </div>
@@ -70,36 +62,20 @@
       <div ng-if="$ctrl.worksheet === 'Workbook'">
         <h3>Workbook</h3>
         <div class="btn-group-xs">
-          <button
-            type="button"
-            class="btn btn-link"
-            ng-click="$ctrl.selectAll('Workbook')"
-          >
+          <button type="button" class="btn btn-link" ng-click="$ctrl.selectAll('Workbook')">
             Select ALL in Workbook
           </button>
-          <button
-            type="button"
-            class="btn btn-link"
-            ng-click="$ctrl.selectNone('Workbook')"
-          >
+          <button type="button" class="btn btn-link" ng-click="$ctrl.selectNone('Workbook')">
             Select NONE in Workbook
           </button>
         </div>
         <h3>{{ worksheet }} Worksheet</h3>
       </div>
       <div class="btn-group btn-group-xs">
-        <button
-          type="button"
-          class="btn btn-link"
-          ng-click="$ctrl.selectAll(worksheet)"
-        >
+        <button type="button" class="btn btn-link" ng-click="$ctrl.selectAll(worksheet)">
           Select all {{ worksheet }}
         </button>
-        <button
-          type="button"
-          class="btn btn-link"
-          ng-click="$ctrl.selectNone(worksheet)"
-        >
+        <button type="button" class="btn btn-link" ng-click="$ctrl.selectNone(worksheet)">
           Select None for {{ worksheet }}
         </button>
         <button
@@ -112,11 +88,7 @@
         </button>
       </div>
       <uib-accordion close-others="false">
-        <div
-          uib-accordion-group
-          class="panel-default md-whiteframe-2dp"
-          is-open="true"
-        >
+        <div uib-accordion-group class="panel-default md-whiteframe-2dp" is-open="true">
           <div ng-if="$ctrl.worksheet === 'Workbook'" uib-accordion-heading>
             {{ worksheet }} Worksheet Minimum Information Standard Items
           </div>
@@ -143,10 +115,7 @@
             heading="{{ group }}"
             is-open="true"
           >
-            <div
-              class="checkbox"
-              ng-repeat="attribute in attributes | orderBy: 'column'"
-            >
+            <div class="checkbox" ng-repeat="attribute in attributes | orderBy: 'column'">
               <label ng-hide="data.required.indexOf(attribute) > -1">
                 <input
                   type="checkbox"
