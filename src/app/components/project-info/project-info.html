@@ -3,10 +3,16 @@
     <md-progress-circular md-mode="indeterminate"></md-progress-circular>
   </div>
 
-    <div ng-repeat="config in $ctrl.data" class="config-item">
-       <div class="panel panel-info">
-       		<div class="panel-heading">{{config.name}} Configuration</div>
-          	<div class="panel-body">{{config.description}}</div>
-      </div>
+<uib-accordion>
+    <div uib-accordion-group ng-repeat="config in $ctrl.data" class="config-item">
+		<uib-accordion-heading>
+       		{{config.name}} Configuration
+		</uib-accordion-heading>
+
+		<uib-accordion>
+          	{{config.description}}
+		</uib-accordion>
     </div>
+</uib-accordion>
+
 </div>
