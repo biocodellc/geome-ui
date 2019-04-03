@@ -24,7 +24,7 @@
       on-change="$ctrl.handleWorksheetDataChange(worksheet, file, reload)"
       worksheet="data.worksheet"
       file="data.file"
-      can-reload="!$ctrl.validateOnly && !$ctrl.isMultiExpeditionUpload()"
+      can-reload="$ctrl.canReload(data.worksheet)"
     >
     </fims-worksheet-data>
     <div
