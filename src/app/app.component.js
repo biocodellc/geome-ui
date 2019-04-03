@@ -9,6 +9,7 @@ import {
   STARTED_HOOK_EVENT,
   ENDED_HOOK_EVENT,
 } from './projectView.hook';
+import { setUser, setProject } from './fims-analytics';
 
 const template = require('./app.html');
 
@@ -32,6 +33,7 @@ class AppCtrl {
     this.ProjectService.on(PROJECT_CHANGED_EVENT, p => {
       this.currentProject = p;
       this.setUserIsMember();
+      setProject(p ? p.projectId : undefined);
       if (!this.preventReload && !this.$state.current.abstract) {
         this.$state.reload();
       }
@@ -45,6 +47,7 @@ class AppCtrl {
       }
       this.setUserIsMember();
       const { current } = this.$state;
+      setUser(u ? u.username : undefined);
       if (
         !this.preventReload &&
         !current.abstract &&

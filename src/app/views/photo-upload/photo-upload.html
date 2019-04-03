@@ -3,39 +3,70 @@
     <h2 class="page-header">Upload Photos</h2>
 
     <div class="information">
-      <p><strong>The GeOMe bulk image loader accepts a directory of images zipped into a single
-          file.</strong></p>
+      <p>
+        <strong>About Photo Uploading in GeOMe</strong>
+        <br>There are two primary methods for uploading photos to GeOME:
+      </p>
 
-      <p>The max file size is 2GB. If you need to upload more then that, split the upload into
-        multiple uploads.</p>
+      <p>
+        <strong>OPTION 1: Upload metadata that references images that are already online.</strong>
+      </p>
 
-      <p>When uploading images, you have <strong>the following options:</strong></p>
+      <p>
+      This option is used when your photos are already accessible online.  You simply need to load a CSV file telling GeOMe where these photos are located along with relevant metadata.  Goto <i>Workbench->Load Data</i> and  select the <i>sample_photos_csv</i>or the <i>event_photos_csv</i> option.  
       <ol>
-        <li>Name each file according to the following template. Each file will then be parsed and
-          attached
-          to the appropriate record:</li>
+      <li>You can upload photos on a project by project basis</li>
+      <li>If your photos span multiple expeditions, select “multiple expeditions” in the expedition code option and specify the expeditionCode in the upload file.</li>
+      <li>Fields to include in the CSV file:</li>
+      <ul>
+	<li><u>photoID</u> (May be required.  A good idea to specify this so you can update photos using the ID later.).</li>
+	<li><u>originalUrl</u> (required. URL location of photo that GeOMe will obtain)</li>
+	<li><u>expeditionCode</u> (required if photos span multiple expeditions)</li>
+	<li><u>other fields</u> (see photo fields under <i>"Generate Template"</i>)</li>
+      </ul>
+      </ol>
+      </p>
+
+      <p>
+        <strong>OPTION 2: Upload photos from your hard-drive.</strong>
+      </p>
+
+      <p>The GeOMe bulk image loader accepts a directory of images zipped into a single file.  The max file size is 2GB. If you need to upload more then that, split the upload into multiple uploads.  When uploading images, you have the following options:</p>
+      <ol>
+        <li>
+          Name each file according to the following template. Each file will then be parsed and
+          attached to the appropriate record:
+        </li>
         <ul>
           <li>{parentIdentifier}+{imgIdentifier}.{ext}</li>
-          <p ng-show="$ctrl.entity.generateID" class="small">If you select "Auto-Generate
-            Ids" below, the parsed 'imgIdentifier' will be ignored.</p>
+          <p ng-show="$ctrl.entity.generateID" class="small">
+            If you select "Auto-Generate Ids" below, the parsed 'imgIdentifier' will be ignored.
+          </p>
         </ul>
-        <li>Include a metadata.csv file with the following columns</li>
+        <li>Include a <i>metadata.csv</i> with the following fields:</li>
         <ul>
-          <li>parentIdentifier* - the identifier of the record to attach the photo to</li>
-          <li>fileName* - the name of the file in the directory</li>
-          <li ng-if="!$ctrl.entity">any additional metadata - this is project specific. 1 entry per
-            column.</li>
-          <li ng-repeat="a in $ctrl.entity.additionalMetadata track by a.column">{{a.column}}
-            (optional)
-            - {{a.description}}</li>
+          <li><u>parentIdentifier</u> (required - the identifier of the record to attach the photo to)</li>
+          <li><u>fileName</u> (required -the name of the file in the directory)</li>
+	  <li><u>expeditionCode</u> (required if photos span multiple expeditions)</li>
+	  <li><u>other fields</u> (see photo fields under <i>"Generate Template"</i>)</li>
         </ul>
       </ol>
+
+      <p>
+      Once you upload it may take several minutes to an hour or more for all photos to appear. 
+      </p>
     </div>
 
     <div layout="row" layout-xs="column" layout-sm="column" layout-align="center center">
-      <form flex flex-gt-md="75" flex-gt-sm="80" role="form" name="$ctrl.uploadForm"
-        class="form-horizontal" novalidate>
-
+      <form
+        flex
+        flex-gt-md="75"
+        flex-gt-sm="80"
+        role="form"
+        name="$ctrl.uploadForm"
+        class="form-horizontal"
+        novalidate
+      >
         <div layout-gt-sm="row" ng-if="$ctrl.photoEntities.length > 1">
           <md-input-container class="md-block" flex-gt-sm>
             <label>Photo Entity</label>
@@ -55,8 +86,10 @@
           <md-input-container class="md-block" flex-gt-sm>
             <label>Expedition</label>
             <md-select name="expedition" ng-model="$ctrl.expeditionCode" required>
-              <md-option ng-repeat="expedition in $ctrl.userExpeditions"
-                value="{{expedition.expeditionCode}}">
+              <md-option
+                ng-repeat="expedition in $ctrl.userExpeditions"
+                value="{{expedition.expeditionCode}}"
+              >
                 {{expedition.expeditionTitle}}
               </md-option>
             </md-select>
@@ -67,36 +100,61 @@
           </md-input-container>
         </div>
 
-        <md-checkbox ng-if="$ctrl.entity.generateID" ng-model="$ctrl.ignoreId"
-          class="md-align-top-left" name="generate-id">
+        <md-checkbox
+          ng-if="$ctrl.entity.generateID"
+          ng-model="$ctrl.ignoreId"
+          class="md-align-top-left"
+          name="generate-id"
+        >
           Auto-Generate IDs?
           <md-hints>
-            <md-hint>If selected and the zip file does not contain a metadata.csv file, the parsed
+            <md-hint
+              >If selected and the zip file does not contain a metadata.csv file, the parsed
               'imgIdentifier' will be ignored and the photoId will be auto-generated for each file.
             </md-hint>
           </md-hints>
         </md-checkbox>
 
         <div layout-gt-sm="row">
-          <md-file-upload flex required="true" pattern=".zip" on-select="$ctrl.onSelect(files)"
-            text="Choose File" file="$ctrl.file"
-            hints='["A zipped directory of photos to upload."]' />
+          <md-file-upload
+            flex
+            required="true"
+            pattern=".zip"
+            on-select="$ctrl.onSelect(files)"
+            text="Choose File"
+            file="$ctrl.file"
+            hints='["A zipped directory of photos to upload."]'
+          />
         </div>
-        <md-progress-linear ng-if="$ctrl.uploadProgress !== undefined" md-mode="determinate"
-          ng-value="$ctrl.uploadProgress"></md-progress-linear>
-        <button type="submit" class="md-button md-raised md-primary photo-upload-button"
-          layout="row" layout-align="center center"
-          ng-click="$ctrl.uploadForm.$valid && $ctrl.upload()">
+        <md-progress-linear
+          ng-if="$ctrl.uploadProgress !== undefined"
+          md-mode="determinate"
+          ng-value="$ctrl.uploadProgress"
+        ></md-progress-linear>
+        <button
+          type="submit"
+          class="md-button md-raised md-primary photo-upload-button"
+          layout="row"
+          layout-align="center center"
+          ng-click="$ctrl.uploadForm.$valid && $ctrl.upload()"
+        >
           <span ng-if="!$ctrl.loading && !$ctrl.canResume">Upload</span>
           <span ng-if="!$ctrl.loading && $ctrl.canResume">Resume</span>
-          <md-progress-circular ng-if="$ctrl.loading" md-mode="indeterminate" md-diameter="18"
-            class="md-accent md-hue-3"></md-progress-circular>
+          <md-progress-circular
+            ng-if="$ctrl.loading"
+            md-mode="indeterminate"
+            md-diameter="18"
+            class="md-accent md-hue-3"
+          ></md-progress-circular>
         </button>
-        <button ng-show="$ctrl.canResume"
+        <button
+          ng-show="$ctrl.canResume"
           ng-click="$ctrl.canResume = false;$ctrl.uploadProgress = undefined;"
-          class="md-button md-raised md-warn md-hue-2 pull-right">Reset</button>
+          class="md-button md-raised md-warn md-hue-2 pull-right"
+        >
+          Reset
+        </button>
+      </form>
     </div>
-    </form>
-
   </md-content>
 </div>

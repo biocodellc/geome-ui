@@ -1,39 +1,58 @@
 <div layout="row" layout-align="center center" class="login-card">
-    <md-card flex-xs="100" flex-sm="80" flex-md="70" flex="60" class="md-whiteframe-2dp">
-        <md-card-title>
-            <md-card-title-text>
-                <h4 md-colors="{color: 'primary-700'}">Reset Password</h4>
-            </md-card-title-text>
-        </md-card-title>
-        <md-card-content>
-            <form id="login-form" name="form" role="form" layout="column" novalidate>
-                <md-input-container>
-                    <label>New Password</label>
-                    <input name="password" type="password" ng-model="$ctrl.password" required
-                        tabindex="1" password-strength ng-enter="$ctrl.resetPassword()"
-                        ng-enter-disabled="form.$invalid" />
-                    <div ng-messages="form.password.$error">
-                        <div ng-message="required">Password is required.</div>
-                        <div ng-message="passwordStrength">Password is not strong enough.</div>
-                    </div>
-                    <md-hints class="md-hints-keep">
-                        <md-hint>Password must contain more than 15 characters OR at least 8
-                            characters including a number and a letter.</md-hint>
-                    </md-hints>
-                </md-input-container>
-            </form>
+  <md-card flex-xs="100" flex-sm="80" flex-md="70" flex="60" class="md-whiteframe-2dp">
+    <md-card-title>
+      <md-card-title-text>
+        <h4 md-colors="{color: 'primary-700'}">Reset Password</h4>
+      </md-card-title-text>
+    </md-card-title>
+    <md-card-content>
+      <form id="login-form" name="form" role="form" layout="column" novalidate>
+        <md-input-container>
+          <label>New Password</label>
+          <input
+            name="password"
+            type="password"
+            ng-model="$ctrl.password"
+            required
+            tabindex="1"
+            password-strength
+            ng-enter="$ctrl.resetPassword()"
+            ng-enter-disabled="form.$invalid"
+          />
+          <div ng-messages="form.password.$error">
+            <div ng-message="required">Password is required.</div>
+            <div ng-message="passwordStrength">Password is not strong enough.</div>
+          </div>
+          <md-hints class="md-hints-keep">
+            <md-hint
+              >Password must contain more than 15 characters OR at least 8 characters including a
+              number and a letter.</md-hint
+            >
+          </md-hints>
+        </md-input-container>
+      </form>
 
-            <div layout="row" layout-align="center center">
-                <md-button class="md-block md-primary md-raised" ng-click="$ctrl.resetPassword()"
-                    ng-disabled="form.$invalid" layout="row" tabindex="3" layout-align="center center"
-                    flex="33">
-                    <span ng-show="!$ctrl.loading">
-                        <span>Reset Password</span>
-                    </span>
-                    <md-progress-circular ng-show="$ctrl.loading" md-mode="indeterminate"
-                        md-diameter="18" class="md-accent md-hue-3"></md-progress-circular>
-                </md-button>
-            </div>
-        </md-card-content>
-    </md-card>
+      <div layout="row" layout-align="center center">
+        <md-button
+          class="md-block md-primary md-raised"
+          ng-click="$ctrl.resetPassword()"
+          ng-disabled="form.$invalid"
+          layout="row"
+          tabindex="3"
+          layout-align="center center"
+          flex="33"
+        >
+          <span ng-show="!$ctrl.loading">
+            <span>Reset Password</span>
+          </span>
+          <md-progress-circular
+            ng-show="$ctrl.loading"
+            md-mode="indeterminate"
+            md-diameter="18"
+            class="md-accent md-hue-3"
+          ></md-progress-circular>
+        </md-button>
+      </div>
+    </md-card-content>
+  </md-card>
 </div>

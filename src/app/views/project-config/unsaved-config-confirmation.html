@@ -1,23 +1,24 @@
 <md-dialog class="confirmation-dialog">
-    <md-toolbar>
-        <div class="md-toolbar-tools">
-            <span flex></span>
-            <h2>Warning! Unsaved Changes</h2>
-            <span flex></span>
-        </div>
-    </md-toolbar>
-    <md-dialog-content layout="column" layout-margin layout-padding>
-        <p>
-            Are you sure you want to leave this page?
-            <br />
-            <strong>Any unsaved changes to the project config will be lost.</strong>
-        </p>
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <span flex></span>
+      <h2>Warning! Unsaved Changes</h2>
+      <span flex></span>
+    </div>
+  </md-toolbar>
+  <md-dialog-content layout="column" layout-margin layout-padding>
+    <p>
+      Are you sure you want to leave this page?
+      <br />
+      <strong>Any unsaved changes to the project config will be lost.</strong>
+    </p>
 
-        <md-dialog-actions>
-            <md-button ng-click="$ctrl.$mdDialog.hide(false)" class="md-primary">Continue</md-button>
-            <md-button ng-click="$ctrl.$mdDialog.hide(true)" class="md-primary" md-autofocus>Save
-                and Continue</md-button>
-            <md-button ng-click="$ctrl.$mdDialog.cancel()" class="md-primary">Cancel</md-button>
-        </md-dialog-actions>
-    </md-dialog-content>
+    <md-dialog-actions>
+      <md-button ng-click="$ctrl.$mdDialog.hide(false)" class="md-primary">Continue</md-button>
+      <md-button ng-click="$ctrl.$mdDialog.hide(true)" class="md-primary" md-autofocus
+        >Save and Continue</md-button
+      >
+      <md-button ng-click="$ctrl.$mdDialog.cancel()" class="md-primary">Cancel</md-button>
+    </md-dialog-actions>
+  </md-dialog-content>
 </md-dialog>

@@ -6,7 +6,7 @@
 
   <div class="main-details" layout="row" layout-align="center center">
     <div ng-if="$ctrl.record.img1024" flex="100">
-      <a href="{{$ctrl.record.img1024}}"><img ng-src="{{$ctrl.record.img512}}"></a>
+      <a href="{{$ctrl.record.img1024}}"><img ng-src="{{$ctrl.record.img512}}"/></a>
     </div>
     <table ng-if="!$ctrl.record.originalUrl" flex="100">
       <tbody>
@@ -17,8 +17,13 @@
           </td>
           <td ng-if="!value.href || !value.text">
             <div class="truncate">
-              <md-tooltip md-direction="top" class="fix-placement" text-overflow-tooltip
-                md-visible="false">{{value.text}}</md-tooltip>
+              <md-tooltip
+                md-direction="top"
+                class="fix-placement"
+                text-overflow-tooltip
+                md-visible="false"
+                >{{value.text}}</md-tooltip
+              >
               {{value.text || 'N/A'}}
             </div>
           </td>
@@ -40,9 +45,13 @@
           <th>{{key}}:</th>
           <td>
             <div class="truncate">
-              <md-tooltip md-direction="top" class="fix-placement" text-overflow-tooltip
-                md-visible="false">{{value.text
-                || value}}</md-tooltip>
+              <md-tooltip
+                md-direction="top"
+                class="fix-placement"
+                text-overflow-tooltip
+                md-visible="false"
+                >{{value.text || value}}</md-tooltip
+              >
               <span ng-if="!value.href">{{value}}</span>
               <span ng-if="value.href">
                 <a href="{{value.href}}">{{value.text}}</a>
@@ -60,9 +69,13 @@
           <th>{{key}}:</th>
           <td>
             <div class="truncate">
-              <md-tooltip md-direction="top" class="fix-placement" text-overflow-tooltip
-                md-visible="false">{{value.text
-                || value}}</md-tooltip>
+              <md-tooltip
+                md-direction="top"
+                class="fix-placement"
+                text-overflow-tooltip
+                md-visible="false"
+                >{{value.text || value}}</md-tooltip
+              >
               <span ng-if="!value.href">{{value}}</span>
               <span ng-if="value.href">
                 <a href="{{value.href}}">{{value.text}}</a>
@@ -91,7 +104,6 @@
     </div>
   </div>
 
-
   <md-divider ng-if="$ctrl.childDetails"></md-divider>
 
   <div class="child-details horizontal-description-list" ng-if="$ctrl.childDetails">
@@ -111,3 +123,4 @@
       </div>
     </div>
   </div>
+</div>

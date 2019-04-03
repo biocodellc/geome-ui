@@ -73,9 +73,7 @@
   <!-- sidebar toggle -->
   <div class="sidebar-toggle">
     <md-button class="md-raised" ng-click="$ctrl.toggleSidebar()">
-      <md-tooltip md-direction="right">{{
-        $ctrl.sidebarToggleToolTip
-      }}</md-tooltip>
+      <md-tooltip md-direction="right">{{ $ctrl.sidebarToggleToolTip }}</md-tooltip>
       <md-icon
         md-font-icon="fa {{
           $ctrl.showSidebar ? 'fa-chevron-left' : 'fa-chevron-right'
@@ -86,18 +84,10 @@
 
   <!-- main content-->
   <div flex layout="column" class="query-content">
-    <md-progress-circular
-      ng-show="$ctrl.loading"
-      md-mode="indeterminate"
-    ></md-progress-circular>
+    <md-progress-circular ng-show="$ctrl.loading" md-mode="indeterminate"></md-progress-circular>
 
     <!-- map -->
-    <fims-map
-      ng-show="$ctrl.showMap"
-      flex
-      layout="row"
-      map-instance="$ctrl.queryMap"
-    ></fims-map>
+    <fims-map ng-show="$ctrl.showMap" flex layout="row" map-instance="$ctrl.queryMap"></fims-map>
 
     <!-- table -->
     <md-content>

@@ -1,45 +1,51 @@
-<div class="col-sm-12 alert alert-error" role="alert" ng-show="vm.error"><strong>Error! </strong>{{ vm.error }}</div>
+<div class="col-sm-12 alert alert-error" role="alert" ng-show="vm.error">
+  <strong>Error! </strong>{{ vm.error }}
+</div>
 
 <div class="sectioncontent row" id="results" ng-show="!vm.error">
-    <h1>{{ vm.identifier }} is a <a href="{{ vm.metadata['rdf:type'].value }}">{{ vm.metadata['rdf:type'].shortValue
-        }}</a></h1>
-    <table>
-        <tr>
-            <th>Description</th>
-            <th>Value</th>
-            <th>Definition</th>
-        </tr>
+  <h1>
+    {{ vm.identifier }} is a
+    <a href="{{ vm.metadata['rdf:type'].value }}">{{ vm.metadata['rdf:type'].shortValue }}</a>
+  </h1>
+  <table>
+    <tr>
+      <th>Description</th>
+      <th>Value</th>
+      <th>Definition</th>
+    </tr>
 
-        <tr ng-repeat="(key, value) in vm.filteredMetadata()">
-            <td ng-show="value.isResource"><a href="{{ value.value }}">{{ value.value }}</a></td>
-            <td ng-show="!value.isResource">{{ value.value }}</td>
-            <td><a href="{{ value.fullKey }}">{{ key }}</a></td>
-            <td>{{ value.description }}</td>
-        </tr>
+    <tr ng-repeat="(key, value) in vm.filteredMetadata()">
+      <td ng-show="value.isResource"><a href="{{ value.value }}">{{ value.value }}</a></td>
+      <td ng-show="!value.isResource">{{ value.value }}</td>
+      <td><a href="{{ value.fullKey }}">{{ key }}</a></td>
+      <td>{{ value.description }}</td>
+    </tr>
+  </table>
 
-    </table>
+  <p ng-show="vm.metadata.message"><strong>{{ vm.metadata.message }}</strong></p>
+  <table ng-show="!vm.metadata.message && vm.metadata.download">
+    <tr>
+      <th>Download:</th>
+      <th>
+        <a href="{{ vm.metadata.download}}" target="_self">{{ vm.identifier }}</a>
+      </th>
+    </tr>
+  </table>
 
-    <p ng-show="vm.metadata.message"><strong>{{ vm.metadata.message }}</strong></p>
-    <table ng-show="!vm.metadata.message && vm.metadata.download">
-        <tr>
-            <th>Download:</th>
-            <th>
-                <a href="{{ vm.metadata.download}}"
-                   target="_self">{{ vm.identifier }}</a></th>
-        </tr>
-    </table>
+  <table ng-show="!vm.metadata.message && vm.metadata.datasets">
+    <tr>
+      <th>Date</th>
+      <th>Identifier</th>
+    </tr>
 
-    <table ng-show="!vm.metadata.message && vm.metadata.datasets">
-        <tr>
-            <th>Date</th>
-            <th>Identifier</th>
-        </tr>
-
-        <!-- loop through each dataset -->
-        <tr ng-repeat="dataset in vm.metadata.datasets.datasets">
-            <td>{{ dataset.ts }}</td>
-            <td><a href="{{ vm.metadata.datasets.appRoot }}lookup?id={{ dataset.identifier }}">{{ dataset.identifier
-                }}</a></td>
-        </tr>
-    </table>
+    <!-- loop through each dataset -->
+    <tr ng-repeat="dataset in vm.metadata.datasets.datasets">
+      <td>{{ dataset.ts }}</td>
+      <td>
+        <a href="{{ vm.metadata.datasets.appRoot }}lookup?id={{ dataset.identifier }}"
+          >{{ dataset.identifier }}</a
+        >
+      </td>
+    </tr>
+  </table>
 </div>

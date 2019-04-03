@@ -1,9 +1,24 @@
 <div layout flex class ng-attr-id="{{ $ctrl.mapId }}">
   <div class="leaflet-top leaflet-right">
     <div class="md-dense leaflet-control" layout="row" layout-align="center center">
-      <md-button ng-click="$ctrl.toggleMapView('map')" ng-disabled="$ctrl.tiles === 'map'" class="groupX left md-raised">Map</md-button>
-      <md-button ng-click="$ctrl.toggleMapView('sat')" ng-disabled="$ctrl.tiles === 'sat'" class="groupX middle md-raised">Satellite</md-button>
-      <md-button ng-click="$ctrl.toggleMapView('usgs')" ng-disabled="$ctrl.tiles === 'usgs'" class="groupX right md-raised">USGS</md-button>
+      <md-button
+        ng-click="$ctrl.toggleMapView('map')"
+        ng-disabled="$ctrl.tiles === 'map'"
+        class="groupX left md-raised"
+        >Map</md-button
+      >
+      <md-button
+        ng-click="$ctrl.toggleMapView('sat')"
+        ng-disabled="$ctrl.tiles === 'sat'"
+        class="groupX middle md-raised"
+        >Satellite</md-button
+      >
+      <md-button
+        ng-click="$ctrl.toggleMapView('usgs')"
+        ng-disabled="$ctrl.tiles === 'usgs'"
+        class="groupX right md-raised"
+        >USGS</md-button
+      >
     </div>
   </div>
 </div>

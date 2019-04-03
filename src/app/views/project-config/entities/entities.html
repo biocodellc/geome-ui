@@ -1,12 +1,20 @@
 <p ng-if="!$ctrl.canEdit">Note: only subscribed users can edit a project configuration</p>
 <ul class="settings-list entities" dnd-drop="$ctrl.dndDrop(index, item)" dnd-list="$ctrl.entities">
-    <div ng-repeat="entity in $ctrl.entities">
-        <fims-entity entity="entity" editing="$index===$ctrl.editEntity" can-edit="$ctrl.canEdit"
-            config="$ctrl.config" worksheets="$ctrl.config.worksheets()" on-toggle-edit="$ctrl.handleToggleEdit($index)"
-            on-update="$ctrl.handleUpdateEntity($index, entity)" on-remove="$ctrl.handleRemoveEntity(entity)"
-            on-new-worksheet="$ctrl.onNewWorksheet(sheetName)" dnd-draggable="entity">
-        </fims-entity>
-    </div>
-    <!--define a custom <div> placeholder -->
-    <div class="dndPlaceholder"></div>
+  <div ng-repeat="entity in $ctrl.entities">
+    <fims-entity
+      entity="entity"
+      editing="$index===$ctrl.editEntity"
+      can-edit="$ctrl.canEdit"
+      config="$ctrl.config"
+      worksheets="$ctrl.config.worksheets()"
+      on-toggle-edit="$ctrl.handleToggleEdit($index)"
+      on-update="$ctrl.handleUpdateEntity($index, entity)"
+      on-remove="$ctrl.handleRemoveEntity(entity)"
+      on-new-worksheet="$ctrl.onNewWorksheet(sheetName)"
+      dnd-draggable="entity"
+    >
+    </fims-entity>
+  </div>
+  <!--define a custom <div> placeholder -->
+  <div class="dndPlaceholder"></div>
 </ul>
