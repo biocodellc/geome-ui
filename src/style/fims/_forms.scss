@@ -39,7 +39,6 @@ md-input-container {
     line-height: 14px;
   }
   md-hint {
-    padding-top: 5px;
     /* Copy styles from ng-messages */
     transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
     /* Set our own color */
@@ -50,6 +49,15 @@ md-input-container {
       text-decoration: none;
       color: #4d4d4d;
     }
+  }
+}
+
+md-hint {
+  display: block;
+  padding-top: 5px;
+
+  &:first-of-type {
+    padding-top: 0;
   }
 }
 
