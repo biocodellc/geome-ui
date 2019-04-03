@@ -6,12 +6,13 @@
   <p>
     <strong>Column Name: {{ $ctrl.attribute.column }}</strong>
     <br />
-    <span ng-show="$ctrl.attribute.defineddataformatBy"
+    <span  
       >Defined By:
-      <a href="{{ $ctrl.attribute.definedBy }}" target="_blank"
-        >{{ $ctrl.attribute.definedBy }}</a
-      ></span
-    >
+      <span ng-show="$ctrl.attribute.definedBy.indexOf('urn:') > -1">This term is defined by GeOMe as no community standard equivalent term has been found.</span>
+      <a ng-hide="$ctrl.attribute.definedBy.indexOf('urn:') > -1"  href="{{ $ctrl.attribute.definedBy }}" target="_blank" >
+        {{ $ctrl.attribute.definedBy }}</a
+      >
+    </span>
   </p>
 
   <p><strong>Definition</strong></p>
