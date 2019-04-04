@@ -4,8 +4,8 @@
     <span ng-show="!$ctrl.currentProject">Choose a Project</span>
     <md-icon md-font-icon="fa fa-angle-down fa-sm"></md-icon>
   </md-button>
-  <md-menu-content width="4" class="md-menu-bar-menu md-dense">
-    <md-menu-item class="project-selector-header">
+  <md-menu-content width="4" class="md-menu-bar-menu md-dense project-selector" layout="column">
+    <md-menu-item class="project-selector-header" flex="noshrink">
       <div layout="row" layout-align="center center">
         <div layout="column">
           Switch Project
@@ -50,15 +50,40 @@
         </md-checkbox>
       </div>
     </md-menu-item>
-    <md-menu-divider></md-menu-divider>
-    <md-menu-item ng-repeat="project in $ctrl.projects track by project.projectId">
-      <md-button ng-click="$ctrl.change(project)">
-        {{ ::project.projectTitle }}
-        <md-icon
-          ng-show="$ctrl.currentProject.projectId === project.projectId"
-          md-font-icon="fa fa-check success fa-fw"
-        ></md-icon>
-      </md-button>
+    <md-menu-divider flex="noshrink"></md-menu-divider>
+    <md-menu-item class="project-selector-header" flex="noshrink">
+      <md-input-container md-no-float>
+        <input
+          ng-model="$ctrl.searchText"
+          ng-change="$ctrl.searchTextChange($ctrl.searchText)"
+          placeholder="Filter Projects"
+        />
+      </md-input-container>
     </md-menu-item>
+    <md-menu-divider flex="noshrink"></md-menu-divider>
+    <div class="project-selector-projects">
+      <md-menu-item ng-repeat="project in $ctrl.filteredProjects track by project.projectId">
+        <md-button ng-click="$ctrl.change(project)">
+          <span md-highlight-text="$ctrl.searchText" md-highlight-flags="gi">
+            {{ project.projectTitle }}</span
+          >
+          <md-icon
+            ng-show="$ctrl.currentProject.projectId === project.projectId"
+            md-font-icon="fa fa-check success fa-fw"
+          ></md-icon>
+        </md-button>
+      </md-menu-item>
+      <md-menu-item class="project-selector-not-found" ng-if="$ctrl.filteredProjects.length === 0"
+        ><span
+          >No matching projects were found.
+          <span ng-show="$ctrl.isAuthenticated && !$ctrl.includePublicProjects"
+            >You may need to include public projects.</span
+          >
+          <span ng-show="!$ctrl.isAuthenticated"
+            >You may need to <a ng-click="$ctrl.signIn()">Sign In</a> to view the project.</span
+          ></span
+        >
+      </md-menu-item>
+    </div>
   </md-menu-content>
 </md-menu>
