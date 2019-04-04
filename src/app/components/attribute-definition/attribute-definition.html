@@ -4,11 +4,11 @@
 
 <div ng-show="$ctrl.attribute">
   <p>
-    <strong>Column Name: {{ $ctrl.attribute.column }}</strong>
+    <strong>Column Name:</strong> {{ $ctrl.attribute.column }}
     <br />
     <span  
-      >Defined By:
-      <span ng-show="$ctrl.attribute.definedBy.indexOf('urn:') > -1">This term is defined by GeOMe as no community standard equivalent term has been found.</span>
+      ><strong>Defined By:</strong>
+      <span ng-show="$ctrl.attribute.definedBy.indexOf('urn:') > -1">{{ $ctrl.attribute.definedBy }} (This term is defined by GeOMe).</span>
       <a ng-hide="$ctrl.attribute.definedBy.indexOf('urn:') > -1"  href="{{ $ctrl.attribute.definedBy }}" target="_blank" >
         {{ $ctrl.attribute.definedBy }}</a
       >
