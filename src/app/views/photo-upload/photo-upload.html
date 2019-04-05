@@ -34,7 +34,7 @@
       <p>The GeOMe bulk image loader accepts a directory of images zipped into a single file.  The max file size is 2GB. If you need to upload more then that, split the upload into multiple uploads.  When uploading images, you have the following options:</p>
       <ol>
         <li>
-          Name each file according to the following template. Each file will then be parsed and
+          <strong>File name option</strong>: Name each file according to the following template. Each file will then be parsed and
           attached to the appropriate record:
         </li>
         <ul>
@@ -43,7 +43,7 @@
             If you select "Auto-Generate Ids" below, the parsed 'imgIdentifier' will be ignored.
           </p>
         </ul>
-        <li>Include a <i>metadata.csv</i> with the following fields:</li>
+        <li><strong>Metadata option</strong>: Include a <i>metadata.csv</i> with the following fields:</li>
         <ul>
           <li><u>parentIdentifier</u> (required - the identifier of the record to attach the photo to)</li>
           <li><u>fileName</u> (required -the name of the file in the directory)</li>
@@ -109,8 +109,7 @@
           Auto-Generate IDs?
           <md-hints>
             <md-hint
-              >If selected and the zip file does not contain a metadata.csv file, the parsed
-              'imgIdentifier' will be ignored and the photoId will be auto-generated for each file.
+              >If selected, the system will automatically generate an identifier for your photo beginning with the materialSampleID and ending with the "_photo_[number]".  If not selected, then the system will either use the "photoID" field in the metadata.csv file if using the "metadata" option OR if uploading photos using the "file name" option, the "imgIdentifier" portion of the photo name as the photo Identifier.  
             </md-hint>
           </md-hints>
         </md-checkbox>

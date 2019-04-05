@@ -1,3 +1,38 @@
+// md-menu-content.md-menu-bar-menu.md-dense .md-button span.highlight {
+// font-weight: 700;
+// }
+md-menu-content.project-selector {
+  width: 320px;
+  max-width: 320px;
+  max-height: calc(100vh - 10px) !important;
+
+  &.md-menu-bar-menu.md-dense {
+    .md-button {
+      span.highlight {
+        font-weight: 700;
+        float: none;
+      }
+    }
+  }
+  .project-selector-projects {
+    overflow: auto;
+  }
+
+  md-menu-item .md-button span {
+    max-width: calc(100% - 24px); // 24px for project selected checkmark
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  md-menu-item.project-selector-not-found {
+    height: auto;
+
+    a:hover {
+      cursor: pointer;
+    }
+  }
+}
+
 .project-selector {
   .md-button.md-icon-button {
     width: auto;

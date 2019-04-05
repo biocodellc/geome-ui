@@ -29,8 +29,7 @@
     <p>
       GeOMe is an implementation of the
       <a href="http://gensc.org/projects/migo/" target="_blank"
-        >“Minimum Information about a Genomic Observatory” (MIGO)</a
-      >
+        >“Minimum Information about a Genomic Observatory” (MIGO)</a>
       checklist, requiring the following fields at the very minimum for all implementing
       configurations and projects:
     </p>
@@ -38,14 +37,14 @@
     <ul>
       <li>materialSampleID</li>
       <li>yearCollected</li>
-      <li>Either decimalLatitude and decimalLongitude or Locality</li>
-      <li>phylum</li>
+      <li>decimalLatitude/decimalLongitude OR locality</li>
     </ul>
 
-    <p>In addition, there are numerous rules that are enforced at the network level concerning incoming data.  For instance “dayCollected” requires an integer between 1 and 31 and if a user enters a decimalLatitude they must also enter a decimalLongitude.  A full list of GeOMe network configuration rules, data attributes, and definitions is available in JSON format at <a href="https://api.geome-db.org/v1/network/1/config" target="_blank">https://api.geome-db.org/v1/network/1/config</a></p>
+    <p><strong>Notes:</strong></p>
+    <p>While a value for phylum is also technically required, we allow users to select a value of "Unknown", thus enabling samples where multiple taxa are present.  We have elected to allow for just a locality description in place of decimalLatitude/decimalLongitude coordinates in order to both curate historical data without coordinates, as well as allow for events not suitably described by coordinates. Finally, there are numerous rules that are enforced for all all incoming data.  For instance “dayCollected” requires an integer between 1 and 31 and if a user enters a decimalLatitude they must also enter a decimalLongitude.  A full list of GeOMe network configuration rules, data attributes, and definitions is available in JSON format at <a href="https://api.geome-db.org/v1/network/1/config" target="_blank">https://api.geome-db.org/v1/network/1/config</a></p>
 
     <p>
-      Each of the provided configurations may choose to enforce additional rules that extend the GeOMe network rules. 
+      Finally, each of the provided configurations may choose to enforce additional rules that extend the GeOMe network rules. 
     </p>
   </div>
 

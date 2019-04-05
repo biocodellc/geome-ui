@@ -13,6 +13,8 @@ class ProjectSelectorController {
 
   $onInit() {
     this.projects = [];
+    this.filteredProjects = [];
+    this.searchText = '';
     this.isOpen = false;
   }
 
@@ -28,6 +30,18 @@ class ProjectSelectorController {
     }
 
     if (filterProjects) this.filterProjects();
+  }
+
+  searchTextChange(searchText) {
+    if (searchText === '') {
+      this.filteredProjects = this.projects;
+      return;
+    }
+
+    const sText = searchText.toLowerCase();
+    this.filteredProjects = this.projects.filter(
+      p => p.projectTitle.toLowerCase().indexOf(sText) > -1,
+    );
   }
 
   filterProjects(notMember = false) {
@@ -47,11 +61,13 @@ class ProjectSelectorController {
         return;
       }
       this.projects = data;
+      this.searchTextChange(this.searchText);
     });
   }
 
   change(project) {
     this.onChange({ project });
+    this.searchText = '';
     this.isOpen = false;
   }
 
