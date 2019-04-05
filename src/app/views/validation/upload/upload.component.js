@@ -477,6 +477,16 @@ class UploadController {
     }
   }
 
+  canReload(worksheet) {
+    return (
+      !this.validateOnly &&
+      (!this.isMultiExpeditionUpload() ||
+        this.currentProject.config.entities.some(
+          e => e.worksheet === worksheet && e.type === 'Photo',
+        ))
+    );
+  }
+
   checkCoordinatesVerified() {
     return !this.coordinateWorksheets.some(
       w => !this.verifiedCoordinateWorksheets.includes(w),
@@ -503,7 +513,7 @@ class UploadController {
         data.dataSourceMetadata.push({
           dataType: 'TABULAR',
           filename: wd.file.name,
-          reload: !this.isMultiExpeditionUpload() && wd.reload,
+          reload: this.canReload(wd.worksheet) && wd.reload,
           metadata: {
             sheetName: wd.worksheet,
           },
