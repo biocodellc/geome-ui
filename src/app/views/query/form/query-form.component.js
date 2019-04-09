@@ -73,6 +73,7 @@ class QueryFormController {
   }
 
   $onInit() {
+    this.orderBy = 'column';
     this.showGroups = true;
     this.resetExpeditions = true;
     this.moreSearchOptions = false;
