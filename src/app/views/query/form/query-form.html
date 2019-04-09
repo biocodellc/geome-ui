@@ -8,7 +8,7 @@
     </md-hint>
   </md-hints>
 
-  <div layout-padding>
+  <div>
     <!--<div ng-show="$ctrl.moreSearchOptions" ng-click="$ctrl.clearParams()">
       <md-radio-group ng-model="$ctrl.showGroups" layout-gt-sm="row" class="md-primary">
         <md-radio-button ng-value="false" flex> Search by individual project
@@ -31,7 +31,7 @@
           <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
         </md-button>
       </h3>
-      <md-input-container>
+      <md-input-container >
         <md-chips
           flex
           ng-model="$ctrl.families"
@@ -48,7 +48,7 @@
             md-item-text="name"
             md-dropdown-position="bottom"
             md-min-length="0"
-          >
+          style='height:20px'>
             <span md-highlight-text="searchText" md-highlight-flags="i">{{ name }}</span>
           </md-autocomplete>
           <md-chip-template>
@@ -92,6 +92,7 @@
           md-item-text="item.projectTitle"
           md-dropdown-position="bottom"
           md-min-length="0"
+          style='height:20px'
         >
           <span md-highlight-text="searchText" md-highlight-flags="i">{{ item.projectTitle }}</span>
         </md-autocomplete>
@@ -104,7 +105,7 @@
     </div>
   </div>
 
-  <div class="expeditions" layout-padding ng-show="$ctrl.moreSearchOptions&&$ctrl.expeditions">
+  <div class="expeditions" ng-show="$ctrl.moreSearchOptions&&$ctrl.expeditions">
     <div layout="column">
       <h3 class="md-subhead bold" flex>Expeditions</h3>
       <md-chips ng-model="$ctrl.params.expeditions" md-require-match flex>
@@ -152,6 +153,7 @@
   </div>
 
   <div class="simple" ng-show="!$ctrl.moreSearchOptions">
+
     <div >
       <div layout="column">
         <h3 class="md-subhead bold" flex>
@@ -520,7 +522,7 @@
       </div>
     </div>
 
-    <div class="bounding-box" layout-padding>
+    <div class="bounding-box" >
       <div layout="column" layout-wrap>
         <h3 class="md-subhead bold" ng-if="$ctrl.moreSearchOptions" flex>Filter Options</h3>
         <a
@@ -579,7 +581,7 @@
       </div>
     </div>
 
-    <div class="sequences" layout-padding>
+    <div class="sequences" >
       <div layout="column">
         <h3 class="md-subhead bold" flex>Sequences</h3>
         <md-checkbox
@@ -590,10 +592,10 @@
         >
           has NCBI Sequence Read Archive Accession Numbers
         </md-checkbox>
-        <md-input-container flex="50">
-          <label>marker</label>
+        <md-input-container>
+	  <label>Select marker</label>
           <md-select ng-model="$ctrl.params.marker" md-container-class>
-            <md-option ng-value="null">-- Clear Selection --</md-option>
+            <md-option ng-value="null">-- Marker --</md-option>
             <md-option
               ng-value="marker.value"
               ng-repeat="marker in $ctrl.markers track by marker.value"
