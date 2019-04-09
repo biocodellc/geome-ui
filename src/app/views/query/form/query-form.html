@@ -132,7 +132,7 @@
     </div>
   </div>
 
-  <div class="term" layout-padding>
+  <div class="term" >
     <div layout="column">
       <div layout="row" layout-align="start center">
         <h3 class="md-subhead bold">
@@ -152,7 +152,7 @@
   </div>
 
   <div class="simple" ng-show="!$ctrl.moreSearchOptions">
-    <div layout-padding>
+    <div >
       <div layout="column">
         <h3 class="md-subhead bold" flex>
           MaterialSampleID
@@ -172,7 +172,7 @@
       </div>
     </div>
 
-    <div layout-padding>
+    <div >
       <div layout="column">
         <h3 class="md-subhead bold" flex>
           Country
@@ -208,9 +208,9 @@
       </div>
     </div>
 
-    <div layout-padding>
+    <div >
       <div layout="column">
-        <h3 class="md-subhead bold" flex>Year</h3>
+        <h3 class="md-subhead bold" flex>Year Collected</h3>
         <div flex>
           <div layout="row" layout-align="start center">
             <md-input-container md-no-float flex="40">
@@ -225,7 +225,7 @@
       </div>
     </div>
 
-    <div layout-padding>
+    <div >
       <div layout="column">
         <h3 class="md-subhead bold" flex>
           Phylum
@@ -258,6 +258,29 @@
         </div>
       </div>
     </div>
+
+    <div >
+      <div layout="column">
+        <h3 class="md-subhead bold" flex>
+	  Genus
+        </h3>
+        <md-input-container md-no-float flex>
+          <input ng-model="$ctrl.params.genus" type="text" />
+        </md-input-container>
+      </div>
+    </div>
+
+    <div >
+      <div layout="column">
+        <h3 class="md-subhead bold" flex>
+	  Specific Epithet
+        </h3>
+        <md-input-container md-no-float flex>
+          <input ng-model="$ctrl.params.specificEpithet" type="text" />
+        </md-input-container>
+      </div>
+    </div>
+
   </div>
 
   <div ng-show="$ctrl.moreSearchOptions">
