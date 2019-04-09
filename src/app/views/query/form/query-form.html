@@ -119,9 +119,9 @@
           md-min-length="0"
           placeholder="Expedition Name ..."
         >
-          <span md-highlight-text="$ctrl.searchText" md-highlight-flags="i"
-            >{{ item.expeditionTitle }}</span
-          >
+          <span md-highlight-text="$ctrl.searchText" md-highlight-flags="i">{{
+            item.expeditionTitle
+          }}</span>
         </md-autocomplete>
         <md-chip-template>
           <span>
@@ -132,7 +132,7 @@
     </div>
   </div>
 
-  <div class="term" >
+  <div class="term">
     <div layout="column">
       <div layout="row" layout-align="start center">
         <h3 class="md-subhead bold">
@@ -152,7 +152,7 @@
   </div>
 
   <div class="simple" ng-show="!$ctrl.moreSearchOptions">
-    <div >
+    <div>
       <div layout="column">
         <h3 class="md-subhead bold" flex>
           MaterialSampleID
@@ -172,7 +172,7 @@
       </div>
     </div>
 
-    <div >
+    <div>
       <div layout="column">
         <h3 class="md-subhead bold" flex>
           Country
@@ -198,9 +198,9 @@
               md-floating-label=" "
             >
               <md-item-template>
-                <span md-highlight-text="searchCountry" md-highlight-flags="i"
-                  >{{ country.value }}</span
-                >
+                <span md-highlight-text="searchCountry" md-highlight-flags="i">{{
+                  country.value
+                }}</span>
               </md-item-template>
             </md-autocomplete>
           </md-content>
@@ -208,7 +208,7 @@
       </div>
     </div>
 
-    <div >
+    <div>
       <div layout="column">
         <h3 class="md-subhead bold" flex>Year Collected</h3>
         <div flex>
@@ -225,7 +225,7 @@
       </div>
     </div>
 
-    <div >
+    <div>
       <div layout="column">
         <h3 class="md-subhead bold" flex>
           Phylum
@@ -259,10 +259,10 @@
       </div>
     </div>
 
-    <div >
+    <div>
       <div layout="column">
         <h3 class="md-subhead bold" flex>
-	  Genus
+          Genus
         </h3>
         <md-input-container md-no-float flex>
           <input ng-model="$ctrl.params.genus" type="text" />
@@ -270,17 +270,16 @@
       </div>
     </div>
 
-    <div >
+    <div>
       <div layout="column">
         <h3 class="md-subhead bold" flex>
-	  Specific Epithet
+          Specific Epithet
         </h3>
         <md-input-container md-no-float flex>
           <input ng-model="$ctrl.params.specificEpithet" type="text" />
         </md-input-container>
       </div>
     </div>
-
   </div>
 
   <div ng-show="$ctrl.moreSearchOptions">
@@ -474,7 +473,7 @@
                     <md-optgroup label="Tissues">
                       <md-option
                         ng-value="tissue.column"
-			ng-repeat="tissue in $ctrl.filterOptions['Tissue'] | orderBy: $ctrl.orderBy"
+                        ng-repeat="tissue in $ctrl.filterOptions['Tissue'] | orderBy: $ctrl.orderBy"
                       >
                         {{ tissue.column.split('.')[1] }}</md-option
                       >
@@ -538,15 +537,15 @@
             <div>
               <span class="small bold">northEast:</span>
               <span class="small">
-                [{{ $ctrl.params.bounds.northEast.lat | number: 2 }}, {{
-                $ctrl.params.bounds.northEast.lng | number: 2 }}]</span
+                [{{ $ctrl.params.bounds.northEast.lat | number: 2 }},
+                {{ $ctrl.params.bounds.northEast.lng | number: 2 }}]</span
               >
             </div>
             <div>
               <span class="small bold">southWest:</span>
               <span class="small">
-                [{{ $ctrl.params.bounds.southWest.lat | number: 2 }}, {{
-                $ctrl.params.bounds.southWest.lng | number: 2 }}]</span
+                [{{ $ctrl.params.bounds.southWest.lat | number: 2 }},
+                {{ $ctrl.params.bounds.southWest.lng | number: 2 }}]</span
               >
             </div>
           </div>
