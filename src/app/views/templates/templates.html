@@ -58,19 +58,19 @@
 
 <div class="row">
   <div class="col-xs-6">
-    <div ng-repeat="(worksheet, data) in $ctrl.getAttributes()">
-      <div ng-if="$ctrl.worksheet === 'Workbook'">
-        <h3>Workbook</h3>
-        <div class="btn-group-xs">
-          <button type="button" class="btn btn-link" ng-click="$ctrl.selectAll('Workbook')">
-            Select ALL in Workbook
-          </button>
-          <button type="button" class="btn btn-link" ng-click="$ctrl.selectNone('Workbook')">
-            Select NONE in Workbook
-          </button>
-        </div>
-        <h3>{{ worksheet }} Worksheet</h3>
+    <div ng-if="$ctrl.worksheet === 'Workbook'">
+      <h3>Workbook</h3>
+      <div class="btn-group-xs">
+        <button type="button" class="btn btn-link" ng-click="$ctrl.selectAll('Workbook')">
+          Select ALL in Workbook
+        </button>
+        <button type="button" class="btn btn-link" ng-click="$ctrl.selectNone('Workbook')">
+          Select NONE in Workbook
+        </button>
       </div>
+    </div>
+    <div ng-repeat="(worksheet, data) in $ctrl.getAttributes()">
+      <h3 ng-if="$ctrl.worksheet === 'Workbook'">{{ worksheet }}</h3>
       <div class="btn-group btn-group-xs">
         <button type="button" class="btn btn-link" ng-click="$ctrl.selectAll(worksheet)">
           Select all {{ worksheet }}
@@ -89,10 +89,8 @@
       </div>
       <uib-accordion close-others="false">
         <div uib-accordion-group class="panel-default md-whiteframe-2dp" is-open="true">
-          <div ng-if="$ctrl.worksheet === 'Workbook'" uib-accordion-heading>
-            {{ worksheet }} Worksheet Minimum Information Standard Items
-          </div>
-          <div ng-if="$ctrl.worksheet !== 'Workbook'" uib-accordion-heading>
+          <div uib-accordion-heading>
+            <span ng-if="$ctrl.worksheet === 'Workbook'"> {{ worksheet }} </span>
             Minimum Information Standard Items
           </div>
           <div class="checkbox" ng-repeat="attribute in data.required">
