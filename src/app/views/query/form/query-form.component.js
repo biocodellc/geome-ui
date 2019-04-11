@@ -315,7 +315,6 @@ class QueryFormController {
           a.column > b.column ? 1 : b.column > a.column ? -1 : 0,
         );
       });
-      console.log(this.filterOptions);
     }
 
     const filter = Object.assign({}, defaultFilter, {
