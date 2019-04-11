@@ -291,6 +291,7 @@
             <md-button
               class="md-accent md-raised md-button-sm"
               ng-click="$ctrl.generateFilterOptions('Event')"
+              ng-disabled="!$ctrl.config"
             >
               <span class="fa fa-plus"></span> Add Event Filter</md-button
             >
@@ -369,6 +370,7 @@
             <md-button
               class="md-accent md-raised md-button-sm"
               ng-click="$ctrl.generateFilterOptions('Sample')"
+              ng-disabled="!$ctrl.config"
             >
               <span class="fa fa-plus"></span> Add Sample Filter</md-button
             >
@@ -447,6 +449,7 @@
             <md-button
               class="md-accent md-raised md-button-sm"
               ng-click="$ctrl.generateFilterOptions('Tissue')"
+              ng-disabled="!$ctrl.config"
             >
               <span class="fa fa-plus"></span> Add Tissue Filter</md-button
             >
