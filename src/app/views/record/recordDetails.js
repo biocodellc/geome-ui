@@ -58,8 +58,8 @@ export const childRecordDetails = {
     }),
   },
   fastqMetadata: {
-    materialSampleID: m => ({
-      text: m.materialSampleID,
+    tissueID: m => ({
+      text: m.tissueID,
       href: `/record/${m.bcid}`,
     }),
   },
@@ -171,7 +171,7 @@ export const mainRecordDetails = {
     }),
   },
   fastqMetadata: {
-    materialSampleID: getKey('materialSampleID'),
+    tissueID: getKey('tissueID'),
     bioSamplesLink: m => ({
       text: m.bioSample ? 'NCBI BioSamples' : undefined,
       href: m.bioSample
@@ -185,6 +185,9 @@ export const mainRecordDetails = {
             m.bioSample.bioProjectId
           }`
         : undefined,
+    }),
+    bioSampleAccession: m => ({
+      text: m.bioSample ? m.bioSample.accession : undefined,
     }),
     bcid: s => ({
       text: s.bcid,
