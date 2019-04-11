@@ -41,7 +41,12 @@
     </ul>
 
     <p><strong>Notes:</strong></p>
-    <p>While a value for phylum is also technically required, we allow users to select a value of "Unknown", thus enabling samples where multiple taxa are present.  We have elected to allow for just a locality description in place of decimalLatitude/decimalLongitude coordinates in order to both curate historical data without coordinates, as well as allow for events not suitably described by coordinates. Finally, there are numerous rules that are enforced for all all incoming data.  For instance “dayCollected” requires an integer between 1 and 31 and if a user enters a decimalLatitude they must also enter a decimalLongitude.  A full list of GeOMe network configuration rules, data attributes, and definitions is available in JSON format at <a href="https://api.geome-db.org/v1/network/1/config" target="_blank">https://api.geome-db.org/v1/network/1/config</a></p>
+    <ul>
+    <li>While a value for phylum is technically required by GeOMe, we allow users to select a value of "Unknown", thus enabling samples where multiple taxa are present.</li>
+    <li>We have elected to allow for just a locality description in place of decimalLatitude/decimalLongitude coordinates in order to both curate historical data without coordinates, as well as allow for events not suitably described by coordinates.</li> 
+    <li>Controlled vocabularies are enforced for the following fields: country, container, horizontalDatum, lengthUnits, lifeStage, markers, phylum, preservative, relaxant, sex, taxonRank, and weightUnits.  Additional controlled vocabularies exist for describing SRA metadata submissions.</li>
+    <li>There are numerous rules that are enforced for all all incoming data.  For instance “dayCollected” requires an integer between 1 and 31 and if a user enters a decimalLatitude they must also enter a decimalLongitude.  A full list of GeOMe network configuration rules, data attributes, and definitions is available in JSON format at <a href="https://api.geome-db.org/v1/network/1/config" target="_blank">https://api.geome-db.org/v1/network/1/config</a></li>
+     </ul>
 
     <p>
       Finally, each of the provided configurations may choose to enforce additional rules that extend the GeOMe network rules. 
@@ -68,7 +73,7 @@
 
   <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="The Biocode LIMS Plugin">
     <p>
-      Data uploaded to GeOMe can be manipulated in a laboratory information management system (LIMS) using a specially
+      All data uploaded to GeOMe can be manipulated in a laboratory information management system (LIMS) using a specially
       built
       <a href="https://github.com/biocodellc/biocode-lims/releases">LIMS plugin</a> that operates within the Geneious environment. The
       purpose of the LIMS tool is to help manage lab and
