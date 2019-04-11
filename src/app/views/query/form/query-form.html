@@ -318,7 +318,7 @@
                     <md-optgroup label="Events">
                       <md-option
                         ng-value="event.column"
-                        ng-repeat="event in $ctrl.filterOptions['Event'] | orderBy: $ctrl.orderBy"
+                        ng-repeat="event in $ctrl.filterOptions['Event']"
                       >
                         {{ event.column.split('.')[1] }}</md-option
                       >
@@ -396,7 +396,7 @@
                     <md-optgroup label="Sample">
                       <md-option
                         ng-value="sample.column"
-                        ng-repeat="sample in $ctrl.filterOptions['Sample'] | orderBy: $ctrl.orderBy"
+                        ng-repeat="sample in $ctrl.filterOptions['Sample']"
                       >
                         {{ sample.column.split('.')[1] }}</md-option
                       >
@@ -474,7 +474,7 @@
                     <md-optgroup label="Tissues">
                       <md-option
                         ng-value="tissue.column"
-                        ng-repeat="tissue in $ctrl.filterOptions['Tissue'] | orderBy: $ctrl.orderBy"
+                        ng-repeat="tissue in $ctrl.filterOptions['Tissue']"
                       >
                         {{ tissue.column.split('.')[1] }}</md-option
                       >
