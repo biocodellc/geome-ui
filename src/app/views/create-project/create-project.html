@@ -138,12 +138,14 @@
                   changes made to the original config will not be propagated to your
                   configuration.</md-hint
                 >
-                <md-hint ng-show="!$ctrl.isNetworkAdmin && !$ctrl.currentUser.subscribed">
-                  Only subscribed users can customize project configurations. See
-                  <a href="/about">our about page</a> for more information</md-hint
-                >
               </md-hints>
             </md-checkbox>
+            <p
+              ng-show="!$ctrl.newConfig && $ctrl.existingConfig && !$ctrl.isNetworkAdmin && !$ctrl.currentUser.subscribed"
+            >
+              Note: Only subscribed users can customize project configurations. See
+              <a ui-sref="about({'#':'subscriptions'})">our about page</a> for more information
+            </p>
           </md-step-body>
           <md-step-actions>
             <md-button
