@@ -2,6 +2,8 @@ import angular from 'angular';
 
 const template = require('./query-form.html');
 
+const QUERY_ENTITIES = ['Event', 'Sample', 'Tissue'];
+
 const SOURCE = [
   'Event.eventID',
   'Sample.eventID',
@@ -19,7 +21,13 @@ const SOURCE = [
   'Sample.bcid',
   'Sample.phylum',
   'Sample.scientificName',
-  'Sample.expeditionCode',
+  'Tissue.materialSampleID',
+  'Tissue.tissueID',
+  'Tissue.bcid',
+  'Tissue.tissueType',
+  'Tissue.tissuePlate',
+  'Tissue.tissueWell',
+  'expeditionCode',
 ];
 
 const defaultFilter = {
@@ -76,6 +84,8 @@ class QueryFormController {
     this.showGroups = true;
     this.resetExpeditions = true;
     this.moreSearchOptions = false;
+    this.entity = 'Sample';
+    this.queryEntities = QUERY_ENTITIES;
     this.families = [];
     this.individualProjects = [];
     this.eventFilters = [];
@@ -166,6 +176,7 @@ class QueryFormController {
             .cancel('Cancel'),
         )
         .then(() => {
+          this.entity = 'Sample';
           this.clearPreviousResults();
           this.clearParams();
           this.clearBounds();
@@ -331,23 +342,27 @@ class QueryFormController {
   queryJson() {
     this.toggleLoading({ val: true });
     const entities = this.config.entities
-      .filter(e => ['Event', 'Tissue'].includes(e.conceptAlias))
+      .filter(e => ['Event', 'Sample', 'Tissue'].includes(e.conceptAlias))
       .map(e => e.conceptAlias);
     this.entitiesForDownload({ entities });
     const selectEntities = ['Event', 'fastqMetadata'];
+    if (this.entity === 'Tissue') {
+      selectEntities.push('Sample');
+    }
     this.QueryService.queryJson(
       this.params.buildQuery(selectEntities, SOURCE.join()),
-      'Sample',
+      this.entity,
       0,
       10000,
     )
       .then(results => {
         this.onNewResults({
           results,
+          entity: this.entity,
           isAdvancedSearch: this.moreSearchOptions,
         });
         this.queryMap.clearBounds();
-        this.queryMap.setMarkers(results.data);
+        this.queryMap.setMarkers(results.data, this.entity);
       })
       .catch(response => {
         angular.catcher('Failed to load query results')(response);

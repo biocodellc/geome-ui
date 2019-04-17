@@ -18,6 +18,30 @@
       </md-radio-group>
     </div>-->
 
+    <div class="term" layout-padding>
+      <div layout="column">
+        <div layout="row" layout-align="start center">
+          <h3 class="md-subhead bold">
+            Query Entity
+          </h3>
+          <md-button class="md-icon-button help-link md-popover-button">
+            <md-popover md-popover-class="fastq-help-filenames" md-direction="right">
+              <div>Controls which columns as a result of a query</div>
+            </md-popover>
+            <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
+          </md-button>
+        </div>
+
+        <md-input-container class="entity-radio">
+          <md-radio-group ng-model="$ctrl.entity" layout-gt-sm="row" class="md-primary">
+            <md-radio-button ng-repeat="entity in $ctrl.queryEntities" ng-value="entity" flex>{{
+              entity
+            }}</md-radio-button>
+          </md-radio-group>
+        </md-input-container>
+      </div>
+    </div>
+
     <div layout="column" class="project-configs">
       <h3 class="md-subhead bold" flex>
         Project Configuration

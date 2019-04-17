@@ -7,13 +7,38 @@ const { restRoot } = config;
 function transformResults(data) {
   const records = [];
 
-  if (data.Sample) {
-    const events = data.Event
-      ? data.Event.reduce((accumulator, event) => {
-          accumulator[event.eventID] = event;
+  const getRecords = (alias, uniqueKey) =>
+    data[alias]
+      ? data[alias].reduce((accumulator, record) => {
+          accumulator[record[uniqueKey]] = record;
           return accumulator;
         }, {})
       : undefined;
+
+  if (data.Tissue) {
+    const events = getRecords('Event', 'eventID');
+    const samples = getRecords('Sample', 'materialSampleID');
+    data.Tissue.forEach(t => {
+      const record = t;
+      const { bcid } = t;
+      if (samples) {
+        const sample = samples[t.materialSampleID];
+        const { bcid: sampleBcid } = sample;
+        Object.assign(record, sample, { bcid, sampleBcid });
+
+        let event = {};
+        let eventBcid;
+
+        if (events) {
+          event = events[record.eventID];
+          eventBcid = event.bcid;
+        }
+        Object.assign(record, sample, event, { bcid, sampleBcid, eventBcid });
+      }
+      records.push(record);
+    });
+  } else if (data.Sample) {
+    const events = getRecords('Event', 'eventID');
     data.Sample.forEach(s => {
       const record = s;
       const { bcid } = s;
@@ -27,7 +52,7 @@ function transformResults(data) {
     });
   } else if (data.Event) {
     data.Event.forEach(e => {
-      records.push({ event: e });
+      records.push(e);
     });
   }
 
