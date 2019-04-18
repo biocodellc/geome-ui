@@ -27,9 +27,10 @@ class QueryController {
     this.sidebarToggleToolTip = 'hide sidebar';
   }
 
-  handleNewResults(results, isAdvancedSearch) {
+  handleNewResults(results, entity, isAdvancedSearch) {
     // when switching between simple and advanced searches
     this.results = results;
+    this.entity = entity;
     if (!results) {
       this.toggleMap(true);
     } else {
@@ -49,7 +50,7 @@ class QueryController {
     this.loading = true;
     this.QueryService.downloadExcel(
       this.params.buildQuery(this.entities),
-      'Sample',
+      this.entity,
     ).finally(() => {
       this.loading = false;
     });
@@ -59,7 +60,7 @@ class QueryController {
     this.loading = true;
     this.QueryService.downloadCsv(
       this.params.buildQuery(this.entities),
-      'Sample',
+      this.entity,
     ).finally(() => {
       this.loading = false;
     });
