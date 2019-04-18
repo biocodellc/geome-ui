@@ -55,33 +55,32 @@
           <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
         </md-button>
       </h3>
-      <md-input-container>
-        <md-chips
-          flex
-          ng-model="$ctrl.families"
-          md-on-add="$ctrl.familyToggle($chip)"
-          md-on-remove="$ctrl.familyToggle($chip,$event)"
-          md-require-match
+      <md-chips
+        flex
+        ng-model="$ctrl.families"
+        md-on-add="$ctrl.familyToggle($chip)"
+        md-on-remove="$ctrl.familyToggle($chip,$event)"
+        md-require-match
+      >
+        <md-autocomplete
+          md-selected-item="$ctrl.selectedGroup"
+          md-no-cache
+          md-autocomplete-snap="width"
+          md-search-text="searchText"
+          md-items="name in $ctrl.configNames | filter: {$: searchText}"
+          md-item-text="name"
+          md-dropdown-position="bottom"
+          md-menu-container-class="project-config-autocomplete-menu"
+          md-min-length="0"
         >
-          <md-autocomplete
-            md-selected-item="$ctrl.selectedGroup"
-            md-no-cache
-            md-autocomplete-snap="width"
-            md-search-text="searchText"
-            md-items="name in $ctrl.configNames | filter: {$: searchText}"
-            md-item-text="name"
-            md-dropdown-position="bottom"
-            md-min-length="0"
-          >
-            <span md-highlight-text="searchText" md-highlight-flags="i">{{ name }}</span>
-          </md-autocomplete>
-          <md-chip-template>
-            <span>
-              <strong>{{ $chip }}</strong>
-            </span>
-          </md-chip-template>
-        </md-chips>
-      </md-input-container>
+          <span md-highlight-text="searchText" md-highlight-flags="i">{{ name }}</span>
+        </md-autocomplete>
+        <md-chip-template>
+          <span>
+            <strong>{{ $chip }}</strong>
+          </span>
+        </md-chip-template>
+      </md-chips>
     </div>
   </div>
 

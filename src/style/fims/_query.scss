@@ -1,8 +1,9 @@
 // Query View styles
 
-.md-chips .md-chip-input-container md-autocomplete input {
-  width: 400px;
+.project-config-autocomplete-menu {
+  min-width: 400px !important;
 }
+
 .md-raised-disabled {
   background-color: rgba(0, 0, 0, 0.3);
   color: #fff;
