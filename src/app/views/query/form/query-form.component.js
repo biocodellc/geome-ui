@@ -2,7 +2,14 @@ import angular from 'angular';
 
 const template = require('./query-form.html');
 
-const QUERY_ENTITIES = ['Event', 'Sample', 'Tissue'];
+const QUERY_ENTITIES = ['Event', 'Sample', 'Tissue', 'Fastq'];
+
+const SELECT_ENTITIES = {
+  Event: [],
+  Sample: ['Event'],
+  Tissue: ['Event', 'Sample'],
+  fastqMetadata: ['Event', 'Sample', 'Tissue'],
+};
 
 const SOURCE = [
   'Event.eventID',
@@ -15,8 +22,13 @@ const SOURCE = [
   'Event.decimalLongitude',
   'Sample.genus',
   'Sample.specificEpithet',
+  'fastqMetadata.tissueID',
   'fastqMetadata.identifier',
-  'fastqMetadata.identifier',
+  'fastqMetadata.bioSample',
+  'fastqMetadata.libraryLayout',
+  'fastqMetadata.librarySource',
+  'fastqMetadata.librarySelection',
+  'fastqMetadata.bcid',
   'Event.bcid',
   'Sample.bcid',
   'Sample.phylum',
@@ -109,7 +121,6 @@ class QueryFormController {
       this.phylums = this.networkConfig.getList('phylum').fields;
       this.countries = this.networkConfig.getList('country').fields;
       this.markers = this.networkConfig.getList('markers').fields;
-      this.hasFastqEntity = this.config.entities.some(e => e.type === 'Fastq');
     });
 
     const { q } = this.$location.search();
@@ -340,29 +351,27 @@ class QueryFormController {
   }
 
   queryJson() {
+    const entity = this.entity === 'Fastq' ? 'fastqMetadata' : this.entity;
     this.toggleLoading({ val: true });
     const entities = this.config.entities
       .filter(e => ['Event', 'Sample', 'Tissue'].includes(e.conceptAlias))
       .map(e => e.conceptAlias);
     this.entitiesForDownload({ entities });
-    const selectEntities = ['Event', 'fastqMetadata'];
-    if (this.entity === 'Tissue') {
-      selectEntities.push('Sample');
-    }
+    const selectEntities = SELECT_ENTITIES[entity];
     this.QueryService.queryJson(
       this.params.buildQuery(selectEntities, SOURCE.join()),
-      this.entity,
+      entity,
       0,
       10000,
     )
       .then(results => {
         this.onNewResults({
           results,
-          entity: this.entity,
+          entity,
           isAdvancedSearch: this.moreSearchOptions,
         });
         this.queryMap.clearBounds();
-        this.queryMap.setMarkers(results.data, this.entity);
+        this.queryMap.setMarkers(results.data, entity);
       })
       .catch(response => {
         angular.catcher('Failed to load query results')(response);

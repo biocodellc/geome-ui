@@ -116,6 +116,7 @@
           md-items="item in $ctrl.projects | filter: {projectTitle: searchText}"
           md-item-text="item.projectTitle"
           md-dropdown-position="bottom"
+          md-menu-container-class="project-autocomplete-menu"
           md-min-length="0"
         >
           <span md-highlight-text="searchText" md-highlight-flags="i">{{ item.projectTitle }}</span>

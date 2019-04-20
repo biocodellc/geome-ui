@@ -43,7 +43,7 @@
       <tbody>
         <tr ng-repeat="(key, value) in $ctrl.auxiliaryRecordDetails(0) track by key">
           <th>{{ key }}:</th>
-          <td>
+          <td ng-class="{'sequence': key === 'sequence'}">
             <md-tooltip
               md-direction="top"
               class="fix-placement"
@@ -65,7 +65,7 @@
       <tbody>
         <tr ng-repeat="(key, value) in $ctrl.auxiliaryRecordDetails(1) track by key">
           <th>{{ key }}:</th>
-          <td>
+          <td ng-class="{'sequence': key === 'sequence'}">
             <md-tooltip
               md-direction="top"
               class="fix-placement"

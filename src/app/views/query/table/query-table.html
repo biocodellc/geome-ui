@@ -14,7 +14,7 @@
       >
         <thead md-head md-order="$ctrl.orderBy">
           <tr md-row class="text-capitalize">
-            <th md-column ng-repeat="column in $ctrl.tableColumns" md-order-by="{{ column }}">
+            <th md-column ng-repeat="column in $ctrl.getTableColumns()" md-order-by="{{ column }}">
               {{ column }}
             </th>
           </tr>
@@ -34,11 +34,11 @@
               popover-placement="bottom"
               popover-append-to-body="true"
               ng-repeat="column in $ctrl.tableColumns"
-              ng-bind-html="resource[column] | trusted_html"
+              ng-bind-html="$ctrl.getVal(resource, column) | trusted_html"
             ></td>
           </tr>
           <tr ng-show="$ctrl.results.totalElements === 0" class="h4">
-            <td class="text-primary" colspan="100">No Samples Found</td>
+            <td class="text-primary" colspan="100">No Data Found</td>
           </tr>
         </tbody>
       </table>
