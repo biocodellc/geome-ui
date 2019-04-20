@@ -34,6 +34,21 @@ const TABLE_COLUMNS = {
     'expeditionCode',
     'bcid',
   ],
+  fastqMetadata: [
+    {
+      column: 'BioSample Accession #',
+      get: f => (f.bioSample ? f.bioSample.accession : 'N/A'),
+    },
+    'tissueID',
+    'materialSampleID',
+    'yearCollected',
+    'scientificName',
+    'libraryLayout',
+    'librarySource',
+    'librarySelection',
+    'expeditionCode',
+    'bcid',
+  ],
 };
 
 class QueryTableController {
@@ -50,6 +65,16 @@ class QueryTableController {
     this.currentPage = 1;
     this.pageSize = 50;
     this.limitOptions = [25, 50, 100];
+  }
+
+  getTableColumns() {
+    return this.tableColumns.map(column =>
+      typeof column === 'string' ? column : column.column,
+    );
+  }
+
+  getVal(record, column) {
+    return typeof column === 'string' ? record[column] : column.get(record);
   }
 
   $onChanges(changesObj) {

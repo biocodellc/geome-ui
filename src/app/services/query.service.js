@@ -4,7 +4,7 @@ import authService from './auth.service';
 
 const { restRoot } = config;
 
-function transformResults(data) {
+function transformResults(data, entity) {
   const records = [];
 
   const getRecords = (alias, uniqueKey) =>
@@ -15,7 +15,41 @@ function transformResults(data) {
         }, {})
       : undefined;
 
-  if (data.Tissue) {
+  // TODO come up w/ a more generic way to flatten these records
+  if (entity === 'fastqMetadata') {
+    const events = getRecords('Event', 'eventID');
+    const samples = getRecords('Sample', 'materialSampleID');
+    const tissues = getRecords('Tissue', 'tissueID');
+    data.fastqMetadata.forEach(f => {
+      const record = f;
+      const { bcid } = f;
+      if (tissues) {
+        const tissue = tissues[f.tissueID];
+        const { bcid: tissueBcid } = tissue;
+
+        let event = {};
+        let sample = {};
+        let eventBcid;
+        let sampleBcid;
+
+        if (samples) {
+          sample = samples[tissue.materialSampleID];
+          sampleBcid = sample.bcid;
+        }
+        if (events) {
+          event = events[sample.eventID];
+          eventBcid = event.bcid;
+        }
+        Object.assign(record, tissue, sample, event, {
+          bcid,
+          tissueBcid,
+          sampleBcid,
+          eventBcid,
+        });
+      }
+      records.push(record);
+    });
+  } else if (entity === 'Tissue') {
     const events = getRecords('Event', 'eventID');
     const samples = getRecords('Sample', 'materialSampleID');
     data.Tissue.forEach(t => {
@@ -37,7 +71,7 @@ function transformResults(data) {
       }
       records.push(record);
     });
-  } else if (data.Sample) {
+  } else if (entity === 'Sample') {
     const events = getRecords('Event', 'eventID');
     data.Sample.forEach(s => {
       const record = s;
@@ -50,7 +84,7 @@ function transformResults(data) {
       }
       records.push(record);
     });
-  } else if (data.Event) {
+  } else if (entity === 'Event') {
     data.Event.forEach(e => {
       records.push(e);
     });
@@ -86,7 +120,7 @@ class QueryService {
       };
 
       if (response.data) {
-        results.data = transformResults(response.data.content);
+        results.data = transformResults(response.data.content, entity);
 
         results.page = response.data.page;
         results.totalElements = results.data.length;

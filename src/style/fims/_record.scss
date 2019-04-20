@@ -19,6 +19,9 @@
 
   td {
     padding: 0 8px;
+  }
+
+  td.sequence {
     word-break: break-all;
   }
 }
@@ -26,10 +29,6 @@
 .record-detail {
   > h3 {
     margin-top: 8px;
-  }
-
-  td {
-    word-break: break-all;
   }
 
   .truncate {
