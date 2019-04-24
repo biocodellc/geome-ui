@@ -38,25 +38,26 @@
     <ul>
       <li>materialSampleID</li>
       <li>yearCollected</li>
-      <li>decimalLatitude/decimalLongitude OR locality</li>
+      <li>country</li>
+      <li>locality</li>
+      <li>phylum ('Unknown' is an acceptable value)</li>
     </ul>
 
     <p><strong>Notes:</strong></p>
     <ul>
       <li>
-        While a value for phylum is technically required by GeOMe, we allow users to select a value
-        of "Unknown", thus enabling samples where multiple taxa are present.
-      </li>
-      <li>
-        We have elected to allow for just a locality description in place of
-        decimalLatitude/decimalLongitude coordinates in order to both curate historical data without
-        coordinates, as well as allow for events not suitably described by coordinates.
+         Each of the provided configurations may choose to enforce additional rules that extend the GeOMe network rules.
       </li>
       <li>
         Controlled vocabularies are enforced for the following fields: country, container,
         horizontalDatum, lengthUnits, lifeStage, markers, phylum, preservative, relaxant, sex,
         taxonRank, and weightUnits. Additional controlled vocabularies exist for describing SRA
         metadata submissions.
+      </li>
+      <li>
+        To view a list of all fields and validation rules for a particular configuration, see Workbench -> "Generate Template" and then
+	select one of the SAMPLE project configurations in the project chooser in the top-center of the window.  
+	Note that you can type "SAMPLE" in the filter to show only the SAMPLE projects.
       </li>
       <li>
         There are numerous rules that are enforced for all all incoming data. For instance
@@ -67,12 +68,11 @@
           >https://api.geome-db.org/v1/network/1/config</a
         >
       </li>
+      <li>
+        Locality is required but not decimalLatitude/decimalLongitude coordinates as some projects need to curate historical data without coordinates.  
+      </li>
     </ul>
 
-    <p>
-      Finally, each of the provided configurations may choose to enforce additional rules that
-      extend the GeOMe network rules.
-    </p>
   </div>
 
   <div
