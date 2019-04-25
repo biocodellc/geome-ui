@@ -333,6 +333,9 @@ class QueryFormController {
             list: this.config.findListForColumn(e, a.column),
           }));
         this.filterOptions[alias] = opts;
+        this.filterOptions[alias].sort((a, b) =>
+          a.column > b.column ? 1 : b.column > a.column ? -1 : 0,
+        );
       });
     }
 
