@@ -382,7 +382,9 @@
                       aria-label="event"
                     >
                       <md-option>-- Choose value --</md-option>
-                      <md-option ng-value="item" ng-repeat="item in $chip.list track by item">
+                      <md-option 
+		      	ng-value="item" 
+			ng-repeat="item in $chip.list track by item">
                         {{ item }}</md-option
                       >
                     </md-select>
@@ -393,6 +395,7 @@
           </div>
 
         </div>
+	<!--
         <md-chips
           ng-model="$ctrl.eventFilters"
           readonly="true"
@@ -447,6 +450,7 @@
             </div>
           </md-chip-template>
         </md-chips>
+	-->
       </div>
 
       <div class="sample">
@@ -527,7 +531,7 @@
           </div>
 
         </div>
-        <md-chips
+        <!--<md-chips
           ng-model="$ctrl.sampleFilters"
           readonly="true"
           md-removable="true"
@@ -581,6 +585,7 @@
             </div>
           </md-chip-template>
         </md-chips>
+	-->
       </div>
 
       <div class="tissues">
@@ -661,6 +666,7 @@
           </div>
 
         </div>
+	<!--
         <md-chips
           ng-model="$ctrl.tissueFilters"
           readonly="true"
@@ -715,6 +721,7 @@
             </div>
           </md-chip-template>
         </md-chips>
+	-->
       </div>
     </div>
 
