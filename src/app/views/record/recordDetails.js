@@ -58,8 +58,8 @@ export const childRecordDetails = {
     }),
   },
   fastqMetadata: {
-    materialSampleID: m => ({
-      text: m.materialSampleID,
+    tissueID: m => ({
+      text: m.tissueID,
       href: `/record/${m.bcid}`,
     }),
   },
@@ -164,27 +164,30 @@ export const mainRecordDetails = {
   },
   fastaSequence: {
     marker: getKey('marker'),
-    sequence: getKey('sequence'),
+    // sequence: getKey('sequence'),
     bcid: s => ({
       text: s.bcid,
       href: `https://n2t.net/${s.bcid}`,
     }),
   },
   fastqMetadata: {
-    materialSampleID: getKey('materialSampleID'),
+    tissueID: getKey('tissueID'),
     bioSamplesLink: m => ({
       text: m.bioSample ? 'NCBI BioSamples' : undefined,
-      href: m.bioSample
-        ? `https://www.ncbi.nlm.nih.gov/bioproject/${m.bioSample.bioProjectId}`
-        : undefined,
-    }),
-    bioProjectLink: m => ({
-      text: m.bioSample ? 'NCBI BioProject' : undefined,
       href: m.bioSample
         ? `https://www.ncbi.nlm.nih.gov/biosample?LinkName=bioproject_biosample_all&from_uid=${
             m.bioSample.bioProjectId
           }`
         : undefined,
+    }),
+    bioProjectLink: m => ({
+      text: m.bioSample ? 'NCBI BioProject' : undefined,
+      href: m.bioSample
+        ? `https://www.ncbi.nlm.nih.gov/bioproject/${m.bioSample.bioProjectId}`
+        : undefined,
+    }),
+    bioSampleAccession: m => ({
+      text: m.bioSample ? m.bioSample.accession : undefined,
     }),
     bcid: s => ({
       text: s.bcid,

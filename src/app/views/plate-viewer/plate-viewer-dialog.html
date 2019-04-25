@@ -36,7 +36,7 @@
           </md-autocomplete>
           <span flex />
         </div>
-        <div ng-show="$ctrl.errors" class="errors">
+        <div ng-show="$ctrl.errors && $ctrl.errors.length > 0" class="errors">
           <p>
             <strong
               >The following errors occurred when creating the plate. Any tissues below were not
