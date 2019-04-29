@@ -35,7 +35,8 @@ class DashboardController {
 
   showExpeditionsDetail(project) {
     this.loading = true;
-    this.ProjectService.setCurrentProject(project)
+
+    this.ProjectService.setCurrentProject(project) // this does not work unless we use $ctrl.projects in the data table, and will have to change depending on how the new service call is written
       .then(() => this.$state.go('dashboardExpedition'))
       .finally(() => (this.loading = false));
   }
