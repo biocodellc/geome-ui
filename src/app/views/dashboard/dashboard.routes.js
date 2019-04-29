@@ -8,6 +8,14 @@ function getStates() {
         component: 'fimsDashboard',
       },
     },
+    {
+      state: 'dashboardExpedition',
+      config: {
+        parent: 'projectView',
+        url: '/project/detail',
+        component: 'fimsDashboardExpedition',
+      },
+    },
   ];
 }
 

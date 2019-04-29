@@ -1,0 +1,482 @@
+[
+  {
+    "project_title": "Diversity of the IndoPacific",
+    "events": 5655,
+    "samples": 38659,
+    "tissues": 38659,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": 38821,
+    "fastq": 672
+  },
+  {
+    "project_title": "SI BioBlitz",
+    "events": 190,
+    "samples": 1582,
+    "tissues": 1582,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "Genetic diversity of coral reef damselfish feeding guilds",
+    "events": 10,
+    "samples": 114,
+    "tissues": 114,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": 114
+  },
+  {
+    "project_title": "Ira Moana - Genes of the Sea",
+    "events": 11,
+    "samples": 132,
+    "tissues": 132,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": 2,
+    "fastq": null
+  },
+  {
+    "project_title": "Kuroshio Current",
+    "events": 5,
+    "samples": 205,
+    "tissues": 205,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": 205
+  },
+  {
+    "project_title": "Zostera capensis pooled RADseq",
+    "events": 12,
+    "samples": 12,
+    "tissues": 12,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "Smithsonian BOEM Project",
+    "events": 716,
+    "samples": 2640,
+    "tissues": 4617,
+    "event_photos": "",
+    "sample_photos": 57,
+    "fasta": 37,
+    "fastq": null
+  },
+  {
+    "project_title": "Rosie Test",
+    "events": null,
+    "samples": null,
+    "tissues": null,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "HI Biotic Interactions Database",
+    "events": null,
+    "samples": null,
+    "tissues": null,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "AntStravaganza",
+    "events": null,
+    "samples": null,
+    "tissues": null,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "Test Project Here",
+    "events": 1,
+    "samples": 1,
+    "tissues": 1,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "Ployploidy",
+    "events": null,
+    "samples": null,
+    "tissues": null,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "Smithsonian DROP Project",
+    "events": 63,
+    "samples": 3881,
+    "tissues": 2982,
+    "event_photos": "",
+    "sample_photos": 11448,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "John Biocode Config Test Project",
+    "events": 4,
+    "samples": 5,
+    "tissues": 2,
+    "event_photos": "",
+    "sample_photos": 5,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "MISE University of the Ryukyus",
+    "events": 12,
+    "samples": 12,
+    "tissues": 12,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": 12,
+    "fastq": null
+  },
+  {
+    "project_title": "Test project",
+    "events": null,
+    "samples": null,
+    "tissues": null,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "Cairns LAB",
+    "events": 100,
+    "samples": 521,
+    "tissues": 520,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "CMPI",
+    "events": 176,
+    "samples": 176,
+    "tissues": 275,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "Harasewych LAB",
+    "events": 6,
+    "samples": 189,
+    "tissues": 189,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "INDIAN RIVER LAGOON",
+    "events": 44,
+    "samples": 1227,
+    "tissues": 1211,
+    "event_photos": "",
+    "sample_photos": 2814,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "Lemaitre LAB",
+    "events": 117,
+    "samples": 189,
+    "tissues": 190,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "Meyer ARMS",
+    "events": 61,
+    "samples": 1515,
+    "tissues": 1160,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "Meyer Biocube",
+    "events": 96,
+    "samples": 2404,
+    "tissues": 2307,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "Meyer LAB",
+    "events": 320,
+    "samples": 1226,
+    "tissues": 1470,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "Moorea Biocode",
+    "events": 5336,
+    "samples": 50373,
+    "tissues": 39556,
+    "event_photos": "",
+    "sample_photos": 42440,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "Norenburg LAB",
+    "events": 17,
+    "samples": 1303,
+    "tissues": 1196,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "Osborn LAB",
+    "events": 529,
+    "samples": 2563,
+    "tissues": 3199,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "PEER Deadheads",
+    "events": 85,
+    "samples": 8472,
+    "tissues": 5509,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "Phillips LAB",
+    "events": 30,
+    "samples": 243,
+    "tissues": 243,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "PIRE ARMS",
+    "events": 158,
+    "samples": 12088,
+    "tissues": 7876,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "Strong LAB",
+    "events": 2126,
+    "samples": 10420,
+    "tissues": 10376,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "USAID INDO",
+    "events": 195,
+    "samples": 9563,
+    "tissues": 9115,
+    "event_photos": "",
+    "sample_photos": 19444,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "Windsor LAB",
+    "events": 298,
+    "samples": 317,
+    "tissues": 366,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "Global Genome Initiative",
+    "events": 2114,
+    "samples": 6403,
+    "tissues": 6403,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "SI Barcoding CBOL",
+    "events": 3988,
+    "samples": 14051,
+    "tissues": 14051,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "Mekong River",
+    "events": 6,
+    "samples": 248,
+    "tissues": 248,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": 248
+  },
+  {
+    "project_title": "Bionetwork",
+    "events": 6,
+    "samples": 165,
+    "tissues": 165,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": 165
+  },
+  {
+    "project_title": "John Test of single-sheet generic",
+    "events": 1,
+    "samples": 2,
+    "tissues": 2,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "john dipnet test project",
+    "events": 1,
+    "samples": 1,
+    "tissues": 1,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "john test of barcoding",
+    "events": 1,
+    "samples": 1,
+    "tissues": 1,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "john test of Multi-sheet Generic",
+    "events": 1,
+    "samples": 1,
+    "tissues": 3,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "my test project",
+    "events": 1,
+    "samples": 1,
+    "tissues": null,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "Notothenia_coriiceps_population_genomics",
+    "events": 16,
+    "samples": 132,
+    "tissues": 132,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": 132
+  },
+  {
+    "project_title": "BARCODING SAMPLE PROJECT",
+    "events": null,
+    "samples": null,
+    "tissues": null,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "Reef Fish Phylogeography",
+    "events": 8,
+    "samples": 52,
+    "tissues": 52,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": 52
+  },
+  {
+    "project_title": "Amphibian Disease Portal",
+    "events": null,
+    "samples": null,
+    "tissues": null,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "SINGLE SHEET SAMPLE PROJECT",
+    "events": null,
+    "samples": null,
+    "tissues": null,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  },
+  {
+    "project_title": "MULTI SHEET SAMPLE PROJECT",
+    "events": null,
+    "samples": null,
+    "tissues": null,
+    "event_photos": "",
+    "sample_photos": null,
+    "fasta": null,
+    "fastq": null
+  }
+]
