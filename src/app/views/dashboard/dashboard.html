@@ -1,10 +1,15 @@
 <div layout-fill layout="column">
   <h3 class="text-center page-header">{{$ctrl.currentProject.projectTitle}} Overview</h3>
   <p class="text-center">{{ $ctrl.currentProject.description}}</p>
-  <p class="text-center">
-    <strong>Project owned by user: </strong> {{ $ctrl.currentProject.user.username}}
-    ({{$ctrl.currentProject.user.email}})
-  </p>
+
+  <div class="row">
+    <form class="form-horizontal">
+	 <div class="col-sm-4 text-right col-md-offset-1"><strong>Project owner:</strong></div><div class="col-sm-4 text-left">{{ $ctrl.currentProject.user.username}} ({{$ctrl.currentProject.user.email}})</div>
+         <div class="col-sm-4 text-right col-md-offset-1"><strong>Project configuration:</strong></div> <div class="col-sm-4 text-left">{{ $ctrl.currentProject.projectConfiguration.name }}</div>
+    </form>
+  </div>
+  <p></p>
+
 
   <div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
     <md-progress-circular md-mode="indeterminate"></md-progress-circular>
