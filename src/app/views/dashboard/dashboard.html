@@ -1,14 +1,12 @@
-<div layout-fill layout="column">
-  <h2 class="text-center page-header">Project Dashboard</h2>
-  <div
-    layout="row"
-    layout-fill
-    layout-sm="column"
-    ng-show="$ctrl.loading"
-    layout-align="center center"
-  >
-    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+<div layout-fill>
+  <div layout="row" layout-align="center center" class="loading-overlay" ng-show="$ctrl.loading">
+    <md-progress-circular
+      class="loading-overlay-fixed"
+      md-mode="indeterminate"
+    ></md-progress-circular>
   </div>
+  <h2 class="text-center page-header">Project Dashboard</h2>
+
   <div class="text-center">
     <p>
       <md-button ui-sref="create-project" class="md-raised md-primary"
@@ -20,29 +18,30 @@
     </p>
   </div>
   <div ng-if="$ctrl.currentUser">
-    <h3>Private Projects for {{ $ctrl.currentUser.username }}</h3>
+    <h3>Projects marked as private that {{ $ctrl.currentUser.username }} belongs to</h3>
     <table class="table table-hover table-condensed">
       <thead>
         <th class="text-center">Project Title</th>
         <th class="text-center" ng-repeat="entity in $ctrl.entities">
           {{ entity }}
         </th>
+        <th class="text-center">Project Configuration</th>
       </thead>
 
-      <tr ng-repeat="data in $ctrl.projectsAndTheirEntityCounts">
-        <!-- 
-        ng-show="data.user.username === $ctrl.currentUser.username" 
-        the service call for projects entity counts will need to include the user, or we redisign the table 
-        -->
+      <tr
+        ng-repeat="project in $ctrl.projects"
+        ng-show="project.user.username === $ctrl.currentUser.username"
+      >
         <td>
-          <a href="#" ng-click="$ctrl.showExpeditionsDetail(project)">{{ data.project_title }}</a>
+          <a href="#" ng-click="$ctrl.showExpeditionsDetail(project)">{{ project.projectTitle }}</a>
         </td>
-        <td class="text-center">{{ data.samples }}</td>
-        <td class="text-center">{{ data.events }}</td>
-        <td class="text-center">{{ data.tissues }}</td>
-        <td class="text-center">{{ data.event_photos }}</td>
-        <td class="text-center">{{ data.fasta }}</td>
-        <td class="text-center">{{ data.fastq }}</td>
+        <td class="text-center">{{ project.samples }}</td>
+        <td class="text-center">{{ project.events }}</td>
+        <td class="text-center">{{ project.tissues }}</td>
+        <td class="text-center">{{ project.event_photos }}</td>
+        <td class="text-center">{{ project.fasta }}</td>
+        <td class="text-center">{{ project.fastq }}</td>
+        <td class="text-center">{{ project.projectConfiguration.name }}</td>
         <td></td>
       </tr>
     </table>
@@ -51,22 +50,26 @@
   <h3>Public Projects</h3>
   <table class="table table-hover table-condensed">
     <thead>
-      <th>Project Title</th>
+      <th class="text-center">Project Title</th>
       <th ng-repeat="entity in $ctrl.entities">
         {{ entity }}
       </th>
+      <th class="text-center">Project Configuration</th>
     </thead>
-    <tr ng-repeat="data in $ctrl.projectsAndTheirEntityCounts">
-      <!--  ng-if="$ctrl.currentUser.username !== data.user.username" -->
+    <tr
+      ng-repeat="project in $ctrl.projects"
+      ng-if="$ctrl.currentUser.username !== project.user.username"
+    >
       <td>
-        <a href="#" ng-click="$ctrl.showExpeditionsDetail(project)">{{ data.project_title }}</a>
+        <a href="#" ng-click="$ctrl.showExpeditionsDetail(project)">{{ project.projectTitle }}</a>
       </td>
-      <td class="text-center">{{ data.samples }}</td>
-      <td class="text-center">{{ data.events }}</td>
-      <td class="text-center">{{ data.tissues }}</td>
-      <td class="text-center">{{ data.event_photos }}</td>
-      <td class="text-center">{{ data.fasta }}</td>
-      <td class="text-center">{{ data.fastq }}</td>
+      <td class="text-center">{{ project.samples }}</td>
+      <td class="text-center">{{ project.events }}</td>
+      <td class="text-center">{{ project.tissues }}</td>
+      <td class="text-center">{{ project.event_photos }}</td>
+      <td class="text-center">{{ project.fasta }}</td>
+      <td class="text-center">{{ project.fastq }}</td>
+      <td class="text-center">{{ project.projectConfiguration.name }}</td>
     </tr>
   </table>
 </div>
