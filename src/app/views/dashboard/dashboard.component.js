@@ -163,13 +163,15 @@ class DashboardController {
     // each object in the result contains the expedition info,
     // as well as the 1 {entity}Count value for each entity
     // our table headers are these count values
-    this.headers = Object.keys(this.results[0]).filter(k =>
-      k.endsWith('Count'),
-    );
-    this.displayResults = this.results.slice(
-      (this.currentPage - 1) * this.itemsPerPage,
-      this.currentPage * this.itemsPerPage,
-    );
+    if (this.results.length !== 0) {
+      this.headers = Object.keys(this.results[0]).filter(k =>
+        k.endsWith('Count'),
+      );
+      this.displayResults = this.results.slice(
+        (this.currentPage - 1) * this.itemsPerPage,
+        this.currentPage * this.itemsPerPage,
+      );
+    }
   }
 
   fetchPage() {
