@@ -1,4 +1,5 @@
-<h2 class="page-header">Generate Template</h2>
+<h3>{{$ctrl.currentProject.projectTitle}} Template Generator</h3>
+<p>{{$ctrl.description}}</p>
 
 <div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
   <md-progress-circular md-mode="indeterminate"></md-progress-circular>
@@ -132,8 +133,6 @@
   </div>
 
   <div class="col-xs-6 attribute-definition-container" md-sticky>
-    <p>{{ $ctrl.description }}</p>
-
     <fims-attribute-definition
       current-project="$ctrl.currentProject"
       attribute="$ctrl.defAttribute"

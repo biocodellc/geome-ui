@@ -1,3 +1,5 @@
+import compareValues from '../../utils/compareValues';
+
 const template = require('./project-info.html');
 
 class ProjectInfoController {
@@ -11,10 +13,10 @@ class ProjectInfoController {
   $onInit() {
     this.loading = true;
     this.ProjectConfigurationService.all(true)
-      .then(( data ) => {
-        //this.data = data.filter(p => p.projectConfiguration.networkApproved);
-	console.log(data)
-        this.data = data
+      .then(data => {
+        // sorting by description a bit of a hack to get generic configurations to sort at top
+        // these configuratinos purposefully begin with early alphabet letters
+        this.data = data.sort(compareValues('description'));
       })
       .finally(() => (this.loading = false));
   }
