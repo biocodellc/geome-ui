@@ -7,6 +7,8 @@ const { restRoot } = config;
 function transformResults(data, entity) {
   const records = [];
 
+  if (Object.keys(data).length === 0) return records;
+
   const getRecords = (alias, uniqueKey) =>
     data[alias]
       ? data[alias].reduce((accumulator, record) => {
