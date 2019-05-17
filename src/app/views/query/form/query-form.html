@@ -8,7 +8,7 @@
     </md-hint>
   </md-hints>
 
-  <div layout-padding ng-show="$ctrl.moreSearchOptions">
+  <div layout-padding ng-if="$ctrl.moreSearchOptions">
     <!--<div ng-show="$ctrl.moreSearchOptions" ng-click="$ctrl.clearParams()">
       <md-radio-group ng-model="$ctrl.showGroups" layout-gt-sm="row" class="md-primary">
         <md-radio-button ng-value="false" flex> Search by individual project
@@ -93,7 +93,7 @@
     </div>
   </div>
 
-  <div layout-padding ng-show="$ctrl.moreSearchOptions">
+  <div layout-padding ng-if="$ctrl.moreSearchOptions">
     <!-- TODO: close autocomplete on item select-->
     <!-- TODO: autocomplete-snap not working -->
     <div class="projects" layout="column">
@@ -143,7 +143,7 @@
     </div>
   </div>
 
-  <div class="expeditions" layout-padding ng-show="$ctrl.moreSearchOptions&&$ctrl.expeditions">
+  <div class="expeditions" layout-padding ng-if="$ctrl.moreSearchOptions&&$ctrl.expeditions">
     <div layout="column">
       <h3 class="md-subhead bold" flex>Expeditions</h3>
       <md-chips ng-model="$ctrl.params.expeditions" md-require-match flex>
@@ -178,7 +178,20 @@
           Any Term
         </h3>
         <md-button class="md-icon-button help-link md-popover-button">
-          <md-popover md-popover-class="query-help" md-popover-group="simple" md-direction="right">
+          <md-popover
+            ng-if="!$ctrl.moreSearchOptions"
+            md-popover-class="query-help"
+            md-popover-group="simple"
+            md-direction="right"
+          >
+            <div>Type any word or phrase here to query all collecting event and sample fields</div>
+          </md-popover>
+          <md-popover
+            ng-if="$ctrl.moreSearchOptions"
+            md-popover-class="query-help"
+            md-popover-group="advanced"
+            md-direction="right"
+          >
             <div>Type any word or phrase here to query all collecting event and sample fields</div>
           </md-popover>
           <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
@@ -190,7 +203,7 @@
     </div>
   </div>
 
-  <div class="simple" ng-show="!$ctrl.moreSearchOptions">
+  <div class="simple" ng-if="!$ctrl.moreSearchOptions">
     <div layout-padding>
       <div layout="column">
         <h3 class="md-subhead bold" flex>
@@ -332,7 +345,7 @@
     </div>
   </div>
 
-  <div ng-show="$ctrl.moreSearchOptions">
+  <div ng-if="$ctrl.moreSearchOptions">
     <div class="filters">
       <div class="events">
         <div layout="column">
@@ -781,7 +794,7 @@
           </div>
           <a href="" class="text-danger" ng-click="$ctrl.clearBounds()">Clear Bounding Box</a>
         </div>
-        <div ng-show="$ctrl.moreSearchOptions" layout="column" class="checkboxes">
+        <div ng-if="$ctrl.moreSearchOptions" layout="column" class="checkboxes">
           <md-checkbox class="small" ng-model="$ctrl.params.isMappable" name="isMappable">
             is mappable</md-checkbox
           >
