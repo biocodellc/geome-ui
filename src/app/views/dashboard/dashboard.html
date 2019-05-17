@@ -10,6 +10,17 @@
       </div>
       <div class="col-sm-4 text-right col-md-offset-1"><strong>Project configuration:</strong></div>
       <div class="col-sm-4 text-left">{{ $ctrl.currentProject.projectConfiguration.name }}</div>
+      <div class="col-sm-4 text-right col-md-offset-1"><strong>Terms:</strong></div>
+      <div class="col-sm-4 text-left">
+        The configuration owner controls all validation rules and terms for the
+        configuration to which this project belongs.
+      </div>
+      <div class="col-sm-4 text-right col-md-offset-1">
+        <strong>Project configuration owner:</strong>
+      </div>
+      <div class="col-sm-4 text-left">
+        {{ $ctrl.currentProject.projectConfiguration.user.username }}
+      </div>
     </form>
   </div>
   <p></p>
