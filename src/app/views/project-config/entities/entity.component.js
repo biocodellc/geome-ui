@@ -10,16 +10,16 @@ class EditEntityController {
     this.onUpdate({ entity: this.entity });
   }
 
-  disableGenerateID() {
-    if (this.entity.type === 'Photo') return false;
+  showGenerateID() {
+    if (this.entity.type === 'Photo') return true;
     if (this.entity.type !== 'Tissue' || this.entity.uniqueKey !== 'tissueID') {
-      return true;
+      return false;
     }
 
     const sampleEntity = this.config.entities.find(
       entity => entity.conceptAlias === this.entity.parentEntity,
     );
-    return !sampleEntity || sampleEntity.worksheet !== this.entity.worksheet;
+    return sampleEntity && sampleEntity.worksheet === this.entity.worksheet;
   }
 }
 

@@ -34,19 +34,26 @@ const css = (extend = []) => {
   // Reference: https://github.com/webpack/style-loader
   // Use style-loader in development.
   return [
-    isProd ? MiniCssExtractPlugin.loader : 'style-loader',
+    isProd
+      ? {
+          loader: MiniCssExtractPlugin.loader,
+          options: {
+            hmr: !isProd,
+          },
+        }
+      : 'style-loader',
     isProd
       ? 'css-loader'
       : {
           loader: 'css-loader',
-          options: { sourceMap: false, importLoaders: 1 },
+          options: { sourceMap: !isProd, importLoaders: 1 },
         },
     isProd
       ? 'postcss-loader'
       : {
           loader: 'postcss-loader',
           options: {
-            sourceMap: false,
+            sourceMap: !isProd,
             config: { path: './postcss.config.js' },
           },
         },
@@ -145,19 +152,17 @@ module.exports = (function makeWebpackConfig() {
         test: /\.(scss|sass)$/,
         exclude: root('src', 'app'),
         use: css([
-          isProd
-            ? 'sass-loader'
-            : {
-                loader: 'sass-loader',
-                options: { sourceComments: true },
-              },
+          {
+            loader: 'sass-loader',
+            options: { sourceComments: !isProd, sourceMap: !isProd },
+          },
         ]),
       },
       {
         // all sass required in src/app files will be merged in js files
         test: /\.(scss|sass)$/,
         include: root('src', 'app'),
-        loader: 'raw-loader!postcss-loader!sass-loader',
+        loader: 'style!css?sourceMap!postcss?sourceMap!sass?sourceMap',
       },
       {
         // CSS LOADER
