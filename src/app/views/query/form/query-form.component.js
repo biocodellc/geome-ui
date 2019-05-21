@@ -339,17 +339,20 @@ class QueryFormController {
       });
     }
 
-    const filter = Object.assign({}, defaultFilter, {
-      column: this.filterOptions[conceptAlias][0].column,
-      type: this.getQueryTypes(
-        conceptAlias,
-        this.filterOptions[conceptAlias][0].column,
-      )[0],
-    });
+    const filter = { type: '=' };
 
-    if (conceptAlias === 'Event') this.eventFilters.push(filter);
-    if (conceptAlias === 'Sample') this.sampleFilters.push(filter);
-    if (conceptAlias === 'Tissue') this.tissueFilters.push(filter);
+    if (conceptAlias === 'Event') {
+      filter.column = 'Event.eventID';
+      this.eventFilters.push(filter);
+    } else if (conceptAlias === 'Sample') {
+      filter.column = 'Sample.materialSampleID';
+      this.sampleFilters.push(filter);
+    } else if (conceptAlias === 'Tissue') {
+      filter.column = 'Tissue.tissueID';
+
+      this.tissueFilters.push(filter);
+    }
+
     this.filterToggle(filter);
   }
 
