@@ -94,7 +94,7 @@
             <span ng-if="$ctrl.worksheet === 'Workbook'"> {{ worksheet }} </span>
             Minimum Information Standard Items
           </div>
-          <div class="checkbox" ng-repeat="attribute in data.required">
+          <div class="checkbox" ng-repeat="attribute in data.required | unique: 'column'">
             <label>
               <input
                 type="checkbox"
