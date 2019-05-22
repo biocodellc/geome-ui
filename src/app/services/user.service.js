@@ -23,9 +23,9 @@ class UserService extends EventEmitter {
     return currentUser;
   }
 
-  setCurrentUser(user) {
+  setCurrentUser(user, ignoreReload = false) {
     currentUser = user ? new User(user) : undefined;
-    this.emit(USER_CHANGED_EVENT, currentUser);
+    this.emit(USER_CHANGED_EVENT, currentUser, ignoreReload);
     return currentUser;
   }
 

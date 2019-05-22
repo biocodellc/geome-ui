@@ -5,6 +5,7 @@ function getStates() {
       config: {
         url: '/workbench',
         abstract: true,
+        projectRequired: true,
         views: {
           projectView: {
             template:

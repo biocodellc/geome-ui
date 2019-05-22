@@ -30,16 +30,20 @@ class AppCtrl {
     this.preventReload = false;
 
     this.AuthService.on(AUTH_ERROR_EVENT, () => this.signout());
-    this.ProjectService.on(PROJECT_CHANGED_EVENT, p => {
+    this.ProjectService.on(PROJECT_CHANGED_EVENT, (p, ignoreReload) => {
       this.currentProject = p;
       this.setUserIsMember();
       setProject(p ? p.projectId : undefined);
-      if (!this.preventReload && !this.$state.current.abstract) {
+      if (
+        !ignoreReload &&
+        !this.preventReload &&
+        !this.$state.current.abstract
+      ) {
         this.$state.reload();
       }
     });
 
-    this.UserService.on(USER_CHANGED_EVENT, u => {
+    this.UserService.on(USER_CHANGED_EVENT, (u, ignoreReload) => {
       this.currentUser = u;
       if (u) {
         this.currentUser.userHasProject = true;
@@ -49,6 +53,7 @@ class AppCtrl {
       const { current } = this.$state;
       setUser(u ? u.username : undefined);
       if (
+        !ignoreReload &&
         !this.preventReload &&
         !current.abstract &&
         current.name !== 'login'

@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events';
 import { executeIfTransitionValid, isTransitionValid } from './utils/router';
+import { checkProjectRequired } from './views/project/projectRequired.hook';
 
 export const STARTED_HOOK_EVENT = 'started_hook';
 export const ENDED_HOOK_EVENT = 'ended_hook';
@@ -37,7 +38,7 @@ export default (
   });
   // setup dialog for workbench states if no project is selected
   $transitions.onBefore(
-    { to: checkProjectViewPresent },
+    { to: s => checkProjectViewPresent(s) && checkProjectRequired(s) },
     async trans => {
       const projectId = parseInt($location.search().projectId, 10);
       if (

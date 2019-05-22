@@ -1,17 +1,7 @@
 import angular from 'angular';
-
-const loadSession = (
-  $location,
-  AuthService,
-  StorageService,
-  UserService,
-  ProjectService,
-) => {
-  const projectId = parseInt($location.search().projectId, 10);
-  const loadUser = () =>
-    AuthService.getAccessToken() ? UserService.loadFromSession() : undefined;
-  return Promise.all([ProjectService.loadFromSession(projectId), loadUser()]);
-};
+import { executeIfTransitionValid } from './utils/router';
+import { checkProjectRequired } from './views/project/projectRequired.hook';
+import { checkLoginRequired } from './components/auth/loginRequired.hook';
 
 export default function(
   $http,
@@ -21,7 +11,6 @@ export default function(
   $state,
   $location,
   AuthService,
-  StorageService,
   UserService,
   ProjectService,
 ) {
@@ -49,36 +38,48 @@ export default function(
   const deregister = $transitions.onBefore(
     {},
     trans => {
-      let hasTimedOut = false;
+      // immediately deregister so this is only run 1x
+      deregister();
 
-      return new Promise(resolve => {
+      let hasTimedOut = false;
+      const projectRequired = checkProjectRequired(trans.$to());
+      const loginRequired = checkLoginRequired(trans.$to());
+
+      return new Promise(async resolve => {
         const timeoutPromise = $timeout(() => {
           hasTimedOut = true;
-          deregister();
-          console.log('loadingSession timed out, redirecting to about page');
+          if (loginRequired || projectRequired) {
+            console.log('loadingSession timed out, redirecting to home page');
+            resolve(trans.router.stateService.target('home'));
+          } else {
+            resolve();
+          }
           angular.toaster('Timed out loading session');
-          resolve(trans.router.stateService.target('about'));
         }, 10000); // timeout loading after 10 secs
 
-        loadSession(
-          $location,
-          AuthService,
-          StorageService,
-          UserService,
-          ProjectService,
-        ).then(([project, user]) => {
-          if (!hasTimedOut) {
-            $timeout.cancel(timeoutPromise);
-            deregister();
-          }
+        const projectId = parseInt($location.search().projectId, 10);
+        const loadUser = () =>
+          AuthService.getAccessToken()
+            ? UserService.loadFromSession()
+            : undefined;
 
-          // deregister before setting project & user b/c setting these will trigger a state
-          // reload, and we don't want to run this function again
-          ProjectService.setCurrentProject(project);
-          UserService.setCurrentUser(user);
+        const projectPromise = ProjectService.loadFromSession(projectId).then(
+          project => ProjectService.setCurrentProject(project, true),
+        );
+        const userPromise = loadUser().then(user =>
+          UserService.setCurrentUser(user, true),
+        );
 
-          if (!hasTimedOut) resolve();
-        });
+        const promisesToWaitFor = projectRequired ? [projectPromise] : [];
+        if (loginRequired) promisesToWaitFor.push(userPromise);
+
+        await Promise.all(promisesToWaitFor);
+        if (!hasTimedOut) {
+          $timeout.cancel(timeoutPromise);
+          executeIfTransitionValid(trans, $transitions, () => {
+            resolve();
+          });
+        }
       });
     },
     { priority: 1000 },

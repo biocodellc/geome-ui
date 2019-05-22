@@ -37,10 +37,10 @@ class ProjectService extends EventEmitter {
     return currentProject;
   }
 
-  setCurrentProject(project) {
+  setCurrentProject(project, ignoreReload = false) {
     if (!project) {
       currentProject = undefined;
-      this.emit(PROJECT_CHANGED_EVENT, currentProject);
+      this.emit(PROJECT_CHANGED_EVENT, currentProject, ignoreReload);
       return Promise.resolve();
     }
 
@@ -50,7 +50,7 @@ class ProjectService extends EventEmitter {
     return setProjectConfig().then(p => {
       this.StorageService.set('projectId', project.projectId);
       currentProject = p;
-      this.emit(PROJECT_CHANGED_EVENT, currentProject);
+      this.emit(PROJECT_CHANGED_EVENT, currentProject, ignoreReload);
       return p;
     });
   }

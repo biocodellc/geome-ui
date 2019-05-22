@@ -1,6 +1,6 @@
 import { executeIfTransitionValid } from '../../utils/router';
 
-function checkLoginRequired(state) {
+export function checkLoginRequired(state) {
   let s = state;
 
   do {

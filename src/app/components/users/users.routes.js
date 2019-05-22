@@ -14,6 +14,7 @@ function getStates() {
         url: '/user/profile',
         component: 'fimsProfile',
         loginRequired: true,
+        projectRequired: false,
       },
     },
   ];
