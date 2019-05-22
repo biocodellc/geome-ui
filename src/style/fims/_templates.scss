@@ -1,4 +1,13 @@
-.attribute-definition-container {
-  height: 90vh;
-  overflow-y: auto;
+fims-templates {
+  #template-form {
+    margin-top: 24px;
+  }
+
+  .panel-group .panel {
+    margin-bottom: 8px;
+  }
+  .attribute-definition-container {
+    height: 90vh;
+    overflow-y: auto;
+  }
 }

@@ -1,5 +1,5 @@
 <h3>{{ $ctrl.currentProject.projectTitle }} Template Generator</h3>
-<p>{{ $ctrl.description }}</p>
+<p class="small">{{ $ctrl.description }}</p>
 
 <div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
   <md-progress-circular md-mode="indeterminate"></md-progress-circular>
@@ -59,19 +59,19 @@
 
 <div class="row">
   <div class="col-xs-6">
-    <div ng-if="$ctrl.worksheet === 'Workbook'">
-      <h4>Workbook</h4>
-      <div class="btn-group-xs">
-        <button type="button" class="btn btn-link" ng-click="$ctrl.selectAll('Workbook')">
-          Select ALL in Workbook
-        </button>
-        <button type="button" class="btn btn-link" ng-click="$ctrl.selectNone('Workbook')">
-          Select NONE in Workbook
-        </button>
-      </div>
-    </div>
     <div ng-repeat="(worksheet, data) in $ctrl.getAttributes()">
       <h3 ng-if="$ctrl.worksheet === 'Workbook'">{{ worksheet }}</h3>
+      <div ng-if="$first && $ctrl.worksheet === 'Workbook'">
+        <!-- <h4>Workbook</h4> -->
+        <div class="btn-group-xs">
+          <button type="button" class="btn btn-link" ng-click="$ctrl.selectAll('Workbook')">
+            Select ALL in Workbook
+          </button>
+          <button type="button" class="btn btn-link" ng-click="$ctrl.selectNone('Workbook')">
+            Select NONE in Workbook
+          </button>
+        </div>
+      </div>
       <div class="btn-group btn-group-xs">
         <button type="button" class="btn btn-link" ng-click="$ctrl.selectAll(worksheet)">
           Select all {{ worksheet }}
@@ -89,11 +89,8 @@
         </button>
       </div>
       <uib-accordion close-others="false">
-        <div uib-accordion-group class="panel-default md-whiteframe-2dp" is-open="true">
-          <div uib-accordion-heading>
-            <span ng-if="$ctrl.worksheet === 'Workbook'"> {{ worksheet }} </span>
-            Minimum Information Standard Items
-          </div>
+        <div uib-accordion-group class="panel-default" is-open="true">
+          <div uib-accordion-heading>Minimum Information Standard Items</div>
           <div class="checkbox" ng-repeat="attribute in data.required | unique: 'column'">
             <label>
               <input
@@ -108,12 +105,7 @@
           </div>
         </div>
         <div ng-repeat="(group, attributes) in data.attributes">
-          <div
-            uib-accordion-group
-            class="panel-default md-whiteframe-2dp"
-            heading="{{ group }}"
-            is-open="true"
-          >
+          <div uib-accordion-group class="panel-default" heading="{{ group }}" is-open="true">
             <div class="checkbox" ng-repeat="attribute in attributes | orderBy: 'column'">
               <label>
                 <input
