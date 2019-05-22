@@ -1,18 +1,15 @@
 <div>
-  <div layout="row" class="loading-overlay" layout-align="center top" ng-show="$ctrl.loading">
+  <div layout="row" layout-align="center top" ng-show="$ctrl.loading">
     <md-progress-circular md-mode="indeterminate"></md-progress-circular>
   </div>
 
-<uib-accordion>
+  <uib-accordion>
     <div uib-accordion-group ng-repeat="config in $ctrl.data" class="config-item">
-		<uib-accordion-heading>
-       		{{config.name}} Configuration
-		</uib-accordion-heading>
+      <uib-accordion-heading> {{ config.name }} Configuration </uib-accordion-heading>
 
-		<uib-accordion>
-          	{{config.description}}
-		</uib-accordion>
+      <uib-accordion>
+        {{ config.description }}
+      </uib-accordion>
     </div>
-</uib-accordion>
-
+  </uib-accordion>
 </div>
