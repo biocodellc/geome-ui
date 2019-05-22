@@ -22,6 +22,19 @@
     z-index: 500;
   }
 }
+.query-help {
+  width: 200px;
+  margin-left: 11px;
+
+  h4 {
+    margin-top: 0;
+    text-transform: none;
+  }
+
+  md-divider {
+    margin-bottom: 8px;
+  }
+}
 
 .query-bar {
   background-color: rgba(96, 134, 152, 0.6);
