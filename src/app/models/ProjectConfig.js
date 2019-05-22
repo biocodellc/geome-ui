@@ -38,10 +38,12 @@ export default class ProjectConfig {
     this.worksheets().push(sheetName);
   }
 
-  attributesByGroup(sheetName) {
+  attributesByGroup(sheetName, includeRequired = true) {
     const defaultGroup = 'Default Group';
 
     const attributes = {};
+    const requiredAttributes =
+      !includeRequired && this.requiredAttributes(sheetName);
 
     this.entities
       .filter(entity => entity.worksheet === sheetName)
@@ -49,6 +51,8 @@ export default class ProjectConfig {
         e.attributes.forEach(attribute => {
           // don't include the uniqueKey if this is a hashed entity
           if (e.hashed && attribute.column === e.uniqueKey) return;
+          if (!includeRequired && requiredAttributes.includes(attribute))
+            return;
 
           // don't include the parentEntity uniqueKey if the parent is a hashed entity
           if (e.parentEntity) {
