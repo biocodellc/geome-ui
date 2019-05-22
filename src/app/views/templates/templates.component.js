@@ -45,12 +45,30 @@ class TemplateController {
   }
 
   selectAll(worksheet) {
+    if (worksheet === 'Workbook') {
+      const worksheetNames = Object.keys(this.attributes);
+      worksheetNames.forEach(w => {
+        this.selected[w] = Object.values(this.attributes[w].attributes)
+          .reduce((result, group) => result.concat(group), [])
+          .concat(this.attributes[w].required);
+      });
+      return;
+    }
     this.selected[worksheet] = Object.values(
       this.attributes[worksheet].attributes,
-    ).reduce((result, group) => result.concat(group), []);
+    )
+      .reduce((result, group) => result.concat(group), [])
+      .concat(this.attributes[worksheet].required);
   }
 
   selectNone(worksheet) {
+    if (worksheet === 'Workbook') {
+      const worksheetNames = Object.keys(this.attributes);
+      worksheetNames.forEach(
+        w => (this.selected[w] = this.attributes[w].required.slice()),
+      );
+      return;
+    }
     this.selected[worksheet] = this.attributes[worksheet].required.slice();
   }
 
@@ -237,7 +255,7 @@ class TemplateController {
 
         // eslint-disable-next-line no-param-reassign
         accumulator[worksheet] = {
-          attributes: this.projectConfig.attributesByGroup(worksheet),
+          attributes: this.projectConfig.attributesByGroup(worksheet, false),
           required: this.projectConfig.requiredAttributes(worksheet),
         };
 
