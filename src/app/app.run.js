@@ -58,17 +58,15 @@ export default function(
         }, 10000); // timeout loading after 10 secs
 
         const projectId = parseInt($location.search().projectId, 10);
-        const loadUser = () =>
-          AuthService.getAccessToken()
-            ? UserService.loadFromSession()
-            : undefined;
 
         const projectPromise = ProjectService.loadFromSession(projectId).then(
           project => ProjectService.setCurrentProject(project, true),
         );
-        const userPromise = loadUser().then(user =>
-          UserService.setCurrentUser(user, true),
-        );
+        const userPromise = AuthService.getAccessToken()
+          ? UserService.loadFromSession().then(user =>
+              UserService.setCurrentUser(user, true),
+            )
+          : undefined;
 
         const promisesToWaitFor = projectRequired ? [projectPromise] : [];
         if (loginRequired) promisesToWaitFor.push(userPromise);
