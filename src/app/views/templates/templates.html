@@ -1,4 +1,5 @@
-<h2 class="page-header">Generate Template</h2>
+<h3>{{ $ctrl.currentProject.projectTitle }} Template Generator</h3>
+<p>{{ $ctrl.description }}</p>
 
 <div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
   <md-progress-circular md-mode="indeterminate"></md-progress-circular>
@@ -93,7 +94,7 @@
             <span ng-if="$ctrl.worksheet === 'Workbook'"> {{ worksheet }} </span>
             Minimum Information Standard Items
           </div>
-          <div class="checkbox" ng-repeat="attribute in data.required">
+          <div class="checkbox" ng-repeat="attribute in data.required | unique: 'column'">
             <label>
               <input
                 type="checkbox"
@@ -114,7 +115,7 @@
             is-open="true"
           >
             <div class="checkbox" ng-repeat="attribute in attributes | orderBy: 'column'">
-              <label ng-hide="data.required.indexOf(attribute) > -1">
+              <label>
                 <input
                   type="checkbox"
                   ng-disabled="data.required.indexOf(attribute) > -1"
@@ -132,8 +133,6 @@
   </div>
 
   <div class="col-xs-6 attribute-definition-container" md-sticky>
-    <p>{{ $ctrl.description }}</p>
-
     <fims-attribute-definition
       current-project="$ctrl.currentProject"
       attribute="$ctrl.defAttribute"

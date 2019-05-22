@@ -2,18 +2,18 @@
   <md-progress-circular md-mode="indeterminate"></md-progress-circular>
 </div>
 <div layout="column" class="record-detail" ng-show="!$ctrl.loading">
-  <h3>{{$ctrl.record.entity}} {{$ctrl.getIdentifier($ctrl.record)}}</h3>
+  <h3>{{ $ctrl.record.entity }} {{ $ctrl.getIdentifier($ctrl.record) }}</h3>
 
   <div class="main-details" layout="row" layout-align="center center">
     <div ng-if="$ctrl.record.img1024" flex="100">
-      <a href="{{$ctrl.record.img1024}}"><img ng-src="{{$ctrl.record.img512}}"/></a>
+      <a href="{{ $ctrl.record.img1024 }}"><img ng-src="{{ $ctrl.record.img512 }}"/></a>
     </div>
     <table ng-if="!$ctrl.record.originalUrl" flex="100">
       <tbody>
         <tr ng-repeat="(key, value) in $ctrl.mainRecordDetails() track by key">
-          <th>{{key}}:</th>
+          <th>{{ key }}:</th>
           <td ng-if="value.href && value.text" class="truncate">
-            <a href="{{value.href}}" target="_blank">{{value.text}}</a>
+            <a href="{{ value.href }}" target="_blank">{{ value.text }}</a>
           </td>
           <td ng-if="!value.href || !value.text">
             <div class="truncate">
@@ -22,9 +22,9 @@
                 class="fix-placement"
                 text-overflow-tooltip
                 md-visible="false"
-                >{{value.text}}</md-tooltip
+                >{{ value.text }}</md-tooltip
               >
-              {{value.text || 'N/A'}}
+              {{ value.text || 'N/A' }}
             </div>
           </td>
         </tr>
@@ -42,21 +42,19 @@
     <table flex>
       <tbody>
         <tr ng-repeat="(key, value) in $ctrl.auxiliaryRecordDetails(0) track by key">
-          <th>{{key}}:</th>
-          <td>
-            <div class="truncate">
-              <md-tooltip
-                md-direction="top"
-                class="fix-placement"
-                text-overflow-tooltip
-                md-visible="false"
-                >{{value.text || value}}</md-tooltip
-              >
-              <span ng-if="!value.href">{{value}}</span>
-              <span ng-if="value.href">
-                <a href="{{value.href}}">{{value.text}}</a>
-              </span>
-            </div>
+          <th>{{ key }}:</th>
+          <td ng-class="{'sequence': key === 'sequence'}">
+            <md-tooltip
+              md-direction="top"
+              class="fix-placement"
+              text-overflow-tooltip
+              md-visible="false"
+              >{{ value.text || value }}</md-tooltip
+            >
+            <span ng-if="!value.href">{{ value }}</span>
+            <span ng-if="value.href">
+              <a href="{{ value.href }}">{{ value.text }}</a>
+            </span>
           </td>
         </tr>
       </tbody>
@@ -66,21 +64,19 @@
     <table ng-show="$ctrl.$mdMedia('gt-sm')" flex>
       <tbody>
         <tr ng-repeat="(key, value) in $ctrl.auxiliaryRecordDetails(1) track by key">
-          <th>{{key}}:</th>
-          <td>
-            <div class="truncate">
-              <md-tooltip
-                md-direction="top"
-                class="fix-placement"
-                text-overflow-tooltip
-                md-visible="false"
-                >{{value.text || value}}</md-tooltip
-              >
-              <span ng-if="!value.href">{{value}}</span>
-              <span ng-if="value.href">
-                <a href="{{value.href}}">{{value.text}}</a>
-              </span>
-            </div>
+          <th>{{ key }}:</th>
+          <td ng-class="{'sequence': key === 'sequence'}">
+            <md-tooltip
+              md-direction="top"
+              class="fix-placement"
+              text-overflow-tooltip
+              md-visible="false"
+              >{{ value.text || value }}</md-tooltip
+            >
+            <span ng-if="!value.href">{{ value }}</span>
+            <span ng-if="value.href">
+              <a href="{{ value.href }}">{{ value.text }}</a>
+            </span>
           </td>
         </tr>
       </tbody>
@@ -90,14 +86,14 @@
   <md-divider ng-if="$ctrl.parentDetail"></md-divider>
 
   <div class="parent-details horizontal-description-list" ng-if="$ctrl.parentDetail">
-    <h4>Parent {{$ctrl.parent.entity}}</h4>
+    <h4>Parent {{ $ctrl.parent.entity }}</h4>
     <div layout="row">
       <dl flex layout="row">
-        <dt ng-repeat-start="(key, value) in $ctrl.parentDetail track by key">{{key}}:</dt>
+        <dt ng-repeat-start="(key, value) in $ctrl.parentDetail track by key">{{ key }}:</dt>
         <dd ng-repeat-end>
-          <span ng-if="!value.href">{{value.text || 'N/A'}}</span>
+          <span ng-if="!value.href">{{ value.text || 'N/A' }}</span>
           <span ng-if="value.href">
-            <a href="{{value.href}}">{{value.text || 'N/A'}}</a>
+            <a href="{{ value.href }}">{{ value.text || 'N/A' }}</a>
           </span>
         </dd>
       </dl>
@@ -110,13 +106,13 @@
     <h4>Child Entities</h4>
     <div class="entity-group" ng-repeat="(entity, children) in $ctrl.childDetails track by entity">
       <div layout="row" ng-repeat="child in children track by $index">
-        <span class="entity">{{entity}}</span>
+        <span class="entity">{{ entity }}</span>
         <dl flex layout="row">
-          <dt ng-repeat-start="(key, value) in child track by key">{{key}}:</dt>
+          <dt ng-repeat-start="(key, value) in child track by key">{{ key }}:</dt>
           <dd ng-repeat-end>
-            <span ng-if="!value.href">{{value.text || 'N/A'}}</span>
+            <span ng-if="!value.href">{{ value.text || 'N/A' }}</span>
             <span ng-if="value.href">
-              <a href="{{value.href}}">{{value.text || 'N/A'}}</a>
+              <a href="{{ value.href }}">{{ value.text || 'N/A' }}</a>
             </span>
           </dd>
         </dl>

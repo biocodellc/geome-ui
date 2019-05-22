@@ -16,6 +16,14 @@
   margin-bottom: 8px;
   padding-top: 8px;
   padding-bottom: 8px;
+
+  td {
+    padding: 0 8px;
+  }
+
+  td.sequence {
+    word-break: break-all;
+  }
 }
 
 .record-detail {

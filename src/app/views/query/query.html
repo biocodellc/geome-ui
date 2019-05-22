@@ -58,7 +58,7 @@
     <fims-query-form
       params="$ctrl.params"
       entities-for-download="$ctrl.downloadableEntities(entities)"
-      on-new-results="$ctrl.handleNewResults(results, isAdvancedSearch)"
+      on-new-results="$ctrl.handleNewResults(results, entity, isAdvancedSearch)"
       query-map="$ctrl.queryMap"
       class="query-form"
       expeditions="$ctrl.expeditions"
@@ -75,9 +75,7 @@
     <md-button class="md-raised" ng-click="$ctrl.toggleSidebar()">
       <md-tooltip md-direction="right">{{ $ctrl.sidebarToggleToolTip }}</md-tooltip>
       <md-icon
-        md-font-icon="fa {{
-          $ctrl.showSidebar ? 'fa-chevron-left' : 'fa-chevron-right'
-        }}"
+        md-font-icon="fa {{ $ctrl.showSidebar ? 'fa-chevron-left' : 'fa-chevron-right' }}"
       ></md-icon>
     </md-button>
   </div>
@@ -96,6 +94,7 @@
         class="query-table"
         ng-class="{'full-page-query-table': !$ctrl.showSidebar}"
         results="$ctrl.results"
+        entity="$ctrl.entity"
       ></fims-query-table>
     </md-content>
   </div>

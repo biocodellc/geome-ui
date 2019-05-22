@@ -1,5 +1,6 @@
 import angular from 'angular';
 import compareValues from '../../utils/compareValues';
+import flatten from '../../utils/flatten';
 import {
   mainRecordDetails,
   childRecordDetails,
@@ -71,10 +72,6 @@ class RecordController {
 
     const numCols = this.$mdMedia('gt-sm') ? 2 : 1;
 
-    if (['fastaSequence', 'fastqMetadata'].includes(this.record.entity)) {
-      return undefined;
-    }
-
     if (detailCache[index] && detailCacheNumCols === numCols) {
       return detailCache[index] === {} ? undefined : detailCache[index];
     }
@@ -90,7 +87,9 @@ class RecordController {
       entity => entity.conceptAlias === this.record.entity,
     );
 
-    const recordKeys = Object.keys(this.record).filter(
+    const flatRecord = flatten(this.record);
+
+    const recordKeys = Object.keys(flatRecord).filter(
       k =>
         (!mainRecordDetails[this.record.entity] ||
           !Object.keys(mainRecordDetails[this.record.entity]).includes(k)) &&
@@ -130,13 +129,13 @@ class RecordController {
         };
       } else if (key === 'expeditionCode') {
         accumulator[key] = {
-          text: this.record[key],
+          text: flatRecord[key],
           href: `/query?q=_projects_:${
             this.project.projectId
-          } and _expeditions_:${this.record[key]}`,
+          } and _expeditions_:${flatRecord[key]}`,
         };
       } else {
-        accumulator[key] = this.record[key];
+        accumulator[key] = flatRecord[key];
       }
       return accumulator;
     }, {});
