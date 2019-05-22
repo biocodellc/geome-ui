@@ -47,6 +47,7 @@ const mdPopover = /* ngInject */ ($timeout, $mdPanel) => {
   // }
   // };
 
+  let clickHandler;
   return {
     restrict: 'E',
     priority: 210,
@@ -87,12 +88,6 @@ const mdPopover = /* ngInject */ ($timeout, $mdPanel) => {
         focusOnOpen: true,
       };
 
-      // const wrapper = angular.element(
-      // '<div class="md-panel-outer-wrapper"></div>',
-      // );
-
-      // wrapper.on('click', () => parent.click());
-
       if (scope.mdPopoverGroup) {
         if (!$mdPanel._groups[scope.mdPopoverGroup]) {
           $mdPanel.newPanelGroup(scope.mdPopoverGroup, { maxOpen: 1 });
@@ -103,7 +98,10 @@ const mdPopover = /* ngInject */ ($timeout, $mdPanel) => {
 
       parent.on('click', () => {
         if (panelRef.isAttached) {
-          // wrapper.detach();
+          if (clickHandler) {
+            angular.element(document.body).off('click', clickHandler);
+            clickHandler = undefined;
+          }
           panelRef.close();
           panelRef.panelEl.addClass('md-popover-hide');
         } else {
@@ -115,6 +113,10 @@ const mdPopover = /* ngInject */ ($timeout, $mdPanel) => {
             // todo if we enable this, scrolling breaks
             // wrapper.appendTo(document.body);
 
+            if (!clickHandler) {
+              clickHandler = () => parent.click();
+              angular.element(document.body).one('click', clickHandler);
+            }
             // addArrow(scope.mdDirection, panelRef);
 
             // show panel after we recalculate the position

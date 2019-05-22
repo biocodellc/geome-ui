@@ -69,6 +69,7 @@ class QueryFormController {
   constructor(
     $scope,
     $mdDialog,
+    $mdPanel,
     $timeout,
     $window,
     $location,
@@ -82,6 +83,7 @@ class QueryFormController {
 
     this.$scope = $scope;
     this.$mdDialog = $mdDialog;
+    this.$mdPanel = $mdPanel;
     this.$timeout = $timeout;
     this.$window = $window;
     this.$location = $location;
@@ -173,6 +175,10 @@ class QueryFormController {
   }
 
   switchQueryMethod() {
+    const panelGroup = this.$mdPanel._groups.query;
+    if (panelGroup) {
+      panelGroup.openPanels.forEach(p => p.close());
+    }
     if (!_.isEqual(this.params, this.paramCopy)) {
       this.$mdDialog
         .show(
