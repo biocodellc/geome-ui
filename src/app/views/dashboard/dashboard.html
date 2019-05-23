@@ -2,17 +2,52 @@
   <h3 class="text-center page-header">{{ $ctrl.currentProject.projectTitle }} Overview</h3>
   <p class="text-center">{{ $ctrl.currentProject.description }}</p>
 
-  <div class="row">
-    <form class="form-horizontal">
-      <div class="col-sm-4 text-right col-md-offset-1"><strong>Project owner:</strong></div>
-      <div class="col-sm-4 text-left">
-        {{ $ctrl.currentProject.user.username }} ({{ $ctrl.currentProject.user.email }})
+  <div class="project-details">
+    <div class="row">
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Project owner:</strong></div>
+      <div class="col-sm-8 col-md-9 col-lg-10">
+        {{ $ctrl.currentProject.user.username }} (<a
+          href="mailto:{{ $ctrl.currentProject.user.email }}"
+          >{{ $ctrl.currentProject.user.email }}</a
+        >)
       </div>
-      <div class="col-sm-4 text-right col-md-offset-1"><strong>Project configuration:</strong></div>
-      <div class="col-sm-4 text-left">{{ $ctrl.currentProject.projectConfiguration.name }}</div>
-    </form>
+    </div>
+    <div class="row">
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Project link:</strong></div>
+      <div class="col-sm-8 col-md-9 col-lg-10">
+        <a
+          href="https://geome-db.org/workbench/overview?projectId={{
+            $ctrl.currentProject.projectId
+          }}"
+          >https://geome-db.org/workbench/overview?projectId={{ $ctrl.currentProject.projectId }}</a
+        >
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Public:</strong></div>
+      <div class="col-sm-8 col-md-9 col-lg-10">{{ $ctrl.currentProject.public }}</div>
+    </div>
+
+    <div class="row title">
+      <div class="col-sm-12">
+        <strong>{{ $ctrl.currentProject.projectConfiguration.name }} Configuration Details:</strong>
+      </div>
+      <div class="col-sm-12 small">
+        This configuration specifies all validation rules and terms for this project. If you have
+        any questions or suggestions, please contact the configuration owner.
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Config owner:</strong></div>
+      <div class="col-sm-8 col-md-9 col-lg-10">
+        {{ $ctrl.currentProject.projectConfiguration.user.username }}
+        (<a href="mailto:{{ $ctrl.currentProject.projectConfiguration.user.email }}">{{
+          $ctrl.currentProject.projectConfiguration.user.email
+        }}</a
+        >)
+      </div>
+    </div>
   </div>
-  <p></p>
 
   <div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
     <md-progress-circular md-mode="indeterminate"></md-progress-circular>
@@ -21,108 +56,100 @@
   <div layout="row" ng-show="!$ctrl.loading && $ctrl.totalItems === 0" layout-align="center center">
     There are no expeditions associated with this project
   </div>
-    <div layout="row" ng-show="!$ctrl.loading && $ctrl.totalItems" layout-align="center center">
-      <md-button
-        class="md-primary md-raised project-download-button"
-        ng-click="$ctrl.downloadCsv()"
-        layout="row"
-        layout-align="center center"
-      >
-        <!-- Download -->
-        <span>Project CSV Archive</span>
-        <md-icon
-          ng-show="$ctrl.loadingExpedition !== 'project'"
-          md-font-icon="fa fa-download fa-xs"
-        >
-        </md-icon>
-        <md-progress-circular
-          ng-show="$ctrl.loadingExpedition === 'project'"
-          md-mode="indeterminate"
-          md-diameter="18"
-          class="md-accent md-hue-3"
-        ></md-progress-circular>
-      </md-button>
-    </div>
-
-    <!-- <table class="table table-hover table-condensed text-center" ng-show="!$ctrl.loading"> -->
-    <table
-      class="table table-hover table-condensed text-center"
-      ng-show="$ctrl.displayResults.length > 0"
+  <div layout="row" ng-show="!$ctrl.loading && $ctrl.totalItems" layout-align="center center">
+    <md-button
+      class="md-primary md-raised project-download-button"
+      ng-click="$ctrl.downloadCsv()"
+      layout="row"
+      layout-align="center center"
     >
-      <thead>
-        <th class="text-center">Expedition Title</th>
-        <th class="text-center" ng-repeat="header in $ctrl.headers">
-          {{ $ctrl.humanReadableHeader(header) }}
-        </th>
-        <th class="text-center">GUID</th>
-        <th></th>
-      </thead>
+      <!-- Download -->
+      <span>Project CSV Archive</span>
+      <md-icon ng-show="$ctrl.loadingExpedition !== 'project'" md-font-icon="fa fa-download fa-xs">
+      </md-icon>
+      <md-progress-circular
+        ng-show="$ctrl.loadingExpedition === 'project'"
+        md-mode="indeterminate"
+        md-diameter="18"
+        class="md-accent md-hue-3"
+      ></md-progress-circular>
+    </md-button>
+  </div>
 
-      <tbody>
-        <tr
-          ng-repeat="expedition in $ctrl.displayResults track by expedition.expeditionCode"
-          ng-click="$ctrl.results && $ctrl.viewData(expedition.expeditionCode)"
-        >
-          <td>{{ expedition.expeditionTitle }}</td>
-          <td ng-repeat="header in $ctrl.headers">{{ expedition[header] }}</td>
-          <td ng-show="expedition.expeditionIdentifier">
-            <!--<a href="https://n2t.net/{{expedition.expeditionIdentifier}}">https://n2t.net/{{ expedition.expeditionIdentifier}} </a>-->
-            https://n2t.net/{{ expedition.expeditionIdentifier }}
-          </td>
-          <td ng-show="!expedition.expeditionIdentifier"></td>
-          <td ng-show="$ctrl.menuOptions(expedition).length == 0"></td>
-          <td ng-show="$ctrl.menuOptions(expedition).length > 0" class="md-dense action-buttons">
-            <!--<md-button aria-label="View expedition data" ng-click="$ctrl.viewData(expedition.expeditionCode)"
+  <!-- <table class="table table-hover table-condensed text-center" ng-show="!$ctrl.loading"> -->
+  <table
+    class="table table-hover table-condensed text-center"
+    ng-show="$ctrl.displayResults.length > 0"
+  >
+    <thead>
+      <th class="text-center">Expedition Title</th>
+      <th class="text-center" ng-repeat="header in $ctrl.headers">
+        {{ $ctrl.humanReadableHeader(header) }}
+      </th>
+      <th class="text-center">GUID</th>
+      <th></th>
+    </thead>
+
+    <tbody>
+      <tr
+        ng-repeat="expedition in $ctrl.displayResults track by expedition.expeditionCode"
+        ng-click="$ctrl.results && $ctrl.viewData(expedition.expeditionCode)"
+      >
+        <td>{{ expedition.expeditionTitle }}</td>
+        <td ng-repeat="header in $ctrl.headers">{{ expedition[header] }}</td>
+        <td ng-show="expedition.expeditionIdentifier">
+          <!--<a href="https://n2t.net/{{expedition.expeditionIdentifier}}">https://n2t.net/{{ expedition.expeditionIdentifier}} </a>-->
+          https://n2t.net/{{ expedition.expeditionIdentifier }}
+        </td>
+        <td ng-show="!expedition.expeditionIdentifier"></td>
+        <td ng-show="$ctrl.menuOptions(expedition).length == 0"></td>
+        <td ng-show="$ctrl.menuOptions(expedition).length > 0" class="md-dense action-buttons">
+          <!--<md-button aria-label="View expedition data" ng-click="$ctrl.viewData(expedition.expeditionCode)"
             class="md-primary md-raised query-button">
             <md-icon md-font-icon="fa fa-map-marker fa-sm"></md-icon>
           </md-button>-->
-            <md-menu
-              ng-show="$ctrl.results"
-              class="md-dense"
-              md-position-mode="target-right target"
+          <md-menu ng-show="$ctrl.results" class="md-dense" md-position-mode="target-right target">
+            <md-button
+              aria-label="Open expedition download menu"
+              ng-click="$mdMenu.open($event)"
+              class="md-primary download-button"
             >
-              <md-button
-                aria-label="Open expedition download menu"
-                ng-click="$mdMenu.open($event)"
-                class="md-primary download-button"
+              <!-- Download -->
+              <md-icon
+                ng-show="$ctrl.loadingExpedition !== expedition.expeditionCode"
+                md-font-icon="fa fa-download fa-xs"
+              ></md-icon>
+              <md-progress-circular
+                ng-show="$ctrl.loadingExpedition === expedition.expeditionCode"
+                md-mode="indeterminate"
+                md-diameter="18"
+                class="md-accent md-hue-3"
               >
-                <!-- Download -->
-                <md-icon
-                  ng-show="$ctrl.loadingExpedition !== expedition.expeditionCode"
-                  md-font-icon="fa fa-download fa-xs"
-                ></md-icon>
-                <md-progress-circular
-                  ng-show="$ctrl.loadingExpedition === expedition.expeditionCode"
-                  md-mode="indeterminate"
-                  md-diameter="18"
-                  class="md-accent md-hue-3"
-                >
-                </md-progress-circular>
-              </md-button>
-              <md-menu-content width="2" class="md-dense download-menu-content">
-                <md-menu-item
-                  ng-repeat="opt in $ctrl.menuOptions(expedition) track by expedition.expeditionCode + opt.name"
-                >
-                  <md-button ng-click="opt.fn(expedition.expeditionCode)">{{ opt.name }}</md-button>
-                </md-menu-item>
-              </md-menu-content>
-            </md-menu>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+              </md-progress-circular>
+            </md-button>
+            <md-menu-content width="2" class="md-dense download-menu-content">
+              <md-menu-item
+                ng-repeat="opt in $ctrl.menuOptions(expedition) track by expedition.expeditionCode + opt.name"
+              >
+                <md-button ng-click="opt.fn(expedition.expeditionCode)">{{ opt.name }}</md-button>
+              </md-menu-item>
+            </md-menu-content>
+          </md-menu>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
-    <div class="text-center" ng-show="$ctrl.totalItems > 0">
-      <ul
-        uib-pagination
-        total-items="$ctrl.totalItems"
-        ng-model="$ctrl.currentPage"
-        ng-change="$ctrl.pageChanged()"
-        max-size="10"
-        force-ellipses="true"
-        boundary-link-numbers="true"
-        items-per-page="$ctrl.itemsPerPage"
-      ></ul>
-    </div>
+  <div class="text-center" ng-show="$ctrl.totalItems > 0">
+    <ul
+      uib-pagination
+      total-items="$ctrl.totalItems"
+      ng-model="$ctrl.currentPage"
+      ng-change="$ctrl.pageChanged()"
+      max-size="10"
+      force-ellipses="true"
+      boundary-link-numbers="true"
+      items-per-page="$ctrl.itemsPerPage"
+    ></ul>
   </div>
 </div>
