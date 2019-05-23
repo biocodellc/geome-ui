@@ -2,36 +2,52 @@
   <h3 class="text-center page-header">{{ $ctrl.currentProject.projectTitle }} Overview</h3>
   <p class="text-center">{{ $ctrl.currentProject.description }}</p>
 
-  <div class="row">
-    <form class="form-horizontal">
-      <div class="col-sm-4 text-right col-md-offset-1"><strong>Project owner:</strong></div>
-      <div class="col-sm-4 text-left">
-        {{ $ctrl.currentProject.user.username }} ({{ $ctrl.currentProject.user.email }})
+  <div class="project-details">
+    <div class="row">
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Project owner:</strong></div>
+      <div class="col-sm-8 col-md-9 col-lg-10">
+        {{ $ctrl.currentProject.user.username }} (<a
+          href="mailto:{{ $ctrl.currentProject.user.email }}"
+          >{{ $ctrl.currentProject.user.email }}</a
+        >)
       </div>
-    </form>
+    </div>
+    <div class="row">
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Project link:</strong></div>
+      <div class="col-sm-8 col-md-9 col-lg-10">
+        <a
+          href="https://geome-db.org/workbench/overview?projectId={{
+            $ctrl.currentProject.projectId
+          }}"
+          >https://geome-db.org/workbench/overview?projectId={{ $ctrl.currentProject.projectId }}</a
+        >
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Public:</strong></div>
+      <div class="col-sm-8 col-md-9 col-lg-10">{{ $ctrl.currentProject.public }}</div>
+    </div>
+
+    <div class="row title">
+      <div class="col-sm-12">
+        <strong>{{ $ctrl.currentProject.projectConfiguration.name }} Configuration Details:</strong>
+      </div>
+      <div class="col-sm-12 small">
+        This configuration specifies all validation rules and terms for this project. If you have
+        any questions or suggestions, please contact the configuration owner.
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Config owner:</strong></div>
+      <div class="col-sm-8 col-md-9 col-lg-10">
+        {{ $ctrl.currentProject.projectConfiguration.user.username }}
+        (<a href="mailto:{{ $ctrl.currentProject.projectConfiguration.user.email }}">{{
+          $ctrl.currentProject.projectConfiguration.user.email
+        }}</a
+        >)
+      </div>
+    </div>
   </div>
-  <h5 class="text-center">
-    <strong>{{ $ctrl.currentProject.projectConfiguration.name }} Configuration Details:</strong>
-  </h5>
-  <div class="row">
-    <div class="col-sm-4 text-right col-md-offset-1">
-      <strong>Terms:</strong>
-    </div>
-    <div class="col-sm-4 text-left ">
-      The {{ $ctrl.currentProject.projectConfiguration.name }} Configuration specifies all
-      validation rules and terms for this project.
-    </div>
-    <div class="col-sm-4 text-right col-md-offset-1">
-      <strong>Owner:</strong>
-    </div>
-    <div class="col-sm-4 text-left ">
-      {{ $ctrl.currentProject.projectConfiguration.user.username }}
-      <a href="mailto:{{ $ctrl.currentProject.projectConfiguration.user.email }}">
-        ({{ $ctrl.currentProject.projectConfiguration.user.email }})
-      </a>
-    </div>
-  </div>
-  <p></p>
 
   <div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
     <md-progress-circular md-mode="indeterminate"></md-progress-circular>
