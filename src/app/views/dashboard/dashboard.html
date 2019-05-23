@@ -29,8 +29,9 @@
     </div>
 
     <div class="row title">
-      <div class="col-sm-12">
-        <strong>{{ $ctrl.currentProject.projectConfiguration.name }} Configuration Details:</strong>
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Project Config:</strong></div>
+      <div class="col-sm-8 col-md-9 col-lg-10">
+        {{ $ctrl.currentProject.projectConfiguration.name }}
       </div>
       <div class="col-sm-12 small">
         This configuration specifies all validation rules and terms for this project. If you have
