@@ -1,15 +1,20 @@
 .project-view-white {
-  margin: -12px -25px;
-  padding: 12px 25px;
+  margin: -12px -25px -60px;
+  padding: 12px 25px 60px;
   background-color: #fff;
   display: block;
 }
 
 .project-view {
-  padding: 12px 25px; // when changing this, update.project-view-white
+  padding: 12px 25px 60px; // when changing this, update.project-view-white
+  overflow: auto;
 
-  ui-view > * {
-    flex: 1;
+  ui-view {
+    min-height: 100%;
+    > * {
+      flex: 1;
+      overflow: auto;
+    }
   }
 
   fims-dashboard,
