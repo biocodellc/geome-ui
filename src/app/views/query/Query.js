@@ -2,7 +2,7 @@ export class Query {
   constructor(queryString, source) {
     this.q = queryString;
     this.source = source;
-    this.networkId = 1; // GeOMe Network
+    this.networkId = 1; // GEOME Network
   }
 }
 
