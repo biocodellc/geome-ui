@@ -12,14 +12,26 @@
       <i class="fa fa-exclamation-circle"></i>
       Original Url is invalid
     </span>
+    <span
+      ng-if="$ctrl.record.processed === 'false' && $ctrl.record.entity === 'Sample_Photo'"
+      class="alert alert-danger"
+      class="text-center"
+      role="alert"
+    >
+      <i class="fa fa-exclamation-circle"></i>
+      Image is still being processed
+    </span>
   </h3>
 
   <div class="main-details" layout="row" layout-align="center center">
     <div ng-if="$ctrl.record.img1024" flex="100">
       <a href="{{ $ctrl.record.img1024 }}"><img ng-src="{{ $ctrl.record.img512 }}"/></a>
     </div>
-    <div ng-if="$ctrl.record.originalUrl && !$ctrl.invalidUrl" flex="100">
-      <a href="{{ $ctrl.record.originalUrl }}"><img ng-src="{{ $ctrl.record.originalUrl }}"/></a>
+    <div
+      ng-if="$ctrl.record.originalUrl && !$ctrl.invalidUrl && $ctrl.record.processed !== 'false'"
+      flex="100"
+    >
+      <a href="{{ $ctrl.record.img1024 }}"><img ng-src="{{ $ctrl.record.originalUrl }}"/></a>
     </div>
     <table ng-if="!$ctrl.record.originalUrl" flex="100">
       <tbody>
