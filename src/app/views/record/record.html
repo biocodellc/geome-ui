@@ -2,11 +2,24 @@
   <md-progress-circular md-mode="indeterminate"></md-progress-circular>
 </div>
 <div layout="column" class="record-detail" ng-show="!$ctrl.loading">
-  <h3>{{ $ctrl.record.entity }} {{ $ctrl.getIdentifier($ctrl.record) }}</h3>
+  <h3>
+    {{ $ctrl.record.entity }} {{ $ctrl.getIdentifier($ctrl.record) }}
+    <span
+      ng-if="$ctrl.invalidUrl && $ctrl.record.entity === 'Sample_Photo'"
+      class="alert alert-danger"
+      role="alert"
+    >
+      <i class="fa fa-exclamation-circle"></i>
+      Original Url is invalid
+    </span>
+  </h3>
 
   <div class="main-details" layout="row" layout-align="center center">
     <div ng-if="$ctrl.record.img1024" flex="100">
       <a href="{{ $ctrl.record.img1024 }}"><img ng-src="{{ $ctrl.record.img512 }}"/></a>
+    </div>
+    <div ng-if="$ctrl.record.originalUrl && !$ctrl.invalidUrl" flex="100">
+      <a href="{{ $ctrl.record.originalUrl }}"><img ng-src="{{ $ctrl.record.originalUrl }}"/></a>
     </div>
     <table ng-if="!$ctrl.record.originalUrl" flex="100">
       <tbody>
@@ -42,7 +55,9 @@
     <table flex>
       <tbody>
         <tr ng-repeat="(key, value) in $ctrl.auxiliaryRecordDetails(0) track by key">
-          <th>{{ key }}:</th>
+          <th ng-class="{'error': !value.href && $ctrl.record.entity === 'Sample_Photo'}">
+            {{ key }}:
+          </th>
           <td ng-class="{'sequence': key === 'sequence'}">
             <md-tooltip
               md-direction="top"
