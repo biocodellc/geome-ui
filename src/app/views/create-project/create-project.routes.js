@@ -11,7 +11,7 @@ function getStates() {
         loginRequired: true,
         resolve: {
           configurations: /* @ngInject */ ProjectConfigurationService =>
-            ProjectConfigurationService.all(true, true),
+            ProjectConfigurationService.all(),
           isNetworkAdmin: /* @ngInject */ (UserService, NetworkService) =>
             NetworkService.get()
               .then(

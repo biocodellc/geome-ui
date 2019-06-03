@@ -78,29 +78,37 @@
           <md-step-body>
             <p>
               The project config determines how and what data you can upload. You can use an
-              existing configuration or to clone an existing configuration to use as a template.
+              existing team configuration or create a new one.
             </p>
 
             <md-switch
               ng-if="$ctrl.isNetworkAdmin"
-              ng-model="$ctrl.newConfig"
-              ng-true-value="false"
-              ng-false-value="true"
+              ng-model="$ctrl.cloneConfig"
+              ng-click="$ctrl.teamConfig = false;"
               class="md-primary"
               aria-label="Clone Existing Project Config?"
             >
-              Clone Existing Project Config?
+              Clone Existing Project Config? (Admin Only)
+            </md-switch>
+
+            <md-switch
+              ng-model="$ctrl.teamConfig"
+              ng-click="$ctrl.cloneConfig = false;"
+              class="md-primary"
+              aria-label="Use existing team configuration?"
+            >
+              Use Existing Team Configuration?
             </md-switch>
 
             <md-autocomplete
-              ng-show="!$ctrl.newConfig"
+              ng-show="$ctrl.teamConfig || ($ctrl.isNetworkAdmin && $ctrl.cloneConfig)"
               flex
               required
               md-no-cache
               md-show-arrow="true"
               md-selected-item="$ctrl.existingConfig"
-              md-items="c in $ctrl.configurations | filter:{name: configSearchText}"
-              md-floating-label="Existing Configuration"
+              md-items="c in $ctrl.getConfigurations() | filter:{name: configSearchText}"
+              md-floating-label="Existing Team Configuration"
               md-require-match
               md-search-text="configSearchText"
               md-min-length="0"
@@ -113,17 +121,17 @@
                 }}</span>
               </md-item-template>
               <md-hints>
-                <md-hint>Choose an existing project configuration to clone</md-hint>
+                <md-hint>Select an existing team configuration.</md-hint>
               </md-hints>
             </md-autocomplete>
 
-            <div ng-show="!$ctrl.newConfig && $ctrl.existingConfig" class="config-description">
+            <div ng-show="$ctrl.cloneConfig && $ctrl.existingConfig" class="config-description">
               <h6>Configuration Description</h6>
               {{ $ctrl.existingConfig.description }}
             </div>
 
             <md-checkbox
-              ng-show="!$ctrl.newConfig && $ctrl.existingConfig"
+              ng-show="$ctrl.isNetworkAdmin && $ctrl.cloneConfig && $ctrl.existingConfig"
               ng-model="$ctrl.syncConfig"
               ng-disabled="!$ctrl.isNetworkAdmin && !$ctrl.currentUser.subscribed"
               class="md-align-top-left"
@@ -140,17 +148,30 @@
                 >
               </md-hints>
             </md-checkbox>
-            <p
-              ng-show="!$ctrl.newConfig && $ctrl.existingConfig && !$ctrl.isNetworkAdmin && !$ctrl.currentUser.subscribed"
-            >
-              Note: Only subscribed users can customize project configurations. See
-              <a ui-sref="about({'#':'subscriptions'})">our about page</a> for more information
-            </p>
+
+            <div ng-show="!$ctrl.teamConfig && !$ctrl.cloneConfig">
+              <h4>Worksheet Layout</h4>
+              <p>Choose how you would like to enter data for your project.</p>
+              <md-radio-group ng-model="$ctrl.configLayout" class="md-primary">
+                <md-radio-button value="single"
+                  >Single Sheet -
+                  <span class="small"
+                    >Event, Samples, & Tissues will be entered on a single worksheet</span
+                  >
+                </md-radio-button>
+                <md-radio-button value="multi"
+                  >Multi Sheet -
+                  <span class="small"
+                    >Event, Samples, & Tissues will be entered on their own worksheet</span
+                  >
+                </md-radio-button>
+              </md-radio-group>
+            </div>
           </md-step-body>
           <md-step-actions>
             <md-button
-              ng-if="$ctrl.newConfig || ($ctrl.existingConfig && !$ctrl.syncConfig)"
-              ng-disabled="!$ctrl.newConfig && !$ctrl.existingConfig"
+              ng-if="!$ctrl.teamConfig && !$ctrl.cloneConfig || ($ctrl.cloneConfig && $ctrl.existingConfig && !$ctrl.syncConfig)"
+              ng-disabled="$ctrl.cloneConfig && !$ctrl.existingConfig"
               class="md-primary md-raised"
               ng-click="$ctrl.toConfigStep($mdStep)"
               layout="row"
@@ -168,7 +189,7 @@
               class="md-primary md-raised"
               ng-click="$ctrl.createProject()"
               ng-disabled="!$ctrl.existingConfig"
-              ng-if="($ctrl.syncConfig || !$ctrl.existingConfig) && !$ctrl.newConfig"
+              ng-if="$ctrl.teamConfig || ($ctrl.cloneConfig && ($ctrl.syncConfig || !$ctrl.existingConfig))"
               layout="row"
               layout-align="center center"
             >
@@ -184,9 +205,8 @@
           </md-step-actions>
         </md-step>
         <md-step
-          ng-if="$ctrl.isNetworkAdmin"
           md-label="Project Config Modules"
-          ng-show="$ctrl.newConfig || !$ctrl.syncConfig"
+          ng-show="!$ctrl.teamConfig && !$ctrl.cloneConfig || ($ctrl.cloneConfig && !$ctrl.syncConfig)"
           class="config-modules-step"
           md-order="2"
         >
@@ -259,6 +279,7 @@
               ng-model="$ctrl.photos"
               class="md-align-top-left"
               name="photos"
+              ng-disabled="!$ctrl.isNetworkAdmin && !$ctrl.currentUser.subscribed"
               ng-change="$ctrl.photosChanged()"
             >
               Photos Module
@@ -266,6 +287,11 @@
                 <md-hint>Upload and associate photos with your metadata.</md-hint>
               </md-hints>
             </md-checkbox>
+
+            <p ng-show="!$ctrl.isNetworkAdmin && !$ctrl.currentUser.subscribed">
+              Note: Only subscribed users can use the photos module. See
+              <a ui-sref="about({'#':'subscriptions'})">our about page</a> for more information
+            </p>
 
             <div class="photo-modules" ng-show="$ctrl.photos">
               <md-checkbox
@@ -311,8 +337,8 @@
         <md-step
           ng-repeat="e in $ctrl.config.entities track by e.conceptAlias"
           md-label="Entity - {{ e.conceptAlias }}"
-          ng-show="$ctrl.newConfig || !$ctrl.syncConfig"
-          md-order="$index + ($ctrl.isNetworkAdmin ? 3 : 2)"
+          ng-show="!$ctrl.teamConfig && !$ctrl.cloneConfig || ($ctrl.cloneConfig && !$ctrl.syncConfig)"
+          md-order="$index + 3"
         >
           <md-step-body>
             <md-checkbox
@@ -393,23 +419,16 @@
             </md-autocomplete>
 
             <md-checkbox
-              ng-if="e.type === 'Tissue'"
+              ng-if="e.type === 'Tissue' && $ctrl.disableGenerateID(e)"
               ng-model="e.generateID"
               class="md-align-top-left"
               name="{{ e.conceptAlias }}-generate-id"
-              ng-disabled="$ctrl.disableGenerateID(e)"
             >
               Auto-Generate ID?
               <md-hints>
-                <md-hint ng-if="$ctrl.disableGenerateID(e)"
-                  >ID generation is only available if this entity is on the same worksheet as the
-                  {{ e.parentEntity }} entity (worksheet = "{{
-                    $ctrl.getEntity(e.parentEntity).worksheet
-                  }}") and the uniqueKey is "tissueID".
-                </md-hint>
                 <md-hint ng-if="!$ctrl.disableGenerateID(e)"
                   >If selected, the tissueID will be autogenerated and is not required to be entered
-                  by the user. The generated id will be incrememnted based off of the parentEntity
+                  by the user. The generated id will be incremented based off of the Sample
                   uniqueKey. Ex.
                   <strong>_{{ $ctrl.getEntity(e.parentEntity).uniqueKey }}_.1</strong>
                 </md-hint>
@@ -417,7 +436,7 @@
             </md-checkbox>
 
             <md-checkbox
-              ng-if="$ctrl.isNetworkAdmin && !e.hashed"
+              ng-if="!e.hashed && ['Event', 'Sample', 'Tissue'].includes(e.conceptAlias)"
               ng-model="e.uniqueAcrossProject"
               class="md-align-top-left"
               name="{{ e.conceptAlias }}-uniqueAcrossProject"
@@ -425,8 +444,9 @@
               Unique Across Project?
               <md-hints>
                 <md-hint
-                  >By default, the uniqueKey is only unique within an expedition. When selected, the
-                  uniqueKey will be unique across all expeditions within the project.</md-hint
+                  >By default, the {{ e.uniqueKey }} is only unique within an expedition. When
+                  selected, the {{ e.uniqueKey }} will be unique across all expeditions within the
+                  project.</md-hint
                 >
               </md-hints>
             </md-checkbox>
@@ -475,8 +495,8 @@
 
         <md-step
           md-label="Expedition Metadata Properties"
-          ng-if="$ctrl.config"
-          md-order="$ctrl.config.entities.length + ($ctrl.isNetworkAdmin ? 3 : 2)"
+          ng-if="$ctrl.config && (!$ctrl.teamConfig && !$ctrl.cloneConfig || ($ctrl.cloneConfig && !$ctrl.syncConfig))"
+          md-order="$ctrl.config.entities.length + 3"
         >
           <md-step-body>
             <p class="small">
