@@ -38,7 +38,6 @@ class EntitiesController {
   }
 
   handleToggleEdit(index) {
-    if (!this.canEdit) return;
     if (this.editEntity === index) {
       delete this.editEntity;
     } else {
@@ -74,6 +73,5 @@ export default {
     config: '<',
     onUpdateEntities: '&',
     onNewWorksheet: '&',
-    canEdit: '<',
   },
 };

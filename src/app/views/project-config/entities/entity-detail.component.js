@@ -98,7 +98,6 @@ const fimsEntityDetail = {
   bindings: {
     config: '<',
     entity: '<',
-    canEdit: '<',
     networkConfig: '<',
     currentProject: '<',
     onSave: '&',
