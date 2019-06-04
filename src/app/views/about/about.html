@@ -1,8 +1,8 @@
 <h2>Getting Started</h2>
 <div style="padding-left:40px; width:80%">
-  <p><strong>1.</strong> <a ui-sref="register">Create an account</a></p>
+  <p><strong>1.</strong> <a ui-sref="register">Create an account</a> - user accounts are free to make.</p>
 
-  <p>
+  <!--<p>
     <strong>2.</strong> Read the following configuration descriptions by clicking on each title. You
     will be asked to choose one of these configurations when you create your project. Configurations
     define a common set of validation rules and data formatting options drawing on the same set of
@@ -12,14 +12,17 @@
   <p></p>
 
   <project-info></project-info>
+  -->
 
-  <p><strong>3.</strong> <a ui-sref="create-project">Create a project</a></p>
+  <p><strong>2.</strong> <a ui-sref="create-project">Create a project</a> - the GEOME project creation wizard makes it easy to start your own project or join a team </p>
 
   <p>Feel free to to <a ui-sref="contact">contact us</a> if you have any questions!</p>
 </div>
 
+
 <h2>More Information</h2>
 <uib-accordion>
+
   <div
     uib-accordion-group
     id="network"
@@ -85,32 +88,39 @@
 
   <div
     uib-accordion-group
+    id="network"
     class="panel-default md-whiteframe-2dp"
-    heading="Getting More Out of GEOME"
+    heading="About Teams"
+  >
+   Join a team if you have been invited to do so and if you agree to use all of the attributes and rules and data formatting options for that team.  
+   If you wish to join a team you can select the appropriate option during the project creation process.  
+   The following public "teams" are available in GEOME, which have been built around the particular needs of each team.   
+
+  <project-info></project-info>
+
+  </div>
+
+  <div
+    uib-accordion-group
+    class="panel-default md-whiteframe-2dp"
+    heading="Enterprise Services"
     id="subscriptions"
     is-open="$ctrl.subscriptions"
   >
     <p>
-      GEOME provides a free service to the community for contextualizing genomic data sources and
-      making your data public. While many of our services are completely free to use, you may want
-      to consider purchasing a subscription. Subscriptions offer users an enhanced set of services
-      as well as keeps GEOME running for the community. A list of items we offer for to subscribers:
+      GEOME offers the following enterprise-level services under contract:
     </p>
     <ul>
-      <li>
-        Create customized configurations with custom-built rules and validations, enabling you to
-        create your own network within GEOME
-      </li>
-      <li>Customizing privacy settings</li>
+      <li>Customizing user and team options</li>
       <li>Technical assistance with the Biocode LIMS plugin and Geneious integration</li>
-      <li>Enable loading projects with large amounts of data</li>
-      <li>Enhanced technical support</li>
-      <li>Custom installations</li>
+      <li>Enable loading photos</li>
+      <li>Technical support</li>
+      <li>Training</li>
+      <li>Custom configurations and installations</li>
     </ul>
 
     <p>
-      Pricing plans vary based on what requirements you have. Please
-      <a ui-sref="contact">contact us</a> so we can discuss a plan to best suit your needs.
+      <a ui-sref="contact">Contact us</a> to discuss options.
     </p>
   </div>
 

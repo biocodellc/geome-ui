@@ -59,7 +59,7 @@
               <md-hints>
                 <md-hint
                   >If a project is public, non project members will be able to query the
-                  data</md-hint
+                  data.  You may change the public/private status of your project later.</md-hint
                 >
               </md-hints>
             </md-checkbox>
@@ -74,11 +74,11 @@
             >
           </md-step-actions>
         </md-step>
-        <md-step md-label="Project Config" md-order="1">
+        <md-step md-label="Project Configuration" md-order="1">
           <md-step-body>
             <p>
-              The project config determines how and what data you can upload. You can use an
-              existing team configuration or create a new one.
+	      Join a team if you have been invited to do so and if you agree to use all of the attributes and rules and data formatting options for that team.  
+	      Otherwise, create your own project by selecting a data format below.
             </p>
 
             <md-switch
@@ -97,8 +97,9 @@
               class="md-primary"
               aria-label="Use existing team configuration?"
             >
-              Use Existing Team Configuration?
+              Join a team? 
             </md-switch>
+
 
             <md-autocomplete
               ng-show="$ctrl.teamConfig || ($ctrl.isNetworkAdmin && $ctrl.cloneConfig)"
@@ -125,7 +126,7 @@
               </md-hints>
             </md-autocomplete>
 
-            <div ng-show="$ctrl.cloneConfig && $ctrl.existingConfig" class="config-description">
+            <div ng-show="$ctrl.teamConfig && $ctrl.existingConfig" class="config-description">
               <h6>Configuration Description</h6>
               {{ $ctrl.existingConfig.description }}
             </div>
@@ -150,19 +151,19 @@
             </md-checkbox>
 
             <div ng-show="!$ctrl.teamConfig && !$ctrl.cloneConfig">
-              <h4>Worksheet Layout</h4>
-              <p>Choose how you would like to enter data for your project.</p>
+              <h4>Data Format</h4>
+              <p>Select how data will be entered. Once chosen, all project data will be input and output using this format. </p>
               <md-radio-group ng-model="$ctrl.configLayout" class="md-primary">
                 <md-radio-button value="single"
                   >Single Sheet -
                   <span class="small"
-                    >Event, Samples, & Tissues will be entered on a single worksheet</span
+                    >Enter data on a single flat-sheet. Best when there is close to a one:one match between events, samples, and tissues.</span
                   >
                 </md-radio-button>
                 <md-radio-button value="multi"
                   >Multi Sheet -
                   <span class="small"
-                    >Event, Samples, & Tissues will be entered on their own worksheet</span
+                    >Enter Event, Samples, & Tissues on their own worksheets.  Best when a single collecting event yields  many samples or a single sample will yield many tissues.  Requires user to manage identifiers to link each entity.</span
                   >
                 </md-radio-button>
               </md-radio-group>
@@ -205,7 +206,7 @@
           </md-step-actions>
         </md-step>
         <md-step
-          md-label="Project Config Modules"
+          md-label="Project Modules"
           ng-show="!$ctrl.teamConfig && !$ctrl.cloneConfig || ($ctrl.cloneConfig && !$ctrl.syncConfig)"
           class="config-modules-step"
           md-order="2"
@@ -234,7 +235,7 @@
             >
               Tissues Module
               <md-hints>
-                <md-hint>Necessary for including NextGen or Barcoding modules</md-hint>
+                <md-hint>Necessary for including NextGen or Barcoding modules as well as integring with the Biocode LIMS Geneious Plugin.</md-hint>
               </md-hints>
             </md-checkbox>
 
@@ -314,9 +315,8 @@
           </md-step-body>
           <md-step-actions layout="row">
             <md-button class="md-primary md-raised" ng-click="$mdStep.$stepper.next()">
-              Next</md-button
-            >
-            <md-button
+              Next</md-button>
+            <!--<md-button
               class="md-primary md-raised"
               ng-click="$ctrl.createProject()"
               layout="row"
@@ -330,7 +330,7 @@
                 class="md-accent md-hue-3"
               >
               </md-progress-circular>
-            </md-button>
+            </md-button> -->
           </md-step-actions>
         </md-step>
 
@@ -454,12 +454,14 @@
             <h4>Attributes</h4>
             <p class="small">
               The available attributes for {{ e.conceptAlias }} are listed below. You can choose
-              which attributes you would like to collect. You can also edit a the group,
-              description, etc. Attributes that are required by GEOME can not be disabled.
+              which attributes you would like to appear on your spreadsheet templates. You can also edit 
+	      the definition and attribute group along with changing the default column order. 
+              Attributes that are required by GEOME can not be disabled.
             </p>
 
+              <!--selected-attributes="e.attributes"-->
             <fims-project-config-attributes
-              selected-attributes="e.attributes"
+              selected-attributes="$ctrl.availableAttributes(e.conceptAlias)"
               can-edit="true"
               available="$ctrl.availableAttributes(e.conceptAlias)"
               required-attributes="$ctrl.requiredAttributes[e.conceptAlias]"
@@ -469,10 +471,10 @@
 
             <h4>Rules</h4>
             <p class="small">
-              Here you can configure the validation rules for this entity. Note: required GEOME
-              rules will be added upon creation.
+	       You will be able to add validation rules for {{ e.conceptAlias }} after project creation in the "Project Configuration" options.
             </p>
 
+	    <!--
             <fims-project-config-rules
               rules="e.rules"
               required="$ctrl.requiredRules[e.conceptAlias]"
@@ -482,6 +484,7 @@
               on-change="$ctrl.updateRules(e, rules)"
             >
             </fims-project-config-rules>
+	    -->
           </md-step-body>
           <md-step-actions>
             <md-button
