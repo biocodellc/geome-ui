@@ -1,20 +1,24 @@
 <h2>Getting Started</h2>
 <div style="padding-left:40px; width:80%">
-  <p><strong>1.</strong> <a ui-sref="register">Create an account</a> - user accounts are free to make.</p>
+  <ol>
+    <li><strong><a ui-sref="register">Create an account</a></strong>
+       <br>All users wishing to contribute data to GEOME require an account which lets you load, manage and set viewing permissions for your data.</p>
+    </li>
+    <li><strong>Find a place to jump-in</strong>
+      <p></p>
+      <ul>
+  	<p><strong>Join a project</strong><br>If you have been asked to join an existing project, ask the project administrator to add you as a member so you can upload expeditions (data sets).  In this case, there is no need to create a new project.
 
-  <!--<p>
-    <strong>2.</strong> Read the following configuration descriptions by clicking on each title. You
-    will be asked to choose one of these configurations when you create your project. Configurations
-    define a common set of validation rules and data formatting options drawing on the same set of
-    GEOME terms.
-  </p>
+  	<p><strong>OR</strong>
 
-  <p></p>
+  	<p><strong>Create a project in a team workspace</strong><br>  <a ui-sref="create-project">Create a new project</a> within a team workspace if you have been invited to do so.  You agree to adopt all rules, formatting, and controlled vocabularies defined by the team.</p>
 
-  <project-info></project-info>
-  -->
-
-  <p><strong>2.</strong> <a ui-sref="create-project">Create a project</a> - the GEOME project creation wizard makes it easy to start your own project or join a team </p>
+  	<p><strong>OR</strong>
+  
+  	<p><strong>Create your own project</strong><br>The GEOME project creation wizard makes it easy to <a ui-sref="create-project">create a new project</a> by defining the format, attributes, rules, and controlled vocabularies which will guide metadata collection.</p>
+      </ul>
+    </li>
+  </ol>
 
   <p>Feel free to to <a ui-sref="contact">contact us</a> if you have any questions!</p>
 </div>
@@ -71,10 +75,8 @@
 
     <p><strong>Minimum Requirements for each Configuration:</strong></p>
 	<p>
-        To view a list of all fields and validation rules for particular configurations, see Workbench -> "Generate Template" and then
+        To view a list of all fields and validation rules for particular projects or teams, see Workbench -> "Generate Template" and then
 	select one of the SAMPLE project configurations in the project chooser in the top-center of the window.  
-	Note that you can type "SAMPLE" in the filter to show only the SAMPLE projects.
-	The following table lists required fields for GEOME and current configurations:
 	<br>
       <img
         id="requiredFieldsImage"
@@ -90,11 +92,13 @@
     uib-accordion-group
     id="network"
     class="panel-default md-whiteframe-2dp"
-    heading="About Teams"
+    heading="About Teams Workspaces"
   >
-   Join a team if you have been invited to do so and if you agree to use all of the attributes and rules and data formatting options for that team.  
-   If you wish to join a team you can select the appropriate option during the project creation process.  
-   The following public "teams" are available in GEOME, which have been built around the particular needs of each team.   
+   Join a team workspace if you have been invited to do so and if you agree to use all of the attributes and rules and data formatting options for that team.  
+   To join a team workspace, select "Join team workspace" during the project creation process and then select the appropriate team.  You will then
+   be able to continue creating a project that is a part of the team workspace.  You will need to coordinate with the team administrator for configuring available
+   attributes, rules, and controlled vocabularies.  
+   The following public team workspaces are available in GEOME, which have been built around the particular needs of each team.   
 
   <project-info></project-info>
 

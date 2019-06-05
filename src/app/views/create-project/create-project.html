@@ -97,7 +97,7 @@
               class="md-primary"
               aria-label="Use existing team configuration?"
             >
-              Join a team? 
+              Join a team workspace?
             </md-switch>
 
 
@@ -152,7 +152,7 @@
 
             <div ng-show="!$ctrl.teamConfig && !$ctrl.cloneConfig">
               <h4>Data Format</h4>
-              <p>Select how data will be entered. Once chosen, all project data will be input and output using this format. </p>
+              <p>The data format options below determine how data will be input and output.</p>
               <md-radio-group ng-model="$ctrl.configLayout" class="md-primary">
                 <md-radio-button value="single"
                   >Single Sheet -
@@ -471,7 +471,7 @@
 
             <h4>Rules</h4>
             <p class="small">
-	       You will be able to add validation rules for {{ e.conceptAlias }} after project creation in the "Project Configuration" options.
+	       All new projects inherit the GEOME core rules.  You will be able to add your own validation rules for {{ e.conceptAlias }} after project creation in the "Project Configuration" options.
             </p>
 
 	    <!--
