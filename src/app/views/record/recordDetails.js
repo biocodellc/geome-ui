@@ -99,6 +99,8 @@ export const mainRecordDetails = {
     photoID: getKey('photoID'),
     originalUrl: getKey('originalUrl'),
     original: getKey('photoID'),
+    hasScale: getKey('hasScale'),
+    qualityScore: getKey('qualityScore'),
     img1024: eventPhoto => ({
       text: '1024 pixel wide image',
       href: `${eventPhoto.img1024}`,
@@ -123,6 +125,8 @@ export const mainRecordDetails = {
     materialSampleID: getKey('materialSampleID'),
     photoID: getKey('photoID'),
     originalUrl: getKey('originalUrl'),
+    hasScale: getKey('hasScale'),
+    qualityScore: getKey('qualityScore'),
     img1024: SamplePhoto => ({
       text: '1024 pixel wide image',
       href: `${SamplePhoto.img1024}`,
