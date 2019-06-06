@@ -105,6 +105,7 @@ class QueryFormController {
     this.eventFilters = [];
     this.sampleFilters = [];
     this.tissueFilters = [];
+    this.photoFilters = [];
 
     // Retrieve Projects
     const projectsPromise = this.ProjectService.all(true).then(({ data }) => {
@@ -194,17 +195,17 @@ class QueryFormController {
         )
         .then(() => {
           this.entity = 'Sample';
-          this.clearPreviousResults();
+          this.clearPreviousMapResults();
           this.clearParams();
           this.clearBounds();
         })
         .catch(() => {});
     } else {
-      this.clearPreviousResults();
+      this.clearPreviousMapResults();
     }
   }
 
-  clearPreviousResults() {
+  clearPreviousMapResults() {
     this.queryMap._clearMap();
     this.onNewResults(); // call results function in parent component to switch to map view and clear table data
     this.moreSearchOptions = !this.moreSearchOptions;
@@ -224,11 +225,13 @@ class QueryFormController {
       }
     });
     this.expeditions = undefined;
-    this.individualProjects = []; // remove selected chips
-    this.families = []; // remove selected chips
-    this.tissueFilters = []; // remove selected chips
-    this.eventFilters = []; // remove selected chips
-    this.sampleFilters = []; // remove selected chips
+    // remove selected chips
+    this.individualProjects = [];
+    this.families = [];
+    this.tissueFilters = [];
+    this.eventFilters = [];
+    this.sampleFilters = [];
+    this.photoFilters = [];
   }
 
   familyToggle(chip, removal) {
@@ -355,8 +358,10 @@ class QueryFormController {
       this.sampleFilters.push(filter);
     } else if (conceptAlias === 'Tissue') {
       filter.column = 'Tissue.tissueID';
-
       this.tissueFilters.push(filter);
+    } else if (conceptAlias === 'Sample_Photo') {
+      filter.column = 'Sample_Photo.photoID';
+      this.photoFilters.push(filter);
     }
 
     this.filterToggle(filter);
