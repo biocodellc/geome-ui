@@ -28,35 +28,28 @@
       <div class="col-sm-8 col-md-9 col-lg-10">{{ $ctrl.currentProject.public }}</div>
     </div>
 
-    <div class="row title">
-      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Project Config:</strong></div>
-      <div class="col-sm-8 col-md-9 col-lg-10">
-        {{ $ctrl.currentProject.projectConfiguration.name }}
-	<md-button class="md-icon-button help-link md-popover-button">
-          <md-popover
-            md-popover-class="fastq-help-filenames"
-            md-popover-group="reloadHelp"
-            md-direction="right"
-          >
-            <div ng-include="'overview-config-help.popover.html'"></div>
-          </md-popover>
-          <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
-        </md-button>
+    <div ng-show="$ctrl.currentProject.projectConfiguration.networkApproved">
+      <div class="row title">
+        <div class="col-sm-4 col-md-3 col-lg-2"><strong>Project Config:</strong></div>
+        <div class="col-sm-8 col-md-9 col-lg-10">
+          {{ $ctrl.currentProject.projectConfiguration.name }}
+          <md-button class="md-icon-button help-link md-popover-button">
+            <md-popover md-popover-class="fastq-help-filenames" md-direction="right">
+              <div ng-include="'overview-config-help.popover.html'"></div>
+            </md-popover>
+            <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
+          </md-button>
+        </div>
       </div>
-      <!--<div class="col-sm-12 small">
-        This configuration specifies all validation rules and terms for this project. If you have
-        any questions or suggestions, please contact the configuration owner.
-      </div>
--->
-    </div>
-    <div class="row">
-      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Config owner:</strong></div>
-      <div class="col-sm-8 col-md-9 col-lg-10">
-        {{ $ctrl.currentProject.projectConfiguration.user.username }}
-        (<a href="mailto:{{ $ctrl.currentProject.projectConfiguration.user.email }}">{{
-          $ctrl.currentProject.projectConfiguration.user.email
-        }}</a
-        >)
+      <div class="row">
+        <div class="col-sm-4 col-md-3 col-lg-2"><strong>Config owner:</strong></div>
+        <div class="col-sm-8 col-md-9 col-lg-10">
+          {{ $ctrl.currentProject.projectConfiguration.user.username }}
+          (<a href="mailto:{{ $ctrl.currentProject.projectConfiguration.user.email }}">{{
+            $ctrl.currentProject.projectConfiguration.user.email
+          }}</a
+          >)
+        </div>
       </div>
     </div>
   </div>
@@ -65,9 +58,9 @@
     <md-progress-circular md-mode="indeterminate"></md-progress-circular>
   </div>
 
-  <div layout="row" ng-show="!$ctrl.loading && $ctrl.totalItems === 0" layout-align="center center">
+  <p ng-show="!$ctrl.loading && $ctrl.totalItems === 0" class="text-center">
     There are no expeditions associated with this project
-  </div>
+  </p>
   <div layout="row" ng-show="!$ctrl.loading && $ctrl.totalItems" layout-align="center center">
     <md-button
       class="md-primary md-raised project-download-button"
@@ -171,10 +164,10 @@ help templates
  ---------------------------->
 
 <script type="text/ng-template" id="overview-config-help.popover.html">
-  <div>
-<p>
-        This configuration specifies all validation rules and terms for this project. If you have
-        any questions or suggestions, please contact the configuration owner.
-</p>
-  </div>
+    <div>
+  <p>
+          This configuration specifies all validation rules and terms for this project. If you have
+          any questions or suggestions, please contact the configuration owner.
+  </p>
+    </div>
 </script>

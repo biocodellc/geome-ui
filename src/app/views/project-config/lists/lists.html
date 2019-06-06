@@ -1,10 +1,6 @@
 <div layout="row">
   <span flex></span>
-  <button
-    ng-click="$ctrl.addList($event)"
-    class="md-primary md-button md-ink-ripple add-button"
-    ng-show="$ctrl.canEdit"
-  >
+  <button ng-click="$ctrl.addList($event)" class="md-primary md-button md-ink-ripple add-button">
     <md-icon md-font-icon="fa fa-plus fa-fw"></md-icon>
     Add List
   </button>
@@ -14,7 +10,7 @@
     class="settings-list-item"
     ng-repeat="list in $ctrl.lists | orderBy: ['networkList', 'alias']"
   >
-    <div class="row-actions" ng-if="$ctrl.canEdit">
+    <div class="row-actions">
       <a ng-if="!list.networkList" href="#" ng-click="$ctrl.removeList($event, list)"
         ><i class="fa fa-trash fa-fw text-danger"></i
       ></a>
@@ -43,7 +39,7 @@
         <div class="col-xs-12">
           <ul class="list-inline metadata">
             <li><strong>caseSensitive:</strong> {{ !list.caseInsensitive }}</li>
-            <li><strong>isNetworkList:</strong> {{ list.networkList}}</li>
+            <li><strong>isNetworkList:</strong> {{ list.networkList }}</li>
           </ul>
         </div>
       </div>

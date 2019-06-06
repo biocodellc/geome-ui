@@ -50,11 +50,10 @@ class ConfigController {
 
   updateShowSave() {
     this.showSave =
-      (this.isNetworkAdmin || this.currentUser.subscribed) &&
-      (!angular.equals(this.configuration.config, this.config) ||
-        this.name !== this.configuration.name ||
-        this.description !== this.configuration.description ||
-        this.networkApproved !== this.configuration.networkApproved);
+      !angular.equals(this.configuration.config, this.config) ||
+      this.name !== this.configuration.name ||
+      this.description !== this.configuration.description ||
+      this.networkApproved !== this.configuration.networkApproved;
   }
 
   handleUpdateEntities(entities) {

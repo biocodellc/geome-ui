@@ -19,7 +19,7 @@
 
       <fims-project-config-list
         list="$ctrl.list"
-        can-edit="$ctrl.canEdit && !$ctrl.list.networkList"
+        can-edit="!$ctrl.list.networkList"
         on-change="$ctrl.onUpdateList({ list: list })"
       ></fims-project-config-list>
     </div>

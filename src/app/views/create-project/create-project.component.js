@@ -25,6 +25,16 @@ const BASE_CONFIG = {
       conceptURI: 'http://rs.tdwg.org/dwc/terms/MaterialSample',
       parentEntity: 'Event',
     },
+    {
+      conceptAlias: 'Tissue',
+      type: 'Tissue',
+      worksheet: 'Tissues',
+      uniqueKey: 'tissueID',
+      attributes: [],
+      rules: [],
+      conceptURI: 'http://rs.tdwg.org/dwc/terms/MaterialSample',
+      parentEntity: 'Sample',
+    },
   ],
   lists: [],
   expeditionMetadataProperties: [],
@@ -63,15 +73,17 @@ class CreateProjectController {
       description: undefined,
       public: false,
     };
-    this.newConfig = false;
+    this.cloneConfig = false;
+    this.teamConfig = false;
     this.syncConfig = true;
+    this.configLayout = 'single';
     this.worksheetSearchText = {};
     this.requiredAttributes = {};
     this.requiredRules = {};
   }
 
   async createProject() {
-    if (this.newConfig || !this.syncConfig) {
+    if (this.isNetworkAdmin && !this.syncConfig) {
       try {
         await this.$mdDialog.show(
           this.$mdDialog
@@ -92,7 +104,7 @@ class CreateProjectController {
       }
     }
 
-    if (!this.newConfig && this.syncConfig) {
+    if (this.teamConfig || (this.cloneConfig && this.syncConfig)) {
       this.project.projectConfiguration = this.existingConfig;
     } else {
       // creating a new ProjectConfiguration
@@ -167,22 +179,39 @@ class CreateProjectController {
       });
     });
 
-    if (this.newConfig) {
-      this.loading = true;
-      await this.networkPromise;
-      this.config = new ProjectConfig(BASE_CONFIG);
-      this.loading = false;
-    } else {
+    if (this.cloneConfig) {
       this.loading = true;
       await this.fetchConfig();
       this.loading = false;
 
       if (!this.config) return;
-      this.selectModulesForExistingConfig();
+      this.selectModulesForConfig();
       this.setRequiredAttributes(this.config);
+    } else {
+      this.loading = true;
+      await this.networkPromise;
+      this.config = new ProjectConfig(angular.copy(BASE_CONFIG));
+      this.setupSheetLayout();
+      this.selectModulesForConfig();
+      this.loading = false;
     }
 
     $mdStep.$stepper.next();
+  }
+
+  setupSheetLayout() {
+    if (this.configLayout === 'single') {
+      this.config.entities.forEach(e => {
+        if (e.conceptAlias === 'Event') {
+          e.hashed = true;
+          e.worksheet = 'Samples';
+        } else if (e.conceptAlias === 'Tissue') {
+          e.worksheet = 'Samples';
+          e.generateID = true;
+          e.generateEmptyTissue = false;
+        }
+      });
+    }
   }
 
   hashChanged(e) {
@@ -282,7 +311,9 @@ class CreateProjectController {
         e = {
           conceptAlias: 'Tissue',
           type: 'Tissue',
-          worksheet: 'Tissues',
+          worksheet: this.configLayout === 'single' ? 'Samples' : 'Tissues',
+          generateID: this.configLayout === 'single',
+          generateEmptyTissue: false,
           uniqueKey: 'tissueID',
           attributes: this.requiredAttributes.Tissue.map(a =>
             Object.assign({}, a),
@@ -417,7 +448,7 @@ class CreateProjectController {
     if (i > -1) this.config.entities.splice(i, 1);
   }
 
-  selectModulesForExistingConfig() {
+  selectModulesForConfig() {
     // reset selected modules
     this.tissues = false;
     this.photos = false;
@@ -578,6 +609,11 @@ class CreateProjectController {
           'Failed to load the network configuration. Please try again later.',
         ),
       );
+  }
+
+  getConfigurations() {
+    if (this.isNetworkAdmin && !this.teamConfig) return this.configurations;
+    return this.configurations.filter(c => c.networkApproved);
   }
 }
 

@@ -177,7 +177,7 @@ class ProjectConfigAttributesController {
 
   canEditAttribute(attribute) {
     // only allow editing selected atributes
-    return this.canEdit && this.selectedAttributeMap[attribute.uri];
+    return this.selectedAttributeMap[attribute.uri];
   }
 
   handleChange() {
@@ -192,7 +192,6 @@ export default {
     selectedAttributes: '<',
     available: '<',
     requiredAttributes: '<',
-    canEdit: '<',
     onChange: '&',
   },
 };

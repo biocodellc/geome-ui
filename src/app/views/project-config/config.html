@@ -2,15 +2,22 @@
   <div class="row">
     <div class="col-xs-12">
       <section class="heading">
-        <h3>{{ $ctrl.currentProject.projectConfiguration.name }}</h3>
-        <p>
-          Every project has a master configuration, either synchronized with a network approved
-          configuration, or pointing to a clone of a network approved configuration. This
-          configuration screen is for the Master project configuration.
+        <h3>
+          {{
+            $ctrl.networkApproved
+              ? $ctrl.currentProject.projectConfiguration.name + ' master'
+              : 'Project'
+          }}
+          configuration
+        </h3>
+        <p ng-if="!$ctrl.networkApproved">
+          Here you can view and edit the configuration for your project. Any changes will only be
+          enforced for new data loads.
         </p>
-        <p>
-          <strong>Master configuration owned by user: </strong>{{
-          $ctrl.currentProject.projectConfiguration.user.username}}
+        <p ng-if="$ctrl.networkApproved">
+          This configuration controls what data is collected and the validation rules for all
+          projects within your team. Here you can view and edit the configuration for all projects
+          within your team. Any changes will only be enforced for new data loads.
         </p>
       </section>
     </div>
@@ -21,7 +28,6 @@
       <section>
         <div class="settings-bar">
           <ul class="nav nav-pills">
-            <li><a href ui-sref=".settings" ui-sref-active="active">Settings</a></li>
             <li><a href ui-sref=".entities" ui-sref-active="active">Entities</a></li>
             <li>
               <a href ui-sref=".expeditionMetadata" ui-sref-active="active"
@@ -29,6 +35,7 @@
               >
             </li>
             <li><a href ui-sref=".lists" ui-sref-active="active">Lists</a></li>
+            <li><a href ui-sref=".settings" ui-sref-active="active">Settings</a></li>
 
             <ul class="actions pull-right">
               <li class="save-config" ng-show="$ctrl.showSave">
@@ -71,7 +78,6 @@
                 ng-cloak
                 config="$ctrl.config"
                 entities="$ctrl.config.entities"
-                can-edit="$ctrl.isNetworkAdmin || $ctrl.currentUser.subscribed"
                 on-update-entities="$ctrl.handleUpdateEntities(entities)"
                 on-update-entity="$ctrl.handleUpdateEntity(alias, entity)"
                 on-new-worksheet="$ctrl.handleNewWorksheet(sheetName)"
@@ -81,7 +87,6 @@
                 ui-view="lists"
                 ng-cloak
                 lists="$ctrl.config.lists"
-                can-edit="$ctrl.isNetworkAdmin || $ctrl.currentUser.subscribed"
                 on-update-list="$ctrl.handleUpdateList(list)"
                 on-update-lists="$ctrl.handleUpdateLists(lists)"
               ></div>
@@ -90,7 +95,6 @@
                 ui-view="expeditionMetadata"
                 ng-cloak
                 properties="$ctrl.config.expeditionMetadataProperties"
-                can-edit="$ctrl.isNetworkAdmin || $ctrl.currentUser.subscribed"
                 on-change="$ctrl.handleUpdateExpeditionMetadata(properties)"
               ></div>
             </div>

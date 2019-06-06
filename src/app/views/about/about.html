@@ -1,37 +1,76 @@
-<h2>Getting Started</h2>
+<h2>Quick Start</h2>
 <div style="padding-left:40px; width:80%">
-  <p><strong>1.</strong> <a ui-sref="register">Create an account</a></p>
+  <ol>
+    <li><strong><a ui-sref="register">Create an account</a></strong></li>
+    <p></p>
+    <li><strong>Choose your project</strong>
+      <p></p>
+      <ul>
+  	<p>A project administrator may invite you to <strong>join an existing project</strong>. There is no need for you to create a new project.
 
-  <p>
-    <strong>2.</strong> Read the following configuration descriptions by clicking on each title. You
-    will be asked to choose one of these configurations when you create your project. Configurations
-    define a common set of validation rules and data formatting options drawing on the same set of
-    GEOME terms.
-  </p>
+  	<p><strong>OR</strong>
 
-  <p></p>
+  	<p><strong><a ui-sref="create-project">Create a new project in a team workspace</a></strong>: You agree to adopt all rules, formatting, and controlled vocabularies defined by the team.</p>
 
-  <project-info></project-info>
+  	<p><strong>OR</strong>
+  
+  	<p><strong><a ui-sref="create-project">Create a new project</a></strong>: Choose your own format, attributes, rules, and controlled vocabularies.</p>
+      </ul>
+    </li>
+  </ol>
 
-  <p><strong>3.</strong> <a ui-sref="create-project">Create a project</a></p>
-
-  <p>Feel free to to <a ui-sref="contact">contact us</a> if you have any questions!</p>
+  <p>We highly reccomend reading the following documentation before creating your first project.  <a ui-sref="contact">Contact us</a> if you have any questions!</p>
 </div>
 
-<h2>More Information</h2>
+
+<h2>About GEOME</h2>
 <uib-accordion>
+
+  <div
+    uib-accordion-group
+    id="teams"
+    class="panel-default md-whiteframe-2dp"
+    is-open="$first"
+    heading="About Teams, Projects, and Expeditions"
+  >
+
+    Read this section carefully in order to understand how teams, projects, and expeditions work in the GEOME environment.
+
+    <p></p>
+
+    <p><strong>Teams</strong></p>
+A team is a shared configuration where users create projects which having a common set of rules, attributes, and controlled vocabulary terms.  Join a team workspace if you have been invited to do so and if you agree to use all of the attributes, rules, and controlled vocabularies for that team. The concept of a team workspace is used for enterprises where many users will be working together in a shared environment.  To create a project within a team workspace, select "Join team workspace" during the project creation process and then select the appropriate team.  The team administrator controls all configuration options and project owners must accept these decisions. The following public team workspaces are available in GEOME:
+
+    <project-info></project-info>
+
+    <p><strong>Projects</strong></p>
+A project has one owner, who may invite additional members.  If a project is created as part of a team, the project owner does not have the ability to alter the set of available attributes, rules, or controlled vocabularies.  If a project is not created as part of a team, the project owner may configure available attributes, rules, or controlled vocabularies during project creation, or later by visiting the “project configuration” option in the workbench.   When creating a project indendepent from a team, you will have the choice to either create a single sheet project or a multiple sheet project.  A single sheet project is conceptually simpler to implement as all event, sample, and tissue metadata is entered onto a single sheet.  The advantage of a multiple worksheet project is that you reduce duplicate data entry for "parent" entities (You only need to enter a row 1 time and the uniqueKey can be referenced in other worksheets). The disadvantage is that it requires more work on the users part by needing to associate identifier keys between sheets.
+
+    <p></p>
+
+    <p><strong>Expeditions</strong></p>
+  An expedition corresponds to a single spreadsheet, containing all related events, samples, and tissues.  All data entered into GEOME must be entered as an expedition. Any member of a project may create an expedition when they first upload a spreadsheet. The expedition owner retains the right to update or alter expedition data as well as setting the expedition to public or private viewing.  The project owner also has the capability to alter expedition metadata of any user within the project.  Expedition identifiers can be set as unique either within the expedition itself or across the project.  Finally, each expedition provides a globally unique and resolvable prefix (expedition root identifier) for each entity.  When a local identifier, which is enforced as unique either within an expedition or project, is appended to the expedition root identifier, it services as a resolvable and globally unique representation for each instance of a collecting event, sample, or tissue. The provision of these identifiers happens automatically, and is noted within the system as BCIDs (biocode commons identifiers).
+
+    <p></p>
+    
+    <p><strong>Team projects versus Non-team projects:</strong></p>
+      <img
+        id="requiredFieldsImage"
+        class="img-responsive"
+        style="max-height: 350px;"
+        src="docs/teams-and-projects.png"
+      />
+
+  </div>
+
   <div
     uib-accordion-group
     id="network"
     class="panel-default md-whiteframe-2dp"
-    heading="Minimum Information about a Genomic Observatory"
+    heading="Minimum Information Requirements"
   >
     <p>
-      GEOME is an implementation of the
-      <a href="http://gensc.org/projects/migo/" target="_blank"
-        >“Minimum Information about a Genomic Observatory” (MIGO)</a>
-      checklist, requiring the following fields at the very minimum for all implementing
-      configurations and projects:
+     GEOME requires the following fields to be entered for ALL projects:
     </p>
 
     <ul>
@@ -41,38 +80,30 @@
       <li>locality</li>
     </ul>
 
-
     <p><strong>Notes:</strong></p>
 
     <ul>
       <li>
-        Locality is required but not decimalLatitude/decimalLongitude as some projects need to curate historical data without coordinates.  
+        Locality is required but not decimalLatitude/decimalLongitude as the coordinates of a collected sample may not be, or cannot be, stated.
       </li>
       <li>
-        Each of the provided configurations may choose to enforce additional rules that extend the GEOME network rules.
+        Each team workspace or project may choose to enforce additional rules which extend the GEOME network rules.
       </li>
       <li>
-        Controlled vocabularies are enforced for the following fields: country, container,
+        GEOME provides the following controlled vocabularies which all projects must adopt: country, container,
         horizontalDatum, lengthUnits, lifeStage, markers, phylum, preservative, relaxant, sex,
         taxonRank, basisOfIdentification, and weightUnits. FASTQ metadata controlled vocabularies include: 
 	libraryLayout, librarySelection, librarySource, libraryStrategy.  Some of the controlled vocabularies accept the value of 
 	'Unknown' in cases where none of the listed options are suitabled. 
       </li>
       <li>
-        A full list of GEOME network configuration rules,
-        data attributes, and definitions is available in JSON format at
+	The technical specification for the GEOME network is represented in javascript object notation (JSON) format at 
         <a href="https://api.geome-db.org/v1/network/1/config" target="_blank"
           >https://api.geome-db.org/v1/network/1/config</a>
       </li>
     </ul>
 
-    <p><strong>Minimum Requirements for each Configuration:</strong></p>
-	<p>
-        To view a list of all fields and validation rules for particular configurations, see Workbench -> "Generate Template" and then
-	select one of the SAMPLE project configurations in the project chooser in the top-center of the window.  
-	Note that you can type "SAMPLE" in the filter to show only the SAMPLE projects.
-	The following table lists required fields for GEOME and current configurations:
-	<br>
+    <p><strong>Minimum required fields for teams and available project configurations:</strong></p>
       <img
         id="requiredFieldsImage"
         class="img-responsive"
@@ -81,37 +112,6 @@
       />
 	</p>
 
-  </div>
-
-  <div
-    uib-accordion-group
-    class="panel-default md-whiteframe-2dp"
-    heading="Getting More Out of GEOME"
-    id="subscriptions"
-    is-open="$ctrl.subscriptions"
-  >
-    <p>
-      GEOME provides a free service to the community for contextualizing genomic data sources and
-      making your data public. While many of our services are completely free to use, you may want
-      to consider purchasing a subscription. Subscriptions offer users an enhanced set of services
-      as well as keeps GEOME running for the community. A list of items we offer for to subscribers:
-    </p>
-    <ul>
-      <li>
-        Create customized configurations with custom-built rules and validations, enabling you to
-        create your own network within GEOME
-      </li>
-      <li>Customizing privacy settings</li>
-      <li>Technical assistance with the Biocode LIMS plugin and Geneious integration</li>
-      <li>Enable loading projects with large amounts of data</li>
-      <li>Enhanced technical support</li>
-      <li>Custom installations</li>
-    </ul>
-
-    <p>
-      Pricing plans vary based on what requirements you have. Please
-      <a ui-sref="contact">contact us</a> so we can discuss a plan to best suit your needs.
-    </p>
   </div>
 
   <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="Workflow Diagram">
@@ -149,8 +149,7 @@
       <li><strong>Field Database Connection:</strong> GEOME FIMS</li>
       <li><strong>Host:</strong>https://api.geome-db.org/</li>
       <li>
-        <strong>Username/password:</strong> You will need to create a username and password on this
-        site in order to make any connection to the LIMS system.
+        <strong>Username/password:</strong> User your GEOME username and password to access your data in the LIMS system.
       </li>
     </ul>
   </div>
@@ -177,6 +176,29 @@
 	allowfullscreen></iframe>
 
     </div>
+  </div>
+
+  <div
+    uib-accordion-group
+    class="panel-default md-whiteframe-2dp"
+    heading="Enterprise Services"
+    id="subscriptions"
+    is-open="$ctrl.subscriptions"
+  >
+    <p>
+      GEOME offers the following enterprise-level services under contract:
+    </p>
+    <ul>
+      <li>Creating and customizing team environments</li>
+      <li>Technical assistance with GEOME as well as the Biocode LIMS plugin</li>
+      <li>Loading photos and media</li>
+      <li>Training</li>
+      <li>Customized installations</li>
+    </ul>
+
+    <p>
+      <a ui-sref="contact">Contact us</a> to discuss options.
+    </p>
   </div>
 
   <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="History">
@@ -355,47 +377,6 @@
     </p>
   </div>
 
-  <div uib-accordion-group class="panel-default md-whiteframe-2dp" heading="Glossary">
-    <p>
-      <b><u>Glossary</u></b
-      >:
-    </p>
-
-    <p>
-      <i>Generate a template</i> (see Workbench -> "Generate Template") enables the user to create
-      and download a spreadsheet template useful for guiding data entry. For public proejcts, you do
-      not need a user account to generate a template.
-    </p>
-
-    <p>
-      <i>Validate Data</i> (see Workbench -> "Load Data") enables the user to validate data for
-      selected projects. For public projects, you can check the "Only validate data" box to validate
-      your spreadsheet data without being a project member.
-    </p>
-
-    <p>
-      <i>Load Data</i> (see Workbench -> "Load Data") enables the user to submit data for a project
-      that you have access to.
-    </p>
-
-    <p>
-      <i>Create project</i> (see user menu -> "Create Project" ) enables the user to create and
-      manage their own projects within GEOME. <a ui-sref="register">Registered</a> users are able to
-      use the <a ui-sref="create-project">Create Project Wizard</a> to easily create a new project.
-      Projects can either adopt a network approved configuration, clone an existing project, or
-      build a project from scratch.
-    </p>
-
-    <p>
-      <i>Network approved configurations</i> are templates adopted by a set of projects that share a
-      common set of rules and attributes. When a project is created from a network approved
-      configuration, the new project adopts all of the rules, attributes, and lists from the chosen
-      network approved configuration. Currently deployed network approved configurations are visible
-      at the top of this page. It is possible to modify project rules and attributes of created
-      proejcts or create a new network approved configurations by
-      <a href="#" ng-click="$ctrl.openSections($event,'subscriptions')">subscribing to GEOME</a>.
-    </p>
-  </div>
 </uib-accordion>
 
 <div>
