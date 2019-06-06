@@ -126,11 +126,11 @@
               </md-hints>
             </md-autocomplete>
 
-            <div ng-show="$ctrl.teamConfig && $ctrl.existingConfig" class="config-description">
-              <h6>Configuration Description</h6>
+            <div ng-show="$ctrl.teamConfig && $ctrl.existingConfig" class="md-primary">
+              <h4>{{ $ctrl.existingConfig.name }} Description</h4>
               {{ $ctrl.existingConfig.description }}
             </div>
-
+	    <p></p>
             <md-checkbox
               ng-show="$ctrl.isNetworkAdmin && $ctrl.cloneConfig && $ctrl.existingConfig"
               ng-model="$ctrl.syncConfig"
