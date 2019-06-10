@@ -122,25 +122,9 @@ export const mainRecordDetails = {
   Sample_Photo: {
     materialSampleID: getKey('materialSampleID'),
     photoID: getKey('photoID'),
+    photographer: getKey('photographer'),
+    filename: getKey('filename'),
     originalUrl: getKey('originalUrl'),
-    img1024: SamplePhoto => ({
-      text: '1024 pixel wide image',
-      href: `${SamplePhoto.img1024}`,
-    }),
-    img512: samplePhoto => ({
-      text: '512 pixel wide image',
-      href: `${samplePhoto.img512}`,
-    }),
-    img128: samplePhoto => ({
-      text: '128 pixel wide image',
-      href: `${samplePhoto.img128}`,
-    }),
-    expeditionCode: samplePhoto => ({
-      text: `${samplePhoto.expeditionCode}`,
-      href: `/query?q=_projects_:${samplePhoto.projectId} and _expeditions_:${
-        samplePhoto.expeditionCode
-      }`,
-    }),
     processed: getKey('processed'),
   },
   Sample: {
