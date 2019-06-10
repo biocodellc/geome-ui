@@ -1,37 +1,21 @@
 <div id="landing-page" layout="column" flex>
-  <h3 class="md-headline">
-    Genomic Observatories MetaDatabase (GEOME)
-  </h3>
-
-  <div layout="row">
-  <!-- 
-  <div><img 
-  	id="TK-open-to-collaborate"
-  	class="figure-img img-fluid"
- 	style="max-height: 50px; max-width: 50px;"
-  	src="img/TK-open-to-collaborate.png"></div>
-  // When clicked display:
-  //GEOME is committed to the development of new modes of collaboration, engagement, and partnership for the care and stewardship of tangible and intangible biocultural materials.
-  // See http://localcontexts.org/ci-labels for more information
-  -->
-  <div>
-  <audio controls>
-      <source src="docs/geome.mp3" type="audio/mpeg">
-      Your browser does not support the audio element.
-  </audio>
+  <div class="md-headline">
+    <h3>
+      Genomic Observatories MetaDatabase (GEOME)
+      <md-icon ng-click="$ctrl.playAudio()" md-font-icon="fa fa-volume-up fa-sm"></md-icon>
+    </h3>
   </div>
-  </div>
-
   <p>
-    The Genomic Observatories Meta-Database (GEOME) is a web-based database which captures metadata 
-    on biological samples and associated genetic sequences.  GEOME satisfies the requirements of the 
-    <a href="https://gigascience.biomedcentral.com/articles/10.1186/2047-217X-3-2" target="_blank">genomic observatories model</a>, 
-    including capturing the who, what, where, and when associated with all samples. 
-    In addition to validating sample-based metadata, GEOME enables loading FASTA files describing Sanger sequences, 
-    as well as photos, and 96-well plate-based tissue matching. When working with metadata for FASTQ files from 
-    massively parallel sequencing runs, GEOME produces a submission package to ease the upload process 
-    into NCBI’s Sequence Read Archive (SRA). GEOME then harvests the SRA accession numbers, creating a permanent
-    link between the data and metadata.
+    The Genomic Observatories Meta-Database (GEOME) is a web-based database which captures metadata
+    on biological samples and associated genetic sequences. GEOME satisfies the requirements of the
+    <a href="https://gigascience.biomedcentral.com/articles/10.1186/2047-217X-3-2" target="_blank"
+      >genomic observatories model</a
+    >, including capturing the who, what, where, and when associated with all samples. In addition
+    to validating sample-based metadata, GEOME enables loading FASTA files describing Sanger
+    sequences, as well as photos, and 96-well plate-based tissue matching. When working with
+    metadata for FASTQ files from massively parallel sequencing runs, GEOME produces a submission
+    package to ease the upload process into NCBI’s Sequence Read Archive (SRA). GEOME then harvests
+    the SRA accession numbers, creating a permanent link between the data and metadata.
   </p>
   <div layout="row" layout-align="center center" flex>
     <div layout="row" flex layout-wrap>
@@ -57,5 +41,22 @@
       </md-card>
     </div>
   </div>
+  <md-divider></md-divider>
+  <div layout="column" layout-align="center center" class="TK-open-to-collaborate">
+    <p>
+      <img
+        ng-click="showExplanation = !showExplanation"
+        id="TK-open-to-collaborate"
+        class="figure-img img-fluid"
+        style="max-height: 50px; max-width: 50px;"
+        src="img/TK-open-to-collaborate.png"
+      />
+    </p>
+    <p class="text-center" ng-show="showExplanation">
+      GEOME is committed to the development of new modes of collaboration, engagement, and
+      partnership for the care and stewardship of tangible and intangible biocultural materials. See
+      <a href="http://localcontexts.org/ci-labels" target="_blank"><i>Local Contexts</i></a> for
+      more information
+    </p>
+  </div>
 </div>
-<div></div>

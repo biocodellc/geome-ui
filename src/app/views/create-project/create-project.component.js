@@ -51,6 +51,7 @@ class CreateProjectController {
     $state,
     $anchorScroll,
     $location,
+    $timeout,
     $mdDialog,
     NetworkConfigurationService,
     ProjectConfigurationService,
@@ -61,6 +62,7 @@ class CreateProjectController {
     this.$state = $state;
     this.$anchorScroll = $anchorScroll;
     this.$location = $location;
+    this.$timeout = $timeout;
     this.$mdDialog = $mdDialog;
     this.NetworkConfigurationService = NetworkConfigurationService;
     this.ProjectConfigurationService = ProjectConfigurationService;
@@ -80,6 +82,8 @@ class CreateProjectController {
     this.worksheetSearchText = {};
     this.requiredAttributes = {};
     this.requiredRules = {};
+
+    this.fetchNetworkConfig();
   }
 
   async createProject() {
@@ -104,14 +108,21 @@ class CreateProjectController {
       }
     }
 
+    this.creatingProject = true;
+
     if (this.teamConfig || (this.cloneConfig && this.syncConfig)) {
       this.project.projectConfiguration = this.existingConfig;
     } else {
       // creating a new ProjectConfiguration
+      if (!this.config) {
+        await this.setupNewConfig(false);
+        this.config.entities.forEach(e => {
+          e.attributes = this.availableAttributes(e.conceptAlias).slice();
+        });
+      }
       this.project.projectConfig = this.config;
     }
 
-    this.creatingProject = true;
     this.ProjectService.create(this.project)
       .then(({ data }) => {
         data.config = new ProjectConfig(data.projectConfig);
@@ -167,9 +178,7 @@ class CreateProjectController {
     return this.requiredAttributes[conceptAlias].includes(attribute);
   }
 
-  async toConfigStep($mdStep) {
-    this.fetchNetworkConfig();
-
+  async setupNewConfig(setLoading = true) {
     this.networkPromise.then(() => {
       this.setRequiredAttributes(this.networkConfig);
       this.setRequiredRules();
@@ -180,28 +189,38 @@ class CreateProjectController {
     });
 
     if (this.cloneConfig) {
-      this.loading = true;
+      if (setLoading) this.loading = true;
       await this.fetchConfig();
-      this.loading = false;
+      if (setLoading) this.loading = false;
 
       if (!this.config) return;
       this.selectModulesForConfig();
       this.setRequiredAttributes(this.config);
     } else {
-      this.loading = true;
+      if (setLoading) this.loading = true;
       await this.networkPromise;
       this.config = new ProjectConfig(angular.copy(BASE_CONFIG));
       this.setupSheetLayout();
       this.selectModulesForConfig();
-      this.loading = false;
+      if (setLoading) this.loading = false;
     }
+  }
 
-    $mdStep.$stepper.next();
+  async toConfigStep($mdStep) {
+    await this.setupNewConfig();
+    // trying this hack to address https://github.com/biocodellc/geome-ui/issues/313
+    this.$timeout(() => $mdStep.$stepper.next(), 50);
   }
 
   setupSheetLayout() {
-    if (this.configLayout === 'single') {
-      this.config.entities.forEach(e => {
+    this.config.entities.forEach(e => {
+      e.attributes = angular.copy(
+        this.networkConfig.entities.find(
+          entity => e.conceptAlias === entity.conceptAlias,
+        ).attributes,
+      );
+
+      if (this.configLayout === 'single') {
         if (e.conceptAlias === 'Event') {
           e.hashed = true;
           e.worksheet = 'Samples';
@@ -210,8 +229,8 @@ class CreateProjectController {
           e.generateID = true;
           e.generateEmptyTissue = false;
         }
-      });
-    }
+      }
+    });
   }
 
   hashChanged(e) {
@@ -227,13 +246,13 @@ class CreateProjectController {
     }
   }
 
-  disableGenerateID(e) {
-    if (e.type !== 'Tissue' || e.uniqueKey !== 'tissueID') return true;
+  showGenerateID(e) {
+    if (e.type !== 'Tissue' || e.uniqueKey !== 'tissueID') return false;
 
     const sampleEntity = this.config.entities.find(
       entity => entity.conceptAlias === e.parentEntity,
     );
-    return !sampleEntity || sampleEntity.worksheet !== e.worksheet;
+    return sampleEntity && sampleEntity.worksheet === e.worksheet;
   }
 
   getEntity(conceptAlias) {

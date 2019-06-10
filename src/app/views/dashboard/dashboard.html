@@ -30,7 +30,7 @@
 
     <div ng-show="$ctrl.currentProject.projectConfiguration.networkApproved">
       <div class="row title">
-        <div class="col-sm-4 col-md-3 col-lg-2"><strong>Project Config:</strong></div>
+        <div class="col-sm-4 col-md-3 col-lg-2"><strong>Team workspace:</strong></div>
         <div class="col-sm-8 col-md-9 col-lg-10">
           {{ $ctrl.currentProject.projectConfiguration.name }}
           <md-button class="md-icon-button help-link md-popover-button">
@@ -42,7 +42,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-sm-4 col-md-3 col-lg-2"><strong>Config owner:</strong></div>
+        <div class="col-sm-4 col-md-3 col-lg-2"><strong>Team owner:</strong></div>
         <div class="col-sm-8 col-md-9 col-lg-10">
           {{ $ctrl.currentProject.projectConfiguration.user.username }}
           (<a href="mailto:{{ $ctrl.currentProject.projectConfiguration.user.email }}">{{
@@ -166,8 +166,8 @@ help templates
 <script type="text/ng-template" id="overview-config-help.popover.html">
     <div>
   <p>
-          This configuration specifies all validation rules and terms for this project. If you have
-          any questions or suggestions, please contact the configuration owner.
+          This team workspace specifies all validation rules and terms for this project. If you have
+          any questions or suggestions, please contact the team owner.
   </p>
     </div>
 </script>
