@@ -9,7 +9,7 @@
   >
     <thead fix-head md-head md-order="$ctrl.orderBy">
       <tr md-row>
-        <th md-column class="action-row" ng-show="$ctrl.canEdit"></th>
+        <th md-column class="action-row"></th>
         <th md-column md-order-by="column">Column</th>
         <th md-column md-order-by="group">Group</th>
         <th md-column md-order-by="dataType">Data Type</th>
@@ -25,7 +25,7 @@
         md-on-select="$ctrl.onSelect"
         md-on-deselect="$ctrl.onDeSelect"
         ng-repeat="a in $ctrl.getAvailable() track by a.uri"
-        ng-disabled="!$ctrl.canEdit || $ctrl.requiredUris.includes(a.uri)"
+        ng-disabled="$ctrl.requiredUris.includes(a.uri)"
         ng-if="!a.internal"
         dnd-draggable="a"
         dnd-dragstart="$ctrl.disableTooltips()"
@@ -45,7 +45,7 @@
           </md-icon>
           <md-icon md-font-icon="fa fa-pencil fa-fw"></md-icon>
         </td>
-        <td md-cell class="action-row" ng-if="$ctrl.canEdit && !$ctrl.canEditAttribute(a)"></td>
+        <td md-cell class="action-row" ng-if="!$ctrl.canEditAttribute(a)"></td>
         <td md-cell>{{a.column}}</td>
         <td md-cell>{{a.group || 'Default Group'}}</td>
         <td md-cell>{{a.dataType}}</td>

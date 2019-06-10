@@ -40,7 +40,10 @@
     </md-list-item>
     <md-list-item ng-click="$ctrl.$state.go('project-config')" ng-show="$ctrl.showProjectConfig">
       <md-icon md-font-icon="fa fa-cog fa-fw"></md-icon>
-      <p>Master Configuration</p>
+      <p>
+        {{ $ctrl.currentProject.projectConfiguration.networkApproved ? 'Master' : 'Project' }}
+        Configuration
+      </p>
     </md-list-item>
     <md-list-item ng-click="$ctrl.$state.go('profile')">
       <md-icon md-font-icon="fa fa-user fa-fw"></md-icon>

@@ -4,9 +4,9 @@ export function checkProjectRequired(state) {
   let s = state;
 
   do {
-    if (s.projectRequired) {
-      return true;
-    }
+    if (s.projectRequired) return true;
+    // allow overriding projectRequired on parent view
+    else if (s.projectRequired === false) return false;
     s = s.parent;
   } while (s);
 

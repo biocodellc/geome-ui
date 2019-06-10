@@ -25,7 +25,7 @@
             Query Entity
           </h3>
           <md-button class="md-icon-button help-link md-popover-button">
-            <md-popover md-popover-class="fastq-help-filenames" md-direction="right">
+            <md-popover md-popover-class="query-help" md-popover-group="query" md-direction="right">
               <div>Determines which entity to query for.</div>
             </md-popover>
             <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
@@ -46,7 +46,7 @@
       <h3 class="md-subhead bold" flex>
         Project Configuration
         <md-button class="md-icon-button help-link md-popover-button">
-          <md-popover md-popover-class="fastq-help-filenames" md-direction="right">
+          <md-popover md-popover-class="query-help" md-popover-group="query" md-direction="right">
             <div>
               Project configuration families represent a group of projects sharing the same
               fields,validation rules, and data entry templates.
@@ -92,7 +92,7 @@
       <h3 class="md-subhead bold" flex>
         Individual Projects
         <md-button class="md-icon-button help-link md-popover-button">
-          <md-popover md-popover-class="fastq-help-filenames" md-direction="right">
+          <md-popover md-popover-class="query-help" md-popover-group="query" md-direction="right">
             <div>
               Select an individual project to query on. All public projects will appear as available
               selections in addition to projects that you own, assuming that you logged in. If you
@@ -159,7 +159,6 @@
     </div>
   </div>
 
-
   <div class="term" layout-padding>
     <div layout="column">
       <div layout="row" layout-align="start center">
@@ -167,8 +166,10 @@
           Any Term
         </h3>
         <md-button class="md-icon-button help-link md-popover-button">
-          <md-popover md-popover-class="fastq-help-filenames" md-direction="right">
-            <div>Type any word or phrase here to query all collecting event and sample fields</div>
+          <md-popover md-popover-class="query-help" md-popover-group="query" md-direction="right">
+            <div>
+              Type any word or phrase here to query all collecting event, sample, and tissue fields
+            </div>
           </md-popover>
           <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
         </md-button>
@@ -180,13 +181,12 @@
   </div>
 
   <div class="simple" ng-show="!$ctrl.moreSearchOptions">
-
     <div layout-padding>
       <div layout="column">
         <h3 class="md-subhead bold" flex>
           MaterialSampleID
           <md-button class="md-icon-button help-link md-popover-button">
-            <md-popover md-popover-class="fastq-help-filenames" md-direction="right">
+            <md-popover md-popover-class="query-help" md-popover-group="query" md-direction="right">
               <div>
                 The Material Sample Identifier is the unique identifier assigned by the collector in
                 the field.
@@ -206,7 +206,7 @@
         <h3 class="md-subhead bold" flex>
           Country
           <md-button class="md-icon-button help-link md-popover-button">
-            <md-popover md-popover-class="fastq-help-filenames" md-direction="right">
+            <md-popover md-popover-class="query-help" md-popover-group="query" md-direction="right">
               <div>
                 Click the Input line below country to get a list of valid country names to query on.
                 The country name list is derived from NCBI.
@@ -237,7 +237,6 @@
       </div>
     </div>
 
-
     <div layout-padding>
       <div layout="column">
         <h3 class="md-subhead bold" flex>Year Collected</h3>
@@ -255,13 +254,12 @@
       </div>
     </div>
 
-
     <div layout-padding>
       <div layout="column">
         <h3 class="md-subhead bold" flex>
           Phylum
           <md-button class="md-icon-button help-link md-popover-button">
-            <md-popover md-popover-class="fastq-help-filenames" md-direction="right">
+            <md-popover md-popover-class="query-help" md-popover-group="query" md-direction="right">
               <div>
                 Click the Input line below phylum to get a list of valid phylum names to query on.
               </div>
@@ -288,7 +286,6 @@
         </div>
       </div>
     </div>
-
 
     <div layout-padding>
       <div layout="column">
@@ -326,7 +323,11 @@
               <span class="fa fa-plus"></span> Add Event Filter</md-button
             >
             <md-button class="md-icon-button help-link md-popover-button">
-              <md-popover md-popover-class="fastq-help-filenames" md-direction="right">
+              <md-popover
+                md-popover-class="query-help"
+                md-popover-group="query"
+                md-direction="right"
+              >
                 <div>
                   Filter on Event related fields. The "has" option can be used to look for any
                   values. E.g. "has" a scientificName.
@@ -382,9 +383,7 @@
                       aria-label="event"
                     >
                       <md-option>-- Choose value --</md-option>
-                      <md-option 
-		      	ng-value="item" 
-			ng-repeat="item in $chip.list track by item">
+                      <md-option ng-value="item" ng-repeat="item in $chip.list track by item">
                         {{ item }}</md-option
                       >
                     </md-select>
@@ -393,9 +392,8 @@
               </md-chip-template>
             </md-chips>
           </div>
-
         </div>
-	<!--
+        <!--
         <md-chips
           ng-model="$ctrl.eventFilters"
           readonly="true"
@@ -464,7 +462,11 @@
               <span class="fa fa-plus"></span> Add Sample Filter</md-button
             >
             <md-button class="md-icon-button help-link md-popover-button">
-              <md-popover md-popover-class="fastq-help-filenames" md-direction="right">
+              <md-popover
+                md-popover-class="query-help"
+                md-popover-group="query"
+                md-direction="right"
+              >
                 <div>
                   Filter on Sample related fields. The "has" option can be used to look for any
                   values. E.g. "has" a scientificName.
@@ -529,7 +531,6 @@
               </md-chip-template>
             </md-chips>
           </div>
-
         </div>
         <!--<md-chips
           ng-model="$ctrl.sampleFilters"
@@ -599,7 +600,11 @@
               <span class="fa fa-plus"></span> Add Tissue Filter</md-button
             >
             <md-button class="md-icon-button help-link md-popover-button">
-              <md-popover md-popover-class="fastq-help-filenames" md-direction="right">
+              <md-popover
+                md-popover-class="query-help"
+                md-popover-group="query"
+                md-direction="right"
+              >
                 <div>
                   Filter on Tissue related fields. The "has" option can be used to look for any
                   values. E.g. "has" a scientificName.
@@ -664,9 +669,8 @@
               </md-chip-template>
             </md-chips>
           </div>
-
         </div>
-	<!--
+        <!--
         <md-chips
           ng-model="$ctrl.tissueFilters"
           readonly="true"
@@ -725,7 +729,6 @@
       </div>
     </div>
 
-
     <div class="bounding-box" layout-padding>
       <div layout="column" layout-wrap>
         <h3 class="md-subhead bold" ng-if="$ctrl.moreSearchOptions" flex>Filter Options</h3>
@@ -782,7 +785,6 @@
         </div>
       </div>
     </div>
-
 
     <div class="sequences" layout-padding>
       <div layout="column">

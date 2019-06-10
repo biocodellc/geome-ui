@@ -20,9 +20,19 @@
   }
 }
 
+.project-details {
+  margin-top: 8px;
+
+  .title {
+    margin-top: 8px;
+    margin-bottom: 4px;
+  }
+}
+
 .project-download-button {
   @extend .download-button;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
+  margin-top: 16px;
   padding: 0 6px;
   span {
     margin-right: 5px;

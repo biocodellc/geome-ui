@@ -25,6 +25,16 @@ const BASE_CONFIG = {
       conceptURI: 'http://rs.tdwg.org/dwc/terms/MaterialSample',
       parentEntity: 'Event',
     },
+    {
+      conceptAlias: 'Tissue',
+      type: 'Tissue',
+      worksheet: 'Tissues',
+      uniqueKey: 'tissueID',
+      attributes: [],
+      rules: [],
+      conceptURI: 'http://rs.tdwg.org/dwc/terms/MaterialSample',
+      parentEntity: 'Sample',
+    },
   ],
   lists: [],
   expeditionMetadataProperties: [],
@@ -41,6 +51,7 @@ class CreateProjectController {
     $state,
     $anchorScroll,
     $location,
+    $timeout,
     $mdDialog,
     NetworkConfigurationService,
     ProjectConfigurationService,
@@ -51,6 +62,7 @@ class CreateProjectController {
     this.$state = $state;
     this.$anchorScroll = $anchorScroll;
     this.$location = $location;
+    this.$timeout = $timeout;
     this.$mdDialog = $mdDialog;
     this.NetworkConfigurationService = NetworkConfigurationService;
     this.ProjectConfigurationService = ProjectConfigurationService;
@@ -63,15 +75,19 @@ class CreateProjectController {
       description: undefined,
       public: false,
     };
-    this.newConfig = false;
+    this.cloneConfig = false;
+    this.teamConfig = false;
     this.syncConfig = true;
+    this.configLayout = 'single';
     this.worksheetSearchText = {};
     this.requiredAttributes = {};
     this.requiredRules = {};
+
+    this.fetchNetworkConfig();
   }
 
   async createProject() {
-    if (this.newConfig || !this.syncConfig) {
+    if (this.isNetworkAdmin && !this.syncConfig) {
       try {
         await this.$mdDialog.show(
           this.$mdDialog
@@ -92,14 +108,21 @@ class CreateProjectController {
       }
     }
 
-    if (!this.newConfig && this.syncConfig) {
+    this.creatingProject = true;
+
+    if (this.teamConfig || (this.cloneConfig && this.syncConfig)) {
       this.project.projectConfiguration = this.existingConfig;
     } else {
       // creating a new ProjectConfiguration
+      if (!this.config) {
+        await this.setupNewConfig(false);
+        this.config.entities.forEach(e => {
+          e.attributes = this.availableAttributes(e.conceptAlias).slice();
+        });
+      }
       this.project.projectConfig = this.config;
     }
 
-    this.creatingProject = true;
     this.ProjectService.create(this.project)
       .then(({ data }) => {
         data.config = new ProjectConfig(data.projectConfig);
@@ -155,9 +178,7 @@ class CreateProjectController {
     return this.requiredAttributes[conceptAlias].includes(attribute);
   }
 
-  async toConfigStep($mdStep) {
-    this.fetchNetworkConfig();
-
+  async setupNewConfig(setLoading = true) {
     this.networkPromise.then(() => {
       this.setRequiredAttributes(this.networkConfig);
       this.setRequiredRules();
@@ -167,22 +188,49 @@ class CreateProjectController {
       });
     });
 
-    if (this.newConfig) {
-      this.loading = true;
-      await this.networkPromise;
-      this.config = new ProjectConfig(BASE_CONFIG);
-      this.loading = false;
-    } else {
-      this.loading = true;
+    if (this.cloneConfig) {
+      if (setLoading) this.loading = true;
       await this.fetchConfig();
-      this.loading = false;
+      if (setLoading) this.loading = false;
 
       if (!this.config) return;
-      this.selectModulesForExistingConfig();
+      this.selectModulesForConfig();
       this.setRequiredAttributes(this.config);
+    } else {
+      if (setLoading) this.loading = true;
+      await this.networkPromise;
+      this.config = new ProjectConfig(angular.copy(BASE_CONFIG));
+      this.setupSheetLayout();
+      this.selectModulesForConfig();
+      if (setLoading) this.loading = false;
     }
+  }
 
-    $mdStep.$stepper.next();
+  async toConfigStep($mdStep) {
+    await this.setupNewConfig();
+    // trying this hack to address https://github.com/biocodellc/geome-ui/issues/313
+    this.$timeout(() => $mdStep.$stepper.next(), 50);
+  }
+
+  setupSheetLayout() {
+    this.config.entities.forEach(e => {
+      e.attributes = angular.copy(
+        this.networkConfig.entities.find(
+          entity => e.conceptAlias === entity.conceptAlias,
+        ).attributes,
+      );
+
+      if (this.configLayout === 'single') {
+        if (e.conceptAlias === 'Event') {
+          e.hashed = true;
+          e.worksheet = 'Samples';
+        } else if (e.conceptAlias === 'Tissue') {
+          e.worksheet = 'Samples';
+          e.generateID = true;
+          e.generateEmptyTissue = false;
+        }
+      }
+    });
   }
 
   hashChanged(e) {
@@ -198,13 +246,13 @@ class CreateProjectController {
     }
   }
 
-  disableGenerateID(e) {
-    if (e.type !== 'Tissue' || e.uniqueKey !== 'tissueID') return true;
+  showGenerateID(e) {
+    if (e.type !== 'Tissue' || e.uniqueKey !== 'tissueID') return false;
 
     const sampleEntity = this.config.entities.find(
       entity => entity.conceptAlias === e.parentEntity,
     );
-    return !sampleEntity || sampleEntity.worksheet !== e.worksheet;
+    return sampleEntity && sampleEntity.worksheet === e.worksheet;
   }
 
   getEntity(conceptAlias) {
@@ -282,7 +330,9 @@ class CreateProjectController {
         e = {
           conceptAlias: 'Tissue',
           type: 'Tissue',
-          worksheet: 'Tissues',
+          worksheet: this.configLayout === 'single' ? 'Samples' : 'Tissues',
+          generateID: this.configLayout === 'single',
+          generateEmptyTissue: false,
           uniqueKey: 'tissueID',
           attributes: this.requiredAttributes.Tissue.map(a =>
             Object.assign({}, a),
@@ -417,7 +467,7 @@ class CreateProjectController {
     if (i > -1) this.config.entities.splice(i, 1);
   }
 
-  selectModulesForExistingConfig() {
+  selectModulesForConfig() {
     // reset selected modules
     this.tissues = false;
     this.photos = false;
@@ -578,6 +628,11 @@ class CreateProjectController {
           'Failed to load the network configuration. Please try again later.',
         ),
       );
+  }
+
+  getConfigurations() {
+    if (this.isNetworkAdmin && !this.teamConfig) return this.configurations;
+    return this.configurations.filter(c => c.networkApproved);
   }
 }
 

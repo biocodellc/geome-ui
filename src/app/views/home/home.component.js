@@ -8,6 +8,11 @@ class HomeController {
 
     this.$state = $state;
   }
+
+  playAudio() {
+    const geomeSound = new Audio('docs/geome.mp3');
+    geomeSound.play();
+  }
 }
 
 export default {

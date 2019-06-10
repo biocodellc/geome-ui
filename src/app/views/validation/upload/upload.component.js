@@ -457,7 +457,7 @@ class UploadController {
 
       const confirm = this.$mdDialog
         .confirm()
-        .title('Confirm Data Reload')
+        .title('Confirm Data Replace')
         .htmlContent(
           `<br/><p>All existing ${reloadSheets.join(
             ', ',

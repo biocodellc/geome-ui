@@ -66,7 +66,12 @@ class ProjectSelectorController {
   }
 
   change(project) {
-    this.onChange({ project });
+    if (
+      !this.currentProject ||
+      project.projectId !== this.currentProject.projectId
+    ) {
+      this.onChange({ project });
+    }
     this.searchText = '';
     this.isOpen = false;
   }
