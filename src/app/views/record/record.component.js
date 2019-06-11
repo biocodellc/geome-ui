@@ -136,7 +136,7 @@ class RecordController {
         };
       } else if (['img128', 'img512', 'img1024'].includes(key)) {
         accumulator[key] = {
-          text: flatRecord[key],
+          text: `${key.substring(3)} pixel wide image`,
           href: flatRecord[key],
         };
       } else {
