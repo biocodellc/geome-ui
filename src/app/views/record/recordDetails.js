@@ -97,26 +97,9 @@ export const mainRecordDetails = {
   Event_Photo: {
     materialSampleID: getKey('materialSampleID'),
     photoID: getKey('photoID'),
+    photographer: getKey('photographer'),
+    filename: getKey('filename'),
     originalUrl: getKey('originalUrl'),
-    original: getKey('photoID'),
-    img1024: eventPhoto => ({
-      text: '1024 pixel wide image',
-      href: `${eventPhoto.img1024}`,
-    }),
-    img512: eventPhoto => ({
-      text: '512 pixel wide image',
-      href: `${eventPhoto.img512}`,
-    }),
-    img128: eventPhoto => ({
-      text: '128 pixel wide image',
-      href: `${eventPhoto.img128}`,
-    }),
-    expeditionCode: eventPhoto => ({
-      text: `${eventPhoto.expeditionCode}`,
-      href: `/query?q=_projects_:${eventPhoto.projectId} and _expeditions_:${
-        eventPhoto.expeditionCode
-      }`,
-    }),
     processed: getKey('processed'),
   },
   Sample_Photo: {
