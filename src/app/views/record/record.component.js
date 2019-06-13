@@ -133,6 +133,11 @@ class RecordController {
             this.project.projectId
           } and _expeditions_:${flatRecord[key]}`,
         };
+      } else if (['img128', 'img512', 'img1024'].includes(key)) {
+        accumulator[key] = {
+          text: `${key.substring(3)} pixel wide image`,
+          href: flatRecord[key],
+        };
       } else {
         accumulator[key] = flatRecord[key];
       }

@@ -20,7 +20,7 @@ class PlateService {
     return this.$http
       .get(`${restRoot}tissues/plates/${projectId}/${plateName}`)
       .then(({ data }) => data)
-      .catch(angular.catcher('Failed to load tissue plates'));
+      .catch(angular.catcher('Failed to load tissue plate'));
   }
 
   all(projectId) {

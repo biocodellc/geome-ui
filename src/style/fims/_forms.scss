@@ -9,6 +9,7 @@ md-input-container {
   }
 }
 
+md-switch,
 md-checkbox,
 md-input-container {
   &.md-input-invalid {
@@ -72,6 +73,7 @@ md-autocomplete {
   }
 }
 
+md-switch,
 md-checkbox {
   md-hints {
     display: block;

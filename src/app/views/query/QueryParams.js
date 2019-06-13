@@ -60,6 +60,12 @@ export default class QueryParams {
             if (!filter.value.includes('%')) filter.value = `%${filter.value}%`;
             builder.add(`${filter.column}::"${filter.value}"`);
             break;
+          case '<':
+          case '<=':
+          case '>':
+          case '>=':
+            builder.add(`${filter.column} ${filter.type} ${filter.value}`);
+            break;
           default:
             builder.add(`${filter.column} ${filter.type} "${filter.value}"`);
         }
