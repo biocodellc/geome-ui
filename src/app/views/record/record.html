@@ -68,7 +68,7 @@
       <tbody>
         <tr ng-repeat="(key, value) in $ctrl.auxiliaryRecordDetails(0) track by key">
           <th
-            ng-class="{'error': key === 'imageProcessingErrors' && ($ctrl.record.entity === 'Sample_Photo' || $ctrl.record.entity === 'Event_Photo')}"
+            ng-class="{'text-danger': key === 'imageProcessingErrors' && ($ctrl.record.entity === 'Sample_Photo' || $ctrl.record.entity === 'Event_Photo')}"
           >
             {{ key }}:
           </th>
