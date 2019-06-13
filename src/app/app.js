@@ -62,6 +62,7 @@ import mdFileUpload from './components/md-file-upload';
 // import lookup from './components/lookup';
 import users from './components/users';
 import projectSelectorDialog from './components/project-selector-dialog';
+import tkLabels from './components/tk-labels';
 
 import catcher from './utils/exceptions';
 import Toaster from './utils/toaster';
@@ -120,6 +121,7 @@ const dependencies = [
   projectConfig,
   users,
   projectSelectorDialog,
+  tkLabels,
   // lookup,
 ];
 
