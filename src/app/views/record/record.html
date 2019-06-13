@@ -67,7 +67,9 @@
     <table flex>
       <tbody>
         <tr ng-repeat="(key, value) in $ctrl.auxiliaryRecordDetails(0) track by key">
-          <th ng-class="{'error': !value.href && $ctrl.record.entity === 'Sample_Photo'}">
+          <th
+            ng-class="{'error': key === 'imageProcessingErrors' && ($ctrl.record.entity === 'Sample_Photo' || $ctrl.record.entity === 'Event_Photo')}"
+          >
             {{ key }}:
           </th>
           <td ng-class="{'sequence': key === 'sequence'}">
