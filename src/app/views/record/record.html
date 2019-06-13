@@ -13,8 +13,8 @@
       Original Url is invalid
     </span>
     <span
-      ng-if="$ctrl.record.processed === 'false' && $ctrl.record.entity === 'Sample_Photo'"
-      class="alert alert-danger"
+      ng-if="$ctrl.record.processed === 'false' && ($ctrl.record.entity === 'Sample_Photo' || $ctrl.record.entity === 'Event_Photo')"
+      class="alert alert-warning"
       class="text-center"
       role="alert"
     >
