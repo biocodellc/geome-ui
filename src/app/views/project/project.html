@@ -24,7 +24,6 @@
             <a href ui-sref="project.members" ui-sref-active="active">Members</a>
           </li>
         </ul>
-
         <div class="row">
           <div
             ui-view="details"
@@ -33,6 +32,8 @@
             ng-cloak
             on-project-update="$ctrl.handleProjectUpdate(project)"
             on-project-delete="$ctrl.handleProjectDelete(project)"
+            load-save="$ctrl.loadSave"
+            load-delete="$ctrl.loadDelete"
           ></div>
         </div>
       </section>
