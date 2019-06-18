@@ -14,7 +14,7 @@ class AttributionController {
       this.$mdDialog
         .alert()
         .clickOutsideToClose(true)
-        .title('Traditional Knowledge Label: Attribution')
+        .title('Attribution')
         .htmlContent(
           'GEOME asks all future users to record and display all metadata elements in downstream systems and use, particularly those records indicating landowner, locality, permitInformation, collectors, eventRemarks, and occurrenceRemarks. See <a href="https://localcontexts.org" target=_blank><i>Local Contexts</i></a> for more information',
         )

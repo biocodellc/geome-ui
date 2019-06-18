@@ -14,7 +14,7 @@ class CollaborationController {
       this.$mdDialog
         .alert()
         .clickOutsideToClose(true)
-        .title('Traditional Knowledge Label: Open to Collaborate')
+        .title('Open to Collaborate')
         .htmlContent(
           'GEOME is committed to the development of new modes of collaboration, engagement, and partnership for the care and stewardship of tangible and intangible biocultural materials. See <a href="https://localcontexts.org/ci-labels" target=_blank><i>Local Contexts</i></a> for more information ',
         )
