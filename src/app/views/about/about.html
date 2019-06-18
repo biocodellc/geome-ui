@@ -38,12 +38,25 @@
     heading="Creating Projects and Expeditions"
   >
 
-    Read this section carefully in order to understand how teams, projects, and expeditions work in the GEOME environment. If a project administrator has invited you to join an existing project, there is no need for you to create a new project.  If this is the case, you may skip to the heading below titled "Expeditions".
+    Read this section carefully in order to understand how teams, projects, and expeditions work in the GEOME environment. If a project administrator has invited you to join an existing project, there is no need for you to create a new project.  If this is the case, you may skip to the heading below titled "Expeditions".  
 
     <p></p>
 
-    <p><strong>Team Projects</strong></p>
-A team is a shared workspace where users create projects having a common set of rules, attributes, and controlled vocabulary terms.  Join a team workspace if you have been invited to do so and if you agree to use ALL of the attributes, rules, and controlled vocabularies for that team.  
+   <figure class="text-center">
+      <img
+        id="expeditions"
+	class="figure-img img-fluid"
+        style="max-height: 350px;"
+        src="img/expeditionProjectTeamGraphic.png"
+      />
+      <figcaption class="figure-caption"><i>About Teams and Projects</i></figcaption>
+    </figure>
+
+
+    <p></p>
+
+    <p><strong>TEAM Projects</strong></p>
+A team is a specialized research group with settings relevant to members of that group. If you are not part of one of the teams, then proceed to the next-section, "Non-Team Projects".  Teams enable users to create projects having a common set of rules, attributes, and controlled vocabulary terms.  Join a team workspace if you have been invited to do so and if you agree to use ALL of the attributes, rules, and controlled vocabularies for that team.  
 The team administrator controls all configuration options. 
 To create a project within a team workspace, select "Join team workspace" during the project creation process and then select the appropriate team:
 
@@ -66,7 +79,7 @@ The following public team workspaces are available in GEOME and will appear in t
 
     <project-info></project-info>
 
-    <p><strong>Non-Team Projects</strong></p>
+    <p><strong>NON-TEAM Projects</strong></p>
 If a project is not created as part of a team, the project owner may configure available attributes, rules, or controlled vocabularies during project creation, or later by visiting the “project configuration” option in the workbench.   
 
    <figure class="text-center">
@@ -136,16 +149,6 @@ Please note that all projects have one owner, who may invite additional members.
 
     <p></p>
     
-   <figure class="text-center">
-      <img
-        id="requiredFieldsImage"
-	class="figure-img img-fluid"
-        style="max-height: 350px"
-        src="docs/teams-and-projects.png"
-      />
-      <figcaption class="figure-caption"><i>Team projects versus Non-team projects</i></figcaption>
-    </figure>
-
   </div>
 
   <div
@@ -216,6 +219,28 @@ Please note that all projects have one owner, who may invite additional members.
       GEOME environment, such as data entry into a spreadsheet.
       </i></figcaption>
     </figure>
+  </div>
+
+  <div
+    uib-accordion-group
+    class="panel-default md-whiteframe-2dp"
+    heading="The GEOME R Package"
+  >
+    <p>
+      The <a href="https://cran.r-project.org/web/packages/geomedb/index.html">GEOME R package</a> is used to retrieve GEOME data for analysis.  
+    </p>
+
+    <p>
+      To get the current released version from CRAN :
+    </p>
+
+    <p>
+       install.packages("geomedb")
+    </p>
+    <p>
+     More information can be found at the CRAN site <a href="https://cran.r-project.org/web/packages/geomedb/readme/README.html">GEOME README</a> file
+    </p>
+
   </div>
 
   <div

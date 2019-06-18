@@ -130,7 +130,7 @@ class CreateProjectController {
         return this.ProjectService.setCurrentProject(data);
       })
       .then(() =>
-        this.$state.go('validate', {}, { reload: true, inherit: false }),
+        this.$state.go('template', {}, { reload: true, inherit: false }),
       )
       .catch(resp => {
         if (resp.status === 400 && resp.data.errors) {
