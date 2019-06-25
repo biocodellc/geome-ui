@@ -6,24 +6,24 @@
     <li><strong>Choose your project</strong>
       <p></p>
       <ul>
-  	<li>A project administrator may invite you to <strong>join an existing project</strong>. There is no need for you to create a new project.</li>
+  	<li>A project administrator may invite you to <strong>join an existing project</strong>.</li>
 
 	<p></p>
 
   	<p><strong>OR</strong></p>
 
-  	<li><strong><a ui-sref="create-project">Create a new project in a team workspace</a></strong>: You agree to adopt all rules, formatting, and controlled vocabularies defined by the team.</li>
+  	<li><strong><a ui-sref="create-project">Create a project</a></strong> within an existing team.</li>
 
 	<p></p>
 
   	<p><strong>OR</strong></p>
   
-  	<li><strong><a ui-sref="create-project">Create a new project</a></strong>: Choose your own format, attributes, rules, and controlled vocabularies.</li>
+  	<li><strong><a ui-sref="create-project">Create a project</a></strong> not part of a team.</li>
       </ul>
     </li>
   </ol>
 
-  <p>We highly reccomend reading the following documentation before creating your first project.  <a ui-sref="contact">Contact us</a> if you have any questions!</p>
+  <p>Read the documentation under <i>Creating Projects and Expeditions</i> below before creating your first project.  <a ui-sref="contact">Contact us</a> if you have any questions!</p>
 </div>
 
 
@@ -38,17 +38,78 @@
     heading="Creating Projects and Expeditions"
   >
 
-    Read this section carefully in order to understand how teams, projects, and expeditions work in the GEOME environment.
+    Read this section carefully in order to understand how teams, projects, and expeditions work in the GEOME environment. If a project administrator has invited you to join an existing project, there is no need for you to create a new project.  If this is the case, you may skip to the heading below titled "Expeditions".  
 
     <p></p>
 
-    <p><strong>Teams</strong></p>
-A team is a shared configuration where users create projects having a common set of rules, attributes, and controlled vocabulary terms.  Join a team workspace if you have been invited to do so and if you agree to use all of the attributes, rules, and controlled vocabularies for that team. The concept of a team workspace is used for enterprises where many users will be working together with a shared purpose.  To create a project within a team workspace, select "Join team workspace" during the project creation process and then select the appropriate team.  The team administrator controls all configuration options and project owners must accept these decisions. The following public team workspaces are available in GEOME:
+   <figure class="text-center">
+      <img
+        id="expeditions"
+	class="figure-img img-fluid"
+        style="max-height: 350px;"
+        src="img/expeditionProjectTeamGraphic.png"
+      />
+      <figcaption class="figure-caption"><i>About Teams and Projects</i></figcaption>
+    </figure>
+
+
+    <p></p>
+
+    <p><strong>TEAM Projects</strong></p>
+A team is a specialized research group with settings relevant to members of that group. If you are not part of one of the teams, then proceed to the next-section, "Non-Team Projects".  Teams enable users to create projects having a common set of rules, attributes, and controlled vocabulary terms.  Join a team workspace if you have been invited to do so and if you agree to use ALL of the attributes, rules, and controlled vocabularies for that team.  
+The team administrator controls all configuration options. 
+To create a project within a team workspace, select "Join team workspace" during the project creation process and then select the appropriate team:
+
+   <figure class="text-center">
+      <img
+        id="jointeam"
+	class="figure-img img-fluid"
+        style="max-height: 350px;"
+        src="img/screenshotNewTeamProject.png"
+      />
+      <figcaption class="figure-caption"><i>Screenshot of project creation wizard, creating a team project. You will need to select a suitable team in the dropdown box labelled "Existing Team Workspace".</i></figcaption>
+    </figure>
+
+    <p></p>
+
+
+The following public team workspaces are available in GEOME and will appear in the dropdown entitled "Existing Team Workspace":
+
+    <p></p>
 
     <project-info></project-info>
 
-    <p><strong>Projects</strong></p>
-A project has one owner, who may invite additional members.  If a project is created as part of a team, the project owner does not have the ability to alter the set of available attributes, rules, or controlled vocabularies.  If a project is not created as part of a team, the project owner may configure available attributes, rules, or controlled vocabularies during project creation, or later by visiting the “project configuration” option in the workbench.   When creating a project indendepent from a team, you will have the choice to either create a single sheet project or a multiple sheet project.  A single sheet project is conceptually simpler to implement as all event, sample, and tissue metadata is entered onto a single sheet.  The advantage of a multiple worksheet project is that you reduce duplicate data entry for "parent" entities (You only need to enter a row 1 time and the uniqueKey can be referenced in other worksheets). The disadvantage is that it requires more work on the users part by needing to associate identifier keys between sheets.
+    <p><strong>NON-TEAM Projects</strong></p>
+If a project is not created as part of a team, the project owner may configure available attributes, rules, or controlled vocabularies during project creation, or later by visiting the “project configuration” option in the workbench.   
+
+   <figure class="text-center">
+      <img
+        id="jointeam"
+	class="figure-img img-fluid"
+        style="max-height: 350px;"
+        src="img/screenshotNonTeamProject.png"
+      />
+      <figcaption class="figure-caption"><i>Screenshot of project creation wizard, creating a non-team project. Note the "Join a team workspace" slider is greyed out.</i></figcaption>
+    </figure>
+
+    <p></p>
+
+After pressing "Next" (see screenshot above), you will have the choice to either create a single sheet project or a multiple sheet project.  
+
+   <figure class="text-center">
+      <img
+        id="projectConfiguration"
+	class="figure-img img-fluid"
+        style="max-height: 350px;"
+        src="img/screenshotChooseConfig.png"
+      />
+      <figcaption class="figure-caption"><i>Screenshot of project creation wizard, "Project Configuration" section.</i></figcaption>
+    </figure>
+
+    <p></p>
+
+
+A single sheet project is conceptually simpler to implement as all event, sample, and tissue metadata is entered onto a single sheet.  The advantage of a multiple worksheet project is that you reduce duplicate data entry for "parent" entities (You only need to enter a row 1 time and the uniqueKey can be referenced in other worksheets). The disadvantage is that it requires more work on the users part by needing to associate identifier keys between sheets.
 
     <p></p>
 
@@ -57,28 +118,37 @@ A project has one owner, who may invite additional members.  If a project is cre
         id="requiredFieldsImage"
 	class="figure-img img-fluid"
         style="max-height: 350px;"
-        src="docs/singleSheet-multipleSheet.png"
+        src="img/singleSheet-multipleSheet.png"
       />
-      <figcaption class="figure-caption"><i>Single sheet format versus multiple sheet format.  Notice that you must manage unique identifiers for events and tissues in the multiple sheet format, whereas in the single sheet format identifiers as well as entities are inferred by the data contained within a single row.</i></figcaption>
+      <figcaption class="figure-caption"><i>Single sheet format versus multiple sheet format.</i></figcaption>
     </figure>
+
+    <p></p>
+
+After you choose your project configuration (single or multiple sheet), press the "Next" button and you can choose which modules to add.  Select the modules applicable to your project needs.
+
+   <figure class="text-center">
+      <img
+        id="chooseModules"
+	class="figure-img img-fluid"
+        style="max-height: 350px;"
+        src="img/screenshotChooseModules.png"
+      />
+      <figcaption class="figure-caption"><i>Screenshot of project creation wizard, "Choose Modules" section</i></figcaption>
+    </figure>
+
+    <p></p>
+
+Please note that all projects have one owner, who may invite additional members.  Each of the members in turn can create expeditions within a project.  Read further to understand how expeditions work.  
 
     <p></p>
 
     <p><strong>Expeditions</strong></p>
-  An expedition corresponds to a single spreadsheet, containing all related events, samples, and tissues.  All data entered into GEOME must be entered as an expedition. Any member of a project may create an expedition when they first upload a spreadsheet. The expedition owner retains the right to update or alter expedition data as well as setting the expedition to public or private viewing.  The project owner also has the capability to alter expedition metadata of any user within the project.  Expedition identifiers can be set as unique either within the expedition itself or across the project.  Finally, each expedition provides a globally unique and resolvable prefix (expedition root identifier) for each entity.  When a local identifier, which is enforced as unique either within an expedition or project, is appended to the expedition root identifier, it services as a resolvable and globally unique representation for each instance of a collecting event, sample, or tissue. The provision of these identifiers happens automatically, and is noted within the system as BCIDs (biocode commons identifiers).
+
+  Projects are composed of one or more expeditions. An expedition corresponds to a single spreadsheet, containing all related events, samples, and tissues.  All data entered into GEOME must be entered as an expedition. Any member of a project may create an expedition when they first upload a spreadsheet. The expedition owner retains the right to update or alter expedition data as well as setting the expedition to public or private viewing.  The project owner also has the capability to alter expedition metadata of any user within the project.  Expedition identifiers can be set as unique either within the expedition itself or across the project.  Finally, each expedition provides a globally unique and resolvable prefix (expedition root identifier) for each entity.  When a local identifier, which is enforced as unique either within an expedition or project, is appended to the expedition root identifier, it services as a resolvable and globally unique representation for each instance of a collecting event, sample, or tissue. The provision of these identifiers happens automatically, and is noted within the system as BCIDs (biocode commons identifiers).
 
     <p></p>
     
-   <figure class="text-center">
-      <img
-        id="requiredFieldsImage"
-	class="figure-img img-fluid"
-        style="max-height: 350px"
-        src="docs/teams-and-projects.png"
-      />
-      <figcaption class="figure-caption"><i>Team projects versus Non-team projects</i></figcaption>
-    </figure>
-
   </div>
 
   <div
@@ -149,6 +219,28 @@ A project has one owner, who may invite additional members.  If a project is cre
       GEOME environment, such as data entry into a spreadsheet.
       </i></figcaption>
     </figure>
+  </div>
+
+  <div
+    uib-accordion-group
+    class="panel-default md-whiteframe-2dp"
+    heading="The GEOME R Package"
+  >
+    <p>
+      The <a href="https://cran.r-project.org/web/packages/geomedb/index.html">GEOME R package</a> is used to retrieve GEOME data for analysis.  
+    </p>
+
+    <p>
+      To get the current released version from CRAN :
+    </p>
+
+    <p>
+       install.packages("geomedb")
+    </p>
+    <p>
+     More information can be found at the CRAN site <a href="https://cran.r-project.org/web/packages/geomedb/readme/README.html">GEOME README</a> file
+    </p>
+
   </div>
 
   <div
@@ -342,7 +434,7 @@ A project has one owner, who may invite additional members.  If a project is cre
     <p>
       <b>1.1</b> The Genetic Resources from which Genetic Data and Associated Metadata were derived
       were collected under appropriate and legal access permits or their equivalent by each Country
-      of Origin and that the data contributor can provide their copies upon request, and
+      of Origin, and
     </p>
     <p>
       <b>1.2</b> All co-authors on the data’s primary publication have consented to share the data

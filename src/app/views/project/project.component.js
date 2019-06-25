@@ -1,3 +1,4 @@
+/* eslint-disable no-return-assign */
 import angular from 'angular';
 
 const template = require('./project.html');
@@ -13,7 +14,9 @@ class ProjectCtrl {
 
   handleProjectUpdate(project) {
     if (!angular.equals(this.currentProject, project)) {
+      this.loadSave = true;
       this.ProjectService.update(project)
+        .then(() => (this.loadSave = false))
         .then(({ data }) => {
           angular.toaster.success('Successfully updated!');
           return this.ProjectService.setCurrentProject(data);
@@ -39,10 +42,12 @@ class ProjectCtrl {
           .ok('Delete')
           .cancel('Cancel'),
       )
+      .then(() => (this.loadDelete = true))
       .then(() => this.ProjectService.delete(project))
       .then(() => {
         angular.toaster.success('Successfully deleted project!');
       })
+      .then(() => (this.loadDelete = false))
       .catch(() => {});
   }
 }
