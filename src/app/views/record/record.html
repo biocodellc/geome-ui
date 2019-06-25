@@ -91,6 +91,14 @@
           }}</a>
         </td>
       </tr>
+      <tr ng-if="$ctrl.invalidUrl && $ctrl.record.originalUrl.includes('base64')">
+        <th class="text-danger">
+          Error Detail:
+        </th>
+        <td>
+          Geome does not support base64 encoded images
+        </td>
+      </tr>
     </table>
   </div>
 
