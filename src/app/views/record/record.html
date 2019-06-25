@@ -5,7 +5,7 @@
   <h3>
     {{ $ctrl.record.entity }} {{ $ctrl.getIdentifier($ctrl.record) }}
     <span
-      ng-if="$ctrl.invalidUrl && $ctrl.record.entity === 'Sample_Photo'"
+      ng-if="$ctrl.invalidUrl && ($ctrl.record.entity === 'Sample_Photo' || $ctrl.record.entity === 'Event_Photo')"
       class="alert alert-danger"
       role="alert"
     >
@@ -24,14 +24,14 @@
   </h3>
 
   <div class="main-details" layout="row" layout-align="center center">
-    <div ng-if="$ctrl.record.img1024" flex="100">
-      <a href="{{ $ctrl.record.img1024 }}"><img ng-src="{{ $ctrl.record.img512 }}"/></a>
-    </div>
     <div
-      ng-if="$ctrl.record.originalUrl && !$ctrl.invalidUrl && $ctrl.record.processed !== 'false'"
+      ng-if="($ctrl.record.entity === 'Sample_Photo' || $ctrl.record.entity === 
+      'Event_Photo') && $ctrl.record.processed !== 'false' && !$ctrl.invalidUrl"
       flex="100"
     >
-      <a href="{{ $ctrl.record.img1024 }}"><img ng-src="{{ $ctrl.record.originalUrl }}"/></a>
+      <a href="{{ $ctrl.record.img1024 }}">
+        <img ng-if="$ctrl.record.img1024" ng-src="{{ $ctrl.record.img512 }}" />
+      </a>
     </div>
     <table ng-if="!$ctrl.record.originalUrl" flex="100">
       <tbody>
@@ -56,9 +56,42 @@
       </tbody>
     </table>
     <div flex="100" ng-if="$ctrl.photos">
+      <span
+        ng-if="$ctrl.photos.length === 0"
+        class="alert alert-warning"
+        class="text-center"
+        role="alert"
+      >
+        <i class="fa fa-exclamation-circle"></i>
+        Images are still being processed
+      </span>
       <ng-image-gallery images="$ctrl.photos" inline="true" img-Bubbles="true" bubble-size="64">
       </ng-image-gallery>
     </div>
+  </div>
+
+  <div class="original-url-details">
+    <md-divider ng-if="$ctrl.record.originalUrl"></md-divider>
+    <table>
+      <tr>
+        <th>
+          PhotoID:
+        </th>
+        <td>
+          {{ $ctrl.record.photoID }}
+        </td>
+      </tr>
+      <tr ng-if="!$ctrl.invalidUrl">
+        <th>
+          originalUrl:
+        </th>
+        <td>
+          <a href="{{ $ctrl.record.originalUrl }}" target="_blank">{{
+            $ctrl.record.originalUrl
+          }}</a>
+        </td>
+      </tr>
+    </table>
   </div>
 
   <md-divider ng-if="$ctrl.auxiliaryRecordDetails(0)"></md-divider>
