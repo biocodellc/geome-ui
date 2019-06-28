@@ -435,6 +435,33 @@ class CreateProjectController {
     }
   }
 
+  diagnosticsChanged() {
+    if (!this.diagnostics) this.removeEntity('Diagnostics');
+    else {
+      let e;
+      if (this.existingConfig) {
+        e = this.existingConfig.config.entities.find(
+          entity => entity.conceptAlias === 'Diagnostics',
+        );
+      }
+      if (!e) {
+        e = {
+          conceptAlias: 'Diagnostics',
+          type: 'DefaultEntity',
+          attributes: this.requiredAttributes.Diagnostics.map(a =>
+            Object.assign({}, a),
+          ),
+          rules: [],
+          worksheet: this.configLayout === 'single' ? 'Samples' : 'Diagnostics',
+          generateID: this.configLayout === 'single',
+          uniqueKey: 'diagnosticID',
+          conceptURI: 'http://rs.tdwg.org/dwc/terms/MeasurementOrFact',
+          parentEntity: 'Sample',
+        };
+      }
+      this.config.entities.push(e);
+    }
+  }
   samplePhotosChanged() {
     if (!this.samplePhotos) this.removeEntity('Sample_Photo');
     else {
@@ -478,6 +505,7 @@ class CreateProjectController {
     this.samplePhotos = false;
     this.nextgen = false;
     this.barcode = false;
+    this.diagnostics = false;
 
     this.config.entities.forEach(e => {
       switch (e.conceptAlias) {
@@ -497,6 +525,9 @@ class CreateProjectController {
           break;
         case 'fastqMetadata':
           this.nextgen = true;
+          break;
+        case 'diagnostics':
+          this.diagnostics = true;
           break;
         default:
       }

@@ -370,6 +370,18 @@
                 Sample Photos</md-checkbox
               >
             </div>
+
+            <md-checkbox
+              ng-model="$ctrl.diagnostics"
+              class="md-align-top-left"
+              name="barcode"
+              ng-change="$ctrl.diagnosticsChanged()"
+            >
+              Diagnostics Module
+              <md-hints>
+                <md-hint>Include Diagnostics module metadata</md-hint>
+              </md-hints>
+            </md-checkbox>
           </md-step-body>
           <md-step-actions layout="row">
             <md-button class="md-primary md-raised" ng-click="$mdStep.$stepper.next()">
