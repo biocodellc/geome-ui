@@ -230,10 +230,8 @@ class CreateProjectController {
           e.generateEmptyTissue = false;
         } else if (e.conceptAlias === 'Diagnostics') {
           e.worksheet = 'Samples';
-          e.generateID = true;
-          e.generateEmptyTissue = false;
+          e.hashed = true;
         }
-      }
       }
     });
   }
@@ -449,7 +447,7 @@ class CreateProjectController {
       if (!e) {
         e = {
           conceptAlias: 'Diagnostics',
-      	  type: 'DefaultEntity',
+          type: 'DefaultEntity',
           attributes: this.requiredAttributes.Diagnostics.map(a =>
             Object.assign({}, a),
           ),

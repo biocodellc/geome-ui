@@ -48,10 +48,13 @@
         </div>
       </div>
     </fieldset>
-
     <fieldset>
       <div class="form-group clearfix">
         <div class="col-xs-12">
+          <md-progress-circular
+            md-mode="indeterminate"
+            ng-if="$ctrl.loadSave"
+          ></md-progress-circular>
           <button
             class="btn btn-primary"
             ng-click="$ctrl.onProjectUpdate({ project: $ctrl.project })"
@@ -86,6 +89,10 @@
           >
             Delete
           </button>
+          <md-progress-circular
+            ng-if="$ctrl.loadDelete"
+            md-mode="indeterminate"
+          ></md-progress-circular>
         </div>
       </div>
     </div>
