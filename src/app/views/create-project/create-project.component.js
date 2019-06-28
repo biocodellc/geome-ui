@@ -228,6 +228,9 @@ class CreateProjectController {
           e.worksheet = 'Samples';
           e.generateID = true;
           e.generateEmptyTissue = false;
+        } else if (e.conceptAlias === 'Diagnostics') {
+          e.worksheet = 'Samples';
+          e.hashed = true;
         }
       }
     });
