@@ -13,5 +13,7 @@ export default {
     currentProject: '<',
     onProjectUpdate: '&',
     onProjectDelete: '&',
+    loadSave: '<',
+    loadDelete: '<',
   },
 };
