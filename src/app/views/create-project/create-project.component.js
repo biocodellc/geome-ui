@@ -228,9 +228,6 @@ class CreateProjectController {
           e.worksheet = 'Samples';
           e.generateID = true;
           e.generateEmptyTissue = false;
-        } else if (e.conceptAlias === 'Diagnostics') {
-          e.worksheet = 'Samples';
-          e.hashed = true;
         }
       }
     });
@@ -448,12 +445,14 @@ class CreateProjectController {
         e = {
           conceptAlias: 'Diagnostics',
           type: 'DefaultEntity',
-          attributes: this.requiredAttributes.Diagnostics.map(a =>
-            Object.assign({}, a),
+          attributes: angular.copy(
+            this.networkConfig.entities.find(
+              entity => entity.conceptAlias === 'Diagnostics',
+            ).attributes,
           ),
           rules: [],
           worksheet: this.configLayout === 'single' ? 'Samples' : 'Diagnostics',
-          generateID: this.configLayout === 'single',
+          hashed: this.configLayout === 'single',
           uniqueKey: 'diagnosticID',
           conceptURI: 'http://rs.tdwg.org/dwc/terms/MeasurementOrFact',
           parentEntity: 'Sample',
