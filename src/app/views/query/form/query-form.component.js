@@ -1,5 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import angular from 'angular';
+import { toUnicode } from 'punycode';
 
 const template = require('./query-form.html');
 
@@ -44,6 +45,7 @@ const SOURCE = [
 ];
 
 const queryTypes = {
+  list: ['=', 'has'],
   string: ['=', 'like', 'has'],
   float: ['=', '<', '<=', '>', '>=', 'has'],
   datetime: ['=', '<', '<=', '>', '>=', 'has'],
@@ -270,20 +272,6 @@ class QueryFormController {
     });
   }
 
-  filterToggle(chip, removal) {
-    if (!removal) {
-      this.params.filters.push(chip);
-    } else if (removal) {
-      const index = this.params.filters.indexOf(chip);
-      this.params.filters.splice(index, 1);
-    }
-  }
-
-  getQueryTypes(conceptAlias, column) {
-    const opt = this.filterOptions[conceptAlias].find(o => o.column === column);
-    return opt ? queryTypes[opt.dataType.toLowerCase()] : [];
-  }
-
   generateFilterOptions(conceptAlias) {
     if (!this.filterOptions) {
       this.filterOptions = {};
@@ -302,9 +290,9 @@ class QueryFormController {
         );
       });
     }
+    this.createArrayOfAttributesWithLists();
 
     const filter = { type: '=' };
-
     if (conceptAlias === 'Event') {
       filter.column = 'Event.eventID';
       this.eventFilters.push(filter);
@@ -313,11 +301,46 @@ class QueryFormController {
       this.sampleFilters.push(filter);
     } else if (conceptAlias === 'Tissue') {
       filter.column = 'Tissue.tissueID';
-
       this.tissueFilters.push(filter);
     }
-
     this.filterToggle(filter);
+  }
+
+  createArrayOfAttributesWithLists() {
+    this.controlledVocabAttributes = [];
+    this.config.entities.forEach(e => {
+      const allAliases = e.conceptAlias;
+      this.filterOptions[allAliases].forEach(o => {
+        if (o.list) {
+          this.controlledVocabAttributes.push(o.column);
+        }
+      });
+    });
+  }
+
+  filterToggle(chip, removal) {
+    if (!removal) {
+      this.params.filters.push(chip);
+    } else if (removal) {
+      const index = this.params.filters.indexOf(chip);
+      this.params.filters.splice(index, 1);
+    }
+  }
+
+  getQueryTypes(conceptAlias, column) {
+    const opt = this.filterOptions[conceptAlias].find(o => o.column === column);
+    if (opt) {
+      if (opt.list) {
+        return queryTypes.list;
+      }
+      return queryTypes[opt.dataType.toLowerCase()];
+    }
+    return [];
+  }
+
+  getList(conceptAlias, column) {
+    const opt = this.filterOptions[conceptAlias].find(o => o.column === column);
+    return opt.list ? opt.list.fields : [];
   }
 
   drawBounds() {
