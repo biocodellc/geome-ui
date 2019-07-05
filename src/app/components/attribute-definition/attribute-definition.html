@@ -6,14 +6,21 @@
   <p>
     <strong>Column Name:</strong> {{ $ctrl.attribute.column }}
     <br />
-    <span  
+    <span
       ><strong>Defined By:</strong>
-      <span ng-show="$ctrl.attribute.definedBy.indexOf('urn:') > -1">{{ $ctrl.attribute.definedBy }} (This term is defined by GEOME).</span>
-      <a ng-hide="$ctrl.attribute.definedBy.indexOf('urn:') > -1"  href="{{ $ctrl.attribute.definedBy }}" target="_blank" >
+      <span ng-show="$ctrl.attribute.definedBy.indexOf('urn:') > -1"
+        >{{ $ctrl.attribute.definedBy }} (This term is defined by GEOME).</span
+      >
+      <a
+        ng-hide="$ctrl.attribute.definedBy.indexOf('urn:') > -1"
+        href="{{ $ctrl.attribute.definedBy }}"
+        target="_blank"
+      >
         {{ $ctrl.attribute.definedBy }}</a
       >
     </span>
   </p>
+  <p><strong>Data Type:</strong> {{ $ctrl.attribute.dataType }}</p>
 
   <p><strong>Definition</strong></p>
   <p>{{ $ctrl.attribute.definition }}</p>

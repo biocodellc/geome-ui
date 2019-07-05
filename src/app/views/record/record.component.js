@@ -86,7 +86,6 @@ class RecordController {
     const e = this.project.config.entities.find(
       entity => entity.conceptAlias === this.record.entity,
     );
-
     const flatRecord = flatten(this.record);
 
     const recordKeys = Object.keys(flatRecord).filter(
@@ -142,6 +141,11 @@ class RecordController {
       } else {
         accumulator[key] = flatRecord[key];
       }
+
+      if (key === 'imageProcessingErrors') {
+        this.invalidPhoto = true;
+      }
+
       return accumulator;
     }, {});
 
