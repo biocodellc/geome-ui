@@ -2,39 +2,35 @@
   <md-progress-circular md-mode="indeterminate"></md-progress-circular>
 </div>
 <div layout="column" class="record-detail" ng-show="!$ctrl.loading">
-  <h3>
-    {{ $ctrl.record.entity }} {{ $ctrl.getIdentifier($ctrl.record) }}
-    <span
-      ng-if="$ctrl.invalidUrl && ($ctrl.record.entity === 'Sample_Photo' || $ctrl.record.entity === 'Event_Photo')"
-      class="alert alert-danger"
-      role="alert"
-    >
-      <i class="fa fa-exclamation-circle"></i>
-      Original Url is invalid
-    </span>
-    <span
-      ng-if="$ctrl.record.processed === 'false' && ($ctrl.record.entity === 'Sample_Photo' || $ctrl.record.entity === 'Event_Photo')"
-      class="alert alert-warning"
-      class="text-center"
-      role="alert"
-    >
-      <i class="fa fa-exclamation-circle"></i>
-      Image is still being processed
-    </span>
-  </h3>
+  <div ng-if="$ctrl.invalidPhoto" class="alert alert-danger text-center text-large" role="alert">
+    <i class="fa fa-exclamation-circle"></i>
+    An error occurred while processing this image.
+  </div>
+  <div
+    ng-if="$ctrl.record.processed === 'false' && $ctrl.record.photoID"
+    class="alert alert-warning text-center text-large"
+    role="alert"
+  >
+    <i class="fa fa-exclamation-circle"></i>
+    Image is processing.
+  </div>
+  <h3>{{ $ctrl.record.entity }} {{ $ctrl.getIdentifier($ctrl.record) }}</h3>
 
   <div class="main-details" layout="row" layout-align="center center">
     <div
-      ng-if="($ctrl.record.entity === 'Sample_Photo' || $ctrl.record.entity === 
-      'Event_Photo') && $ctrl.record.processed !== 'false' && !$ctrl.invalidUrl"
+      ng-if="$ctrl.photoID && $ctrl.record.processed !== 'false' && !$ctrl.invalidPhoto"
       flex="100"
     >
       <a href="{{ $ctrl.record.img1024 }}">
         <img ng-if="$ctrl.record.img1024" ng-src="{{ $ctrl.record.img512 }}" />
       </a>
     </div>
-    <table ng-if="!$ctrl.record.originalUrl" flex="100">
+    <table flex="100">
       <tbody>
+        <tr ng-if="$ctrl.invalidPhoto && $ctrl.record.originalUrl.includes('base64')">
+          <th class="text-danger">Error Detail:</th>
+          <td>GEOME does not support base64 encoded images</td>
+        </tr>
         <tr ng-repeat="(key, value) in $ctrl.mainRecordDetails() track by key">
           <th>{{ key }}:</th>
           <td ng-if="value.href && value.text" class="truncate">
@@ -63,43 +59,11 @@
         role="alert"
       >
         <i class="fa fa-exclamation-circle"></i>
-        Images are still being processed
+        Image(s) are processing.
       </span>
       <ng-image-gallery images="$ctrl.photos" inline="true" img-Bubbles="true" bubble-size="64">
       </ng-image-gallery>
     </div>
-  </div>
-
-  <div class="original-url-details" ng-if="$ctrl.record.originalUrl">
-    <md-divider></md-divider>
-    <table>
-      <tr>
-        <th>
-          PhotoID:
-        </th>
-        <td>
-          {{ $ctrl.record.photoID }}
-        </td>
-      </tr>
-      <tr ng-if="!$ctrl.invalidUrl">
-        <th>
-          originalUrl:
-        </th>
-        <td>
-          <a href="{{ $ctrl.record.originalUrl }}" target="_blank">{{
-            $ctrl.record.originalUrl
-          }}</a>
-        </td>
-      </tr>
-      <tr ng-if="$ctrl.invalidUrl && $ctrl.record.originalUrl.includes('base64')">
-        <th class="text-danger">
-          Error Detail:
-        </th>
-        <td>
-          Geome does not support base64 encoded images
-        </td>
-      </tr>
-    </table>
   </div>
 
   <md-divider ng-if="$ctrl.auxiliaryRecordDetails(0)"></md-divider>
@@ -108,11 +72,7 @@
     <table flex>
       <tbody>
         <tr ng-repeat="(key, value) in $ctrl.auxiliaryRecordDetails(0) track by key">
-          <th
-            ng-class="{'text-danger': key === 'imageProcessingErrors' && ($ctrl.record.entity === 'Sample_Photo' || $ctrl.record.entity === 'Event_Photo')}"
-          >
-            {{ key }}:
-          </th>
+          <th ng-class="{'text-danger': key === 'imageProcessingErrors'}">{{ key }}:</th>
           <td ng-class="{'sequence': key === 'sequence'}">
             <md-tooltip
               md-direction="top"

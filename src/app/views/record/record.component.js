@@ -143,7 +143,7 @@ class RecordController {
       }
 
       if (key === 'imageProcessingErrors') {
-        this.invalidUrl = true;
+        this.invalidPhoto = true;
       }
 
       return accumulator;
