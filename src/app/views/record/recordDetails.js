@@ -100,6 +100,8 @@ export const mainRecordDetails = {
     photographer: getKey('photographer'),
     filename: getKey('filename'),
     originalUrl: getKey('originalUrl'),
+    hasScale: getKey('hasScale'),
+    qualityScore: getKey('qualityScore'),
     processed: getKey('processed'),
   },
   Sample_Photo: {
@@ -108,6 +110,8 @@ export const mainRecordDetails = {
     photographer: getKey('photographer'),
     filename: getKey('filename'),
     originalUrl: getKey('originalUrl'),
+    hasScale: getKey('hasScale'),
+    qualityScore: getKey('qualityScore'),
     processed: getKey('processed'),
   },
   Sample: {
