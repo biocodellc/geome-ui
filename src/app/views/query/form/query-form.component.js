@@ -1,6 +1,5 @@
 /* eslint-disable no-underscore-dangle */
 import angular from 'angular';
-import { toUnicode } from 'punycode';
 
 const template = require('./query-form.html');
 
