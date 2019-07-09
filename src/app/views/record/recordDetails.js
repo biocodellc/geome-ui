@@ -37,6 +37,12 @@ export const childRecordDetails = {
     genus: getKey('genus'),
     specificEpithet: getKey('specificEpithet'),
   },
+  Diagnostics: {
+    diagnosticID: record => ({
+      text: record.diagnosticID,
+      href: `/record/${record.bcid}`,
+    }),
+  },
   Tissue: {
     tissueID: tissue => ({
       text: tissue.tissueID,
@@ -122,6 +128,9 @@ export const mainRecordDetails = {
       text: s.bcid,
       href: `https://n2t.net/${s.bcid}`,
     }),
+  },
+  Diagnostics: {
+    diagnosticID: getKey('diagnosticID'),
   },
   Tissue: {
     tissueID: getKey('tissueID'),

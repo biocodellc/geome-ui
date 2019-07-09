@@ -197,6 +197,7 @@ class RecordController {
     const childDetails = c =>
       c.map(child => {
         const detailMap = childRecordDetails[child.entity];
+        if (!detailMap) return {};
         return Object.entries(detailMap).reduce(
           (accumulator, [key, fn]) =>
             Object.assign(accumulator, {
@@ -258,6 +259,5 @@ export default {
   bindings: {
     layout: '@',
     record: '<',
-    currentProject: '<',
   },
 };
