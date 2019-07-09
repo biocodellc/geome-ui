@@ -335,6 +335,18 @@
             </md-checkbox>
 
             <md-checkbox
+              ng-model="$ctrl.diagnostics"
+              class="md-align-top-left"
+              name="barcode"
+              ng-change="$ctrl.diagnosticsChanged()"
+            >
+              Diagnostics Module
+              <md-hints>
+                <md-hint>Include Diagnostics module metadata</md-hint>
+              </md-hints>
+            </md-checkbox>
+
+            <md-checkbox
               ng-model="$ctrl.photos"
               class="md-align-top-left"
               name="photos"
