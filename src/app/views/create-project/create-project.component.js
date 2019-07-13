@@ -359,7 +359,6 @@ class CreateProjectController {
       }
       this.config.entities.push(e);
     }
-    console.log(this.config.entities);
   }
 
   nextgenChanged() {
@@ -385,7 +384,6 @@ class CreateProjectController {
       }
       this.config.entities.push(e);
     }
-    console.log(this.config.entities);
   }
 
   barcodeChanged() {
@@ -411,7 +409,6 @@ class CreateProjectController {
       }
       this.config.entities.push(e);
     }
-    console.log(this.config.entities);
   }
 
   photosChanged() {
