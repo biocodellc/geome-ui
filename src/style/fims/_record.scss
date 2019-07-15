@@ -12,6 +12,7 @@
 }
 
 .auxiliary-details {
+  position: relative;
   margin-top: 8px;
   margin-bottom: 8px;
   padding-top: 8px;
@@ -24,6 +25,14 @@
 
   td.sequence {
     word-break: break-all;
+  }
+  .tk-labels {
+    position: absolute;
+    left: 17%;
+    top: 25%;
+    img {
+      width: 30px;
+    }
   }
 }
 

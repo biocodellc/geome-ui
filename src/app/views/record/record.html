@@ -81,7 +81,10 @@
               md-visible="false"
               >{{ value.text || value }}</md-tooltip
             >
-            <span ng-if="!value.href">{{ value }}</span>
+            <span ng-if="!value.href"
+              >{{ value }}
+              <notice-label ng-if="key === 'traditionalKnowledgeNotice'"></notice-label>
+            </span>
             <span ng-if="value.href">
               <a href="{{ value.href }}">{{ value.text }}</a>
             </span>
