@@ -4,16 +4,18 @@ import QueryParams from '../query/QueryParams';
 const template = require('./dashboard.html');
 
 class DashboardController {
-  constructor($state, ExpeditionService, DataService, QueryService) {
+  constructor($state, $location, ExpeditionService, DataService, QueryService) {
     'ngInject';
 
     this.$state = $state;
+    this.$location = $location;
     this.ExpeditionService = ExpeditionService;
     this.DataService = DataService;
     this.QueryService = QueryService;
   }
 
   $onInit() {
+    this.url = this.$location.absUrl();
     this.loading = true;
     this.totalItems = null;
     this.itemsPerPage = 100;
