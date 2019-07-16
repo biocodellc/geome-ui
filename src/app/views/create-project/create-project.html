@@ -54,62 +54,30 @@
               </div>
             </md-input-container>
 
-            <md-checkbox ng-model="$ctrl.project.public" class="md-align-top-left" name="public">
-              Public Project?
-              <md-hints>
-                <md-hint
-                  >If a project is public, non project members will be able to query the
-                  data.  You may change the public/private status of your project later.</md-hint
-                >
-              </md-hints>
-            </md-checkbox>
-          </md-step-body>
-          <md-step-actions>
-            <md-button
-              class="md-primary md-raised"
-              ng-click="$mdStep.$stepper.next()"
-              ng-disabled="form.description.$invalid || form.title.$invalid || form.title.$pending"
-            >
-              Next</md-button
-            >
-          </md-step-actions>
-        </md-step>
-        <md-step md-label="Project Configuration" md-order="1">
-          <md-step-body>
-            <p>
-	      Join a team if you have been invited to do so and if you agree to use all of the attributes and rules and data formatting options for that team.  
-	      Otherwise, create your own project by selecting a data format below.
-            </p>
-
-            <md-switch
-              ng-if="$ctrl.isNetworkAdmin"
-              ng-model="$ctrl.cloneConfig"
-              ng-click="$ctrl.teamConfig = false;"
-              class="md-primary"
-              aria-label="Clone Existing Project Config?"
-            >
-              Clone Existing Project Config? (Admin Only)
-            </md-switch>
-
             <md-switch
               ng-model="$ctrl.teamConfig"
-              ng-click="$ctrl.cloneConfig = false;"
               class="md-primary"
-              aria-label="Use existing team configuration?"
+              aria-label="Join a team workspace?"
             >
               Join a team workspace?
+
+              <md-hints>
+                <md-hint>
+                  Join a team if you have been invited to do so and if you agree to use all of the
+                  attributes and rules and data formatting options for that team.
+                </md-hint>
+              </md-hints>
             </md-switch>
 
-
             <md-autocomplete
-              ng-show="$ctrl.teamConfig || ($ctrl.isNetworkAdmin && $ctrl.cloneConfig)"
+              ng-show="$ctrl.teamConfig"
               flex
               required
               md-no-cache
               md-show-arrow="true"
               md-selected-item="$ctrl.existingConfig"
               md-items="c in $ctrl.getConfigurations() | filter:{name: configSearchText}"
-              md-floating-label="Existing Team Configuration"
+              md-floating-label="Existing Team Workspace"
               md-require-match
               md-search-text="configSearchText"
               md-min-length="0"
@@ -122,15 +90,97 @@
                 }}</span>
               </md-item-template>
               <md-hints>
-                <md-hint>Select an existing team configuration.</md-hint>
+                <md-hint>Select an existing team workspace.</md-hint>
               </md-hints>
             </md-autocomplete>
 
-            <div ng-show="$ctrl.teamConfig && $ctrl.existingConfig" class="config-description">
-              <h6>Configuration Description</h6>
-              {{ $ctrl.existingConfig.description }}
+            <div ng-show="$ctrl.teamConfig && $ctrl.existingConfig" class="md-primary">
+              <h5>{{ $ctrl.existingConfig.name }} Description</h5>
+              <p class="small">{{ $ctrl.existingConfig.description }}</p>
             </div>
 
+            <md-checkbox ng-model="$ctrl.project.public" class="md-align-top-left" name="public">
+              Public Project?
+              <md-hints>
+                <md-hint
+                  >If a project is public, non project members will be able to query the data. You
+                  may change the public/private status of your project later.</md-hint
+                >
+              </md-hints>
+            </md-checkbox>
+          </md-step-body>
+          <md-step-actions>
+            <md-button
+              class="md-primary md-raised"
+              ng-if="!$ctrl.teamConfig"
+              ng-click="$mdStep.$stepper.next()"
+              ng-disabled="form.description.$invalid || form.title.$invalid || form.title.$pending"
+            >
+              Next</md-button
+            >
+            <md-button
+              class="md-primary md-raised"
+              ng-click="$ctrl.createProject()"
+              ng-disabled="!$ctrl.existingConfig || form.description.$invalid || form.title.$invalid || form.title.$pending"
+              ng-if="$ctrl.teamConfig"
+              layout="row"
+              layout-align="center center"
+            >
+              <span ng-show="!$ctrl.creatingProject">Create Project</span>
+              <md-progress-circular
+                ng-show="$ctrl.creatingProject"
+                md-mode="indeterminate"
+                md-diameter="18"
+                class="md-accent md-hue-3"
+              >
+              </md-progress-circular>
+            </md-button>
+          </md-step-actions>
+        </md-step>
+        <md-step md-label="Project Configuration" md-order="1" ng-if="!$ctrl.teamConfig">
+          <md-step-body>
+            <p>
+              Create your own project by selecting a data format below.
+            </p>
+
+            <md-switch
+              ng-if="$ctrl.isNetworkAdmin"
+              ng-model="$ctrl.cloneConfig"
+              class="md-primary"
+              aria-label="Clone Existing Project Config?"
+            >
+              Clone Existing Project Config? (Admin Only)
+            </md-switch>
+
+            <md-autocomplete
+              ng-show="$ctrl.isNetworkAdmin && $ctrl.cloneConfig"
+              flex
+              required
+              md-no-cache
+              md-show-arrow="true"
+              md-selected-item="$ctrl.existingConfig"
+              md-items="c in $ctrl.getConfigurations() | filter:{name: configSearchText}"
+              md-floating-label="Existing Project Configuration"
+              md-require-match
+              md-search-text="configSearchText"
+              md-min-length="0"
+              md-item-text="c.name"
+              ng-click="configSearchText = ''"
+            >
+              <md-item-template>
+                <span md-highlight-text="configSearchText" md-highlight-flags="i">{{
+                  c.name
+                }}</span>
+              </md-item-template>
+              <md-hints>
+                <md-hint>Select an existing project configuration.</md-hint>
+              </md-hints>
+            </md-autocomplete>
+
+            <div ng-show="$ctrl.cloneConfig && $ctrl.existingConfig" class="md-primary">
+              <h5>{{ $ctrl.existingConfig.name }} Description</h5>
+              <p class="small">{{ $ctrl.existingConfig.description }}</p>
+            </div>
             <md-checkbox
               ng-show="$ctrl.isNetworkAdmin && $ctrl.cloneConfig && $ctrl.existingConfig"
               ng-model="$ctrl.syncConfig"
@@ -150,28 +200,31 @@
               </md-hints>
             </md-checkbox>
 
-            <div ng-show="!$ctrl.teamConfig && !$ctrl.cloneConfig">
+            <div ng-show="!$ctrl.cloneConfig">
               <h4>Data Format</h4>
               <p>The data format options below determine how data will be input and output.</p>
               <md-radio-group ng-model="$ctrl.configLayout" class="md-primary">
                 <md-radio-button value="single"
                   >Single Sheet -
                   <span class="small"
-                    >Enter data on a single flat-sheet. Best when there is close to a one:one match between events, samples, and tissues.</span
+                    >Enter data on a single flat-sheet. Best when there is close to a one:one match
+                    between events, samples, and tissues.</span
                   >
                 </md-radio-button>
                 <md-radio-button value="multi"
-                  >Multi Sheet -
+                  >Multiple Sheet -
                   <span class="small"
-                    >Enter Event, Samples, & Tissues on their own worksheets.  Best when a single collecting event yields  many samples or a single sample will yield many tissues.  Requires user to manage identifiers to link each entity.</span
+                    >Enter Event, Samples, & Tissues on their own worksheets. Best when a single
+                    collecting event yields many samples or a single sample will yield many tissues.
+                    Requires user to manage identifiers to link each entity.</span
                   >
                 </md-radio-button>
               </md-radio-group>
             </div>
           </md-step-body>
-          <md-step-actions>
+          <md-step-actions layout="row">
             <md-button
-              ng-if="!$ctrl.teamConfig && !$ctrl.cloneConfig || ($ctrl.cloneConfig && $ctrl.existingConfig && !$ctrl.syncConfig)"
+              ng-if="!$ctrl.cloneConfig || ($ctrl.cloneConfig && $ctrl.existingConfig && !$ctrl.syncConfig)"
               ng-disabled="$ctrl.cloneConfig && !$ctrl.existingConfig"
               class="md-primary md-raised"
               ng-click="$ctrl.toConfigStep($mdStep)"
@@ -189,8 +242,8 @@
             <md-button
               class="md-primary md-raised"
               ng-click="$ctrl.createProject()"
-              ng-disabled="!$ctrl.existingConfig"
-              ng-if="$ctrl.teamConfig || ($ctrl.cloneConfig && ($ctrl.syncConfig || !$ctrl.existingConfig))"
+              ng-disabled="$ctrl.cloneConfig && !$ctrl.existingConfig"
+              ng-hide="$ctrl.cloneConfig && $ctrl.syncConfig"
               layout="row"
               layout-align="center center"
             >
@@ -235,7 +288,10 @@
             >
               Tissues Module
               <md-hints>
-                <md-hint>Necessary for including NextGen or Barcoding modules as well as integring with the Biocode LIMS Geneious Plugin.</md-hint>
+                <md-hint
+                  >Necessary for including NextGen or Barcoding modules as well as integrating with
+                  the Biocode LIMS Geneious Plugin.</md-hint
+                >
               </md-hints>
             </md-checkbox>
 
@@ -252,10 +308,10 @@
               NextGen Module
               <md-hints>
                 <md-hint
-                  >Include fields for associating NextGen sequencing data with your tissues. Adds
-                  the ability to generate
+                  >Include fields for associating sequencing data from any method that generates
+                  FASTQ files with your tissues. Adds the ability to generate
                   <a target="_blank" href="https://ncbi.nlm.nih.gov/sra/">NCBI SRA</a>
-                  submission packages from uploaded metadata
+                  submission packages from uploaded metadata.
                 </md-hint>
               </md-hints>
             </md-checkbox>
@@ -270,9 +326,23 @@
               <md-tooltip md-delay="500" ng-if="!$ctrl.tissues"
                 >Enable the Tissues Module.</md-tooltip
               >
-              Barcoding Module
+              Sanger Sequencing and Barcoding Module
               <md-hints>
-                <md-hint>Adds the ability to upload FASTA sequences </md-hint>
+                <md-hint
+                  >Adds the ability to upload FASTA sequences that will be stored in GEOME</md-hint
+                >
+              </md-hints>
+            </md-checkbox>
+
+            <md-checkbox
+              ng-model="$ctrl.diagnostics"
+              class="md-align-top-left"
+              name="barcode"
+              ng-change="$ctrl.diagnosticsChanged()"
+            >
+              Diagnostics Module
+              <md-hints>
+                <md-hint>Include Diagnostics module metadata</md-hint>
               </md-hints>
             </md-checkbox>
 
@@ -315,22 +385,8 @@
           </md-step-body>
           <md-step-actions layout="row">
             <md-button class="md-primary md-raised" ng-click="$mdStep.$stepper.next()">
-              Next</md-button>
-            <!--<md-button
-              class="md-primary md-raised"
-              ng-click="$ctrl.createProject()"
-              layout="row"
-              layout-align="center center"
+              Next</md-button
             >
-              <span ng-show="!$ctrl.creatingProject">Create Project</span>
-              <md-progress-circular
-                ng-show="$ctrl.creatingProject"
-                md-mode="indeterminate"
-                md-diameter="18"
-                class="md-accent md-hue-3"
-              >
-              </md-progress-circular>
-            </md-button> -->
           </md-step-actions>
         </md-step>
 
@@ -419,17 +475,17 @@
             </md-autocomplete>
 
             <md-checkbox
-              ng-if="e.type === 'Tissue' && $ctrl.disableGenerateID(e)"
+              ng-if="e.type === 'Tissue' && $ctrl.showGenerateID(e)"
               ng-model="e.generateID"
               class="md-align-top-left"
               name="{{ e.conceptAlias }}-generate-id"
             >
               Auto-Generate ID?
               <md-hints>
-                <md-hint ng-if="!$ctrl.disableGenerateID(e)"
-                  >If selected, the tissueID will be autogenerated and is not required to be entered
-                  by the user. The generated id will be incremented based off of the Sample
-                  uniqueKey. Ex.
+                <md-hint>
+                  If selected, the tissueID will be autogenerated and is not required to be entered
+                  by the user. The generated id will be incremented based off of the
+                  materialSampleID. uniqueKey. Ex.
                   <strong>_{{ $ctrl.getEntity(e.parentEntity).uniqueKey }}_.1</strong>
                 </md-hint>
               </md-hints>
@@ -454,14 +510,18 @@
             <h4>Attributes</h4>
             <p class="small">
               The available attributes for {{ e.conceptAlias }} are listed below. You can choose
-              which attributes you would like to appear on your spreadsheet templates. You can also edit 
-	      the definition and attribute group along with changing the default column order. 
-              Attributes that are required by GEOME can not be disabled.
+              which attributes you would like to appear on your spreadsheet templates. De-select
+              attributes for which you are sure your project will not need as users will have the
+              option to de-select unneeded attributes when generating templates. You can also edit
+              the definition and attribute group along with changing the default column order.
+              Attribute groups simply organize your attributes when generating metadata templates
+              and have no impact on the data. Attributes that are required by GEOME can not be
+              disabled.
             </p>
 
-              <!--selected-attributes="e.attributes"-->
+            <!--selected-attributes="e.attributes"-->
             <fims-project-config-attributes
-              selected-attributes="$ctrl.availableAttributes(e.conceptAlias)"
+              selected-attributes="e.attributes"
               can-edit="true"
               available="$ctrl.availableAttributes(e.conceptAlias)"
               required-attributes="$ctrl.requiredAttributes[e.conceptAlias]"
@@ -471,20 +531,10 @@
 
             <h4>Rules</h4>
             <p class="small">
-	       All new projects inherit the GEOME core rules.  You will be able to add your own validation rules for {{ e.conceptAlias }} after project creation in the "Project Configuration" options.
+              All new projects inherit the GEOME core rules. You will be able to add your own
+              validation rules for {{ e.conceptAlias }} after project creation in the "Project
+              Configuration" options.
             </p>
-
-	    <!--
-            <fims-project-config-rules
-              rules="e.rules"
-              required="$ctrl.requiredRules[e.conceptAlias]"
-              can-edit="true"
-              attributes="e.attributes"
-              lists="$ctrl.config.lists"
-              on-change="$ctrl.updateRules(e, rules)"
-            >
-            </fims-project-config-rules>
-	    -->
           </md-step-body>
           <md-step-actions>
             <md-button

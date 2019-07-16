@@ -35,6 +35,16 @@ const BASE_CONFIG = {
       conceptURI: 'http://rs.tdwg.org/dwc/terms/MaterialSample',
       parentEntity: 'Sample',
     },
+    {
+      conceptAlias: 'fastqMetadata',
+      type: 'Fastq',
+      uniqueKey: 'identifier',
+      attributes: [],
+      rules: [],
+      conceptURI: 'urn:fastqMetadata',
+      recordType: 'biocode.fims.fastq.FastqRecord',
+      parentEntity: 'Tissue',
+    },
   ],
   lists: [],
   expeditionMetadataProperties: [],
@@ -51,6 +61,7 @@ class CreateProjectController {
     $state,
     $anchorScroll,
     $location,
+    $timeout,
     $mdDialog,
     NetworkConfigurationService,
     ProjectConfigurationService,
@@ -61,6 +72,7 @@ class CreateProjectController {
     this.$state = $state;
     this.$anchorScroll = $anchorScroll;
     this.$location = $location;
+    this.$timeout = $timeout;
     this.$mdDialog = $mdDialog;
     this.NetworkConfigurationService = NetworkConfigurationService;
     this.ProjectConfigurationService = ProjectConfigurationService;
@@ -80,6 +92,8 @@ class CreateProjectController {
     this.worksheetSearchText = {};
     this.requiredAttributes = {};
     this.requiredRules = {};
+
+    this.fetchNetworkConfig();
   }
 
   async createProject() {
@@ -104,14 +118,21 @@ class CreateProjectController {
       }
     }
 
+    this.creatingProject = true;
+
     if (this.teamConfig || (this.cloneConfig && this.syncConfig)) {
       this.project.projectConfiguration = this.existingConfig;
     } else {
       // creating a new ProjectConfiguration
+      if (!this.config) {
+        await this.setupNewConfig(false);
+        this.config.entities.forEach(e => {
+          e.attributes = this.availableAttributes(e.conceptAlias).slice();
+        });
+      }
       this.project.projectConfig = this.config;
     }
 
-    this.creatingProject = true;
     this.ProjectService.create(this.project)
       .then(({ data }) => {
         data.config = new ProjectConfig(data.projectConfig);
@@ -119,7 +140,7 @@ class CreateProjectController {
         return this.ProjectService.setCurrentProject(data);
       })
       .then(() =>
-        this.$state.go('validate', {}, { reload: true, inherit: false }),
+        this.$state.go('template', {}, { reload: true, inherit: false }),
       )
       .catch(resp => {
         if (resp.status === 400 && resp.data.errors) {
@@ -167,9 +188,7 @@ class CreateProjectController {
     return this.requiredAttributes[conceptAlias].includes(attribute);
   }
 
-  async toConfigStep($mdStep) {
-    this.fetchNetworkConfig();
-
+  async setupNewConfig(setLoading = true) {
     this.networkPromise.then(() => {
       this.setRequiredAttributes(this.networkConfig);
       this.setRequiredRules();
@@ -180,28 +199,38 @@ class CreateProjectController {
     });
 
     if (this.cloneConfig) {
-      this.loading = true;
+      if (setLoading) this.loading = true;
       await this.fetchConfig();
-      this.loading = false;
+      if (setLoading) this.loading = false;
 
       if (!this.config) return;
       this.selectModulesForConfig();
       this.setRequiredAttributes(this.config);
     } else {
-      this.loading = true;
+      if (setLoading) this.loading = true;
       await this.networkPromise;
       this.config = new ProjectConfig(angular.copy(BASE_CONFIG));
       this.setupSheetLayout();
       this.selectModulesForConfig();
-      this.loading = false;
+      if (setLoading) this.loading = false;
     }
+  }
 
-    $mdStep.$stepper.next();
+  async toConfigStep($mdStep) {
+    await this.setupNewConfig();
+    // trying this hack to address https://github.com/biocodellc/geome-ui/issues/313
+    this.$timeout(() => $mdStep.$stepper.next(), 50);
   }
 
   setupSheetLayout() {
-    if (this.configLayout === 'single') {
-      this.config.entities.forEach(e => {
+    this.config.entities.forEach(e => {
+      e.attributes = angular.copy(
+        this.networkConfig.entities.find(
+          entity => e.conceptAlias === entity.conceptAlias,
+        ).attributes,
+      );
+
+      if (this.configLayout === 'single') {
         if (e.conceptAlias === 'Event') {
           e.hashed = true;
           e.worksheet = 'Samples';
@@ -210,8 +239,8 @@ class CreateProjectController {
           e.generateID = true;
           e.generateEmptyTissue = false;
         }
-      });
-    }
+      }
+    });
   }
 
   hashChanged(e) {
@@ -227,13 +256,13 @@ class CreateProjectController {
     }
   }
 
-  disableGenerateID(e) {
-    if (e.type !== 'Tissue' || e.uniqueKey !== 'tissueID') return true;
+  showGenerateID(e) {
+    if (e.type !== 'Tissue' || e.uniqueKey !== 'tissueID') return false;
 
     const sampleEntity = this.config.entities.find(
       entity => entity.conceptAlias === e.parentEntity,
     );
-    return !sampleEntity || sampleEntity.worksheet !== e.worksheet;
+    return sampleEntity && sampleEntity.worksheet === e.worksheet;
   }
 
   getEntity(conceptAlias) {
@@ -299,8 +328,13 @@ class CreateProjectController {
   }
 
   tissuesChanged() {
-    if (!this.tissues) this.removeEntity('Tissue');
-    else {
+    if (!this.tissues) {
+      this.removeEntity('Tissue');
+      this.removeEntity('fastqMetadata');
+      this.removeEntity('fastaSequence');
+      this.nextgen = false;
+      this.barcode = false;
+    } else {
       let e;
       if (this.existingConfig) {
         e = this.existingConfig.config.entities.find(
@@ -413,6 +447,35 @@ class CreateProjectController {
     }
   }
 
+  diagnosticsChanged() {
+    if (!this.diagnostics) this.removeEntity('Diagnostics');
+    else {
+      let e;
+      if (this.existingConfig) {
+        e = this.existingConfig.config.entities.find(
+          entity => entity.conceptAlias === 'Diagnostics',
+        );
+      }
+      if (!e) {
+        e = {
+          conceptAlias: 'Diagnostics',
+          type: 'DefaultEntity',
+          attributes: angular.copy(
+            this.networkConfig.entities.find(
+              entity => entity.conceptAlias === 'Diagnostics',
+            ).attributes,
+          ),
+          rules: [],
+          worksheet: this.configLayout === 'single' ? 'Samples' : 'Diagnostics',
+          hashed: this.configLayout === 'single',
+          uniqueKey: 'diagnosticID',
+          conceptURI: 'http://rs.tdwg.org/dwc/terms/MeasurementOrFact',
+          parentEntity: 'Sample',
+        };
+      }
+      this.config.entities.push(e);
+    }
+  }
   samplePhotosChanged() {
     if (!this.samplePhotos) this.removeEntity('Sample_Photo');
     else {
@@ -456,6 +519,7 @@ class CreateProjectController {
     this.samplePhotos = false;
     this.nextgen = false;
     this.barcode = false;
+    this.diagnostics = false;
 
     this.config.entities.forEach(e => {
       switch (e.conceptAlias) {
@@ -475,6 +539,9 @@ class CreateProjectController {
           break;
         case 'fastqMetadata':
           this.nextgen = true;
+          break;
+        case 'diagnostics':
+          this.diagnostics = true;
           break;
         default:
       }

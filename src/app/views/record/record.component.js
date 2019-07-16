@@ -86,7 +86,6 @@ class RecordController {
     const e = this.project.config.entities.find(
       entity => entity.conceptAlias === this.record.entity,
     );
-
     const flatRecord = flatten(this.record);
 
     const recordKeys = Object.keys(flatRecord).filter(
@@ -134,9 +133,19 @@ class RecordController {
             this.project.projectId
           } and _expeditions_:${flatRecord[key]}`,
         };
+      } else if (['img128', 'img512', 'img1024'].includes(key)) {
+        accumulator[key] = {
+          text: `${key.substring(3)} pixel wide image`,
+          href: flatRecord[key],
+        };
       } else {
         accumulator[key] = flatRecord[key];
       }
+
+      if (key === 'imageProcessingErrors') {
+        this.invalidPhoto = true;
+      }
+
       return accumulator;
     }, {});
 
@@ -188,6 +197,7 @@ class RecordController {
     const childDetails = c =>
       c.map(child => {
         const detailMap = childRecordDetails[child.entity];
+        if (!detailMap) return {};
         return Object.entries(detailMap).reduce(
           (accumulator, [key, fn]) =>
             Object.assign(accumulator, {
@@ -249,6 +259,5 @@ export default {
   bindings: {
     layout: '@',
     record: '<',
-    currentProject: '<',
   },
 };

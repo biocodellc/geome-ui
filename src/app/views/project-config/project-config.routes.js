@@ -6,7 +6,7 @@ function getStates() {
       state: 'project-config',
       config: {
         url: '/config',
-        redirectTo: 'project-config.settings',
+        redirectTo: 'project-config.entities',
         component: 'fimsProjectConfig',
         parent: 'projectView',
         projectRequired: true,
