@@ -361,7 +361,11 @@ class QueryFormController {
     const entity = this.entity === 'Fastq' ? 'fastqMetadata' : this.entity;
     this.toggleLoading({ val: true });
     const entities = this.config.entities
-      .filter(e => ['Event', 'Sample', 'Tissue'].includes(e.conceptAlias))
+      .filter(e =>
+        ['Event', 'Sample', 'Tissue', 'Sample_Photo', 'Event_Photo'].includes(
+          e.conceptAlias,
+        ),
+      )
       .map(e => e.conceptAlias);
     this.entitiesForDownload({ entities });
     const selectEntities = SELECT_ENTITIES[entity];
