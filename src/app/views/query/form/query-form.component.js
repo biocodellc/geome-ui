@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import angular from 'angular';
 
 const template = require('./query-form.html');
@@ -42,13 +43,8 @@ const SOURCE = [
   'expeditionCode',
 ];
 
-const defaultFilter = {
-  column: null,
-  type: null,
-  value: null,
-};
-
 const queryTypes = {
+  list: ['=', 'has'],
   string: ['=', 'like', 'has'],
   float: ['=', '<', '<=', '>', '>=', 'has'],
   datetime: ['=', '<', '<=', '>', '>=', 'has'],
@@ -57,13 +53,6 @@ const queryTypes = {
 };
 
 const PROJECT_RE = new RegExp(/_projects_:\s*(\d+)|(\[[\s\d,]+])/);
-const EXPEDITION_RE = new RegExp(/_expeditions_:\s*(\w+)|(\[[\s\w,]+])/);
-
-const parseExpeditionQueryString = s =>
-  s
-    .replace('[', '')
-    .replace(']', '')
-    .split(',');
 
 class QueryFormController {
   constructor(
@@ -116,7 +105,7 @@ class QueryFormController {
       this.configNames = [...names];
     });
 
-    // Retrieve General Configurations
+    // Retrieve General Configuration
     let configPromise = this.NetworkConfigurationService.get().then(config => {
       this.networkConfig = config;
       this.config = config;
@@ -125,52 +114,29 @@ class QueryFormController {
       this.markers = this.networkConfig.getList('markers').fields;
     });
 
+    // Query Results from Url
     const { q } = this.$location.search();
-
     if (q) {
       this.params.queryString = q;
-
       const projectMatch = PROJECT_RE.exec(q);
-      if (projectMatch) {
-        if (projectMatch[1]) {
-          // single project
-          configPromise = projectsPromise.then(() => {
-            const projectId = parseInt(projectMatch[1], 10);
-            const project = this.projects.find(p => p.projectId === projectId);
-            if (project) {
-              return this.ProjectConfigurationService.get(
-                project.projectConfiguration.id,
-              ).then(({ config }) => {
-                this.config = config;
-              });
-            }
-            return undefined;
-          });
-          // this.ProjectService.get(parseInt(projectMatch[1], 10), false).then(
-          // p => {
-          // this.onProjectChange({ project: p });
-          // },
-          // );
-        } else {
-          // TODO handle this case
-          // projects array
-          // const projects = this.$scope.$eval(projectMatch[2]);
-        }
-        // const expeditionMatch = EXPEDITION_RE.exec(q);
-        // if (expeditionMatch) {
-        //   this.resetExpeditions = false;
-        //   const e =
-        //     expeditionMatch[1] ||
-        //     parseExpeditionQueryString(expeditionMatch[2]);
-
-        //   this.params.expeditions.push(...e);
-        // }
+      if (projectMatch && projectMatch[1]) {
+        // only set up to handle single project queries
+        configPromise = projectsPromise.then(() => {
+          const projectId = parseInt(projectMatch[1], 10);
+          const project = this.projects.find(p => p.projectId === projectId);
+          if (project) {
+            return this.ProjectConfigurationService.get(
+              project.projectConfiguration.id,
+            ).then(({ config }) => {
+              this.config = config;
+            });
+          }
+          return undefined;
+        });
       }
-
       configPromise.then(() => this.queryJson());
     }
 
-    // copy default/original params for later reference
     this.paramCopy = angular.copy(this.params);
   }
 
@@ -180,6 +146,7 @@ class QueryFormController {
       panelGroup.openPanels.forEach(p => p.close());
     }
     if (!_.isEqual(this.params, this.paramCopy)) {
+      // uses underscore third party library method
       this.$mdDialog
         .show(
           this.$mdDialog
@@ -206,7 +173,7 @@ class QueryFormController {
 
   clearPreviousResults() {
     this.queryMap._clearMap();
-    this.onNewResults(); // call results function in parent component to switch to map view and clear table data
+    this.onNewResults();
     this.moreSearchOptions = !this.moreSearchOptions;
   }
 
@@ -224,14 +191,20 @@ class QueryFormController {
       }
     });
     this.expeditions = undefined;
-    this.individualProjects = []; // remove selected chips
-    this.families = []; // remove selected chips
-    this.tissueFilters = []; // remove selected chips
-    this.eventFilters = []; // remove selected chips
-    this.sampleFilters = []; // remove selected chips
+    this.individualProjects = [];
+    this.families = [];
+    this.removeFilterChips();
+  }
+
+  removeFilterChips() {
+    this.params.filters = [];
+    this.tissueFilters = [];
+    this.eventFilters = [];
+    this.sampleFilters = [];
   }
 
   familyToggle(chip, removal) {
+    this.removeFilterChips();
     if (!removal) {
       this.projects.forEach(p => {
         if (p.projectConfiguration.name === chip) {
@@ -246,11 +219,12 @@ class QueryFormController {
       });
     }
     if (this.families.length === 1) {
-      this.specificConfigCall();
+      this.identifySpecificConfig();
     } else this.config = this.networkConfig;
   }
 
   individualToggle(chip, removal) {
+    this.removeFilterChips();
     this.params.expeditions = [];
     this.singleProject = this.individualProjects.length === 1;
 
@@ -267,8 +241,7 @@ class QueryFormController {
     }
 
     if (this.singleProject) {
-      this.specificConfigCall();
-      // retrieve expeditions for single projects only
+      this.identifySpecificConfig();
       this.ExpeditionService.all(this.individualProjects[0].projectId).then(
         ({ data }) => {
           this.expeditions = data;
@@ -280,50 +253,22 @@ class QueryFormController {
     }
   }
 
-  specificConfigCall() {
-    let specificName;
-    if (this.families.length === 1) {
-      specificName = this.families[0];
-    } else if (this.singleProject) {
-      specificName = this.individualProjects[0].projectConfiguration.name;
-    }
-    const firstMatchingConfig = this.projects.find(
-      p => p.projectConfiguration.name === specificName,
+  identifySpecificConfig() {
+    const specificConfigName = this.singleProject
+      ? this.individualProjects[0].projectConfiguration.name
+      : this.families[0];
+    const matchingProjectForConfigurationRetrieval = this.projects.find(
+      p => p.projectConfiguration.name === specificConfigName,
     );
+    this.callConfigService(matchingProjectForConfigurationRetrieval);
+  }
+
+  callConfigService(projectMatch) {
     this.ProjectConfigurationService.get(
-      firstMatchingConfig.projectConfiguration.id,
+      projectMatch.projectConfiguration.id,
     ).then(({ config }) => {
       this.config = config;
     });
-  }
-
-  filterToggle(chip, removal) {
-    if (!removal) {
-      this.params.filters.push(chip);
-    } else if (removal) {
-      const index = this.params.filters.indexOf(chip);
-      this.params.filters.splice(index, 1);
-    }
-  }
-
-  getQueryTypes(conceptAlias, column) {
-    const opt = this.filterOptions[conceptAlias].find(o => o.column === column);
-    return opt ? queryTypes[opt.dataType.toLowerCase()] : [];
-  }
-
-  drawBounds() {
-    this.drawing = true;
-    this.queryMap.drawBounds(bounds => {
-      this.params.bounds = bounds;
-      this.$timeout(() => {
-        this.drawing = false;
-      });
-    });
-  }
-
-  clearBounds() {
-    this.queryMap.clearBounds();
-    this.params.bounds = null;
   }
 
   generateFilterOptions(conceptAlias) {
@@ -344,9 +289,9 @@ class QueryFormController {
         );
       });
     }
+    this.createArrayOfAttributesWithLists();
 
     const filter = { type: '=' };
-
     if (conceptAlias === 'Event') {
       filter.column = 'Event.eventID';
       this.eventFilters.push(filter);
@@ -355,18 +300,72 @@ class QueryFormController {
       this.sampleFilters.push(filter);
     } else if (conceptAlias === 'Tissue') {
       filter.column = 'Tissue.tissueID';
-
       this.tissueFilters.push(filter);
     }
-
     this.filterToggle(filter);
+  }
+
+  createArrayOfAttributesWithLists() {
+    this.controlledVocabAttributes = [];
+    this.config.entities.forEach(e => {
+      const allAliases = e.conceptAlias;
+      this.filterOptions[allAliases].forEach(o => {
+        if (o.list) {
+          this.controlledVocabAttributes.push(o.column);
+        }
+      });
+    });
+  }
+
+  filterToggle(chip, removal) {
+    if (!removal) {
+      this.params.filters.push(chip);
+    } else if (removal) {
+      const index = this.params.filters.indexOf(chip);
+      this.params.filters.splice(index, 1);
+    }
+  }
+
+  getQueryTypes(conceptAlias, column) {
+    const opt = this.filterOptions[conceptAlias].find(o => o.column === column);
+    if (opt) {
+      if (opt.list) {
+        return queryTypes.list;
+      }
+      return queryTypes[opt.dataType.toLowerCase()];
+    }
+    return [];
+  }
+
+  getList(conceptAlias, column) {
+    const opt = this.filterOptions[conceptAlias].find(o => o.column === column);
+    return opt.list ? opt.list.fields : [];
+  }
+
+  drawBounds() {
+    this.drawing = true;
+    this.queryMap.drawBounds(bounds => {
+      this.params.bounds = bounds;
+      this.$timeout(() => {
+        this.drawing = false;
+      });
+    });
+  }
+
+  clearBounds() {
+    this.queryMap.clearBounds();
+    this.params.bounds = null;
   }
 
   queryJson() {
     const entity = this.entity === 'Fastq' ? 'fastqMetadata' : this.entity;
     this.toggleLoading({ val: true });
     const entities = this.config.entities
-      .filter(e => ['Event', 'Sample', 'Tissue'].includes(e.conceptAlias))
+      .filter(e =>
+        ['Event', 'Sample', 'Tissue', 'Sample_Photo', 'Event_Photo'].includes(
+          e.conceptAlias,
+        ),
+      )
       .map(e => e.conceptAlias);
     this.entitiesForDownload({ entities });
     const selectEntities = SELECT_ENTITIES[entity];
