@@ -257,15 +257,15 @@ class QueryFormController {
     const specificConfigName = this.singleProject
       ? this.individualProjects[0].projectConfiguration.name
       : this.families[0];
-    this.matchingProjectForConfigurationRetrieval = this.projects.find(
+    const matchingProjectForConfigurationRetrieval = this.projects.find(
       p => p.projectConfiguration.name === specificConfigName,
     );
-    this.callConfigService();
+    this.callConfigService(matchingProjectForConfigurationRetrieval);
   }
 
-  callConfigService() {
+  callConfigService(projectMatch) {
     this.ProjectConfigurationService.get(
-      this.matchingProjectForConfigurationRetrieval.projectConfiguration.id,
+      projectMatch.projectConfiguration.id,
     ).then(({ config }) => {
       this.config = config;
     });
