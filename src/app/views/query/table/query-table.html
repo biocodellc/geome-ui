@@ -22,7 +22,6 @@
         <tbody md-body>
           <tr
             md-row
-            ng-class="{'last-table-row':$last}"
             ng-repeat="resource in $ctrl.results.data | orderBy: $ctrl.orderBy | limitTo: $ctrl.pageSize: ($ctrl.currentPage - 1) * $ctrl.pageSize"
             ng-click="$ctrl.detailView(resource)"
           >
@@ -38,7 +37,7 @@
               ng-bind-html="$ctrl.getVal(resource, column) | trusted_html"
             ></td>
           </tr>
-          <tr ng-show="$ctrl.results.totalElements === 0" class="h4">
+          <tr ng-if="$ctrl.results.totalElements === 0" class="h4">
             <td class="text-primary" colspan="100">No Data Found</td>
           </tr>
         </tbody>
