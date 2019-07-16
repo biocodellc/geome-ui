@@ -578,7 +578,7 @@
               ng-click="$ctrl.generateFilterOptions('Sample_Photo')"
               ng-disabled="!$ctrl.config"
             >
-              <span class="fa fa-plus"></span> Add Photo Filter</md-button
+              <span class="fa fa-plus"></span> Add Sample Photo Filter</md-button
             >
             <md-button class="md-icon-button help-link md-popover-button">
               <md-popover
@@ -596,7 +596,7 @@
           </div>
           <div flex>
             <md-chips
-              ng-model="$ctrl.photoFilters"
+              ng-model="$ctrl.samplePhotoFilters"
               readonly="true"
               md-removable="true"
               md-on-remove="$ctrl.filterToggle($chip, true)"
@@ -631,18 +631,115 @@
                 </div>
                 <div flex="45">
                   <div ng-show="$chip.type !== 'has'">
-                    <md-input-container ng-show="!$chip.list">
-                      <input type="text" ng-model="$chip.value" aria-label="sample-photos" />
+                    <md-input-container
+                      ng-if="!$ctrl.controlledVocabAttributes.includes($chip.column)"
+                      ng-model="$chip.value"
+                    >
+                      <input type="text" aria-label="event" />
                     </md-input-container>
                     <md-select
+                      ng-if="$ctrl.controlledVocabAttributes.includes($chip.column)"
                       ng-model="$chip.value"
-                      ng-show="$chip.list"
                       md-container-class
-                      aria-label="sample-photos"
+                      aria-label="samplePhotoChipValue"
                     >
                       <md-option>-- Choose value --</md-option>
-                      <md-option ng-value="item" ng-repeat="item in $chip.list track by item">
-                        {{ item }}</md-option
+                      <md-option
+                        ng-value="list.value"
+                        ng-repeat="list in $ctrl.getList('Sample_Photo', $chip.column) track by list.value"
+                      >
+                        {{ list.value }}</md-option
+                      >
+                    </md-select>
+                  </div>
+                </div>
+              </md-chip-template>
+            </md-chips>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="event-photos">
+        <div layout="column">
+          <div class="filter-button" flex>
+            <md-button
+              class="md-accent md-raised md-button-sm"
+              ng-click="$ctrl.generateFilterOptions('Event_Photo')"
+              ng-disabled="!$ctrl.config"
+            >
+              <span class="fa fa-plus"></span> Add Event Photo Filter</md-button
+            >
+            <md-button class="md-icon-button help-link md-popover-button">
+              <md-popover
+                md-popover-class="query-help"
+                md-popover-group="query"
+                md-direction="right"
+              >
+                <div>
+                  Filter on Event Photo related fields. The "has" option can be used to look for
+                  any values. E.g. "has" photographer.
+                </div>
+              </md-popover>
+              <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
+            </md-button>
+          </div>
+          <div flex>
+            <md-chips
+              ng-model="$ctrl.eventPhotoFilters"
+              readonly="true"
+              md-removable="true"
+              md-on-remove="$ctrl.filterToggle($chip, true)"
+              md-on-add="$ctrl.filterToggle($chip)"
+            >
+              <md-chip-template layout="row">
+                <div flex="60" class="filter-select">
+                  <md-select ng-model="$chip.column" md-container-class aria-label="event-photos">
+                    <md-optgroup label="Event Photos">
+                      <md-option
+                        ng-value="photo.column"
+                        ng-repeat="photo in $ctrl.filterOptions['Event_Photo']"
+                      >
+                        {{ photo.column.split('.')[1] }}
+                      </md-option>
+                    </md-optgroup>
+                  </md-select>
+                </div>
+                <div flex="15" class="filter-select">
+                  <md-select
+                    ng-model="$chip.type"
+                    ng-model-options="{trackBy: '$value'}"
+                    md-container-class
+                    aria-label="event-photos"
+                  >
+                    <md-option
+                      ng-value="t"
+                      ng-repeat="t in $ctrl.getQueryTypes('Event_Photo', $chip.column)"
+                      >{{ t }}</md-option
+                    >
+                  </md-select>
+                </div>
+                <div flex="45">
+                  <div ng-show="$chip.type !== 'has'">
+                    <md-input-container
+                      ng-if="!$ctrl.controlledVocabAttributes.includes($chip.column)"
+                      ng-model="$chip.value"
+                    >
+                      <input type="text" aria-label="event" />
+                    </md-input-container>
+                    <md-select
+                      ng-if="$ctrl.controlledVocabAttributes.includes($chip.column)"
+                      ng-model="$chip.value"
+                      md-container-class
+                      aria-label="eventPhotoChipValue"
+                    >
+                      <md-option>-- Choose value --</md-option>
+                      <md-option
+                        ng-value="list.value"
+                        ng-repeat="list in $ctrl.getList('Event_Photo', $chip.column) track by list.value"
+                      >
+                        {{ list.value }}</md-option
                       >
                     </md-select>
                   </div>

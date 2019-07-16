@@ -94,7 +94,8 @@ class QueryFormController {
     this.eventFilters = [];
     this.sampleFilters = [];
     this.tissueFilters = [];
-    this.photoFilters = [];
+    this.samplePhotoFilters = [];
+    this.eventPhotoFilters = [];
 
     // Retrieve Projects
     const projectsPromise = this.ProjectService.all(true).then(({ data }) => {
@@ -192,7 +193,6 @@ class QueryFormController {
       }
     });
     this.expeditions = undefined;
-    // remove selected chips
     this.individualProjects = [];
     this.families = [];
     this.removeFilterChips();
@@ -203,7 +203,8 @@ class QueryFormController {
     this.tissueFilters = [];
     this.eventFilters = [];
     this.sampleFilters = [];
-    this.photoFilters = [];
+    this.samplePhotoFilters = [];
+    this.eventPhotoFilters = [];
   }
 
   familyToggle(chip, removal) {
@@ -306,7 +307,10 @@ class QueryFormController {
       this.tissueFilters.push(filter);
     } else if (conceptAlias === 'Sample_Photo') {
       filter.column = 'Sample_Photo.photoID';
-      this.photoFilters.push(filter);
+      this.samplePhotoFilters.push(filter);
+    } else if (conceptAlias === 'Event_Photo') {
+      filter.column = 'Event_Photo.photoID';
+      this.eventPhotoFilters.push(filter);
     }
     this.filterToggle(filter);
   }
@@ -364,6 +368,7 @@ class QueryFormController {
   }
 
   queryJson() {
+    console.log(this.params);
     const entity = this.entity === 'Fastq' ? 'fastqMetadata' : this.entity;
     this.toggleLoading({ val: true });
     const entities = this.config.entities
