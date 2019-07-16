@@ -22,6 +22,7 @@
         <tbody md-body>
           <tr
             md-row
+            ng-class="{'last-table-row':$last}"
             ng-repeat="resource in $ctrl.results.data | orderBy: $ctrl.orderBy | limitTo: $ctrl.pageSize: ($ctrl.currentPage - 1) * $ctrl.pageSize"
             ng-click="$ctrl.detailView(resource)"
           >

@@ -216,4 +216,7 @@ $query-form-toggle-width: 40px;
 
 #query-table {
   border: none;
+  .last-table-row {
+    height: 50px;
+  }
 }
