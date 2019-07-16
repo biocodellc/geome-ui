@@ -624,9 +624,6 @@
           <md-checkbox class="small" ng-model="$ctrl.params.hasEventPhoto" name="hasEventPhoto">
             has event photos</md-checkbox
           >
-          <md-checkbox class="small" ng-model="$ctrl.params.hasFasta" name="hasFasta">
-            has fasta sequence</md-checkbox
-          >
         </div>
       </div>
     </div>
@@ -634,6 +631,9 @@
     <div class="sequences" layout-padding>
       <div layout="column">
         <h3 class="md-subhead bold" flex>Sequences</h3>
+        <md-checkbox class="small" ng-model="$ctrl.params.hasFasta" name="hasFasta">
+          has fasta sequence</md-checkbox
+        >
         <md-checkbox class="small" ng-model="$ctrl.params.hasSRAAccessions" name="hasSraAccessions">
           has NCBI Sequence Read Archive Accession Numbers
         </md-checkbox>
