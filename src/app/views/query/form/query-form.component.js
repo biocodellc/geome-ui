@@ -368,7 +368,6 @@ class QueryFormController {
   }
 
   queryJson() {
-    console.log(this.params);
     const entity = this.entity === 'Fastq' ? 'fastqMetadata' : this.entity;
     this.toggleLoading({ val: true });
     const entities = this.config.entities
