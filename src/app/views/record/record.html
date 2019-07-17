@@ -14,8 +14,10 @@
     <i class="fa fa-exclamation-circle"></i>
     Image is processing.
   </div>
-  <h3>{{ $ctrl.record.entity }} {{ $ctrl.getIdentifier($ctrl.record) }}</h3>
-
+  <div layout="row">
+    <h3>{{ $ctrl.record.entity }} {{ $ctrl.getIdentifier($ctrl.record) }}</h3>
+    <notice-label ng-if="$ctrl.record.traditionalKnowledgeNotice === 'TRUE'"></notice-label>
+  </div>
   <div class="main-details" layout="row" layout-align="center center">
     <div
       ng-if="$ctrl.record.photoID && $ctrl.record.processed !== 'false' && !$ctrl.invalidPhoto"
@@ -81,10 +83,7 @@
               md-visible="false"
               >{{ value.text || value }}</md-tooltip
             >
-            <span ng-if="!value.href"
-              >{{ value }}
-              <notice-label ng-if="key === 'traditionalKnowledgeNotice'"></notice-label>
-            </span>
+            <span ng-if="!value.href">{{ value }} </span>
             <span ng-if="value.href">
               <a href="{{ value.href }}">{{ value.text }}</a>
             </span>
