@@ -15,7 +15,7 @@ class DashboardController {
   }
 
   $onInit() {
-    this.url = this.$location.absUrl();
+    this.url = this.$location.absUrl().split('?')[0];
     this.loading = true;
     this.totalItems = null;
     this.itemsPerPage = 100;
