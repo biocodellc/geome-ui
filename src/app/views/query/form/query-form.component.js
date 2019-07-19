@@ -84,12 +84,11 @@ class QueryFormController {
   }
 
   $onInit() {
-    this.showGroups = true;
     this.resetExpeditions = true;
     this.moreSearchOptions = false;
     this.entity = 'Sample';
     this.queryEntities = QUERY_ENTITIES;
-    this.families = [];
+    this.teams = [];
     this.individualProjects = [];
     this.eventFilters = [];
     this.sampleFilters = [];
@@ -192,7 +191,7 @@ class QueryFormController {
     });
     this.expeditions = undefined;
     this.individualProjects = [];
-    this.families = [];
+    this.teams = [];
     this.removeFilterChips();
   }
 
@@ -203,7 +202,7 @@ class QueryFormController {
     this.sampleFilters = [];
   }
 
-  familyToggle(chip, removal) {
+  teamToggle(chip, removal) {
     this.removeFilterChips();
     if (!removal) {
       this.projects.forEach(p => {
@@ -218,7 +217,7 @@ class QueryFormController {
           this.params.projects.splice(projIdx, 1);
       });
     }
-    if (this.families.length === 1) {
+    if (this.teams.length === 1) {
       this.identifySpecificConfig();
     } else this.config = this.networkConfig;
   }
@@ -256,7 +255,7 @@ class QueryFormController {
   identifySpecificConfig() {
     const specificConfigName = this.singleProject
       ? this.individualProjects[0].projectConfiguration.name
-      : this.families[0];
+      : this.teams[0];
     const matchingProjectForConfigurationRetrieval = this.projects.find(
       p => p.projectConfiguration.name === specificConfigName,
     );
