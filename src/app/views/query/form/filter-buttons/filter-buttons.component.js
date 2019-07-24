@@ -28,6 +28,11 @@ class FilterButtonsController {
         );
       });
     }
+    this.setIdAsDefaultFilter();
+    this.createArrayOfAttributesWithLists();
+  }
+
+  setIdAsDefaultFilter() {
     const filter = { type: '=' };
     if (this.conceptAlias === 'Event') {
       filter.column = 'Event.eventID';
@@ -45,7 +50,6 @@ class FilterButtonsController {
       filter.column = 'Event_Photo.photoID';
       this.filter.push(filter);
     }
-    this.createArrayOfAttributesWithLists();
     this.filterToggle(filter);
   }
 
