@@ -43,24 +43,13 @@ const SOURCE = [
   'expeditionCode',
 ];
 
-const queryTypes = {
-  list: ['=', 'has'],
-  string: ['=', 'like', 'has'],
-  float: ['=', '<', '<=', '>', '>=', 'has'],
-  datetime: ['=', '<', '<=', '>', '>=', 'has'],
-  date: ['=', '<', '<=', '>', '>=', 'has'],
-  integer: ['=', '<', '<=', '>', '>=', 'has'],
-};
-
 const PROJECT_RE = new RegExp(/_projects_:\s*(\d+)|(\[[\s\d,]+])/);
 
 class QueryFormController {
   constructor(
-    $scope,
     $mdDialog,
     $mdPanel,
     $timeout,
-    $window,
     $location,
     QueryService,
     ProjectService,
@@ -70,11 +59,9 @@ class QueryFormController {
   ) {
     'ngInject';
 
-    this.$scope = $scope;
     this.$mdDialog = $mdDialog;
     this.$mdPanel = $mdPanel;
     this.$timeout = $timeout;
-    this.$window = $window;
     this.$location = $location;
     this.QueryService = QueryService;
     this.ProjectService = ProjectService;
@@ -110,10 +97,11 @@ class QueryFormController {
     // Retrieve General Configuration
     let configPromise = this.NetworkConfigurationService.get().then(config => {
       this.networkConfig = config;
-      this.config = config;
+      //    this.config = config;
       this.phylums = this.networkConfig.getList('phylum').fields;
       this.countries = this.networkConfig.getList('country').fields;
       this.markers = this.networkConfig.getList('markers').fields;
+      this.setNetworkConfig();
     });
 
     // Query Results from Url
@@ -140,6 +128,15 @@ class QueryFormController {
     }
 
     this.paramCopy = angular.copy(this.params);
+  }
+
+  setNetworkConfig() {
+    this.config = this.networkConfig;
+    this.identifySpecificEntities();
+  }
+
+  identifySpecificEntities() {
+    this.entitiesList = this.config.entities.map(e => e.conceptAlias);
   }
 
   switchQueryMethod() {
@@ -180,7 +177,6 @@ class QueryFormController {
   }
 
   clearParams() {
-    // reset params to default
     Object.keys(this.params).forEach(key => {
       if (Array.isArray(this.params[key])) {
         this.params[key] = [];
@@ -192,10 +188,20 @@ class QueryFormController {
         this.params[key] = null;
       }
     });
-    this.expeditions = undefined;
-    this.individualProjects = [];
-    this.families = [];
+    this.clearIndividualProjects();
+    this.clearTeams();
     this.removeFilterChips();
+  }
+
+  clearTeams() {
+    this.families = [];
+    this.params.projects = [];
+  }
+
+  clearIndividualProjects() {
+    this.individualProjects = [];
+    this.params.projects = [];
+    this.expeditions = undefined;
   }
 
   removeFilterChips() {
@@ -209,6 +215,9 @@ class QueryFormController {
 
   familyToggle(chip, removal) {
     this.removeFilterChips();
+    if (this.individualProjects.length > 0) {
+      this.clearIndividualProjects();
+    }
     if (!removal) {
       this.projects.forEach(p => {
         if (p.projectConfiguration.name === chip) {
@@ -224,11 +233,14 @@ class QueryFormController {
     }
     if (this.families.length === 1) {
       this.identifySpecificConfig();
-    } else this.config = this.networkConfig;
+    } else this.setNetworkConfig();
   }
 
   individualToggle(chip, removal) {
     this.removeFilterChips();
+    if (this.families.length > 0) {
+      this.clearTeams();
+    }
     this.params.expeditions = [];
     this.singleProject = this.individualProjects.length === 1;
 
@@ -245,22 +257,27 @@ class QueryFormController {
     }
 
     if (this.singleProject) {
+      this.getExpeditions();
       this.identifySpecificConfig();
-      this.ExpeditionService.all(this.individualProjects[0].projectId).then(
-        ({ data }) => {
-          this.expeditions = data;
-        },
-      );
     } else {
       this.expeditions = undefined;
-      this.config = this.networkConfig;
+      this.setNetworkConfig();
     }
   }
 
+  getExpeditions() {
+    this.ExpeditionService.all(this.individualProjects[0].projectId).then(
+      ({ data }) => {
+        this.expeditions = data;
+      },
+    );
+  }
+
   identifySpecificConfig() {
-    const specificConfigName = this.singleProject
-      ? this.individualProjects[0].projectConfiguration.name
-      : this.families[0];
+    const specificConfigName =
+      this.singleProject && this.families.length <= 0
+        ? this.individualProjects[0].projectConfiguration.name
+        : this.families[0];
     const matchingProjectForConfigurationRetrieval = this.projects.find(
       p => p.projectConfiguration.name === specificConfigName,
     );
@@ -272,84 +289,8 @@ class QueryFormController {
       projectMatch.projectConfiguration.id,
     ).then(({ config }) => {
       this.config = config;
+      this.identifySpecificEntities();
     });
-  }
-
-  generateFilterOptions(conceptAlias) {
-    if (!this.filterOptions) {
-      this.filterOptions = {};
-      this.config.entities.forEach(e => {
-        const alias = e.conceptAlias;
-        const opts = e.attributes
-          .filter(a => !a.internal)
-          .map(a => ({
-            column: `${alias}.${a.column}`,
-            dataType: a.dataType,
-            list: this.config.findListForColumn(e, a.column),
-          }));
-        this.filterOptions[alias] = opts;
-        this.filterOptions[alias].sort((a, b) =>
-          a.column > b.column ? 1 : b.column > a.column ? -1 : 0,
-        );
-      });
-    }
-    this.createArrayOfAttributesWithLists();
-
-    const filter = { type: '=' };
-    if (conceptAlias === 'Event') {
-      filter.column = 'Event.eventID';
-      this.eventFilters.push(filter);
-    } else if (conceptAlias === 'Sample') {
-      filter.column = 'Sample.materialSampleID';
-      this.sampleFilters.push(filter);
-    } else if (conceptAlias === 'Tissue') {
-      filter.column = 'Tissue.tissueID';
-      this.tissueFilters.push(filter);
-    } else if (conceptAlias === 'Sample_Photo') {
-      filter.column = 'Sample_Photo.photoID';
-      this.samplePhotoFilters.push(filter);
-    } else if (conceptAlias === 'Event_Photo') {
-      filter.column = 'Event_Photo.photoID';
-      this.eventPhotoFilters.push(filter);
-    }
-    this.filterToggle(filter);
-  }
-
-  createArrayOfAttributesWithLists() {
-    this.controlledVocabAttributes = [];
-    this.config.entities.forEach(e => {
-      const allAliases = e.conceptAlias;
-      this.filterOptions[allAliases].forEach(o => {
-        if (o.list) {
-          this.controlledVocabAttributes.push(o.column);
-        }
-      });
-    });
-  }
-
-  filterToggle(chip, removal) {
-    if (!removal) {
-      this.params.filters.push(chip);
-    } else if (removal) {
-      const index = this.params.filters.indexOf(chip);
-      this.params.filters.splice(index, 1);
-    }
-  }
-
-  getQueryTypes(conceptAlias, column) {
-    const opt = this.filterOptions[conceptAlias].find(o => o.column === column);
-    if (opt) {
-      if (opt.list) {
-        return queryTypes.list;
-      }
-      return queryTypes[opt.dataType.toLowerCase()];
-    }
-    return [];
-  }
-
-  getList(conceptAlias, column) {
-    const opt = this.filterOptions[conceptAlias].find(o => o.column === column);
-    return opt.list ? opt.list.fields : [];
   }
 
   drawBounds() {
