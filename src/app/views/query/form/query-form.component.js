@@ -97,7 +97,6 @@ class QueryFormController {
     // Retrieve General Configuration
     let configPromise = this.NetworkConfigurationService.get().then(config => {
       this.networkConfig = config;
-      //    this.config = config;
       this.phylums = this.networkConfig.getList('phylum').fields;
       this.countries = this.networkConfig.getList('country').fields;
       this.markers = this.networkConfig.getList('markers').fields;
