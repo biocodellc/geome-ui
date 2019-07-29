@@ -1,7 +1,7 @@
 <form method="POST" name="queryForm" layout="column">
   <md-hints>
     <md-hint class="pull-right">
-      <a class="text-upper" href="" ng-click="$ctrl.showGroups = true;$ctrl.switchQueryMethod()">
+      <a class="text-upper" href="" ng-click="$ctrl.switchQueryMethod()">
         <span ng-if="!$ctrl.moreSearchOptions">Switch to Advanced Search</span
         ><span ng-if="$ctrl.moreSearchOptions">Switch to Simple Search</span></a
       >
@@ -35,12 +35,11 @@
 
     <div layout="column" class="project-configs">
       <h3 class="md-subhead bold" flex>
-        Project Configuration
+        Team
         <md-button class="md-icon-button help-link md-popover-button">
           <md-popover md-popover-class="query-help" md-popover-group="query" md-direction="right">
             <div>
-              Project configuration families represent a group of projects sharing the same
-              fields,validation rules, and data entry templates.
+              Teams consist of projects sharing a common set of rules, attributes, and controlled vocabulary terms.
             </div>
           </md-popover>
           <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
@@ -49,13 +48,13 @@
 
       <md-chips
         flex
-        ng-model="$ctrl.families"
-        md-on-add="$ctrl.familyToggle($chip)"
-        md-on-remove="$ctrl.familyToggle($chip,$event)"
+        ng-model="$ctrl.teams"
+        md-on-add="$ctrl.teamToggle($chip)"
+        md-on-remove="$ctrl.teamToggle($chip,$event)"
         md-require-match
       >
         <md-autocomplete
-          md-selected-item="$ctrl.selectedGroup"
+          md-selected-item="$ctrl.selectedTeam"
           md-no-cache
           md-autocomplete-snap="width"
           md-search-text="searchText"
