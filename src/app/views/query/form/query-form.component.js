@@ -236,7 +236,7 @@ class QueryFormController {
 
   individualToggle(chip, removal) {
     this.removeFilterChips();
-    if (this.families.length > 0) {
+    if (this.teams.length > 0) {
       this.clearTeams();
     }
     this.params.expeditions = [];
