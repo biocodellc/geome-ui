@@ -273,7 +273,7 @@ class QueryFormController {
 
   identifySpecificConfig() {
     const specificConfigName =
-      this.singleProject && this.families.length <= 0
+      this.singleProject && this.teams.length <= 0
         ? this.individualProjects[0].projectConfiguration.name
         : this.teams[0];
     const matchingProjectForConfigurationRetrieval = this.projects.find(
