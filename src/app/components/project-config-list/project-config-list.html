@@ -23,7 +23,7 @@
     <tbody md-body>
       <tr md-row ng-repeat="f in $ctrl.list.fields |  orderBy: $ctrl.orderBy track by $index">
         <td class="row-actions" ng-if="$ctrl.canEdit">
-          <a href="#" ng-click="$ctrl.removeField($event, f.value)"
+          <a href="#" ng-click="$ctrl.removeField($event, f)"
             ><i class="fa fa-trash fa-fw text-danger"></i
           ></a>
         </td>
