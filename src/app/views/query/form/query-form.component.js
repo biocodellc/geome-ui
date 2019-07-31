@@ -82,6 +82,7 @@ class QueryFormController {
     this.tissueFilters = [];
     this.samplePhotoFilters = [];
     this.eventPhotoFilters = [];
+    this.paramCopy = angular.copy(this.params);
 
     // Retrieve Projects
     const projectsPromise = this.ProjectService.all(true).then(({ data }) => {
@@ -124,8 +125,6 @@ class QueryFormController {
       }
       configPromise.then(() => this.queryJson());
     }
-
-    this.paramCopy = angular.copy(this.params);
   }
 
   setNetworkConfig() {
@@ -351,7 +350,7 @@ export default {
     queryMap: '<',
     currentUser: '<',
     onNewResults: '&',
-    clearTableData: '&',
+    //clearTableData: '&',
     toggleLoading: '&',
     entitiesForDownload: '&',
   },

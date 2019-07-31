@@ -68,9 +68,12 @@ class QueryTableController {
   }
 
   getTableColumns() {
-    return this.tableColumns.map(column =>
-      typeof column === 'string' ? column : column.column,
-    );
+    if (this.tableColumns) {
+      return this.tableColumns.map(column =>
+        typeof column === 'string' ? column : column.column,
+      );
+    }
+    return [];
   }
 
   getVal(record, column) {
