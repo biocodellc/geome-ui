@@ -64,6 +64,7 @@ import users from './components/users';
 import projectSelectorDialog from './components/project-selector-dialog';
 import collaboration from './components/tk-labels/collaboration-label';
 import attribution from './components/tk-labels/attribution-label';
+import notice from './components/tk-labels/notice-label';
 
 import catcher from './utils/exceptions';
 import Toaster from './utils/toaster';
@@ -124,6 +125,7 @@ const dependencies = [
   projectSelectorDialog,
   collaboration,
   attribution,
+  notice,
   // lookup,
 ];
 

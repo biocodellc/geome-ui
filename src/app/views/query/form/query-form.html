@@ -1,7 +1,7 @@
 <form method="POST" name="queryForm" layout="column">
   <md-hints>
     <md-hint class="pull-right">
-      <a class="text-upper" href="" ng-click="$ctrl.showGroups = true;$ctrl.switchQueryMethod()">
+      <a class="text-upper" href="" ng-click="$ctrl.switchQueryMethod()">
         <span ng-if="!$ctrl.moreSearchOptions">Switch to Advanced Search</span
         ><span ng-if="$ctrl.moreSearchOptions">Switch to Simple Search</span></a
       >
@@ -9,15 +9,6 @@
   </md-hints>
 
   <div layout-padding ng-show="$ctrl.moreSearchOptions">
-    <!--<div ng-show="$ctrl.moreSearchOptions" ng-click="$ctrl.clearParams()">
-      <md-radio-group ng-model="$ctrl.showGroups" layout-gt-sm="row" class="md-primary">
-        <md-radio-button ng-value="false" flex> Search by individual project
-        </md-radio-button>
-        <md-radio-button ng-value="true" flex> Search by project configuration 
-        </md-radio-button>
-      </md-radio-group>
-    </div>-->
-
     <div class="term" layout-padding>
       <div layout="column">
         <div layout="row" layout-align="start center">
@@ -44,12 +35,11 @@
 
     <div layout="column" class="project-configs">
       <h3 class="md-subhead bold" flex>
-        Project Configuration
+        Team
         <md-button class="md-icon-button help-link md-popover-button">
           <md-popover md-popover-class="query-help" md-popover-group="query" md-direction="right">
             <div>
-              Project configuration families represent a group of projects sharing the same
-              fields,validation rules, and data entry templates.
+              Teams consist of projects sharing a common set of rules, attributes, and controlled vocabulary terms.
             </div>
           </md-popover>
           <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
@@ -58,13 +48,13 @@
 
       <md-chips
         flex
-        ng-model="$ctrl.families"
-        md-on-add="$ctrl.familyToggle($chip)"
-        md-on-remove="$ctrl.familyToggle($chip,$event)"
+        ng-model="$ctrl.teams"
+        md-on-add="$ctrl.teamToggle($chip)"
+        md-on-remove="$ctrl.teamToggle($chip,$event)"
         md-require-match
       >
         <md-autocomplete
-          md-selected-item="$ctrl.selectedGroup"
+          md-selected-item="$ctrl.selectedTeam"
           md-no-cache
           md-autocomplete-snap="width"
           md-search-text="searchText"
@@ -311,422 +301,45 @@
   </div>
 
   <div ng-show="$ctrl.moreSearchOptions">
+    <div flex ng-if="!$ctrl.config" layout="row" layout-align="center center">
+      <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+    </div>
     <div class="filters">
-      <div class="events">
-        <div layout="column">
-          <div class="filter-button" flex>
-            <md-button
-              class="md-accent md-raised md-button-sm"
-              ng-click="$ctrl.generateFilterOptions('Event')"
-              ng-disabled="!$ctrl.config"
-            >
-              <span class="fa fa-plus"></span> Add Event Filter</md-button
-            >
-            <md-button class="md-icon-button help-link md-popover-button">
-              <md-popover
-                md-popover-class="query-help"
-                md-popover-group="query"
-                md-direction="right"
-              >
-                <div>
-                  Filter on Event related fields. The "has" option can be used to look for any
-                  values. E.g. "has" a scientificName.
-                </div>
-              </md-popover>
-              <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
-            </md-button>
-          </div>
-          <div flex>
-            <md-chips
-              ng-model="$ctrl.eventFilters"
-              readonly="true"
-              md-removable="true"
-              md-on-remove="$ctrl.filterToggle($chip, true)"
-              md-on-add="$ctrl.filterToggle($chip)"
-            >
-              <md-chip-template layout="row">
-                <div flex="40" class="filter-select">
-                  <md-select ng-model="$chip.column" md-container-class aria-label="event">
-                    <md-optgroup label="Events">
-                      <md-option
-                        ng-value="event.column"
-                        ng-repeat="event in $ctrl.filterOptions['Event']"
-                      >
-                        {{ event.column.split('.')[1] }}</md-option
-                      >
-                    </md-optgroup>
-                  </md-select>
-                </div>
-                <div flex="15" class="filter-select">
-                  <md-select
-                    ng-model="$chip.type"
-                    ng-model-options="{trackBy: '$value'}"
-                    md-container-class
-                    aria-label="event"
-                  >
-                    <md-option
-                      ng-value="t"
-                      ng-repeat="t in $ctrl.getQueryTypes('Event', $chip.column)"
-                      >{{ t }}</md-option
-                    >
-                  </md-select>
-                </div>
-                <div flex="45">
-                  <div ng-show="$chip.type !== 'has'">
-                    <md-input-container ng-show="!$chip.list">
-                      <input type="text" ng-model="$chip.value" aria-label="event" />
-                    </md-input-container>
-                    <md-select
-                      ng-model="$chip.value"
-                      ng-show="$chip.list"
-                      md-container-class
-                      aria-label="event"
-                    >
-                      <md-option>-- Choose value --</md-option>
-                      <md-option ng-value="item" ng-repeat="item in $chip.list track by item">
-                        {{ item }}</md-option
-                      >
-                    </md-select>
-                  </div>
-                </div>
-              </md-chip-template>
-            </md-chips>
-          </div>
-        </div>
-        <!--
-        <md-chips
-          ng-model="$ctrl.eventFilters"
-          readonly="true"
-          md-removable="true"
-          md-on-remove="$ctrl.filterToggle($chip, true)"
-          md-on-add="$ctrl.filterToggle($chip)"
-        >
-          <md-chip-template layout="row">
-            <div flex="40" class="filter-select">
-              <md-select ng-model="$chip.column" md-container-class aria-label="event">
-                <md-optgroup label="Events">
-                  <md-option
-                    ng-value="event.column"
-                    ng-repeat="event in $ctrl.filterOptions['Event']"
-                  >
-                    {{ event.column.split('.')[1] }}</md-option
-                  >
-                </md-optgroup>
-              </md-select>
-            </div>
-            <div flex="15" class="filter-select">
-              <md-select
-                ng-model="$chip.type"
-                ng-model-options="{trackBy: '$value'}"
-                md-container-class
-                aria-label="event"
-              >
-                <md-option
-                  ng-value="t"
-                  ng-repeat="t in $ctrl.getQueryTypes('Event', $chip.column)"
-                  >{{ t }}</md-option
-                >
-              </md-select>
-            </div>
-            <div flex="45">
-              <div ng-show="$chip.type !== 'has'">
-                <md-input-container ng-show="!$chip.list">
-                  <input type="text" ng-model="$chip.value" aria-label="event" />
-                </md-input-container>
-                <md-select
-                  ng-model="$chip.value"
-                  ng-show="$chip.list"
-                  md-container-class
-                  aria-label="event"
-                >
-                  <md-option>-- Choose value --</md-option>
-                  <md-option ng-value="item" ng-repeat="item in $chip.list track by item">
-                    {{ item }}</md-option
-                  >
-                </md-select>
-              </div>
-            </div>
-          </md-chip-template>
-        </md-chips>
-	-->
-      </div>
-
-      <div class="sample">
-        <div layout="column">
-          <div class="filter-button" flex>
-            <md-button
-              class="md-accent md-raised md-button-sm"
-              ng-click="$ctrl.generateFilterOptions('Sample')"
-              ng-disabled="!$ctrl.config"
-            >
-              <span class="fa fa-plus"></span> Add Sample Filter</md-button
-            >
-            <md-button class="md-icon-button help-link md-popover-button">
-              <md-popover
-                md-popover-class="query-help"
-                md-popover-group="query"
-                md-direction="right"
-              >
-                <div>
-                  Filter on Sample related fields. The "has" option can be used to look for any
-                  values. E.g. "has" a scientificName.
-                </div>
-              </md-popover>
-              <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
-            </md-button>
-          </div>
-          <div flex>
-            <md-chips
-              ng-model="$ctrl.sampleFilters"
-              readonly="true"
-              md-removable="true"
-              md-on-remove="$ctrl.filterToggle($chip, true)"
-              md-on-add="$ctrl.filterToggle($chip)"
-            >
-              <md-chip-template layout="row">
-                <div flex="40" class="filter-select">
-                  <md-select ng-model="$chip.column" md-container-class aria-label="sample">
-                    <md-optgroup label="Sample">
-                      <md-option
-                        ng-value="sample.column"
-                        ng-repeat="sample in $ctrl.filterOptions['Sample']"
-                      >
-                        {{ sample.column.split('.')[1] }}</md-option
-                      >
-                    </md-optgroup>
-                  </md-select>
-                </div>
-                <div flex="15" class="filter-select">
-                  <md-select
-                    ng-model="$chip.type"
-                    ng-model-options="{trackBy: '$value'}"
-                    md-container-class
-                    aria-label="sample"
-                  >
-                    <md-option
-                      ng-value="t"
-                      ng-repeat="t in $ctrl.getQueryTypes('Sample', $chip.column)"
-                      >{{ t }}</md-option
-                    >
-                  </md-select>
-                </div>
-                <div flex="45">
-                  <div ng-show="$chip.type !== 'has'">
-                    <md-input-container ng-show="!$chip.list">
-                      <input type="text" ng-model="$chip.value" aria-label="sample" />
-                    </md-input-container>
-                    <md-select
-                      ng-model="$chip.value"
-                      ng-show="$chip.list"
-                      md-container-class
-                      aria-label="sample"
-                    >
-                      <md-option>-- Choose value --</md-option>
-                      <md-option ng-value="item" ng-repeat="item in $chip.list track by item">
-                        {{ item }}</md-option
-                      >
-                    </md-select>
-                  </div>
-                </div>
-              </md-chip-template>
-            </md-chips>
-          </div>
-        </div>
-        <!--<md-chips
-          ng-model="$ctrl.sampleFilters"
-          readonly="true"
-          md-removable="true"
-          md-on-remove="$ctrl.filterToggle($chip, true)"
-          md-on-add="$ctrl.filterToggle($chip)"
-        >
-          <md-chip-template layout="row">
-            <div flex="40" class="filter-select">
-              <md-select ng-model="$chip.column" md-container-class aria-label="sample">
-                <md-optgroup label="Sample">
-                  <md-option
-                    ng-value="sample.column"
-                    ng-repeat="sample in $ctrl.filterOptions['Sample']"
-                  >
-                    {{ sample.column.split('.')[1] }}</md-option
-                  >
-                </md-optgroup>
-              </md-select>
-            </div>
-            <div flex="15" class="filter-select">
-              <md-select
-                ng-model="$chip.type"
-                ng-model-options="{trackBy: '$value'}"
-                md-container-class
-                aria-label="sample"
-              >
-                <md-option
-                  ng-value="t"
-                  ng-repeat="t in $ctrl.getQueryTypes('Sample', $chip.column)"
-                  >{{ t }}</md-option
-                >
-              </md-select>
-            </div>
-            <div flex="45">
-              <div ng-show="$chip.type !== 'has'">
-                <md-input-container ng-show="!$chip.list">
-                  <input type="text" ng-model="$chip.value" aria-label="sample" />
-                </md-input-container>
-                <md-select
-                  ng-model="$chip.value"
-                  ng-show="$chip.list"
-                  md-container-class
-                  aria-label="sample"
-                >
-                  <md-option>-- Choose value --</md-option>
-                  <md-option ng-value="item" ng-repeat="item in $chip.list track by item">
-                    {{ item }}</md-option
-                  >
-                </md-select>
-              </div>
-            </div>
-          </md-chip-template>
-        </md-chips>
-	-->
-      </div>
-
-      <div class="tissues">
-        <div layout="column">
-          <div class="filter-button" flex>
-            <md-button
-              class="md-accent md-raised md-button-sm"
-              ng-click="$ctrl.generateFilterOptions('Tissue')"
-              ng-disabled="!$ctrl.config"
-            >
-              <span class="fa fa-plus"></span> Add Tissue Filter</md-button
-            >
-            <md-button class="md-icon-button help-link md-popover-button">
-              <md-popover
-                md-popover-class="query-help"
-                md-popover-group="query"
-                md-direction="right"
-              >
-                <div>
-                  Filter on Tissue related fields. The "has" option can be used to look for any
-                  values. E.g. "has" a scientificName.
-                </div>
-              </md-popover>
-              <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
-            </md-button>
-          </div>
-          <div flex>
-            <md-chips
-              ng-model="$ctrl.tissueFilters"
-              readonly="true"
-              md-removable="true"
-              md-on-remove="$ctrl.filterToggle($chip, true)"
-              md-on-add="$ctrl.filterToggle($chip)"
-            >
-              <md-chip-template layout="row">
-                <div flex="60" class="filter-select">
-                  <md-select ng-model="$chip.column" md-container-class aria-label="tissue">
-                    <md-optgroup label="Tissues">
-                      <md-option
-                        ng-value="tissue.column"
-                        ng-repeat="tissue in $ctrl.filterOptions['Tissue']"
-                      >
-                        {{ tissue.column.split('.')[1] }}</md-option
-                      >
-                    </md-optgroup>
-                  </md-select>
-                </div>
-                <div flex="15" class="filter-select">
-                  <md-select
-                    ng-model="$chip.type"
-                    ng-model-options="{trackBy: '$value'}"
-                    md-container-class
-                    aria-label="tissue"
-                  >
-                    <md-option
-                      ng-value="t"
-                      ng-repeat="t in $ctrl.getQueryTypes('Tissue', $chip.column)"
-                      >{{ t }}</md-option
-                    >
-                  </md-select>
-                </div>
-                <div flex="45">
-                  <div ng-show="$chip.type !== 'has'">
-                    <md-input-container ng-show="!$chip.list">
-                      <input type="text" ng-model="$chip.value" aria-label="tissue" />
-                    </md-input-container>
-                    <md-select
-                      ng-model="$chip.value"
-                      ng-show="$chip.list"
-                      md-container-class
-                      aria-label="tissue"
-                    >
-                      <md-option>-- Choose value --</md-option>
-                      <md-option ng-value="item" ng-repeat="item in $chip.list track by item">
-                        {{ item }}</md-option
-                      >
-                    </md-select>
-                  </div>
-                </div>
-              </md-chip-template>
-            </md-chips>
-          </div>
-        </div>
-        <!--
-        <md-chips
-          ng-model="$ctrl.tissueFilters"
-          readonly="true"
-          md-removable="true"
-          md-on-remove="$ctrl.filterToggle($chip, true)"
-          md-on-add="$ctrl.filterToggle($chip)"
-        >
-          <md-chip-template layout="row">
-            <div flex="60" class="filter-select">
-              <md-select ng-model="$chip.column" md-container-class aria-label="tissue">
-                <md-optgroup label="Tissues">
-                  <md-option
-                    ng-value="tissue.column"
-                    ng-repeat="tissue in $ctrl.filterOptions['Tissue']"
-                  >
-                    {{ tissue.column.split('.')[1] }}</md-option
-                  >
-                </md-optgroup>
-              </md-select>
-            </div>
-            <div flex="15" class="filter-select">
-              <md-select
-                ng-model="$chip.type"
-                ng-model-options="{trackBy: '$value'}"
-                md-container-class
-                aria-label="tissue"
-              >
-                <md-option
-                  ng-value="t"
-                  ng-repeat="t in $ctrl.getQueryTypes('Tissue', $chip.column)"
-                  >{{ t }}</md-option
-                >
-              </md-select>
-            </div>
-            <div flex="45">
-              <div ng-show="$chip.type !== 'has'">
-                <md-input-container ng-show="!$chip.list">
-                  <input type="text" ng-model="$chip.value" aria-label="tissue" />
-                </md-input-container>
-                <md-select
-                  ng-model="$chip.value"
-                  ng-show="$chip.list"
-                  md-container-class
-                  aria-label="tissue"
-                >
-                  <md-option>-- Choose value --</md-option>
-                  <md-option ng-value="item" ng-repeat="item in $chip.list track by item">
-                    {{ item }}</md-option
-                  >
-                </md-select>
-              </div>
-            </div>
-          </md-chip-template>
-        </md-chips>
-	-->
-      </div>
+      <fims-filter-buttons
+        ng-if="$ctrl.entitiesList.includes('Event')"
+        concept-alias="'Event'"
+        current-config="$ctrl.config"
+        params="$ctrl.params"
+        filter="$ctrl.eventFilters"
+      ></fims-filter-buttons>
+      <fims-filter-buttons
+        ng-if="$ctrl.entitiesList.includes('Sample')"
+        concept-alias="'Sample'"
+        current-config="$ctrl.config"
+        params="$ctrl.params"
+        filter="$ctrl.sampleFilters"
+      ></fims-filter-buttons>
+      <fims-filter-buttons
+        ng-if="$ctrl.entitiesList.includes('Tissue')"
+        concept-alias="'Tissue'"
+        current-config="$ctrl.config"
+        params="$ctrl.params"
+        filter="$ctrl.tissueFilters"
+      ></fims-filter-buttons>
+      <fims-filter-buttons
+        ng-if="$ctrl.entitiesList.includes('Sample_Photo')"
+        concept-alias="'Sample_Photo'"
+        current-config="$ctrl.config"
+        params="$ctrl.params"
+        filter="$ctrl.samplePhotoFilters"
+      ></fims-filter-buttons>
+      <fims-filter-buttons
+        ng-if="$ctrl.entitiesList.includes('Event_Photo')"
+        concept-alias="'Event_Photo'"
+        current-config="$ctrl.config"
+        params="$ctrl.params"
+        filter="$ctrl.eventPhotoFilters"
+      ></fims-filter-buttons>
     </div>
 
     <div class="bounding-box" layout-padding>
@@ -739,7 +352,6 @@
           ng-click="$ctrl.drawBounds()"
           ><u>Draw Bounding Box</u></a
         >
-
         <div layout="row" layout-align="space-between center" ng-show="$ctrl.params.bounds">
           <div layout="column">
             <div>
@@ -789,6 +401,9 @@
     <div class="sequences" layout-padding>
       <div layout="column">
         <h3 class="md-subhead bold" flex>Sequences</h3>
+        <md-checkbox class="small" ng-model="$ctrl.params.hasFasta" name="hasFasta">
+          has fasta sequence</md-checkbox
+        >
         <md-checkbox class="small" ng-model="$ctrl.params.hasSRAAccessions" name="hasSraAccessions">
           has NCBI Sequence Read Archive Accession Numbers
         </md-checkbox>
