@@ -106,7 +106,7 @@
         </div>
         <div ng-repeat="(group, attributes) in data.attributes">
           <div uib-accordion-group class="panel-default" heading="{{ group }}" is-open="true">
-            <div class="checkbox" ng-repeat="attribute in attributes | orderBy: 'column'">
+            <div class="checkbox" ng-repeat="attribute in attributes">
               <label>
                 <input
                   type="checkbox"
