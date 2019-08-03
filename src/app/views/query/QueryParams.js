@@ -159,10 +159,6 @@ export default class QueryParams {
       if (builder.queryString.length > 0) builder.add('and');
       builder.add('_exists_:Event.permitInformation');
     }
-    if (this.hasFasta) {
-      if (builder.queryString.length > 0) builder.add('and');
-      builder.add('_exists_:fastaSequence.sequence');
-    }
 
     if (this.bounds) {
       const ne = this.bounds.northEast;

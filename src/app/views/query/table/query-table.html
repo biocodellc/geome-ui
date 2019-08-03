@@ -37,7 +37,7 @@
               ng-bind-html="$ctrl.getVal(resource, column) | trusted_html"
             ></td>
           </tr>
-          <tr ng-if="$ctrl.results.totalElements === 0" class="h4">
+          <tr ng-show="$ctrl.results.totalElements === 0" class="h4">
             <td class="text-primary" colspan="100">No Data Found</td>
           </tr>
         </tbody>

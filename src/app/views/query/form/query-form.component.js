@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import angular from 'angular';
 
 const template = require('./query-form.html');
@@ -43,13 +42,36 @@ const SOURCE = [
   'expeditionCode',
 ];
 
+const defaultFilter = {
+  column: null,
+  type: null,
+  value: null,
+};
+
+const queryTypes = {
+  string: ['=', 'like', 'has'],
+  float: ['=', '<', '<=', '>', '>=', 'has'],
+  datetime: ['=', '<', '<=', '>', '>=', 'has'],
+  date: ['=', '<', '<=', '>', '>=', 'has'],
+  integer: ['=', '<', '<=', '>', '>=', 'has'],
+};
+
 const PROJECT_RE = new RegExp(/_projects_:\s*(\d+)|(\[[\s\d,]+])/);
+const EXPEDITION_RE = new RegExp(/_expeditions_:\s*(\w+)|(\[[\s\w,]+])/);
+
+const parseExpeditionQueryString = s =>
+  s
+    .replace('[', '')
+    .replace(']', '')
+    .split(',');
 
 class QueryFormController {
   constructor(
+    $scope,
     $mdDialog,
     $mdPanel,
     $timeout,
+    $window,
     $location,
     QueryService,
     ProjectService,
@@ -59,9 +81,11 @@ class QueryFormController {
   ) {
     'ngInject';
 
+    this.$scope = $scope;
     this.$mdDialog = $mdDialog;
     this.$mdPanel = $mdPanel;
     this.$timeout = $timeout;
+    this.$window = $window;
     this.$location = $location;
     this.QueryService = QueryService;
     this.ProjectService = ProjectService;
@@ -71,17 +95,16 @@ class QueryFormController {
   }
 
   $onInit() {
+    this.showGroups = true;
     this.resetExpeditions = true;
     this.moreSearchOptions = false;
     this.entity = 'Sample';
     this.queryEntities = QUERY_ENTITIES;
-    this.teams = [];
+    this.families = [];
     this.individualProjects = [];
     this.eventFilters = [];
     this.sampleFilters = [];
     this.tissueFilters = [];
-    this.samplePhotoFilters = [];
-    this.eventPhotoFilters = [];
 
     // Retrieve Projects
     const projectsPromise = this.ProjectService.all(true).then(({ data }) => {
@@ -93,48 +116,62 @@ class QueryFormController {
       this.configNames = [...names];
     });
 
-    // Retrieve General Configuration
+    // Retrieve General Configurations
     let configPromise = this.NetworkConfigurationService.get().then(config => {
       this.networkConfig = config;
+      this.config = config;
       this.phylums = this.networkConfig.getList('phylum').fields;
       this.countries = this.networkConfig.getList('country').fields;
       this.markers = this.networkConfig.getList('markers').fields;
-      this.setNetworkConfig();
     });
 
-    // Query Results from Url
     const { q } = this.$location.search();
+
     if (q) {
       this.params.queryString = q;
+
       const projectMatch = PROJECT_RE.exec(q);
-      if (projectMatch && projectMatch[1]) {
-        // only set up to handle single project queries
-        configPromise = projectsPromise.then(() => {
-          const projectId = parseInt(projectMatch[1], 10);
-          const project = this.projects.find(p => p.projectId === projectId);
-          if (project) {
-            return this.ProjectConfigurationService.get(
-              project.projectConfiguration.id,
-            ).then(({ config }) => {
-              this.config = config;
-            });
-          }
-          return undefined;
-        });
+      if (projectMatch) {
+        if (projectMatch[1]) {
+          // single project
+          configPromise = projectsPromise.then(() => {
+            const projectId = parseInt(projectMatch[1], 10);
+            const project = this.projects.find(p => p.projectId === projectId);
+            if (project) {
+              return this.ProjectConfigurationService.get(
+                project.projectConfiguration.id,
+              ).then(({ config }) => {
+                this.config = config;
+              });
+            }
+            return undefined;
+          });
+          // this.ProjectService.get(parseInt(projectMatch[1], 10), false).then(
+          // p => {
+          // this.onProjectChange({ project: p });
+          // },
+          // );
+        } else {
+          // TODO handle this case
+          // projects array
+          // const projects = this.$scope.$eval(projectMatch[2]);
+        }
+        // const expeditionMatch = EXPEDITION_RE.exec(q);
+        // if (expeditionMatch) {
+        //   this.resetExpeditions = false;
+        //   const e =
+        //     expeditionMatch[1] ||
+        //     parseExpeditionQueryString(expeditionMatch[2]);
+
+        //   this.params.expeditions.push(...e);
+        // }
       }
+
       configPromise.then(() => this.queryJson());
     }
 
+    // copy default/original params for later reference
     this.paramCopy = angular.copy(this.params);
-  }
-
-  setNetworkConfig() {
-    this.config = this.networkConfig;
-    this.identifySpecificEntities();
-  }
-
-  identifySpecificEntities() {
-    this.entitiesList = this.config.entities.map(e => e.conceptAlias);
   }
 
   switchQueryMethod() {
@@ -143,7 +180,6 @@ class QueryFormController {
       panelGroup.openPanels.forEach(p => p.close());
     }
     if (!_.isEqual(this.params, this.paramCopy)) {
-      // uses underscore third party library method
       this.$mdDialog
         .show(
           this.$mdDialog
@@ -158,23 +194,24 @@ class QueryFormController {
         )
         .then(() => {
           this.entity = 'Sample';
-          this.clearPreviousMapResults();
+          this.clearPreviousResults();
           this.clearParams();
           this.clearBounds();
         })
         .catch(() => {});
     } else {
-      this.clearPreviousMapResults();
+      this.clearPreviousResults();
     }
   }
 
-  clearPreviousMapResults() {
+  clearPreviousResults() {
     this.queryMap._clearMap();
-    this.onNewResults();
+    this.onNewResults(); // call results function in parent component to switch to map view and clear table data
     this.moreSearchOptions = !this.moreSearchOptions;
   }
 
   clearParams() {
+    // reset params to default
     Object.keys(this.params).forEach(key => {
       if (Array.isArray(this.params[key])) {
         this.params[key] = [];
@@ -186,36 +223,15 @@ class QueryFormController {
         this.params[key] = null;
       }
     });
-    this.clearIndividualProjects();
-    this.clearTeams();
-    this.removeFilterChips();
-  }
-
-  clearTeams() {
-    this.teams = [];
-    this.params.projects = [];
-  }
-
-  clearIndividualProjects() {
-    this.individualProjects = [];
-    this.params.projects = [];
     this.expeditions = undefined;
+    this.individualProjects = []; // remove selected chips
+    this.families = []; // remove selected chips
+    this.tissueFilters = []; // remove selected chips
+    this.eventFilters = []; // remove selected chips
+    this.sampleFilters = []; // remove selected chips
   }
 
-  removeFilterChips() {
-    this.params.filters = [];
-    this.tissueFilters = [];
-    this.eventFilters = [];
-    this.sampleFilters = [];
-    this.samplePhotoFilters = [];
-    this.eventPhotoFilters = [];
-  }
-
-  teamToggle(chip, removal) {
-    this.removeFilterChips();
-    if (this.individualProjects.length > 0) {
-      this.clearIndividualProjects();
-    }
+  familyToggle(chip, removal) {
     if (!removal) {
       this.projects.forEach(p => {
         if (p.projectConfiguration.name === chip) {
@@ -229,16 +245,12 @@ class QueryFormController {
           this.params.projects.splice(projIdx, 1);
       });
     }
-    if (this.teams.length === 1) {
-      this.identifySpecificConfig();
-    } else this.setNetworkConfig();
+    if (this.families.length === 1) {
+      this.specificConfigCall();
+    } else this.config = this.networkConfig;
   }
 
   individualToggle(chip, removal) {
-    this.removeFilterChips();
-    if (this.teams.length > 0) {
-      this.clearTeams();
-    }
     this.params.expeditions = [];
     this.singleProject = this.individualProjects.length === 1;
 
@@ -255,40 +267,48 @@ class QueryFormController {
     }
 
     if (this.singleProject) {
-      this.getExpeditions();
-      this.identifySpecificConfig();
+      this.specificConfigCall();
+      // retrieve expeditions for single projects only
+      this.ExpeditionService.all(this.individualProjects[0].projectId).then(
+        ({ data }) => {
+          this.expeditions = data;
+        },
+      );
     } else {
       this.expeditions = undefined;
-      this.setNetworkConfig();
+      this.config = this.networkConfig;
     }
   }
 
-  getExpeditions() {
-    this.ExpeditionService.all(this.individualProjects[0].projectId).then(
-      ({ data }) => {
-        this.expeditions = data;
-      },
+  specificConfigCall() {
+    let specificName;
+    if (this.families.length === 1) {
+      specificName = this.families[0];
+    } else if (this.singleProject) {
+      specificName = this.individualProjects[0].projectConfiguration.name;
+    }
+    const firstMatchingConfig = this.projects.find(
+      p => p.projectConfiguration.name === specificName,
     );
-  }
-
-  identifySpecificConfig() {
-    const specificConfigName =
-      this.singleProject && this.teams.length <= 0
-        ? this.individualProjects[0].projectConfiguration.name
-        : this.teams[0];
-    const matchingProjectForConfigurationRetrieval = this.projects.find(
-      p => p.projectConfiguration.name === specificConfigName,
-    );
-    this.callConfigService(matchingProjectForConfigurationRetrieval);
-  }
-
-  callConfigService(projectMatch) {
     this.ProjectConfigurationService.get(
-      projectMatch.projectConfiguration.id,
+      firstMatchingConfig.projectConfiguration.id,
     ).then(({ config }) => {
       this.config = config;
-      this.identifySpecificEntities();
     });
+  }
+
+  filterToggle(chip, removal) {
+    if (!removal) {
+      this.params.filters.push(chip);
+    } else if (removal) {
+      const index = this.params.filters.indexOf(chip);
+      this.params.filters.splice(index, 1);
+    }
+  }
+
+  getQueryTypes(conceptAlias, column) {
+    const opt = this.filterOptions[conceptAlias].find(o => o.column === column);
+    return opt ? queryTypes[opt.dataType.toLowerCase()] : [];
   }
 
   drawBounds() {
@@ -306,15 +326,47 @@ class QueryFormController {
     this.params.bounds = null;
   }
 
+  generateFilterOptions(conceptAlias) {
+    if (!this.filterOptions) {
+      this.filterOptions = {};
+      this.config.entities.forEach(e => {
+        const alias = e.conceptAlias;
+        const opts = e.attributes
+          .filter(a => !a.internal)
+          .map(a => ({
+            column: `${alias}.${a.column}`,
+            dataType: a.dataType,
+            list: this.config.findListForColumn(e, a.column),
+          }));
+        this.filterOptions[alias] = opts;
+        this.filterOptions[alias].sort((a, b) =>
+          a.column > b.column ? 1 : b.column > a.column ? -1 : 0,
+        );
+      });
+    }
+
+    const filter = { type: '=' };
+
+    if (conceptAlias === 'Event') {
+      filter.column = 'Event.eventID';
+      this.eventFilters.push(filter);
+    } else if (conceptAlias === 'Sample') {
+      filter.column = 'Sample.materialSampleID';
+      this.sampleFilters.push(filter);
+    } else if (conceptAlias === 'Tissue') {
+      filter.column = 'Tissue.tissueID';
+
+      this.tissueFilters.push(filter);
+    }
+
+    this.filterToggle(filter);
+  }
+
   queryJson() {
     const entity = this.entity === 'Fastq' ? 'fastqMetadata' : this.entity;
     this.toggleLoading({ val: true });
     const entities = this.config.entities
-      .filter(e =>
-        ['Event', 'Sample', 'Tissue', 'Sample_Photo', 'Event_Photo'].includes(
-          e.conceptAlias,
-        ),
-      )
+      .filter(e => ['Event', 'Sample', 'Tissue'].includes(e.conceptAlias))
       .map(e => e.conceptAlias);
     this.entitiesForDownload({ entities });
     const selectEntities = SELECT_ENTITIES[entity];

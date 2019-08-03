@@ -328,13 +328,8 @@ class CreateProjectController {
   }
 
   tissuesChanged() {
-    if (!this.tissues) {
-      this.removeEntity('Tissue');
-      this.removeEntity('fastqMetadata');
-      this.removeEntity('fastaSequence');
-      this.nextgen = false;
-      this.barcode = false;
-    } else {
+    if (!this.tissues) this.removeEntity('Tissue');
+    else {
       let e;
       if (this.existingConfig) {
         e = this.existingConfig.config.entities.find(

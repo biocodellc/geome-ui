@@ -30,7 +30,7 @@ class ProjectConfigListController {
           .cancel('Cancel'),
       )
       .then(() => {
-        const i = this.list.fields.indexOf(field);
+        const i = this.list.field.indexOf(field);
         this.list.fields.splice(i, 1);
         this.handleChange();
       })

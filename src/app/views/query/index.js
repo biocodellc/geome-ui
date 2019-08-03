@@ -13,7 +13,6 @@ import fimsMap from '../../components/map';
 import fimsQuery from './query.component';
 import fimsQueryForm from './form/query-form.component';
 import fimsQueryTable from './table/query-table.component';
-import fimsFilterButtons from './form/filter-buttons/filter-buttons.component';
 
 const dependencies = ['sly', router, QueryService, projectService, fimsMap];
 
@@ -22,5 +21,4 @@ export default angular
   .run(routing) // need to declare in run block. otherwise $transitions is not available
   .component('fimsQuery', fimsQuery)
   .component('fimsQueryForm', fimsQueryForm)
-  .component('fimsQueryTable', fimsQueryTable)
-  .component('fimsFilterButtons', fimsFilterButtons).name;
+  .component('fimsQueryTable', fimsQueryTable).name;

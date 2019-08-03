@@ -109,8 +109,7 @@
           Auto-Generate IDs?
           <md-hints>
             <md-hint
-              >
-              If selected, the system will automatically generate an identifier for your photo beginning with the materialSampleID and ending with the "photo[number]". If not selected, the system will use metadata provided with the photo itself.
+              >If selected, the system will automatically generate an identifier for your photo beginning with the materialSampleID and ending with the "_photo_[number]".  If not selected, then the system will either use the "photoID" field in the metadata.csv file if using the "metadata" option OR if uploading photos using the "file name" option, the "imgIdentifier" portion of the photo name as the photo Identifier.  
             </md-hint>
           </md-hints>
         </md-checkbox>
