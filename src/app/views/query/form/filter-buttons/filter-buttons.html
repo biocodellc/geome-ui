@@ -64,7 +64,7 @@
               <md-option>-- Choose value --</md-option>
               <md-option
                 ng-value="list.value"
-                ng-repeat="list in $ctrl.getList($ctrl.conceptAlias, $chip.column) track by list.value"
+                ng-repeat="list in $ctrl.getList($ctrl.conceptAlias, $chip.column) track by $index"
               >
                 {{ list.value }}</md-option
               >
