@@ -63,7 +63,7 @@
                 ng-value="list.value"
                 ng-repeat="list in $ctrl.getList($ctrl.conceptAlias, $chip.column) track by $index"
               >
-                <span>{{ list.value }}</span>
+                {{ list.value }}
               </md-option>
             </md-select>
           </div>
