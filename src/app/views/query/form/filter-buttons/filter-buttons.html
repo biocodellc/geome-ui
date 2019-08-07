@@ -49,11 +49,8 @@
         </div>
         <div flex="45">
           <div ng-show="$chip.type !== 'has'">
-            <md-input-container
-              ng-if="!$ctrl.controlledVocabAttributes.includes($chip.column)"
-              ng-model="$chip.value"
-            >
-              <input type="text" aria-label="filter" />
+            <md-input-container ng-if="!$ctrl.controlledVocabAttributes.includes($chip.column)">
+              <input ng-model="$chip.value" type="text" aria-label="filter" />
             </md-input-container>
             <md-select
               ng-if="$ctrl.controlledVocabAttributes.includes($chip.column)"
@@ -66,8 +63,8 @@
                 ng-value="list.value"
                 ng-repeat="list in $ctrl.getList($ctrl.conceptAlias, $chip.column) track by $index"
               >
-                {{ list.value }}</md-option
-              >
+                <span ng-if="list.value">{{ list.value }}</span>
+              </md-option>
             </md-select>
           </div>
         </div>
