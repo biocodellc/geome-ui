@@ -91,10 +91,21 @@ export default class ProjectConfig {
   }
 
   findListForColumn(entity, column) {
+    let alternateListName;
+    entity.rules.forEach(rule => {
+      if (
+        rule.column === column &&
+        rule.name === 'ControlledVocabulary' &&
+        rule.listName !== rule.column
+      )
+        alternateListName = rule.listName;
+    });
     const r = entity.rules.some(
-      rule => rule.name === 'ControlledVocabulary' && rule.column === column,
+      rule => rule.name === 'ControlledVocabulary' && rule.listName === column,
     );
-    return r ? this.getList(column) : undefined;
+    if (r) return this.getList(column);
+    else if (alternateListName) return this.getList(alternateListName);
+    return undefined;
   }
 
   attributeRules(sheetName, attribute) {
