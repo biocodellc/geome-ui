@@ -1,0 +1,75 @@
+<div layout-fill class="dashboard">
+  <div layout="row" layout-align="center center" class="loading-overlay" ng-show="$ctrl.loading">
+    <md-progress-circular
+      class="loading-overlay-fixed"
+      md-mode="indeterminate"
+    ></md-progress-circular>
+  </div>
+  <h2 class="text-center page-header">Project Dashboard</h2>
+
+  <div class="text-center">
+    <p>
+      <md-button ui-sref="create-project" class="md-raised md-primary"
+        ><md-icon md-font-icon="fa fa-plus fa-fw"></md-icon><span>New Project</span></md-button
+      >
+    </p>
+    <p>
+      Click on project title to view its expeditions and entity counts
+    </p>
+  </div>
+  <div ng-if="$ctrl.currentUser">
+    <h3>Projects marked as private that {{ $ctrl.currentUser.username }} belongs to</h3>
+    <table class="table table-hover table-condensed">
+      <thead>
+        <th class="text-center">Project Title</th>
+        <th class="text-center" ng-repeat="entity in $ctrl.entities">
+          {{ entity }}
+        </th>
+        <th class="text-center">Project Configuration</th>
+      </thead>
+
+      <tr
+        ng-repeat="project in $ctrl.projects"
+        ng-show="project.user.username === $ctrl.currentUser.username"
+      >
+        <td>
+          <a href="#" ng-click="$ctrl.showExpeditionsDetail(project)">{{ project.projectTitle }}</a>
+        </td>
+        <td class="text-center">{{ project.samples }}</td>
+        <td class="text-center">{{ project.events }}</td>
+        <td class="text-center">{{ project.tissues }}</td>
+        <td class="text-center">{{ project.event_photos }}</td>
+        <td class="text-center">{{ project.fasta }}</td>
+        <td class="text-center">{{ project.fastq }}</td>
+        <td class="text-center">{{ project.projectConfiguration.name }}</td>
+        <td></td>
+      </tr>
+    </table>
+  </div>
+
+  <h3>Public Projects</h3>
+  <table class="table table-hover table-condensed">
+    <thead>
+      <th class="text-center">Project Title</th>
+      <th ng-repeat="entity in $ctrl.entities">
+        {{ entity }}
+      </th>
+      <th class="text-center">Project Configuration</th>
+    </thead>
+    <tr
+      ng-repeat="project in $ctrl.projects"
+      ng-if="$ctrl.currentUser.username !== project.user.username"
+    >
+      <td>
+        <a href="#" ng-click="$ctrl.showExpeditionsDetail(project)">{{ project.projectTitle }}</a>
+      </td>
+      <td class="text-center">{{ project.samples }}</td>
+      <td class="text-center">{{ project.events }}</td>
+      <td class="text-center">{{ project.tissues }}</td>
+      <td class="text-center">{{ project.event_photos }}</td>
+      <td class="text-center">{{ project.fasta }}</td>
+      <td class="text-center">{{ project.fastq }}</td>
+      <td class="text-center">{{ project.projectConfiguration.name }}</td>
+    </tr>
+  </table>
+</div>

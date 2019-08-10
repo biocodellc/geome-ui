@@ -1,5 +1,9 @@
 <md-sidenav flex class="md-sidenav-left" md-is-locked-open="true" md-whiteframe="4">
   <md-list>
+    <md-list-item ng-click="$ctrl.$state.go('dashboard')">
+      <md-icon md-font-icon="fa fa-list fa-fw"></md-icon>
+      <p>Dashboard</p>
+    </md-list-item>
     <md-list-item ng-click="$ctrl.$state.go('template')">
       <md-icon md-font-icon="fa fa-file-excel-o fa-fw"></md-icon>
       <p>Generate Template</p>
