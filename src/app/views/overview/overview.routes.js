@@ -1,11 +1,11 @@
 function getStates() {
   return [
     {
-      state: 'dashboard',
+      state: 'overview',
       config: {
         parent: 'projectView',
         url: '/overview',
-        component: 'fimsDashboard',
+        component: 'fimsOverview',
       },
     },
   ];

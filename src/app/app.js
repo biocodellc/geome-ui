@@ -43,7 +43,7 @@ import projectConfig from './views/project-config';
 import expeditions from './views/expeditions';
 import validation from './views/validation';
 import query from './views/query';
-import dashboard from './views/dashboard';
+import overview from './views/overview';
 import record from './views/record';
 import photoUpload from './views/photo-upload';
 import plateViewer from './views/plate-viewer';
@@ -110,7 +110,7 @@ const dependencies = [
   login,
   register,
   query,
-  dashboard,
+  overview,
   record,
   photoUpload,
   plateViewer,

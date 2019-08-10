@@ -1,9 +1,9 @@
 /* eslint-disable array-callback-return */
 import QueryParams from '../query/QueryParams';
 
-const template = require('./dashboard.html');
+const template = require('./overview.html');
 
-class DashboardController {
+class OverviewController {
   constructor($state, $location, ExpeditionService, DataService, QueryService) {
     'ngInject';
 
@@ -191,7 +191,7 @@ class DashboardController {
 
 export default {
   template,
-  controller: DashboardController,
+  controller: OverviewController,
   bindings: {
     currentUser: '<',
     currentProject: '<',
