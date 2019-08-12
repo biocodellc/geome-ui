@@ -94,7 +94,7 @@ export default class ProjectConfig {
     const r = entity.rules.some(
       rule => rule.name === 'ControlledVocabulary' && rule.column === column,
     );
-    return r ? this.getList(r.listName) : undefined;
+    return r ? this.getList(column) : undefined;
   }
 
   attributeRules(sheetName, attribute) {
