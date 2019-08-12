@@ -9,7 +9,7 @@ function getStates() {
         views: {
           projectView: {
             template:
-              '<ui-view layout="column" ng-cloak current-project="$ctrl.currentProject" current-user="$ctrl.currentUser"/>',
+              '<ui-view layout="column" class="layout-fill" ng-cloak current-project="$ctrl.currentProject" current-user="$ctrl.currentUser"/>',
           },
         },
       },

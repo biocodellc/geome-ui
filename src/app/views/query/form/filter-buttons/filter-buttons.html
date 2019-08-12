@@ -1,0 +1,77 @@
+<div layout="column">
+  <div class="filter-button" flex>
+    <md-button class="md-accent md-raised md-button-sm" ng-click="$ctrl.generateFilterOptions()">
+      <span class="fa fa-plus"></span> Add {{ $ctrl.conceptAlias }} Filter</md-button
+    >
+    <md-button class="md-icon-button help-link md-popover-button">
+      <md-popover md-popover-class="query-help" md-popover-group="query" md-direction="right">
+        <div>
+          Filter on {{ $ctrl.conceptAlias }} related fields. The "has" option can be used to look
+          for any values. E.g. "has" an eventID.
+        </div>
+      </md-popover>
+      <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
+    </md-button>
+  </div>
+  <div flex>
+    <md-chips
+      ng-model="$ctrl.filter"
+      readonly="true"
+      md-removable="true"
+      md-on-remove="$ctrl.filterToggle($chip, true)"
+      md-on-add="$ctrl.filterToggle($chip)"
+    >
+      <md-chip-template layout="row">
+        <div flex="40" class="filter-select">
+          <md-select ng-model="$chip.column" md-container-class aria-label="filter">
+            <md-optgroup label="{{ $ctrl.conceptAlias }}">
+              <md-option
+                ng-value="option.column"
+                ng-repeat="option in $ctrl.filterOptions[$ctrl.conceptAlias]"
+              >
+                {{ option.column.split('.')[1] }}</md-option
+              >
+            </md-optgroup>
+          </md-select>
+        </div>
+        <div flex="15" class="filter-select">
+          <md-select
+            ng-model="$chip.type"
+            ng-model-options="{trackBy: '$value'}"
+            md-container-class
+          >
+            <md-option
+              ng-value="t"
+              ng-repeat="t in $ctrl.getQueryTypes($ctrl.conceptAlias, $chip.column)"
+              >{{ t }}</md-option
+            >
+          </md-select>
+        </div>
+        <div flex="45">
+          <div ng-show="$chip.type !== 'has'">
+            <md-input-container
+              ng-if="!$ctrl.controlledVocabAttributes.includes($chip.column)"
+              ng-model="$chip.value"
+            >
+              <input type="text" aria-label="filter" />
+            </md-input-container>
+            <md-select
+              ng-if="$ctrl.controlledVocabAttributes.includes($chip.column)"
+              ng-model="$chip.value"
+              md-container-class
+              aria-label="filterValue"
+            >
+              <md-option>-- Choose value --</md-option>
+              <md-option
+                ng-value="list.value"
+                ng-repeat="list in $ctrl.getList($ctrl.conceptAlias, $chip.column) track by list.value"
+              >
+                {{ list.value }}</md-option
+              >
+            </md-select>
+          </div>
+        </div>
+      </md-chip-template>
+    </md-chips>
+  </div>
+</div>

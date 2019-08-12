@@ -239,23 +239,6 @@
                 class="md-accent md-hue-3"
               ></md-progress-circular>
             </md-button>
-            <md-button
-              class="md-primary md-raised"
-              ng-click="$ctrl.createProject()"
-              ng-disabled="$ctrl.cloneConfig && !$ctrl.existingConfig"
-              ng-hide="$ctrl.cloneConfig && $ctrl.syncConfig"
-              layout="row"
-              layout-align="center center"
-            >
-              <span ng-show="!$ctrl.creatingProject">Create Project</span>
-              <md-progress-circular
-                ng-show="$ctrl.creatingProject"
-                md-mode="indeterminate"
-                md-diameter="18"
-                class="md-accent md-hue-3"
-              >
-              </md-progress-circular>
-            </md-button>
           </md-step-actions>
         </md-step>
         <md-step
@@ -289,7 +272,7 @@
               Tissues Module
               <md-hints>
                 <md-hint
-                  >Necessary for including NextGen or Barcoding modules as well as integring with
+                  >Necessary for including NextGen or Barcoding modules as well as integrating with
                   the Biocode LIMS Geneious Plugin.</md-hint
                 >
               </md-hints>

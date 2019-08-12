@@ -2,6 +2,7 @@
   <table md-table order-by="$ctrl.orderBy" class="table table-condensed">
     <thead fix-head md-head md-order="$ctrl.orderBy">
       <tr md-row>
+        <th ng-show="$ctrl.canEdit" md-column class="action-row"></th>
         <th md-column md-order-by="value">Value</th>
         <th md-column>Defined By</th>
         <th md-column>
@@ -21,17 +22,22 @@
     </thead>
     <tbody md-body>
       <tr md-row ng-repeat="f in $ctrl.list.fields |  orderBy: $ctrl.orderBy track by $index">
-        <td md-cell>{{f.value}}</td>
+        <td class="row-actions" ng-if="$ctrl.canEdit">
+          <a href="#" ng-click="$ctrl.removeField($event, f)"
+            ><i class="fa fa-trash fa-fw text-danger"></i
+          ></a>
+        </td>
+        <td md-cell>{{ f.value }}</td>
         <td md-cell>
           <a
-            href="{{f.definedBy}}"
+            href="{{ f.definedBy }}"
             ng-if="f.definedBy && f.definedBy.startsWith('http')"
             target="_blank"
-            >{{f.definedBy}}</a
+            >{{ f.definedBy }}</a
           >
-          <span ng-if="!f.definedBy || !f.definedBy.startsWith('http')">{{f.definedBy}}</span>
+          <span ng-if="!f.definedBy || !f.definedBy.startsWith('http')">{{ f.definedBy }}</span>
         </td>
-        <td md-cell>{{f.definition}}</td>
+        <td md-cell>{{ f.definition }}</td>
       </tr>
       <tr md-row ng-if="$ctrl.list.fields.length === 0">
         <td md-cell class="text-center" colspan="3">No fields.</td>
