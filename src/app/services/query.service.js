@@ -9,6 +9,12 @@ function transformResults(data, entity) {
 
   if (Object.keys(data).length === 0) return records;
 
+  Object.keys(data).forEach(e => {
+    if (data[e]) {
+      data[e].forEach(r => (r.bcid = r.bcid.match(/ark:\/.*/)[0]));
+    }
+  });
+
   const getRecords = (alias, uniqueKey) =>
     data[alias]
       ? data[alias].reduce((accumulator, record) => {
@@ -24,7 +30,6 @@ function transformResults(data, entity) {
     const tissues = getRecords('Tissue', 'tissueID');
     data.fastqMetadata.forEach(f => {
       const record = f;
-      f.bcid = f.bcid.match(/ark:\/.*/)[0];
       const { bcid } = f;
       if (tissues) {
         const tissue = tissues[f.tissueID];
@@ -56,7 +61,6 @@ function transformResults(data, entity) {
     const events = getRecords('Event', 'eventID');
     const samples = getRecords('Sample', 'materialSampleID');
     data.Tissue.forEach(t => {
-      t.bcid = t.bcid.match(/ark:\/.*/)[0];
       const record = t;
       const { bcid } = t;
       if (samples) {
@@ -79,7 +83,6 @@ function transformResults(data, entity) {
     const events = getRecords('Event', 'eventID');
     data.Sample.forEach(s => {
       const record = s;
-      s.bcid = s.bcid.match(/ark:\/.*/)[0];
       const { bcid } = s;
       if (events) {
         const event = events[s.eventID];
@@ -91,7 +94,6 @@ function transformResults(data, entity) {
     });
   } else if (entity === 'Event') {
     data.Event.forEach(e => {
-      e.bcid = e.bcid.match(/ark:\/.*/)[0];
       records.push(e);
     });
   }
