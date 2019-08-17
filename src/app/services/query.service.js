@@ -9,6 +9,12 @@ function transformResults(data, entity) {
 
   if (Object.keys(data).length === 0) return records;
 
+  Object.keys(data).forEach(e => {
+    if (data[e]) {
+      data[e].forEach(r => r.bcid && (r.bcid = r.bcid.match(/ark:\/.*/)[0]));
+    }
+  });
+
   const getRecords = (alias, uniqueKey) =>
     data[alias]
       ? data[alias].reduce((accumulator, record) => {

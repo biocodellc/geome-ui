@@ -95,8 +95,8 @@ export const mainRecordDetails = {
     decimalLongitude: getKey('decimalLongitude'),
     locality: getKey('locality'),
     bcid: e => ({
-      text: e.bcid.match(/ark:\/.*/)[0],
-      href: e.bcid,
+      text: e.bcid,
+      href: `https://n2t.net/${e.bcid}`,
     }),
   },
   // For photos, i'm putting some of the auxillary data in the main element, appears better
@@ -125,8 +125,8 @@ export const mainRecordDetails = {
     genus: getKey('genus'),
     specificEpithet: getKey('specificEpithet'),
     bcid: s => ({
-      text: s.bcid.match(/ark:\/.*/)[0],
-      href: s.bcid,
+      text: s.bcid,
+      href: `https://n2t.net/${s.bcid}`,
     }),
   },
   Diagnostics: {
@@ -138,16 +138,16 @@ export const mainRecordDetails = {
     tissuePlate: getKey('tissuePlate'),
     tissueWell: getKey('tissueWell'),
     bcid: t => ({
-      text: t.bcid.match(/ark:\/.*/)[0],
-      href: t.bcid,
+      text: t.bcid,
+      href: `https://n2t.net/${t.bcid}`,
     }),
   },
   fastaSequence: {
     marker: getKey('marker'),
     // sequence: getKey('sequence'),
     bcid: s => ({
-      text: s.bcid.match(/ark:\/.*/)[0],
-      href: s.bcid,
+      text: s.bcid,
+      href: `https://n2t.net/${s.bcid}`,
     }),
   },
   fastqMetadata: {
@@ -170,8 +170,8 @@ export const mainRecordDetails = {
       text: m.bioSample ? m.bioSample.accession : undefined,
     }),
     bcid: s => ({
-      text: s.bcid.match(/ark:\/.*/)[0],
-      href: s.bcid,
+      text: s.bcid,
+      href: `https://n2t.net/${s.bcid}`,
     }),
   },
 };
