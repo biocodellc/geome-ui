@@ -11,7 +11,7 @@ function transformResults(data, entity) {
 
   Object.keys(data).forEach(e => {
     if (data[e]) {
-      data[e].forEach(r => (r.bcid = r.bcid.match(/ark:\/.*/)[0]));
+      data[e].forEach(r => r.bcid && (r.bcid = r.bcid.match(/ark:\/.*/)[0]));
     }
   });
 
