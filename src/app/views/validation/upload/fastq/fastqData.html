@@ -236,8 +236,12 @@
     <li>GEOME will accept single and paired end read data</li>
     <li>Each fastq file should contain reads from a single individual</li>
     <li>
-      Names of fastq files must match the materialsampleIDs in the metadata file up to the file
-      extension (e.g., R1.fq.gz, .1.fq, etc)
+      Names of fastq files must start with the materialsampleIDs in the metadata file. If you would
+      like to include additional information in the filename, you can do so by placing a "-" after
+      the materialSampleID and then including any additional text. Example
+      <b>Single End</b> filenames include (sample1.fq.gz, sample2-run1.fq.gz,
+      sample3-more_context.fastq.gzip, etc). Example <b>Paired End</b> filenames include
+      (sample1.1.fq.gz, sample1_2.fq.gz, sample2-run1.1.fq.gz, sample2-more_context.2.fastq)
     </li>
     <li>
       The actual fastq sequence files will not be uploaded here and stored on the GEOME system.

@@ -135,7 +135,7 @@ class PlateViewerController {
 
     const remove = () => {
       delete this.plateData[row][column];
-      this.RecordService.delete(t.bcid)
+      this.RecordService.delete(t.bcid.match(/ark:\/.*/)[0])
         .then(() => {
           // new plate if there are no more tissues
           this.newPlate = !Object.keys(this.plateData).some(r =>
