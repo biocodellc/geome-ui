@@ -1,0 +1,86 @@
+<div>
+  <md-input-container ng-if="$ctrl.currentUser && !$ctrl.loading" md-no-float>
+    <input
+      ng-model="$ctrl.searchText"
+      ng-change="$ctrl.searchTextChange($ctrl.searchText)"
+      placeholder="Filter Projects"
+      md-autofocus
+      ng-enter="$ctrl.showHideProject($ctrl.filteredProjects[0])"
+    />
+  </md-input-container>
+
+  <div layout="row" layout-align="center center" class="loading-overlay" ng-show="$ctrl.loading">
+    <md-progress-circular
+      class="loading-overlay-fixed"
+      md-mode="indeterminate"
+    ></md-progress-circular>
+  </div>
+
+  <div ng-if="!$ctrl.currentUser" class="sign-in">
+    <span>No projects yet? <a ui-sref="login({ nextState: 'dashboard' })">Sign In</a></span>
+  </div>
+
+  <div ng-repeat="project in $ctrl.filteredProjects">
+    <ul>
+      <md-button class="md-icon-button md-primary" ng-click="$ctrl.showHideProject(project)">
+        <md-icon
+          ng-if="!$ctrl.shownProjects.includes(project.projectTitle)"
+          md-font-icon="fa fa-angle-right fa-xs"
+        ></md-icon>
+        <md-icon
+          ng-if="$ctrl.shownProjects.includes(project.projectTitle)"
+          md-font-icon="fa fa-angle-down fa-xs"
+        ></md-icon>
+        <span>{{ project.projectTitle }} </span>
+      </md-button>
+      <ul>
+        <md-card ng-show="$ctrl.selectedProject.includes(project.projectTitle)">
+          <table class="table table-hover table-condensed">
+            <thead>
+              <tr>
+                <th class="text-center">Expeditions Detail</th>
+                <th class="text-center">Configuration</th>
+                <th class="text-center">Network Approved?</th>
+              </tr>
+              <tr>
+                <td ng-click="$ctrl.showExpeditionsDetail(project.projectId)" class="text-center">
+                  <a href="#"> {{ project.projectTitle }} Overview </a>
+                </td>
+                <td class="text-center">
+                  {{ project.projectConfiguration.name }}
+                </td>
+                <td class="text-center">
+                  <md-icon
+                    ng-if="project.projectConfiguration.networkApproved === true"
+                    md-font-icon="fa fa-check success fa-fw"
+                  >
+                  </md-icon>
+                  <md-icon
+                    ng-if="project.projectConfiguration.networkApproved === false"
+                    md-font-icon="fa fa-times false fa-fw"
+                  >
+                  </md-icon>
+                </td>
+              </tr>
+            </thead>
+          </table>
+
+          <table class="table table-hover table-condensed">
+            <thead>
+              <tr>
+                <th ng-repeat="(key, value) in $ctrl.usersStats[0].entityStats">
+                  {{ key.split('C')[0] }}
+                </th>
+              </tr>
+            </thead>
+            <tr>
+              <td class="text-center" ng-repeat="stat in project.entityStats">
+                {{ stat }}
+              </td>
+            </tr>
+          </table>
+        </md-card>
+      </ul>
+    </ul>
+  </div>
+</div>

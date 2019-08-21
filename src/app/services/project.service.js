@@ -114,6 +114,12 @@ class ProjectService extends EventEmitter {
       .catch(angular.catcher('Failed to check if projectTitle exists'));
   }
 
+  stats(includePublic) {
+    return this.$http
+      .get(`${restRoot}projects/stats?includePublic=${includePublic}`)
+      .catch(angular.catcher('Failed to load project statistics'));
+  }
+
   create(project) {
     this.PROJECT_CACHE.removeAll();
     return this.$http({

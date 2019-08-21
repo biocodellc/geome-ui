@@ -1,9 +1,16 @@
 import angular from 'angular';
 
 import routing from './dashboard.routes';
-import dashboard from './dashboard.component';
+import fimsDashboardMyProjects from './my-projects';
+import fimsDashboardPublicProjects from './public-projects';
+import fimsDashboardMemberProjects from './member-projects';
+import fimsDashboard from './dashboard.component';
 
 export default angular
-  .module('fims.dashboard', [])
+  .module('fims.dashboard', [
+    fimsDashboardMyProjects,
+    fimsDashboardPublicProjects,
+    fimsDashboardMemberProjects,
+  ])
   .run(routing)
-  .component('fimsDashboard', dashboard).name;
+  .component('fimsDashboard', fimsDashboard).name;

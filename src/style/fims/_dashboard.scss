@@ -1,3 +1,31 @@
-.loading-overlay-fixed {
-  position: fixed;
+.dashboard {
+  .settings-bar {
+    margin-top: 0;
+    border-bottom: none;
+
+    .nav {
+      border-top: 1px solid $gray-light;
+      border-bottom: 1px solid $gray-light;
+    }
+  }
+
+  .loading-overlay-fixed {
+    position: fixed;
+  }
+
+  .md-button.md-icon-button {
+    width: auto;
+    md-icon {
+      display: inline-block;
+    }
+  }
+
+  .sign-in {
+    padding: 10px;
+  }
+
+  md-card {
+    padding: 35px;
+    margin-right: 40px;
+  }
 }
