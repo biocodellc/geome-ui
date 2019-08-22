@@ -9,12 +9,13 @@
   <section>
     <div class="settings-bar">
       <ul class="nav nav-pills">
-        <li><a href ui-sref=".publicProjects" ui-sref-active="active">Public Projects</a></li>
-        <li><a href ui-sref=".myProjects" ui-sref-active="active">My Projects</a></li>
-        <li><a href ui-sref=".memberProjects" ui-sref-active="active">Member Projects</a></li>
+        <li><a href ui-sref=".myProjects" ui-sref-active="active">Projects I Own</a></li>
+        <li><a href ui-sref=".publicProjects" ui-sref-active="active">All Public Projects</a></li>
+        <li>
+          <a href ui-sref=".memberProjects" ui-sref-active="active">Projects I'm a Member Of</a>
+        </li>
       </ul>
     </div>
-    <div ui-view="publicProjects" ng-cloak current-project="$ctrl.currentProject"></div>
 
     <div
       ui-view="myProjects"
@@ -23,6 +24,13 @@
       current-project="$ctrl.currentProject"
     ></div>
 
-    <div ui-view="memberProjects" ng-cloak current-user="$ctrl.currentUser"></div>
+    <div ui-view="publicProjects" ng-cloak current-project="$ctrl.currentProject"></div>
+
+    <div
+      ui-view="memberProjects"
+      ng-cloak
+      current-user="$ctrl.currentUser"
+      current-project="$ctrl.currentProject"
+    ></div>
   </section>
 </div>

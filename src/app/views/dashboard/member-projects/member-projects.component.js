@@ -11,21 +11,34 @@ class PublicProjectsController {
 
   $onInit() {
     this.loading = true;
-    this.shownProjects = [];
+    this.selectedProject = this.currentProject
+      ? [this.currentProject.projectTitle]
+      : [];
     this.showPublicProjects = true;
-    this.ProjectService.all(true).then(({ data }) => (this.allProjects = data));
-    this.ProjectService.stats(true)
-      .then(({ data }) => (this.allStats = data))
+    const memberProjectTitles = [];
+    this.ProjectService.all(false)
+      .then(({ data }) => {
+        this.allProjects = data;
+        data.forEach(p => memberProjectTitles.push(p.projectTitle));
+      })
+      .then(() =>
+        this.ProjectService.stats(true).then(
+          ({ data }) =>
+            (this.memberStats = data.filter(
+              p =>
+                memberProjectTitles.includes(p.projectTitle) &&
+                p.user.username !== this.currentUser.username,
+            )),
+        ),
+      )
+      .then(() => (this.filteredProjects = this.memberStats))
       .finally(() => (this.loading = false));
   }
 
   showHideProject(project) {
-    if (this.shownProjects.includes(project)) {
-      const i = this.shownProjects.indexOf(project);
-      this.shownProjects.splice(i, 1);
-    } else {
-      this.shownProjects.push(project);
-    }
+    this.selectedProject = [];
+    this.ProjectService.setCurrentProject(project, true);
+    this.selectedProject.push(project.projectTitle);
   }
 
   showExpeditionsDetail(projectId) {
@@ -35,6 +48,18 @@ class PublicProjectsController {
       .then(() => this.$state.go('overview'))
       .finally(() => (this.loading = false));
   }
+
+  searchTextChange(searchText) {
+    if (searchText === '') {
+      this.filteredProjects = this.memberStats;
+      return;
+    }
+
+    const sText = searchText.toLowerCase();
+    this.filteredProjects = this.memberStats.filter(
+      p => p.projectTitle.toLowerCase().indexOf(sText) > -1,
+    );
+  }
 }
 
 export default {
@@ -42,5 +67,6 @@ export default {
   controller: PublicProjectsController,
   bindings: {
     currentUser: '<',
+    currentProject: '<',
   },
 };
