@@ -36,9 +36,13 @@ class PublicProjectsController {
   }
 
   showHideProject(project) {
-    this.selectedProject = [];
-    this.ProjectService.setCurrentProject(project, true);
-    this.selectedProject.push(project.projectTitle);
+    if (this.selectedProject.includes(project.projectTitle))
+      this.selectedProject = [];
+    else {
+      this.selectedProject = [];
+      this.ProjectService.setCurrentProject(project, true);
+      this.selectedProject.push(project.projectTitle);
+    }
   }
 
   showExpeditionsDetail(projectId) {

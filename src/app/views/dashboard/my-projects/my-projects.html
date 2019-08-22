@@ -24,11 +24,11 @@
     <ul>
       <md-button class="md-icon-button md-primary" ng-click="$ctrl.showHideProject(project)">
         <md-icon
-          ng-if="!$ctrl.shownProjects.includes(project.projectTitle)"
+          ng-if="!$ctrl.selectedProject.includes(project.projectTitle)"
           md-font-icon="fa fa-angle-right fa-xs"
         ></md-icon>
         <md-icon
-          ng-if="$ctrl.shownProjects.includes(project.projectTitle)"
+          ng-if="$ctrl.selectedProject.includes(project.projectTitle)"
           md-font-icon="fa fa-angle-down fa-xs"
         ></md-icon>
         <span>{{ project.projectTitle }} </span>
