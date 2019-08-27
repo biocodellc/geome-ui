@@ -110,11 +110,11 @@ class PlateViewerController {
             if (this.cachedData) return this.cachedData;
             this.cachedData = Object.keys(this.tissue).map(key => ({
               key,
-              value: this.tissue[key],
+              value:
+                key === 'bcid'
+                  ? this.tissue[key].match(/ark:\/.*/)[0]
+                  : this.tissue[key],
             }));
-            if (this.cachedData.bcid) {
-              this.cachedData.bcid = this.tissue.bcid.match(/ark:\/.*/)[0];
-            }
             return this.cachedData;
           };
         },
