@@ -112,6 +112,9 @@ class PlateViewerController {
               key,
               value: this.tissue[key],
             }));
+            if (this.cachedData.bcid) {
+              this.cachedData.bcid = this.tissue.bcid.match(/ark:\/.*/)[0];
+            }
             return this.cachedData;
           };
         },
