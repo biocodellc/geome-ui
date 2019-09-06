@@ -18,6 +18,7 @@ class ProjectService extends EventEmitter {
     $timeout,
     StorageService,
     ProjectConfigurationService,
+    $state,
   ) {
     'ngInject';
 
@@ -28,6 +29,7 @@ class ProjectService extends EventEmitter {
     this.$timeout = $timeout;
     this.StorageService = StorageService;
     this.ProjectConfigurationService = ProjectConfigurationService;
+    this.$state = $state;
   }
 
   /**
@@ -40,8 +42,9 @@ class ProjectService extends EventEmitter {
   setCurrentProject(project, ignoreReload = false) {
     if (!project) {
       currentProject = undefined;
-      this.emit(PROJECT_CHANGED_EVENT, currentProject, ignoreReload);
-      return Promise.resolve();
+      this.emit(PROJECT_CHANGED_EVENT, currentProject, true);
+      this.$state.go('dashboard');
+      return Promise.resolve;
     }
 
     const setProjectConfig = () =>

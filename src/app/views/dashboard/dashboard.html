@@ -7,30 +7,144 @@
   </section>
 
   <section>
-    <div class="settings-bar">
-      <ul class="nav nav-pills">
-        <li><a href ui-sref=".myProjects" ui-sref-active="active">Projects I Own</a></li>
-        <li><a href ui-sref=".publicProjects" ui-sref-active="active">All Public Projects</a></li>
-        <li>
-          <a href ui-sref=".memberProjects" ui-sref-active="active">Projects I'm a Member Of</a>
-        </li>
-      </ul>
+    <div layout="row" layout-align="center center" class="loading-overlay" ng-show="$ctrl.loading">
+      <md-progress-circular
+        class="loading-overlay-fixed"
+        md-mode="indeterminate"
+      ></md-progress-circular>
     </div>
 
-    <div
-      ui-view="myProjects"
-      ng-cloak
-      current-user="$ctrl.currentUser"
-      current-project="$ctrl.currentProject"
-    ></div>
+    <div ng-if="$ctrl.currentUser">
+      <h3>My Projects</h3>
 
-    <div ui-view="publicProjects" ng-cloak current-project="$ctrl.currentProject"></div>
+      <div ng-if="!$ctrl.loading && $ctrl.usersProjects.length === 0">
+        <span>
+          You don't have any projects yet!
+          <strong
+            ><a ui-sref="create-project({ nextState: 'dashboard' })">Create Project </a></strong
+          >
+        </span>
+      </div>
 
-    <div
-      ui-view="memberProjects"
-      ng-cloak
-      current-user="$ctrl.currentUser"
-      current-project="$ctrl.currentProject"
-    ></div>
+      <table
+        class="table table-hover table-condensed"
+        ng-if="!$ctrl.loading && $ctrl.usersProjects.length > 0"
+      >
+        <thead>
+          <th></th>
+          <th class="text-center">SampleCount</th>
+          <th class="text-center">hasSRAdata</th>
+          <th class="text-center">hasPhotos</th>
+          <th class="text-center">Last Update</th>
+        </thead>
+        <tr ng-repeat="project in $ctrl.usersProjects | orderBy: 'user.username'">
+          <th ng-click="$ctrl.showExpeditionsDetail(project.projectId)">
+            <md-button class="md-icon-button md-primary">{{ project.projectTitle }} </md-button>
+            <span
+              ng-if="project.user.username === $ctrl.currentUser.username"
+              class="label label-primary"
+              >admin</span
+            >
+            <span
+              ng-if="project.projectConfiguration.networkApproved === true"
+              class="label label-info"
+              >{{ project.projectConfiguration.name }} team</span
+            >
+            <span ng-if="project.public === true" class="label label-warning">public</span>
+          </th>
+          <th class="text-center">{{ project.entityStats.SampleCount }}</th>
+          <th class="text-center">
+            <md-icon
+              ng-if="project.entityStats.fastqMetadataCount > 0"
+              md-font-icon="fa fa-check success fa-fw"
+            >
+            </md-icon>
+            <md-icon
+              ng-if="project.entityStats.fastqMetadataCount === 0 "
+              md-font-icon="fa fa-times false fa-fw"
+            >
+            </md-icon>
+          </th>
+          <th class="text-center">
+            <md-icon
+              ng-if="project.entityStats.Event_PhotoCount > 0 || project.entityStats.Sample_PhotoCount > 0 "
+              md-font-icon="fa fa-check success fa-fw"
+            >
+            </md-icon>
+            <md-icon
+              ng-if="project.entityStats.Event_PhotoCount === 0 && project.entityStats.Sample_PhotoCount === 0 "
+              md-font-icon="fa fa-times false fa-fw"
+            >
+            </md-icon>
+          </th>
+          <th class="text-center">{{ project.dateModified.split(' ')[0] }}</th>
+        </tr>
+      </table>
+    </div>
+
+    <div>
+      <div layout="row">
+        <h3 flex>Public Projects</h3>
+        <div col-sm-3 md-no-float>
+          <md-icon md-font-icon="fa fa-search fa-fw"></md-icon>
+          <md-input-container>
+            <input
+              ng-model="$ctrl.searchText"
+              ng-change="$ctrl.searchTextChange($ctrl.searchText)"
+              placeholder="Filter Projects"
+              md-autofocus
+            />
+          </md-input-container>
+        </div>
+      </div>
+      <table class="table table-hover table-condensed" ng-if="!$ctrl.loading">
+        <thead>
+          <th></th>
+          <th class="text-center">SampleCount</th>
+          <th class="text-center">hasSRAdata</th>
+          <th class="text-center">hasPhotos</th>
+          <th class="text-center">Last Update</th>
+        </thead>
+        <tr
+          ng-repeat="project in $ctrl.filteredProjects"
+          ng-if="!$ctrl.currentUser || ($ctrl.currentUser && !$ctrl.usersProjects.includes(project))"
+        >
+          <th ng-click="$ctrl.showExpeditionsDetail(project.projectId)">
+            <md-button class="md-icon-button md-primary">{{ project.projectTitle }} </md-button>
+            <span
+              ng-if="project.projectConfiguration.networkApproved === true"
+              class="label label-info"
+              >{{ project.projectConfiguration.name }} team</span
+            >
+          </th>
+          <th class="text-center">{{ project.entityStats.SampleCount }}</th>
+          <th class="text-center">
+            <md-icon
+              ng-if="project.entityStats.fastqMetadataCount > 0"
+              md-font-icon="fa fa-check success fa-fw"
+            >
+            </md-icon>
+            <md-icon
+              ng-if="project.entityStats.fastqMetadataCount === 0 "
+              md-font-icon="fa fa-times false fa-fw"
+            >
+            </md-icon>
+          </th>
+          <th class="text-center">
+            <md-icon
+              ng-if="project.entityStats.Event_PhotoCount > 0 || project.entityStats.Sample_PhotoCount > 0 "
+              md-font-icon="fa fa-check success fa-fw"
+            >
+            </md-icon>
+            <md-icon
+              ng-if="project.entityStats.Event_PhotoCount === 0 && project.entityStats.Sample_PhotoCount === 0 "
+              md-font-icon="fa fa-times false fa-fw"
+            >
+            </md-icon>
+          </th>
+          <th class="text-center">{{ project.dateModified.split(' ')[0] }}</th>
+        </tr>
+      </table>
+    </div>
   </section>
 </div>
