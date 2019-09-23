@@ -110,10 +110,7 @@ class PlateViewerController {
             if (this.cachedData) return this.cachedData;
             this.cachedData = Object.keys(this.tissue).map(key => ({
               key,
-              value:
-                key === 'bcid'
-                  ? this.tissue[key].match(/ark:\/.*/)[0]
-                  : this.tissue[key],
+              value: this.tissue[key],
             }));
             return this.cachedData;
           };
@@ -138,7 +135,7 @@ class PlateViewerController {
 
     const remove = () => {
       delete this.plateData[row][column];
-      this.RecordService.delete(t.bcid.match(/ark:\/.*/)[0])
+      this.RecordService.delete(t.bcid)
         .then(() => {
           // new plate if there are no more tissues
           this.newPlate = !Object.keys(this.plateData).some(r =>
