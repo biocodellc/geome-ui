@@ -27,18 +27,7 @@ function getStates() {
                 if (response.status === 204) {
                   $state.go('notFound', { path: '404' });
                 }
-                const { data } = response;
-                data.record.bcid = data.record.bcid.match(/ark:\/.*/)[0];
-                if (data.parent) {
-                  data.parent.bcid = data.parent.bcid.match(/ark:\/.*/)[0];
-                }
-                if (data.children) {
-                  data.children.forEach(
-                    c => (c.bcid = c.bcid.match(/ark:\/.*/)[0]),
-                  );
-                }
-
-                return data;
+                return response.data;
               })
               .catch(response => {
                 if (response.status === 403) {
