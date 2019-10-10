@@ -33,7 +33,7 @@ class DashboardController {
   }
 
   createTableData() {
-    this.tableData = [];
+    this.publicTableData = [];
     this.usersProjects = [];
     this.allProjects.forEach(p => {
       const el = this.statsData.find(s => s.projectTitle === p.projectTitle);
@@ -41,13 +41,14 @@ class DashboardController {
         dateModified: p.modified,
       };
       Object.assign(el, date);
-      this.tableData.push(el);
+      this.publicTableData.push(el);
     });
-    this.filteredProjects = this.tableData;
-    this.tableData.forEach(p => {
+    this.filteredPublicProjects = this.publicTableData;
+    this.publicTableData.forEach(p => {
       if (this.usersProjectTitles.includes(p.projectTitle))
         this.usersProjects.push(p);
     });
+    this.filteredPrivateProjects = this.usersProjects;
   }
 
   showExpeditionsDetail(projectId) {
@@ -58,14 +59,26 @@ class DashboardController {
       .finally(() => (this.loading = false));
   }
 
-  searchTextChange(searchText) {
+  privateSearchTextChange(searchText) {
     if (searchText === '') {
-      this.filteredProjects = this.tableData;
+      this.filteredPrivateProjects = this.usersProjects;
       return;
     }
 
     const sText = searchText.toLowerCase();
-    this.filteredProjects = this.tableData.filter(
+    this.filteredPrivateProjects = this.usersProjects.filter(
+      p => p.projectTitle.toLowerCase().indexOf(sText) > -1,
+    );
+  }
+
+  publicSearchTextChange(searchText) {
+    if (searchText === '') {
+      this.filteredPublicProjects = this.publicTableData;
+      return;
+    }
+
+    const sText = searchText.toLowerCase();
+    this.filteredPublicProjects = this.publicTableData.filter(
       p => p.projectTitle.toLowerCase().indexOf(sText) > -1,
     );
   }
