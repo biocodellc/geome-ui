@@ -1,191 +1,82 @@
-/* eslint-disable array-callback-return */
-import QueryParams from '../query/QueryParams';
-
+/* eslint-disable no-return-assign */
 const template = require('./dashboard.html');
 
 class DashboardController {
-  constructor($state, $location, ExpeditionService, DataService, QueryService) {
+  constructor($state, ProjectService) {
     'ngInject';
 
+    this.ProjectService = ProjectService;
     this.$state = $state;
-    this.$location = $location;
-    this.ExpeditionService = ExpeditionService;
-    this.DataService = DataService;
-    this.QueryService = QueryService;
   }
 
   $onInit() {
-    this.url = this.$location.absUrl().split('?')[0];
     this.loading = true;
-    this.totalItems = null;
-    this.itemsPerPage = 100;
-    this.currentPage = 1;
-    this.results = [];
-    this.displayResults = [];
-    this.menuCache = {};
-  }
-
-  $onChanges(changesObj) {
-    if (
-      this.currentProject &&
-      'currentProject' in changesObj &&
-      changesObj.currentProject.previousValue !== this.currentProject
-    ) {
-      this.fetchPage();
-    }
-  }
-
-  viewData(expeditionCode) {
-    this.$state.go('query', {
-      q: `_projects_:${
-        this.currentProject.projectId
-      } and _expeditions_:[${expeditionCode}]`,
-    });
-  }
-
-  worksheetEntities() {
-    return this.currentProject.config.entities
-      .filter(e => !!e.worksheet)
-      .sort((a, b) => {
-        if (a.parentEntity) {
-          if (b.parentEntity) return 0;
-          return 1;
-        } else if (b.parentEntity) {
-          return -1;
-        }
-        return 0;
-      })
-      .map(e => e.conceptAlias);
-  }
-
-  downloadCsv(expeditionCode) {
-    this.loadingExpedition = expeditionCode || 'project';
-
-    let res;
-    if (expeditionCode) {
-      res = this.DataService.exportData(
-        this.currentProject.projectId,
-        expeditionCode,
-      );
-    } else {
-      const entities = this.worksheetEntities();
-      const conceptAlias = entities.shift();
-
-      res = this.QueryService.downloadCsv(
-        this.getQuery(expeditionCode, entities),
-        conceptAlias,
-      );
-    }
-    res.finally(() => (this.loadingExpedition = undefined));
-  }
-
-  downloadExcel(expeditionCode) {
-    this.loadingExpedition = expeditionCode;
-
-    const entities = this.worksheetEntities();
-    const conceptAlias = entities.shift();
-
-    this.QueryService.downloadExcel(
-      this.getQuery(expeditionCode, entities),
-      conceptAlias,
-    ).finally(() => (this.loadingExpedition = undefined));
-  }
-
-  getQuery(expeditionCode, selectEntities) {
-    const params = new QueryParams();
-    if (expeditionCode) {
-      params.expeditions.push({ expeditionCode });
-    }
-    params.projects.push(this.currentProject);
-    return params.buildQuery(selectEntities);
-  }
-
-  downloadFastq(expeditionCode) {
-    this.loadingExpedition = expeditionCode;
-    this.DataService.generateSraData(
-      this.currentProject.projectId,
-      expeditionCode,
-    ).finally(() => (this.loadingExpedition = undefined));
-  }
-
-  menuOptions(expedition) {
-    if (!this.menuCache[expedition.expeditionCode]) {
-      // const worksheets = [];
-      let foundWorksheet = false;
-      this.menuCache[expedition.expeditionCode] = this.headers
-        .map(header => {
-          const conceptAlias = header.replace('Count', '');
-          const entity = this.currentProject.config.entities.find(
-            e => e.conceptAlias === conceptAlias,
-          );
-
-          // if count is 0
-          if (!Number(expedition[header])) return;
-
-          if (entity.worksheet) {
-            if (foundWorksheet) return;
-            foundWorksheet = true;
-            // eslint-disable-next-line consistent-return
-            return {
-              fn: this.downloadCsv.bind(this),
-              name: 'CSV Archive',
-            };
-          } else if (entity.type === 'Fastq') {
-            // eslint-disable-next-line consistent-return
-            return {
-              fn: this.downloadFastq.bind(this),
-              name: 'Fastq - SRA Metadata',
-            };
-          }
-        })
-        .filter(o => o !== undefined);
-
-      if (foundWorksheet) {
-        this.menuCache[expedition.expeditionCode].splice(1, 0, {
-          fn: this.downloadExcel.bind(this),
-          name: 'Excel Workbook',
-        });
-      }
-    }
-    return this.menuCache[expedition.expeditionCode];
-  }
-  // eslint-disable-next-line class-methods-use-this
-  humanReadableHeader(val) {
-    return val
-      .replace('Count', '') // remove 'Count' suffix
-      .replace(/([A-Z])/g, match => ` ${match}`) // split on camelCase
-      .replace(/^./, match => match.toUpperCase()) // uppercase each word
-      .trim()
-      .replace(/\w$/, match =>
-        match === 's' || match === 'a' ? match : `${match}s`,
-      ); // end w/ 's'
-  }
-
-  pageChanged() {
-    // each object in the result contains the expedition info,
-    // as well as the 1 {entity}Count value for each entity
-    // our table headers are these count values
-    if (this.results.length !== 0) {
-      this.headers = Object.keys(this.results[0]).filter(k =>
-        k.endsWith('Count'),
-      );
-      this.displayResults = this.results.slice(
-        (this.currentPage - 1) * this.itemsPerPage,
-        this.currentPage * this.itemsPerPage,
-      );
-    }
-  }
-
-  fetchPage() {
-    this.ExpeditionService.stats(this.currentProject.projectId)
+    this.usersProjectTitles = [];
+    this.ProjectService.all(true)
       .then(({ data }) => {
-        Object.assign(this.results, data);
-        this.pageChanged();
-        this.totalItems = this.results.length;
+        this.allProjects = data;
       })
-      .finally(() => {
-        this.loading = false;
-      });
+      .then(() =>
+        this.ProjectService.all(false).then(({ data }) => {
+          data.forEach(p => {
+            this.usersProjectTitles.push(p.projectTitle);
+          });
+        }),
+      )
+      .then(() =>
+        this.ProjectService.stats(true).then(({ data }) => {
+          this.statsData = data;
+        }),
+      )
+      .then(() => this.createTableData())
+      .finally(() => (this.loading = false));
+  }
+
+  createTableData() {
+    this.publicTableData = [];
+    this.usersProjects = [];
+    this.allProjects.forEach(p => {
+      const el = this.statsData.find(s => s.projectTitle === p.projectTitle);
+      this.publicTableData.push(el);
+    });
+    this.filteredPublicProjects = this.publicTableData;
+    this.publicTableData.forEach(p => {
+      if (this.usersProjectTitles.includes(p.projectTitle))
+        this.usersProjects.push(p);
+    });
+    this.filteredPrivateProjects = this.usersProjects;
+  }
+
+  showExpeditionsDetail(projectId) {
+    this.loading = true;
+    const project = this.allProjects.find(p => p.projectId === projectId);
+    this.ProjectService.setCurrentProject(project, true)
+      .then(() => this.$state.go('overview'))
+      .finally(() => (this.loading = false));
+  }
+
+  privateSearchTextChange(searchText) {
+    if (searchText === '') {
+      this.filteredPrivateProjects = this.usersProjects;
+      return;
+    }
+
+    const sText = searchText.toLowerCase();
+    this.filteredPrivateProjects = this.usersProjects.filter(
+      p => p.projectTitle.toLowerCase().indexOf(sText) > -1,
+    );
+  }
+
+  publicSearchTextChange(searchText) {
+    if (searchText === '') {
+      this.filteredPublicProjects = this.publicTableData;
+      return;
+    }
+
+    const sText = searchText.toLowerCase();
+    this.filteredPublicProjects = this.publicTableData.filter(
+      p => p.projectTitle.toLowerCase().indexOf(sText) > -1,
+    );
   }
 }
 

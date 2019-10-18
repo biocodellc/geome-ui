@@ -1,170 +1,206 @@
-<div layout-fill layout="column">
-  <h3 class="text-center page-header">{{ $ctrl.currentProject.projectTitle }} Overview</h3>
-  <p class="text-center">{{ $ctrl.currentProject.description }}</p>
-
-  <div class="project-details">
-    <div class="row">
-      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Project owner:</strong></div>
-      <div class="col-sm-8 col-md-9 col-lg-10">
-        {{ $ctrl.currentProject.user.username }} (<a
-          href="mailto:{{ $ctrl.currentProject.user.email }}"
-          >{{ $ctrl.currentProject.user.email }}</a
-        >)
+<div class="admin dashboard">
+  <section class="my-projects" ng-if="$ctrl.currentUser">
+    <div layout="row">
+      <h3 flex>My Projects</h3>
+      <div md-no-float class="col-sm-4 filter">
+        <md-icon md-font-icon="fa fa-search fa-fw"></md-icon>
+        <md-input-container flex>
+          <input
+            ng-model="$ctrl.privateSearchText"
+            ng-change="$ctrl.privateSearchTextChange($ctrl.privateSearchText)"
+            placeholder="Filter Projects"
+            md-autofocus
+          />
+        </md-input-container>
       </div>
     </div>
-    <div class="row">
-      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Project link:</strong></div>
-      <div class="col-sm-8 col-md-9 col-lg-10">
-        <a href="{{ $ctrl.url }}?projectId={{ $ctrl.currentProject.projectId }}"
-          >{{ $ctrl.url }}?projectId={{ $ctrl.currentProject.projectId }}</a
-        >
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Public:</strong></div>
-      <div class="col-sm-8 col-md-9 col-lg-10">{{ $ctrl.currentProject.public }}</div>
-    </div>
 
-    <div ng-show="$ctrl.currentProject.projectConfiguration.networkApproved">
-      <div class="row title">
-        <div class="col-sm-4 col-md-3 col-lg-2"><strong>Team workspace:</strong></div>
-        <div class="col-sm-8 col-md-9 col-lg-10">
-          {{ $ctrl.currentProject.projectConfiguration.name }}
-          <md-button class="md-icon-button help-link md-popover-button">
-            <md-popover md-popover-class="fastq-help-filenames" md-direction="right">
-              <div ng-include="'overview-config-help.popover.html'"></div>
-            </md-popover>
-            <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
-          </md-button>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-4 col-md-3 col-lg-2"><strong>Team owner:</strong></div>
-        <div class="col-sm-8 col-md-9 col-lg-10">
-          {{ $ctrl.currentProject.projectConfiguration.user.username }}
-          (<a href="mailto:{{ $ctrl.currentProject.projectConfiguration.user.email }}">{{
-            $ctrl.currentProject.projectConfiguration.user.email
-          }}</a
-          >)
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
-    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-  </div>
-
-  <p ng-show="!$ctrl.loading && $ctrl.totalItems === 0" class="text-center">
-    There are no expeditions associated with this project
-  </p>
-  <div layout="row" ng-show="!$ctrl.loading && $ctrl.totalItems" layout-align="center center">
-    <md-button
-      class="md-primary md-raised project-download-button"
-      ng-click="$ctrl.downloadCsv()"
+    <div
       layout="row"
       layout-align="center center"
+      ng-show="$ctrl.loading && $ctrl.currentUser"
+      class="loader"
     >
-      <!-- Download -->
-      <span>Project CSV Archive</span>
-      <md-icon ng-show="$ctrl.loadingExpedition !== 'project'" md-font-icon="fa fa-download fa-xs">
-      </md-icon>
       <md-progress-circular
-        ng-show="$ctrl.loadingExpedition === 'project'"
+        class="loading-overlay-fixed"
         md-mode="indeterminate"
-        md-diameter="18"
-        class="md-accent md-hue-3"
       ></md-progress-circular>
-    </md-button>
-  </div>
+    </div>
 
-  <!-- <table class="table table-hover table-condensed text-center" ng-show="!$ctrl.loading"> -->
-  <table
-    class="table table-hover table-condensed text-center"
-    ng-show="$ctrl.displayResults.length > 0"
-  >
-    <thead>
-      <th class="text-center">Expedition Title</th>
-      <th class="text-center" ng-repeat="header in $ctrl.headers">
-        {{ $ctrl.humanReadableHeader(header) }}
-      </th>
-      <th class="text-center">GUID</th>
-      <th></th>
-    </thead>
+    <!--span> Click on project title to view more </span-->
+    <div ng-if="!$ctrl.loading && $ctrl.usersProjects.length === 0">
+      <span>
+        You don't have any projects yet!
+        <strong><a ui-sref="create-project({ nextState: 'dashboard' })">Create Project </a></strong>
+      </span>
+    </div>
 
-    <tbody>
+    <table
+      class="table table-hover table-striped"
+      ng-if="!$ctrl.loading && $ctrl.usersProjects.length > 0"
+    >
+      <thead>
+        <th></th>
+        <th class="sample-count-header"># of Samples</th>
+        <th>Has SRA</th>
+        <th>Has Photos</th>
+      </thead>
       <tr
-        ng-repeat="expedition in $ctrl.displayResults track by expedition.expeditionCode"
-        ng-click="$ctrl.results && $ctrl.viewData(expedition.expeditionCode)"
+        ng-repeat="project in $ctrl.filteredPrivateProjects | orderBy: 'projectTitle'"
+        ng-click="$ctrl.showExpeditionsDetail(project.projectId)"
       >
-        <td>{{ expedition.expeditionTitle }}</td>
-        <td ng-repeat="header in $ctrl.headers">{{ expedition[header] }}</td>
-        <td ng-show="expedition.expeditionIdentifier">
-          <!--<a href="https://n2t.net/{{expedition.expeditionIdentifier}}">https://n2t.net/{{ expedition.expeditionIdentifier}} </a>-->
-          https://n2t.net/{{ expedition.expeditionIdentifier }}
-        </td>
-        <td ng-show="!expedition.expeditionIdentifier"></td>
-        <td ng-show="$ctrl.menuOptions(expedition).length == 0"></td>
-        <td ng-show="$ctrl.menuOptions(expedition).length > 0" class="md-dense action-buttons">
-          <!--<md-button aria-label="View expedition data" ng-click="$ctrl.viewData(expedition.expeditionCode)"
-            class="md-primary md-raised query-button">
-            <md-icon md-font-icon="fa fa-map-marker fa-sm"></md-icon>
-          </md-button>-->
-          <md-menu ng-show="$ctrl.results" class="md-dense" md-position-mode="target-right target">
-            <md-button
-              aria-label="Open expedition download menu"
-              ng-click="$mdMenu.open($event)"
-              class="md-primary download-button"
+        <td layout="column">
+          <div layout="row" layout-align="space-between">
+            <div md-truncate md-colors="{color: 'primary'}">
+              <span>{{ project.projectTitle }}</span>
+              <md-tooltip md-delay="200" md-direction="bottom">{{
+                project.projectTitle
+              }}</md-tooltip>
+            </div>
+            <div>
+              <span
+                flex
+                ng-if="project.user.username === $ctrl.currentUser.username"
+                class="label label-primary"
+                >admin</span
+              >
+              <span flex ng-if="project.public === true" class="label label-warning">public</span>
+            </div>
+          </div>
+          <div layout="row" layout-align="space-between">
+            <small class="text-muted activity"
+              >Latest Activity:
+              {{
+                project.latestDataModification
+                  ? project.latestDataModification.split(' ')[0]
+                  : 'N/A'
+              }}</small
             >
-              <!-- Download -->
-              <md-icon
-                ng-show="$ctrl.loadingExpedition !== expedition.expeditionCode"
-                md-font-icon="fa fa-download fa-xs"
-              ></md-icon>
-              <md-progress-circular
-                ng-show="$ctrl.loadingExpedition === expedition.expeditionCode"
-                md-mode="indeterminate"
-                md-diameter="18"
-                class="md-accent md-hue-3"
-              >
-              </md-progress-circular>
-            </md-button>
-            <md-menu-content width="2" class="md-dense download-menu-content">
-              <md-menu-item
-                ng-repeat="opt in $ctrl.menuOptions(expedition) track by expedition.expeditionCode + opt.name"
-              >
-                <md-button ng-click="opt.fn(expedition.expeditionCode)">{{ opt.name }}</md-button>
-              </md-menu-item>
-            </md-menu-content>
-          </md-menu>
+            <span
+              ng-if="project.projectConfiguration.networkApproved === true"
+              class="label label-info"
+              >{{ project.projectConfiguration.name }} team</span
+            >
+          </div>
+        </td>
+        <td class="sample-count">{{ project.entityStats.SampleCount }}</td>
+        <td>
+          <md-icon
+            ng-if="project.entityStats.fastqMetadataCount > 0"
+            md-font-icon="fa fa-check success fa-fw"
+          >
+          </md-icon>
+          <md-icon
+            ng-if="project.entityStats.fastqMetadataCount === 0 "
+            md-font-icon="fa fa-times false fa-fw"
+          >
+          </md-icon>
+        </td>
+        <td>
+          <md-icon
+            ng-if="project.entityStats.Event_PhotoCount > 0 || project.entityStats.Sample_PhotoCount > 0 "
+            md-font-icon="fa fa-check success fa-fw"
+          >
+          </md-icon>
+          <md-icon
+            ng-if="project.entityStats.Event_PhotoCount === 0 && project.entityStats.Sample_PhotoCount === 0 "
+            md-font-icon="fa fa-times false fa-fw"
+          >
+          </md-icon>
         </td>
       </tr>
-    </tbody>
-  </table>
-
-  <div class="text-center" ng-show="$ctrl.totalItems > 0">
-    <ul
-      uib-pagination
-      total-items="$ctrl.totalItems"
-      ng-model="$ctrl.currentPage"
-      ng-change="$ctrl.pageChanged()"
-      max-size="10"
-      force-ellipses="true"
-      boundary-link-numbers="true"
-      items-per-page="$ctrl.itemsPerPage"
-    ></ul>
-  </div>
-</div>
-
-<!----------------------------
-help templates
- ---------------------------->
-
-<script type="text/ng-template" id="overview-config-help.popover.html">
-    <div>
-  <p>
-          This team workspace specifies all validation rules and terms for this project. If you have
-          any questions or suggestions, please contact the team owner.
-  </p>
+    </table>
+  </section>
+  <section class="public-projects">
+    <div layout="row">
+      <h3 flex>Public Projects</h3>
+      <div md-no-float class="col-sm-4 filter">
+        <md-icon md-font-icon="fa fa-search fa-fw"></md-icon>
+        <md-input-container flex>
+          <input
+            ng-model="$ctrl.publicSearchText"
+            ng-change="$ctrl.publicSearchTextChange($ctrl.publicSearchText)"
+            placeholder="Filter Projects"
+            md-autofocus
+          />
+        </md-input-container>
+      </div>
     </div>
-</script>
+    <!--span ng-if="!$ctrl.currentUser" class="text-center">
+          Click on project title to view more
+        </span-->
+
+    <div
+      layout="row"
+      layout-align="center center"
+      ng-show="$ctrl.loading && !$ctrl.currentUser"
+      class="loader"
+    >
+      <md-progress-circular
+        class="loading-overlay-fixed"
+        md-mode="indeterminate"
+      ></md-progress-circular>
+    </div>
+
+    <table class="table table-hover table-striped" ng-if="!$ctrl.loading">
+      <thead>
+        <th></th>
+        <th class="sample-count-header"># of Samples</th>
+        <th>Has SRA</th>
+        <th>Has Photos</th>
+      </thead>
+      <tr
+        ng-repeat="project in $ctrl.filteredPublicProjects | orderBy: 'projectTitle'"
+        ng-if="!$ctrl.currentUser || ($ctrl.currentUser && !$ctrl.usersProjects.includes(project))"
+        ng-click="$ctrl.showExpeditionsDetail(project.projectId)"
+      >
+        <td layout="column">
+          <div md-truncate md-colors="{color: 'primary'}">
+            <span>{{ project.projectTitle }}</span>
+            <md-tooltip md-delay="200" md-direction="bottom">{{ project.projectTitle }}</md-tooltip>
+          </div>
+          <div layout="row" layout-align="space-between">
+            <small class="text-muted activity"
+              >Latest Activity:
+              {{
+                project.latestDataModification
+                  ? project.latestDataModification.split(' ')[0]
+                  : 'N/A'
+              }}</small
+            >
+            <span
+              ng-if="project.projectConfiguration.networkApproved === true"
+              class="label label-info"
+              >{{ project.projectConfiguration.name }} team</span
+            >
+          </div>
+        </td>
+        <td class="sample-count">{{ project.entityStats.SampleCount }}</td>
+        <td>
+          <md-icon
+            ng-if="project.entityStats.fastqMetadataCount > 0"
+            md-font-icon="fa fa-check success fa-fw"
+          >
+          </md-icon>
+          <md-icon
+            ng-if="project.entityStats.fastqMetadataCount === 0 "
+            md-font-icon="fa fa-times false fa-fw"
+          >
+          </md-icon>
+        </td>
+        <td>
+          <md-icon
+            ng-if="project.entityStats.Event_PhotoCount > 0 || project.entityStats.Sample_PhotoCount > 0 "
+            md-font-icon="fa fa-check success fa-fw"
+          >
+          </md-icon>
+          <md-icon
+            ng-if="project.entityStats.Event_PhotoCount === 0 && project.entityStats.Sample_PhotoCount === 0 "
+            md-font-icon="fa fa-times false fa-fw"
+          >
+          </md-icon>
+        </td>
+      </tr>
+    </table>
+  </section>
+</div>
