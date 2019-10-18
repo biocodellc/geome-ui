@@ -10,7 +10,7 @@
     }"
 >
   <div class="md-steppers-header-region">
-    <md-steppers-header class="md-steppers-header md-steppers-horizontal md-whiteframe-1dp">
+    <md-steppers-header class="md-steppers-header md-steppers-horizontal">
       <button
         class="md-stepper-indicator"
         ng-repeat="(stepNumber, $step) in stepper.steps track by $index"
@@ -55,15 +55,15 @@
         <div class="md-toolbar-tools">
           <h3>
             <span
-              >{{stepper.labelStep}} {{stepper.currentStep+1}} {{stepper.labelOf}}
-              {{stepper.steps.length}}</span
+              >{{ stepper.labelStep }} {{ stepper.currentStep + 1 }} {{ stepper.labelOf }}
+              {{ stepper.steps.length }}</span
             >
           </h3>
         </div>
       </md-toolbar>
     </md-steppers-mobile-header>
     <div class="md-stepper-feedback-message" ng-show="stepper.hasFeedback">
-      {{stepper.feedbackMessage}}
+      {{ stepper.feedbackMessage }}
     </div>
   </div>
   <md-steppers-content class="md-steppers-content" ng-transclude></md-steppers-content>
