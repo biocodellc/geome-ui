@@ -10,16 +10,79 @@
     }
   }
   table tr th:first-child {
-    width: 35%;
+    width: 65%;
   }
-  table tr th:nth-child(2) {
-    width: 25%;
+  .public-projects,
+  .my-projects {
+    background-color: #fff;
+    padding: 24px;
   }
+
   .public-projects {
-    padding-top: 10px;
+    padding-top: 8px;
   }
+
+  .my-projects {
+    margin-bottom: 48px;
+  }
+
   .loading-overlay-fixed {
     position: fixed;
+  }
+
+  .label {
+    margin-top: 0.25rem;
+    margin-left: 8px;
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  thead {
+    tr {
+      th {
+        padding: 5px;
+      }
+    }
+  }
+  tbody {
+    box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.12);
+  }
+
+  td,
+  th {
+    text-align: right;
+    border: none !important;
+  }
+
+  td {
+    font-weight: 400;
+  }
+
+  .sample-count-header {
+    text-align: right;
+  }
+
+  .sample-count {
+    text-align: right;
+    font-weight: 500;
+  }
+
+  .activity {
+    font-weight: 300;
+  }
+
+  td:first-of-type {
+    text-align: left;
+    font-weight: 600;
+    color: $brand-primary;
+  }
+
+  th {
+    color: $gray;
+    font-weight: 400;
   }
 
   .md-button.md-icon-button {
@@ -27,5 +90,14 @@
     md-icon {
       display: inline-block;
     }
+  }
+
+  .filter {
+    display: flex;
+  }
+
+  .loader {
+    margin-top: 48px;
+    margin-bottom: 48px;
   }
 }

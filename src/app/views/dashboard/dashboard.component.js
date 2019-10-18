@@ -37,10 +37,6 @@ class DashboardController {
     this.usersProjects = [];
     this.allProjects.forEach(p => {
       const el = this.statsData.find(s => s.projectTitle === p.projectTitle);
-      const date = {
-        dateModified: p.modified,
-      };
-      Object.assign(el, date);
       this.publicTableData.push(el);
     });
     this.filteredPublicProjects = this.publicTableData;

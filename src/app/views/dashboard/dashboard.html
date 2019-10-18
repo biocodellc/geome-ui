@@ -1,178 +1,206 @@
-<div layout-fill layout="column" class="admin dashboard">
-  <div layout="row" layout-align="center center" class="loading-overlay" ng-show="$ctrl.loading">
-    <md-progress-circular
-      class="loading-overlay-fixed"
-      md-mode="indeterminate"
-    ></md-progress-circular>
-  </div>
-  <md-content ng-if="$ctrl.currentUser" flex>
-    <section class="my-projects">
-      <div layout="row">
-        <h3 flex>My Projects</h3>
-        <div col-sm-3 md-no-float>
-          <md-icon md-font-icon="fa fa-search fa-fw"></md-icon>
-          <md-input-container>
-            <input
-              ng-model="$ctrl.privateSearchText"
-              ng-change="$ctrl.privateSearchTextChange($ctrl.privateSearchText)"
-              placeholder="Filter Projects"
-              md-autofocus
-            />
-          </md-input-container>
-        </div>
+<div class="admin dashboard">
+  <section class="my-projects" ng-if="$ctrl.currentUser">
+    <div layout="row">
+      <h3 flex>My Projects</h3>
+      <div md-no-float class="col-sm-4 filter">
+        <md-icon md-font-icon="fa fa-search fa-fw"></md-icon>
+        <md-input-container flex>
+          <input
+            ng-model="$ctrl.privateSearchText"
+            ng-change="$ctrl.privateSearchTextChange($ctrl.privateSearchText)"
+            placeholder="Filter Projects"
+            md-autofocus
+          />
+        </md-input-container>
       </div>
-      <!--span> Click on project title to view more </span-->
-      <div ng-if="!$ctrl.loading && $ctrl.usersProjects.length === 0">
-        <span>
-          You don't have any projects yet!
-          <strong
-            ><a ui-sref="create-project({ nextState: 'dashboard' })">Create Project </a></strong
-          >
-        </span>
-      </div>
+    </div>
 
-      <table
-        class="table table-hover table-condensed"
-        ng-if="!$ctrl.loading && $ctrl.usersProjects.length > 0"
+    <div
+      layout="row"
+      layout-align="center center"
+      ng-show="$ctrl.loading && $ctrl.currentUser"
+      class="loader"
+    >
+      <md-progress-circular
+        class="loading-overlay-fixed"
+        md-mode="indeterminate"
+      ></md-progress-circular>
+    </div>
+
+    <!--span> Click on project title to view more </span-->
+    <div ng-if="!$ctrl.loading && $ctrl.usersProjects.length === 0">
+      <span>
+        You don't have any projects yet!
+        <strong><a ui-sref="create-project({ nextState: 'dashboard' })">Create Project </a></strong>
+      </span>
+    </div>
+
+    <table
+      class="table table-hover table-striped"
+      ng-if="!$ctrl.loading && $ctrl.usersProjects.length > 0"
+    >
+      <thead>
+        <th></th>
+        <th class="sample-count-header"># of Samples</th>
+        <th>Has SRA</th>
+        <th>Has Photos</th>
+      </thead>
+      <tr
+        ng-repeat="project in $ctrl.filteredPrivateProjects | orderBy: 'projectTitle'"
+        ng-click="$ctrl.showExpeditionsDetail(project.projectId)"
       >
-        <thead>
-          <th></th>
-          <th></th>
-          <th class="text-center">Sample Count</th>
-          <th class="text-center">Has SRA</th>
-          <th class="text-center">Has Photos</th>
-          <th class="text-center">Last Update</th>
-        </thead>
-        <tr ng-repeat="project in $ctrl.filteredPrivateProjects | orderBy: 'user.username'">
-          <th ng-click="$ctrl.showExpeditionsDetail(project.projectId)">
-            <md-button md-truncate flex class="md-icon-button md-primary">
+        <td layout="column">
+          <div layout="row" layout-align="space-between">
+            <div md-truncate md-colors="{color: 'primary'}">
               <span>{{ project.projectTitle }}</span>
-            </md-button>
-            <md-tooltip md-delay="200" md-direction="bottom">{{ project.projectTitle }}</md-tooltip>
-          </th>
-          <th>
-            <span
-              flex
-              ng-if="project.user.username === $ctrl.currentUser.username"
-              class="label label-primary"
-              >admin</span
+              <md-tooltip md-delay="200" md-direction="bottom">{{
+                project.projectTitle
+              }}</md-tooltip>
+            </div>
+            <div>
+              <span
+                flex
+                ng-if="project.user.username === $ctrl.currentUser.username"
+                class="label label-primary"
+                >admin</span
+              >
+              <span flex ng-if="project.public === true" class="label label-warning">public</span>
+            </div>
+          </div>
+          <div layout="row" layout-align="space-between">
+            <small class="text-muted activity"
+              >Latest Activity:
+              {{
+                project.latestDataModification
+                  ? project.latestDataModification.split(' ')[0]
+                  : 'N/A'
+              }}</small
             >
             <span
-              flex
               ng-if="project.projectConfiguration.networkApproved === true"
               class="label label-info"
               >{{ project.projectConfiguration.name }} team</span
             >
-            <span flex ng-if="project.public === true" class="label label-warning">public</span>
-          </th>
-          <th class="text-center">{{ project.entityStats.SampleCount }}</th>
-          <th class="text-center">
-            <md-icon
-              ng-if="project.entityStats.fastqMetadataCount > 0"
-              md-font-icon="fa fa-check success fa-fw"
-            >
-            </md-icon>
-            <md-icon
-              ng-if="project.entityStats.fastqMetadataCount === 0 "
-              md-font-icon="fa fa-times false fa-fw"
-            >
-            </md-icon>
-          </th>
-          <th class="text-center">
-            <md-icon
-              ng-if="project.entityStats.Event_PhotoCount > 0 || project.entityStats.Sample_PhotoCount > 0 "
-              md-font-icon="fa fa-check success fa-fw"
-            >
-            </md-icon>
-            <md-icon
-              ng-if="project.entityStats.Event_PhotoCount === 0 && project.entityStats.Sample_PhotoCount === 0 "
-              md-font-icon="fa fa-times false fa-fw"
-            >
-            </md-icon>
-          </th>
-          <th class="text-center">{{ project.dateModified.split(' ')[0] }}</th>
-        </tr>
-      </table>
-    </section>
-  </md-content>
-  <md-content class="public-projects" flex>
-    <section>
-      <div>
-        <div layout="row">
-          <h3 flex>Public Projects</h3>
-          <div col-sm-3 md-no-float>
-            <md-icon md-font-icon="fa fa-search fa-fw"></md-icon>
-            <md-input-container>
-              <input
-                ng-model="$ctrl.publicSearchText"
-                ng-change="$ctrl.publicSearchTextChange($ctrl.publicSearchText)"
-                placeholder="Filter Projects"
-                md-autofocus
-              />
-            </md-input-container>
           </div>
-        </div>
-        <!--span ng-if="!$ctrl.currentUser" class="text-center">
+        </td>
+        <td class="sample-count">{{ project.entityStats.SampleCount }}</td>
+        <td>
+          <md-icon
+            ng-if="project.entityStats.fastqMetadataCount > 0"
+            md-font-icon="fa fa-check success fa-fw"
+          >
+          </md-icon>
+          <md-icon
+            ng-if="project.entityStats.fastqMetadataCount === 0 "
+            md-font-icon="fa fa-times false fa-fw"
+          >
+          </md-icon>
+        </td>
+        <td>
+          <md-icon
+            ng-if="project.entityStats.Event_PhotoCount > 0 || project.entityStats.Sample_PhotoCount > 0 "
+            md-font-icon="fa fa-check success fa-fw"
+          >
+          </md-icon>
+          <md-icon
+            ng-if="project.entityStats.Event_PhotoCount === 0 && project.entityStats.Sample_PhotoCount === 0 "
+            md-font-icon="fa fa-times false fa-fw"
+          >
+          </md-icon>
+        </td>
+      </tr>
+    </table>
+  </section>
+  <section class="public-projects">
+    <div layout="row">
+      <h3 flex>Public Projects</h3>
+      <div md-no-float class="col-sm-4 filter">
+        <md-icon md-font-icon="fa fa-search fa-fw"></md-icon>
+        <md-input-container flex>
+          <input
+            ng-model="$ctrl.publicSearchText"
+            ng-change="$ctrl.publicSearchTextChange($ctrl.publicSearchText)"
+            placeholder="Filter Projects"
+            md-autofocus
+          />
+        </md-input-container>
+      </div>
+    </div>
+    <!--span ng-if="!$ctrl.currentUser" class="text-center">
           Click on project title to view more
         </span-->
 
-        <table class="table table-hover table-condensed" ng-if="!$ctrl.loading">
-          <thead>
-            <th></th>
-            <th></th>
-            <th class="text-center">Sample Count</th>
-            <th class="text-center">Has SRA</th>
-            <th class="text-center">Has Photos</th>
-            <th class="text-center">Last Update</th>
-          </thead>
-          <tr
-            ng-repeat="project in $ctrl.filteredPublicProjects"
-            ng-if="!$ctrl.currentUser || ($ctrl.currentUser && !$ctrl.usersProjects.includes(project))"
+    <div
+      layout="row"
+      layout-align="center center"
+      ng-show="$ctrl.loading && !$ctrl.currentUser"
+      class="loader"
+    >
+      <md-progress-circular
+        class="loading-overlay-fixed"
+        md-mode="indeterminate"
+      ></md-progress-circular>
+    </div>
+
+    <table class="table table-hover table-striped" ng-if="!$ctrl.loading">
+      <thead>
+        <th></th>
+        <th class="sample-count-header"># of Samples</th>
+        <th>Has SRA</th>
+        <th>Has Photos</th>
+      </thead>
+      <tr
+        ng-repeat="project in $ctrl.filteredPublicProjects | orderBy: 'projectTitle'"
+        ng-if="!$ctrl.currentUser || ($ctrl.currentUser && !$ctrl.usersProjects.includes(project))"
+        ng-click="$ctrl.showExpeditionsDetail(project.projectId)"
+      >
+        <td layout="column">
+          <div md-truncate md-colors="{color: 'primary'}">
+            <span>{{ project.projectTitle }}</span>
+            <md-tooltip md-delay="200" md-direction="bottom">{{ project.projectTitle }}</md-tooltip>
+          </div>
+          <div layout="row" layout-align="space-between">
+            <small class="text-muted activity"
+              >Latest Activity:
+              {{
+                project.latestDataModification
+                  ? project.latestDataModification.split(' ')[0]
+                  : 'N/A'
+              }}</small
+            >
+            <span
+              ng-if="project.projectConfiguration.networkApproved === true"
+              class="label label-info"
+              >{{ project.projectConfiguration.name }} team</span
+            >
+          </div>
+        </td>
+        <td class="sample-count">{{ project.entityStats.SampleCount }}</td>
+        <td>
+          <md-icon
+            ng-if="project.entityStats.fastqMetadataCount > 0"
+            md-font-icon="fa fa-check success fa-fw"
           >
-            <th ng-click="$ctrl.showExpeditionsDetail(project.projectId)">
-              <md-button md-truncate flex class="md-icon-button md-primary"
-                >{{ project.projectTitle }}
-              </md-button>
-              <md-tooltip md-delay="200" md-direction="bottom">{{
-                project.projectTitle
-              }}</md-tooltip>
-            </th>
-            <th>
-              <span
-                ng-if="project.projectConfiguration.networkApproved === true"
-                class="label label-info"
-                >{{ project.projectConfiguration.name }} team</span
-              >
-            </th>
-            <th class="text-center">{{ project.entityStats.SampleCount }}</th>
-            <th class="text-center">
-              <md-icon
-                ng-if="project.entityStats.fastqMetadataCount > 0"
-                md-font-icon="fa fa-check success fa-fw"
-              >
-              </md-icon>
-              <md-icon
-                ng-if="project.entityStats.fastqMetadataCount === 0 "
-                md-font-icon="fa fa-times false fa-fw"
-              >
-              </md-icon>
-            </th>
-            <th class="text-center">
-              <md-icon
-                ng-if="project.entityStats.Event_PhotoCount > 0 || project.entityStats.Sample_PhotoCount > 0 "
-                md-font-icon="fa fa-check success fa-fw"
-              >
-              </md-icon>
-              <md-icon
-                ng-if="project.entityStats.Event_PhotoCount === 0 && project.entityStats.Sample_PhotoCount === 0 "
-                md-font-icon="fa fa-times false fa-fw"
-              >
-              </md-icon>
-            </th>
-            <th class="text-center">{{ project.dateModified.split(' ')[0] }}</th>
-          </tr>
-        </table>
-      </div>
-    </section>
-  </md-content>
+          </md-icon>
+          <md-icon
+            ng-if="project.entityStats.fastqMetadataCount === 0 "
+            md-font-icon="fa fa-times false fa-fw"
+          >
+          </md-icon>
+        </td>
+        <td>
+          <md-icon
+            ng-if="project.entityStats.Event_PhotoCount > 0 || project.entityStats.Sample_PhotoCount > 0 "
+            md-font-icon="fa fa-check success fa-fw"
+          >
+          </md-icon>
+          <md-icon
+            ng-if="project.entityStats.Event_PhotoCount === 0 && project.entityStats.Sample_PhotoCount === 0 "
+            md-font-icon="fa fa-times false fa-fw"
+          >
+          </md-icon>
+        </td>
+      </tr>
+    </table>
+  </section>
 </div>
