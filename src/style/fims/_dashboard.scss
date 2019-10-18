@@ -31,7 +31,6 @@
   }
 
   .label {
-    margin-top: 0.25rem;
     margin-left: 8px;
     display: inline-block;
     max-width: 100%;
@@ -68,6 +67,10 @@
   .sample-count {
     text-align: right;
     font-weight: 500;
+  }
+
+  .title-row .label {
+    margin-bottom: 4px;
   }
 
   .activity {
