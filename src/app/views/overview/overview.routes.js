@@ -1,16 +1,16 @@
 function getStates() {
   return [
     {
-      state: 'dashboard',
+      state: 'overview',
       config: {
         parent: 'projectView',
-        url: '/dashboard',
-        component: 'fimsDashboard',
-        projectRequired: false,
+        url: '/overview',
+        component: 'fimsOverview',
       },
     },
   ];
 }
+
 export default routerHelper => {
   'ngInject';
 

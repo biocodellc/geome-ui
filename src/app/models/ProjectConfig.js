@@ -91,10 +91,10 @@ export default class ProjectConfig {
   }
 
   findListForColumn(entity, column) {
-    const r = entity.rules.some(
+    const r = entity.rules.find(
       rule => rule.name === 'ControlledVocabulary' && rule.column === column,
     );
-    return r ? this.getList(column) : undefined;
+    return r ? this.getList(r.listName) : undefined;
   }
 
   attributeRules(sheetName, attribute) {

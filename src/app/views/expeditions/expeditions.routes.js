@@ -24,7 +24,7 @@ function getStates() {
               .then(({ data }) => {
                 if (data.length > 0)
                   return data.sort(compareValues('expeditionTitle'));
-                return $state.go('dashboard');
+                return $state.go('overview');
               })
               .catch(() => $state.go('home')),
         },

@@ -1,73 +1,106 @@
-.download-button {
-  min-width: 24px;
-  margin: 0;
-  padding: 0 3px;
-  md-progress-circular {
-    margin-left: 5px;
+.dashboard {
+  h3 {
+    margin-bottom: 5px;
   }
-}
-
-.query-button {
-  @extend .download-button;
-  min-width: 24px;
-  margin-right: 5px;
-  md-icon {
-    min-width: 18px;
-    width: 18px;
-    min-height: 18px;
-    height: 18px;
-    font-size: 18px;
+  .table {
+    table-layout: fixed;
+    width: 100%;
+    tbody > tr > th {
+      padding: 2px;
+    }
   }
-}
-
-.project-details {
-  margin-top: 8px;
-
-  .title {
-    margin-top: 8px;
-    margin-bottom: 4px;
+  table tr th:first-child {
+    width: 65%;
   }
-}
-
-.project-download-button {
-  @extend .download-button;
-  margin-bottom: 16px;
-  margin-top: 16px;
-  padding: 0 6px;
-  span {
-    margin-right: 5px;
+  .public-projects,
+  .my-projects {
+    background-color: #fff;
+    padding: 24px;
   }
-  md-progress-circular {
+
+  .public-projects {
+    padding-top: 8px;
+  }
+
+  .my-projects {
+    margin-bottom: 48px;
+  }
+
+  .loading-overlay-fixed {
+    position: fixed;
+  }
+
+  .label {
+    margin-left: 8px;
     display: inline-block;
-    margin-left: 7px;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
-}
 
-fims-dashboard {
-  .page-header {
-    margin-bottom: 4px;
-  }
-}
-
-.table-condensed {
-  td.md-dense.action-buttons {
-    padding: 3px !important;
-
-    md-menu.md-dense {
-      button {
-        min-width: 24px;
-        min-height: 24px !important;
-        line-height: 24px !important;
-        padding: 0 3px;
-
-        md-icon {
-          min-width: 18px;
-          width: 18px;
-          min-height: 18px;
-          height: 18px;
-          font-size: 18px;
-        }
+  thead {
+    tr {
+      th {
+        padding: 5px;
       }
     }
+  }
+  tbody {
+    box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.12);
+  }
+
+  td,
+  th {
+    text-align: right;
+    border: none !important;
+  }
+
+  td {
+    font-weight: 400;
+  }
+
+  .sample-count-header {
+    text-align: right;
+  }
+
+  .sample-count {
+    text-align: right;
+    font-weight: 500;
+  }
+
+  .title-row .label {
+    margin-bottom: 4px;
+  }
+
+  .activity {
+    font-weight: 300;
+  }
+
+  td:first-of-type {
+    text-align: left;
+    font-weight: 600;
+    color: $brand-primary;
+  }
+
+  th {
+    color: $gray;
+    font-weight: 400;
+  }
+
+  .md-button.md-icon-button {
+    width: 100%;
+    md-icon {
+      display: inline-block;
+    }
+  }
+
+  .filter {
+    display: flex;
+  }
+
+  .loader {
+    margin-top: 48px;
+    margin-bottom: 48px;
   }
 }

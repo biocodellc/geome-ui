@@ -89,7 +89,9 @@ class QueryFormController {
       this.projects = data;
       const names = new Set();
       this.projects.forEach(p => {
-        names.add(p.projectConfiguration.name);
+        if (p.projectConfiguration.networkApproved === true) {
+          names.add(p.projectConfiguration.name);
+        }
       });
       this.configNames = [...names];
     });

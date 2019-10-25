@@ -1,13 +1,15 @@
 const template = require('./filter-buttons.html');
 
 const queryTypes = {
-  list: ['=', 'has'],
   string: ['=', 'like', 'has'],
   float: ['=', '<', '<=', '>', '>=', 'has'],
   datetime: ['=', '<', '<=', '>', '>=', 'has'],
   date: ['=', '<', '<=', '>', '>=', 'has'],
   integer: ['=', '<', '<=', '>', '>=', 'has'],
+  list: ['=', 'has'],
 };
+
+const booleanValues = [{ value: 'true' }, { value: 'false' }];
 
 class FilterButtonsController {
   generateFilterOptions() {
@@ -58,7 +60,7 @@ class FilterButtonsController {
     this.currentConfig.entities.forEach(e => {
       const allAliases = e.conceptAlias;
       this.filterOptions[allAliases].forEach(o => {
-        if (o.list) {
+        if (o.list || o.dataType === 'BOOLEAN') {
           this.controlledVocabAttributes.push(o.column);
         }
       });
@@ -77,7 +79,7 @@ class FilterButtonsController {
   getQueryTypes(conceptAlias, column) {
     const opt = this.filterOptions[conceptAlias].find(o => o.column === column);
     if (opt) {
-      if (opt.list) {
+      if (opt.list || opt.dataType === 'BOOLEAN') {
         return queryTypes.list;
       }
       return queryTypes[opt.dataType.toLowerCase()];
@@ -87,7 +89,12 @@ class FilterButtonsController {
 
   getList(conceptAlias, column) {
     const opt = this.filterOptions[conceptAlias].find(o => o.column === column);
-    return opt.list ? opt.list.fields : [];
+    if (opt.dataType === 'BOOLEAN') {
+      return booleanValues;
+    } else if (opt.list) {
+      return opt.list.fields;
+    }
+    return [];
   }
 }
 
