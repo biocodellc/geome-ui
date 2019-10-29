@@ -66,8 +66,8 @@
       <md-menu-item ng-repeat="project in $ctrl.filteredProjects track by project.projectId">
         <md-button ng-click="$ctrl.change(project)">
           <span md-highlight-text="$ctrl.searchText" md-highlight-flags="gi">
-            {{ project.projectTitle }}</span
-          >
+            {{ project.projectTitle }}
+          </span>
           <md-icon
             ng-show="$ctrl.currentProject.projectId === project.projectId"
             md-font-icon="fa fa-check success fa-fw"
