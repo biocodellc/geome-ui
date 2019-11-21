@@ -182,7 +182,7 @@ export default class QueryParams {
         builder.add(
           `or (Event.decimalLongitude <= ${
             ne.lng
-          } or Event.decimalLongitude >= -180))`,
+          } and Event.decimalLongitude >= -180))`,
         );
       }
       if (builder.queryString.length > 0) builder.add('and');
