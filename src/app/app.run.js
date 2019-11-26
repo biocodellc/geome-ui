@@ -60,7 +60,7 @@ export default function(
         const projectId = parseInt($location.search().projectId, 10);
 
         const projectPromise = ProjectService.loadFromSession(projectId).then(
-          project => ProjectService.setCurrentProject(project, true),
+          project => ProjectService.setCurrentProject(project, true, false),
         );
         const userPromise = AuthService.getAccessToken()
           ? UserService.loadFromSession().then(user =>
