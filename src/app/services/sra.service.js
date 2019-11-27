@@ -4,32 +4,20 @@ import config from '../utils/config';
 
 const { restRoot } = config;
 
-class PhotosService {
-  constructor($http, $interval, Upload) {
+class SraService {
+  constructor($http, Upload) {
     'ngInject';
 
     this.$http = $http;
-    this.$interval = $interval;
     this.Upload = Upload;
   }
 
-  upload(
-    projectId,
-    expeditionCode,
-    entity,
-    file,
-    isResume = false,
-    ignoreId = false,
-  ) {
+  async upload(metadata, file, isResume = false) {
     const progressCallbacks = [];
 
-    const onSuccess = res => ({
-      success: res.data.success,
-      errors: res.data.messages.errors || [],
-      warnings: res.data.messages.warnings || [],
-    });
+    const onSuccess = res => res.data
     const onFail = angular.catcher(
-      'Photo upload failed',
+      'SRA upload failed',
       { name: 'close', fn: () => {} },
       {
         hideDelay: 0,
@@ -37,8 +25,21 @@ class PhotosService {
     );
     const onProgress = event => progressCallbacks.forEach(fn => fn(event));
 
+    const { data } = await this.$http({
+      method: 'PUT',
+      url: `${restRoot}sra/upload`,
+      data: metadata,
+      keepJson: true,
+    }).catch(e => onFail(e) && {});
+
+    if (!data) {
+      return Promise.reject(new Error('Upload initialization failed.'));
+    }
+
+    const { uploadId: id } = data;
+
     const p = this.Upload.http({
-      url: `${restRoot}photos/${entity}/upload`,
+      url: `${restRoot}sra/upload`,
       method: 'PUT',
       data: file,
       headers: {
@@ -46,14 +47,10 @@ class PhotosService {
       },
       keepJson: true,
       params: {
-        projectId,
-        expeditionCode,
-        ignoreId,
+        id,
         type: isResume ? 'resume' : 'resumable',
       },
-      resumeSize: isResume
-        ? () => this.getResumeSize(projectId, expeditionCode, entity)
-        : undefined,
+      resumeSize: isResume ? () => this.getResumeSize(id) : undefined,
     }).then(onSuccess, onFail, onProgress);
 
     p.progress = fn => {
@@ -66,13 +63,10 @@ class PhotosService {
     return p;
   }
 
-  getResumeSize(projectId, expeditionCode, entity) {
+  getResumeSize(id) {
     return this.$http({
-      url: `${restRoot}photos/${entity}/upload/progress`,
-      params: {
-        projectId,
-        expeditionCode,
-      },
+      url: `${restRoot}sra/upload/progress`,
+      params: { id },
     })
       .then(response => response.data.size || 0)
       .catch(response => {
@@ -85,5 +79,5 @@ class PhotosService {
 }
 
 export default angular
-  .module('fims.photosService', [])
-  .service('PhotosService', PhotosService).name;
+  .module('fims.sraService', [])
+  .service('SraService', SraService).name;

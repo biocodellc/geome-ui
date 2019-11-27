@@ -17,7 +17,7 @@
       <md-icon md-font-icon="fa fa-photo fa-fw"></md-icon>
       <p>Upload Photos</p>
     </md-list-item>
-    <md-list-item ng-click="$ctrl.$state.go('sra-upload')">
+    <md-list-item ng-if="$ctrl.showSRAUpload" ng-click="$ctrl.$state.go('sra-upload')">
       <md-icon md-font-icon="fa fa-photo fa-fw"></md-icon>
       <p>Fastq SRA Upload</p>
     </md-list-item>

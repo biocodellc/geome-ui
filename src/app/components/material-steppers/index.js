@@ -351,6 +351,8 @@ export default angular
     require: 'mdStep', // require the above mdStep directive
     link: (scope, element, attrs, ctrl) => {
       // place the $mdStep on the parent scope
+      // This should actually only place the $stepper on the parent scope.
+      // The way we currently do this, $mdStep always evaluates to the last mdStep as that is the last ctrl to be set
       scope.$mdStep = ctrl;
     },
   }))

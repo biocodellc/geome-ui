@@ -7,42 +7,37 @@ function getStates() {
       config: {
         parent: 'projectView',
         url: '/upload/sra',
-        component: 'fimsSRAUpload',
+        component: 'fimsSraUpload',
         projectRequired: true,
         loginRequired: true,
         resolve: {
           userExpeditions: /* @ngInject */ (
             ExpeditionService,
             ProjectService,
-            UserService,
           ) => {
-            // TODO only get expeditions with Fastq data
-            if (ProjectService.currentProject()) {
-              let fetchExpeditions;
-              if (UserService.currentUser()) {
-                fetchExpeditions = ProjectService.currentProject()
-                  .enforceExpeditionAccess
-                  ? ExpeditionService.getExpeditionsForUser(
-                      ProjectService.currentProject().projectId,
-                      true,
-                    )
-                  : ExpeditionService.all(
-                      ProjectService.currentProject().projectId,
-                    );
-              } else {
-                fetchExpeditions = ExpeditionService.all(
-                  ProjectService.currentProject().projectId,
-                );
-              }
+            const expeditions = ExpeditionService.getExpeditionsForUser(
+              ProjectService.currentProject().projectId,
+              true,
+            );
 
-              return fetchExpeditions
-                .then(({ data }) => data)
-                .catch(() =>
-                  angular.toaster.error('Failed to load expeditions'),
-                );
-            }
+            const expeditionStats = ExpeditionService.stats(
+              ProjectService.currentProject().projectId,
+            );
 
-            return [];
+            return Promise.all([
+              expeditions.then(({ data }) => data),
+              expeditionStats.then(({ data }) => data),
+            ])
+              .then(([expeditions, stats]) => {
+                const expeditionCodesWithFastq = stats
+                  .filter(e => parseInt(e.fastqMetadataCount) > 0)
+                  .map(e => e.expeditionCode);
+
+                return expeditions.filter(e =>
+                  expeditionCodesWithFastq.includes(e.expeditionCode),
+                );
+              })
+              .catch(() => angular.toaster.error('Failed to load expeditions'));
           },
         },
       },
