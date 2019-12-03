@@ -4,11 +4,12 @@ const JSZip = require('jszip');
 // const resultsTemplate = require('./photo-upload-results.html');
 
 class SraUploadController {
-  constructor($mdDialog, $timeout, SraService, DataService) {
+  constructor($mdDialog, $timeout, $state, SraService, DataService) {
     'ngInject';
 
     this.$mdDialog = $mdDialog;
     this.$timeout = $timeout;
+    this.$state = $state;
     this.SraService = SraService;
     this.DataService = DataService;
   }
@@ -25,6 +26,13 @@ class SraUploadController {
     this.selectedBioSamples = [];
     this.sraMetadata = [];
     this.filteredSraMetadata = [];
+    this.sraUsername =
+      this.currentUser.sraUsername || this.currentUser.username;
+    this.sraEmail = this.currentUser.sraEmail || this.currentUser.email;
+    this.sraFirstName =
+      this.currentUser.sraFirstName || this.currentUser.firstName;
+    this.sraLastName =
+      this.currentUser.sraLastName || this.currentUser.lastName;
   }
 
   $onChanges(changesObj) {
@@ -129,6 +137,13 @@ class SraUploadController {
         bioProjectDescription: this.bioProjectDescription,
         bioSampleType: this.bioSampleType,
         bioSamples: this.selectedBioSamples.map(s => s.sample_name),
+        releaseDate: this.releaseDate
+          ? this.releaseDate.toISOString().split('T')[0]
+          : undefined,
+        sraUsername: this.sraUsername,
+        sraEmail: this.sraEmail,
+        sraFirstName: this.sraFirstName,
+        sraLastName: this.sraLastName,
       },
       this.file,
       resume,
@@ -226,14 +241,7 @@ class SraUploadController {
     );
 
     if (results.success) {
-      this.file = undefined;
-      this.bioSampleType = 'animal';
-      this.bioSamples = [];
-      this.bioSamplesPromise = null;
-      this.selectedBioSamples = [];
-      this.sraMetadata = [];
-      this.filteredSraMetadata = [];
-      this.expedition = null;
+      this.$state.reload()
     }
   }
 }

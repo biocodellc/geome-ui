@@ -99,7 +99,49 @@
             </md-step-actions>
           </md-step>
 
-          <md-step md-label="BioSample Type" md-order="1">
+          <md-step md-label="Submission Info" md-order="1">
+            <md-step-body layout="row" class="layout-wrap">
+              <p>
+                The following information is used to make an SRA submission on your behalf. The
+                username, first name, last name, and email <b>must</b> match your account with the
+                SRA in order to access the submission after GEOME has submitted your data.
+                <a href="https://submit.ncbi.nlm.nih.gov/accounts/profile/" target="_blank"
+                  >View my SRA account.</a
+                >
+              </p>
+              <md-input-container flex-gt-sm="50">
+                <label>SRA Account Username</label>
+                <input name="sraUsername" ng-model="$ctrl.sraUsername" required />
+              </md-input-container>
+              <md-input-container flex-gt-sm="50">
+                <label>SRA Account Email</label>
+                <input name="sraEmail" ng-model="$ctrl.sraEmail" required />
+              </md-input-container>
+              <md-input-container flex-gt-sm="50">
+                <label>SRA Account First Name</label>
+                <input name="sraFirstName" ng-model="$ctrl.sraFirstName" required />
+              </md-input-container>
+              <md-input-container flex-gt-sm="50">
+                <label>SRA Account Last Name</label>
+                <input name="sraLastName" ng-model="$ctrl.sraLastName" required />
+              </md-input-container>
+
+              <md-input-container flex="100">
+                <label>Release Date</label>
+                <md-datepicker ng-model="$ctrl.releaseDate" md-open-on-focus="true"></md-datepicker>
+                <md-hints>
+                  <md-hint>The date you would like your SRA submission to be released.</md-hint>
+                </md-hints>
+              </md-input-container>
+            </md-step-body>
+            <md-step-actions>
+              <md-button class="md-primary md-raised" ng-click="$mdStep.$stepper.next()">
+                Next
+              </md-button>
+            </md-step-actions>
+          </md-step>
+
+          <md-step md-label="BioSample Type" md-order="2">
             <md-step-body>
               <md-radio-group ng-model="$ctrl.bioSampleType" class="md-primary">
                 <md-radio-button value="animal"
@@ -125,17 +167,17 @@
                     advantageous to use MIxS packages.</span
                   >
                 </md-radio-button>
-<!--                <md-radio-button value="genome"-->
-<!--                  >Genome, metagenome or marker sequences (MIxS compliant) - -->
-<!--                  <span class="small"-->
-<!--                    >Use for genomes, metagenomes, and marker sequences. These samples include-->
-<!--                    specific attributes that have been defined by the Genome Standards Consortium-->
-<!--                    (GSC) to formally describe and standardize sample metadata for genomes,-->
-<!--                    metagenomes, and marker sequences. The samples are validated for compliance-->
-<!--                    based on the presence of the required core attributes as described in-->
-<!--                    MIxS.</span-->
-<!--                  >-->
-<!--                </md-radio-button>-->
+                <!--                <md-radio-button value="genome"-->
+                <!--                  >Genome, metagenome or marker sequences (MIxS compliant) - -->
+                <!--                  <span class="small"-->
+                <!--                    >Use for genomes, metagenomes, and marker sequences. These samples include-->
+                <!--                    specific attributes that have been defined by the Genome Standards Consortium-->
+                <!--                    (GSC) to formally describe and standardize sample metadata for genomes,-->
+                <!--                    metagenomes, and marker sequences. The samples are validated for compliance-->
+                <!--                    based on the presence of the required core attributes as described in-->
+                <!--                    MIxS.</span-->
+                <!--                  >-->
+                <!--                </md-radio-button>-->
                 <md-radio-button value="virus"
                   >Virus -
                   <span class="small"
@@ -144,21 +186,21 @@
                     package.</span
                   >
                 </md-radio-button>
-<!--                <md-radio-button value="beta-lactamase"-->
-<!--                  >Beta-lactamase - -->
-<!--                  <span class="small"-->
-<!--                    >Use for beta-lactamase gene transformants that have antibiotic resistance-->
-<!--                    data.</span-->
-<!--                  >-->
-<!--                </md-radio-button>-->
-<!--                <md-radio-button value="pathogen"-->
-<!--                  >Pathogen affecting public health - -->
-<!--                  <span class="small"-->
-<!--                    >Use for pathogen samples that are relevant to public health. Required-->
-<!--                    attributes include those considered useful for the rapid analysis and trace back-->
-<!--                    of pathogens.</span-->
-<!--                  >-->
-<!--                </md-radio-button>-->
+                <!--                <md-radio-button value="beta-lactamase"-->
+                <!--                  >Beta-lactamase - -->
+                <!--                  <span class="small"-->
+                <!--                    >Use for beta-lactamase gene transformants that have antibiotic resistance-->
+                <!--                    data.</span-->
+                <!--                  >-->
+                <!--                </md-radio-button>-->
+                <!--                <md-radio-button value="pathogen"-->
+                <!--                  >Pathogen affecting public health - -->
+                <!--                  <span class="small"-->
+                <!--                    >Use for pathogen samples that are relevant to public health. Required-->
+                <!--                    attributes include those considered useful for the rapid analysis and trace back-->
+                <!--                    of pathogens.</span-->
+                <!--                  >-->
+                <!--                </md-radio-button>-->
                 <md-radio-button value="microbe"
                   >Microbe -
                   <span class="small"
@@ -199,7 +241,7 @@
               </md-button>
             </md-step-actions>
           </md-step>
-          <md-step md-label="BioSamples" md-order="2">
+          <md-step md-label="BioSamples" md-order="3">
             <p>Select the samples that you would like to submit to the SRA database.</p>
             <md-step-body>
               <md-table-container>
@@ -244,7 +286,7 @@
             </md-step-actions>
           </md-step>
 
-          <md-step md-label="SRA Metadata" md-order="3">
+          <md-step md-label="SRA Metadata" md-order="4">
             <p>
               Please verify the metadata below. If something is not correct, you will need to
               <a ui-sref="validate">update</a> your data before proceeding.
@@ -278,51 +320,51 @@
             </md-step-actions>
           </md-step>
 
-          <md-step md-label="File Upload" md-order="4">
-              <md-step-body>
-                <div layout-gt-sm="row">
-                  <md-file-upload
-                    flex
-                    required="true"
-                    pattern=".zip"
-                    on-select="$ctrl.onSelect(files)"
-                    text="Choose File"
-                    file="$ctrl.file"
-                    hints='["A zipped directory of Fastq data to upload."]'
-                  />
-                </div>
-                <md-progress-linear
-                  ng-if="$ctrl.uploadProgress !== undefined"
-                  md-mode="determinate"
-                  ng-value="$ctrl.uploadProgress"
-                ></md-progress-linear>
-              </md-step-body>
-              <md-step-actions>
-                <!--                  ng-disabled="$ctrl.loading"-->
-                <md-button
-                  type="submit"
-                  class="md-primary md-raised"
-                  layout="row"
-                  layout-align="center center"
-                  ng-click="$ctrl.upload()"
-                >
-                  <span ng-if="!$ctrl.loading && !$ctrl.canResume">Upload</span>
-                  <span ng-if="!$ctrl.loading && $ctrl.canResume">Resume</span>
-                  <md-progress-circular
-                    ng-if="$ctrl.loading"
-                    md-mode="indeterminate"
-                    md-diameter="18"
-                    class="md-accent md-hue-3"
-                  ></md-progress-circular>
-                </md-button>
-                <button
-                  ng-show="$ctrl.canResume"
-                  ng-click="$ctrl.canResume = false;$ctrl.uploadProgress = undefined;"
-                  class="md-button md-raised md-warn md-hue-2 pull-right"
-                >
-                  Reset
-                </button>
-              </md-step-actions>
+          <md-step md-label="File Upload" md-order="5">
+            <md-step-body>
+              <div layout-gt-sm="row">
+                <md-file-upload
+                  flex
+                  required="true"
+                  pattern=".zip"
+                  on-select="$ctrl.onSelect(files)"
+                  text="Choose File"
+                  file="$ctrl.file"
+                  hints='["A zipped directory of Fastq data to upload."]'
+                />
+              </div>
+              <md-progress-linear
+                ng-if="$ctrl.uploadProgress !== undefined"
+                md-mode="determinate"
+                ng-value="$ctrl.uploadProgress"
+              ></md-progress-linear>
+            </md-step-body>
+            <md-step-actions>
+              <!--                  ng-disabled="$ctrl.loading"-->
+              <md-button
+                type="submit"
+                class="md-primary md-raised"
+                layout="row"
+                layout-align="center center"
+                ng-click="$ctrl.upload()"
+              >
+                <span ng-if="!$ctrl.loading && !$ctrl.canResume">Upload</span>
+                <span ng-if="!$ctrl.loading && $ctrl.canResume">Resume</span>
+                <md-progress-circular
+                  ng-if="$ctrl.loading"
+                  md-mode="indeterminate"
+                  md-diameter="18"
+                  class="md-accent md-hue-3"
+                ></md-progress-circular>
+              </md-button>
+              <button
+                ng-show="$ctrl.canResume"
+                ng-click="$ctrl.canResume = false;$ctrl.uploadProgress = undefined;"
+                class="md-button md-raised md-warn md-hue-2 pull-right"
+              >
+                Reset
+              </button>
+            </md-step-actions>
           </md-step>
         </md-stepper>
       </form>
