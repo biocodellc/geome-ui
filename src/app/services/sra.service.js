@@ -12,10 +12,10 @@ class SraService {
     this.Upload = Upload;
   }
 
-  async upload(metadata, file, isResume = false) {
+  upload(metadata, file, isResume = false) {
     const progressCallbacks = [];
 
-    const onSuccess = res => res.data
+    const onSuccess = res => res.data;
     const onFail = angular.catcher(
       'SRA upload failed',
       { name: 'close', fn: () => {} },
@@ -25,33 +25,35 @@ class SraService {
     );
     const onProgress = event => progressCallbacks.forEach(fn => fn(event));
 
-    const { data } = await this.$http({
+    const p = this.$http({
       method: 'PUT',
       url: `${restRoot}sra/upload`,
       data: metadata,
       keepJson: true,
-    }).catch(e => onFail(e) && {});
+    })
+      .then(({ data }) => {
+        if (!data) {
+          return Promise.reject(new Error('Upload initialization failed.'));
+        }
 
-    if (!data) {
-      return Promise.reject(new Error('Upload initialization failed.'));
-    }
+        const { uploadId: id } = data;
 
-    const { uploadId: id } = data;
-
-    const p = this.Upload.http({
-      url: `${restRoot}sra/upload`,
-      method: 'PUT',
-      data: file,
-      headers: {
-        'Content-Type': file.type,
-      },
-      keepJson: true,
-      params: {
-        id,
-        type: isResume ? 'resume' : 'resumable',
-      },
-      resumeSize: isResume ? () => this.getResumeSize(id) : undefined,
-    }).then(onSuccess, onFail, onProgress);
+        return this.Upload.http({
+          url: `${restRoot}sra/upload`,
+          method: 'PUT',
+          data: file,
+          headers: {
+            'Content-Type': file.type,
+          },
+          keepJson: true,
+          params: {
+            id,
+            type: isResume ? 'resume' : 'resumable',
+          },
+          resumeSize: isResume ? () => this.getResumeSize(id) : undefined,
+        }).then(onSuccess, onFail, onProgress);
+      })
+      .catch(e => onFail(e) && {});
 
     p.progress = fn => {
       if (fn && typeof fn === 'function') {
