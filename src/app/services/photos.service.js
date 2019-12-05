@@ -5,13 +5,12 @@ import config from '../utils/config';
 const { restRoot } = config;
 
 class PhotosService {
-  constructor($http, $interval, Upload, FileService) {
+  constructor($http, $interval, Upload) {
     'ngInject';
 
     this.$http = $http;
     this.$interval = $interval;
     this.Upload = Upload;
-    this.FileService = FileService;
   }
 
   upload(
