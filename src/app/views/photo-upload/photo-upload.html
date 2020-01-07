@@ -40,12 +40,13 @@
         <ul>
           <li>{parentIdentifier}+{imgIdentifier}.{ext}</li>
           <p ng-show="$ctrl.entity.generateID" class="small">
-            If you select "Auto-Generate Ids" below, the parsed 'imgIdentifier' will be ignored.
+            If you select "Auto-Generate Ids" below, the parsed 'imgIdentifier' will be ignored. {parentIdentifier} will be either materialSampleID or eventID
+
           </p>
         </ul>
         <li><strong>Metadata option</strong>: Include a <i>metadata.csv</i> with the following fields:</li>
         <ul>
-          <li><u>parentIdentifier</u> (required - the identifier of the record to attach the photo to)</li>
+          <li><u>materialSampleID OR eventID</u> (required - the identifier of the record to attach the photo to.  Use either materialSampleID or eventID to denote the parentIdentifier)</li>
           <li><u>fileName</u> (required -the name of the file in the directory)</li>
 	  <li><u>expeditionCode</u> (required if photos span multiple expeditions)</li>
 	  <li><u>other fields</u> (see photo fields under <i>"Generate Template"</i>)</li>
