@@ -4,7 +4,7 @@
 
   <div class="project-details">
     <div class="row">
-      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Project owner:</strong></div>
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Project owner</strong></div>
       <div class="col-sm-8 col-md-9 col-lg-10">
         {{ $ctrl.currentProject.user.username }} (<a
           href="mailto:{{ $ctrl.currentProject.user.email }}"
@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Project link:</strong></div>
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Project link</strong></div>
       <div class="col-sm-8 col-md-9 col-lg-10">
         <a href="{{ $ctrl.url }}?projectId={{ $ctrl.currentProject.projectId }}"
           >{{ $ctrl.url }}?projectId={{ $ctrl.currentProject.projectId }}</a
@@ -21,12 +21,15 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Public:</strong></div>
-      <div class="col-sm-8 col-md-9 col-lg-10">{{ $ctrl.currentProject.public }}</div>
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Visibility</strong></div>
+      <div class="col-sm-8 col-md-9 col-lg-10">
+        <span ng-if="$ctrl.currentProject.public">This is a public project</span>
+        <span ng-if="!$ctrl.currentProject.public">This is a private project</span>
+      </div>
     </div>
     
     <div class="row" ng-if="$ctrl.currentProject.principalInvestigator">
-      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Principal Investigator:</strong></div>
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Prin. Investigator</strong></div>
       <div class="col-sm-8 col-md-9 col-lg-10">{{ $ctrl.currentProject.principalInvestigator}}<span ng-if="$ctrl.currentProject.principalInvestigatorAffiliation">, 
             {{$ctrl.currentProject.principalInvestigatorAffiliation}}</span>
       </div>
@@ -34,7 +37,7 @@
     </div>
 
     <div class="row" ng-if="$ctrl.currentProject.projectContact">
-      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Contact:</strong></div>
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Contact</strong></div>
       <div class="col-sm-8 col-md-9 col-lg-10">{{ $ctrl.currentProject.projectContact}} 
           <span ng-if="$ctrl.currentProject.projectContactEmail">(
             <a href="mailto:{{ $ctrl.currentProject.projectContactEmail}}">{{ $ctrl.currentProject.projectContactEmail}}</a>)
@@ -43,25 +46,29 @@
     </div>
 
     <div class="row" ng-if="$ctrl.currentProject.publicationGuid">
-      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Publication GUID:</strong></div>
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Publication GUID</strong></div>
       <div class="col-sm-8 col-md-9 col-lg-10">{{ $ctrl.currentProject.publicationGuid}}</div>
     </div>
 
     <div class="row" ng-if="$ctrl.currentProject.projectDataGuid">
-      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Project Data GUID:</strong></div>
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Data GUID</strong></div>
       <div class="col-sm-8 col-md-9 col-lg-10">{{ $ctrl.currentProject.projectDataGuid}}</div>
     </div>
 
     <div class="row" ng-if="$ctrl.currentProject.recommendedCitation">
-      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Recommended Citation:</strong></div>
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Citation</strong></div>
       <div class="col-sm-8 col-md-9 col-lg-10">{{ $ctrl.currentProject.recommendedCitation}}</div>
     </div>
 
     <div ng-show="$ctrl.currentProject.projectConfiguration.networkApproved">
       <div class="row title">
-        <div class="col-sm-4 col-md-3 col-lg-2"><strong>Team workspace:</strong></div>
+        <div class="col-sm-4 col-md-3 col-lg-2"><strong>Team workspace</strong></div>
         <div class="col-sm-8 col-md-9 col-lg-10">
           {{ $ctrl.currentProject.projectConfiguration.name }}
+          (<a href="mailto:{{ $ctrl.currentProject.projectConfiguration.user.email }}">{{
+            $ctrl.currentProject.projectConfiguration.user.email
+          }}</a
+          >)
           <md-button class="md-icon-button help-link md-popover-button">
             <md-popover md-popover-class="fastq-help-filenames" md-direction="right">
               <div ng-include="'overview-config-help.popover.html'"></div>
@@ -70,8 +77,9 @@
           </md-button>
         </div>
       </div>
+      <!--
       <div class="row">
-        <div class="col-sm-4 col-md-3 col-lg-2"><strong>Team owner:</strong></div>
+        <div class="col-sm-4 col-md-3 col-lg-2"><strong>Team owner</strong></div>
         <div class="col-sm-8 col-md-9 col-lg-10">
           {{ $ctrl.currentProject.projectConfiguration.user.username }}
           (<a href="mailto:{{ $ctrl.currentProject.projectConfiguration.user.email }}">{{
@@ -80,7 +88,9 @@
           >)
         </div>
       </div>
+-->
     </div>
+
   </div>
 
   <div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
