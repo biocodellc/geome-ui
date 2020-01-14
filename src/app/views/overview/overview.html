@@ -24,6 +24,38 @@
       <div class="col-sm-4 col-md-3 col-lg-2"><strong>Public:</strong></div>
       <div class="col-sm-8 col-md-9 col-lg-10">{{ $ctrl.currentProject.public }}</div>
     </div>
+    
+    <div class="row" ng-if="$ctrl.currentProject.principalInvestigator">
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Principal Investigator:</strong></div>
+      <div class="col-sm-8 col-md-9 col-lg-10">{{ $ctrl.currentProject.principalInvestigator}}<span ng-if="$ctrl.currentProject.principalInvestigatorAffiliation">, 
+            {{$ctrl.currentProject.principalInvestigatorAffiliation}}</span>
+      </div>
+
+    </div>
+
+    <div class="row" ng-if="$ctrl.currentProject.projectContact">
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Contact:</strong></div>
+      <div class="col-sm-8 col-md-9 col-lg-10">{{ $ctrl.currentProject.projectContact}} 
+          <span ng-if="$ctrl.currentProject.projectContactEmail">(
+            <a href="mailto:{{ $ctrl.currentProject.projectContactEmail}}">{{ $ctrl.currentProject.projectContactEmail}}</a>)
+          </span>
+      </div> 
+    </div>
+
+    <div class="row" ng-if="$ctrl.currentProject.publicationGuid">
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Publication GUID:</strong></div>
+      <div class="col-sm-8 col-md-9 col-lg-10">{{ $ctrl.currentProject.publicationGuid}}</div>
+    </div>
+
+    <div class="row" ng-if="$ctrl.currentProject.projectDataGuid">
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Project Data GUID:</strong></div>
+      <div class="col-sm-8 col-md-9 col-lg-10">{{ $ctrl.currentProject.projectDataGuid}}</div>
+    </div>
+
+    <div class="row" ng-if="$ctrl.currentProject.recommendedCitation">
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Recommended Citation:</strong></div>
+      <div class="col-sm-8 col-md-9 col-lg-10">{{ $ctrl.currentProject.recommendedCitation}}</div>
+    </div>
 
     <div ng-show="$ctrl.currentProject.projectConfiguration.networkApproved">
       <div class="row title">
