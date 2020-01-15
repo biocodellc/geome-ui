@@ -34,6 +34,11 @@ class NavigationController {
       this.currentProject.config.entities.some(
         e => e.conceptAlias === 'Tissue' && e.uniqueKey === 'tissueID',
       );
+
+    this.showSRAUpload =
+      this.currentUser &&
+      this.currentProject &&
+      this.currentProject.config.entities.some(e => e.type === 'Fastq');
   }
 }
 

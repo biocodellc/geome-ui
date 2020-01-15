@@ -1,16 +1,17 @@
 <div class="settings">
   <form>
     <fieldset>
+
       <div class="form-group clearfix">
         <div class="col-xs-9">
-          <label>Title</label>
+          <label>Title*</label>
           <input type="text" required class="form-control" ng-model="$ctrl.project.projectTitle" />
         </div>
       </div>
 
       <div class="form-group clearfix">
         <div class="col-xs-9">
-          <label>Description</label>
+          <label>Description*</label>
           <textarea
             required
             class="form-control"
@@ -22,7 +23,7 @@
 
       <div class="form-group clearfix">
         <div class="col-xs-3">
-          <label>Visibility</label>
+          <label>Visibility*</label>
           <select
             ng-model="$ctrl.project.public"
             class="form-control"
@@ -31,7 +32,7 @@
           >
           </select>
         </div>
-      </div>
+      </div>    
 
       <div class="form-group clearfix">
         <div class="checkbox col-xs-9">
@@ -47,10 +48,78 @@
           </label>
         </div>
       </div>
-    </fieldset>
-    <fieldset>
+
       <div class="form-group clearfix">
-        <div class="col-xs-12">
+        <div class="col-xs-9">
+          <label>Principal Investigator</label>
+          <input type="text" class="form-control"  ng-model="$ctrl.project.principalInvestigator">      
+          <span class="help-block">The principal investigator for this project</span>
+        </div>
+      </div>
+
+      <div class="form-group clearfix">
+        <div class="col-xs-9">
+          <label>Principal Investigator Affiliation</label>
+          <input type="text" class="form-control"  ng-model="$ctrl.project.principalInvestigatorAffiliation">      
+          <span class="help-block">The affiliation of the principal investigator for this project</span class="help-block">
+        </div>
+      </div>
+
+      <div class="form-group clearfix">
+        <div class="col-xs-9">
+          <label>Project Contact</label>
+          <input type="text" class="form-control"  ng-model="$ctrl.project.projectContact">      
+          <span class="help-block">Name of an individual to contact for this project.  Typically this is the name of
+            the person with the user account for this project, but in some cases the contact will
+            be someone else</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group clearfix">
+        <div class="col-xs-9">
+          <label>Project Contact Email</label>
+          <input type="text" class="form-control"  ng-model="$ctrl.project.projectContactEmail">      
+          <span class="help-block">Email for the project contact</span>
+        </div>
+      </div>
+
+      <div class="form-group clearfix">
+        <div class="col-xs-9">
+          <label>Publication GUID</label>
+          <input type="text" class="form-control"  ng-model="$ctrl.project.publicationGuid">      
+          <span class="help-block">A globally unique identifier for a written publication pertaining
+            to this dataset</span>
+        </div>
+      </div>
+
+      <div class="form-group clearfix">
+        <div class="col-xs-9">
+          <label>Project Data GUID</label>
+          <input type="text" class="form-control"  ng-model="$ctrl.project.projectDataGuid">      
+          <span class="help-block">A globally unique identifier for the data in this project.  
+            Recommended to use a resolvable URL containing a DOI or ARK identifier.  Coming 
+          soon is the ability to generage a DOI here.  GEOME does not automatically assign
+          identifiers for all datasets since many datasets have been given GUIDs elsewhere.</span>
+        </div>
+      </div>
+
+      <div class="form-group clearfix">
+        <div class="col-xs-9">
+          <label>Recommended Citation</label>
+          <input type="text" class="form-control"  ng-model="$ctrl.project.recommendedCitation">      
+          <span class="help-block">Indicate a recommended citation for this data resource.</span>
+        </div>
+      </div>
+
+      <div class="form-group clearfix">
+        <div class="col-xs-9">
+          <label>*Required Elements</label> 
+        </div>
+      </div>
+
+      <div class="form-group clearfix">
+        <div class="col-xs-9">
           <md-progress-circular
             md-mode="indeterminate"
             ng-if="$ctrl.loadSave"
@@ -61,6 +130,7 @@
           >
             Save
           </button>
+           <!--  <input type="submit" class="btn btn-primary" value="Save" />-->
         </div>
       </div>
     </fieldset>

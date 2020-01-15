@@ -47,6 +47,7 @@ import overview from './views/overview';
 import dashboard from './views/dashboard';
 import record from './views/record';
 import photoUpload from './views/photo-upload';
+import sraUpload from './views/sra-upload';
 import plateViewer from './views/plate-viewer';
 
 import projectService from './services/project.service';
@@ -115,6 +116,7 @@ const dependencies = [
   dashboard,
   record,
   photoUpload,
+  sraUpload,
   plateViewer,
   auth,
   templates,

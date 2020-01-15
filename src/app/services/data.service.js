@@ -102,10 +102,13 @@ class DataService {
   }
 
   generateSraData(projectId, expeditionCode) {
-    return this.$http
-      .get(
-        `${restRoot}projects/${projectId}/expeditions/${expeditionCode}/generateSraFiles`,
-      )
+    return this.$http({
+      url: `${restRoot}sra/submissionData`,
+      params: {
+        projectId,
+        expeditionCode,
+      },
+    })
       .then(response => {
         if (response.status === 204) {
           angular.toaster('No Fastq records found.');
@@ -114,6 +117,19 @@ class DataService {
         return this.FileService.download(response.data.url);
       })
       .catch(angular.catcher('Failed to generate SRA files'));
+  }
+
+  fetchSraData(projectId, expeditionCode) {
+    return this.$http({
+      url: `${restRoot}sra/submissionData`,
+      params: {
+        projectId,
+        expeditionCode,
+        format: 'json',
+      },
+    })
+      .then(response => response.data)
+      .catch(angular.catcher('Failed to fetch SRA data'));
   }
 }
 

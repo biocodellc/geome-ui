@@ -35,9 +35,16 @@ md-menu-content.project-selector {
 
 .project-selector {
   .md-button.md-icon-button {
-    width: auto;
+    width: 100%;
+    span {
+      max-width: 90%;
+      display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
     md-icon {
       display: inline-block;
+      vertical-align: top; // sibling element with overflow: hidden changes vertical alignments
     }
   }
 }

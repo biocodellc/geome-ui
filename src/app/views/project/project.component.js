@@ -19,9 +19,9 @@ class ProjectCtrl {
         .then(() => (this.loadSave = false))
         .then(({ data }) => {
           angular.toaster.success('Successfully updated!');
-          return this.ProjectService.setCurrentProject(data);
+          //return this.ProjectService.setCurrentProject(data);
         })
-        .then(() => this.$state.reload());
+        //.then(() => this.$state.reload());
     } else {
       angular.toaster.success('Successfully updated!');
     }

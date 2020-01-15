@@ -39,11 +39,11 @@ class ProjectService extends EventEmitter {
     return currentProject;
   }
 
-  setCurrentProject(project, ignoreReload = false) {
+  setCurrentProject(project, ignoreReload = false, redirectIfNull = true) {
     if (!project) {
       currentProject = undefined;
-      this.emit(PROJECT_CHANGED_EVENT, currentProject, true);
-      this.$state.go('dashboard');
+      this.emit(PROJECT_CHANGED_EVENT, currentProject, ignoreReload);
+      if (redirectIfNull) this.$state.go('dashboard');
       return Promise.resolve;
     }
 

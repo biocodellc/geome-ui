@@ -34,8 +34,8 @@ md-table-container {
           padding: 0 16px;
         }
 
-        &.md-checkbox-cell + .md-column,
-        &.md-checkbox-cell + .md-cell {
+        &.md-checkbox-cell + .md-column.action-row,
+        &.md-checkbox-cell + .md-cell.action-row {
           padding: 0 16px 0 8px;
         }
       }
