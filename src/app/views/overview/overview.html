@@ -13,13 +13,15 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Project link</strong></div>
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Shareable URLs</strong></div>
       <div class="col-sm-8 col-md-9 col-lg-10">
-        <a href="{{ $ctrl.url }}?projectId={{ $ctrl.currentProject.projectId }}"
-          >{{ $ctrl.url }}?projectId={{ $ctrl.currentProject.projectId }}</a
-        >
+        Project Homepage: <a href="{{ $ctrl.url }}?projectId={{ $ctrl.currentProject.projectId }}">
+          {{ $ctrl.url }}?projectId={{ $ctrl.currentProject.projectId }}</a>
+        <br>
+        Template Generator Direct Link: <a href="{{ $ctrl.templateUrl }}?projectId={{ $ctrl.currentProject.projectId }}">
+          {{ $ctrl.templateUrl }}?projectId={{ $ctrl.currentProject.projectId }}</a>
       </div>
-    </div>
+    </div>    
     <div class="row">
       <div class="col-sm-4 col-md-3 col-lg-2"><strong>Visibility</strong></div>
       <div class="col-sm-8 col-md-9 col-lg-10">
