@@ -3,7 +3,9 @@
     <h2 class="page-header">SRA Submission</h2>
 
     <div class="information">
-      <p>This tool will facilitate the submission of FASTQ data to the SRA database.</p>
+      <p>This tool will facilitate the submission of FASTQ data to the SRA database. <strong>This tool is in beta.
+        Please email us at <a href="mailto:geome.help@gmail.com">geome.help@gmail.com</a> if you experience any errors.</strong>
+      </p>
     </div>
 
     <div
@@ -106,24 +108,24 @@
                 username, first name, last name, and email <b>must</b> match your account with the
                 SRA in order to access the submission after GEOME has submitted your data.
                 <a href="https://submit.ncbi.nlm.nih.gov/accounts/profile/" target="_blank"
-                  >View my SRA account.</a
+                >View my SRA account.</a
                 >
               </p>
               <md-input-container flex-gt-sm="50">
                 <label>SRA Account Username</label>
-                <input name="sraUsername" ng-model="$ctrl.sraUsername" required />
+                <input name="sraUsername" ng-model="$ctrl.sraUsername" required/>
               </md-input-container>
               <md-input-container flex-gt-sm="50">
                 <label>SRA Account Email</label>
-                <input name="sraEmail" ng-model="$ctrl.sraEmail" required />
+                <input name="sraEmail" ng-model="$ctrl.sraEmail" required/>
               </md-input-container>
               <md-input-container flex-gt-sm="50">
                 <label>SRA Account First Name</label>
-                <input name="sraFirstName" ng-model="$ctrl.sraFirstName" required />
+                <input name="sraFirstName" ng-model="$ctrl.sraFirstName" required/>
               </md-input-container>
               <md-input-container flex-gt-sm="50">
                 <label>SRA Account Last Name</label>
-                <input name="sraLastName" ng-model="$ctrl.sraLastName" required />
+                <input name="sraLastName" ng-model="$ctrl.sraLastName" required/>
               </md-input-container>
 
               <md-input-container flex="100">
@@ -145,25 +147,25 @@
             <md-step-body>
               <md-radio-group ng-model="$ctrl.bioSampleType" class="md-primary">
                 <md-radio-button value="animal"
-                  >Model organism or animal sample -
+                >Model organism or animal sample -
                   <span class="small"
-                    >Use for multicellular samples or cell lines derived from common laboratory
+                  >Use for multicellular samples or cell lines derived from common laboratory
                     model organisms, e.g., mouse, rat, Drosophila, worm, fish, frog, or large
                     mammals including zoo and farm animals.</span
                   >
                 </md-radio-button>
                 <md-radio-button value="invertebrate"
-                  >Invertebrate -
+                >Invertebrate -
                   <span class="small">Use for any invertebrate sample.</span>
                 </md-radio-button>
                 <md-radio-button value="plant"
-                  >Plant -
+                >Plant -
                   <span class="small">Use for any plant sample or cell line. </span>
                 </md-radio-button>
                 <md-radio-button value="environmental"
-                  >Metagenome or environmental sample -
+                >Metagenome or environmental sample -
                   <span class="small"
-                    >Use for metagenomic and environmental samples when it is not appropriate or
+                  >Use for metagenomic and environmental samples when it is not appropriate or
                     advantageous to use MIxS packages.</span
                   >
                 </md-radio-button>
@@ -179,9 +181,9 @@
                 <!--                  >-->
                 <!--                </md-radio-button>-->
                 <md-radio-button value="virus"
-                  >Virus -
+                >Virus -
                   <span class="small"
-                    >Use for all virus samples not directly associated with disease. Viral pathogens
+                  >Use for all virus samples not directly associated with disease. Viral pathogens
                     should be submitted using the Pathogen: Clinical or host-associated pathogen
                     package.</span
                   >
@@ -202,16 +204,16 @@
                 <!--                  >-->
                 <!--                </md-radio-button>-->
                 <md-radio-button value="microbe"
-                  >Microbe -
+                >Microbe -
                   <span class="small"
-                    >Use for bacteria or other unicellular microbes when it is not appropriate or
+                  >Use for bacteria or other unicellular microbes when it is not appropriate or
                     advantageous to use MIxS, Pathogen or Virus packages.</span
                   >
                 </md-radio-button>
                 <md-radio-button value="human"
-                  >Human -
+                >Human -
                   <span class="small"
-                    >WARNING: Only use for human samples or cell lines that have no privacy
+                  >WARNING: Only use for human samples or cell lines that have no privacy
                     concerns. For all studies involving human subjects, it is the submitter's
                     responsibility to ensure that the information supplied protects participant
                     privacy in accordance with all applicable laws, regulations and institutional
@@ -253,22 +255,22 @@
                   class="table table-condensed"
                 >
                   <thead md-head>
-                    <tr md-row>
-                      <th md-column ng-repeat="k in $ctrl.bioSampleHeaders()">{{k}}</th>
-                    </tr>
+                  <tr md-row>
+                    <th md-column ng-repeat="k in $ctrl.bioSampleHeaders()">{{k}}</th>
+                  </tr>
                   </thead>
                   <tbody md-body>
-                    <tr
-                      md-row
-                      md-select="s"
-                      md-select-id="sample_name"
-                      ng-repeat="s in $ctrl.bioSamples track by s.sample_name"
-                    >
-                      <!--                    ng-repeat="s in $ctrl.bioSamples | limitTo: $ctrl.limit: ($ctrl.page - 1) * $ctrl.limit track by s.sample_name"-->
-                      <td md-cell ng-class="{'{{k}}-cell' : true }" ng-repeat="(k, v) in s">
-                        {{v}}
-                      </td>
-                    </tr>
+                  <tr
+                    md-row
+                    md-select="s"
+                    md-select-id="sample_name"
+                    ng-repeat="s in $ctrl.bioSamples track by s.sample_name"
+                  >
+                    <!--                    ng-repeat="s in $ctrl.bioSamples | limitTo: $ctrl.limit: ($ctrl.page - 1) * $ctrl.limit track by s.sample_name"-->
+                    <td md-cell ng-class="{'{{k}}-cell' : true }" ng-repeat="(k, v) in s">
+                      {{v}}
+                    </td>
+                  </tr>
                   </tbody>
                 </table>
               </md-table-container>
@@ -295,20 +297,20 @@
               <md-table-container>
                 <table md-table class="table table-condensed">
                   <thead md-head>
-                    <tr md-row>
-                      <th md-column ng-repeat="k in $ctrl.sraMetadataHeaders">{{k}}</th>
-                    </tr>
+                  <tr md-row>
+                    <th md-column ng-repeat="k in $ctrl.sraMetadataHeaders">{{k}}</th>
+                  </tr>
                   </thead>
                   <tbody md-body>
-                    <tr md-row ng-repeat="m in $ctrl.filteredSraMetadata track by m.sample_name">
-                      <td
-                        md-cell
-                        ng-class="{'{{k}}-cell' : true }"
-                        ng-repeat="k in $ctrl.sraMetadataHeaders"
-                      >
-                        {{m[k]}}
-                      </td>
-                    </tr>
+                  <tr md-row ng-repeat="m in $ctrl.filteredSraMetadata track by m.sample_name">
+                    <td
+                      md-cell
+                      ng-class="{'{{k}}-cell' : true }"
+                      ng-repeat="k in $ctrl.sraMetadataHeaders"
+                    >
+                      {{m[k]}}
+                    </td>
+                  </tr>
                   </tbody>
                 </table>
               </md-table-container>
