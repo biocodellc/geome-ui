@@ -4,6 +4,31 @@
     <img src="img/geome-logo.png" alt="geome-db" />
   </a>
 
+  <md-divider hide-lg hide-md></md-divider>
+  <md-menu>
+    <md-button
+      hide-lg
+      hide-md
+      aria-label="menu"
+      class="md-icon-button md-primary"
+      ng-click="$mdMenu.open($event)"
+    >
+      <md-icon md-menu-origin md-font-icon="fa fa-home fa-md"></md-icon>
+      <md-icon md-font-icon="fa fa-angle-down fa-sm"></md-icon>
+    </md-button>
+    <md-menu-content width="4">
+      <md-menu-item>
+        <md-button ui-sref="about">Getting Started</md-button>
+      </md-menu-item>
+      <md-menu-item>
+        <md-button ui-sref="query">Query</md-button>
+      </md-menu-item>
+      <md-menu-item>
+        <md-button ui-sref="dashboard">Workbench</md-button>
+      </md-menu-item>
+    </md-menu-content>
+  </md-menu>
+
   <div flex ng-show="!$ctrl.showProjectSelector && !$ctrl.showCreateProject"></div>
   <div flex layout="row" layout-align="center">
     <project-selector
@@ -25,9 +50,9 @@
     </div>
   </div>
 
-  <md-button ui-sref="about">Getting Started</md-button>
-  <md-button ui-sref="query">Query</md-button>
-  <md-button ui-sref="dashboard">Workbench</md-button>
+  <md-button hide-sm hide-xs ui-sref="about">Getting Started</md-button>
+  <md-button hide-sm hide-xs ui-sref="query">Query</md-button>
+  <md-button hide-sm hide-xs ui-sref="dashboard">Workbench</md-button>
 
   <md-divider></md-divider>
 

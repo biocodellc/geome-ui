@@ -1,11 +1,15 @@
 const template = require('./navigation.html');
 
 class NavigationController {
-  constructor($state, ExpeditionService) {
+  constructor($state, ExpeditionService, $mdMedia) {
     'ngInject';
 
     this.$state = $state;
+    this.$mdMedia = $mdMedia;
     this.ExpeditionService = ExpeditionService;
+  }
+  $onInit() {
+    this.showNav = false;
   }
 
   $onChanges() {
@@ -39,6 +43,9 @@ class NavigationController {
       this.currentUser &&
       this.currentProject &&
       this.currentProject.config.entities.some(e => e.type === 'Fastq');
+  }
+  toggleNav() {
+    this.showNav = !this.showNav;
   }
 }
 

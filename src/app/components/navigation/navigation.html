@@ -1,4 +1,16 @@
-<md-sidenav flex class="md-sidenav-left" md-is-locked-open="true" md-whiteframe="4">
+<div hide-gt-sm>
+  <md-button class="md-icon-button" ng-click="$ctrl.toggleNav()">
+    <md-icon md-font-icon="fa fa-bars fa-sm"></md-icon>
+  </md-button>
+  <md-divider></md-divider>
+</div>
+<md-sidenav
+  flex
+  class="md-sidenav-left"
+  md-is-open="$ctrl.showNav"
+  md-is-locked-open="$mdMedia('gt-sm')"
+  md-whiteframe="4"
+>
   <md-list>
     <md-list-item ng-click="$ctrl.$state.go('dashboard')">
       <md-icon md-font-icon="fa fa-list fa-fw"></md-icon>
