@@ -2,20 +2,21 @@
   <fims-header
     show-create-project="$ctrl.currentUser && !$ctrl.currentUser.userHasProject"
     ng-cloak
-    show-project-selector="$ctrl.projectView"
+    project-view="$ctrl.projectView"
     current-user="$ctrl.currentUser"
     current-project="$ctrl.currentProject"
     on-project-change="$ctrl.handleProjectChange(project)"
     on-signout="$ctrl.signout()"
+    toggle-side-nav="$ctrl.toggleSideNav()"
   >
   </fims-header>
 
   <div flex layout="row" ng-if="$ctrl.projectView">
-    <!-- Sidebar navigation -->
     <fims-navigation
       layout="column"
       current-project="$ctrl.currentProject"
       current-user="$ctrl.currentUser"
+      show-side-navigation="$ctrl.showSideNavigation"
       ng-cloak
     ></fims-navigation>
 

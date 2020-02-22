@@ -28,6 +28,7 @@ class AppCtrl {
   $onInit() {
     this.loading = true;
     this.preventReload = false;
+    this.showSideNavigation = false;
 
     this.AuthService.on(AUTH_ERROR_EVENT, () => this.signout());
     this.ProjectService.on(PROJECT_CHANGED_EVENT, (p, ignoreReload) => {
@@ -124,6 +125,10 @@ class AppCtrl {
       this.ProjectService.setCurrentProject();
     }
     this.AuthService.clearTokens();
+  }
+
+  toggleSideNav() {
+    this.showSideNavigation = !this.showSideNavigation;
   }
 }
 

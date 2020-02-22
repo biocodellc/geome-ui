@@ -1,5 +1,11 @@
 <!-- Navbar -->
 <md-toolbar layout="row" layout-align="start center" class="md-menu-toolbar" md-whiteframe="1">
+  <div hide-gt-sm ng-show="$ctrl.projectView">
+    <md-button class="md-icon-button" ng-click="$ctrl.toggleSideNav()">
+      <md-icon md-font-icon="fa fa-bars fa-sm"></md-icon>
+    </md-button>
+  </div>
+
   <a class="brand" ui-sref="home">
     <img src="img/geome-logo.png" alt="geome-db" />
   </a>
@@ -29,12 +35,12 @@
     </md-menu-content>
   </md-menu>
 
-  <div flex ng-show="!$ctrl.showProjectSelector && !$ctrl.showCreateProject"></div>
+  <div flex ng-show="!$ctrl.projectView && !$ctrl.showCreateProject"></div>
   <div flex layout="row" layout-align="center">
     <project-selector
       layout="row"
       layout-align="center center"
-      ng-show="$ctrl.showProjectSelector"
+      ng-show="$ctrl.projectView"
       user-has-project="$ctrl.currentUser && $ctrl.currentUser.userHasProject"
       is-authenticated="!!($ctrl.currentUser)"
       current-project="$ctrl.currentProject"

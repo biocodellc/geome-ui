@@ -8,9 +8,6 @@ class NavigationController {
     this.$mdMedia = $mdMedia;
     this.ExpeditionService = ExpeditionService;
   }
-  $onInit() {
-    this.showNav = false;
-  }
 
   $onChanges() {
     if (this.currentUser && this.currentProject) {
@@ -44,9 +41,6 @@ class NavigationController {
       this.currentProject &&
       this.currentProject.config.entities.some(e => e.type === 'Fastq');
   }
-  toggleNav() {
-    this.showNav = !this.showNav;
-  }
 }
 
 export default {
@@ -55,5 +49,6 @@ export default {
   bindings: {
     currentUser: '<',
     currentProject: '<',
+    showSideNavigation: '<',
   },
 };
