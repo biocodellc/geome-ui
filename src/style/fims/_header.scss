@@ -1,27 +1,31 @@
 fims-header {
-  z-index: 61;
+    z-index: 61;
 
-  a.md-button {
-    font-weight: 400;
-  }
-
-  .md-button.md-icon-button {
-    width: auto;
-
-    md-icon {
-      display: inline-block;
+    a.md-button {
+        font-weight: 400;
     }
-  }
 
-  .brand {
-    margin: $layout-gutter-width / 2;
+    .md-button.md-icon-button {
+        width: auto;
 
-    img {
-      height: $brand-img-height;
+        md-icon {
+            display: inline-block;
+        }
     }
-  }
 
-  md-divider {
-    margin: 8px 0;
-  }
+    .hamburger-menu {
+        padding: 0px;
+    }
+
+    .brand {
+        margin: $layout-gutter-width / 3;
+
+        img {
+            height: $brand-img-height;
+        }
+    }
+
+    md-divider {
+        margin: 8px 0;
+    }
 }

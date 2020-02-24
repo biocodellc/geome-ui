@@ -4,6 +4,7 @@
   md-is-open="$ctrl.showSideNavigation"
   md-is-locked-open="$mdMedia('gt-sm')"
   md-whiteframe="4"
+  ng-click="$ctrl.showSideNavigation = false"
 >
   <md-list>
     <md-list-item ng-click="$ctrl.$state.go('dashboard')">
