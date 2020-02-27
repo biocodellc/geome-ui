@@ -51,7 +51,7 @@ class DashboardController {
     this.loading = true;
     const project = this.allProjects.find(p => p.projectId === projectId);
     this.ProjectService.setCurrentProject(project, true)
-      .then(() => this.$state.go('overview'))
+      .then(() => this.$state.go('project-overview'))
       .finally(() => (this.loading = false));
   }
 

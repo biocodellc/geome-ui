@@ -1,9 +1,9 @@
 import angular from 'angular';
 
-import routing from './overview.routes';
-import fimsOverview from './overview.component';
+import routing from './project-overview.routes';
+import fimsProjectOverview from './project-overview.component';
 
 export default angular
-  .module('fims.overview', [])
+  .module('fims.projectOverview', [])
   .run(routing)
-  .component('fimsOverview', fimsOverview).name;
+  .component('fimsProjectOverview', fimsProjectOverview).name;
