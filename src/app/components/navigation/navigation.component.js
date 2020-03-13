@@ -9,15 +9,6 @@ class NavigationController {
   }
 
   $onChanges() {
-    if (this.currentUser && this.currentProject) {
-      this.ExpeditionService.getExpeditionsForUser(
-        this.currentProject.projectId,
-        true,
-      ).then(({ data }) => {
-        this.showMyExpeditions = data.length > 0;
-      });
-    }
-
     this.showProjectConfig =
       this.currentUser &&
       this.currentProject &&
