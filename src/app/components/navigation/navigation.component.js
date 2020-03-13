@@ -1,10 +1,11 @@
 const template = require('./navigation.html');
 
 class NavigationController {
-  constructor($state, ExpeditionService) {
+  constructor($state, ExpeditionService, $mdMedia) {
     'ngInject';
 
     this.$state = $state;
+    this.$mdMedia = $mdMedia;
     this.ExpeditionService = ExpeditionService;
   }
 
@@ -39,5 +40,6 @@ export default {
   bindings: {
     currentUser: '<',
     currentProject: '<',
+    showSideNavigation: '<',
   },
 };

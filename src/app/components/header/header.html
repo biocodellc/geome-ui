@@ -1,15 +1,20 @@
-<!-- Navbar -->
 <md-toolbar layout="row" layout-align="start center" class="md-menu-toolbar" md-whiteframe="1">
+  <div hide-gt-sm ng-show="$ctrl.projectView">
+    <button class="hamburger-menu" ng-click="$ctrl.toggleSideNav()">
+      <md-icon md-font-icon="fa fa-bars fa-xs"></md-icon>
+    </button>
+  </div>
+
   <a class="brand" ui-sref="home">
     <img src="img/geome-logo.png" alt="geome-db" />
   </a>
 
-  <div flex ng-show="!$ctrl.showProjectSelector && !$ctrl.showCreateProject"></div>
+  <div flex ng-show="!$ctrl.projectView && !$ctrl.showCreateProject"></div>
   <div flex layout="row" layout-align="center">
     <project-selector
       layout="row"
       layout-align="center center"
-      ng-show="$ctrl.showProjectSelector"
+      ng-show="$ctrl.projectView"
       user-has-project="$ctrl.currentUser && $ctrl.currentUser.userHasProject"
       is-authenticated="!!($ctrl.currentUser)"
       current-project="$ctrl.currentProject"
@@ -25,9 +30,33 @@
     </div>
   </div>
 
-  <md-button ui-sref="about">Getting Started</md-button>
-  <md-button ui-sref="query">Query</md-button>
-  <md-button ui-sref="dashboard">Workbench</md-button>
+  <md-button hide-sm hide-xs ui-sref="about">Getting Started</md-button>
+  <md-button hide-sm hide-xs ui-sref="query">Query</md-button>
+  <md-button hide-sm hide-xs ui-sref="dashboard">Workbench</md-button>
+
+  <md-divider hide-lg hide-md></md-divider>
+  <md-menu md-position-mode="right bottom" md-offset="0 12">
+    <md-button
+      hide-lg
+      hide-md
+      aria-label="menu"
+      class="md-icon-button md-primary"
+      ng-click="$mdMenu.open($event)"
+    >
+      <md-icon md-menu-origin md-font-icon="fa fa-home fa-md"></md-icon>
+    </md-button>
+    <md-menu-content width="4">
+      <md-menu-item>
+        <md-button ui-sref="about">Getting Started</md-button>
+      </md-menu-item>
+      <md-menu-item>
+        <md-button ui-sref="query">Query</md-button>
+      </md-menu-item>
+      <md-menu-item>
+        <md-button ui-sref="dashboard">Workbench</md-button>
+      </md-menu-item>
+    </md-menu-content>
+  </md-menu>
 
   <md-divider></md-divider>
 
@@ -37,11 +66,15 @@
       class="md-icon-button md-primary"
       ng-click="console.log($mdMenu); $mdMenu.open($event)"
     >
-      <span ng-show="$ctrl.currentUser" style="padding-right: 5px;text-transform: none"
+      <span
+        ng-show="$ctrl.currentUser"
+        hide-sm
+        hide-xs
+        style="padding-right: 5px;text-transform: none"
         >HI, {{ $ctrl.currentUser.username }}!</span
       >
       <md-icon md-font-icon="fa fa-user-circle-o fa-md"></md-icon>
-      <md-icon md-font-icon="fa fa-angle-down fa-sm"></md-icon>
+      <md-icon hide-sm hide-xs md-font-icon="fa fa-angle-down fa-sm"></md-icon>
     </md-button>
     <md-menu-content width="4" class="md-menu-bar-menu md-dense">
       <md-menu-item ng-show="!$ctrl.currentUser">
@@ -87,7 +120,7 @@
       ng-click="$mdMenu.open($event)"
     >
       <md-icon md-font-icon="fa fa-cog fa-md"></md-icon>
-      <md-icon md-font-icon="fa fa-angle-down fa-sm"></md-icon>
+      <md-icon hide-sm hide-xs md-font-icon="fa fa-angle-down fa-sm"></md-icon>
     </md-button>
     <md-menu-content width="4" class="md-menu-bar-menu md-dense">
       <md-menu-item>

@@ -1,29 +1,30 @@
 .project-view-white {
-  margin: -12px -25px -60px;
-  padding: 12px 25px 60px;
-  background-color: #fff;
-  display: block;
+    margin: -12px -25px -60px;
+    padding: 12px 25px 60px;
+    background-color: #fff;
+    display: block;
 }
 
 .project-view {
-  padding: 12px 25px 60px; // when changing this, update.project-view-white
-  overflow: auto;
+    padding: 12px 25px 60px; // when changing this, update.project-view-white
+    overflow: auto;
 
-  ui-view {
-    min-height: 100%;
-    > * {
-      flex: 1;
-      overflow: auto;
+    ui-view {
+        min-height: 100%;
+
+        > * {
+            flex: 1;
+            overflow: auto;
+        }
     }
-  }
 
-  fims-overview,
-  fims-validation,
-  fims-templates {
-    @extend .project-view-white;
-  }
+    fims-overview,
+    fims-validation,
+    fims-templates {
+        @extend .project-view-white;
+    }
 
-  md-card-title {
-    padding-top: 4px;
-  }
+    md-card-title {
+        padding-top: 4px;
+    }
 }
