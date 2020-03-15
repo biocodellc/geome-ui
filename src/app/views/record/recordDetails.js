@@ -153,11 +153,9 @@ export const mainRecordDetails = {
   fastqMetadata: {
     tissueID: getKey('tissueID'),
     bioSamplesLink: m => ({
-      text: m.bioSample ? 'NCBI BioSamples' : undefined,
+      text: m.bioSample ? 'NCBI BioSample' : undefined,
       href: m.bioSample
-        ? `https://www.ncbi.nlm.nih.gov/biosample?LinkName=bioproject_biosample_all&from_uid=${
-            m.bioSample.bioProjectId
-          }`
+        ? `https://www.ncbi.nlm.nih.gov/biosample/${m.bioSample.accession}`
         : undefined,
     }),
     bioProjectLink: m => ({

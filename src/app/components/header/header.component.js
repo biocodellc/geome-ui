@@ -31,7 +31,8 @@ export default {
     currentProject: '<',
     onProjectChange: '&',
     onSignout: '&',
-    showProjectSelector: '<',
+    projectView: '<',
     showCreateProject: '<',
+    toggleSideNav: '&',
   },
 };

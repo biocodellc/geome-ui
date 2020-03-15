@@ -1,23 +1,15 @@
 const template = require('./navigation.html');
 
 class NavigationController {
-  constructor($state, ExpeditionService) {
+  constructor($state, ExpeditionService, $mdMedia) {
     'ngInject';
 
     this.$state = $state;
+    this.$mdMedia = $mdMedia;
     this.ExpeditionService = ExpeditionService;
   }
 
   $onChanges() {
-    if (this.currentUser && this.currentProject) {
-      this.ExpeditionService.getExpeditionsForUser(
-        this.currentProject.projectId,
-        true,
-      ).then(({ data }) => {
-        this.showMyExpeditions = data.length > 0;
-      });
-    }
-
     this.showProjectConfig =
       this.currentUser &&
       this.currentProject &&
@@ -52,5 +44,6 @@ export default {
   bindings: {
     currentUser: '<',
     currentProject: '<',
+    showSideNavigation: '<',
   },
 };
