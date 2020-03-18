@@ -1,119 +1,82 @@
 .team-overview {
-    background-color: #fff;
+    padding: 0em 2em 0em 2em;
 
-    .team-details {
-        padding: 0px 50px 20px 50px;
+    @media screen and (max-width: $layout-breakpoint-sm) {
+        padding: 0px;
     }
 
-    .team-description {
-        padding: 0px 50px 50px 50px;
+    .description {
+        padding: 0em 2em 1em 2em;
 
-        @media screen and (max-width: $screen-md) {
-            padding: 0px 10px 50px 50px;
+        // White-out default ng-click behavior
+        :focus {
+            outline-color: #fff;
         }
 
         .ellipsis {
-            display: none;
+            font-weight: 600;
+            font-size: large;
         }
 
-        @media screen and (max-width: $screen-md) {
+        @media screen and (max-width: $layout-breakpoint-sm) {
             .truncate {
+                display: block;
                 overflow: hidden;
-                word-break: break-all;
                 position: relative;
                 line-height: 1.5em;
 
                 /* max-height = line-height (1.5) * lines max number (3) */
                 max-height: 4.5em;
-                text-align: justify;
-                margin-right: -1em;
-                padding-right: 1em;
-            }
-
-            .ellipsis {
-                display: inline;
-                position: absolute;
-                right: 0;
-                bottom: 0;
-                font-weight: 600;
-                font-size: large;
             }
         }
-
-        /*.truncate:before {
-            content: '...';
-            position: absolute;
-            right: 0;
-            bottom: 0;
-        }
-
-       /* .truncate:after {
-            content: '';
-            position: absolute;
-            right: 0;
-            width: 1em;
-            height: 1em;
-            margin-top: 0.2em;
-            background: white;
-        } */
     }
 
-    .detail-key {
-        font-weight: bold;
-    }
+    .detail-row {
+        padding: 0em 2em 0em 2em;
 
-    .collaboration-checkbox-row {
-        display: inline;
+        .team-details {
+            padding: 2em 0em 2em 0em;
 
-        @media screen and (max-width: $screen-sm) {
-            display: none;
-        }
-
-        //  position: relative;
-
-        md-checkbox {
-            span {
+            .detail-key {
                 font-weight: bold;
             }
         }
 
-        // collaboration-label {
-        //    position: absolute;
-        //   bottom: 1px;
+        .collaboration {
+            padding: 2em 0em 2em 0em;
 
-        //  @media screen and (min-width: $screen-md) {
-        //     left: 275;
-        //}
+            .checkbox-container {
+                margin-right: 1em;
 
-        //@media screen and (min-width: $screen-lg) {
-        //   left: 320;
-        //}
-        //}
-   
-    }
-
-    .project-title, .title-row {
-        font-weight: 600;
+                md-checkbox {
+                    span {
+                        font-weight: bold;
+                    }
+                }
+            }
+        }
     }
 
     section {
-        margin: 0px 15px 15px 15px;
-        padding: 0px 57px 15px 57px;
-        background-color: #fff;
+        padding: 0em 2em 0em 2em;
         border: 2px solid rgba(0, 0, 0, 0.12);
         box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.12);
-    }
 
-    .table {
-        table-layout: fixed;
+        .table {
+            table-layout: fixed;
 
-        th {
-            border-bottom: 0px;
-            font-weight: 600;
-        }
+            .project-title, .title-row {
+                font-weight: 600;
+            }
 
-        tbody > tr > td {
-            border-top: 0px;
+            th {
+                border-bottom: 0px;
+                font-weight: 600;
+            }
+
+            tbody > tr > td {
+                border-top: 0px;
+            }
         }
     }
 }

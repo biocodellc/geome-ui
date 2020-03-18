@@ -1,3 +1,4 @@
+// TODO: Add logo to page after API is updated
 import angular from 'angular';
 import ProjectConfig from '../../models/ProjectConfig';
 
@@ -9,6 +10,7 @@ class TeamOverviewController {
     ProjectService,
     ProjectConfigurationService,
     NetworkConfigurationService,
+    $mdMedia,
   ) {
     'ngInject';
 
@@ -16,33 +18,37 @@ class TeamOverviewController {
     this.ProjectService = ProjectService;
     this.ProjectConfigurationService = ProjectConfigurationService;
     this.NetworkConfigurationService = NetworkConfigurationService;
+    this.$mdMedia = $mdMedia;
   }
 
   $onInit() {
-    this.config = this.currentProject.config;
-    this.configuration = this.currentProject.projectConfiguration;
-    this.configId = this.configuration.id;
     this.loading = true;
+    this.config = this.currentProject.config;
+    this.sampleEntityIndex = this.config.entities.findIndex(
+      e => e.conceptAlias === 'Sample',
+    );
+    this.configuration = this.currentProject.projectConfiguration;
     this.textTruncated = true;
-    this.setTeamDetails();
+    this.getTeamDetails();
     this.getProjectStats();
     this.getNetworkConfiguration();
     this.initializeCollaborationLabel();
   }
 
   $onChanges(changesObj) {
-    /*  if (
+    if (
       'currentProject' in changesObj &&
       this.currentProject.projectConfiguration.networkApproved !== true
     )
-      this.$state.go('project-overview'); */
+      this.$state.go('project-overview');
   }
 
-  setTeamDetails() {
+  getTeamDetails() {
     this.teamDetails = {
       'Team Administrator': this.currentProject.projectConfiguration.user
         .username,
       Contact: this.currentProject.projectConfiguration.user.email,
+      // TODO: Include real variables after the API is updated
       DOI: undefined,
       Website: undefined,
       Documentation: undefined,
@@ -52,7 +58,7 @@ class TeamOverviewController {
   getProjectStats() {
     this.ProjectService.stats(true)
       .then(({ data }) => {
-        this.projects = data;
+        this.projectStats = data;
       })
       .finally(() => (this.loading = false));
   }
@@ -63,13 +69,6 @@ class TeamOverviewController {
         this.networkConfig = config;
       })
       .finally(() => this.getTKAttributeObject());
-  }
-
-  projectDetail(project) {
-    this.loading = true;
-    this.ProjectService.setCurrentProject(project, true)
-      .then(() => this.$state.go('project-overview'))
-      .finally(() => (this.loading = false));
   }
 
   getTKAttributeObject() {
@@ -83,22 +82,24 @@ class TeamOverviewController {
   }
 
   initializeCollaborationLabel() {
-    this.loadingCollaborationCheckbox = true;
-    const index = this.config.entities.findIndex(
-      e => e.conceptAlias === 'Sample',
-    );
-    this.openToCollaboration = this.config.entities[index].attributes.some(
+    this.openToCollaboration = this.config.entities[
+      this.sampleEntityIndex
+    ].attributes.some(
       attribute => attribute.column === 'traditionalKnowledgeNotice',
     );
-    this.loadingCollaborationCheckbox = false;
   }
 
-  collaborationCheckboxChange() {
-    const entityIndex = this.config.entities.findIndex(
-      e => e.conceptAlias === 'Sample',
-    );
-    const sampleAttributes = this.config.entities[entityIndex].attributes;
-    const sampleRules = this.config.entities[entityIndex].rules;
+  viewProjectOverview(project) {
+    this.loading = true;
+    this.ProjectService.setCurrentProject(project, true)
+      .then(() => this.$state.go('project-overview'))
+      .finally(() => (this.loading = false));
+  }
+
+  updateCollaborationAttribute() {
+    const sampleAttributes = this.config.entities[this.sampleEntityIndex]
+      .attributes;
+    const sampleRules = this.config.entities[this.sampleEntityIndex].rules;
     // ng-model changes before ng-change is executed
     if (this.openToCollaboration === false) {
       const attributeIndex = sampleAttributes.findIndex(

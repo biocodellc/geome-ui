@@ -1,40 +1,54 @@
-<div layout-fill layout="column" class="team-overview">
+<div class="team-overview">
   <h3 class="text-center page-header">
     Team {{$ctrl.currentProject.projectConfiguration.name}} Overview
   </h3>
-  <div layout="row" class="team-description text-center">
-    <div class="col-sm-12 text-center" ng-class="{truncate: $ctrl.textTruncated}">
-      {{ $ctrl.currentProject.projectConfiguration.description }}
+  <div layout="row" class="description text-center">
+    <div ng-click="$ctrl.textTruncated = !$ctrl.textTruncated">
+      <span ng-class="{truncate: $ctrl.textTruncated}">
+        {{ $ctrl.currentProject.projectConfiguration.description }}
+      </span>
       <span
-        ng-click="$ctrl.textTruncated = !$ctrl.textTruncated"
         class="ellipsis"
+        ng-if="$ctrl.currentProject.projectConfiguration.description"
+        hide-gt-sm
         md-colors="{color: 'primary'}"
       >
         ...
       </span>
     </div>
   </div>
-  <div class="team-details" layout="row">
-    <div class="col-sm-6">
-      <div layout="row" ng-if="value !== undefined" ng-repeat="(key, value) in $ctrl.teamDetails">
-        <div class="col-sm-6 detail-key text-left">{{key}}:</div>
-        <div class="col-sm-6 text-left">
-          {{value}}
-        </div>
+  <div layout="row" layout-xs="column" class="detail-row">
+    <div class="text-center team-details" flex>
+      <div
+        layout="row"
+        layout-xs="column"
+        layout-align="center center"
+        ng-if="value !== undefined"
+        ng-repeat="(key, value) in $ctrl.teamDetails"
+      >
+        <div class="detail-key" flex="50">{{key}}<span hide-xs>:</span></div>
+        <div class="detail-value" flex="50">{{value}}</div>
       </div>
     </div>
-    <div class="col-sm-6 text-center">
-      <div class="collaboration-checkbox-row" ng-show="!$ctrl.loadingcollab">
+    <div
+      class="collaboration"
+      flex
+      layout="row"
+      layout-sm="column"
+      layout-xs="column"
+      layout-align="center center"
+    >
+      <div class="checkbox-container">
         <md-tooltip
           ng-if="!$ctrl.currentUser || 
           $ctrl.currentUser.username !== 
           $ctrl.currentProject.projectConfiguration.user.username"
         >
-          To make changes to this teams configuration, you must be signed in as team administrator
+          Sign in as team administrator to make changes
         </md-tooltip>
         <md-checkbox
           ng-model="$ctrl.openToCollaboration"
-          ng-change="$ctrl.collaborationCheckboxChange()"
+          ng-change="$ctrl.updateCollaborationAttribute()"
           ng-disabled="!$ctrl.currentUser || 
           $ctrl.currentUser.username !== 
           $ctrl.currentProject.projectConfiguration.user.username || 
@@ -43,8 +57,8 @@
         >
           <span>Open to Collaborate</span>
         </md-checkbox>
-        <collaboration-label></collaboration-label>
       </div>
+      <collaboration-label></collaboration-label>
       <md-progress-circular
         ng-if="$ctrl.loadingCollaborationCheckbox"
         class="loading-overlay-fixed"
@@ -52,36 +66,32 @@
       ></md-progress-circular>
     </div>
   </div>
-  <section class="projects">
+  <section>
     <table class="table table-hover" ng-if="!$ctrl.loading">
       <h4 class="text-center">Projects</h4>
-      <div ng-if="$ctrl.loading" layout="row" layout-align="center center" class="loader">
+      <div ng-if="$ctrl.loading" layout="row" layout-align="center center">
         <md-progress-circular
           class="loading-overlay-fixed"
           md-mode="indeterminate"
         ></md-progress-circular>
       </div>
-      <tr class="title-row">
+      <tr class="title-row" flex>
         <td>Title</td>
-        <td class="text-center">Samples</td>
-        <td class="text-center">Events</td>
-        <td class="text-center">Tissues</td>
-        <td class="text-center">Latest Activity</td>
+        <td class="text-center md-clip" md-truncate>Samples</td>
+        <td class="text-center md-clip" md-truncate>Events</td>
+        <td class="text-center md-clip" md-truncate>Tissues</td>
+        <td class="text-center md-clip" md-truncate>Latest Activity</td>
       </tr>
 
       <tr
-        ng-repeat="project in $ctrl.projects | orderBy: 'projectTitle'"
-        ng-click="$ctrl.projectDetail(project)"
+        ng-repeat="project in $ctrl.projectStats | orderBy: 'projectTitle'"
+        ng-click="$ctrl.viewProjectOverview(project)"
         ng-if="$ctrl.currentProject.projectConfiguration.name === project.projectConfiguration.name"
       >
-        <td layout="column">
-          <div md-truncate layout="row" layout-align="space-between" class="title-row">
-            <div md-colors="{color: 'primary'}">
-              <span class="project-title">{{ project.projectTitle }}</span>
-              <md-tooltip md-delay="200" md-direction="bottom"
-                >{{ project.projectTitle }}</md-tooltip
-              >
-            </div>
+        <td>
+          <div md-truncate md-colors="{color: 'primary'}" class="project-title">
+            <span>{{ project.projectTitle }}</span>
+            <md-tooltip md-delay="200" md-direction="bottom">{{ project.projectTitle }}</md-tooltip>
           </div>
         </td>
         <td class="text-center">
