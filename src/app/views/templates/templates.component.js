@@ -1,16 +1,18 @@
 import angular from 'angular';
 
 const template = require('./templates.html');
+const definitionTemplate = require('./definition-dialog.html');
 
 const DEFAULT_TEMPLATE = { name: 'DEFAULT' };
 
 class TemplateController {
-  constructor($state, $mdDialog, TemplateService) {
+  constructor($state, $mdDialog, TemplateService, $mdMedia) {
     'ngInject';
 
     this.TemplateService = TemplateService;
     this.$state = $state;
     this.$mdDialog = $mdDialog;
+    this.$mdMedia = $mdMedia;
   }
 
   $onInit() {
@@ -295,6 +297,20 @@ class TemplateController {
   define(worksheet, attribute) {
     this.defAttribute = attribute;
     this.defWorksheet = worksheet;
+
+    if (this.$mdMedia('xs')) {
+      this.$mdDialog
+        .show({
+          template: definitionTemplate,
+          // bind to controller
+        })
+        .then(() => {
+          this.$mdDialog.hide();
+        })
+        .catch(() => {
+          this.$mdDialog.cancel();
+        });
+    }
   }
 }
 
