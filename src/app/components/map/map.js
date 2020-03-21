@@ -56,8 +56,15 @@ export default class Map extends EventEmitter {
     this.map.setZoom(z);
 
     this.mapTiles = L.tileLayer(
-      'https://api.mapbox.com/v4/mapbox.outdoors/{z}/{x}/{y}.png?access_token={access_token}',
-      { access_token: mapboxToken },
+      //      'https://api.mapbox.com/v4/mapbox.outdoors/{z}/{x}/{y}.png?access_token={access_token}',
+      'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={access_token}',
+      {
+        id: 'mapbox/outdoors-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        access_token: mapboxToken,
+        maxZoom: 18,
+      },
     );
 
     this.mapTiles.addTo(this.map);
