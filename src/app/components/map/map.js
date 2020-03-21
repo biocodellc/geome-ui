@@ -56,14 +56,12 @@ export default class Map extends EventEmitter {
     this.map.setZoom(z);
 
     this.mapTiles = L.tileLayer(
-      //      'https://api.mapbox.com/v4/mapbox.outdoors/{z}/{x}/{y}.png?access_token={access_token}',
       'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={access_token}',
       {
         id: 'mapbox/outdoors-v11',
         tileSize: 512,
         zoomOffset: -1,
         access_token: mapboxToken,
-        maxZoom: 18,
       },
     );
 
@@ -71,8 +69,13 @@ export default class Map extends EventEmitter {
     this.base = this.mapTiles;
 
     this.satelliteTiles = L.tileLayer(
-      'https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token={access_token}',
-      { access_token: mapboxToken },
+      'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={access_token}',
+      {
+        id: 'mapbox/satellite-v9',
+        tileSize: 512,
+        zoomOffset: -1,
+        access_token: mapboxToken,
+      },
     );
 
     this.usgsTiles = L.tileLayer.wms(
