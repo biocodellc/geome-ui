@@ -2,7 +2,6 @@ import angular from 'angular';
 
 const template = require('./templates.html');
 const definitionTemplate = require('./definition-dialog.html');
-// const definitionTemplate = require('../../components/attribute-definition/attribute-definition.html');
 
 const DEFAULT_TEMPLATE = { name: 'DEFAULT' };
 
