@@ -46,6 +46,7 @@ import query from './views/query';
 import projectOverview from './views/project-overview';
 import teamOverview from './views/team-overview';
 import dashboard from './views/dashboard';
+import teamsList from './views/teams-list';
 import record from './views/record';
 import photoUpload from './views/photo-upload';
 import sraUpload from './views/sra-upload';
@@ -116,6 +117,7 @@ const dependencies = [
   projectOverview,
   teamOverview,
   dashboard,
+  teamsList,
   record,
   photoUpload,
   sraUpload,

@@ -1,0 +1,58 @@
+<div class="teams-list">
+  {{$ctrl.teams}}
+  <section class="public-teams">
+    <div layout="row">
+      <h3 flex>Public Teams</h3>
+      <div md-no-float class="col-sm-4 filter">
+        <md-icon md-font-icon="fa fa-search fa-fw"></md-icon>
+        <md-input-container flex>
+          <input
+            ng-model="$ctrl.searchText"
+            ng-change="$ctrl.searchTextChange($ctrl.searchText)"
+            placeholder="Filter Teams"
+            md-autofocus
+          />
+        </md-input-container>
+      </div>
+    </div>
+    <div layout="row" layout-align="center center" ng-show="$ctrl.loading" class="loader">
+      <md-progress-circular
+        class="loading-overlay-fixed"
+        md-mode="indeterminate"
+      ></md-progress-circular>
+    </div>
+
+    <table class="table table-hover table-striped" ng-if="!$ctrl.loading">
+      <thead>
+        <th></th>
+        <th>Modules</th>
+        <th># of Samples</th>
+        <th># of Projects</th>
+        <th># of Members</th>
+      </thead>
+      <tr
+        ng-repeat="team in $ctrl.filteredTeams | orderBy: 'name'"
+        ng-click="$ctrl.viewTeamOverview(project.projectId)"
+      >
+        <td layout="column">
+          <div md-truncate md-colors="{color: 'primary'}">
+            <span>{{ team.name }}</span>
+            <md-tooltip md-delay="200" md-direction="bottom">{{ team.name }}</md-tooltip>
+          </div>
+          <div layout="row" layout-align="space-between">
+            <small class="text-muted activity"
+              >Latest Activity: {{ team.latestDataModification ? team.latestDataModification.split('
+              ')[0] : 'N/A' }}</small
+            >
+            <div ng-repeat="entity in team.entities">
+              <span class="label label-info">{{ entity}}</span>
+            </div>
+          </div>
+        </td>
+        <td>{{ team.entityStats.samples }}</td>
+        <td>{{ team.project.numOfProjects }}</td>
+        <td>{{ team.project.totalmembers }}</td>
+      </tr>
+    </table>
+  </section>
+</div>
