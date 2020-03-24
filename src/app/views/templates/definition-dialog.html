@@ -1,11 +1,11 @@
-<md-dialog-content flex layout="column">
+<md-dialog-content flex layout="column" layout-padding>
   <fims-attribute-definition
     current-project="$ctrl.currentProject"
-    attribute="$ctrl.defAttribute"
-    sheet-name="$ctrl.defWorksheet"
+    attribute="$ctrl.attribute"
+    sheet-name="$ctrl.worksheet"
   >
   </fims-attribute-definition>
   <md-dialog-actions>
-    <md-button ng-click="$ctrl.ok()" class="md-primary">Looks Good!</md-button>
+    <md-button ng-click="$ctrl.$mdDialog.hide()" class="md-primary">Close</md-button>
   </md-dialog-actions>
 </md-dialog-content>

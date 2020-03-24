@@ -2,6 +2,7 @@ import angular from 'angular';
 
 const template = require('./templates.html');
 const definitionTemplate = require('./definition-dialog.html');
+// const definitionTemplate = require('../../components/attribute-definition/attribute-definition.html');
 
 const DEFAULT_TEMPLATE = { name: 'DEFAULT' };
 
@@ -299,17 +300,20 @@ class TemplateController {
     this.defWorksheet = worksheet;
 
     if (this.$mdMedia('xs')) {
-      this.$mdDialog
-        .show({
-          template: definitionTemplate,
-          // bind to controller
-        })
-        .then(() => {
-          this.$mdDialog.hide();
-        })
-        .catch(() => {
-          this.$mdDialog.cancel();
-        });
+      this.$mdDialog.show({
+        template: definitionTemplate,
+        locals: {
+          currentProject: this.currentProject,
+          attribute,
+          worksheet,
+          $mdDialog: this.$mdDialog,
+        },
+        controller: function Controller() {},
+        bindToController: true,
+        controllerAs: '$ctrl',
+        clickOutsideToClose: true,
+        disableParentScroll: false,
+      });
     }
   }
 }

@@ -12,7 +12,7 @@ class AttributeDefController {
   }
 
   $onChanges() {
-    if (this.attribute) {
+    if (this.attribute && this._config) {
       // && attribute.currentValue !== attribute.previousValue) {
       this.rules = this._config.attributeRules(this.sheetName, this.attribute);
     }
