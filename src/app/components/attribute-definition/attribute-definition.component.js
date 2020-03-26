@@ -21,6 +21,5 @@ export default {
     attribute: '<',
     sheetName: '<',
     currentProject: '<',
-    //    rules: '<',
   },
 };
