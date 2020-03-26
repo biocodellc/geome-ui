@@ -297,12 +297,17 @@ class TemplateController {
   define(worksheet, attribute) {
     this.defAttribute = attribute;
     this.defWorksheet = worksheet;
+    this.rules = this.currentProject.config.attributeRules(
+      worksheet,
+      attribute,
+    );
 
     if (this.$mdMedia('xs')) {
       this.$mdDialog.show({
         template: definitionTemplate,
         locals: {
           currentProject: this.currentProject,
+          rules: this.rules,
           attribute,
           worksheet,
           $mdDialog: this.$mdDialog,
