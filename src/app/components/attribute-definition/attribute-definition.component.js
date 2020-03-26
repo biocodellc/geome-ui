@@ -1,8 +1,11 @@
 const template = require('./attribute-definition.html');
 
 class AttributeDefController {
-  $onInit() {
+  $onChanges() {
     this._config = this.currentProject.config;
+    if (this.attribute) {
+      this.rules = this._config.attributeRules(this.sheetName, this.attribute);
+    }
   }
 
   getListFields(listName) {
@@ -18,6 +21,6 @@ export default {
     attribute: '<',
     sheetName: '<',
     currentProject: '<',
-    rules: '<',
+    //    rules: '<',
   },
 };
