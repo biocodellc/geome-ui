@@ -4,6 +4,10 @@
         padding: 24px;
         margin-bottom: 48px;
 
+        .filter-box {
+            display: inherit;
+        }
+
         md-input-container {
             width: 90%;
         }
