@@ -1,14 +1,13 @@
-<div class="teams-list">
-  {{$ctrl.teams}}
+<div class="teams-list admin">
   <section class="public-teams">
     <div layout="row">
       <h3 flex>Public Teams</h3>
-      <div md-no-float class="col-sm-4 filter">
+      <div flex="30">
         <md-icon md-font-icon="fa fa-search fa-fw"></md-icon>
-        <md-input-container flex>
+        <md-input-container>
           <input
-            ng-model="$ctrl.searchText"
-            ng-change="$ctrl.searchTextChange($ctrl.searchText)"
+            ng-model="searchText"
+            ng-change="$ctrl.searchTextChange(searchText)"
             placeholder="Filter Teams"
             md-autofocus
           />
@@ -26,32 +25,33 @@
       <thead>
         <th></th>
         <th>Modules</th>
-        <th># of Samples</th>
+        <!--th># of Samples</th>
         <th># of Projects</th>
-        <th># of Members</th>
+        <th># of Members</th-->
       </thead>
       <tr
         ng-repeat="team in $ctrl.filteredTeams | orderBy: 'name'"
-        ng-click="$ctrl.viewTeamOverview(project.projectId)"
+        ng-click="$ctrl.viewTeamOverview(team.id)"
       >
-        <td layout="column">
+        <td>
           <div md-truncate md-colors="{color: 'primary'}">
-            <span>{{ team.name }}</span>
+            <span class="name">{{ team.name }}</span>
             <md-tooltip md-delay="200" md-direction="bottom">{{ team.name }}</md-tooltip>
           </div>
-          <div layout="row" layout-align="space-between">
+          <div>
             <small class="text-muted activity"
-              >Latest Activity: {{ team.latestDataModification ? team.latestDataModification.split('
-              ')[0] : 'N/A' }}</small
+              >Latest Activity: {{ team.modified ? team.modified.split(' ')[0] : 'N/A' }}</small
             >
-            <div ng-repeat="entity in team.entities">
-              <span class="label label-info">{{ entity}}</span>
-            </div>
           </div>
         </td>
-        <td>{{ team.entityStats.samples }}</td>
+        <td layout="row">
+          <div ng-repeat="entity in team.config.entities">
+            <span class="label label-info">{{ entity.conceptAlias }}</span>
+          </div>
+        </td>
+        <!--td>{{ team.entityStats.samples }}</td>
         <td>{{ team.project.numOfProjects }}</td>
-        <td>{{ team.project.totalmembers }}</td>
+        <td>{{ team.project.totalmembers }}</td-->
       </tr>
     </table>
   </section>
