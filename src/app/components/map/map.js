@@ -78,9 +78,13 @@ export default class Map extends EventEmitter {
       },
     );
 
-    this.usgsTiles = L.tileLayer.wms(
-      'https://basemap.nationalmap.gov/arcgis/services/USGSImageryOnly/MapServer/WMSServer',
-      { layers: 0, maxZoom: 8 },
+    this.esriOceanBasemapTiles = L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}',
+      {
+        attribution:
+          'Tiles &copy; Esri &mdash; Sources: GEBCO, NOAA, CHS, OSU, UNH, CSUMB, National Geographic, DeLorme, NAVTEQ, and Esri',
+        maxZoom: 10,
+      },
     );
 
     this.clusterLayer = new L.MarkerClusterGroup({ chunkedLoading: true });
@@ -166,10 +170,10 @@ export default class Map extends EventEmitter {
     this.base = this.mapTiles;
   }
 
-  usgsView() {
+  esriOceanBasemapView() {
     this.map.removeLayer(this.base);
-    this.map.addLayer(this.usgsTiles);
-    this.base = this.usgsTiles;
+    this.map.addLayer(this.esriOceanBasemapTiles);
+    this.base = this.esriOceanBasemapTiles;
   }
 
   drawBounds(createCallback) {

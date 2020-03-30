@@ -22,8 +22,8 @@ class MapController {
       this.mapInstance.mapView();
     } else if (this.tiles === 'sat') {
       this.mapInstance.satelliteView();
-    } else if (this.tiles === 'usgs') {
-      this.mapInstance.usgsView();
+    } else if (this.tiles === 'esri') {
+      this.mapInstance.esriOceanBasemapView();
     }
   }
 }
