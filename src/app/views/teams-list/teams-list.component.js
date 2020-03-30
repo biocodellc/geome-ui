@@ -76,12 +76,13 @@ class TeamsListController {
     );
   }
 
-  // TODO: come up with better solution for
-  // viewing team overview without needing to change
-  // the current project
-  // or change to a project that
-  // will be easier for the user to grasp why the current project
-  // was just changed to
+  // TODO: we want to call ProjectService.setCurrentProject()
+  // so as to unset the current project if the team selected is
+  // not the team for current project.
+  // However, until the API is updated to give
+  // team metadata within the configuration service API call,
+  // we dont have any team metadata avaialable unless a project
+  // is selected.
 
   viewTeamOverview(Id) {
     this.loading = true;
