@@ -47,11 +47,19 @@ class DashboardController {
     this.filteredPrivateProjects = this.usersProjects;
   }
 
-  showExpeditionsDetail(projectId) {
+  viewProjectOverview(projectId) {
     this.loading = true;
     const project = this.allProjects.find(p => p.projectId === projectId);
     this.ProjectService.setCurrentProject(project, true)
-      .then(() => this.$state.go('overview'))
+      .then(() => this.$state.go('project-overview'))
+      .finally(() => (this.loading = false));
+  }
+
+  viewTeamOverview(projectId) {
+    this.loading = true;
+    const project = this.allProjects.find(p => p.projectId === projectId);
+    this.ProjectService.setCurrentProject(project, true)
+      .then(() => this.$state.go('team-overview'))
       .finally(() => (this.loading = false));
   }
 

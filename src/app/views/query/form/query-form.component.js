@@ -352,7 +352,7 @@ export default {
     queryMap: '<',
     currentUser: '<',
     onNewResults: '&',
-    //clearTableData: '&',
+    // clearTableData: '&',
     toggleLoading: '&',
     entitiesForDownload: '&',
   },

@@ -15,13 +15,17 @@
     <div class="row">
       <div class="col-sm-4 col-md-3 col-lg-2"><strong>Shareable URLs</strong></div>
       <div class="col-sm-8 col-md-9 col-lg-10">
-        Project Homepage: <a href="{{ $ctrl.url }}?projectId={{ $ctrl.currentProject.projectId }}">
-          {{ $ctrl.url }}?projectId={{ $ctrl.currentProject.projectId }}</a>
-        <br>
-        Template Generator Direct Link: <a href="{{ $ctrl.templateUrl }}?projectId={{ $ctrl.currentProject.projectId }}">
-          {{ $ctrl.templateUrl }}?projectId={{ $ctrl.currentProject.projectId }}</a>
+        Project Homepage:
+        <a href="{{ $ctrl.url }}?projectId={{ $ctrl.currentProject.projectId }}">
+          {{ $ctrl.url }}?projectId={{ $ctrl.currentProject.projectId }}</a
+        >
+        <br />
+        Template Generator Direct Link:
+        <a href="{{ $ctrl.templateUrl }}?projectId={{ $ctrl.currentProject.projectId }}">
+          {{ $ctrl.templateUrl }}?projectId={{ $ctrl.currentProject.projectId }}</a
+        >
       </div>
-    </div>    
+    </div>
     <div class="row">
       <div class="col-sm-4 col-md-3 col-lg-2"><strong>Visibility</strong></div>
       <div class="col-sm-8 col-md-9 col-lg-10">
@@ -29,22 +33,28 @@
         <span ng-if="!$ctrl.currentProject.public">This is a private project</span>
       </div>
     </div>
-    
+
     <div class="row" ng-if="$ctrl.currentProject.principalInvestigator">
       <div class="col-sm-4 col-md-3 col-lg-2"><strong>Prin. Investigator</strong></div>
-      <div class="col-sm-8 col-md-9 col-lg-10">{{ $ctrl.currentProject.principalInvestigator}}<span ng-if="$ctrl.currentProject.principalInvestigatorAffiliation">, 
-            {{$ctrl.currentProject.principalInvestigatorAffiliation}}</span>
+      <div class="col-sm-8 col-md-9 col-lg-10">
+        {{ $ctrl.currentProject.principalInvestigator}}<span
+          ng-if="$ctrl.currentProject.principalInvestigatorAffiliation"
+          >, {{$ctrl.currentProject.principalInvestigatorAffiliation}}</span
+        >
       </div>
-
     </div>
 
     <div class="row" ng-if="$ctrl.currentProject.projectContact">
       <div class="col-sm-4 col-md-3 col-lg-2"><strong>Contact</strong></div>
-      <div class="col-sm-8 col-md-9 col-lg-10">{{ $ctrl.currentProject.projectContact}} 
-          <span ng-if="$ctrl.currentProject.projectContactEmail">(
-            <a href="mailto:{{ $ctrl.currentProject.projectContactEmail}}">{{ $ctrl.currentProject.projectContactEmail}}</a>)
-          </span>
-      </div> 
+      <div class="col-sm-8 col-md-9 col-lg-10">
+        {{ $ctrl.currentProject.projectContact}}
+        <span ng-if="$ctrl.currentProject.projectContactEmail"
+          >(
+          <a href="mailto:{{ $ctrl.currentProject.projectContactEmail}}"
+            >{{ $ctrl.currentProject.projectContactEmail}}</a
+          >)
+        </span>
+      </div>
     </div>
 
     <div class="row" ng-if="$ctrl.currentProject.publicationGuid">
@@ -65,11 +75,13 @@
     <div ng-show="$ctrl.currentProject.projectConfiguration.networkApproved">
       <div class="row title">
         <div class="col-sm-4 col-md-3 col-lg-2"><strong>Team workspace</strong></div>
+
         <div class="col-sm-8 col-md-9 col-lg-10">
-          {{ $ctrl.currentProject.projectConfiguration.name }}
-          (<a href="mailto:{{ $ctrl.currentProject.projectConfiguration.user.email }}">{{
-            $ctrl.currentProject.projectConfiguration.user.email
-          }}</a
+          <span class="label label-info" ng-click="$ctrl.$state.go('team-overview')">
+            {{ $ctrl.currentProject.projectConfiguration.name }} team</span
+          >
+          (<a href="mailto:{{ $ctrl.currentProject.projectConfiguration.user.email }}"
+            >{{ $ctrl.currentProject.projectConfiguration.user.email }}</a
           >)
           <md-button class="md-icon-button help-link md-popover-button">
             <md-popover md-popover-class="fastq-help-filenames" md-direction="right">
@@ -92,7 +104,6 @@
       </div>
 -->
     </div>
-
   </div>
 
   <div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
