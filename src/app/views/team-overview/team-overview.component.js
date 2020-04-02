@@ -1,4 +1,3 @@
-// TODO: Add logo to page after API is updated
 import angular from 'angular';
 import ProjectConfig from '../../models/ProjectConfig';
 
@@ -31,8 +30,8 @@ class TeamOverviewController {
     this.textTruncated = true;
     this.getTeamDetails();
     this.getProjectStats();
-    this.getNetworkConfiguration();
-    this.initializeCollaborationLabel();
+    // this.getNetworkConfiguration();
+    // this.initializeCollaborationLabel();
   }
 
   $onChanges(changesObj) {
@@ -63,15 +62,15 @@ class TeamOverviewController {
       .finally(() => (this.loading = false));
   }
 
-  getNetworkConfiguration() {
+  /* getNetworkConfiguration() {
     this.NetworkConfigurationService.get()
       .then(config => {
         this.networkConfig = config;
       })
       .finally(() => this.getTKAttributeObject());
-  }
+  } */
 
-  getTKAttributeObject() {
+  /* getTKAttributeObject() {
     const index = this.networkConfig.entities.findIndex(
       e => e.conceptAlias === 'Sample',
     );
@@ -79,15 +78,15 @@ class TeamOverviewController {
     this.TKAttributeObject = allSampleAttributes.find(
       a => a.column === 'traditionalKnowledgeNotice',
     );
-  }
+  } */
 
-  initializeCollaborationLabel() {
+  /* initializeCollaborationLabel() {
     this.openToCollaboration = this.config.entities[
       this.sampleEntityIndex
     ].attributes.some(
       attribute => attribute.column === 'traditionalKnowledgeNotice',
     );
-  }
+  } */
 
   viewProjectOverview(project) {
     this.loading = true;
@@ -96,7 +95,7 @@ class TeamOverviewController {
       .finally(() => (this.loading = false));
   }
 
-  updateCollaborationAttribute() {
+  /* updateCollaborationAttribute() {
     const sampleAttributes = this.config.entities[this.sampleEntityIndex]
       .attributes;
     const sampleRules = this.config.entities[this.sampleEntityIndex].rules;
@@ -113,9 +112,9 @@ class TeamOverviewController {
     } else sampleAttributes.push(this.TKAttributeObject);
 
     this.updateProjectConfiguration();
-  }
+  } */
 
-  updateProjectConfiguration() {
+  /* updateProjectConfiguration() {
     this.loadingCollaborationCheckbox = true;
     return this.ProjectConfigurationService.save(
       Object.assign({}, this.configuration, { config: this.config }),
@@ -131,7 +130,7 @@ class TeamOverviewController {
       .finally(() => {
         this.loadingCollaborationCheckbox = false;
       });
-  }
+  } */
 }
 
 export default {
