@@ -1,33 +1,37 @@
+<!--TODO: specify $ctrl.record.entity =="Photo" instead of .photoID-->
 <div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
   <md-progress-circular md-mode="indeterminate"></md-progress-circular>
 </div>
-<div layout="column" class="record-detail" ng-show="!$ctrl.loading">
-  <div ng-if="$ctrl.invalidPhoto" class="alert alert-danger text-center text-large" role="alert">
-    <i class="fa fa-exclamation-circle"></i>
-    An error occurred while processing this image.
-  </div>
-  <div
-    ng-if="$ctrl.record.processed === 'false' && $ctrl.record.photoID"
-    class="alert alert-warning text-center text-large"
-    role="alert"
-  >
-    <i class="fa fa-exclamation-circle"></i>
-    Image is processing.
+<div class="record-detail" layout="column" ng-show="!$ctrl.loading">
+  <div class="photo-error-labels" ng-if="$ctrl.record.photoID">
+    <div ng-if="$ctrl.invalidPhoto" class="alert alert-danger text-center text-large" role="alert">
+      <i class="fa fa-exclamation-circle"></i>
+      An error occurred while processing this image.
+    </div>
+    <div
+      ng-if="$ctrl.record.processed === 'false'"
+      class="alert alert-warning text-center text-large"
+      role="alert"
+    >
+      <i class="fa fa-exclamation-circle"></i>
+      Image is processing.
+    </div>
   </div>
   <div layout="row">
     <h3>{{ $ctrl.record.entity }} {{ $ctrl.getIdentifier($ctrl.record) }}</h3>
     <notice-label ng-if="$ctrl.record.traditionalKnowledgeNotice === 'TRUE'"></notice-label>
   </div>
-  <div class="main-details" layout="row" layout-align="center center">
+  <div class="main-details" layout="row" layout-xs="column" layout-align="center center">
     <div
+      class="photo"
       ng-if="$ctrl.record.photoID && $ctrl.record.processed !== 'false' && !$ctrl.invalidPhoto"
-      flex="100"
+      flex
     >
       <a href="{{ $ctrl.record.img1024 }}">
         <img ng-if="$ctrl.record.img1024" ng-src="{{ $ctrl.record.img512 }}" />
       </a>
     </div>
-    <table flex="100">
+    <table flex>
       <tbody>
         <tr ng-if="$ctrl.invalidPhoto && $ctrl.record.originalUrl.includes('base64')">
           <th class="text-danger">Error Detail:</th>
@@ -53,7 +57,10 @@
         </tr>
       </tbody>
     </table>
-    <div flex="100" ng-if="$ctrl.photos">
+    <div class="map-container" ng-if="$ctrl.record.entity === 'Event'" flex>
+      <fims-map class="record-map" map-instance="$ctrl.map"></fims-map>
+    </div>
+    <div flex ng-if="$ctrl.photos && $ctrl.record.entity === 'Sample'">
       <ng-image-gallery images="$ctrl.photos" inline="true" img-Bubbles="true" bubble-size="64">
       </ng-image-gallery>
     </div>

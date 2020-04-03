@@ -54,7 +54,6 @@ export default class Map extends EventEmitter {
     // fill screen with map, roughly 360 degrees of longitude
     const z = this.map.getBoundsZoom([[90, -180], [-90, 180]], true);
     this.map.setZoom(z);
-
     this.mapTiles = L.tileLayer(
       'https://api.mapbox.com/v4/mapbox.outdoors/{z}/{x}/{y}.png?access_token={access_token}',
       { access_token: mapboxToken },

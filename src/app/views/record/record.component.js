@@ -1,4 +1,7 @@
 import angular from 'angular';
+
+import RecordMap from './RecordMap';
+
 import compareValues from '../../utils/compareValues';
 import flatten from '../../utils/flatten';
 import {
@@ -42,7 +45,14 @@ class RecordController {
       const { projectId } = this.record;
       this.record = this.record.record;
       this.fetchProject(projectId);
+      if (this.record.entity === 'Event') this.prepareMap();
     }
+  }
+  // Todo: add check for IF LAT LNG
+  prepareMap() {
+    const data = [this.record];
+    this.map = new RecordMap('decimalLatitude', 'decimalLongitude');
+    this.map.on(RecordMap.INIT_EVENT, () => this.map.setMarkers(data));
   }
 
   getIdentifier(record) {
@@ -259,5 +269,7 @@ export default {
   bindings: {
     layout: '@',
     record: '<',
+    latColumn: '<',
+    lngColumn: '<',
   },
 };
