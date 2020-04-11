@@ -163,6 +163,18 @@ export default class QueryParams {
       if (builder.queryString.length > 0) builder.add('and');
       builder.add('_exists_:fastaSequence.sequence');
     }
+    if (this.diseaseDetected) {
+      if (builder.queryString.length > 0) builder.add('and');
+      builder.add(`diseaseDetected:${this.diseaseDetected.value}`);
+    }
+    if (this.fatal) {
+      if (builder.queryString.length > 0) builder.add('and');
+      builder.add(`fatal:${this.fatal.value}`);
+    }
+    if (this.diseaseTested) {
+      if (builder.queryString.length > 0) builder.add('and');
+      builder.add(`diseaseTested:${this.diseaseTested.value}`);
+    }
 
     if (this.bounds) {
       const ne = this.bounds.northEast;

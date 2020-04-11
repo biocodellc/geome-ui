@@ -1,4 +1,6 @@
 /* eslint-disable no-underscore-dangle */
+// TODO: rename this to default-query
+// TODO: you can take away the project.service.all call and bind from routing
 import angular from 'angular';
 
 const template = require('./query-form.html');
@@ -308,6 +310,7 @@ class QueryFormController {
   }
 
   queryJson() {
+    console.log('query-form');
     const entity = this.entity === 'Fastq' ? 'fastqMetadata' : this.entity;
     this.toggleLoading({ val: true });
     const entities = this.config.entities
@@ -320,7 +323,7 @@ class QueryFormController {
     this.entitiesForDownload({ entities });
     const selectEntities = SELECT_ENTITIES[entity];
     this.QueryService.queryJson(
-      this.params.buildQuery(selectEntities, SOURCE.join()),
+      this.params.buildQuery(selectEntities /* , SOURCE.join() */),
       entity,
       0,
       10000,

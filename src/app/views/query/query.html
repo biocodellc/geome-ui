@@ -55,7 +55,22 @@
     md-is-locked-open="$ctrl.showSidebar"
     md-whiteframe="4"
   >
+    <fims-team-query
+      ng-if="$ctrl.teamQueryForm"
+      team-id="$ctrl.teamIdNum"
+      params="$ctrl.params"
+      projects="$ctrl.projects"
+      entities-for-download="$ctrl.downloadableEntities(entities)"
+      on-new-results="$ctrl.handleNewResults(results, entity)"
+      query-map="$ctrl.queryMap"
+      markers="$ctrl.markers"
+      current-user="$ctrl.currentUser"
+      toggle-loading="$ctrl.toggleLoading(val)"
+      layout-padding
+      class="team-query"
+    ></fims-team-query>
     <fims-query-form
+      ng-if="!$ctrl.teamQueryForm"
       params="$ctrl.params"
       entities-for-download="$ctrl.downloadableEntities(entities)"
       on-new-results="$ctrl.handleNewResults(results, entity, isAdvancedSearch)"
