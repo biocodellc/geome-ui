@@ -64,7 +64,6 @@
       on-new-results="$ctrl.handleNewResults(results, entity)"
       query-map="$ctrl.queryMap"
       markers="$ctrl.markers"
-      current-user="$ctrl.currentUser"
       toggle-loading="$ctrl.toggleLoading(val)"
       layout-padding
       class="team-query"
@@ -72,14 +71,15 @@
     <fims-query-form
       ng-if="!$ctrl.teamQueryForm"
       params="$ctrl.params"
+      projects="$ctrl.projects"
       entities-for-download="$ctrl.downloadableEntities(entities)"
       on-new-results="$ctrl.handleNewResults(results, entity, isAdvancedSearch)"
+      team-id="$ctrl.teamIdNum"
       query-map="$ctrl.queryMap"
       class="query-form"
       expeditions="$ctrl.expeditions"
       markers="$ctrl.markers"
       filter-options="$ctrl.filterOptions"
-      current-user="$ctrl.currentUser"
       toggle-loading="$ctrl.toggleLoading(val)"
       layout-padding
     ></fims-query-form>

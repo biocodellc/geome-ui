@@ -24,14 +24,10 @@ class QueryController {
   $onInit() {
     const teamIdFromUrlParam = this.$location.search().team;
     this.teamIdNum = parseInt(teamIdFromUrlParam, 10);
+    // For now, we just check for team ID of Amphibian Disease
     if (teamIdFromUrlParam && this.teamIdNum === 45) {
       this.teamQueryForm = true;
     }
-
-    // TODO: what about, if the teamID does exist, then we open advanced
-    // query and go ahead and populate the team
-
-    // For now, we just check for team ID of AmphibiaWeb Disease Portal
 
     this.params = new QueryParams();
     this.queryMap = new QueryMap(

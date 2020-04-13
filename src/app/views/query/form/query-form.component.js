@@ -1,6 +1,4 @@
 /* eslint-disable no-underscore-dangle */
-// TODO: rename this to default-query
-// TODO: you can take away the project.service.all call and bind from routing
 import angular from 'angular';
 
 const template = require('./query-form.html');
@@ -54,7 +52,6 @@ class QueryFormController {
     $timeout,
     $location,
     QueryService,
-    ProjectService,
     NetworkConfigurationService,
     ProjectConfigurationService,
     ExpeditionService,
@@ -66,7 +63,6 @@ class QueryFormController {
     this.$timeout = $timeout;
     this.$location = $location;
     this.QueryService = QueryService;
-    this.ProjectService = ProjectService;
     this.NetworkConfigurationService = NetworkConfigurationService;
     this.ProjectConfigurationService = ProjectConfigurationService;
     this.ExpeditionService = ExpeditionService;
@@ -85,20 +81,25 @@ class QueryFormController {
     this.samplePhotoFilters = [];
     this.eventPhotoFilters = [];
     this.paramCopy = angular.copy(this.params);
-
-    // Retrieve Projects
-    const projectsPromise = this.ProjectService.all(true).then(({ data }) => {
-      this.projects = data;
-      const names = new Set();
-      this.projects.forEach(p => {
-        if (p.projectConfiguration.networkApproved === true) {
-          names.add(p.projectConfiguration.name);
-        }
-      });
-      this.configNames = [...names];
+    this.projects = this.projects.data;
+    const names = new Set();
+    this.projects.forEach(p => {
+      if (p.projectConfiguration.networkApproved === true) {
+        names.add(p.projectConfiguration.name);
+      }
     });
+    this.configNames = [...names];
+    if (this.teamId) {
+      const teamExists = this.projects.find(
+        p => p.projectConfiguration.id === this.teamId,
+      );
+      if (teamExists) {
+        this.moreSearchOptions = true;
+        this.teams.push(teamExists.projectConfiguration.name);
+      }
+    }
 
-    // Retrieve General Configuration
+    // General Configuration Retrieval
     let configPromise = this.NetworkConfigurationService.get().then(config => {
       this.networkConfig = config;
       this.phylums = this.networkConfig.getList('phylum').fields;
@@ -114,18 +115,15 @@ class QueryFormController {
       const projectMatch = PROJECT_RE.exec(q);
       if (projectMatch && projectMatch[1]) {
         // only set up to handle single project queries
-        configPromise = projectsPromise.then(() => {
-          const projectId = parseInt(projectMatch[1], 10);
-          const project = this.projects.find(p => p.projectId === projectId);
-          if (project) {
-            return this.ProjectConfigurationService.get(
-              project.projectConfiguration.id,
-            ).then(({ config }) => {
-              this.config = config;
-            });
-          }
-          return undefined;
-        });
+        const projectId = parseInt(projectMatch[1], 10);
+        const project = this.projects.find(p => p.projectId === projectId);
+        if (project) {
+          configPromise = this.ProjectConfigurationService.get(
+            project.projectConfiguration.id,
+          ).then(({ config }) => {
+            this.config = config;
+          });
+        }
       }
       configPromise.then(() => this.queryJson());
     }
@@ -310,7 +308,6 @@ class QueryFormController {
   }
 
   queryJson() {
-    console.log('query-form');
     const entity = this.entity === 'Fastq' ? 'fastqMetadata' : this.entity;
     this.toggleLoading({ val: true });
     const entities = this.config.entities
@@ -323,7 +320,7 @@ class QueryFormController {
     this.entitiesForDownload({ entities });
     const selectEntities = SELECT_ENTITIES[entity];
     this.QueryService.queryJson(
-      this.params.buildQuery(selectEntities /* , SOURCE.join() */),
+      this.params.buildQuery(selectEntities, SOURCE.join()),
       entity,
       0,
       10000,
@@ -353,9 +350,9 @@ export default {
   bindings: {
     params: '<',
     queryMap: '<',
-    currentUser: '<',
+    projects: '<',
+    teamId: '<',
     onNewResults: '&',
-    // clearTableData: '&',
     toggleLoading: '&',
     entitiesForDownload: '&',
   },

@@ -64,22 +64,6 @@ class TeamFormController {
     this.moreSearchOptions = !this.moreSearchOptions;
   }
 
-  clearParams() {
-    Object.keys(this.params).forEach(key => {
-      if (Array.isArray(this.params[key])) {
-        this.params[key] = [];
-      } else if (typeof this.params[key] === 'boolean') {
-        this.params[key] = false;
-      } else if (typeof this.params[key] === 'string') {
-        this.params[key] = null;
-      } else if (typeof this.params[key] === 'object') {
-        this.params[key] = null;
-      }
-    });
-  }
-
-  // TODO: Make the "active" class of drawBounds a lot more noticeable, so that
-  // the user can tell theyre able to do somethign witht he mouse on the map
   drawBounds() {
     this.drawing = true;
     this.queryMap.drawBounds(bounds => {
@@ -95,6 +79,8 @@ class TeamFormController {
     this.params.bounds = null;
   }
 
+  // TODO: Do we want to add the ability to download
+  // diagnostics data?
   prepareEntitiesForDownload(configuration) {
     const entities = configuration.config.entities
       .filter(e =>
