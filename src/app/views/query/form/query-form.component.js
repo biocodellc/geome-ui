@@ -86,18 +86,18 @@ class QueryFormController {
     this.projects.forEach(p => {
       if (p.projectConfiguration.networkApproved === true) {
         names.add(p.projectConfiguration.name);
+        if (
+          this.teamId &&
+          !this.teamHasBeenSelected &&
+          p.projectConfiguration.id === this.teamId
+        ) {
+          this.teamHasBeenSelected = p;
+          this.moreSearchOptions = true;
+          this.teams.push(p.projectConfiguration.name);
+        }
       }
     });
     this.configNames = [...names];
-    if (this.teamId) {
-      const teamExists = this.projects.find(
-        p => p.projectConfiguration.id === this.teamId,
-      );
-      if (teamExists) {
-        this.moreSearchOptions = true;
-        this.teams.push(teamExists.projectConfiguration.name);
-      }
-    }
 
     // General Configuration Retrieval
     let configPromise = this.NetworkConfigurationService.get().then(config => {
