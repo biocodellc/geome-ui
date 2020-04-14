@@ -4,22 +4,13 @@ import QueryParams from './QueryParams';
 const template = require('./query.html');
 
 class QueryController {
-  constructor(
-    $state,
-    $timeout,
-    $location,
-    QueryService,
-    StorageService,
-    ProjectService,
-  ) {
+  constructor($state, $timeout, $location, QueryService) {
     'ngInject';
 
     this.$state = $state;
     this.$timeout = $timeout;
     this.$location = $location;
     this.QueryService = QueryService;
-    this.StorageService = StorageService;
-    this.ProjectService = ProjectService;
   }
   $onInit() {
     const teamIdFromUrlParam = this.$location.search().team;
