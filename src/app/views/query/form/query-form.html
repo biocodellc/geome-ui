@@ -25,9 +25,9 @@
 
         <md-input-container class="entity-radio">
           <md-radio-group ng-model="$ctrl.entity" layout-gt-sm="row" class="md-primary">
-            <md-radio-button ng-repeat="entity in $ctrl.queryEntities" ng-value="entity" flex>{{
-              entity
-            }}</md-radio-button>
+            <md-radio-button ng-repeat="entity in $ctrl.queryEntities" ng-value="entity" flex
+              >{{ entity }}</md-radio-button
+            >
           </md-radio-group>
         </md-input-container>
       </div>
@@ -39,7 +39,8 @@
         <md-button class="md-icon-button help-link md-popover-button">
           <md-popover md-popover-class="query-help" md-popover-group="query" md-direction="right">
             <div>
-              Teams consist of projects sharing a common set of rules, attributes, and controlled vocabulary terms.
+              Teams consist of projects sharing a common set of rules, attributes, and controlled
+              vocabulary terms.
             </div>
           </md-popover>
           <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
@@ -136,9 +137,9 @@
           md-min-length="0"
           placeholder="Expedition Name ..."
         >
-          <span md-highlight-text="$ctrl.searchText" md-highlight-flags="i">{{
-            item.expeditionTitle
-          }}</span>
+          <span md-highlight-text="$ctrl.searchText" md-highlight-flags="i"
+            >{{ item.expeditionTitle }}</span
+          >
         </md-autocomplete>
         <md-chip-template>
           <span>
@@ -217,9 +218,9 @@
               md-floating-label=" "
             >
               <md-item-template>
-                <span md-highlight-text="searchCountry" md-highlight-flags="i">{{
-                  country.value
-                }}</span>
+                <span md-highlight-text="searchCountry" md-highlight-flags="i"
+                  >{{ country.value }}</span
+                >
               </md-item-template>
             </md-autocomplete>
           </md-content>
@@ -357,15 +358,15 @@
             <div>
               <span class="small bold">northEast:</span>
               <span class="small">
-                [{{ $ctrl.params.bounds.northEast.lat | number: 2 }},
-                {{ $ctrl.params.bounds.northEast.lng | number: 2 }}]</span
+                [{{ $ctrl.params.bounds.northEast.lat | number: 2 }}, {{
+                $ctrl.params.bounds.northEast.lng | number: 2 }}]</span
               >
             </div>
             <div>
               <span class="small bold">southWest:</span>
               <span class="small">
-                [{{ $ctrl.params.bounds.southWest.lat | number: 2 }},
-                {{ $ctrl.params.bounds.southWest.lng | number: 2 }}]</span
+                [{{ $ctrl.params.bounds.southWest.lat | number: 2 }}, {{
+                $ctrl.params.bounds.southWest.lng | number: 2 }}]</span
               >
             </div>
           </div>

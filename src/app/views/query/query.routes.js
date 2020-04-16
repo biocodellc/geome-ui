@@ -8,6 +8,7 @@ function getStates() {
         resolve: {
           layout: () => 'column',
           layoutFill: () => '',
+          projects: /* @ngInject */ ProjectService => ProjectService.all(true),
         },
       },
     },
