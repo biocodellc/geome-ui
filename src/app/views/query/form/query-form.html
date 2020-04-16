@@ -305,7 +305,7 @@
     <div flex ng-if="!$ctrl.config" layout="row" layout-align="center center">
       <md-progress-circular md-mode="indeterminate"></md-progress-circular>
     </div>
-    <div class="filters">
+    <div class="filters" ng-show="$ctrl.config">
       <fims-filter-buttons
         ng-if="$ctrl.entitiesList.includes('Event')"
         concept-alias="'Event'"

@@ -160,6 +160,7 @@ class QueryFormController {
         .then(() => {
           this.entity = 'Sample';
           this.clearPreviousMapResults();
+          this.setNetworkConfig();
           this.clearParams();
           this.clearBounds();
         })
