@@ -57,8 +57,8 @@
   </form>
 </div>
 
-<div class="row">
-  <div class="col-xs-6">
+<div layout="row">
+  <div flex>
     <div ng-repeat="(worksheet, data) in $ctrl.getAttributes()">
       <h3 ng-if="$ctrl.worksheet === 'Workbook'">{{ worksheet }}</h3>
       <div ng-if="$first && $ctrl.worksheet === 'Workbook'">
@@ -100,7 +100,7 @@
                 ng-click="$ctrl.toggleSelected(worksheet, attribute)"
               />
               {{ attribute.column }}
-              <a ng-click="$ctrl.define(worksheet, attribute)">DEF</a>
+              <a ng-click="$ctrl.define(worksheet, attribute)">DEF </a>
             </label>
           </div>
         </div>
@@ -115,7 +115,7 @@
                   ng-click="$ctrl.toggleSelected(worksheet, attribute)"
                 />
                 {{ attribute.column }}
-                <a ng-click="$ctrl.define(worksheet, attribute)">DEF</a>
+                <a class="md-popover-button" ng-click="$ctrl.define(worksheet, attribute)">DEF </a>
               </label>
             </div>
           </div>
@@ -124,7 +124,7 @@
     </div>
   </div>
 
-  <div class="col-xs-6 attribute-definition-container" md-sticky>
+  <div flex hide-xs class="attribute-definition-container" md-sticky>
     <fims-attribute-definition
       current-project="$ctrl.currentProject"
       attribute="$ctrl.defAttribute"

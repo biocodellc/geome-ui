@@ -47,15 +47,15 @@
       </thead>
       <tr
         ng-repeat="project in $ctrl.filteredPrivateProjects | orderBy: 'projectTitle'"
-        ng-click="$ctrl.showExpeditionsDetail(project.projectId)"
+        ng-click="$ctrl.viewProjectOverview(project.projectId)"
       >
         <td layout="column">
           <div layout="row" layout-align="space-between" class="title-row">
             <div md-truncate md-colors="{color: 'primary'}">
               <span>{{ project.projectTitle }}</span>
-              <md-tooltip md-delay="200" md-direction="bottom">{{
-                project.projectTitle
-              }}</md-tooltip>
+              <md-tooltip md-delay="200" md-direction="bottom"
+                >{{ project.projectTitle }}</md-tooltip
+              >
             </div>
             <div>
               <span
@@ -69,15 +69,12 @@
           </div>
           <div layout="row" layout-align="space-between">
             <small class="text-muted activity"
-              >Latest Activity:
-              {{
-                project.latestDataModification
-                  ? project.latestDataModification.split(' ')[0]
-                  : 'N/A'
-              }}</small
+              >Latest Activity: {{ project.latestDataModification ?
+              project.latestDataModification.split(' ')[0] : 'N/A' }}</small
             >
             <span
               ng-if="project.projectConfiguration.networkApproved === true"
+              ng-click="$ctrl.viewTeamOverview(project.projectId)"
               class="label label-info"
               >{{ project.projectConfiguration.name }} team</span
             >
@@ -152,7 +149,7 @@
       <tr
         ng-repeat="project in $ctrl.filteredPublicProjects | orderBy: 'projectTitle'"
         ng-if="!$ctrl.currentUser || ($ctrl.currentUser && !$ctrl.usersProjects.includes(project))"
-        ng-click="$ctrl.showExpeditionsDetail(project.projectId)"
+        ng-click="$ctrl.viewProjectOverview(project.projectId)"
       >
         <td layout="column">
           <div md-truncate md-colors="{color: 'primary'}">
@@ -161,16 +158,13 @@
           </div>
           <div layout="row" layout-align="space-between">
             <small class="text-muted activity"
-              >Latest Activity:
-              {{
-                project.latestDataModification
-                  ? project.latestDataModification.split(' ')[0]
-                  : 'N/A'
-              }}</small
+              >Latest Activity: {{ project.latestDataModification ?
+              project.latestDataModification.split(' ')[0] : 'N/A' }}</small
             >
             <span
               ng-if="project.projectConfiguration.networkApproved === true"
               class="label label-info"
+              ng-click="$ctrl.viewTeamOverview(project.projectId)"
               >{{ project.projectConfiguration.name }} team</span
             >
           </div>

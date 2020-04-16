@@ -12,6 +12,8 @@ import routing from './query.routes';
 import fimsMap from '../../components/map';
 import fimsQuery from './query.component';
 import fimsQueryForm from './form/query-form.component';
+import fimsTeamQuery from './team-query/team-query.component';
+import amphibianDisease from './team-query/amphibian-disease/amphibian-disease.component';
 import fimsQueryTable from './table/query-table.component';
 import fimsFilterButtons from './form/filter-buttons/filter-buttons.component';
 
@@ -22,5 +24,7 @@ export default angular
   .run(routing) // need to declare in run block. otherwise $transitions is not available
   .component('fimsQuery', fimsQuery)
   .component('fimsQueryForm', fimsQueryForm)
+  .component('amphibianDisease', amphibianDisease)
+  .component('fimsTeamQuery', fimsTeamQuery)
   .component('fimsQueryTable', fimsQueryTable)
   .component('fimsFilterButtons', fimsFilterButtons).name;

@@ -1,0 +1,71 @@
+<div class="disease-tested" layout-padding>
+  <h3 class="md-subhead bold" flex>
+    Disease Tested
+  </h3>
+  <div flex>
+    <md-content>
+      <md-autocomplete
+        md-selected-item="$ctrl.params.diseaseTested"
+        md-search-text="searchDiseaseTested"
+        md-items="item in $ctrl.diseaseTestedList | filter: {value: searchDiseaseTested }"
+        md-item-text="item.value"
+        md-no-cache
+        md-min-length="0"
+        md-floating-label=" "
+      >
+        <md-item-template>
+          <span md-highlight-text="searchDiseaseTested" md-highlight-flags="i"
+            >{{ item.value }}</span
+          >
+        </md-item-template>
+      </md-autocomplete>
+    </md-content>
+  </div>
+</div>
+
+<div class="fatal" layout-padding>
+  <h3 class="md-subhead bold" flex>
+    Morbidity
+  </h3>
+  <div flex>
+    <md-content>
+      <md-autocomplete
+        md-selected-item="$ctrl.params.fatal"
+        md-search-text="searchFatal"
+        md-items="item in $ctrl.boolean | filter: {value: searchFatal }"
+        md-item-text="item.value"
+        md-no-cache
+        md-min-length="0"
+        md-floating-label=" "
+      >
+        <md-item-template>
+          <span md-highlight-text="searchFatal" md-highlight-flags="i">{{ item.value }}</span>
+        </md-item-template>
+      </md-autocomplete>
+    </md-content>
+  </div>
+</div>
+<div class="disease-detected" layout-padding>
+  <h3 class="md-subhead bold" flex>
+    Disease Status
+  </h3>
+  <div flex>
+    <md-content>
+      <md-autocomplete
+        md-selected-item="$ctrl.params.diseaseDetected"
+        md-search-text="searchDiseaseDetected"
+        md-items="item in $ctrl.diseaseDetectedList | filter: {value: searchDiseaseDetected }"
+        md-item-text="item.value"
+        md-no-cache
+        md-min-length="0"
+        md-floating-label=" "
+      >
+        <md-item-template>
+          <span md-highlight-text="searchDiseaseDetected" md-highlight-flags="i"
+            >{{ item.value }}</span
+          >
+        </md-item-template>
+      </md-autocomplete>
+    </md-content>
+  </div>
+</div>

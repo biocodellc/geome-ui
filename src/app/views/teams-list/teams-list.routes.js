@@ -1,16 +1,16 @@
 function getStates() {
   return [
     {
-      state: 'overview',
+      state: 'teams-list',
       config: {
         parent: 'projectView',
-        url: '/overview',
-        component: 'fimsOverview',
+        url: '/teams-list',
+        component: 'fimsTeamsList',
+        projectRequired: false,
       },
     },
   ];
 }
-
 export default routerHelper => {
   'ngInject';
 

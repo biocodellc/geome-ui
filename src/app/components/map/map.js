@@ -56,21 +56,35 @@ export default class Map extends EventEmitter {
     this.map.setZoom(z);
 
     this.mapTiles = L.tileLayer(
-      'https://api.mapbox.com/v4/mapbox.outdoors/{z}/{x}/{y}.png?access_token={access_token}',
-      { access_token: mapboxToken },
+      'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={access_token}',
+      {
+        id: 'mapbox/outdoors-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        access_token: mapboxToken,
+      },
     );
 
     this.mapTiles.addTo(this.map);
     this.base = this.mapTiles;
 
     this.satelliteTiles = L.tileLayer(
-      'https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token={access_token}',
-      { access_token: mapboxToken },
+      'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={access_token}',
+      {
+        id: 'mapbox/satellite-v9',
+        tileSize: 512,
+        zoomOffset: -1,
+        access_token: mapboxToken,
+      },
     );
 
-    this.usgsTiles = L.tileLayer.wms(
-      'https://basemap.nationalmap.gov/arcgis/services/USGSImageryOnly/MapServer/WMSServer',
-      { layers: 0, maxZoom: 8 },
+    this.esriOceanBasemapTiles = L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}',
+      {
+        attribution:
+          'Tiles &copy; Esri &mdash; Sources: GEBCO, NOAA, CHS, OSU, UNH, CSUMB, National Geographic, DeLorme, NAVTEQ, and Esri',
+        maxZoom: 10,
+      },
     );
 
     this.clusterLayer = new L.MarkerClusterGroup({ chunkedLoading: true });
@@ -156,10 +170,10 @@ export default class Map extends EventEmitter {
     this.base = this.mapTiles;
   }
 
-  usgsView() {
+  esriOceanBasemapView() {
     this.map.removeLayer(this.base);
-    this.map.addLayer(this.usgsTiles);
-    this.base = this.usgsTiles;
+    this.map.addLayer(this.esriOceanBasemapTiles);
+    this.base = this.esriOceanBasemapTiles;
   }
 
   drawBounds(createCallback) {

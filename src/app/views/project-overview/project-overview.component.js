@@ -1,9 +1,9 @@
 /* eslint-disable array-callback-return */
 import QueryParams from '../query/QueryParams';
 
-const template = require('./overview.html');
+const template = require('./project-overview.html');
 
-class OverviewController {
+class ProjectOverviewController {
   constructor($state, $location, ExpeditionService, DataService, QueryService) {
     'ngInject';
 
@@ -16,7 +16,7 @@ class OverviewController {
 
   $onInit() {
     this.url = this.$location.absUrl().split('?')[0];
-    this.templateUrl = this.url.replace("overview","template")
+    this.templateUrl = this.url.replace('project-overview', 'template');
     this.loading = true;
     this.totalItems = null;
     this.itemsPerPage = 100;
@@ -192,7 +192,7 @@ class OverviewController {
 
 export default {
   template,
-  controller: OverviewController,
+  controller: ProjectOverviewController,
   bindings: {
     currentUser: '<',
     currentProject: '<',

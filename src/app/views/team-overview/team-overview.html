@@ -1,0 +1,115 @@
+<div class="team-overview">
+  <h3 class="text-center page-header">
+    Team {{$ctrl.currentProject.projectConfiguration.name}} Overview
+  </h3>
+  <div layout="row" class="description text-center">
+    <div ng-click="$ctrl.textTruncated = !$ctrl.textTruncated">
+      <span ng-class="{truncate: $ctrl.textTruncated}">
+        {{ $ctrl.currentProject.projectConfiguration.description }}
+      </span>
+      <span
+        class="ellipsis"
+        ng-if="$ctrl.currentProject.projectConfiguration.description"
+        hide-gt-sm
+        md-colors="{color: 'primary'}"
+      >
+        ...
+      </span>
+    </div>
+  </div>
+  <div layout="row" layout-xs="column" class="detail-row">
+    <div class="text-center team-details" flex>
+      <div
+        layout="row"
+        layout-xs="column"
+        layout-align="center center"
+        ng-if="value !== undefined"
+        ng-repeat="(key, value) in $ctrl.teamDetails"
+      >
+        <div class="detail-key" flex="50">{{key}}<span hide-xs>:</span></div>
+        <div class="detail-value" flex="50">{{value}}</div>
+      </div>
+    </div>
+    <!--div
+      class="collaboration"
+      flex
+      layout="row"
+      layout-sm="column"
+      layout-xs="column"
+      layout-align="center center"
+    >
+      <div class="checkbox-container">
+        <md-tooltip
+          ng-if="!$ctrl.currentUser || 
+          $ctrl.currentUser.username !== 
+          $ctrl.currentProject.projectConfiguration.user.username"
+        >
+          Sign in as team administrator to make changes
+        </md-tooltip>
+        <md-checkbox
+          ng-model="$ctrl.openToCollaboration"
+          ng-change="$ctrl.updateCollaborationAttribute()"
+          ng-disabled="!$ctrl.currentUser || 
+          $ctrl.currentUser.username !== 
+          $ctrl.currentProject.projectConfiguration.user.username || 
+          $ctrl.loadingCollaborationCheckbox"
+          aria-label="collaboration checkbox"
+        >
+          <span>Open to Collaborate</span>
+        </md-checkbox>
+      </div>
+      <collaboration-label></collaboration-label>
+      <md-progress-circular
+        ng-if="$ctrl.loadingCollaborationCheckbox"
+        class="loading-overlay-fixed"
+        md-mode="indeterminate"
+      ></md-progress-circular>
+    </div-->
+  </div>
+  <section>
+    <table class="table table-hover" ng-if="!$ctrl.loading">
+      <h4 class="text-center">Projects</h4>
+      <div ng-if="$ctrl.loading" layout="row" layout-align="center center" class="loader">
+        <md-progress-circular
+          class="loading-overlay-fixed"
+          md-mode="indeterminate"
+        ></md-progress-circular>
+      </div>
+      <tr class="title-row" flex>
+        <td width="30%">Title</td>
+        <td class="text-center md-clip" md-truncate>Samples</td>
+        <td class="text-center md-clip" md-truncate>Events</td>
+        <td class="text-center md-clip" md-truncate>Tissues</td>
+        <td class="text-center md-clip" md-truncate>Latest Activity</td>
+      </tr>
+
+      <tr
+        ng-repeat="project in $ctrl.projectStats | orderBy: 'projectTitle'"
+        ng-click="$ctrl.viewProjectOverview(project)"
+        ng-if="$ctrl.currentProject.projectConfiguration.name === project.projectConfiguration.name"
+      >
+        <td>
+          <div md-truncate md-colors="{color: 'primary'}" class="project-title">
+            <span>{{ project.projectTitle }}</span>
+            <md-tooltip md-delay="200" md-direction="bottom">{{ project.projectTitle }}</md-tooltip>
+          </div>
+        </td>
+        <td class="text-center">
+          {{project.entityStats.SampleCount}}
+        </td>
+        <td class="text-center">
+          {{project.entityStats.EventCount}}
+        </td>
+        <td class="text-center">
+          {{project.entityStats.TissueCount}}
+        </td>
+        <td class="text-center">
+          <small class="text-muted activity"
+            >{{ project.latestDataModification ? project.latestDataModification.split(' ')[0] :
+            'N/A' }}</small
+          >
+        </td>
+      </tr>
+    </table>
+  </section>
+</div>

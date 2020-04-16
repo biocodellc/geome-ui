@@ -1,14 +1,20 @@
 fims-navigation {
-  md-sidenav {
-    padding-top: 20px;
-  }
+    md-sidenav {
+        padding-top: 1em;
 
-  md-list {
-    margin-bottom: $layout-gutter-width / 2;
-
-    .md-subheader {
-      font-weight: 600;
-      background-color: inherit;
+        // hack to prevent first list item in md-sidenav 
+        // from dissapearing in mobile view
+        @media screen and (max-width: $layout-breakpoint-sm) {
+            padding-top: 5em;
+        }
     }
-  }
+
+    md-list {
+        margin-bottom: $layout-gutter-width / 2;
+
+        .md-subheader {
+            font-weight: 600;
+            background-color: inherit;
+        }
+    }
 }

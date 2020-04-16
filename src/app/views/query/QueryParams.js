@@ -57,8 +57,9 @@ export default class QueryParams {
             builder.add(`${filter.column}:${filter.value}`);
             break;
           case 'like':
-            if (!filter.value.includes('%')) filter.value = `%${filter.value}%`;
-            builder.add(`${filter.column}::"${filter.value}"`);
+            if (filter.value.includes('%'))
+              builder.add(`${filter.column}::"${filter.value}"`);
+            else builder.add(`${filter.column}::"%${filter.value}%"`);
             break;
           case '<':
           case '<=':
@@ -162,6 +163,18 @@ export default class QueryParams {
     if (this.hasFasta) {
       if (builder.queryString.length > 0) builder.add('and');
       builder.add('_exists_:fastaSequence.sequence');
+    }
+    if (this.diseaseDetected) {
+      if (builder.queryString.length > 0) builder.add('and');
+      builder.add(`diseaseDetected:${this.diseaseDetected.value}`);
+    }
+    if (this.fatal) {
+      if (builder.queryString.length > 0) builder.add('and');
+      builder.add(`fatal:${this.fatal.value}`);
+    }
+    if (this.diseaseTested) {
+      if (builder.queryString.length > 0) builder.add('and');
+      builder.add(`diseaseTested:${this.diseaseTested.value}`);
     }
 
     if (this.bounds) {
