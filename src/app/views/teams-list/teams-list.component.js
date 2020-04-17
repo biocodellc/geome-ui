@@ -91,7 +91,8 @@ class TeamsListController {
     );
     // Check that project exists... if someone deletes a project from
     // team list we do not want this to fail
-    if (this.currentProject !== "undefined") {
+    if (this.currentProject !== "undefined" && 
+    	this.currentProject.projectConfiguration !== "undefined") {
        if (this.currentProject.projectConfiguration.id === Id)
           this.$state.go('team-overview');
        else
