@@ -92,7 +92,7 @@ class TeamsListController {
     // Check that project exists... if someone deletes a project from
     // team list we do not want this to fail
     if (this.currentProject == null) {
-    	console.log("could not find a team for team id " + Id + ". This happens when we delete a project and attempt a refresh and this project still exists".)
+    	console.log("could not find a team for team id " + Id + ". This happens when we delete a project and attempt a refresh and this project still exists.")
         this.ProjectService.setCurrentProject(project, true).then(() => this.$state.go('team-overview'),);
     } else {
         if (this.currentProject.projectConfiguration.id === Id)
