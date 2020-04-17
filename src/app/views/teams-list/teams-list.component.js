@@ -93,13 +93,12 @@ class TeamsListController {
     // team list we do not want this to fail
     if (this.currentProject == null) {
     	console.log("could not find project " + Id)
+        this.ProjectService.setCurrentProject(project, true).then(() => this.$state.go('team-overview'),);
     } else {
        if (this.currentProject.projectConfiguration.id === Id)
           this.$state.go('team-overview');
        else
-         this.ProjectService.setCurrentProject(project, true).then(() =>
-           this.$state.go('team-overview'),
-         );
+         this.ProjectService.setCurrentProject(project, true).then(() => this.$state.go('team-overview'),);
     }
   }
 }
