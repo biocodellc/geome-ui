@@ -89,12 +89,16 @@ class TeamsListController {
     const project = this.allProjects.find(
       p => p.projectConfiguration.id === Id,
     );
-    if (this.currentProject.projectConfiguration.id === Id)
-      this.$state.go('team-overview');
-    else
-      this.ProjectService.setCurrentProject(project, true).then(() =>
-        this.$state.go('team-overview'),
-      );
+    // Check that project exists... if someone deletes a project from
+    // team list we do not want this to fail
+    if (this.currentProject !== "undefined") {
+       if (this.currentProject.projectConfiguration.id === Id)
+          this.$state.go('team-overview');
+       else
+         this.ProjectService.setCurrentProject(project, true).then(() =>
+           this.$state.go('team-overview'),
+         );
+      }
   }
 }
 
