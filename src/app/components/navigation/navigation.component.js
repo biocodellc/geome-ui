@@ -27,6 +27,10 @@ class NavigationController {
         e => e.conceptAlias === 'Tissue' && e.uniqueKey === 'tissueID',
       );
 
+    this.showTeamOverview =
+      this.currentProject &&
+      this.currentProject.projectConfiguration.networkApproved === true;
+
     this.showSRAUpload =
       this.currentUser &&
       this.currentProject &&

@@ -4,16 +4,22 @@ import QueryParams from './QueryParams';
 const template = require('./query.html');
 
 class QueryController {
-  constructor($state, $timeout, QueryService, StorageService) {
+  constructor($state, $timeout, $location, QueryService) {
     'ngInject';
 
     this.$state = $state;
     this.$timeout = $timeout;
+    this.$location = $location;
     this.QueryService = QueryService;
-    this.StorageService = StorageService;
   }
-
   $onInit() {
+    const teamIdFromUrlParam = this.$location.search().team;
+    this.teamIdNum = parseInt(teamIdFromUrlParam, 10);
+    // For now, we just check for team ID of Amphibian Disease
+    if (teamIdFromUrlParam && this.teamIdNum === 45) {
+      this.teamQueryForm = true;
+    }
+
     this.params = new QueryParams();
     this.queryMap = new QueryMap(
       this.$state,
@@ -108,6 +114,7 @@ export default {
   controller: QueryController,
   bindings: {
     currentUser: '<',
+    projects: '<',
     layout: '@',
     layoutFill: '@',
   },

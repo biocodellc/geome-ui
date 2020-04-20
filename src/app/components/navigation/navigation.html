@@ -11,6 +11,10 @@
       <md-icon md-font-icon="fa fa-list fa-fw"></md-icon>
       <p>View Projects</p>
     </md-list-item>
+    <md-list-item ng-click="$ctrl.$state.go('teams-list')">
+      <md-icon md-font-icon="fa fa-users fa-fw"></md-icon>
+      <p>View Teams</p>
+    </md-list-item>
     <md-list-item ng-click="$ctrl.$state.go('template')">
       <md-icon md-font-icon="fa fa-file-excel-o fa-fw"></md-icon>
       <p>Generate Template</p>
@@ -32,7 +36,11 @@
       <md-icon md-font-icon="fa fa-table fa-fw"></md-icon>
       <p>Plate Viewer</p>
     </md-list-item>
-    <md-list-item ng-click="$ctrl.$state.go('overview')">
+    <md-list-item ng-if="$ctrl.showTeamOverview" ng-click="$ctrl.$state.go('team-overview')">
+      <md-icon md-font-icon="fa fa-id-badge fa-fw"></md-icon>
+      <p>Team Overview</p>
+    </md-list-item>
+    <md-list-item ng-click="$ctrl.$state.go('project-overview')">
       <md-icon md-font-icon="fa fa-desktop fa-fw"></md-icon>
       <p>Project Overview</p>
     </md-list-item>

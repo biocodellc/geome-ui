@@ -52,7 +52,6 @@ class QueryFormController {
     $timeout,
     $location,
     QueryService,
-    ProjectService,
     NetworkConfigurationService,
     ProjectConfigurationService,
     ExpeditionService,
@@ -64,7 +63,6 @@ class QueryFormController {
     this.$timeout = $timeout;
     this.$location = $location;
     this.QueryService = QueryService;
-    this.ProjectService = ProjectService;
     this.NetworkConfigurationService = NetworkConfigurationService;
     this.ProjectConfigurationService = ProjectConfigurationService;
     this.ExpeditionService = ExpeditionService;
@@ -83,20 +81,25 @@ class QueryFormController {
     this.samplePhotoFilters = [];
     this.eventPhotoFilters = [];
     this.paramCopy = angular.copy(this.params);
-
-    // Retrieve Projects
-    const projectsPromise = this.ProjectService.all(true).then(({ data }) => {
-      this.projects = data;
-      const names = new Set();
-      this.projects.forEach(p => {
-        if (p.projectConfiguration.networkApproved === true) {
-          names.add(p.projectConfiguration.name);
+    this.projects = this.projects.data;
+    const names = new Set();
+    this.projects.forEach(p => {
+      if (p.projectConfiguration.networkApproved === true) {
+        names.add(p.projectConfiguration.name);
+        if (
+          this.teamId &&
+          !this.teamHasBeenSelected &&
+          p.projectConfiguration.id === this.teamId
+        ) {
+          this.teamHasBeenSelected = p;
+          this.moreSearchOptions = true;
+          this.teams.push(p.projectConfiguration.name);
         }
-      });
-      this.configNames = [...names];
+      }
     });
+    this.configNames = [...names];
 
-    // Retrieve General Configuration
+    // General Configuration Retrieval
     let configPromise = this.NetworkConfigurationService.get().then(config => {
       this.networkConfig = config;
       this.phylums = this.networkConfig.getList('phylum').fields;
@@ -112,18 +115,15 @@ class QueryFormController {
       const projectMatch = PROJECT_RE.exec(q);
       if (projectMatch && projectMatch[1]) {
         // only set up to handle single project queries
-        configPromise = projectsPromise.then(() => {
-          const projectId = parseInt(projectMatch[1], 10);
-          const project = this.projects.find(p => p.projectId === projectId);
-          if (project) {
-            return this.ProjectConfigurationService.get(
-              project.projectConfiguration.id,
-            ).then(({ config }) => {
-              this.config = config;
-            });
-          }
-          return undefined;
-        });
+        const projectId = parseInt(projectMatch[1], 10);
+        const project = this.projects.find(p => p.projectId === projectId);
+        if (project) {
+          configPromise = this.ProjectConfigurationService.get(
+            project.projectConfiguration.id,
+          ).then(({ config }) => {
+            this.config = config;
+          });
+        }
       }
       configPromise.then(() => this.queryJson());
     }
@@ -160,6 +160,7 @@ class QueryFormController {
         .then(() => {
           this.entity = 'Sample';
           this.clearPreviousMapResults();
+          this.setNetworkConfig();
           this.clearParams();
           this.clearBounds();
         })
@@ -350,9 +351,9 @@ export default {
   bindings: {
     params: '<',
     queryMap: '<',
-    currentUser: '<',
+    projects: '<',
+    teamId: '<',
     onNewResults: '&',
-    //clearTableData: '&',
     toggleLoading: '&',
     entitiesForDownload: '&',
   },

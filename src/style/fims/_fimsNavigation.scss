@@ -1,6 +1,12 @@
 fims-navigation {
     md-sidenav {
-        padding-top: 50px;
+        padding-top: 1em;
+
+        // hack to prevent first list item in md-sidenav 
+        // from dissapearing in mobile view
+        @media screen and (max-width: $layout-breakpoint-sm) {
+            padding-top: 5em;
+        }
     }
 
     md-list {
