@@ -11,7 +11,6 @@ export default class RecordMap extends Map {
   init(mapId) {
     super.init(mapId, {
       scrollWheelZoom: false,
-      zoom: 1,
     });
   }
 

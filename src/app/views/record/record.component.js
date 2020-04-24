@@ -48,7 +48,7 @@ class RecordController {
       if (this.record.entity === 'Event') this.prepareMap();
     }
   }
-  // Todo: add check for IF LAT LNG
+
   prepareMap() {
     const data = [this.record];
     this.map = new RecordMap('decimalLatitude', 'decimalLongitude');
@@ -269,7 +269,5 @@ export default {
   bindings: {
     layout: '@',
     record: '<',
-    latColumn: '<',
-    lngColumn: '<',
   },
 };
