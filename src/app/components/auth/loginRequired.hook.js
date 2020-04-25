@@ -20,14 +20,16 @@ export default ($transitions, UserService) => {
     {},
     trans => {
       const to = trans.$to();
+      const toParams = trans.params();
       if (checkLoginRequired(to) && !UserService.currentUser()) {
         return executeIfTransitionValid(trans, $transitions, () =>
           trans.router.stateService.target('login', {
             nextState: to.name,
-            nextStateParams: to.params,
+            nextStateParams: toParams,
           }),
         );
       }
+      return undefined;
     },
     { priority: 100 },
   );

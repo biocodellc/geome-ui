@@ -19,7 +19,7 @@
 <md-card>
   <md-card-content>
     <div align="center">
-      <p ng-if="$ctrl.expeditions.length === 0">You do not have any expeditions yet</p>
+      <p ng-if="$ctrl.expeditions.length === 0">You do not have any expeditions in {{$ctrl.currentProject.projectTitle}} yet</p>
       <md-button class="md-primary md-raised" ng-click="$ctrl.createExpedition()">
         <md-icon md-font-icon="fa fa-plus fa-fw"></md-icon>
         CREATE EXPEDITION

@@ -53,6 +53,7 @@ export default class Map extends EventEmitter {
 
     // fill screen with map, roughly 360 degrees of longitude
     const z = this.map.getBoundsZoom([[90, -180], [-90, 180]], true);
+
     this.map.setZoom(z);
     this.mapTiles = L.tileLayer(
       'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={access_token}',
@@ -60,6 +61,7 @@ export default class Map extends EventEmitter {
         id: 'mapbox/outdoors-v11',
         tileSize: 512,
         zoomOffset: -1,
+        minZoom: 1,
         access_token: mapboxToken,
       },
     );
@@ -73,6 +75,7 @@ export default class Map extends EventEmitter {
         id: 'mapbox/satellite-v9',
         tileSize: 512,
         zoomOffset: -1,
+        minZoom: 1,
         access_token: mapboxToken,
       },
     );
@@ -83,6 +86,7 @@ export default class Map extends EventEmitter {
         attribution:
           'Tiles &copy; Esri &mdash; Sources: GEBCO, NOAA, CHS, OSU, UNH, CSUMB, National Geographic, DeLorme, NAVTEQ, and Esri',
         maxZoom: 10,
+        minZoom: 1,
       },
     );
 
