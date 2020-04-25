@@ -35,6 +35,27 @@
       </div>    
 
       <div class="form-group clearfix">
+        <div class="col-xs-3">
+          <label>Discoverable*
+	      </label>
+          <select 
+            ng-model="$ctrl.project.discoverable"
+            class="form-control col-xs-3"
+            required
+            ng-options="(item?'discoverable':'not discoverable') for item in [true, false]"
+          >
+          </select>
+        </div>
+      </div>    
+      <span class="help-block col-xs-9"
+              >Setting a project to discoverable indicates we want the project to be discoverable even if the project is set to private. 
+	      Public users will be able to view project metadata and project statistics but not query project data. 
+	      If a project is public then this setting has no meaning.
+      </span
+
+      <div class="form-group clearfix">
+
+      <div class="form-group clearfix">
         <div class="checkbox col-xs-9">
           <label>
             <input type="checkbox" ng-model="$ctrl.project.enforceExpeditionAccess" />
