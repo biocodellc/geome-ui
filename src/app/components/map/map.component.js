@@ -13,7 +13,9 @@ class MapController {
 
     this.$timeout(() => {
       this.mapInstance.init(this.mapId);
-    }, 5000); // TODO: this should work w/ 0, git blame to find out why
+    }, 3000); // TODO: this should work w/ 0, For queryMap, this broke with
+    // commit ff337736321d5eb7d8c6a26983969a1f4e40acb7 when ng-cloak was added to
+    // app.html
   }
 
   toggleMapView(tiles) {
