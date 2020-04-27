@@ -225,6 +225,10 @@ export default class Map extends EventEmitter {
     this.map.invalidateSize();
   }
 
+  setZoom(zoom) {
+    this.map.setZoom(zoom);
+  }
+
   _clearMap() {
     if (this.clusterLayer && this.markers.length > 0) {
       this.clusterLayer.clearLayers();
