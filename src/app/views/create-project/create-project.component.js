@@ -85,14 +85,13 @@ class CreateProjectController {
       description: undefined,
       public: false,
     };
+    this.teamConfig = !!this.$state.params.joinTeam;
     this.cloneConfig = false;
-    this.teamConfig = false;
     this.syncConfig = true;
     this.configLayout = 'single';
     this.worksheetSearchText = {};
     this.requiredAttributes = {};
     this.requiredRules = {};
-
     this.fetchNetworkConfig();
   }
 
