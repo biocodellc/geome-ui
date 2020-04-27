@@ -28,9 +28,10 @@
     layout-align="center center"
   >
     <md-card
-      class="photo"
+      class="photo-entity"
       ng-if="$ctrl.record.photoID && $ctrl.record.processed !== 'false' && !$ctrl.invalidPhoto"
       flex
+      layout-padding
     >
       <a href="{{ $ctrl.record.img1024 }}">
         <img ng-if="$ctrl.record.img1024" ng-src="{{ $ctrl.record.img512 }}" />
