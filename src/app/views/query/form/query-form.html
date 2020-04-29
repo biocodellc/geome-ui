@@ -166,7 +166,7 @@
         </md-button>
       </div>
       <md-input-container>
-        <input type="text" ng-model="$ctrl.params.queryString" />
+        <input type="text" aria-label="any term" ng-model="$ctrl.params.queryString" />
       </md-input-container>
     </div>
   </div>
@@ -187,7 +187,11 @@
           </md-button>
         </h3>
         <md-input-container md-no-float flex>
-          <input ng-model="$ctrl.params.materialSampleID" type="text" />
+          <input
+            ng-model="$ctrl.params.materialSampleID"
+            type="text"
+            aria-label="material sample Id"
+          />
         </md-input-container>
       </div>
     </div>
@@ -284,7 +288,7 @@
           Genus
         </h3>
         <md-input-container md-no-float flex>
-          <input ng-model="$ctrl.params.genus" type="text" />
+          <input ng-model="$ctrl.params.genus" type="text" aria-label="genus" />
         </md-input-container>
       </div>
     </div>
@@ -295,7 +299,11 @@
           Specific Epithet (species)
         </h3>
         <md-input-container md-no-float flex>
-          <input ng-model="$ctrl.params.specificEpithet" type="text" />
+          <input
+            ng-model="$ctrl.params.specificEpithet"
+            type="text"
+            aria-label="specific epithet"
+          />
         </md-input-container>
       </div>
     </div>
