@@ -36,7 +36,7 @@
         <tr ng-repeat="(key, value) in $ctrl.mainRecordDetails() track by key">
           <th>{{ key }}:</th>
           <td ng-if="value.href && value.text" class="truncate">
-            <a href="{{ value.href }}" target="_blank">{{ value.text }}</a>
+            <a href="{{ value.href }}" target="_blank">{{ value.href }}</a>
           </td>
           <td ng-if="!value.href || !value.text">
             <div class="truncate">
@@ -76,7 +76,7 @@
             >
             <span ng-if="!value.href">{{ value }} </span>
             <span ng-if="value.href">
-              <a href="{{ value.href }}">{{ value.text }}</a>
+              <a href="{{ value.href }}" target="_blank">{{ value.text }}</a>
             </span>
           </td>
         </tr>
@@ -98,7 +98,7 @@
             >
             <span ng-if="!value.href">{{ value }}</span>
             <span ng-if="value.href">
-              <a href="{{ value.href }}">{{ value.text }}</a>
+              <a href="{{ value.href }}" target="_blank">{{ value.text }}</a>
             </span>
           </td>
         </tr>
