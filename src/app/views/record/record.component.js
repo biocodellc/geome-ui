@@ -157,7 +157,6 @@ class RecordController {
       return acc;
     }, {});
 
-    console.log(detailCache[index]);
     return detailCache[index] === {} ? undefined : detailCache[index];
   }
 
