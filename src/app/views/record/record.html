@@ -86,6 +86,12 @@
     <!-- <table hide show-gt-sm flex class="table table-condensed"> -->
     <table ng-show="$ctrl.$mdMedia('gt-sm')" flex>
       <tbody>
+        <tr
+          ng-if="$ctrl.record.genus && $ctrl.record.specificEpithet && !$ctrl.record.scientificName"
+        >
+          <th>scientificName:</th>
+          <td>{{$ctrl.record.genus}} {{$ctrl.record.specificEpithet}}</td>
+        </tr>
         <tr ng-repeat="(key, value) in $ctrl.auxiliaryRecordDetails(1) track by key">
           <th>{{ key }}:</th>
           <td ng-class="{'sequence': key === 'sequence'}">
