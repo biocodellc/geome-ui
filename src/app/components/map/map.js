@@ -55,7 +55,6 @@ export default class Map extends EventEmitter {
     const z = this.map.getBoundsZoom([[90, -180], [-90, 180]], true);
 
     this.map.setZoom(z);
-
     this.mapTiles = L.tileLayer(
       'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={access_token}',
       {
@@ -224,6 +223,10 @@ export default class Map extends EventEmitter {
    */
   refreshSize() {
     this.map.invalidateSize();
+  }
+
+  setZoom(zoom) {
+    this.map.setZoom(zoom);
   }
 
   _clearMap() {

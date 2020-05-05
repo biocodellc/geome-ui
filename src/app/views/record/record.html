@@ -1,62 +1,77 @@
 <div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
   <md-progress-circular md-mode="indeterminate"></md-progress-circular>
 </div>
-<div layout="column" class="record-detail" ng-show="!$ctrl.loading">
-  <div ng-if="$ctrl.invalidPhoto" class="alert alert-danger text-center text-large" role="alert">
-    <i class="fa fa-exclamation-circle"></i>
-    An error occurred while processing this image.
-  </div>
-  <div
-    ng-if="$ctrl.record.processed === 'false' && $ctrl.record.photoID"
-    class="alert alert-warning text-center text-large"
-    role="alert"
-  >
-    <i class="fa fa-exclamation-circle"></i>
-    Image is processing.
+<div class="record-detail" layout="column" ng-show="!$ctrl.loading">
+  <div class="photo-error-labels" ng-if="$ctrl.record.photoID">
+    <div ng-if="$ctrl.invalidPhoto" class="alert alert-danger text-center text-large" role="alert">
+      <i class="fa fa-exclamation-circle"></i>
+      An error occurred while processing this image.
+    </div>
+    <div
+      ng-if="$ctrl.record.processed === 'false'"
+      class="alert alert-warning text-center text-large"
+      role="alert"
+    >
+      <i class="fa fa-exclamation-circle"></i>
+      Image is processing.
+    </div>
   </div>
   <div layout="row">
     <h3>{{ $ctrl.record.entity }} {{ $ctrl.getIdentifier($ctrl.record) }}</h3>
     <notice-label ng-if="$ctrl.record.traditionalKnowledgeNotice === 'TRUE'"></notice-label>
   </div>
-  <div class="main-details" layout="row" layout-align="center center">
-    <div
+  <div
+    class="main-details"
+    layout="row"
+    layout-sm="column"
+    layout-xs="column"
+    layout-align="center center"
+  >
+    <md-card
+      class="photo-entity"
       ng-if="$ctrl.record.photoID && $ctrl.record.processed !== 'false' && !$ctrl.invalidPhoto"
-      flex="100"
+      flex
+      layout-padding
     >
       <a href="{{ $ctrl.record.img1024 }}">
         <img ng-if="$ctrl.record.img1024" ng-src="{{ $ctrl.record.img512 }}" />
       </a>
-    </div>
-    <table flex="100">
-      <tbody>
-        <tr ng-if="$ctrl.invalidPhoto && $ctrl.record.originalUrl.includes('base64')">
-          <th class="text-danger">Error Detail:</th>
-          <td>GEOME does not support base64 encoded images</td>
-        </tr>
-        <tr ng-repeat="(key, value) in $ctrl.mainRecordDetails() track by key">
-          <th>{{ key }}:</th>
-          <td ng-if="value.href && value.text" class="truncate">
-            <a href="{{ value.href }}" target="_blank">{{ value.text }}</a>
-          </td>
-          <td ng-if="!value.href || !value.text">
-            <div class="truncate">
-              <md-tooltip
-                md-direction="top"
-                class="fix-placement"
-                text-overflow-tooltip
-                md-visible="false"
-                >{{ value.text }}</md-tooltip
-              >
-              {{ value.text || 'N/A' }}
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div flex="100" ng-if="$ctrl.photos">
+    </md-card>
+    <md-card layout-padding flex>
+      <table class="table">
+        <tbody>
+          <tr ng-if="$ctrl.invalidPhoto && $ctrl.record.originalUrl.includes('base64')">
+            <th class="text-danger">Error Detail:</th>
+            <td>GEOME does not support base64 encoded images</td>
+          </tr>
+          <tr ng-repeat="(key, value) in $ctrl.mainRecordDetails() track by key">
+            <th>{{ key }}:</th>
+            <td ng-if="value.href && value.text" class="truncate">
+              <a href="{{ value.href }}" target="_blank">{{ value.text }}</a>
+            </td>
+            <td ng-if="!value.href || !value.text">
+              <div class="truncate">
+                <md-tooltip
+                  md-direction="top"
+                  class="fix-placement"
+                  text-overflow-tooltip
+                  md-visible="false"
+                  >{{ value.text }}</md-tooltip
+                >
+                {{ value.text || 'N/A' }}
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </md-card>
+    <md-card layout-padding flex ng-if="$ctrl.photos.length > 0">
       <ng-image-gallery images="$ctrl.photos" inline="true" img-Bubbles="true" bubble-size="64">
       </ng-image-gallery>
-    </div>
+    </md-card>
+    <md-card class="map-container" ng-if="$ctrl.record.entity === 'Event'" flex>
+      <fims-map class="record-map" map-instance="$ctrl.map"></fims-map>
+    </md-card>
   </div>
 
   <md-divider ng-if="$ctrl.auxiliaryRecordDetails(0)"></md-divider>
