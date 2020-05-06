@@ -112,7 +112,7 @@
 
       <div class="form-group clearfix">
         <div class="col-xs-9">
-          <label>Publication GUID</label>
+          <label>Publication DOI</label>
           <input type="text" class="form-control" ng-model="$ctrl.project.publicationGuid" />
           <span class="help-block"
             >A globally unique identifier for a written publication pertaining to this dataset</span
@@ -127,7 +127,7 @@
           <span class="help-block"
             >A globally unique identifier for the data in this project. Recommended to use a
             resolvable URL containing a DOI or ARK identifier. Coming soon is the ability to
-            generage a DOI here. GEOME does not automatically assign identifiers for all datasets
+            generate a DOI here. GEOME does not automatically assign identifiers for all datasets
             since many datasets have been given GUIDs elsewhere.</span
           >
         </div>
@@ -159,7 +159,6 @@
           >
             Save
           </button>
-          <!--  <input type="submit" class="btn btn-primary" value="Save" />-->
         </div>
       </div>
     </fieldset>
@@ -174,10 +173,7 @@
             >Warning! This will delete all expeditions and records associated with this
             project.</span
           >
-          Please export your data before deleting this
-          <!-- expeditions and records associated with this project.</span> Please <a href -->
-          <!-- ng-click="$parent.$ctrl.export()">export your data</a> before deleting this -->
-          project.
+          Please export your data before deleting this project.
         </p>
       </div>
       <div class="col-xs-3">

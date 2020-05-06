@@ -12,8 +12,10 @@ class MapController {
     this.mapId = `map-${parseInt(Math.random() * 100, 10)}`;
 
     this.$timeout(() => {
-      this.mapInstance.init(this.mapId);
-    }, 50); // TODO: this should work w/ 0, git blame to find out why
+      this.$timeout(() => {
+        this.mapInstance.init(this.mapId);
+      }, 0);
+    }, 0);
   }
 
   toggleMapView(tiles) {

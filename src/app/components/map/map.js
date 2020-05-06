@@ -55,15 +55,12 @@ export default class Map extends EventEmitter {
     const z = this.map.getBoundsZoom([[90, -180], [-90, 180]], true);
 
     this.map.setZoom(z);
-
     this.mapTiles = L.tileLayer(
-      'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={access_token}',
+      'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
       {
-        id: 'mapbox/outdoors-v11',
-        tileSize: 512,
-        zoomOffset: -1,
+        attribution:
+          'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
         minZoom: 1,
-        access_token: mapboxToken,
       },
     );
 
@@ -73,6 +70,8 @@ export default class Map extends EventEmitter {
     this.satelliteTiles = L.tileLayer(
       'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={access_token}',
       {
+        attribution:
+          'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         id: 'mapbox/satellite-v9',
         tileSize: 512,
         zoomOffset: -1,
@@ -224,6 +223,10 @@ export default class Map extends EventEmitter {
    */
   refreshSize() {
     this.map.invalidateSize();
+  }
+
+  setZoom(zoom) {
+    this.map.setZoom(zoom);
   }
 
   _clearMap() {
