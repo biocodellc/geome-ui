@@ -1,4 +1,7 @@
 import angular from 'angular';
+
+import RecordMap from './RecordMap';
+
 import compareValues from '../../utils/compareValues';
 import flatten from '../../utils/flatten';
 import {
@@ -19,10 +22,11 @@ const mapChildren = children =>
 let detailCache = {};
 let detailCacheNumCols;
 class RecordController {
-  constructor($mdMedia, ProjectService) {
+  constructor($mdMedia, ProjectService, $timeout) {
     'ngInject';
 
     this.$mdMedia = $mdMedia;
+    this.$timeout = $timeout;
     this.ProjectService = ProjectService;
   }
 
@@ -42,7 +46,18 @@ class RecordController {
       const { projectId } = this.record;
       this.record = this.record.record;
       this.fetchProject(projectId);
+      if (this.record.entity === 'Event') this.prepareMap();
     }
+  }
+
+  prepareMap() {
+    const data = [this.record];
+    this.map = new RecordMap('decimalLatitude', 'decimalLongitude');
+    this.map.on(RecordMap.INIT_EVENT, () => this.map.setMarkers(data));
+    this.$timeout(() => {
+      this.map.refreshSize();
+      this.map.setZoom(2);
+    }, 3000);
   }
 
   getIdentifier(record) {

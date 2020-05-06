@@ -58,7 +58,7 @@
     </div>
 
     <div class="row" ng-if="$ctrl.currentProject.publicationGuid">
-      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Publication GUID</strong></div>
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Publication DOI</strong></div>
       <div class="col-sm-8 col-md-9 col-lg-10">{{ $ctrl.currentProject.publicationGuid}}</div>
     </div>
 
@@ -91,18 +91,6 @@
           </md-button>
         </div>
       </div>
-      <!--
-      <div class="row">
-        <div class="col-sm-4 col-md-3 col-lg-2"><strong>Team owner</strong></div>
-        <div class="col-sm-8 col-md-9 col-lg-10">
-          {{ $ctrl.currentProject.projectConfiguration.user.username }}
-          (<a href="mailto:{{ $ctrl.currentProject.projectConfiguration.user.email }}">{{
-            $ctrl.currentProject.projectConfiguration.user.email
-          }}</a
-          >)
-        </div>
-      </div>
--->
     </div>
   </div>
 
@@ -143,7 +131,7 @@
       <th class="text-center" ng-repeat="header in $ctrl.headers">
         {{ $ctrl.humanReadableHeader(header) }}
       </th>
-      <th class="text-center">GUID</th>
+      <th class="text-center">DOI</th>
       <th></th>
     </thead>
 
@@ -155,16 +143,11 @@
         <td>{{ expedition.expeditionTitle }}</td>
         <td ng-repeat="header in $ctrl.headers">{{ expedition[header] }}</td>
         <td ng-show="expedition.expeditionIdentifier">
-          <!--<a href="https://n2t.net/{{expedition.expeditionIdentifier}}">https://n2t.net/{{ expedition.expeditionIdentifier}} </a>-->
           https://n2t.net/{{ expedition.expeditionIdentifier }}
         </td>
         <td ng-show="!expedition.expeditionIdentifier"></td>
         <td ng-show="$ctrl.menuOptions(expedition).length == 0"></td>
         <td ng-show="$ctrl.menuOptions(expedition).length > 0" class="md-dense action-buttons">
-          <!--<md-button aria-label="View expedition data" ng-click="$ctrl.viewData(expedition.expeditionCode)"
-            class="md-primary md-raised query-button">
-            <md-icon md-font-icon="fa fa-map-marker fa-sm"></md-icon>
-          </md-button>-->
           <md-menu ng-show="$ctrl.results" class="md-dense" md-position-mode="target-right target">
             <md-button
               aria-label="Open expedition download menu"
