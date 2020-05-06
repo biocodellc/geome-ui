@@ -26,6 +26,10 @@ fims-record {
     img {
         max-width: 100%;
     }
+
+    .Sample, .Tissue, .fastaSequence, .fastqMetadata {
+        box-shadow: none;
+    }
 }
 
 .map-container {
