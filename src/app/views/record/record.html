@@ -37,7 +37,7 @@
         <img ng-if="$ctrl.record.img1024" ng-src="{{ $ctrl.record.img512 }}" />
       </a>
     </md-card>
-    <md-card layout-padding flex>
+    <md-card layout-padding flex ng-class="$ctrl.record.entity">
       <table class="table">
         <tbody>
           <tr ng-if="$ctrl.invalidPhoto && $ctrl.record.originalUrl.includes('base64')">
@@ -47,7 +47,7 @@
           <tr ng-repeat="(key, value) in $ctrl.mainRecordDetails() track by key">
             <th>{{ key }}:</th>
             <td ng-if="value.href && value.text" class="truncate">
-              <a href="{{ value.href }}" target="_blank">{{ value.text }}</a>
+              <a href="{{ value.href }}" target="_blank">{{ value.href }}</a>
             </td>
             <td ng-if="!value.href || !value.text">
               <div class="truncate">
@@ -65,7 +65,7 @@
         </tbody>
       </table>
     </md-card>
-    <md-card layout-padding flex ng-if="$ctrl.photos.length > 0">
+    <md-card layout-padding flex ng-if="$ctrl.photos.length > 0" ng-class="$ctrl.entity">
       <ng-image-gallery images="$ctrl.photos" inline="true" img-Bubbles="true" bubble-size="64">
       </ng-image-gallery>
     </md-card>
@@ -91,7 +91,7 @@
             >
             <span ng-if="!value.href">{{ value }} </span>
             <span ng-if="value.href">
-              <a href="{{ value.href }}">{{ value.text }}</a>
+              <a href="{{ value.href }}" target="_blank">{{ value.text }}</a>
             </span>
           </td>
         </tr>
@@ -101,6 +101,12 @@
     <!-- <table hide show-gt-sm flex class="table table-condensed"> -->
     <table ng-show="$ctrl.$mdMedia('gt-sm')" flex>
       <tbody>
+        <tr
+          ng-if="$ctrl.record.genus && $ctrl.record.specificEpithet && !$ctrl.record.scientificName"
+        >
+          <th>scientificName:</th>
+          <td>{{$ctrl.record.genus}} {{$ctrl.record.specificEpithet}}</td>
+        </tr>
         <tr ng-repeat="(key, value) in $ctrl.auxiliaryRecordDetails(1) track by key">
           <th>{{ key }}:</th>
           <td ng-class="{'sequence': key === 'sequence'}">
@@ -113,7 +119,7 @@
             >
             <span ng-if="!value.href">{{ value }}</span>
             <span ng-if="value.href">
-              <a href="{{ value.href }}">{{ value.text }}</a>
+              <a href="{{ value.href }}" target="_blank">{{ value.text }}</a>
             </span>
           </td>
         </tr>
