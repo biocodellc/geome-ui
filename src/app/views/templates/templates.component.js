@@ -20,8 +20,8 @@ class TemplateController {
     this.allTemplates = [];
     this.template = Object.assign({}, DEFAULT_TEMPLATE);
     this.templates = [Object.assign({}, DEFAULT_TEMPLATE)];
-
     if (!this.currentProject) this.$state.go('about');
+    this.entities = [];
   }
 
   $onChanges(changesObj) {
@@ -46,32 +46,27 @@ class TemplateController {
     }
   }
 
-  selectAll(worksheet) {
-    if (worksheet === 'Workbook') {
-      const worksheetNames = Object.keys(this.attributes);
-      worksheetNames.forEach(w => {
+  workbookSelectAll(value) {
+    Object.keys(this.attributes).forEach(k => {
+      this.entities[k] = value;
+    });
+    const worksheets = [];
+    Object.keys(this.entities).forEach(e => {
+      worksheets.push(e);
+    });
+    this.worksheetSelectAll(worksheets, value);
+  }
+
+  worksheetSelectAll(worksheets, value) {
+    worksheets.forEach(w => {
+      if (value === true) {
         this.selected[w] = Object.values(this.attributes[w].attributes)
           .reduce((result, group) => result.concat(group), [])
           .concat(this.attributes[w].required);
-      });
-      return;
-    }
-    this.selected[worksheet] = Object.values(
-      this.attributes[worksheet].attributes,
-    )
-      .reduce((result, group) => result.concat(group), [])
-      .concat(this.attributes[worksheet].required);
-  }
-
-  selectNone(worksheet) {
-    if (worksheet === 'Workbook') {
-      const worksheetNames = Object.keys(this.attributes);
-      worksheetNames.forEach(
-        w => (this.selected[w] = this.attributes[w].required.slice()),
-      );
-      return;
-    }
-    this.selected[worksheet] = this.attributes[worksheet].required.slice();
+      } else if (value === false) {
+        this.selected[w] = this.attributes[w].required.slice();
+      }
+    });
   }
 
   saveConfig(ev) {
@@ -241,11 +236,6 @@ class TemplateController {
       });
   }
 
-  getAttributes() {
-    if (this.worksheet === 'Workbook') return this.attributes;
-    return { [this.worksheet]: this.attributes[this.worksheet] };
-  }
-
   populateAttributesCache() {
     this.attributes = this.projectConfig.entities.reduce(
       (accumulator, entity) => {
@@ -283,6 +273,14 @@ class TemplateController {
         return accumulator;
       },
       {},
+    );
+    this.makeAttributeArray();
+  }
+
+  makeAttributeArray() {
+    this.attributeArray = [];
+    Object.keys(this.attributes).forEach(k =>
+      this.attributeArray.push({ worksheet: k, data: this.attributes[k] }),
     );
   }
 
