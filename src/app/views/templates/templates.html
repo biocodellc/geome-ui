@@ -72,29 +72,23 @@
             ng-model="workbookSelectAll"
             ng-change="$ctrl.workbookSelectAll(workbookSelectAll)"
           >
-            Select all
+            Include all Worksheets
           </md-switch>
         </div>
       </div>
+      <md-switch
+        ng-disabled="!$ctrl.attributes"
+        class="md-primary"
+        md-no-ink
+        aria-label="entity select all"
+        ng-model="$ctrl.entities[item.worksheet]"
+        ng-change="$ctrl.worksheetSelectAll([item.worksheet], $ctrl.entities[item.worksheet]) "
+      >
+        Include all {{ item.worksheet }}
+      </md-switch>
       <h3 ng-if="$ctrl.worksheet === 'Workbook'">{{ item.worksheet}}</h3>
-
-      <div class="btn-group btn-group-xs">
-        <md-switch
-          ng-disabled="!$ctrl.attributes"
-          class="md-primary"
-          md-no-ink
-          aria-label="entity select all"
-          ng-model="$ctrl.entities[item.worksheet]"
-          ng-change="$ctrl.worksheetSelectAll([item.worksheet], $ctrl.entities[item.worksheet]) "
-        >
-          Select all {{ item.worksheet }}
-        </md-switch>
-        <button
-          type="button"
-          class="btn btn-link"
-          ng-if="$ctrl.worksheet !== 'Workbook'"
-          ng-click="$ctrl.saveConfig($event)"
-        >
+      <div class="btn-group btn-group-xs" ng-if="$ctrl.worksheet !== 'Workbook'">
+        <button type="button" class="btn btn-link" ng-click="$ctrl.saveConfig($event)">
           Save
         </button>
       </div>

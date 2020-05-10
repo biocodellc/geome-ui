@@ -1,5 +1,6 @@
 import angular from 'angular';
-
+// TODO: change toggle text to "include {{entity}}
+// and use ng-if to hide/show entities
 const template = require('./templates.html');
 const definitionTemplate = require('./definition-dialog.html');
 
@@ -74,37 +75,57 @@ class TemplateController {
       attribute => attribute.column,
     );
 
-    const prompt = this.$mdDialog
-      .prompt()
-      .title('What would you like to name your template?')
-      .placeholder('Template name')
-      .ariaLabel('Template name')
-      .targetEvent(ev)
-      .required(true)
-      .ok('Save')
-      .cancel('Cancel');
+    if (!this.currentUser) {
+      const login = this.$mdDialog
+        .confirm()
+        .title('You must be signed in to save a template')
+        .ariaLabel('Login required')
+        .targetEvent(ev)
+        .ok('Sign In')
+        .cancel('Cancel');
 
-    this.$mdDialog
-      .show(prompt)
-      .then(templateName => {
-        this.loading = true;
-        return this.TemplateService.save(
-          this.currentProject.projectId,
-          templateName,
-          this.worksheet,
-          columns,
-        );
-      })
-      .then(({ data }) => {
-        this.allTemplates.push(data);
-        this.template = data;
-        this.filterTemplates();
-        this.templateChange();
-      })
-      .catch(() => {})
-      .then(() => {
-        this.loading = false;
-      });
+      this.$mdDialog
+        .show(login)
+        .then(() => {
+          this.$state.go('login', {
+            nextState: this.$state.current.name,
+            nextStateParams: Object.assign({}, this.$state.params),
+          });
+        })
+        .catch(() => {});
+    } else {
+      const prompt = this.$mdDialog
+        .prompt()
+        .title('What would you like to name your template?')
+        .placeholder('Template name')
+        .ariaLabel('Template name')
+        .targetEvent(ev)
+        .required(true)
+        .ok('Save')
+        .cancel('Cancel');
+
+      this.$mdDialog
+        .show(prompt)
+        .then(templateName => {
+          this.loading = true;
+          return this.TemplateService.save(
+            this.currentProject.projectId,
+            templateName,
+            this.worksheet,
+            columns,
+          );
+        })
+        .then(({ data }) => {
+          this.allTemplates.push(data);
+          this.template = data;
+          this.filterTemplates();
+          this.templateChange();
+        })
+        .catch(angular.catcher('Failed to save template'))
+        .then(() => {
+          this.loading = false;
+        });
+    }
   }
 
   removeConfig(ev) {
@@ -154,6 +175,7 @@ class TemplateController {
   }
 
   sheetChange() {
+    this.workbookSelectAll(false);
     this.filterTemplates();
     this.template = Object.assign({}, DEFAULT_TEMPLATE);
     this.templateChange();
