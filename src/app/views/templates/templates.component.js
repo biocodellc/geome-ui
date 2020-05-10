@@ -1,6 +1,5 @@
 import angular from 'angular';
-// TODO: change toggle text to "include {{entity}}
-// and use ng-if to hide/show entities
+
 const template = require('./templates.html');
 const definitionTemplate = require('./definition-dialog.html');
 
@@ -269,12 +268,20 @@ class TemplateController {
 
         // eslint-disable-next-line no-param-reassign
         accumulator[worksheet] = {
-          attributes: this.projectConfig.attributesByGroup(worksheet, false),
-          required: this.projectConfig.requiredAttributes(worksheet),
+          attributes: Object.assign(
+            {
+              'Minimum Information Standard Items': this.projectConfig.requiredAttributes(
+                worksheet,
+              ),
+            },
+            this.projectConfig.attributesByGroup(worksheet, false),
+          ),
         };
 
         this.selected[worksheet] = this.selected[worksheet].concat(
-          accumulator[worksheet].required,
+          accumulator[worksheet].attributes[
+            'Minimum Information Standard Items'
+          ],
           this.projectConfig.suggestedAttributes(worksheet),
         );
 
