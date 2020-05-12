@@ -61,7 +61,7 @@ class TemplateController {
           (result, group) => result.concat(group),
           [],
         );
-      } else if (value === false) {
+      } else {
         this.selected[w] = this.attributes[w].attributes[
           'Minimum Information Standard Items'
         ].slice();
