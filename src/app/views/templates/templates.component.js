@@ -6,13 +6,20 @@ const definitionTemplate = require('./definition-dialog.html');
 const DEFAULT_TEMPLATE = { name: 'DEFAULT' };
 
 class TemplateController {
-  constructor($state, $mdDialog, TemplateService, $mdMedia) {
+  constructor(
+    $state,
+    $mdDialog,
+    TemplateService,
+    $mdMedia,
+    ProjectConfigurationService,
+  ) {
     'ngInject';
 
     this.TemplateService = TemplateService;
     this.$state = $state;
     this.$mdDialog = $mdDialog;
     this.$mdMedia = $mdMedia;
+    this.ProjectConfigurationService = ProjectConfigurationService;
   }
 
   $onInit() {
@@ -21,7 +28,7 @@ class TemplateController {
     this.template = Object.assign({}, DEFAULT_TEMPLATE);
     this.templates = [Object.assign({}, DEFAULT_TEMPLATE)];
     if (!this.currentProject) this.$state.go('about');
-    this.entities = [];
+    this.worksheetToggleModel = [];
   }
 
   $onChanges(changesObj) {
@@ -47,12 +54,9 @@ class TemplateController {
   }
 
   workbookSelectAll(value) {
-    Object.keys(this.attributes).forEach(k => {
-      this.entities[k] = value;
-    });
-    const worksheets = [];
-    Object.keys(this.entities).forEach(e => {
-      worksheets.push(e);
+    const worksheets = this.worksheets.filter(w => w !== 'Workbook');
+    this.attributeArray.forEach(a => {
+      this.worksheetToggleModel[a.worksheet] = value;
     });
     this.worksheetSelectAll(worksheets, value);
   }
@@ -60,11 +64,14 @@ class TemplateController {
   worksheetSelectAll(worksheets, value) {
     worksheets.forEach(w => {
       if (value === true) {
-        this.selected[w] = Object.values(this.attributes[w].attributes)
-          .reduce((result, group) => result.concat(group), [])
-          .concat(this.attributes[w].required);
+        this.selected[w] = Object.values(this.attributes[w].attributes).reduce(
+          (result, group) => result.concat(group),
+          [],
+        );
       } else if (value === false) {
-        this.selected[w] = this.attributes[w].required.slice();
+        this.selected[w] = this.attributes[w].attributes[
+          'Minimum Information Standard Items'
+        ].slice();
       }
     });
   }
@@ -121,7 +128,7 @@ class TemplateController {
           this.templateChange();
         })
         .catch(angular.catcher('Failed to save template'))
-        .then(() => {
+        .finally(() => {
           this.loading = false;
         });
     }
@@ -174,7 +181,6 @@ class TemplateController {
   }
 
   sheetChange() {
-    this.workbookSelectAll(false);
     this.filterTemplates();
     this.template = Object.assign({}, DEFAULT_TEMPLATE);
     this.templateChange();
@@ -182,15 +188,10 @@ class TemplateController {
 
   templateChange() {
     this.defAttribute = undefined;
+    this.workbookSelectAll(false);
     if (this.worksheet === 'Workbook') return;
-    if (angular.equals(this.template, DEFAULT_TEMPLATE)) {
-      this.selected[this.worksheet] = this.attributes[
-        this.worksheet
-      ].required.concat(this.projectConfig.suggestedAttributes(this.worksheet));
-    } else {
-      this.selected[this.worksheet] = this.attributes[
-        this.worksheet
-      ].required.slice();
+    if (!angular.equals(this.template, DEFAULT_TEMPLATE)) {
+      this.selected[this.worksheet] = [];
       Object.values(this.attributes[this.worksheet].attributes)
         .reduce((result, attributes) => result.concat(attributes), [])
         .filter(a => this.template.columns.includes(a.column))
@@ -318,6 +319,7 @@ class TemplateController {
     if (this.worksheets.length > 1 && !this.worksheets.includes('Workbook')) {
       this.worksheets.unshift('Workbook');
     }
+    // eslint-disable-next-line prefer-destructuring
     this.worksheet = this.worksheets[0];
   }
 

@@ -28,7 +28,7 @@
         <div class="input-group col-sm-12">
           <select
             class="form-control"
-            ng-disabled="$ctrl.templates.length <= 1"
+            ng-disabled="$ctrl.templates.length <= 1 || !$ctrl.currentUser"
             ng-model="$ctrl.template"
             ng-options="t as t.name for t in $ctrl.templates track by t.name"
             ng-change="$ctrl.templateChange()"
@@ -80,9 +80,9 @@
         ng-disabled="!$ctrl.attributes"
         class="md-primary"
         md-no-ink
-        aria-label="entity select all"
-        ng-model="$ctrl.entities[item.worksheet]"
-        ng-change="$ctrl.worksheetSelectAll([item.worksheet], $ctrl.entities[item.worksheet]) "
+        aria-label="worksheet selector"
+        ng-model="$ctrl.worksheetToggleModel[item.worksheet]"
+        ng-change="$ctrl.worksheetSelectAll([item.worksheet], $ctrl.worksheetToggleModel[item.worksheet]) "
       >
         Include all {{ item.worksheet }}
       </md-switch>
