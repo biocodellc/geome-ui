@@ -6,20 +6,13 @@ const definitionTemplate = require('./definition-dialog.html');
 const DEFAULT_TEMPLATE = { name: 'DEFAULT' };
 
 class TemplateController {
-  constructor(
-    $state,
-    $mdDialog,
-    TemplateService,
-    $mdMedia,
-    ProjectConfigurationService,
-  ) {
+  constructor($state, $mdDialog, TemplateService, $mdMedia) {
     'ngInject';
 
     this.TemplateService = TemplateService;
     this.$state = $state;
     this.$mdDialog = $mdDialog;
     this.$mdMedia = $mdMedia;
-    this.ProjectConfigurationService = ProjectConfigurationService;
   }
 
   $onInit() {
