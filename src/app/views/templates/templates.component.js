@@ -185,8 +185,8 @@ class TemplateController {
 
   templateChange() {
     this.defAttribute = undefined;
-    if (this.worksheet === 'Workbook') return;
     this.workbookSelectAll(false);
+    if (this.worksheet === 'Workbook') return;
     if (angular.equals(this.template, DEFAULT_TEMPLATE)) {
       this.setDefaultAttributeSelection();
     } else {
