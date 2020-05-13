@@ -185,15 +185,23 @@ class TemplateController {
 
   templateChange() {
     this.defAttribute = undefined;
-    this.toggleModels(false);
     if (this.worksheet === 'Workbook') return;
-    if (!angular.equals(this.template, DEFAULT_TEMPLATE)) {
+    this.workbookSelectAll(false);
+    if (angular.equals(this.template, DEFAULT_TEMPLATE)) {
+      this.setDefaultAttributeSelection();
+    } else {
       this.selected[this.worksheet] = [];
       Object.values(this.attributes[this.worksheet].attributes)
         .reduce((result, attributes) => result.concat(attributes), [])
         .filter(a => this.template.columns.includes(a.column))
         .forEach(a => this.selected[this.worksheet].push(a));
     }
+  }
+
+  setDefaultAttributeSelection() {
+    this.selected[this.worksheet] = this.attributes[this.worksheet].attributes[
+      'Minimum Information Standard Items'
+    ].concat(this.projectConfig.suggestedAttributes(this.worksheet));
   }
 
   canRemoveTemplate() {
