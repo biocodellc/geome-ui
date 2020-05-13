@@ -37,21 +37,25 @@ class TemplateController {
       this.projectConfig = this.currentProject.config;
       this.attributes = {};
       this.selected = {};
-      this.getTemplates();
       this.getWorksheets();
       this.populateAttributesCache();
       this.description = this.currentProject.description;
       this.defAttribute = undefined;
       this.defWorksheet = undefined;
+      this.getTemplates();
     }
   }
 
   workbookSelectAll(value) {
     const worksheets = this.worksheets.filter(w => w !== 'Workbook');
+    this.toggleModels(value);
+    this.worksheetSelectAll(worksheets, value);
+  }
+
+  toggleModels(value) {
     this.attributeArray.forEach(a => {
       this.worksheetToggleModel[a.worksheet] = value;
     });
-    this.worksheetSelectAll(worksheets, value);
   }
 
   worksheetSelectAll(worksheets, value) {
@@ -181,7 +185,7 @@ class TemplateController {
 
   templateChange() {
     this.defAttribute = undefined;
-    this.workbookSelectAll(false);
+    this.toggleModels(false);
     if (this.worksheet === 'Workbook') return;
     if (!angular.equals(this.template, DEFAULT_TEMPLATE)) {
       this.selected[this.worksheet] = [];
@@ -272,6 +276,7 @@ class TemplateController {
           ),
         };
 
+        // eslint-disable-next-line no-param-reassign
         this.selected[worksheet] = this.selected[worksheet].concat(
           accumulator[worksheet].attributes[
             'Minimum Information Standard Items'
