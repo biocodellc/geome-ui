@@ -123,6 +123,9 @@ export default class ProjectConfig {
   sheetRules(sheetName) {
     return this.entities.reduce((result, entity) => {
       if (entity.worksheet === sheetName) {
+        entity.rules.forEach(r =>
+          Object.assign(r, { entity: entity.conceptAlias }),
+        );
         result.push(...entity.rules);
       }
 
