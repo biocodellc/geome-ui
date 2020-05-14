@@ -28,7 +28,7 @@
         <div class="input-group col-sm-12">
           <select
             class="form-control"
-            ng-disabled="$ctrl.templates.length <= 1"
+            ng-disabled="$ctrl.templates.length <= 1 || !$ctrl.currentUser"
             ng-model="$ctrl.template"
             ng-options="t as t.name for t in $ctrl.templates track by t.name"
             ng-change="$ctrl.templateChange()"
@@ -56,66 +56,57 @@
     </div>
   </form>
 </div>
-
 <div layout="row">
   <div flex>
-    <div ng-repeat="(worksheet, data) in $ctrl.getAttributes()">
-      <h3 ng-if="$ctrl.worksheet === 'Workbook'">{{ worksheet }}</h3>
+    <div
+      ng-repeat="item in $ctrl.attributeArray"
+      ng-if="item.worksheet === $ctrl.worksheet || $ctrl.worksheet === 'Workbook'"
+    >
       <div ng-if="$first && $ctrl.worksheet === 'Workbook'">
-        <!-- <h4>Workbook</h4> -->
         <div class="btn-group-xs">
-          <button type="button" class="btn btn-link" ng-click="$ctrl.selectAll('Workbook')">
-            Select ALL in Workbook
-          </button>
-          <button type="button" class="btn btn-link" ng-click="$ctrl.selectNone('Workbook')">
-            Select NONE in Workbook
-          </button>
+          <md-switch
+            ng-disabled="!$ctrl.attributes"
+            class="md-primary"
+            md-no-ink
+            aria-label="workbook select all"
+            ng-model="workbookSelectAll"
+            ng-change="$ctrl.workbookSelectAll(workbookSelectAll)"
+          >
+            Include all properties 
+          </md-switch>
         </div>
       </div>
-      <div class="btn-group btn-group-xs">
-        <button type="button" class="btn btn-link" ng-click="$ctrl.selectAll(worksheet)">
-          Select all {{ worksheet }}
-        </button>
-        <button type="button" class="btn btn-link" ng-click="$ctrl.selectNone(worksheet)">
-          Select None for {{ worksheet }}
-        </button>
-        <button
-          type="button"
-          class="btn btn-link"
-          ng-if="$ctrl.worksheet !== 'Workbook'"
-          ng-click="$ctrl.saveConfig($event)"
-        >
-          Save
+      <md-switch
+        ng-disabled="!$ctrl.attributes"
+        class="md-primary"
+        md-no-ink
+        aria-label="worksheet selector"
+        ng-model="$ctrl.worksheetToggleModel[item.worksheet]"
+        ng-change="$ctrl.worksheetSelectAll([item.worksheet], $ctrl.worksheetToggleModel[item.worksheet]) "
+      >
+        Include properties for all {{ item.worksheet }}
+      </md-switch>
+      <h3 ng-if="$ctrl.worksheet === 'Workbook'">{{ item.worksheet}}</h3>
+      <div class="btn-group btn-group-xs" ng-if="$ctrl.worksheet !== 'Workbook'">
+        <button type="button" class="btn btn-link" ng-click="$ctrl.saveConfig($event)">
+          Save template
         </button>
       </div>
       <uib-accordion close-others="false">
-        <div uib-accordion-group class="panel-default" is-open="true">
-          <div uib-accordion-heading>Minimum Information Standard Items</div>
-          <div class="checkbox" ng-repeat="attribute in data.required | unique: 'column'">
-            <label>
-              <input
-                type="checkbox"
-                ng-disabled="data.required.indexOf(attribute) > -1"
-                ng-checked="$ctrl.selected[worksheet].indexOf(attribute) > -1"
-                ng-click="$ctrl.toggleSelected(worksheet, attribute)"
-              />
-              {{ attribute.column }}
-              <a ng-click="$ctrl.define(worksheet, attribute)">DEF </a>
-            </label>
-          </div>
-        </div>
-        <div ng-repeat="(group, attributes) in data.attributes">
+        <div ng-repeat="(group, attributes) in item.data.attributes">
           <div uib-accordion-group class="panel-default" heading="{{ group }}" is-open="true">
-            <div class="checkbox" ng-repeat="attribute in attributes">
+            <div class="checkbox" ng-repeat="attribute in attributes | unique:'column'">
               <label>
                 <input
                   type="checkbox"
-                  ng-disabled="data.required.indexOf(attribute) > -1"
-                  ng-checked="$ctrl.selected[worksheet].indexOf(attribute) > -1"
-                  ng-click="$ctrl.toggleSelected(worksheet, attribute)"
+                  ng-disabled="group === 'Minimum Information Standard Items'"
+                  ng-checked="$ctrl.selected[item.worksheet].indexOf(attribute) > -1"
+                  ng-click="$ctrl.toggleSelected(item.worksheet, attribute)"
                 />
                 {{ attribute.column }}
-                <a class="md-popover-button" ng-click="$ctrl.define(worksheet, attribute)">DEF </a>
+                <a class="md-popover-button" ng-click="$ctrl.define(item.worksheet, attribute)"
+                  >DEF
+                </a>
               </label>
             </div>
           </div>

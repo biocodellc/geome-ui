@@ -23,6 +23,9 @@ function getStates() {
                 return false;
               }),
         },
+        params: {
+          joinTeam: null,
+        },
       },
     },
   ];

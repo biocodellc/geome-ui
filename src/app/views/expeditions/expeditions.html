@@ -9,7 +9,7 @@
       and may not represent a comprehensive list of expeditions for this project, which can be found
       under
       <br />
-      <md-button href ui-sref="overview">
+      <md-button href ui-sref="project-overview">
         <md-icon md-font-icon="fa fa-desktop fa-fw"></md-icon>
         Project Overview
       </md-button>
@@ -19,7 +19,7 @@
 <md-card>
   <md-card-content>
     <div align="center">
-      <p ng-if="$ctrl.expeditions.length === 0">You do not have any expeditions yet</p>
+      <p ng-if="$ctrl.expeditions.length === 0">You do not have any expeditions in {{$ctrl.currentProject.projectTitle}} yet</p>
       <md-button class="md-primary md-raised" ng-click="$ctrl.createExpedition()">
         <md-icon md-font-icon="fa fa-plus fa-fw"></md-icon>
         CREATE EXPEDITION

@@ -602,7 +602,6 @@ class UploadController {
         lngColumn,
         uniqueKey,
       });
-
       const naanDialog = this.$mdDialog('naanDialog') || Promise.resolve(true);
 
       naanDialog.then(

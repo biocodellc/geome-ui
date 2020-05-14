@@ -36,7 +36,7 @@ class RegisterController {
       );
       this.UserService.setCurrentUser(user);
       this.state.go(
-        this.inviteId ? 'overview' : 'create-project',
+        this.inviteId ? 'project-overview' : 'create-project',
         {},
         { reload: true, inherit: false },
       );
