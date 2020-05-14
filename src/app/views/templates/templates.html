@@ -72,7 +72,7 @@
             ng-model="workbookSelectAll"
             ng-change="$ctrl.workbookSelectAll(workbookSelectAll)"
           >
-            Include all Worksheets
+            Include all properties 
           </md-switch>
         </div>
       </div>
@@ -84,12 +84,12 @@
         ng-model="$ctrl.worksheetToggleModel[item.worksheet]"
         ng-change="$ctrl.worksheetSelectAll([item.worksheet], $ctrl.worksheetToggleModel[item.worksheet]) "
       >
-        Include all {{ item.worksheet }}
+        Include properties for all {{ item.worksheet }}
       </md-switch>
       <h3 ng-if="$ctrl.worksheet === 'Workbook'">{{ item.worksheet}}</h3>
       <div class="btn-group btn-group-xs" ng-if="$ctrl.worksheet !== 'Workbook'">
         <button type="button" class="btn btn-link" ng-click="$ctrl.saveConfig($event)">
-          Save
+          Save template
         </button>
       </div>
       <uib-accordion close-others="false">
