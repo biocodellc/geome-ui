@@ -30,6 +30,7 @@
     <ul class="list-unstyled" ng-repeat="rule in $ctrl.rules">
       <li><strong>Type:</strong> {{ rule.name }}</li>
       <li><strong>Level:</strong> {{ rule.level }}</li>
+      <li><strong>Entity:</strong> {{ rule.entity }}</li>
       <li ng-if="rule.listName">
         <strong>list:</strong>
         <ul>
