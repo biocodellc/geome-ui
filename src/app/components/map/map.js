@@ -60,6 +60,7 @@ export default class Map extends EventEmitter {
       {
         attribution:
           'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
+        maxZoom: 10,
         minZoom: 1,
       },
     );
