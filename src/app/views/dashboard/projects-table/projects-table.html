@@ -21,8 +21,9 @@
   </span>
 </div>
 
-<div ng-if="$ctrl.loading" layout="row" layout-align="center center">
+<div layout="row" layout-align="center center">
   <md-progress-circular
+    ng-show="$ctrl.loading"
     class="loading-overlay-fixed"
     md-mode="indeterminate"
   ></md-progress-circular>

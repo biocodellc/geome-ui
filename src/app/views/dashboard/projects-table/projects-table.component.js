@@ -1,5 +1,4 @@
 const template = require('./projects-table.html');
-// TODO: Set a loader on setCurretProject before state.go
 
 class ProjectsTableController {
   constructor($state, ProjectService) {
