@@ -20,8 +20,8 @@ class TemplateController {
     this.allTemplates = [];
     this.template = Object.assign({}, DEFAULT_TEMPLATE);
     this.templates = [Object.assign({}, DEFAULT_TEMPLATE)];
-
     if (!this.currentProject) this.$state.go('about');
+    this.worksheetToggleModel = [];
   }
 
   $onChanges(changesObj) {
@@ -37,41 +37,40 @@ class TemplateController {
       this.projectConfig = this.currentProject.config;
       this.attributes = {};
       this.selected = {};
-      this.getTemplates();
       this.getWorksheets();
       this.populateAttributesCache();
       this.description = this.currentProject.description;
       this.defAttribute = undefined;
       this.defWorksheet = undefined;
+      this.getTemplates();
     }
   }
 
-  selectAll(worksheet) {
-    if (worksheet === 'Workbook') {
-      const worksheetNames = Object.keys(this.attributes);
-      worksheetNames.forEach(w => {
-        this.selected[w] = Object.values(this.attributes[w].attributes)
-          .reduce((result, group) => result.concat(group), [])
-          .concat(this.attributes[w].required);
-      });
-      return;
-    }
-    this.selected[worksheet] = Object.values(
-      this.attributes[worksheet].attributes,
-    )
-      .reduce((result, group) => result.concat(group), [])
-      .concat(this.attributes[worksheet].required);
+  workbookSelectAll(value) {
+    const worksheets = this.worksheets.filter(w => w !== 'Workbook');
+    this.toggleModels(value);
+    this.worksheetSelectAll(worksheets, value);
   }
 
-  selectNone(worksheet) {
-    if (worksheet === 'Workbook') {
-      const worksheetNames = Object.keys(this.attributes);
-      worksheetNames.forEach(
-        w => (this.selected[w] = this.attributes[w].required.slice()),
-      );
-      return;
-    }
-    this.selected[worksheet] = this.attributes[worksheet].required.slice();
+  toggleModels(value) {
+    this.attributeArray.forEach(a => {
+      this.worksheetToggleModel[a.worksheet] = value;
+    });
+  }
+
+  worksheetSelectAll(worksheets, value) {
+    worksheets.forEach(w => {
+      if (value === true) {
+        this.selected[w] = Object.values(this.attributes[w].attributes).reduce(
+          (result, group) => result.concat(group),
+          [],
+        );
+      } else {
+        this.selected[w] = this.attributes[w].attributes[
+          'Minimum Information Standard Items'
+        ].slice();
+      }
+    });
   }
 
   saveConfig(ev) {
@@ -79,37 +78,57 @@ class TemplateController {
       attribute => attribute.column,
     );
 
-    const prompt = this.$mdDialog
-      .prompt()
-      .title('What would you like to name your template?')
-      .placeholder('Template name')
-      .ariaLabel('Template name')
-      .targetEvent(ev)
-      .required(true)
-      .ok('Save')
-      .cancel('Cancel');
+    if (!this.currentUser) {
+      const login = this.$mdDialog
+        .confirm()
+        .title('You must be signed in to save a template')
+        .ariaLabel('Login required')
+        .targetEvent(ev)
+        .ok('Sign In')
+        .cancel('Cancel');
 
-    this.$mdDialog
-      .show(prompt)
-      .then(templateName => {
-        this.loading = true;
-        return this.TemplateService.save(
-          this.currentProject.projectId,
-          templateName,
-          this.worksheet,
-          columns,
-        );
-      })
-      .then(({ data }) => {
-        this.allTemplates.push(data);
-        this.template = data;
-        this.filterTemplates();
-        this.templateChange();
-      })
-      .catch(() => {})
-      .then(() => {
-        this.loading = false;
-      });
+      this.$mdDialog
+        .show(login)
+        .then(() => {
+          this.$state.go('login', {
+            nextState: this.$state.current.name,
+            nextStateParams: Object.assign({}, this.$state.params),
+          });
+        })
+        .catch(() => {});
+    } else {
+      const prompt = this.$mdDialog
+        .prompt()
+        .title('What would you like to name your template?')
+        .placeholder('Template name')
+        .ariaLabel('Template name')
+        .targetEvent(ev)
+        .required(true)
+        .ok('Save')
+        .cancel('Cancel');
+
+      this.$mdDialog
+        .show(prompt)
+        .then(templateName => {
+          this.loading = true;
+          return this.TemplateService.save(
+            this.currentProject.projectId,
+            templateName,
+            this.worksheet,
+            columns,
+          );
+        })
+        .then(({ data }) => {
+          this.allTemplates.push(data);
+          this.template = data;
+          this.filterTemplates();
+          this.templateChange();
+        })
+        .catch(angular.catcher('Failed to save template'))
+        .finally(() => {
+          this.loading = false;
+        });
+    }
   }
 
   removeConfig(ev) {
@@ -166,20 +185,23 @@ class TemplateController {
 
   templateChange() {
     this.defAttribute = undefined;
+    this.workbookSelectAll(false);
     if (this.worksheet === 'Workbook') return;
     if (angular.equals(this.template, DEFAULT_TEMPLATE)) {
-      this.selected[this.worksheet] = this.attributes[
-        this.worksheet
-      ].required.concat(this.projectConfig.suggestedAttributes(this.worksheet));
+      this.setDefaultAttributeSelection();
     } else {
-      this.selected[this.worksheet] = this.attributes[
-        this.worksheet
-      ].required.slice();
+      this.selected[this.worksheet] = [];
       Object.values(this.attributes[this.worksheet].attributes)
         .reduce((result, attributes) => result.concat(attributes), [])
         .filter(a => this.template.columns.includes(a.column))
         .forEach(a => this.selected[this.worksheet].push(a));
     }
+  }
+
+  setDefaultAttributeSelection() {
+    this.selected[this.worksheet] = this.attributes[this.worksheet].attributes[
+      'Minimum Information Standard Items'
+    ].concat(this.projectConfig.suggestedAttributes(this.worksheet));
   }
 
   canRemoveTemplate() {
@@ -241,11 +263,6 @@ class TemplateController {
       });
   }
 
-  getAttributes() {
-    if (this.worksheet === 'Workbook') return this.attributes;
-    return { [this.worksheet]: this.attributes[this.worksheet] };
-  }
-
   populateAttributesCache() {
     this.attributes = this.projectConfig.entities.reduce(
       (accumulator, entity) => {
@@ -257,12 +274,21 @@ class TemplateController {
 
         // eslint-disable-next-line no-param-reassign
         accumulator[worksheet] = {
-          attributes: this.projectConfig.attributesByGroup(worksheet, false),
-          required: this.projectConfig.requiredAttributes(worksheet),
+          attributes: Object.assign(
+            {
+              'Minimum Information Standard Items': this.projectConfig.requiredAttributes(
+                worksheet,
+              ),
+            },
+            this.projectConfig.attributesByGroup(worksheet, false),
+          ),
         };
 
+        // eslint-disable-next-line no-param-reassign
         this.selected[worksheet] = this.selected[worksheet].concat(
-          accumulator[worksheet].required,
+          accumulator[worksheet].attributes[
+            'Minimum Information Standard Items'
+          ],
           this.projectConfig.suggestedAttributes(worksheet),
         );
 
@@ -284,6 +310,14 @@ class TemplateController {
       },
       {},
     );
+    this.makeAttributeArray();
+  }
+
+  makeAttributeArray() {
+    this.attributeArray = [];
+    Object.keys(this.attributes).forEach(k =>
+      this.attributeArray.push({ worksheet: k, data: this.attributes[k] }),
+    );
   }
 
   getWorksheets() {
@@ -291,6 +325,7 @@ class TemplateController {
     if (this.worksheets.length > 1 && !this.worksheets.includes('Workbook')) {
       this.worksheets.unshift('Workbook');
     }
+    // eslint-disable-next-line prefer-destructuring
     this.worksheet = this.worksheets[0];
   }
 
