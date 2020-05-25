@@ -17,7 +17,7 @@
 <div ng-if="$ctrl.projects.length === 0 && $ctrl.currentUser">
   <span>
     You don't have any projects yet!
-    <strong><a ui-sref="create-project({ nextState: 'dashboard' })">Create Project </a></strong>
+    <strong><a ui-sref="create-project">Create Project </a></strong>
   </span>
 </div>
 
@@ -31,7 +31,7 @@
 
 <table md-table ng-model="$ctrl.filteredProjects" order-by="$ctrl.orderBy" class="table-striped">
   <thead md-head md-order="$ctrl.orderBy">
-    <tr md-row class="projects-table-header-row">
+    <tr md-row class="projects-table-header-row" ng-if="$ctrl.projects.length !== 0">
       <th md-column md-order-by="projectTitle" class="project-title"></th>
       <th md-column md-order-by="entityStats.SampleCount">
         Samples
