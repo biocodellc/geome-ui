@@ -4,7 +4,7 @@ class DashboardController {
   $onInit() {
     this.createPublicTable();
     this.createPrivateTable();
-    this.filterPublicData(); // filter projects displayed under 'My Projects'
+    this.filterPublicData(); // filter out projects already listed under 'My Projects'
   }
 
   createPublicTable() {
