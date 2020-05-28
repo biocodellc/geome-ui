@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import angular from 'angular';
 
-const template = require('./team-query.html');
+const template = require('./team-query-form.html');
 
 const SOURCE = [
   'Event.eventID',
@@ -34,7 +34,7 @@ const SOURCE = [
   'expeditionCode',
 ];
 
-class TeamFormController {
+class TeamQueryFormController {
   constructor($timeout, QueryService, ProjectConfigurationService) {
     'ngInject';
 
@@ -122,7 +122,7 @@ class TeamFormController {
 
 export default {
   template,
-  controller: TeamFormController,
+  controller: TeamQueryFormController,
   bindings: {
     params: '<',
     queryMap: '<',
