@@ -50,6 +50,5 @@ export default {
   controller: TeamQueryTableController,
   bindings: {
     results: '<',
-    entity: '<',
   },
 };
