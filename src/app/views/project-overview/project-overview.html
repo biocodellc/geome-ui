@@ -63,7 +63,7 @@
     </div>
 
     <div class="row" ng-if="$ctrl.currentProject.projectDataGuid">
-      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Data GUID</strong></div>
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Project Data GUID</strong></div>
       <div class="col-sm-8 col-md-9 col-lg-10">{{ $ctrl.currentProject.projectDataGuid}}</div>
     </div>
 
@@ -131,23 +131,23 @@
       <th class="text-center" ng-repeat="header in $ctrl.headers">
         {{ $ctrl.humanReadableHeader(header) }}
       </th>
-      <th class="text-center">DOI</th>
+      <th class="text-center">Expedition GUID</th>
+      <th></th>
       <th></th>
     </thead>
 
     <tbody>
       <tr
         ng-repeat="expedition in $ctrl.displayResults track by expedition.expeditionCode"
-        ng-click="$ctrl.results && $ctrl.viewData(expedition.expeditionCode)"
       >
+        <!--ng-click="$ctrl.results && $ctrl.viewData(expedition.expeditionCode)"-->
         <td>{{ expedition.expeditionTitle }}</td>
         <td ng-repeat="header in $ctrl.headers">{{ expedition[header] }}</td>
-        <td ng-show="expedition.expeditionIdentifier">
-          https://n2t.net/{{ expedition.expeditionIdentifier }}
-        </td>
+        <td><a href="https://n2t.net/{{ expedition.expeditionIdentifier }}">{{expedition.expeditionIdentifier}}</a></td>
         <td ng-show="!expedition.expeditionIdentifier"></td>
         <td ng-show="$ctrl.menuOptions(expedition).length == 0"></td>
-        <td ng-show="$ctrl.menuOptions(expedition).length > 0" class="md-dense action-buttons">
+        <td ng-click="$ctrl.results && $ctrl.viewData(expedition.expeditionCode)"><md-icon ng-show="$ctrl.results" md-font-icon="fa fa-search fa-xs"></md-icon></td>
+        <td ng-click="$ctrl.results && $ctrl.viewData(expedition.expeditionCode)">
           <md-menu ng-show="$ctrl.results" class="md-dense" md-position-mode="target-right target">
             <md-button
               aria-label="Open expedition download menu"
