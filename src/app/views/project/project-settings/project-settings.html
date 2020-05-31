@@ -134,6 +134,20 @@
       </div>
 
       <div class="form-group clearfix">
+        <div class="col-xs-4">
+          <label>License</label>
+          <select
+            ng-model="$ctrl.project.license"
+            class="form-control"
+            required
+            ng-options="item for item in ['CC0','CC-by','BSD'] track by item"
+          >
+          </select>
+          <span class="help-block">Indicate a license for this data resource.</span>
+        </div>
+      </div>
+
+      <div class="form-group clearfix">
         <div class="col-xs-9">
           <label>Recommended Citation</label>
           <input type="text" class="form-control" ng-model="$ctrl.project.recommendedCitation" />
