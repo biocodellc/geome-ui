@@ -26,18 +26,16 @@
         >
       </div>
     </div>
+
     <div class="row">
       <div class="col-sm-4 col-md-3 col-lg-2"><strong>Visibility</strong></div>
       <div class="col-sm-8 col-md-9 col-lg-10">
         <span ng-if="$ctrl.currentProject.public">This is a public project</span>
-        <span ng-if="!$ctrl.currentProject.public">This is a private project</span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Discoverable</strong></div>
-      <div class="col-sm-8 col-md-9 col-lg-10">
-        <span ng-if="$ctrl.currentProject.discoverable">True</span>
-        <span ng-if="!$ctrl.currentProject.discoverable">False</span>
+        <span ng-if="!$ctrl.currentProject.public && !$ctrl.currentProject.discoverable"
+          >This is a private project and is not discoverable</span
+        >
+        <span ng-if="!$ctrl.currentProject.public && $ctrl.currentProject.discoverable"
+          >This is a private project but is discoverable</span
       </div>
     </div>
 
