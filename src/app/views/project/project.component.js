@@ -16,12 +16,11 @@ class ProjectCtrl {
     if (!angular.equals(this.currentProject, project)) {
       this.loadSave = true;
       this.ProjectService.update(project)
-        .then(() => (this.loadSave = false))
         .then(({ data }) => {
           angular.toaster.success('Successfully updated!');
-          //return this.ProjectService.setCurrentProject(data);
+          return this.ProjectService.setCurrentProject(data);
         })
-        //.then(() => this.$state.reload());
+        .finally(() => (this.loadSave = false));
     } else {
       angular.toaster.success('Successfully updated!');
     }
