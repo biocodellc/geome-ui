@@ -40,7 +40,6 @@
             ng-model="$ctrl.project.discoverable"
             class="form-control"
             required
-            ng-init="$ctrl.project.discoverable = true"
             ng-options="item for item in [true, false] track by item"
           >
           </select>
@@ -130,6 +129,20 @@
             generate a DOI here. GEOME does not automatically assign identifiers for all datasets
             since many datasets have been given GUIDs elsewhere.</span
           >
+        </div>
+      </div>
+
+      <div class="form-group clearfix">
+        <div class="col-xs-4">
+          <label>License</label>
+          <select
+            ng-model="$ctrl.project.license"
+            class="form-control"
+            required
+            ng-options="item for item in ['CC0','CC-by','BSD'] track by item"
+          >
+          </select>
+          <span class="help-block">Indicate a license for this data resource.</span>
         </div>
       </div>
 
