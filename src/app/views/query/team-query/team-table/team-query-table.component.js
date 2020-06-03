@@ -19,6 +19,7 @@ class TeamQueryTableController {
       'scientificName',
       'expeditionCode',
       'bcid',
+      'diseaseDetected',
     ];
     this.tableData = [];
     this.currentPage = 1;
@@ -27,6 +28,19 @@ class TeamQueryTableController {
   }
 
   getVal(record, column) {
+    if (
+      column === 'scientificName' &&
+      !record.scientificName &&
+      record.genus &&
+      record.specificEpithet
+    ) {
+      // uses underscore third party library method
+      return _.capitalize(record.genus).concat(
+        ' ',
+        record.specificEpithet.toLowerCase(),
+      );
+    }
+
     return typeof column === 'string' ? record[column] : column.get(record);
   }
 

@@ -14,23 +14,13 @@ const SOURCE = [
   'Event.decimalLongitude',
   'Sample.genus',
   'Sample.specificEpithet',
-  'fastqMetadata.tissueID',
-  'fastqMetadata.identifier',
-  'fastqMetadata.bioSample',
-  'fastqMetadata.libraryLayout',
-  'fastqMetadata.librarySource',
-  'fastqMetadata.librarySelection',
-  'fastqMetadata.bcid',
   'Event.bcid',
   'Sample.bcid',
   'Sample.phylum',
   'Sample.scientificName',
-  'Tissue.materialSampleID',
-  'Tissue.tissueID',
-  'Tissue.bcid',
-  'Tissue.tissueType',
-  'Tissue.tissuePlate',
-  'Tissue.tissueWell',
+  'Diagnostics.diseaseDetected',
+  'Diagnostics.materialSampleID',
+  'Diagnostics.bcid',
   'expeditionCode',
 ];
 
@@ -93,8 +83,8 @@ class TeamQueryFormController {
   }
 
   queryJson() {
-    const entity = 'Sample';
-    const selectEntities = ['Event'];
+    const entity = 'Diagnostics';
+    const selectEntities = ['Event', 'Sample'];
     this.toggleLoading({ val: true });
     this.QueryService.queryJson(
       this.params.buildQuery(selectEntities, SOURCE.join()),
