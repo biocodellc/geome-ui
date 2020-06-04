@@ -19,6 +19,7 @@ const SOURCE = [
   'Sample.phylum',
   'Sample.scientificName',
   'Diagnostics.diseaseDetected',
+  'Diagnostics.diseaseTested',
   'Diagnostics.materialSampleID',
   'Diagnostics.bcid',
   'expeditionCode',

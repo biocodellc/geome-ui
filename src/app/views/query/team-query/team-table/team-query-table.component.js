@@ -20,6 +20,7 @@ class TeamQueryTableController {
       'expeditionCode',
       'bcid',
       'diseaseDetected',
+      'diseaseTested',
     ];
     this.tableData = [];
     this.currentPage = 1;
