@@ -230,7 +230,9 @@ class SraUploadController {
   async showResultDialog(results) {
     const html = results.success
       ? `<p>It may take up to 24 hrs for GEOME to upload your submission to SRA. You will receive an email with the results of this submission upon completion.</p>`
-      : `<p>The following error occurred:</p><p>${results.message}</p>`;
+      : `<p>The following error occurred:</p><p>${
+          results.message ? results.message : results.usrMessage
+        }</p>`;
 
     await this.$mdDialog.show(
       this.$mdDialog
