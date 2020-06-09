@@ -33,6 +33,12 @@ class Controller {
     );
   }
 
+  $onChanges(changesObj) {
+    if ('pattern' in changesObj) {
+      this.acceptPattern = this.pattern.replace(new RegExp("'", 'g'), '');
+    }
+  }
+
   handleSelect(files) {
     this.ngModelCtrl.$setTouched(true);
     if (this.multiple) {
