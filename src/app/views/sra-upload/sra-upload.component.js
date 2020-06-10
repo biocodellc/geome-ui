@@ -176,10 +176,11 @@ class SraUploadController {
   }
 
   async verifyFilenames() {
-    const fileNamesToVerify = this.filteredSraMetadata.reduce(
-      (names, m) => names.concat([m.filename, m.filename2]),
-      [],
-    );
+    const fileNamesToVerify = this.filteredSraMetadata.reduce((names, m) => {
+      const n = names.concat([m.filename]);
+      if (m.filename2) n.push(m.filename2);
+      return n;
+    }, []);
 
     const dateBefore = new Date();
     try {
@@ -243,7 +244,7 @@ class SraUploadController {
     );
 
     if (results.success) {
-      this.$state.reload()
+      this.$state.reload();
     }
   }
 }
