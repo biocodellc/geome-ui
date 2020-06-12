@@ -163,7 +163,14 @@ class SraUploadController {
           this.uploadProgress < 100
         ) {
           this.canResume = true;
-          this.showResultDialog(res);
+          this.showResultDialog({
+            success: false,
+            message: res.data
+              ? res.data.error ||
+              res.data.usrMessage ||
+              res.data.message ||
+              "Upload Error" : "Upload Error"
+          });
           this.loading = false;
         }
       })
@@ -231,8 +238,12 @@ class SraUploadController {
   async showResultDialog(results) {
     const html = results.success
       ? `<p>It may take up to 24 hrs for GEOME to upload your submission to SRA. You will receive an email with the results of this submission upon completion.</p>`
-      : `<p>The following error occurred:</p><p>${
+      : `<p>The following error occurred:</p><p><strong>${
           results.message ? results.message : results.usrMessage
+        }</strong></p><p>${
+          this.canResume
+            ? 'Your connection may have been interrupted... Press "Resume" to continue your upload.'
+            : ''
         }</p>`;
 
     await this.$mdDialog.show(
