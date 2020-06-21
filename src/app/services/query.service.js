@@ -167,6 +167,8 @@ class QueryService {
   }
 
   downloadExcel(query, entity) {
+    console.log(query);
+    console.log(entity);
     return this.download('excel', query, entity);
   }
 

@@ -70,8 +70,6 @@ class TeamQueryFormController {
     this.params.bounds = null;
   }
 
-  // TODO: Do we want to add the ability to download
-  // diagnostics data?
   prepareEntitiesForDownload(configuration) {
     const entities = configuration.config.entities
       .filter(e =>
