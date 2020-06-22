@@ -1,6 +1,6 @@
-const template = require('./amphibian-disease.html');
+const template = require('./amphibian-disease-form.html');
 
-class AmphibianDiseaseController {
+class AmphibianDiseaseFormController {
   constructor() {
     'ngInject';
 
@@ -19,7 +19,7 @@ class AmphibianDiseaseController {
 
 export default {
   template,
-  controller: AmphibianDiseaseController,
+  controller: AmphibianDiseaseFormController,
   bindings: {
     configuration: '<',
     params: '<',

@@ -17,8 +17,31 @@ function transformResults(data, entity) {
         }, {})
       : undefined;
 
-  // TODO come up w/ a more generic way to flatten these records
-  if (entity === 'fastqMetadata') {
+  if (entity === 'Diagnostics') {
+    const events = getRecords('Event', 'eventID');
+    const samples = getRecords('Sample', 'materialSampleID');
+    data.Diagnostics.forEach(d => {
+      const record = d;
+      let sampleBcid;
+      const { bcid } = d;
+      if (samples) {
+        const sample = samples[d.materialSampleID];
+
+        sampleBcid = sample.bcid;
+        Object.assign(record, sample, { bcid, sampleBcid });
+
+        let event = {};
+        let eventBcid;
+
+        if (events) {
+          event = events[record.eventID];
+          eventBcid = event.bcid;
+        }
+        Object.assign(record, sample, event, { bcid, sampleBcid, eventBcid });
+      }
+      records.push(record);
+    });
+  } else if (entity === 'fastqMetadata') {
     const events = getRecords('Event', 'eventID');
     const samples = getRecords('Sample', 'materialSampleID');
     const tissues = getRecords('Tissue', 'tissueID');
@@ -91,7 +114,6 @@ function transformResults(data, entity) {
       records.push(e);
     });
   }
-
   return records;
 }
 

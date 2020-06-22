@@ -36,6 +36,7 @@
         >
         <span ng-if="!$ctrl.currentProject.public && $ctrl.currentProject.discoverable"
           >This is a private project but is discoverable</span
+        >
       </div>
     </div>
 
@@ -156,11 +157,14 @@
           >
         </td>
         <td ng-show="!expedition.expeditionIdentifier"></td>
-        <td ng-show="$ctrl.menuOptions(expedition).length == 0"></td>
         <td ng-click="$ctrl.results && $ctrl.viewData(expedition.expeditionCode)">
           <md-icon ng-show="$ctrl.results" md-font-icon="fa fa-search fa-xs"></md-icon>
         </td>
-        <td ng-click="$ctrl.results && $ctrl.viewData(expedition.expeditionCode)">
+        <td ng-show="$ctrl.menuOptions(expedition).length === 0"></td>
+        <td
+          ng-click="$ctrl.results && $ctrl.viewData(expedition.expeditionCode)"
+          ng-show="$ctrl.menuOptions(expedition).length > 0"
+        >
           <md-menu ng-show="$ctrl.results" class="md-dense" md-position-mode="target-right target">
             <md-button
               aria-label="Open expedition download menu"
