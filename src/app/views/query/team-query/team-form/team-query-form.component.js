@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import angular from 'angular';
 
-const template = require('./team-query.html');
+const template = require('./team-query-form.html');
 
 const SOURCE = [
   'Event.eventID',
@@ -14,27 +14,18 @@ const SOURCE = [
   'Event.decimalLongitude',
   'Sample.genus',
   'Sample.specificEpithet',
-  'fastqMetadata.tissueID',
-  'fastqMetadata.identifier',
-  'fastqMetadata.bioSample',
-  'fastqMetadata.libraryLayout',
-  'fastqMetadata.librarySource',
-  'fastqMetadata.librarySelection',
-  'fastqMetadata.bcid',
   'Event.bcid',
   'Sample.bcid',
   'Sample.phylum',
   'Sample.scientificName',
-  'Tissue.materialSampleID',
-  'Tissue.tissueID',
-  'Tissue.bcid',
-  'Tissue.tissueType',
-  'Tissue.tissuePlate',
-  'Tissue.tissueWell',
+  'Diagnostics.diseaseDetected',
+  'Diagnostics.diseaseTested',
+  'Diagnostics.materialSampleID',
+  'Diagnostics.bcid',
   'expeditionCode',
 ];
 
-class TeamFormController {
+class TeamQueryFormController {
   constructor($timeout, QueryService, ProjectConfigurationService) {
     'ngInject';
 
@@ -79,8 +70,6 @@ class TeamFormController {
     this.params.bounds = null;
   }
 
-  // TODO: Do we want to add the ability to download
-  // diagnostics data?
   prepareEntitiesForDownload(configuration) {
     const entities = configuration.config.entities
       .filter(e =>
@@ -93,8 +82,8 @@ class TeamFormController {
   }
 
   queryJson() {
-    const entity = 'Sample';
-    const selectEntities = ['Event'];
+    const entity = 'Diagnostics';
+    const selectEntities = ['Event', 'Sample'];
     this.toggleLoading({ val: true });
     this.QueryService.queryJson(
       this.params.buildQuery(selectEntities, SOURCE.join()),
@@ -122,7 +111,7 @@ class TeamFormController {
 
 export default {
   template,
-  controller: TeamFormController,
+  controller: TeamQueryFormController,
   bindings: {
     params: '<',
     queryMap: '<',

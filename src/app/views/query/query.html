@@ -55,8 +55,8 @@
     md-is-locked-open="$ctrl.showSidebar"
     md-whiteframe="4"
   >
-    <fims-team-query
-      ng-if="$ctrl.teamQueryForm"
+    <fims-team-query-form
+      ng-if="$ctrl.teamQuery"
       team-id="$ctrl.teamIdNum"
       params="$ctrl.params"
       projects="$ctrl.projects"
@@ -67,9 +67,9 @@
       toggle-loading="$ctrl.toggleLoading(val)"
       layout-padding
       class="team-query"
-    ></fims-team-query>
+    ></fims-team-query-form>
     <fims-query-form
-      ng-if="!$ctrl.teamQueryForm"
+      ng-if="!$ctrl.teamQuery"
       params="$ctrl.params"
       projects="$ctrl.projects"
       entities-for-download="$ctrl.downloadableEntities(entities)"
@@ -105,12 +105,19 @@
     <!-- table -->
     <md-content>
       <fims-query-table
-        ng-show="!$ctrl.showMap"
+        ng-show="!$ctrl.showMap && $ctrl.teamIdNum !== 45"
         class="query-table"
         ng-class="{'full-page-query-table': !$ctrl.showSidebar}"
         results="$ctrl.results"
         entity="$ctrl.entity"
       ></fims-query-table>
+      <!--For now, we just use team table for amphibian disease-->
+      <fims-team-query-table
+        ng-show="!$ctrl.showMap && $ctrl.teamIdNum === 45"
+        class="query-table"
+        ng-class="{'full-page-query-table': !$ctrl.showSidebar}"
+        results="$ctrl.results"
+      ></fims-team-query-table>
     </md-content>
   </div>
 </div>
