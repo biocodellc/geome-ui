@@ -148,6 +148,7 @@ class ProjectOverviewController {
         });
       }
     }
+
     return this.menuCache[expedition.expeditionCode];
   }
   // eslint-disable-next-line class-methods-use-this
