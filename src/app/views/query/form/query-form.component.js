@@ -313,9 +313,14 @@ class QueryFormController {
     this.toggleLoading({ val: true });
     const entities = this.config.entities
       .filter(e =>
-        ['Event', 'Sample', 'Tissue', 'Sample_Photo', 'Event_Photo'].includes(
-          e.conceptAlias,
-        ),
+        [
+          'Event',
+          'Sample',
+          'Tissue',
+          'Sample_Photo',
+          'Event_Photo',
+          'Diagnostics',
+        ].includes(e.conceptAlias),
       )
       .map(e => e.conceptAlias);
     this.entitiesForDownload({ entities });
