@@ -9,7 +9,11 @@ class ProjectsTableController {
   }
 
   $onInit() {
+    this.projects.forEach(p => {
+      if (p.latestDataModification === null) p.latestDataModification = {};
+    });
     this.filteredProjects = this.projects;
+    this.orderBy = '-latestDataModification';
   }
 
   searchTextChange(searchText) {
