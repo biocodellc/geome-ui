@@ -4,5 +4,7 @@ export default {
   template,
   bindings: {
     layout: '@',
+    currentUser: '<',
+    currentProject: '<',
   },
 };
