@@ -9,15 +9,17 @@ class DashboardController {
 
   createPublicTable() {
     this.publicData = [];
-    this.projects.data.forEach(p => {
-      const el = this.stats.data.find(s => s.projectTitle === p.projectTitle);
-      Object.assign(el, {
-        hasPhotos:
-          el.entityStats.Sample_PhotoCount > 0 ||
-          el.entityStats.Event_PhotoCount > 0,
-        hasSRA: el.entityStats.fastqMetadataCount > 0,
+    this.stats.data.forEach(s => {
+      this.projects.data.forEach(p => {
+        if (p.projectTitle === s.projectTitle)
+          Object.assign(s, p.modified, {
+            hasPhotos:
+              s.entityStats.Sample_PhotoCount > 0 ||
+              s.entityStats.Event_PhotoCount > 0,
+            hasSRA: s.entityStats.fastqMetadataCount > 0,
+          });
       });
-      this.publicData.push(el);
+      this.publicData.push(s);
     });
   }
 
