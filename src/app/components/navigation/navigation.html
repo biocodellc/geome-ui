@@ -15,27 +15,29 @@
       <md-icon md-font-icon="fa fa-users fa-fw"></md-icon>
       <p>View Teams</p>
     </md-list-item>
-    <md-list-item ng-click="$ctrl.$state.go('template')">
-      <md-icon md-font-icon="fa fa-file-excel-o fa-fw"></md-icon>
-      <p>Generate Template</p>
-    </md-list-item>
-    <md-list-item ng-click="$ctrl.$state.go('validate')">
-      <md-icon md-font-icon="fa fa-upload fa-fw"></md-icon>
-      <p ng-if="$ctrl.currentUser">Load Data</p>
-      <p ng-if="!$ctrl.currentUser">Validate Data</p>
-    </md-list-item>
-    <md-list-item ng-if="$ctrl.showPhotoUpload" ng-click="$ctrl.$state.go('photo-upload')">
-      <md-icon md-font-icon="fa fa-photo fa-fw"></md-icon>
-      <p>Upload Photos</p>
-    </md-list-item>
-    <md-list-item ng-if="$ctrl.showSRAUpload" ng-click="$ctrl.$state.go('sra-upload')">
-      <md-icon md-font-icon="fa fa-photo fa-fw"></md-icon>
-      <p>Fastq SRA Upload</p>
-    </md-list-item>
-    <md-list-item ng-if="$ctrl.showPlateViewer" ng-click="$ctrl.$state.go('plates')">
-      <md-icon md-font-icon="fa fa-table fa-fw"></md-icon>
-      <p>Plate Viewer</p>
-    </md-list-item>
+    <div ng-hide="$ctrl.currentProject.limitedAccess">
+      <md-list-item ng-click="$ctrl.$state.go('template')">
+        <md-icon md-font-icon="fa fa-file-excel-o fa-fw"></md-icon>
+        <p>Generate Template</p>
+      </md-list-item>
+      <md-list-item ng-click="$ctrl.$state.go('validate')">
+        <md-icon md-font-icon="fa fa-upload fa-fw"></md-icon>
+        <p ng-if="$ctrl.currentUser">Load Data</p>
+        <p ng-if="!$ctrl.currentUser">Validate Data</p>
+      </md-list-item>
+      <md-list-item ng-if="$ctrl.showPhotoUpload" ng-click="$ctrl.$state.go('photo-upload')">
+        <md-icon md-font-icon="fa fa-photo fa-fw"></md-icon>
+        <p>Upload Photos</p>
+      </md-list-item>
+      <md-list-item ng-if="$ctrl.showSRAUpload" ng-click="$ctrl.$state.go('sra-upload')">
+        <md-icon md-font-icon="fa fa-photo fa-fw"></md-icon>
+        <p>Fastq SRA Upload</p>
+      </md-list-item>
+      <md-list-item ng-if="$ctrl.showPlateViewer" ng-click="$ctrl.$state.go('plates')">
+        <md-icon md-font-icon="fa fa-table fa-fw"></md-icon>
+        <p>Plate Viewer</p>
+      </md-list-item>
+    </div>
     <md-list-item ng-if="$ctrl.showTeamOverview" ng-click="$ctrl.$state.go('team-overview')">
       <md-icon md-font-icon="fa fa-id-badge fa-fw"></md-icon>
       <p>Team Overview</p>
@@ -50,24 +52,26 @@
 
   <md-list ng-show="$ctrl.currentUser">
     <md-subheader class="md-no-sticky">Admin</md-subheader>
-    <md-list-item ng-click="$ctrl.$state.go('expeditions.list')">
-      <md-icon md-font-icon="fa fa-cog fa-fw"></md-icon>
-      <p>My Expeditions</p>
-    </md-list-item>
-    <md-list-item
-      ng-click="$ctrl.$state.go('project')"
-      ng-show="$ctrl.currentUser.userId === $ctrl.currentProject.user.userId"
-    >
-      <md-icon md-font-icon="fa fa-wrench fa-fw"></md-icon>
-      <p>Project Settings</p>
-    </md-list-item>
-    <md-list-item ng-click="$ctrl.$state.go('project-config')" ng-show="$ctrl.showProjectConfig">
-      <md-icon md-font-icon="fa fa-cog fa-fw"></md-icon>
-      <p>
-        {{ $ctrl.currentProject.projectConfiguration.networkApproved ? 'Master' : 'Project' }}
-        Configuration
-      </p>
-    </md-list-item>
+    <div ng-hide="$ctrl.currentProject.limitedAccess">
+      <md-list-item ng-click="$ctrl.$state.go('expeditions.list')">
+        <md-icon md-font-icon="fa fa-cog fa-fw"></md-icon>
+        <p>My Expeditions</p>
+      </md-list-item>
+      <md-list-item
+        ng-click="$ctrl.$state.go('project')"
+        ng-show="$ctrl.currentUser.userId === $ctrl.currentProject.user.userId"
+      >
+        <md-icon md-font-icon="fa fa-wrench fa-fw"></md-icon>
+        <p>Project Settings</p>
+      </md-list-item>
+      <md-list-item ng-click="$ctrl.$state.go('project-config')" ng-show="$ctrl.showProjectConfig">
+        <md-icon md-font-icon="fa fa-cog fa-fw"></md-icon>
+        <p>
+          {{ $ctrl.currentProject.projectConfiguration.networkApproved ? 'Master' : 'Project' }}
+          Configuration
+        </p>
+      </md-list-item>
+    </div>
     <md-list-item ng-click="$ctrl.$state.go('profile')">
       <md-icon md-font-icon="fa fa-user fa-fw"></md-icon>
       <p>My Profile</p>

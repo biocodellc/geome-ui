@@ -1,15 +1,21 @@
 const template = require('./navigation.html');
 
 class NavigationController {
-  constructor($state, ExpeditionService, $mdMedia) {
+  constructor($state, ExpeditionService, $mdMedia, $timeout) {
     'ngInject';
 
     this.$state = $state;
     this.$mdMedia = $mdMedia;
     this.ExpeditionService = ExpeditionService;
+    this.$timeout = $timeout;
   }
 
   $onChanges() {
+    if (!this.currentProject || this.currentProject.limitedAccess) {
+      this.showTeamOverview = false;
+      return;
+    }
+
     this.showProjectConfig =
       this.currentUser &&
       this.currentProject &&
