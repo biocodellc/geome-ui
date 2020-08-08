@@ -11,7 +11,6 @@ class NavigationController {
 
   $onChanges() {
     if (!this.currentProject || this.currentProject.limitedAccess) {
-      this.showTeamOverview = false;
       return;
     }
 
