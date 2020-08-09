@@ -7,20 +7,10 @@ function getStates() {
         url: '/record/*bcid',
         component: 'fimsRecord',
         resolve: {
-          record: /* @ngInject */ (
-            RecordService,
-            $stateParams,
-            $state,
-            $window,
-          ) => {
-            const { bcid } = $stateParams;
-            const re = new RegExp(/^ark:\/\d{5}\/[A-Za-z]+2$/);
+          /* @ngInject */
 
-            // bcid is a root identifier, so redirect to ezid metadata
-            if (re.exec(bcid.trim())) {
-              $window.location.href = `https://ezid.cdlib.org/id/${bcid}`;
-              return false;
-            }
+          record: (RecordService, $stateParams, $state) => {
+            const { bcid } = $stateParams;
             return RecordService.get(bcid.trim(), { skipAuthRedirect: true })
               .then(response => {
                 // fail using the 404 route
