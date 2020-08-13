@@ -30,41 +30,6 @@
         <div class="detail-value" flex="50">{{value}}</div>
       </div>
     </div>
-    <!--div
-      class="collaboration"
-      flex
-      layout="row"
-      layout-sm="column"
-      layout-xs="column"
-      layout-align="center center"
-    >
-      <div class="checkbox-container">
-        <md-tooltip
-          ng-if="!$ctrl.currentUser || 
-          $ctrl.currentUser.username !== 
-          $ctrl.currentProject.projectConfiguration.user.username"
-        >
-          Sign in as team administrator to make changes
-        </md-tooltip>
-        <md-checkbox
-          ng-model="$ctrl.openToCollaboration"
-          ng-change="$ctrl.updateCollaborationAttribute()"
-          ng-disabled="!$ctrl.currentUser || 
-          $ctrl.currentUser.username !== 
-          $ctrl.currentProject.projectConfiguration.user.username || 
-          $ctrl.loadingCollaborationCheckbox"
-          aria-label="collaboration checkbox"
-        >
-          <span>Open to Collaborate</span>
-        </md-checkbox>
-      </div>
-      <collaboration-label></collaboration-label>
-      <md-progress-circular
-        ng-if="$ctrl.loadingCollaborationCheckbox"
-        class="loading-overlay-fixed"
-        md-mode="indeterminate"
-      ></md-progress-circular>
-    </div-->
   </div>
   <section>
     <table class="table table-hover" ng-if="!$ctrl.loading">

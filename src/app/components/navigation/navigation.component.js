@@ -10,6 +10,10 @@ class NavigationController {
   }
 
   $onChanges() {
+    if (!this.currentProject || this.currentProject.limitedAccess) {
+      return;
+    }
+
     this.showProjectConfig =
       this.currentUser &&
       this.currentProject &&
