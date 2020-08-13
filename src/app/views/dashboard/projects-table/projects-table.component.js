@@ -30,7 +30,14 @@ class ProjectsTableController {
 
   goToOverview(project, view) {
     this.loading = true;
-    this.ProjectService.setCurrentProject(project, true)
+    let newCurrentProject = project;
+    if (!project.public && view === 'team') {
+      const { id } = project.projectConfiguration;
+      newCurrentProject = this.projects.find(
+        p => p.projectConfiguration.id === id && p.public === true,
+      );
+    }
+    this.ProjectService.setCurrentProject(newCurrentProject, true)
       .then(() => this.$state.go(`${view}-overview`))
       .finally(() => {
         this.loading = false;

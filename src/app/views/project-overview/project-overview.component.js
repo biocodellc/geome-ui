@@ -32,6 +32,7 @@ class ProjectOverviewController {
       'currentProject' in changesObj &&
       changesObj.currentProject.previousValue !== this.currentProject
     ) {
+      this.loading = true;
       this.fetchPage();
     }
   }
@@ -110,6 +111,7 @@ class ProjectOverviewController {
   }
 
   menuOptions(expedition) {
+    if (this.currentProject.limitedAccess || this.loading === true) return;
     if (!this.menuCache[expedition.expeditionCode]) {
       // const worksheets = [];
       let foundWorksheet = false;
@@ -119,6 +121,9 @@ class ProjectOverviewController {
           const entity = this.currentProject.config.entities.find(
             e => e.conceptAlias === conceptAlias,
           );
+
+          // Hack to prevent errors while switching projects from a private, discoverable project to a public project
+          if (!entity) return;
 
           // if count is 0
           if (!Number(expedition[header])) return;
