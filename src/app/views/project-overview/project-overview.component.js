@@ -4,7 +4,14 @@ import QueryParams from '../query/QueryParams';
 const template = require('./project-overview.html');
 
 class ProjectOverviewController {
-  constructor($state, $location, ExpeditionService, DataService, QueryService) {
+  constructor(
+    $state,
+    $location,
+    ExpeditionService,
+    DataService,
+    QueryService,
+    ProjectService,
+  ) {
     'ngInject';
 
     this.$state = $state;
@@ -12,6 +19,7 @@ class ProjectOverviewController {
     this.ExpeditionService = ExpeditionService;
     this.DataService = DataService;
     this.QueryService = QueryService;
+    this.ProjectService = ProjectService;
   }
 
   $onInit() {
@@ -35,6 +43,23 @@ class ProjectOverviewController {
       this.loading = true;
       this.fetchPage();
     }
+  }
+
+  viewTeamOverview() {
+    if (this.currentProject.limitedAccess) {
+      this.ProjectService.all(true)
+        .then(({ data }) => {
+          const publicProjectWithSameConfiguration = data.find(
+            p =>
+              p.projectConfiguration.id ===
+              this.currentProject.projectConfiguration.id,
+          );
+          this.ProjectService.setCurrentProject(
+            publicProjectWithSameConfiguration,
+          );
+        })
+        .finally(() => this.$state.go('team-overview'));
+    } else this.$state.go('team-overview');
   }
 
   viewData(expeditionCode) {
