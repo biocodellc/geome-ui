@@ -1,0 +1,59 @@
+<h3>{{$ctrl.header}}</h3>
+
+<div class="main-details horizontal-description-list">
+  <div>
+    <div ng-repeat="(key, value) in $ctrl.mainRecordDetails track by key" layout="row">
+      <span>
+        {{ key }}:
+      </span>
+      <dl flex layout="row">
+        <span ng-if="value.href">
+          <a href="{{ value.href }}" target="_blank">{{ value.href }}</a>
+        </span>
+        <span ng-if="!value.href">
+          {{ value.text || 'N/A' }}
+        </span>
+      </dl>
+    </div>
+  </div>
+</div>
+
+<md-divider></md-divider>
+
+<div class="parent-details horizontal-description-list" ng-if="$ctrl.parentDetail">
+  <h4>Parent {{ $ctrl.parentEntity }}</h4>
+  <div layout="row">
+    <dl flex layout="row">
+      <dt ng-repeat-start="(key, value) in $ctrl.parentDetail track by key">{{ key }}:</dt>
+      <dd ng-repeat-end>
+        <span ng-if="!value.href">{{ value.text || 'N/A' }}</span>
+        <span ng-if="value.href">
+          <a href="{{ value.href }}">{{ value.text || 'N/A' }}</a>
+        </span>
+      </dd>
+    </dl>
+  </div>
+</div>
+
+<md-divider></md-divider>
+
+<div class="child-details horizontal-description-list" ng-if="$ctrl.childDetails">
+  <h4>Child Entities</h4>
+  <div class="entity-group" ng-repeat="(entity, children) in $ctrl.childDetails track by entity">
+    <div layout="row" ng-repeat="child in children track by $index">
+      <span ng-if="entity !== 'query'" class="entity">{{ entity }}s</span>
+      <span ng-if="entity === 'query'" class="entity"> </span>
+      <dl flex layout="row">
+        <span ng-if="!child.details.href && !child.details.queryLink"
+          >{{ child.details.text || 'N/A' }}</span
+        >
+        <span ng-if="child.details.href">
+          <a href="{{child.details.href}}">{{ child.details.text || 'N/A' }}</a>
+        </span>
+        <span ng-if="child.details.queryLink">
+          <a ng-click="$ctrl.query(child.details.queryLink)">{{ child.details.text || 'N/A' }}</a>
+        </span>
+      </dl>
+    </div>
+  </div>
+</div>

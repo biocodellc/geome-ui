@@ -1,7 +1,8 @@
 <div layout="row" class="loading-overlay" ng-show="$ctrl.loading" layout-align="center center">
   <md-progress-circular md-mode="indeterminate"></md-progress-circular>
 </div>
-<div class="record-detail" layout="column" ng-show="!$ctrl.loading">
+<root-record ng-if="$ctrl.rootRecord" record="$ctrl.record"></root-record>
+<div class="record-detail" layout="column" ng-show="!$ctrl.loading" ng-if="$ctrl.record.entity">
   <div class="photo-error-labels" ng-if="$ctrl.record.photoID">
     <div ng-if="$ctrl.invalidPhoto" class="alert alert-danger text-center text-large" role="alert">
       <i class="fa fa-exclamation-circle"></i>
@@ -97,8 +98,6 @@
         </tr>
       </tbody>
     </table>
-    <!-- Not sure why the following isn't working, but works on the angularjs material docs website -->
-    <!-- <table hide show-gt-sm flex class="table table-condensed"> -->
     <table ng-show="$ctrl.$mdMedia('gt-sm')" flex>
       <tbody>
         <tr

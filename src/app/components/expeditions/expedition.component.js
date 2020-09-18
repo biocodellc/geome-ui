@@ -21,6 +21,8 @@ export class ExpeditionController extends FimsExpeditionController {
   }
 
   handleExpeditionUpdate(expedition) {
+    console.log(expedition);
+    console.log(this.expedition);
     if (!angular.equals(this.expedition, expedition)) {
       this.ExpeditionService.update(
         this.currentProject.projectId,

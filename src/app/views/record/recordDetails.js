@@ -26,6 +26,21 @@ export const parentRecordDetails = {
     // tissueType: getKey('tissueType'),
     // tissueInstitution: getKey('tissueInstitution'),
   },
+  expedition: {
+    projectTitle: getKey('projectTitle'),
+    projectCode: getKey('projectCode'),
+    projectId: getKey('projectId'),
+    principalInvestigator: getKey('principalInvestigator'),
+  },
+  entityIdentifier: {
+    expeditionId: getKey('expeditionId'),
+    expeditionCode: getKey('expeditionCode'),
+    expeditionTitle: getKey('expeditionTitle'),
+    identifier: e => ({
+      text: `https://n2t.net/${e.identifier}`,
+      href: `/record/${e.identifier}`,
+    }),
+  },
 };
 
 export const childRecordDetails = {
@@ -84,6 +99,18 @@ export const childRecordDetails = {
     }),
     qualityScore: getKey('qualityScore'),
     hasScale: getKey('hasScale'),
+  },
+  expedition: {
+    identifier: e => ({
+      text: `https://n2t.net/${e.identifier}`,
+      href: `/record/${e.identifier}`,
+    }),
+  },
+  entityIdentifier: {
+    query: e => ({
+      text: `Query All ${e.expedition.expeditionTitle} ${e.conceptAlias}s`,
+      queryLink: `query`,
+    }),
   },
 };
 
@@ -170,6 +197,28 @@ export const mainRecordDetails = {
     bcid: s => ({
       text: s.bcid,
       href: `https://n2t.net/${s.bcid}`,
+    }),
+  },
+  expedition: {
+    expeditionTitle: getKey('expeditionTitle'),
+    expeditionCode: getKey('expeditionCode'),
+    expeditionId: getKey('expeditionId'),
+    created: getKey('created'),
+    modified: getKey('modified'),
+    identifier: e => ({
+      text: e.identifier,
+      href: `https://n2t.net/${e.identifier}`,
+    }),
+    metadata: getKey('metadata'),
+    // how do I access unique properties here?
+    // are they contained in the metadata object?
+    // answer: yes! that is where the unique stuff lives :)
+  },
+  entityIdentifier: {
+    conceptAlias: getKey('conceptAlias'),
+    identifier: e => ({
+      text: e.identifier,
+      href: `https://n2t.net/${e.identifier}`,
     }),
   },
 };

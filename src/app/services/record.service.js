@@ -13,6 +13,7 @@ class RecordService {
   get(identifier, httpOpts) {
     const re = new RegExp(/^ark:\/\d{5}\/[A-Za-z]+2$/);
     const path = re.exec(identifier) ? 'bcids/metadata/' : 'records/';
+
     return this.$http({
       ...httpOpts,
       method: 'GET',
