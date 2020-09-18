@@ -14,7 +14,6 @@ class ProjectOverviewController {
     this.QueryService = QueryService;
   }
 
-  // TODO: need to change all the n2t urls
   $onInit() {
     this.url = this.$location.absUrl().split('?')[0];
     this.templateUrl = this.url.replace('project-overview', 'template');

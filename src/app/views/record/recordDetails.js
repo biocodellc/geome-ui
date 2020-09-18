@@ -38,7 +38,7 @@ export const parentRecordDetails = {
     expeditionTitle: getKey('expeditionTitle'),
     identifier: e => ({
       text: `https://n2t.net/${e.identifier}`,
-      href: `/record/${e.identifier}`,
+      href: `https://n2t.net/${e.identifier}`,
     }),
   },
 };
@@ -103,7 +103,7 @@ export const childRecordDetails = {
   expedition: {
     identifier: e => ({
       text: `https://n2t.net/${e.identifier}`,
-      href: `/record/${e.identifier}`,
+      href: `https://n2t.net/${e.identifier}`,
     }),
   },
   entityIdentifier: {
@@ -210,9 +210,6 @@ export const mainRecordDetails = {
       href: `https://n2t.net/${e.identifier}`,
     }),
     metadata: getKey('metadata'),
-    // how do I access unique properties here?
-    // are they contained in the metadata object?
-    // answer: yes! that is where the unique stuff lives :)
   },
   entityIdentifier: {
     conceptAlias: getKey('conceptAlias'),
