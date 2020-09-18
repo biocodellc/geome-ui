@@ -1,4 +1,3 @@
-// TODO: change all the n2t links in the app to state.go(record)
 import {
   mainRecordDetails,
   childRecordDetails,
