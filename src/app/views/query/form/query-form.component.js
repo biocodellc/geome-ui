@@ -55,6 +55,7 @@ class QueryFormController {
     NetworkConfigurationService,
     ProjectConfigurationService,
     ExpeditionService,
+    $stateParams,
   ) {
     'ngInject';
 
@@ -66,12 +67,13 @@ class QueryFormController {
     this.NetworkConfigurationService = NetworkConfigurationService;
     this.ProjectConfigurationService = ProjectConfigurationService;
     this.ExpeditionService = ExpeditionService;
+    this.$stateParams = $stateParams;
   }
 
   $onInit() {
     this.resetExpeditions = true;
     this.moreSearchOptions = false;
-    this.entity = 'Sample';
+    this.entity = this.$stateParams.entity || 'Sample';
     this.queryEntities = QUERY_ENTITIES;
     this.teams = [];
     this.individualProjects = [];
