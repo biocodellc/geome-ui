@@ -4,7 +4,14 @@ import QueryParams from '../query/QueryParams';
 const template = require('./project-overview.html');
 
 class ProjectOverviewController {
-  constructor($state, $location, ExpeditionService, DataService, QueryService) {
+  constructor(
+    $state,
+    $location,
+    ExpeditionService,
+    DataService,
+    QueryService,
+    ProjectService,
+  ) {
     'ngInject';
 
     this.$state = $state;
@@ -12,6 +19,7 @@ class ProjectOverviewController {
     this.ExpeditionService = ExpeditionService;
     this.DataService = DataService;
     this.QueryService = QueryService;
+    this.ProjectService = ProjectService;
   }
 
   $onInit() {
@@ -32,8 +40,26 @@ class ProjectOverviewController {
       'currentProject' in changesObj &&
       changesObj.currentProject.previousValue !== this.currentProject
     ) {
+      this.loading = true;
       this.fetchPage();
     }
+  }
+
+  viewTeamOverview() {
+    if (this.currentProject.limitedAccess) {
+      this.ProjectService.all(true)
+        .then(({ data }) => {
+          const publicProjectWithSameConfiguration = data.find(
+            p =>
+              p.projectConfiguration.id ===
+              this.currentProject.projectConfiguration.id,
+          );
+          this.ProjectService.setCurrentProject(
+            publicProjectWithSameConfiguration,
+          );
+        })
+        .finally(() => this.$state.go('team-overview'));
+    } else this.$state.go('team-overview');
   }
 
   viewData(expeditionCode) {
@@ -110,6 +136,7 @@ class ProjectOverviewController {
   }
 
   menuOptions(expedition) {
+    if (this.currentProject.limitedAccess || this.loading === true) return;
     if (!this.menuCache[expedition.expeditionCode]) {
       // const worksheets = [];
       let foundWorksheet = false;
@@ -119,6 +146,9 @@ class ProjectOverviewController {
           const entity = this.currentProject.config.entities.find(
             e => e.conceptAlias === conceptAlias,
           );
+
+          // Hack to prevent errors while switching projects from a private, discoverable project to a public project
+          if (!entity) return;
 
           // if count is 0
           if (!Number(expedition[header])) return;
@@ -148,6 +178,7 @@ class ProjectOverviewController {
         });
       }
     }
+
     return this.menuCache[expedition.expeditionCode];
   }
   // eslint-disable-next-line class-methods-use-this

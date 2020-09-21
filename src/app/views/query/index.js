@@ -12,9 +12,10 @@ import routing from './query.routes';
 import fimsMap from '../../components/map';
 import fimsQuery from './query.component';
 import fimsQueryForm from './form/query-form.component';
-import fimsTeamQuery from './team-query/team-query.component';
-import amphibianDisease from './team-query/amphibian-disease/amphibian-disease.component';
+import fimsTeamQueryForm from './team-query/team-form/team-query-form.component';
+import amphibianDiseaseForm from './team-query/team-form/amphibian-disease-form.component';
 import fimsQueryTable from './table/query-table.component';
+import fimsTeamQueryTable from './team-query/team-table/team-query-table.component';
 import fimsFilterButtons from './form/filter-buttons/filter-buttons.component';
 
 const dependencies = ['sly', router, QueryService, projectService, fimsMap];
@@ -24,7 +25,8 @@ export default angular
   .run(routing) // need to declare in run block. otherwise $transitions is not available
   .component('fimsQuery', fimsQuery)
   .component('fimsQueryForm', fimsQueryForm)
-  .component('amphibianDisease', amphibianDisease)
-  .component('fimsTeamQuery', fimsTeamQuery)
+  .component('amphibianDiseaseForm', amphibianDiseaseForm)
+  .component('fimsTeamQueryForm', fimsTeamQueryForm)
   .component('fimsQueryTable', fimsQueryTable)
+  .component('fimsTeamQueryTable', fimsTeamQueryTable)
   .component('fimsFilterButtons', fimsFilterButtons).name;

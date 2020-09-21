@@ -29,7 +29,7 @@
   ></md-progress-circular>
 </div>
 
-<table md-table ng-model="$ctrl.filteredProjects" order-by="$ctrl.orderBy" class="table-striped">
+<table md-table ng-model="$ctrl.filteredProjects" class="table-striped">
   <thead md-head md-order="$ctrl.orderBy">
     <tr md-row class="projects-table-header-row" ng-if="$ctrl.projects.length !== 0">
       <th md-column md-order-by="projectTitle" class="project-title"></th>
@@ -77,7 +77,7 @@
         </div>
         <div layout="row" layout-xs="column" layout-align="space-between">
           <small hide-xs class="text-muted activity"
-            >Latest Activity: {{ project.latestDataModification ?
+            >Latest Activity: {{ project.latestDataModification.length > 0 ?
             project.latestDataModification.split(' ')[0] : 'N/A' }}</small
           >
           <span
