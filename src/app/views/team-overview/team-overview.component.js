@@ -18,6 +18,7 @@ class TeamOverviewController {
   }
 
   $onInit() {
+    if (this.currentProject.limitedAccess) return;
     this.loading = true;
     this.config = this.currentProject.config;
     this.sampleEntityIndex = this.config.entities.findIndex(
