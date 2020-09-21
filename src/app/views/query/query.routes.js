@@ -4,6 +4,9 @@ function getStates() {
       state: 'query',
       config: {
         url: '/query?q',
+        params: {
+          entity: null,
+        },
         component: 'fimsQuery',
         resolve: {
           layout: () => 'column',
