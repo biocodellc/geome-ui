@@ -15,15 +15,19 @@
     <div class="row">
       <div class="col-sm-4 col-md-3 col-lg-2"><strong>Shareable URLs</strong></div>
       <div class="col-sm-8 col-md-9 col-lg-10">
-        Project Homepage:
-        <a href="{{ $ctrl.url }}?projectId={{ $ctrl.currentProject.projectId }}">
-          {{ $ctrl.url }}?projectId={{ $ctrl.currentProject.projectId }}</a
-        >
+        <span>
+          Project Homepage:
+          <a href="{{ $ctrl.url }}?projectId={{ $ctrl.currentProject.projectId }}">
+            {{ $ctrl.url }}?projectId={{ $ctrl.currentProject.projectId }}</a
+          >
+        </span>
         <br />
-        Template Generator Direct Link:
-        <a href="{{ $ctrl.templateUrl }}?projectId={{ $ctrl.currentProject.projectId }}">
-          {{ $ctrl.templateUrl }}?projectId={{ $ctrl.currentProject.projectId }}</a
-        >
+        <span ng-hide="$ctrl.currentProject.limitedAccess">
+          Template Generator Direct Link:
+          <a href="{{ $ctrl.templateUrl }}?projectId={{ $ctrl.currentProject.projectId }}">
+            {{ $ctrl.templateUrl }}?projectId={{ $ctrl.currentProject.projectId }}</a
+          >
+        </span>
       </div>
     </div>
 
@@ -87,12 +91,14 @@
         <div class="col-sm-4 col-md-3 col-lg-2"><strong>Team workspace</strong></div>
 
         <div class="col-sm-8 col-md-9 col-lg-10">
-          <span class="label label-info" ng-click="$ctrl.$state.go('team-overview')">
+          <span class="label label-info" ng-click="$ctrl.viewTeamOverview()">
             {{ $ctrl.currentProject.projectConfiguration.name }} team</span
           >
-          (<a href="mailto:{{ $ctrl.currentProject.projectConfiguration.user.email }}"
-            >{{ $ctrl.currentProject.projectConfiguration.user.email }}</a
-          >)
+          <span ng-hide="$ctrl.currentProject.limitedAccess">
+            (<a href="mailto:{{ $ctrl.currentProject.projectConfiguration.user.email }}"
+              >{{ $ctrl.currentProject.projectConfiguration.user.email }}</a
+            >)
+          </span>
           <md-button class="md-icon-button help-link md-popover-button">
             <md-popover md-popover-class="fastq-help-filenames" md-direction="right">
               <div ng-include="'overview-config-help.popover.html'"></div>
@@ -114,6 +120,7 @@
   <div layout="row" ng-show="!$ctrl.loading && $ctrl.totalItems" layout-align="center center">
     <md-button
       class="md-primary md-raised project-download-button"
+      ng-disabled="$ctrl.currentProject.limitedAccess"
       ng-click="$ctrl.downloadCsv()"
       layout="row"
       layout-align="center center"
@@ -157,7 +164,10 @@
           >
         </td>
         <td ng-show="!expedition.expeditionIdentifier"></td>
-        <td ng-click="$ctrl.results && $ctrl.viewData(expedition.expeditionCode)">
+        <td
+          ng-hide="$ctrl.currentProject.limitedAccess"
+          ng-click="$ctrl.results && $ctrl.viewData(expedition.expeditionCode)"
+        >
           <md-icon ng-show="$ctrl.results" md-font-icon="fa fa-search fa-xs"></md-icon>
         </td>
         <td ng-show="$ctrl.menuOptions(expedition).length === 0"></td>
