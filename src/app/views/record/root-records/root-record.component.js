@@ -16,79 +16,68 @@ class RootRecordController {
   $onInit() {
     if (this.record.expedition) {
       this.entity = 'expedition';
+      this.parentEntity = 'Project';
       this.data = this.record.expedition;
-      this.header = this.record.expedition.expeditionTitle.concat(
+      this.parent = this.data.project;
+      this.childData = this.data.entityIdentifiers;
+      this.header = this.data.expeditionTitle.concat(
         ' (',
-        this.record.expedition.expeditionCode,
+        this.data.expeditionCode,
         ')',
       );
-      this.parentEntity = 'Project';
-      this.prepareMainDetails(this.data);
-      this.prepareParentDetails(this.data.project);
-      this.prepareChildDetails(this.data.entityIdentifiers);
     } else if (this.record.entityIdentifier) {
       this.entity = 'entityIdentifier';
+      this.parentEntity = 'Expedition';
       this.data = this.record.entityIdentifier;
-      this.header = this.record.entityIdentifier.expedition.expeditionTitle.concat(
+      this.parent = this.data.expedition;
+      this.childData = this.data;
+      this.header = this.data.expedition.expeditionTitle.concat(
         ' ',
-        this.record.entityIdentifier.conceptAlias,
+        this.data.conceptAlias,
         's',
       );
-      this.parentEntity = 'Expedition';
-      this.prepareMainDetails(this.data);
-      this.prepareParentDetails(this.data.expedition);
-      this.prepareChildDetails(this.data);
     }
+    this.prepareChildDetails(this.childData);
+    this.prepareParentDetails(this.parent);
+    this.prepareMainDetails(this.data);
   }
 
-  prepareMainDetails(main) {
+  prepareMainDetails(data) {
     const detailMap = mainRecordDetails[this.entity];
-    this.mainRecordDetails = Object.keys(detailMap).reduce(
-      (accumulator, key) =>
-        Object.assign(accumulator, { [key]: detailMap[key](main) }),
-      {},
-    );
+    this.mainRecordDetails = this.makeDetailObject(data, detailMap);
   }
 
   prepareParentDetails(parent) {
     const detailMap = parentRecordDetails[this.entity];
-    this.parentDetail = Object.keys(detailMap).reduce(
-      (accumulator, key) =>
-        Object.assign(accumulator, { [key]: detailMap[key](parent) }),
-      {},
-    );
+    this.parentDetail = this.makeDetailObject(parent, detailMap);
   }
 
   prepareChildDetails(children) {
     const detailMap = childRecordDetails[this.entity];
 
-    if (!Array.isArray(children)) {
-      const child = children;
-
-      this.childDetails = Object.keys(detailMap).reduce(
-        (accumulator, key) =>
-          Object.assign(accumulator, {
-            [key]: [{ details: detailMap[key](child) }],
-          }),
-        {},
-      );
-    } else {
+    if (Array.isArray(children)) {
       const childDetails = {};
       children.forEach(ch => {
         const { conceptAlias } = ch;
-
         const value = Object.keys(detailMap).reduce(
-          (accumulator, key) =>
-            Object.assign(accumulator, { details: detailMap[key](ch) }),
+          (accumulator, key) => Object.assign(accumulator, detailMap[key](ch)),
           {},
         );
-        const valueArray = [];
-        valueArray.push(value);
         this.childDetails = Object.assign(childDetails, {
-          [conceptAlias]: valueArray,
+          [conceptAlias]: value,
         });
       });
+    } else {
+      this.childDetails = this.makeDetailObject(children, detailMap);
     }
+  }
+
+  makeDetailObject(data, detailMap) {
+    return Object.keys(detailMap).reduce(
+      (accumulator, key) =>
+        Object.assign(accumulator, { [key]: detailMap[key](data) }),
+      {},
+    );
   }
 
   query(href) {
@@ -104,10 +93,6 @@ class RootRecordController {
         entity: `${this.record.entityIdentifier.conceptAlias}`,
       });
     } else this.$state.go(href);
-  }
-
-  isObject(value) {
-    return typeof value === 'object';
   }
 }
 

@@ -27,7 +27,10 @@ export const parentRecordDetails = {
     // tissueInstitution: getKey('tissueInstitution'),
   },
   expedition: {
-    projectTitle: getKey('projectTitle'),
+    projectTitle: p => ({
+      text: p.projectTitle,
+      href: `/workbench/project-overview/?projectId=${p.projectId}`,
+    }),
     projectCode: getKey('projectCode'),
     projectId: getKey('projectId'),
     principalInvestigator: getKey('principalInvestigator'),

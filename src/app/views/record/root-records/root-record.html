@@ -40,19 +40,17 @@
 
 <div class="child-details horizontal-description-list" ng-if="$ctrl.childDetails">
   <h4>Child Entities</h4>
-  <div class="entity-group" ng-repeat="(entity, children) in $ctrl.childDetails track by entity">
-    <div layout="row" ng-repeat="child in children track by $index">
+  <div class="entity-group" ng-repeat="(entity, child) in $ctrl.childDetails track by entity">
+    <div layout="row">
       <span ng-if="entity !== 'query'" class="entity">{{ entity }}s</span>
       <span ng-if="entity === 'query'" class="entity"> </span>
       <dl flex layout="row">
-        <span ng-if="!child.details.href && !child.details.queryLink"
-          >{{ child.details.text || 'N/A' }}</span
-        >
-        <span ng-if="child.details.href">
-          <a href="{{child.details.href}}">{{ child.details.text || 'N/A' }}</a>
+        <span ng-if="!child.href && !child.queryLink">{{ child.text || 'N/A' }}</span>
+        <span ng-if="child.href">
+          <a href="{{child.href}}">{{ child.text || 'N/A' }}</a>
         </span>
-        <span ng-if="child.details.queryLink">
-          <a ng-click="$ctrl.query(child.details.queryLink)">{{ child.details.text || 'N/A' }}</a>
+        <span ng-if="child.queryLink">
+          <a href="#" ng-click="$ctrl.query(child.queryLink)">{{ child.text || 'N/A' }}</a>
         </span>
       </dl>
     </div>
