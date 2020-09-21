@@ -1,4 +1,7 @@
 import angular from 'angular';
+
+import RecordMap from './RecordMap';
+
 import compareValues from '../../utils/compareValues';
 import flatten from '../../utils/flatten';
 import {
@@ -19,10 +22,11 @@ const mapChildren = children =>
 let detailCache = {};
 let detailCacheNumCols;
 class RecordController {
-  constructor($mdMedia, ProjectService) {
+  constructor($mdMedia, ProjectService, $timeout) {
     'ngInject';
 
     this.$mdMedia = $mdMedia;
+    this.$timeout = $timeout;
     this.ProjectService = ProjectService;
   }
 
@@ -42,7 +46,18 @@ class RecordController {
       const { projectId } = this.record;
       this.record = this.record.record;
       this.fetchProject(projectId);
+      if (this.record.entity === 'Event') this.prepareMap();
     }
+  }
+
+  prepareMap() {
+    const data = [this.record];
+    this.map = new RecordMap('decimalLatitude', 'decimalLongitude');
+    this.map.on(RecordMap.INIT_EVENT, () => this.map.setMarkers(data));
+    this.$timeout(() => {
+      this.map.refreshSize();
+      this.map.setZoom(2);
+    }, 3000);
   }
 
   getIdentifier(record) {
@@ -121,32 +136,40 @@ class RecordController {
       }
     }
     detailCache[index] = view.reduce((accumulator, key) => {
+      const acc = accumulator;
       if (key === 'projectId') {
-        accumulator.project = {
+        acc.project = {
           text: this.project.projectTitle,
-          href: `/workbench/overview?projectId=${this.project.projectId}`,
+          href: `/workbench/project-overview?projectId=${
+            this.project.projectId
+          }`,
         };
       } else if (key === 'expeditionCode') {
-        accumulator[key] = {
+        acc[key] = {
           text: flatRecord[key],
           href: `/query?q=_projects_:${
             this.project.projectId
           } and _expeditions_:${flatRecord[key]}`,
         };
       } else if (['img128', 'img512', 'img1024'].includes(key)) {
-        accumulator[key] = {
+        acc[key] = {
           text: `${key.substring(3)} pixel wide image`,
           href: flatRecord[key],
         };
+      } else if (key.match(/CatalogNumber/i)) {
+        acc[key] = {
+          text: flatRecord[key],
+          href: flatRecord[key],
+        };
       } else {
-        accumulator[key] = flatRecord[key];
+        acc[key] = flatRecord[key];
       }
 
       if (key === 'imageProcessingErrors') {
         this.invalidPhoto = true;
       }
 
-      return accumulator;
+      return acc;
     }, {});
 
     return detailCache[index] === {} ? undefined : detailCache[index];

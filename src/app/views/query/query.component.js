@@ -17,7 +17,7 @@ class QueryController {
     this.teamIdNum = parseInt(teamIdFromUrlParam, 10);
     // For now, we just check for team ID of Amphibian Disease
     if (teamIdFromUrlParam && this.teamIdNum === 45) {
-      this.teamQueryForm = true;
+      this.teamQuery = true;
     }
 
     this.params = new QueryParams();

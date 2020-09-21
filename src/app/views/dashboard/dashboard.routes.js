@@ -7,6 +7,10 @@ function getStates() {
         url: '/dashboard',
         component: 'fimsDashboard',
         projectRequired: false,
+        resolve: {
+          stats: /* @ngInject */ ProjectService => ProjectService.stats(true),
+          private: /* @ngInject */ ProjectService => ProjectService.all(false),
+        },
       },
     },
   ];

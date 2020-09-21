@@ -53,7 +53,7 @@ class SraService {
           resumeSize: isResume ? () => this.getResumeSize(id) : undefined,
         }).then(onSuccess, onFail, onProgress);
       })
-      .catch(e => onFail(e) && {});
+      .catch(e => onFail(e));
 
     p.progress = fn => {
       if (fn && typeof fn === 'function') {

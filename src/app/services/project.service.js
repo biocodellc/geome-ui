@@ -67,19 +67,25 @@ class ProjectService extends EventEmitter {
       return Promise.resolve();
     }
 
-    // TODO this will need to change when there are lots of projects
     return this.all(true)
       .then(({ data }) => data.find(p => p.projectId === projectId))
       .then(project => {
-        if (!project || !includeConfig) {
+        if (!includeConfig) {
           return project;
+        }
+        if (!project) {
+          return this.stats(true)
+            .then(({ data }) => data.find(p => p.projectId === projectId))
+            .then(discoverableProject =>
+              Object.assign(discoverableProject, { limitedAccess: true }),
+            );
         }
 
         return this.getConfig(project.projectId)
           .then(c => Object.assign({}, project, { config: c }))
           .catch(angular.catcher('Failed to load project configuration'));
       })
-      .catch(response => angular.catcher('Failed to project')(response));
+      .catch(response => angular.catcher('Failed to load project')(response));
   }
 
   getConfig(projectId) {

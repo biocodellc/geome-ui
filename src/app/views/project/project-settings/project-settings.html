@@ -1,7 +1,6 @@
 <div class="settings">
   <form>
     <fieldset>
-
       <div class="form-group clearfix">
         <div class="col-xs-9">
           <label>Title*</label>
@@ -22,7 +21,7 @@
       </div>
 
       <div class="form-group clearfix">
-        <div class="col-xs-3">
+        <div class="col-xs-4">
           <label>Visibility*</label>
           <select
             ng-model="$ctrl.project.public"
@@ -32,34 +31,32 @@
           >
           </select>
         </div>
-      </div>    
+      </div>
 
-      <div class="form-group clearfix">
-        <div class="col-xs-3">
-          <label>Discoverable*
-	      </label>
-          <select 
+      <div class="form-group clearfix" ng-show="$ctrl.project.public !== true">
+        <div class="col-xs-4">
+          <label>Discoverable* </label>
+          <select
             ng-model="$ctrl.project.discoverable"
-            class="form-control col-xs-3"
+            class="form-control"
             required
-            ng-options="(item?'discoverable':'not discoverable') for item in [true, false]"
+            ng-options="item for item in [true, false] track by item"
           >
           </select>
         </div>
-      </div>    
-      <span class="help-block col-xs-9"
-              >Setting a project to discoverable indicates we want the project to be discoverable even if the project is set to private. 
-	      Public users will be able to view project metadata and project statistics but not query project data. 
-	      If a project is public then this setting has no meaning.
-      </span
-
-      <div class="form-group clearfix">
+        <span class="col-xs-9 help-block" ng-show="$ctrl.project.discoverable === true">
+          Allows public users to view project metadata and project statistics, but not query project
+          data.
+        </span>
+        <span class="col-xs-9 help-block" ng-show="$ctrl.project.discoverable === false">
+          Disallows public users from viewing project metadata and project statistics.
+        </span>
+      </div>
 
       <div class="form-group clearfix">
         <div class="checkbox col-xs-9">
           <label>
             <input type="checkbox" ng-model="$ctrl.project.enforceExpeditionAccess" />
-            <!-- ng-change="$ctrl.onUpdate({ configuration: $ctrl.config })" /> -->
             Enforce Expedition Access Control?
             <span class="help-block"
               >Enforcing Expedition access will allow only the expedition owner to update the
@@ -73,7 +70,7 @@
       <div class="form-group clearfix">
         <div class="col-xs-9">
           <label>Principal Investigator</label>
-          <input type="text" class="form-control"  ng-model="$ctrl.project.principalInvestigator">      
+          <input type="text" class="form-control" ng-model="$ctrl.project.principalInvestigator" />
           <span class="help-block">The principal investigator for this project</span>
         </div>
       </div>
@@ -81,61 +78,85 @@
       <div class="form-group clearfix">
         <div class="col-xs-9">
           <label>Principal Investigator Affiliation</label>
-          <input type="text" class="form-control"  ng-model="$ctrl.project.principalInvestigatorAffiliation">      
-          <span class="help-block">The affiliation of the principal investigator for this project</span class="help-block">
-        </div>
-      </div>
-
-      <div class="form-group clearfix">
-        <div class="col-xs-9">
-          <label>Project Contact</label>
-          <input type="text" class="form-control"  ng-model="$ctrl.project.projectContact">      
-          <span class="help-block">Name of an individual to contact for this project.  Typically this is the name of
-            the person with the user account for this project, but in some cases the contact will
-            be someone else</span>
+          <input
+            type="text"
+            class="form-control"
+            ng-model="$ctrl.project.principalInvestigatorAffiliation"
+          />
+          <span class="help-block">
+            The affiliation of the principal investigator for this project
           </span>
         </div>
       </div>
 
       <div class="form-group clearfix">
         <div class="col-xs-9">
+          <label>Project Contact</label>
+          <input type="text" class="form-control" ng-model="$ctrl.project.projectContact" />
+          <span class="help-block"
+            >Name of an individual to contact for this project. Typically this is the name of the
+            person with the user account for this project, but in some cases the contact will be
+            someone else</span
+          >
+        </div>
+      </div>
+
+      <div class="form-group clearfix">
+        <div class="col-xs-9">
           <label>Project Contact Email</label>
-          <input type="text" class="form-control"  ng-model="$ctrl.project.projectContactEmail">      
+          <input type="text" class="form-control" ng-model="$ctrl.project.projectContactEmail" />
           <span class="help-block">Email for the project contact</span>
         </div>
       </div>
 
       <div class="form-group clearfix">
         <div class="col-xs-9">
-          <label>Publication GUID</label>
-          <input type="text" class="form-control"  ng-model="$ctrl.project.publicationGuid">      
-          <span class="help-block">A globally unique identifier for a written publication pertaining
-            to this dataset</span>
+          <label>Publication DOI</label>
+          <input type="text" class="form-control" ng-model="$ctrl.project.publicationGuid" />
+          <span class="help-block"
+            >A globally unique identifier for a written publication pertaining to this dataset</span
+          >
         </div>
       </div>
 
       <div class="form-group clearfix">
         <div class="col-xs-9">
           <label>Project Data GUID</label>
-          <input type="text" class="form-control"  ng-model="$ctrl.project.projectDataGuid">      
-          <span class="help-block">A globally unique identifier for the data in this project.  
-            Recommended to use a resolvable URL containing a DOI or ARK identifier.  Coming 
-          soon is the ability to generage a DOI here.  GEOME does not automatically assign
-          identifiers for all datasets since many datasets have been given GUIDs elsewhere.</span>
+          <input type="text" class="form-control" ng-model="$ctrl.project.projectDataGuid" />
+          <span class="help-block"
+            >A globally unique identifier for the data in this project. Recommended to use a
+            resolvable URL containing a DOI or ARK identifier. Coming soon is the ability to
+            generate a DOI here. GEOME does not automatically assign identifiers for all datasets
+            since many datasets have been given GUIDs elsewhere.</span
+          >
+        </div>
+      </div>
+
+      <div class="form-group clearfix">
+        <div class="col-xs-4">
+          <label>License</label>
+          <select
+            ng-model="$ctrl.project.license"
+            class="form-control"
+            required
+            ng-options="item for item in ['CC0','CC-by','BSD'] track by item"
+          >
+          </select>
+          <span class="help-block">Indicate a license for this data resource.</span>
         </div>
       </div>
 
       <div class="form-group clearfix">
         <div class="col-xs-9">
           <label>Recommended Citation</label>
-          <input type="text" class="form-control"  ng-model="$ctrl.project.recommendedCitation">      
+          <input type="text" class="form-control" ng-model="$ctrl.project.recommendedCitation" />
           <span class="help-block">Indicate a recommended citation for this data resource.</span>
         </div>
       </div>
 
       <div class="form-group clearfix">
         <div class="col-xs-9">
-          <label>*Required Elements</label> 
+          <label>*Required Elements</label>
         </div>
       </div>
 
@@ -151,7 +172,6 @@
           >
             Save
           </button>
-           <!--  <input type="submit" class="btn btn-primary" value="Save" />-->
         </div>
       </div>
     </fieldset>
@@ -166,10 +186,7 @@
             >Warning! This will delete all expeditions and records associated with this
             project.</span
           >
-          Please export your data before deleting this
-          <!-- expeditions and records associated with this project.</span> Please <a href -->
-          <!-- ng-click="$parent.$ctrl.export()">export your data</a> before deleting this -->
-          project.
+          Please export your data before deleting this project.
         </p>
       </div>
       <div class="col-xs-3">

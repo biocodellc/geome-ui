@@ -22,7 +22,7 @@ function getStates() {
               true,
             )
               .then(({ data }) => data.sort(compareValues('expeditionTitle')))
-              .catch(() => $state.go('overview')),
+              .catch(() => $state.go('project-overview')),
         },
         params: {
           admin: {
