@@ -26,6 +26,24 @@ export const parentRecordDetails = {
     // tissueType: getKey('tissueType'),
     // tissueInstitution: getKey('tissueInstitution'),
   },
+  expedition: {
+    projectTitle: p => ({
+      text: p.projectTitle,
+      href: `/workbench/project-overview/?projectId=${p.projectId}`,
+    }),
+    projectCode: getKey('projectCode'),
+    projectId: getKey('projectId'),
+    principalInvestigator: getKey('principalInvestigator'),
+  },
+  entityIdentifier: {
+    expeditionId: getKey('expeditionId'),
+    expeditionCode: getKey('expeditionCode'),
+    expeditionTitle: getKey('expeditionTitle'),
+    identifier: e => ({
+      text: `https://n2t.net/${e.identifier}`,
+      href: `https://n2t.net/${e.identifier}`,
+    }),
+  },
 };
 
 export const childRecordDetails = {
@@ -84,6 +102,18 @@ export const childRecordDetails = {
     }),
     qualityScore: getKey('qualityScore'),
     hasScale: getKey('hasScale'),
+  },
+  expedition: {
+    identifier: e => ({
+      text: `https://n2t.net/${e.identifier}`,
+      href: `https://n2t.net/${e.identifier}`,
+    }),
+  },
+  entityIdentifier: {
+    query: e => ({
+      text: `Query All ${e.expedition.expeditionTitle} ${e.conceptAlias}s`,
+      queryLink: `query`,
+    }),
   },
 };
 
@@ -170,6 +200,25 @@ export const mainRecordDetails = {
     bcid: s => ({
       text: s.bcid,
       href: `https://n2t.net/${s.bcid}`,
+    }),
+  },
+  expedition: {
+    expeditionTitle: getKey('expeditionTitle'),
+    expeditionCode: getKey('expeditionCode'),
+    expeditionId: getKey('expeditionId'),
+    created: getKey('created'),
+    modified: getKey('modified'),
+    identifier: e => ({
+      text: e.identifier,
+      href: `https://n2t.net/${e.identifier}`,
+    }),
+    metadata: getKey('metadata'),
+  },
+  entityIdentifier: {
+    conceptAlias: getKey('conceptAlias'),
+    identifier: e => ({
+      text: e.identifier,
+      href: `https://n2t.net/${e.identifier}`,
     }),
   },
 };

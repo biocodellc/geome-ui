@@ -30,15 +30,17 @@ class RecordController {
     this.ProjectService = ProjectService;
   }
 
-  $onInit() {
-    this.loading = true;
-    this.inlineGallery = true;
-  }
-
   $onChanges(changesObj) {
     if ('record' in changesObj && this.record) {
+      this.loading = true;
+      this.inlineGallery = true;
       detailCache = {};
       detailCacheNumCols = undefined;
+      if (this.record.expedition || this.record.entityIdentifier) {
+        this.loading = false;
+        this.rootRecord = true;
+        return;
+      }
       this.setParentDetail(this.record.parent);
       this.setChildDetails(this.record.children);
       this.parent = this.record.parent;
