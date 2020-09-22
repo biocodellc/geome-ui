@@ -72,6 +72,7 @@ class ProjectSelectorController {
     ) {
       this.onChange({ project });
     }
+    this.$state.go('project-overview');
     this.searchText = '';
     this.isOpen = false;
   }
