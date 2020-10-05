@@ -43,8 +43,7 @@
       <tr class="title-row" flex>
         <td width="30%">Title</td>
         <td class="text-center md-clip" md-truncate>Samples</td>
-        <td class="text-center md-clip" md-truncate>Events</td>
-        <td class="text-center md-clip" md-truncate>Tissues</td>
+        <td class="text-center md-clip" md-truncate>Project Owner</td>
         <td class="text-center md-clip" md-truncate>Latest Activity</td>
       </tr>
 
@@ -63,10 +62,7 @@
           {{project.entityStats.SampleCount}}
         </td>
         <td class="text-center">
-          {{project.entityStats.EventCount}}
-        </td>
-        <td class="text-center">
-          {{project.entityStats.TissueCount}}
+          {{project.user.username}}
         </td>
         <td class="text-center">
           <small class="text-muted activity"
