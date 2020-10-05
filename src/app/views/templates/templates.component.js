@@ -205,11 +205,14 @@ class TemplateController {
   }
 
   canRemoveTemplate() {
-    return (
-      this.template &&
-      !angular.equals(this.template, DEFAULT_TEMPLATE) &&
-      this.template.user.userId === this.currentUser.userId
-    );
+    if (this.currentUser) {
+      return (
+        this.template &&
+        !angular.equals(this.template, DEFAULT_TEMPLATE) &&
+        this.template.user.userId === this.currentUser.userId
+      );
+    }
+    return false;
   }
 
   generate() {
