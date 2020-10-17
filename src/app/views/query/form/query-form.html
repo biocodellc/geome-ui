@@ -122,7 +122,14 @@
     </div>
   </div>
 
-  <div class="expeditions" layout-padding ng-show="$ctrl.moreSearchOptions&&$ctrl.expeditions">
+  <div ng-if="$ctrl.loadingExpeditions" layout="column">
+    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+  </div>
+  <div
+    class="expeditions"
+    layout-padding
+    ng-show="$ctrl.moreSearchOptions && $ctrl.expeditions.length > 1"
+  >
     <div layout="column">
       <h3 class="md-subhead bold" flex>Expeditions</h3>
       <md-chips ng-model="$ctrl.params.expeditions" md-require-match flex>
