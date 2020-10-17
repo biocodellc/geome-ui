@@ -268,11 +268,14 @@ class QueryFormController {
   }
 
   getExpeditions() {
-    this.ExpeditionService.all(this.individualProjects[0].projectId).then(
-      ({ data }) => {
+    this.loadingExpeditions = true;
+    this.ExpeditionService.all(this.individualProjects[0].projectId)
+      .then(({ data }) => {
         this.expeditions = data;
-      },
-    );
+      })
+      .finally(() => {
+        this.loadingExpeditions = false;
+      });
   }
 
   identifySpecificConfig() {
