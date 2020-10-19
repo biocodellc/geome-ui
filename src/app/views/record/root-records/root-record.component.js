@@ -31,10 +31,11 @@ class RootRecordController {
       this.data = this.record.entityIdentifier;
       this.parent = this.data.expedition;
       this.childData = this.data;
+      const plural = this.data.conceptAlias.endsWith('s') ? ' ' : 's';
       this.header = this.data.expedition.expeditionTitle.concat(
         ' ',
         this.data.conceptAlias,
-        's',
+        plural,
       );
     }
     this.prepareChildDetails(this.childData);
