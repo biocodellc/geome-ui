@@ -136,6 +136,7 @@ class CreateProjectController {
       .then(({ data }) => {
         data.config = new ProjectConfig(data.projectConfig);
         delete data.projectConfig;
+        data.license = 'CC0';
         return this.ProjectService.setCurrentProject(data);
       })
       .then(() =>

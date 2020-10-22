@@ -142,7 +142,10 @@
             ng-options="item for item in ['CC0','CC-by','BSD'] track by item"
           >
           </select>
-          <span class="help-block">Indicate a license for this data resource.</span>
+          <span class="help-block">
+            <p ng-if="!$ctrl.project.license">Indicate a license for this data resource.</p>
+            We recommend CC0 because it best supports the open data movement
+          </span>
         </div>
       </div>
 
