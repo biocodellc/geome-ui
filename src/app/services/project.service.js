@@ -76,11 +76,10 @@ class ProjectService extends EventEmitter {
         if (!project) {
           return this.stats(true)
             .then(({ data }) => data.find(p => p.projectId === projectId))
-            .then(discoverableProject => {
-              if (discoverableProject) {
-                Object.assign(discoverableProject, { limitedAccess: true });
-              }
-            });
+            .then(discoverableProject =>
+              Object.assign(discoverableProject, { limitedAccess: true }),
+            )
+            .catch(() => {});
         }
 
         return this.getConfig(project.projectId)
