@@ -22,11 +22,12 @@ const mapChildren = children =>
 let detailCache = {};
 let detailCacheNumCols;
 class RecordController {
-  constructor($mdMedia, ProjectService, $timeout) {
+  constructor($mdMedia, ProjectService, ExpeditionService, $timeout) {
     'ngInject';
 
     this.$mdMedia = $mdMedia;
     this.$timeout = $timeout;
+    this.ExpeditionService = ExpeditionService;
     this.ProjectService = ProjectService;
   }
 
@@ -49,6 +50,7 @@ class RecordController {
       this.record = this.record.record;
       this.fetchProject(projectId);
       if (this.record.entity === 'Event') this.prepareMap();
+      if (this.record.expeditionCode) this.getExpeditionId();
     }
   }
 
@@ -60,6 +62,15 @@ class RecordController {
       this.map.refreshSize();
       this.map.setZoom(2);
     }, 3000);
+  }
+
+  getExpeditionId() {
+    const { expeditionCode, projectId } = this.record;
+    this.ExpeditionService.getExpedition(projectId, expeditionCode).then(
+      ({ data }) => {
+        this.expeditionIdentifier = data.identifier;
+      },
+    );
   }
 
   getIdentifier(record) {
@@ -149,9 +160,7 @@ class RecordController {
       } else if (key === 'expeditionCode') {
         acc[key] = {
           text: flatRecord[key],
-          href: `/query?q=_projects_:${
-            this.project.projectId
-          } and _expeditions_:${flatRecord[key]}`,
+          href: `https://n2t.net/${this.expeditionIdentifier}`,
         };
       } else if (['img128', 'img512', 'img1024'].includes(key)) {
         acc[key] = {
