@@ -6,6 +6,10 @@ function getStates() {
         parent: 'projectView',
         url: '/template',
         component: 'fimsTemplates',
+        resolve: {
+          allProjects: /* @ngInject */ ProjectService =>
+            ProjectService.all(true),
+        },
       },
     },
   ];

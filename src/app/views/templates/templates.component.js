@@ -1,4 +1,5 @@
 import angular from 'angular';
+import { templateSettings } from 'lodash';
 
 const template = require('./templates.html');
 const definitionTemplate = require('./definition-dialog.html');
@@ -16,7 +17,6 @@ class TemplateController {
   }
 
   $onInit() {
-    this.loading = true;
     this.allTemplates = [];
     this.template = Object.assign({}, DEFAULT_TEMPLATE);
     this.templates = [Object.assign({}, DEFAULT_TEMPLATE)];
@@ -42,8 +42,51 @@ class TemplateController {
       this.description = this.currentProject.description;
       this.defAttribute = undefined;
       this.defWorksheet = undefined;
-      this.getTemplates();
+      this.makeArrayOfProjectsWithinCurrentTeam().then(data =>
+        this.getAllTemplates(data),
+      );
     }
+  }
+
+  async makeArrayOfProjectsWithinCurrentTeam() {
+    return this.allProjects.data.filter(
+      p =>
+        p.projectConfiguration.id ===
+        this.currentProject.projectConfiguration.id,
+    );
+  }
+
+  getAllTemplates(projectsArray) {
+    const promises = [];
+    projectsArray.forEach(p =>
+      promises.push(this.TemplateService.all(p.projectId)),
+    );
+
+    Promise.all(promises)
+      .then(results => {
+        this.allTemplates = results
+          .map(r => {
+            if (r.data.length > 0) return r.data;
+            return false;
+          })
+          .filter(Boolean)
+          .flat();
+      })
+      .catch(angular.catcher('Failed to load templates'))
+      .finally(() => {
+        this.filterTemplates();
+        this.templateChange();
+      });
+  }
+
+  // what we need to do is on buttom click delete, search for the correct project,
+  // then append that on to the url that is goign to be deletign the template
+
+  filterTemplates() {
+    this.templates = this.allTemplates.filter(
+      t => t.worksheet === this.worksheet,
+    );
+    this.templates.unshift(DEFAULT_TEMPLATE);
   }
 
   workbookSelectAll(value) {
@@ -145,7 +188,7 @@ class TemplateController {
       .then(() => {
         this.loading = true;
         return this.TemplateService.delete(
-          this.currentProject.projectId,
+          this.template.project.projectId,
           this.template.name,
         );
       })
@@ -246,26 +289,6 @@ class TemplateController {
       });
   }
 
-  filterTemplates() {
-    this.templates = this.allTemplates.filter(
-      t => t.worksheet === this.worksheet,
-    );
-    this.templates.unshift(DEFAULT_TEMPLATE);
-  }
-
-  getTemplates() {
-    this.TemplateService.all(this.currentProject.projectId)
-      .then(response => {
-        this.allTemplates = response.data;
-        this.filterTemplates();
-        this.templateChange();
-      })
-      .catch(angular.catcher('Failed to load templates'))
-      .then(() => {
-        this.loading = false;
-      });
-  }
-
   populateAttributesCache() {
     this.attributes = this.projectConfig.entities.reduce(
       (accumulator, entity) => {
@@ -361,5 +384,6 @@ export default {
   bindings: {
     currentUser: '<',
     currentProject: '<',
+    allProjects: '<',
   },
 };
