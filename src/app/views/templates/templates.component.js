@@ -1,5 +1,4 @@
 import angular from 'angular';
-import { templateSettings } from 'lodash';
 
 const template = require('./templates.html');
 const definitionTemplate = require('./definition-dialog.html');
@@ -57,19 +56,16 @@ class TemplateController {
   }
 
   getAllTemplates(projectsArray) {
-    const promises = [];
+    const APICalls = [];
     projectsArray.forEach(p =>
-      promises.push(this.TemplateService.all(p.projectId)),
+      APICalls.push(this.TemplateService.all(p.projectId)),
     );
 
-    Promise.all(promises)
+    Promise.all(APICalls)
       .then(results => {
         this.allTemplates = results
-          .map(r => {
-            if (r.data.length > 0) return r.data;
-            return false;
-          })
-          .filter(Boolean)
+          .filter(r => r.data.length > 0)
+          .map(r => r.data)
           .flat();
       })
       .catch(angular.catcher('Failed to load templates'))
@@ -78,9 +74,6 @@ class TemplateController {
         this.templateChange();
       });
   }
-
-  // what we need to do is on buttom click delete, search for the correct project,
-  // then append that on to the url that is goign to be deletign the template
 
   filterTemplates() {
     this.templates = this.allTemplates.filter(
