@@ -16,7 +16,6 @@ class TemplateController {
   }
 
   $onInit() {
-    this.loading = true;
     this.allTemplates = [];
     this.template = Object.assign({}, DEFAULT_TEMPLATE);
     this.templates = [Object.assign({}, DEFAULT_TEMPLATE)];
@@ -42,8 +41,45 @@ class TemplateController {
       this.description = this.currentProject.description;
       this.defAttribute = undefined;
       this.defWorksheet = undefined;
-      this.getTemplates();
+      this.makeArrayOfProjectsWithinCurrentTeam().then(data =>
+        this.getAllTemplates(data),
+      );
     }
+  }
+
+  async makeArrayOfProjectsWithinCurrentTeam() {
+    return this.allProjects.data.filter(
+      p =>
+        p.projectConfiguration.id ===
+        this.currentProject.projectConfiguration.id,
+    );
+  }
+
+  getAllTemplates(projectsArray) {
+    const APICalls = [];
+    projectsArray.forEach(p =>
+      APICalls.push(this.TemplateService.all(p.projectId)),
+    );
+
+    Promise.all(APICalls)
+      .then(results => {
+        this.allTemplates = results
+          .filter(r => r.data.length > 0)
+          .map(r => r.data)
+          .flat();
+      })
+      .catch(angular.catcher('Failed to load templates'))
+      .finally(() => {
+        this.filterTemplates();
+        this.templateChange();
+      });
+  }
+
+  filterTemplates() {
+    this.templates = this.allTemplates.filter(
+      t => t.worksheet === this.worksheet,
+    );
+    this.templates.unshift(DEFAULT_TEMPLATE);
   }
 
   workbookSelectAll(value) {
@@ -145,7 +181,7 @@ class TemplateController {
       .then(() => {
         this.loading = true;
         return this.TemplateService.delete(
-          this.currentProject.projectId,
+          this.template.project.projectId,
           this.template.name,
         );
       })
@@ -246,26 +282,6 @@ class TemplateController {
       });
   }
 
-  filterTemplates() {
-    this.templates = this.allTemplates.filter(
-      t => t.worksheet === this.worksheet,
-    );
-    this.templates.unshift(DEFAULT_TEMPLATE);
-  }
-
-  getTemplates() {
-    this.TemplateService.all(this.currentProject.projectId)
-      .then(response => {
-        this.allTemplates = response.data;
-        this.filterTemplates();
-        this.templateChange();
-      })
-      .catch(angular.catcher('Failed to load templates'))
-      .then(() => {
-        this.loading = false;
-      });
-  }
-
   populateAttributesCache() {
     this.attributes = this.projectConfig.entities.reduce(
       (accumulator, entity) => {
@@ -361,5 +377,6 @@ export default {
   bindings: {
     currentUser: '<',
     currentProject: '<',
+    allProjects: '<',
   },
 };
