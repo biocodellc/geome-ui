@@ -72,6 +72,11 @@ class TemplateController {
       })
       .catch(angular.catcher('Failed to load templates'))
       .finally(() => {
+        // AngularJS does not watch Promise.all, need to $apply manually
+        // future updates: can replace Promise.all with $q?
+        this.$scope.$apply(() => {
+          this.loadingTemplates = false;
+        });
         this.filterTemplates();
         this.templateChange();
       });
