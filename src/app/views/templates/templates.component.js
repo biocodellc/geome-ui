@@ -6,9 +6,10 @@ const definitionTemplate = require('./definition-dialog.html');
 const DEFAULT_TEMPLATE = { name: 'DEFAULT' };
 
 class TemplateController {
-  constructor($state, $mdDialog, TemplateService, $mdMedia) {
+  constructor($scope, $state, $mdDialog, TemplateService, $mdMedia) {
     'ngInject';
 
+    this.$scope = $scope;
     this.TemplateService = TemplateService;
     this.$state = $state;
     this.$mdDialog = $mdDialog;
@@ -33,6 +34,7 @@ class TemplateController {
       'currentProject' in changesObj &&
       changesObj.currentProject.previousValue !== this.currentProject
     ) {
+      this.loadingTemplates = true;
       this.projectConfig = this.currentProject.config;
       this.attributes = {};
       this.selected = {};
@@ -70,6 +72,11 @@ class TemplateController {
       })
       .catch(angular.catcher('Failed to load templates'))
       .finally(() => {
+        // AngularJS does not watch Promise.all, need to $apply manually
+        // future updates: can replace Promise.all with $q?
+        this.$scope.$apply(() => {
+          this.loadingTemplates = false;
+        });
         this.filterTemplates();
         this.templateChange();
       });
