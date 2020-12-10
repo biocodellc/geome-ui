@@ -17,14 +17,21 @@
         </select>
       </div>
     </div>
-
     <div class="form-group" ng-if="$ctrl.worksheet !== 'Workbook'">
       <label class="control-label col-sm-3">Template Config:</label>
       <div class="col-sm-4">
         <div class="input-group col-sm-12">
+          <div
+            layout="row"
+            class="loading-overlay"
+            ng-show="$ctrl.loadingTemplates"
+            layout-align="center center"
+          >
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+          </div>
           <select
             class="form-control"
-            ng-disabled="$ctrl.templates.length <= 1"
+            ng-disabled="$ctrl.loadingTemplates"
             ng-model="$ctrl.template"
             ng-options="t as t.name for t in $ctrl.templates track by t.name"
             ng-change="$ctrl.templateChange()"
