@@ -18,6 +18,10 @@ class RecordService {
       ...httpOpts,
       method: 'GET',
       url: `${restRoot}${path}${identifier}?includeParent&includeChildren`,
+      headers: {
+        Link:
+          '<https://api.geome-db.org/records/ark:/21547/lF2113?includeParent&includeChildren>; rel="alternate"; type="application/json"',
+      },
     });
   }
 
