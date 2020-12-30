@@ -18,9 +18,6 @@ class RecordService {
       ...httpOpts,
       method: 'GET',
       url: `${restRoot}${path}${identifier}?includeParent&includeChildren`,
-      headers: {
-        Link: `<${restRoot}${path}${identifier}?includeParent&includeChildren>; rel="alternate"; type="application/json"`,
-      },
     });
   }
 
