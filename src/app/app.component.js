@@ -34,7 +34,7 @@ class AppCtrl {
     this.ProjectService.on(PROJECT_CHANGED_EVENT, (p, ignoreReload) => {
       this.currentProject = p;
       this.setUserIsMember();
-      setProject(p ? p.projectId : undefined);
+      if (p) setProject(p.projectId);
       if (
         !ignoreReload &&
         !this.preventReload &&
