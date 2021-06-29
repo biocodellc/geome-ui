@@ -8,7 +8,6 @@
   <a class="brand" ui-sref="home">
     <img src="img/geome-logo.png" alt="geome-db" />
   </a>
-
   <div flex ng-show="!$ctrl.projectView && !$ctrl.showCreateProject"></div>
   <div flex layout="row" layout-align="center">
     <project-selector
@@ -124,9 +123,9 @@
     </md-button>
     <md-menu-content width="4" class="md-menu-bar-menu md-dense">
       <md-menu-item>
-        <md-button ng-href="/docs/helpDocumentation.pdf" target="_blank">
+        <md-button ng-href="https://docs.google.com/document/d/1j94NWlrcwu85xGaRda98SSTpRFgRg_RcrYG4Qs5CB1w/edit?usp=sharing" target="_blank">
           <md-icon md-font-icon="fa fa-question fa-fw"></md-icon>
-          User Help
+          User Guide
         </md-button>
       </md-menu-item>
       <md-menu-item>
@@ -141,13 +140,13 @@
       <md-menu-item>
         <md-button ng-href="https://fims.readthedocs.org/en/latest/">
           <md-icon md-font-icon="fa fa-question fa-fw"></md-icon>
-          Developer Documentation
+         Technical Documentation
         </md-button>
       </md-menu-item>
       <md-menu-item>
         <md-button ng-href="{{ $ctrl.restRoot }}/apidocs" target="_blank">
           <md-icon md-font-icon="fa fa-code fa-fw"></md-icon>
-          Api Docs
+          Application Programming Interface
         </md-button>
       </md-menu-item>
 
