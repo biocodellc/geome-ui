@@ -233,40 +233,15 @@
     <li class="list-unstyled big">
       <strong>Instructions:</strong>
     </li>
-    <li>GEOME will accept single and paired end read data</li>
-    <li>Each fastq file should contain reads from a single individual</li>
+    <li>Instructions for loading FASTQ Filenmames to GEOME are contained in the 
+    <a href="https://docs.google.com/document/d/1j94NWlrcwu85xGaRda98SSTpRFgRg_RcrYG4Qs5CB1w/edit#heading=h.3dy6vkm" target=_blank>GEOME User Guide</a>
     <li>
-      Names of fastq files must start with the materialsampleIDs in the metadata file. If you would
-      like to include additional information in the filename, you can do so by placing a "-" after
-      the materialSampleID and then including any additional text. 
-      <b>Single End</b> filenames include: sample1.fq.gz, sample1-run1.fq.gz. 
-      <b>Paired End</b> filenames must have either a 1||2 or F||R immediately preceeding the
-      *.fastq.gz or *.fq.gz names, and filenames include:
+      Filenames listed in the FASTQ filenames file must start with the tissueID column value 
+      in your Sample metadata file.  For example, given a tissueID value of 'sample1': 
+      <b>Single End</b> filename values will be sample1.fastq.gz or sample1.fq.gz, and 
+      <b>Paired End</b> filenames must have either a (-1 or -2) or (-F or -R) immediately preceding the
+      *.fastq.gz or *.fq.gz names, and valid values will be
       sample1-1.fq.gz, sample1-2.fq.gz OR sample1-F.fastq.gz, sample1-R.fastq.gz 
-    </li>
-    <li>
-      The actual fastq sequence files will not be uploaded here and stored on the GEOME system.
-      Instead the metadata file will be uploaded and stored here.
-    </li>
-    <li>
-      For validation purposes a text file of the fastq file names (one name per line and including
-      the file extension) will be uploaded here. If you are uploading PE data there should be two
-      file names per sample. This process ensures that required fields are complete, that each
-      materialsampleID is unique, and that the materialsampleIDs match the fastq file names.
-    </li>
-    <li>
-      Once uploading is complete the GEOME system will produce two files (SRA metadata and BioSample
-      attributes files) that will ease the upload process to NCBI’s Sequence Read Archive (SRA).
-      When these files are downloaded a set of simple instructions are included that will speed your
-      SRA submission.
-    </li>
-    <li>
-     For users who have are NOT part of the DIPNet team, and you get an invalid Parent Identifier 
-     error, see the helpDocumentation (under gear icon in upper right) for tips.
-    </li>
-    <li>
-    If you get an error when uploading your FASTQ filenames, you may need to convert your FASTQ 
-    filename to ASCII see https://github.com/biocodellc/geome-db/issues/41 for a resolution.
     </li>
 
   </ul>
