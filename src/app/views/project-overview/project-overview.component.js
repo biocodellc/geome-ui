@@ -1,5 +1,11 @@
 /* eslint-disable array-callback-return */
 import QueryParams from '../query/QueryParams';
+/*
+TODO: fetch these variables from configuration
+import config from '../../utils/config';
+const { localContextsAPIRoot} = config;
+const { localContextsProjectRoot } = config;
+*/
 
 const template = require('./project-overview.html');
 
