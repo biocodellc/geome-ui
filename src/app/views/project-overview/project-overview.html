@@ -81,6 +81,10 @@
       <div class="col-sm-4 col-md-3 col-lg-2"><strong>Citation</strong></div>
       <div class="col-sm-8 col-md-9 col-lg-10">{{ $ctrl.currentProject.recommendedCitation}}</div>
     </div>
+    <div class="row" ng-if="$ctrl.currentProject.localcontextsId">
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Local Contects ID</strong></div>
+      <div class="col-sm-8 col-md-9 col-lg-10">{{ $ctrl.currentProject.localcontextsId}}</div>
+    </div>
     <div class="row" ng-if="$ctrl.currentProject.license">
       <div class="col-sm-4 col-md-3 col-lg-2"><strong>License</strong></div>
       <div class="col-sm-8 col-md-9 col-lg-10">{{ $ctrl.currentProject.license}}</div>
