@@ -63,6 +63,7 @@
           </md-popover>
           <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
         </md-button>
+      <br>It is highly reccomended to first run the "Only validate data" option (above) and fix errors,  before replacing expedition data.
       </label>
     </div>
   </div>
@@ -74,7 +75,7 @@ help templates
 
 <script type="text/ng-template" id="reload-help.popover.html">
   <div>
-      <p ng-if="$ctrl.worksheet === 'Workbook'">For each data worksheet found in this workbook. All existing data will be removed and replaced with the data in the workbook. Data worksheets not found in this workbook will not be removed.</p>
+      <p ng-if="$ctrl.worksheet === 'Workbook'">For each data worksheet found in this workbook. All existing data will be removed and replaced with the data in the workbook. Data worksheets not found in this workbook will not be removed.  It is highly reccomended to first run the "Only validate data" option (above) and fix errors, before replacing expedition data.</p>
       <p ng-if="$ctrl.worksheet !== 'Workbook'">All existing {{$ctrl.worksheet.replace(' Worksheet', '')}} data will be removed and replaced with the data in this worksheet</p>
   </div>
 </script>
