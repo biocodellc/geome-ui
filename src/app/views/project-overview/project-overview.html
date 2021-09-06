@@ -28,6 +28,13 @@
             {{ $ctrl.templateUrl }}?projectId={{ $ctrl.currentProject.projectId }}</a
           >
         </span>
+        <br />
+        <span ng-hide="$ctrl.currentProject.limitedAccess">
+          Team Direct Link:
+          <a href="{{ $ctrl.teamUrl }}?projectId={{ $ctrl.currentProject.projectId }}">
+            {{ $ctrl.teamUrl}}?projectId={{ $ctrl.currentProject.projectId }}</a
+          >
+        </span>
       </div>
     </div>
 

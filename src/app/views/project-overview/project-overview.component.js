@@ -31,6 +31,7 @@ class ProjectOverviewController {
   $onInit() {
     this.url = this.$location.absUrl().split('?')[0];
     this.templateUrl = this.url.replace('project-overview', 'template');
+    this.teamUrl= this.url.replace('project-overview', 'team-overview');
     this.loading = true;
     this.totalItems = null;
     this.itemsPerPage = 100;
