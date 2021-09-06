@@ -29,6 +29,9 @@
           >
         </span>
         <br />
+	<!-- TODO: come up with a way to land on team-page using the team identifier.  Here
+	we just use the current projectId to land on the team-overview page, which works
+	only when the project referenced is discoverable or public, not private -->
         <span ng-hide="$ctrl.currentProject.limitedAccess">
           Team Direct Link:
           <a href="{{ $ctrl.teamUrl }}?projectId={{ $ctrl.currentProject.projectId }}">
