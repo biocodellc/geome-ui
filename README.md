@@ -25,6 +25,10 @@ $ npm install
 
 # start the server
 $ npm start
+
+# Running under Apple M1 / Silicone chip
+This may require installing Rosetta for getting node libraries to work, see, for example:
+https://cutecoder.org/software/run-command-line-apple-silicon/
 ```
 
 go to [http://localhost:3000](http://localhost:3000) in your browser.
@@ -55,6 +59,7 @@ What you need to run this app:
 * `npm install` to install all dependencies
 
 *NOTE:* If `npm install` hangs on node-gyp rebuild, try running `npm --unsafe-perm install node-sass` and then retrying `npm install`
+*NOTE:* on Mac M1 you may need to limit max_worker_processes to 1 in postgres configuration. see https://twitter.com/searls/status/1351572379370217475
 
 See this [github guide](https://help.github.com/articles/fork-a-repo/#step-3-configure-git-to-sync-your-fork-with-the-original-spoon-knife-repository) for how to keep your fork synced with this repo.
 

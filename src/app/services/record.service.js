@@ -24,7 +24,7 @@ class RecordService {
   delete(identifier) {
     return this.$http({
       method: 'DELETE',
-      url: `${restRoot}records/${identifier}`,
+      url: `${restRoot}records/delete/${identifier}`,
     });
   }
 }
