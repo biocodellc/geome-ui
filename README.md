@@ -26,6 +26,8 @@ $ npm install
 # start the server
 $ npm start
 
+#NOTE: if you are not able to install or start using npm, you may need to try an older version of node, installable using nvm and set for example to version 12
+
 # Running under Apple M1 / Silicone chip
 This may require installing Rosetta for getting node libraries to work, see, for example:
 https://cutecoder.org/software/run-command-line-apple-silicon/
