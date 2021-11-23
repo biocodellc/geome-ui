@@ -167,11 +167,23 @@ class RecordController {
           text: `${key.substring(3)} pixel wide image`,
           href: flatRecord[key],
         };
-      } else if (key.match(/CatalogNumber/i)) {
+      } else if (key === 'voucherURI') {
         acc[key] = {
           text: flatRecord[key],
           href: flatRecord[key],
         };
+      } else if (key === 'wormsID') {
+        acc[key] = {
+          text: flatRecord[key],
+          href: 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=' + flatRecord[key].replace('urn:lsid:marinespecies.org:taxname:',''),          
+        };
+      } else if (key.match(/CatalogNumber/i)) {
+        if (flatRecord[key].match(/http/i)) {
+          acc[key] = {
+            text: flatRecord[key],
+            href: flatRecord[key],
+          };
+        }      
       } else {
         acc[key] = flatRecord[key];
       }
