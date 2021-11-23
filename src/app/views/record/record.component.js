@@ -167,7 +167,7 @@ class RecordController {
           text: `${key.substring(3)} pixel wide image`,
           href: flatRecord[key],
         };
-      } else if (key === 'voucherURI') {
+      } else if (key.match(/URI/i)) {
         acc[key] = {
           text: flatRecord[key],
           href: flatRecord[key],
