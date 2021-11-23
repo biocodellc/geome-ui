@@ -60,7 +60,7 @@ What you need to run this app:
 * `clone` your fork
 * `npm install` to install all dependencies
 
-*NOTE:* If `npm install` hangs on node-gyp rebuild, try running `npm --unsafe-perm install node-sass` and then retrying `npm install`
+*NOTE:* If `npm install` hangs on node-gyp rebuild, try running `npm rebuild node-sass` and then retrying `npm install`
 *NOTE:* on Mac M1 you may need to limit max_worker_processes to 1 in postgres configuration. see https://twitter.com/searls/status/1351572379370217475
 
 See this [github guide](https://help.github.com/articles/fork-a-repo/#step-3-configure-git-to-sync-your-fork-with-the-original-spoon-knife-repository) for how to keep your fork synced with this repo.
