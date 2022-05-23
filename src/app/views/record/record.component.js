@@ -301,7 +301,7 @@ class RecordController {
 
 export default {
   template,
-  controller: RecordController,
+  controller: RecordController, 
   bindings: {
     layout: '@',
     record: '<',
