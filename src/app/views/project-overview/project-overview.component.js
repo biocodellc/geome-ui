@@ -1,5 +1,11 @@
 /* eslint-disable array-callback-return */
 import QueryParams from '../query/QueryParams';
+/*
+TODO: fetch these variables from configuration
+import config from '../../utils/config';
+const { localContextsAPIRoot} = config;
+const { localContextsProjectRoot } = config;
+*/
 
 const template = require('./project-overview.html');
 
@@ -25,6 +31,7 @@ class ProjectOverviewController {
   $onInit() {
     this.url = this.$location.absUrl().split('?')[0];
     this.templateUrl = this.url.replace('project-overview', 'template');
+    this.teamUrl= this.url.replace('project-overview', 'team-overview');
     this.loading = true;
     this.totalItems = null;
     this.itemsPerPage = 100;

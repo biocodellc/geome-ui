@@ -3,6 +3,7 @@ const template = require('./team-overview.html');
 class TeamOverviewController {
   constructor(
     $state,
+    $location,
     ProjectService,
     ProjectConfigurationService,
     NetworkConfigurationService,
@@ -11,6 +12,7 @@ class TeamOverviewController {
     'ngInject';
 
     this.$state = $state;
+    this.$location = $location;
     this.ProjectService = ProjectService;
     this.ProjectConfigurationService = ProjectConfigurationService;
     this.NetworkConfigurationService = NetworkConfigurationService;
@@ -18,6 +20,11 @@ class TeamOverviewController {
   }
 
   $onInit() {
+    this.url =  this.$location.absUrl().split('?')[0];
+    this.teamUrl = this.url + "?teamId=" + this.currentProject.projectConfiguration.id;
+    this.administrator = this.currentProject.projectConfiguration.user.username;
+    this.contact = this.currentProject.projectConfiguration.user.email;
+
     if (this.currentProject.limitedAccess) return;
     this.loading = true;
     this.config = this.currentProject.config;
@@ -26,7 +33,7 @@ class TeamOverviewController {
     );
     this.configuration = this.currentProject.projectConfiguration;
     this.textTruncated = true;
-    this.getTeamDetails();
+    //this.getTeamDetails();
     this.getProjectStats();
   }
 
@@ -38,6 +45,7 @@ class TeamOverviewController {
       this.$state.go('project-overview');
   }
 
+  /*
   getTeamDetails() {
     this.teamDetails = {
       'Team Administrator': this.currentProject.projectConfiguration.user
@@ -49,6 +57,7 @@ class TeamOverviewController {
       Documentation: undefined,
     };
   }
+    */
 
   getProjectStats() {
     this.ProjectService.stats(true)

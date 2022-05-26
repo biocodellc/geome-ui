@@ -28,6 +28,16 @@
             {{ $ctrl.templateUrl }}?projectId={{ $ctrl.currentProject.projectId }}</a
           >
         </span>
+        <br />
+	<!-- TODO: come up with a way to land on team-page using the team identifier.  Here
+	we just use the current projectId to land on the team-overview page, which works
+	only when the project referenced is discoverable or public, not private -->
+        <span ng-hide="$ctrl.currentProject.limitedAccess">
+          Team Direct Link:
+          <a href="{{ $ctrl.teamUrl }}?projectId={{ $ctrl.currentProject.projectId }}">
+            {{ $ctrl.teamUrl}}?projectId={{ $ctrl.currentProject.projectId }}</a
+          >
+        </span>
       </div>
     </div>
 
@@ -80,6 +90,11 @@
     <div class="row" ng-if="$ctrl.currentProject.recommendedCitation">
       <div class="col-sm-4 col-md-3 col-lg-2"><strong>Citation</strong></div>
       <div class="col-sm-8 col-md-9 col-lg-10">{{ $ctrl.currentProject.recommendedCitation}}</div>
+    </div>
+    <div class="row" ng-if="$ctrl.currentProject.localcontextsId">
+      <div class="col-sm-4 col-md-3 col-lg-2"><strong>Local Contexts Page</strong></div>
+      <!--TODO: fetch the projectLink from local.js config directrory -->
+      <div class="col-sm-8 col-md-9 col-lg-10"><a href="https://localcontextshub.org/projects/{{$ctrl.currentProject.localcontextsId}}" target="_blank">https://localcontextshub.org/projects/{{$ctrl.currentProject.localcontextsId}}</a></div>
     </div>
     <div class="row" ng-if="$ctrl.currentProject.license">
       <div class="col-sm-4 col-md-3 col-lg-2"><strong>License</strong></div>
