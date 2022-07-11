@@ -13,6 +13,8 @@ Frontend code for [https://geome-db.org](https://geome-db.org).
 
 ### Quick start
 
+ 
+
 ```bash
 # clone our repo
 $ git clone https://github.com/biocodellc/geome-ui.git my-app
@@ -26,11 +28,17 @@ $ npm install
 # start the server
 $ npm start
 
-#NOTE: if you are not able to install or start using npm, you may need to try an older version of node, installable using nvm and set for example to version 12, for example `nvm use 12`
-
-# Running under Apple M1 / Silicone chip
-This may require installing Rosetta for getting node libraries to work, see, for example:
-https://cutecoder.org/software/run-command-line-apple-silicon/
+```
+NOTE: Some npm dependencies work best under node version 12, if you have troubles, then do the following:
+```
+rm -fr node_modules
+brew unlink node
+brew install node@12
+brew link node@12
+npm install
+npm uninstall node-sass
+npm i node-sass
+npm start
 ```
 
 go to [http://localhost:3000](http://localhost:3000) in your browser.
