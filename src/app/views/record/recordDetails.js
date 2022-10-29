@@ -171,6 +171,10 @@ export const mainRecordDetails = {
       text: t.bcid,
       href: `https://n2t.net/${t.bcid}`,
     }),
+    biosampleAccession: m => ({
+      text: m.biosampleAccession? '$m.biosampleAccession' : undefined,
+      href: `https://www.ncbi.nlm.nih.gov/biosample/?term=${m.biosampleAccession}/`,
+    }),
   },
   fastaSequence: {
     marker: getKey('marker'),
