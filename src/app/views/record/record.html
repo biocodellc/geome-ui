@@ -77,6 +77,7 @@
 
     <md-card ng-if="$ctrl.project.localcontextsId" flex layout-padding>
       <div id=localContextsLabels style="max-height:300px; overflow:scroll">
+        <i>{{$ctrl.getLocalContextsDetails()['title']}}</i>
         <div style='display:block;height:75px;overflow:scroll;'
                      ng-repeat="(key, value) in $ctrl.getLocalContextsDetails()['notice']">
                   <img
