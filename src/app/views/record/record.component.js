@@ -21,14 +21,18 @@ const mapChildren = children =>
 
 let detailCache = {};
 let detailCacheNumCols;
-class RecordController {
-  constructor($mdMedia, ProjectService, ExpeditionService, $timeout) {
-    'ngInject';
+let localContextsData;
 
+class RecordController {
+  constructor($mdMedia, ProjectService, ExpeditionService, $timeout, $http, $mdDialog) {
+    'ngInject';
+    this.$mdDialog = $mdDialog;
+    this.$http = $http;
     this.$mdMedia = $mdMedia;
     this.$timeout = $timeout;
     this.ExpeditionService = ExpeditionService;
     this.ProjectService = ProjectService;
+
   }
 
   $onChanges(changesObj) {
@@ -46,11 +50,13 @@ class RecordController {
       this.setChildDetails(this.record.children);
       this.parent = this.record.parent;
       this.children = this.record.children;
-      const { projectId } = this.record;
+      const {projectId} = this.record;
       this.record = this.record.record;
       this.fetchProject(projectId);
       if (this.record.entity === 'Event') this.prepareMap();
       if (this.record.expeditionCode) this.getExpeditionId();
+      this.prepareLocalContexts(projectId);
+
     }
   }
 
@@ -65,9 +71,9 @@ class RecordController {
   }
 
   getExpeditionId() {
-    const { expeditionCode, projectId } = this.record;
+    const {expeditionCode, projectId} = this.record;
     this.ExpeditionService.getExpedition(projectId, expeditionCode).then(
-      ({ data }) => {
+      ({data}) => {
         this.expeditionIdentifier = data.identifier;
       },
     );
@@ -89,7 +95,7 @@ class RecordController {
 
     detailCache.main = Object.keys(detailMap).reduce(
       (accumulator, key) =>
-        Object.assign(accumulator, { [key]: detailMap[key](this.record) }),
+        Object.assign(accumulator, {[key]: detailMap[key](this.record)}),
       {},
     );
     return detailCache.main;
@@ -175,7 +181,7 @@ class RecordController {
       } else if (key === 'wormsID') {
         acc[key] = {
           text: flatRecord[key],
-          href: 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=' + flatRecord[key].replace('urn:lsid:marinespecies.org:taxname:',''),          
+          href: 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=' + flatRecord[key].replace('urn:lsid:marinespecies.org:taxname:', ''),
         };
       } else if (key.match(/CatalogNumber/i)) {
         if (flatRecord[key].match(/http/i)) {
@@ -183,7 +189,7 @@ class RecordController {
             text: flatRecord[key],
             href: flatRecord[key],
           };
-        }      
+        }
       } else {
         acc[key] = flatRecord[key];
       }
@@ -231,10 +237,47 @@ class RecordController {
     const detailMap = parentRecordDetails[parent.entity];
     this.parentDetail = Object.keys(detailMap).reduce(
       (accumulator, key) =>
-        Object.assign(accumulator, { [key]: detailMap[key](parent) }),
+        Object.assign(accumulator, {[key]: detailMap[key](parent)}),
       {},
     );
   }
+
+  /* concatenate bc and tk labels in response */
+  getLocalContextsDetails() {
+    var bc_labels = localContextsData['bc_labels']
+    var tk_labels = localContextsData['tk_labels']
+    return bc_labels.concat(tk_labels);
+  }
+
+  /* fetch local contexts details at the construction, only populate data if localcontexts project is set */
+  prepareLocalContexts(projectId) {
+    var lcUrl = '//localcontextshub.org/api/v1/projects/' + projectId + '/?format=json';
+    //var lcUrl = 'localcontexts.json';
+    localContextsData = '';
+    this.loading = true;
+    this.ProjectService.get(projectId)
+      .then(project => {
+        if (project.localcontextsId) {
+          this.$http.get(lcUrl)
+            .then(function (result) {
+              localContextsData = result.data;
+            });
+        }
+      });
+  }
+
+  /* show local contexts labels in dialog on center of screen */
+  showLabelMessage(title, label) {
+      this.$mdDialog.show(
+        this.$mdDialog
+          .alert()
+          .clickOutsideToClose(true)
+          .title(title)
+          .htmlContent( label  )
+          .ariaLabel(title)
+          .ok('Close'),
+      );
+    }
 
   setChildDetails(children) {
     if (!children) return;
@@ -301,7 +344,7 @@ class RecordController {
 
 export default {
   template,
-  controller: RecordController, 
+  controller: RecordController,
   bindings: {
     layout: '@',
     record: '<',
