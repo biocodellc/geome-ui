@@ -244,13 +244,7 @@ class RecordController {
 
   /* concatenate bc and tk labels in response */
   getLocalContextsDetails() {
-    if (localContextsData) {
-      var bc_labels = localContextsData['bc_labels']
-      var tk_labels = localContextsData['tk_labels']
-      return bc_labels.concat(tk_labels);
-    } else {
-      return '{}';
-    }
+    return localContextsData;
   }
 
   /* fetch local contexts details at the construction, only populate data if localcontexts project is set */
