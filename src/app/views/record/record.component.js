@@ -251,13 +251,13 @@ class RecordController {
 
   /* fetch local contexts details at the construction, only populate data if localcontexts project is set */
   prepareLocalContexts(projectId) {
-    var lcUrl = '//localcontextshub.org/api/v1/projects/' + projectId + '/?format=json';
-    //var lcUrl = 'localcontexts.json';
     localContextsData = '';
     this.loading = true;
     this.ProjectService.get(projectId)
       .then(project => {
         if (project.localcontextsId) {
+          var lcUrl = '//localcontextshub.org/api/v1/projects/' + project.localcontextsId + '/?format=json';
+          //var lcUrl = 'localcontexts.json';    // for testing locally
           this.$http.get(lcUrl)
             .then(function (result) {
               localContextsData = result.data;
