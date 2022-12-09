@@ -77,7 +77,15 @@
 
     <md-card ng-if="$ctrl.project.localcontextsId" flex layout-padding>
       <div id=localContextsLabels style="max-height:300px; overflow:scroll">
-
+        <div style='display:block;height:75px;overflow:scroll;'
+                     ng-repeat="(key, value) in $ctrl.getLocalContextsDetails()['notice']">
+                  <img
+                    ng-click="$ctrl.showLabelMessage(value['name'],value['default_text'])"
+                    src="{{value['img_url']}}"
+                    height=70
+                    style="padding: 4px; max-height: 70px; float: left; ">
+                  <a href="{{$ctrl.getLocalContextsDetails()['project_page']}}" target="_blank">{{value['name']}}</a>
+                </div>
         <div style='display:block;height:75px;overflow:scroll;'
              ng-repeat="(key, value) in $ctrl.getLocalContextsDetails()['bc_labels']">
           <img
