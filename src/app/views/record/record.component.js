@@ -244,9 +244,13 @@ class RecordController {
 
   /* concatenate bc and tk labels in response */
   getLocalContextsDetails() {
-    var bc_labels = localContextsData['bc_labels']
-    var tk_labels = localContextsData['tk_labels']
-    return bc_labels.concat(tk_labels);
+    if (localContextsData) {
+      var bc_labels = localContextsData['bc_labels']
+      var tk_labels = localContextsData['tk_labels']
+      return bc_labels.concat(tk_labels);
+    } else {
+      return '{}';
+    }
   }
 
   /* fetch local contexts details at the construction, only populate data if localcontexts project is set */
@@ -256,28 +260,28 @@ class RecordController {
     this.ProjectService.get(projectId)
       .then(project => {
         if (project.localcontextsId) {
-          var lcUrl = '//localcontextshub.org/api/v1/projects/' + project.localcontextsId + '/?format=json';
+          var lcUrl = 'https://localcontextshub.org/api/v1/projects/' + project.localcontextsId + '/?format=json';
           //var lcUrl = 'localcontexts.json';    // for testing locally
-          this.$http.get(lcUrl)
-            .then(function (result) {
-              localContextsData = result.data;
-            });
+          var xmlHttp = new XMLHttpRequest();
+          xmlHttp.open("GET", lcUrl, false); // false for synchronous request
+          xmlHttp.send(null);
+          localContextsData = JSON.parse(xmlHttp.responseText)
         }
       });
   }
 
   /* show local contexts labels in dialog on center of screen */
   showLabelMessage(title, label) {
-      this.$mdDialog.show(
-        this.$mdDialog
-          .alert()
-          .clickOutsideToClose(true)
-          .title(title)
-          .htmlContent( label  )
-          .ariaLabel(title)
-          .ok('Close'),
-      );
-    }
+    this.$mdDialog.show(
+      this.$mdDialog
+        .alert()
+        .clickOutsideToClose(true)
+        .title(title)
+        .htmlContent(label)
+        .ariaLabel(title)
+        .ok('Close'),
+    );
+  }
 
   setChildDetails(children) {
     if (!children) return;
