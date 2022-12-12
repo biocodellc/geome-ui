@@ -75,9 +75,10 @@
       <fims-map class="record-map" map-instance="$ctrl.map"></fims-map>
     </md-card>
 
-    <md-card ng-if="$ctrl.project.localcontextsId" flex layout-padding>
+    <md-card ng-if="$ctrl.getLocalContextsPresent()" flex layout-padding>
       <div id=localContextsLabels style="max-height:300px; overflow:scroll">
-        <i>{{$ctrl.getLocalContextsDetails()['title']}}</i>
+        <div id="localContextsHeader"><i>Loading Local Contexts Data...</i></div>
+        <!--<i>{{$ctrl.getLocalContextsDetails()['title']}}</i>
         <div style='display:block;height:75px;overflow:scroll;'
                      ng-repeat="(key, value) in $ctrl.getLocalContextsDetails()['notice']">
                   <img
@@ -107,6 +108,7 @@
           <a href="{{$ctrl.getLocalContextsDetails()['project_page']}}" target="_blank">{{value['name']}}</a>
           <p><i>{{value['community']}}</i></p>
         </div>
+        -->
       </div>
     </md-card>
   </div>

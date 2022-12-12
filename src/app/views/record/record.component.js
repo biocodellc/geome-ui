@@ -21,18 +21,18 @@ const mapChildren = children =>
 
 let detailCache = {};
 let detailCacheNumCols;
-let localContextsData;
+let localContextsPresent;
 
 class RecordController {
-  constructor($mdMedia, ProjectService, ExpeditionService, $timeout, $http, $mdDialog) {
+  constructor( $scope, $mdMedia, ProjectService, ExpeditionService, $timeout, $http, $mdDialog) {
     'ngInject';
+    this.$scope = $scope;
     this.$mdDialog = $mdDialog;
     this.$http = $http;
     this.$mdMedia = $mdMedia;
     this.$timeout = $timeout;
     this.ExpeditionService = ExpeditionService;
     this.ProjectService = ProjectService;
-
   }
 
   $onChanges(changesObj) {
@@ -58,6 +58,7 @@ class RecordController {
       this.prepareLocalContexts(projectId);
 
     }
+    console.log("onchanges triggered")
   }
 
   prepareMap() {
@@ -243,38 +244,68 @@ class RecordController {
   }
 
   /* concatenate bc and tk labels in response */
-  getLocalContextsDetails() {
-    return localContextsData;
+  getLocalContextsPresent() {
+    return localContextsPresent;
   }
 
-  /* fetch local contexts details at the construction, only populate data if localcontexts project is set */
+  /* fetch local contexts details at the construction, only populate data if localcontexts project is set
+  * Note that we delve into jquery calls and here and call directly to DOM since the LC Hub API did not
+  * have proper CORS headers for angular $http calls, which were failing. The jquery XmlHttpRequest
+  * is maybe simpler
+  */
   prepareLocalContexts(projectId) {
-    localContextsData = '';
-    this.loading = true;
+    localContextsPresent = false;
     this.ProjectService.get(projectId)
       .then(project => {
         if (project.localcontextsId) {
+          localContextsPresent = true;
           var lcUrl = 'https://localcontextshub.org/api/v1/projects/' + project.localcontextsId + '/?format=json';
-          //var lcUrl = 'localcontexts.json';    // for testing locally
           var xmlHttp = new XMLHttpRequest();
-          xmlHttp.open("GET", lcUrl, false); // false for synchronous request
+          xmlHttp.open("GET", lcUrl, true); // false for synchronous request
+          xmlHttp.onreadystatechange = function (oEvent) {
+              if (xmlHttp.readyState === 4) {
+                  if (xmlHttp.status === 200) {
+                    var localContextsJson = JSON.parse(xmlHttp.responseText);
+                    var allLabels = []
+                        var height = 70
+                        for (var i = 0; i < localContextsJson.bc_labels.length; i++) {
+                          allLabels.push(localContextsJson.bc_labels[i]);
+                        }
+                        for (var i = 0; i < localContextsJson.tk_labels.length; i++) {
+                          allLabels.push(localContextsJson.tk_labels[i]);
+                        }
+
+                        for (var i = 0; i < allLabels.length; i++) {
+                          var obj = allLabels[i];
+
+                          var div = document.createElement('div');
+                          div.setAttribute("style", "padding: 5px;")
+
+                          var img = document.createElement('img');
+                          img.src = obj.img_url
+                          img.height = height
+                          img.setAttribute("style", "padding: 2px; max-height: 70px; float: left;")
+
+                          var spanner = document.createElement('div')
+                          spanner.setAttribute("style", "display:block;height:70px;overflow:scroll;")
+                          spanner.innerHTML = "<a target=_blank href='" + obj.project_page + "'>" + obj.name + "</a>"
+                          spanner.innerHTML += "<p>" + obj.label_text + "<p>";
+                          spanner.innerHTML += "<p><i>" + obj.community + "</i>"
+
+                          div.appendChild(img);
+                          div.appendChild(spanner);
+                          document.getElementById('localContextsLabels').appendChild(div);
+                        }
+                    document.getElementById("localContextsHeader").innerHTML = '<b><i>' + localContextsJson.title +"</i></b>";
+                  } else {
+                    document.getElementById("localContextsHeader").innerHTML='Error Loading Local Contexts Data...';
+                    console.log("Error", xmlHttp.statusText);
+                  }
+              }
+          };
           xmlHttp.send(null);
-          localContextsData = JSON.parse(xmlHttp.responseText)
         }
       });
-  }
-
-  /* show local contexts labels in dialog on center of screen */
-  showLabelMessage(title, label) {
-    this.$mdDialog.show(
-      this.$mdDialog
-        .alert()
-        .clickOutsideToClose(true)
-        .title(title)
-        .htmlContent(label)
-        .ariaLabel(title)
-        .ok('Close'),
-    );
   }
 
   setChildDetails(children) {
