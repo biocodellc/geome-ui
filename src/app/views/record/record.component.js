@@ -269,32 +269,28 @@ class RecordController {
 
                 var localContextsJson = JSON.parse(xmlHttp.responseText);
                 // Handle Notices
-                var allNotices = []
                 try {
                   for (var i = 0; i < localContextsJson.notice.length; i++) {
-                    allNotices.push(localContextsJson.notices[i]);
+                    var obj = localContextsJson.notice[i];
+                    var div = document.createElement('div');
+                    div.setAttribute("style", "padding: 5px;")
+
+                    var img = document.createElement('img');
+                    img.src = obj.img_url
+                    img.height = height
+                    img.setAttribute("style", "padding: 2px; max-height: 70px; float: left;")
+
+                    var spanner = document.createElement('div')
+                    spanner.setAttribute("style", "display:block;height:70px;overflow:scroll;")
+                    spanner.innerHTML = "<a target=_blank href='" + obj.project_page + "'>" + obj.name + "</a>"
+                    spanner.innerHTML += "<p>" + obj.default_text + "<p>";
+
+                    div.appendChild(img);
+                    div.appendChild(spanner);
+                    document.getElementById('localContextsLabels').appendChild(div);
                   }
                 } catch (e) {
-                }
-                for (var i = 0; i < allNotices.length; i++) {
-                  var obj = allNotices[i];
-
-                  var div = document.createElement('div');
-                  div.setAttribute("style", "padding: 5px;")
-
-                  var img = document.createElement('img');
-                  img.src = obj.img_url
-                  img.height = height
-                  img.setAttribute("style", "padding: 2px; max-height: 70px; float: left;")
-
-                  var spanner = document.createElement('div')
-                  spanner.setAttribute("style", "display:block;height:70px;overflow:scroll;")
-                  spanner.innerHTML = "<a target=_blank href='" + obj.project_page + "'>" + obj.name + "</a>"
-                  spanner.innerHTML += "<p>" + obj.default_text + "<p>";
-
-                  div.appendChild(img);
-                  div.appendChild(spanner);
-                  document.getElementById('localContextsLabels').appendChild(div);
+                  console.log(e);
                 }
                 // Handle Labels
                 var allLabels = []
