@@ -21,10 +21,14 @@ const mapChildren = children =>
 
 let detailCache = {};
 let detailCacheNumCols;
-class RecordController {
-  constructor($mdMedia, ProjectService, ExpeditionService, $timeout) {
-    'ngInject';
+let localContextsPresent;
 
+class RecordController {
+  constructor($scope, $mdMedia, ProjectService, ExpeditionService, $timeout, $http, $mdDialog) {
+    'ngInject';
+    this.$scope = $scope;
+    this.$mdDialog = $mdDialog;
+    this.$http = $http;
     this.$mdMedia = $mdMedia;
     this.$timeout = $timeout;
     this.ExpeditionService = ExpeditionService;
@@ -46,12 +50,15 @@ class RecordController {
       this.setChildDetails(this.record.children);
       this.parent = this.record.parent;
       this.children = this.record.children;
-      const { projectId } = this.record;
+      const {projectId} = this.record;
       this.record = this.record.record;
       this.fetchProject(projectId);
       if (this.record.entity === 'Event') this.prepareMap();
       if (this.record.expeditionCode) this.getExpeditionId();
+      this.prepareLocalContexts(projectId);
+
     }
+    console.log("onchanges triggered")
   }
 
   prepareMap() {
@@ -65,9 +72,9 @@ class RecordController {
   }
 
   getExpeditionId() {
-    const { expeditionCode, projectId } = this.record;
+    const {expeditionCode, projectId} = this.record;
     this.ExpeditionService.getExpedition(projectId, expeditionCode).then(
-      ({ data }) => {
+      ({data}) => {
         this.expeditionIdentifier = data.identifier;
       },
     );
@@ -89,7 +96,7 @@ class RecordController {
 
     detailCache.main = Object.keys(detailMap).reduce(
       (accumulator, key) =>
-        Object.assign(accumulator, { [key]: detailMap[key](this.record) }),
+        Object.assign(accumulator, {[key]: detailMap[key](this.record)}),
       {},
     );
     return detailCache.main;
@@ -175,7 +182,7 @@ class RecordController {
       } else if (key === 'wormsID') {
         acc[key] = {
           text: flatRecord[key],
-          href: 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=' + flatRecord[key].replace('urn:lsid:marinespecies.org:taxname:',''),          
+          href: 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=' + flatRecord[key].replace('urn:lsid:marinespecies.org:taxname:', ''),
         };
       } else if (key.match(/CatalogNumber/i)) {
         if (flatRecord[key].match(/http/i)) {
@@ -183,7 +190,7 @@ class RecordController {
             text: flatRecord[key],
             href: flatRecord[key],
           };
-        }      
+        }
       } else {
         acc[key] = flatRecord[key];
       }
@@ -231,9 +238,106 @@ class RecordController {
     const detailMap = parentRecordDetails[parent.entity];
     this.parentDetail = Object.keys(detailMap).reduce(
       (accumulator, key) =>
-        Object.assign(accumulator, { [key]: detailMap[key](parent) }),
+        Object.assign(accumulator, {[key]: detailMap[key](parent)}),
       {},
     );
+  }
+
+  /* concatenate bc and tk labels in response */
+  getLocalContextsPresent() {
+    return localContextsPresent;
+  }
+
+  /* fetch local contexts details at the construction, only populate data if localcontexts project is set
+  * Note that we delve into jquery calls and here and call directly to DOM since the LC Hub API did not
+  * have proper CORS headers for angular $http calls, which were failing. The jquery XmlHttpRequest
+  * is maybe simpler
+  */
+  prepareLocalContexts(projectId) {
+    localContextsPresent = false;
+    this.ProjectService.get(projectId)
+      .then(project => {
+        if (project.localcontextsId) {
+          localContextsPresent = true;
+          var lcUrl = 'https://localcontextshub.org/api/v1/projects/' + project.localcontextsId + '/?format=json';
+          var xmlHttp = new XMLHttpRequest();
+          xmlHttp.open("GET", lcUrl, true); // false for synchronous request
+          xmlHttp.onreadystatechange = function (oEvent) {
+            if (xmlHttp.readyState === 4) {
+              if (xmlHttp.status === 200) {
+                var height = 70
+
+                var localContextsJson = JSON.parse(xmlHttp.responseText);
+                // Handle Notices
+                try {
+                  for (var i = 0; i < localContextsJson.notice.length; i++) {
+                    var obj = localContextsJson.notice[i];
+                    var div = document.createElement('div');
+                    div.setAttribute("style", "padding: 5px;")
+
+                    var img = document.createElement('img');
+                    img.src = obj.img_url
+                    img.height = height
+                    img.setAttribute("style", "padding: 2px; max-height: 70px; float: left;")
+
+                    var spanner = document.createElement('div')
+                    spanner.setAttribute("style", "display:block;height:70px;overflow:scroll;")
+                    spanner.innerHTML = "<a target=_blank href='" + localContextsJson.project_page + "'>" + obj.name + "</a>"
+                    spanner.innerHTML += "<p>" + obj.default_text + "<p>";
+
+                    div.appendChild(img);
+                    div.appendChild(spanner);
+                    document.getElementById('localContextsLabels').appendChild(div);
+                  }
+                } catch (e) {
+                  console.log(e);
+                }
+                // Handle Labels
+                var allLabels = []
+                try {
+                  for (var i = 0; i < localContextsJson.bc_labels.length; i++) {
+                    allLabels.push(localContextsJson.bc_labels[i]);
+                  }
+                } catch (e) {
+                }
+                try {
+                  for (var i = 0; i < localContextsJson.tk_labels.length; i++) {
+                    allLabels.push(localContextsJson.tk_labels[i]);
+                  }
+                } catch (e) {
+                }
+
+                for (var i = 0; i < allLabels.length; i++) {
+                  var obj = allLabels[i];
+
+                  var div = document.createElement('div');
+                  div.setAttribute("style", "padding: 5px;")
+
+                  var img = document.createElement('img');
+                  img.src = obj.img_url
+                  img.height = height
+                  img.setAttribute("style", "padding: 2px; max-height: 70px; float: left;")
+
+                  var spanner = document.createElement('div')
+                  spanner.setAttribute("style", "display:block;height:70px;overflow:scroll;")
+                  spanner.innerHTML = "<a target=_blank href='" + localContextsJson.project_page + "'>" + obj.name + "</a>"
+                  spanner.innerHTML += "<p>" + obj.label_text + "<p>";
+                  spanner.innerHTML += "<p><i>" + obj.community + "</i>"
+
+                  div.appendChild(img);
+                  div.appendChild(spanner);
+                  document.getElementById('localContextsLabels').appendChild(div);
+                }
+                document.getElementById("localContextsHeader").innerHTML = '<b><i>' + localContextsJson.title + "</i></b>";
+              } else {
+                document.getElementById("localContextsHeader").innerHTML = 'Error Loading Local Contexts Data...';
+                console.log("Error", xmlHttp.statusText);
+              }
+            }
+          };
+          xmlHttp.send(null);
+        }
+      });
   }
 
   setChildDetails(children) {
@@ -301,7 +405,7 @@ class RecordController {
 
 export default {
   template,
-  controller: RecordController, 
+  controller: RecordController,
   bindings: {
     layout: '@',
     record: '<',

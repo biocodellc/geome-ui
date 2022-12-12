@@ -86,6 +86,10 @@
       <div class="col-sm-4 col-md-3 col-lg-2"><strong>Project Data GUID</strong></div>
       <div class="col-sm-8 col-md-9 col-lg-10">{{ $ctrl.currentProject.projectDataGuid}}</div>
     </div>
+    <div class="row" ng-if="$ctrl.currentProject.permitGuid"> 
+	<div class="col-sm-4 col-md-3 col-lg-2"><strong>Permit GUID</strong></div>
+      <div class="col-sm-8 col-md-9 col-lg-10">{{ $ctrl.currentProject.permitGuid}}</a></div>
+    </div>
 
     <div class="row" ng-if="$ctrl.currentProject.recommendedCitation">
       <div class="col-sm-4 col-md-3 col-lg-2"><strong>Citation</strong></div>

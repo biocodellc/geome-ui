@@ -125,9 +125,18 @@
           <input type="text" class="form-control" ng-model="$ctrl.project.projectDataGuid" />
           <span class="help-block"
             >A globally unique identifier for the data in this project. Recommended to use a
-            resolvable URL containing a DOI or ARK identifier. Coming soon is the ability to
-            generate a DOI here. GEOME does not automatically assign identifiers for all datasets
+            resolvable URL containing a DOI or ARK identifier.  GEOME does not automatically assign identifiers for all datasets
             since many datasets have been given GUIDs elsewhere.</span
+          >
+        </div>
+      </div>
+      <div class="form-group clearfix">
+        <div class="col-xs-9">
+          <label>Permit GUID</label>
+          <input type="text" class="form-control" ng-model="$ctrl.project.permitGuid" />
+          <span class="help-block"
+            >A globally unique identifier referencing a permit. Recommended to use a
+            resolvable URL containing a DOI or ARK identifier. </span
           >
         </div>
       </div>

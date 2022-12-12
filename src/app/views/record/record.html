@@ -35,34 +35,35 @@
       layout-padding
     >
       <a href="{{ $ctrl.record.img1024 }}">
-        <img ng-if="$ctrl.record.img1024" ng-src="{{ $ctrl.record.img512 }}" />
+        <img ng-if="$ctrl.record.img1024" ng-src="{{ $ctrl.record.img512 }}"/>
       </a>
     </md-card>
     <md-card layout-padding flex ng-class="$ctrl.record.entity">
       <table class="table">
         <tbody>
-          <tr ng-if="$ctrl.invalidPhoto && $ctrl.record.originalUrl.includes('base64')">
-            <th class="text-danger">Error Detail:</th>
-            <td>GEOME does not support base64 encoded images</td>
-          </tr>
-          <tr ng-repeat="(key, value) in $ctrl.mainRecordDetails() track by key">
-            <th>{{ key }}:</th>
-            <td ng-if="value.href && value.text" class="truncate">
-              <a href="{{ value.href }}" target="_blank">{{ value.href }}</a>
-            </td>
-            <td ng-if="!value.href || !value.text">
-              <div class="truncate">
-                <md-tooltip
-                  md-direction="top"
-                  class="fix-placement"
-                  text-overflow-tooltip
-                  md-visible="false"
-                  >{{ value.text }}</md-tooltip
-                >
-                {{ value.text || 'N/A' }}
-              </div>
-            </td>
-          </tr>
+        <tr ng-if="$ctrl.invalidPhoto && $ctrl.record.originalUrl.includes('base64')">
+          <th class="text-danger">Error Detail:</th>
+          <td>GEOME does not support base64 encoded images</td>
+        </tr>
+        <tr ng-repeat="(key, value) in $ctrl.mainRecordDetails() track by key">
+          <th>{{ key }}:</th>
+          <td ng-if="value.href && value.text" class="truncate">
+            <a href="{{ value.href }}" target="_blank">{{ value.href }}</a>
+          </td>
+          <td ng-if="!value.href || !value.text">
+            <div class="truncate">
+              <md-tooltip
+                md-direction="top"
+                class="fix-placement"
+                text-overflow-tooltip
+                md-visible="false"
+              >{{ value.text }}
+              </md-tooltip
+              >
+              {{ value.text || 'N/A' }}
+            </div>
+          </td>
+        </tr>
         </tbody>
       </table>
     </md-card>
@@ -74,55 +75,43 @@
       <fims-map class="record-map" map-instance="$ctrl.map"></fims-map>
     </md-card>
 
-    <md-card ng-if="$ctrl.project.localcontextsId" flex layout-padding > 
-    <div id=localContextsLabels></div>
-<script>
-
-    // TODO: TURn this section into AngularJS and enable popup content
-    var theJSONUrl = "https://localcontextshub.org/api/v1/projects/259854f7-b261-4c8c-8556-4b153deebc18/?format=json";
-    var theHtmlUrl = "https://localcontextshub.org/projects/259854f7-b261-4c8c-8556-4b153deebc18/?format=json";
-    //document.getElementById('localContextsLabels').innerHTML = "<b><a target=_blank href='"+theHtmlUrl+"'>Local Contexts Hub Project Link</a></b>"
-    document.getElementById('localContextsLabels').innerHTML = "<b>Biocultural and Traditional Knowledge Labels</b>"
-
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", theJSONUrl, false ); // false for synchronous request
-    xmlHttp.send( null );
-
-    // loop through all possible local contexts labels
-    var localContextsJson = JSON.parse(xmlHttp.responseText)
-    var allLabels = []
-    height = 70
-    for(var i = 0; i < localContextsJson.bc_labels.length; i++) {
-	allLabels.push(localContextsJson.bc_labels[i]);
-    }
-    for(var i = 0; i < localContextsJson.tk_labels.length; i++) {
-	allLabels.push(localContextsJson.tk_labels[i]);
-    }
-
-    for (var i = 0; i < allLabels.length; i++) {
-    	var obj = allLabels[i];
-
-    	var div = document.createElement('div');
-	div.setAttribute("style", "padding: 5px;")
-
-    	var img = document.createElement('img');
-    	img.src = obj.img_url
-    	img.height = height 
-	img.setAttribute("style", "padding: 2px; max-height: 70px; float: left;")
-
-	var spanner = document.createElement('div')
-	spanner.setAttribute("style", "display:block;height:70px;overflow:scroll;")
-	spanner.innerHTML= "<a target=_blank href='"+theHtmlUrl+"'>"+obj.name+"</a>"
-	spanner.innerHTML+= "<p><i>"+obj.community+"</i>"
-
-	div.appendChild(img);
-	div.appendChild(spanner);
-    	document.getElementById('localContextsLabels').appendChild(div);
-    }
-</script>
+    <md-card ng-if="$ctrl.getLocalContextsPresent()" flex layout-padding>
+      <div id=localContextsLabels style="max-height:300px; overflow:scroll">
+        <div id="localContextsHeader"><i>Loading Local Contexts Data...</i></div>
+        <!--<i>{{$ctrl.getLocalContextsDetails()['title']}}</i>
+        <div style='display:block;height:75px;overflow:scroll;'
+                     ng-repeat="(key, value) in $ctrl.getLocalContextsDetails()['notice']">
+                  <img
+                    ng-click="$ctrl.showLabelMessage(value['name'],value['default_text'])"
+                    src="{{value['img_url']}}"
+                    height=70
+                    style="padding: 4px; max-height: 70px; float: left; ">
+                  <a href="{{$ctrl.getLocalContextsDetails()['project_page']}}" target="_blank">{{value['name']}}</a>
+                </div>
+        <div style='display:block;height:75px;overflow:scroll;'
+             ng-repeat="(key, value) in $ctrl.getLocalContextsDetails()['bc_labels']">
+          <img
+            ng-click="$ctrl.showLabelMessage(value['name'],value['label_text'])"
+            src="{{value['img_url']}}"
+            height=70
+            style="padding: 4px; max-height: 70px; float: left; ">
+          <a href="{{$ctrl.getLocalContextsDetails()['project_page']}}" target="_blank">{{value['name']}}</a>
+          <p><i>{{value['community']}}</i></p>
+        </div>
+        <div style='display:block;height:75px;overflow:scroll;'
+             ng-repeat="(key, value) in $ctrl.getLocalContextsDetails()['tk_labels']">
+          <img
+            ng-click="$ctrl.showLabelMessage(value['name'],value['label_text'])"
+            src="{{value['img_url']}}"
+            height=70
+            style="padding: 4px; max-height: 70px; float: left; ">
+          <a href="{{$ctrl.getLocalContextsDetails()['project_page']}}" target="_blank">{{value['name']}}</a>
+          <p><i>{{value['community']}}</i></p>
+        </div>
+        -->
+      </div>
     </md-card>
   </div>
-
 
 
   <md-divider ng-if="$ctrl.auxiliaryRecordDetails(0)"></md-divider>
@@ -130,48 +119,50 @@
   <div ng-if="$ctrl.auxiliaryRecordDetails(0)" layout="row" class="auxiliary-details">
     <table flex>
       <tbody>
-        <tr ng-repeat="(key, value) in $ctrl.auxiliaryRecordDetails(0) track by key">
-          <th ng-class="{'text-danger': key === 'imageProcessingErrors'}">{{ key }}:</th>
-          <td ng-class="{'sequence': key === 'sequence'}">
-            <md-tooltip
-              md-direction="top"
-              class="fix-placement"
-              text-overflow-tooltip
-              md-visible="false"
-              >{{ value.text || value }}</md-tooltip
-            >
-            <span ng-if="!value.href">{{ value }} </span>
-            <span ng-if="value.href">
+      <tr ng-repeat="(key, value) in $ctrl.auxiliaryRecordDetails(0) track by key">
+        <th ng-class="{'text-danger': key === 'imageProcessingErrors'}">{{ key }}:</th>
+        <td ng-class="{'sequence': key === 'sequence'}">
+          <md-tooltip
+            md-direction="top"
+            class="fix-placement"
+            text-overflow-tooltip
+            md-visible="false"
+          >{{ value.text || value }}
+          </md-tooltip
+          >
+          <span ng-if="!value.href">{{ value }} </span>
+          <span ng-if="value.href">
               <a href="{{ value.href }}" target="_blank">{{ value.text }}</a>
             </span>
-          </td>
-        </tr>
+        </td>
+      </tr>
       </tbody>
     </table>
     <table ng-show="$ctrl.$mdMedia('gt-sm')" flex>
       <tbody>
-        <tr
-          ng-if="$ctrl.record.genus && $ctrl.record.specificEpithet && !$ctrl.record.scientificName"
-        >
-          <th>scientificName:</th>
-          <td>{{$ctrl.record.genus}} {{$ctrl.record.specificEpithet}}</td>
-        </tr>
-        <tr ng-repeat="(key, value) in $ctrl.auxiliaryRecordDetails(1) track by key">
-          <th>{{ key }}:</th>
-          <td ng-class="{'sequence': key === 'sequence'}">
-            <md-tooltip
-              md-direction="top"
-              class="fix-placement"
-              text-overflow-tooltip
-              md-visible="false"
-              >{{ value.text || value }}</md-tooltip
-            >
-            <span ng-if="!value.href">{{ value }}</span>
-            <span ng-if="value.href">
+      <tr
+        ng-if="$ctrl.record.genus && $ctrl.record.specificEpithet && !$ctrl.record.scientificName"
+      >
+        <th>scientificName:</th>
+        <td>{{$ctrl.record.genus}} {{$ctrl.record.specificEpithet}}</td>
+      </tr>
+      <tr ng-repeat="(key, value) in $ctrl.auxiliaryRecordDetails(1) track by key">
+        <th>{{ key }}:</th>
+        <td ng-class="{'sequence': key === 'sequence'}">
+          <md-tooltip
+            md-direction="top"
+            class="fix-placement"
+            text-overflow-tooltip
+            md-visible="false"
+          >{{ value.text || value }}
+          </md-tooltip
+          >
+          <span ng-if="!value.href">{{ value }}</span>
+          <span ng-if="value.href">
               <a href="{{ value.href }}" target="_blank">{{ value.text }}</a>
             </span>
-          </td>
-        </tr>
+        </td>
+      </tr>
       </tbody>
     </table>
   </div>
