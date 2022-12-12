@@ -268,15 +268,16 @@ class RecordController {
                 var height = 70
 
                 var localContextsJson = JSON.parse(xmlHttp.responseText);
+                // Handle Notices
                 var allNotices = []
                 try {
                   for (var i = 0; i < localContextsJson.notice.length; i++) {
-                    allLabels.push(localContextsJson.bc_labels[i]);
+                    allNotices.push(localContextsJson.notices[i]);
                   }
                 } catch (e) {
                 }
                 for (var i = 0; i < allNotices.length; i++) {
-                  var obj = allLabels[i];
+                  var obj = allNotices[i];
 
                   var div = document.createElement('div');
                   div.setAttribute("style", "padding: 5px;")
@@ -295,7 +296,7 @@ class RecordController {
                   div.appendChild(spanner);
                   document.getElementById('localContextsLabels').appendChild(div);
                 }
-
+                // Handle Labels
                 var allLabels = []
                 try {
                   for (var i = 0; i < localContextsJson.bc_labels.length; i++) {
