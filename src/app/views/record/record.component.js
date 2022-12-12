@@ -24,7 +24,7 @@ let detailCacheNumCols;
 let localContextsPresent;
 
 class RecordController {
-  constructor( $scope, $mdMedia, ProjectService, ExpeditionService, $timeout, $http, $mdDialog) {
+  constructor($scope, $mdMedia, ProjectService, ExpeditionService, $timeout, $http, $mdDialog) {
     'ngInject';
     this.$scope = $scope;
     this.$mdDialog = $mdDialog;
@@ -263,45 +263,80 @@ class RecordController {
           var xmlHttp = new XMLHttpRequest();
           xmlHttp.open("GET", lcUrl, true); // false for synchronous request
           xmlHttp.onreadystatechange = function (oEvent) {
-              if (xmlHttp.readyState === 4) {
-                  if (xmlHttp.status === 200) {
-                    var localContextsJson = JSON.parse(xmlHttp.responseText);
-                    var allLabels = []
-                        var height = 70
-                        for (var i = 0; i < localContextsJson.bc_labels.length; i++) {
-                          allLabels.push(localContextsJson.bc_labels[i]);
-                        }
-                        for (var i = 0; i < localContextsJson.tk_labels.length; i++) {
-                          allLabels.push(localContextsJson.tk_labels[i]);
-                        }
+            if (xmlHttp.readyState === 4) {
+              if (xmlHttp.status === 200) {
+                var height = 70
 
-                        for (var i = 0; i < allLabels.length; i++) {
-                          var obj = allLabels[i];
-
-                          var div = document.createElement('div');
-                          div.setAttribute("style", "padding: 5px;")
-
-                          var img = document.createElement('img');
-                          img.src = obj.img_url
-                          img.height = height
-                          img.setAttribute("style", "padding: 2px; max-height: 70px; float: left;")
-
-                          var spanner = document.createElement('div')
-                          spanner.setAttribute("style", "display:block;height:70px;overflow:scroll;")
-                          spanner.innerHTML = "<a target=_blank href='" + obj.project_page + "'>" + obj.name + "</a>"
-                          spanner.innerHTML += "<p>" + obj.label_text + "<p>";
-                          spanner.innerHTML += "<p><i>" + obj.community + "</i>"
-
-                          div.appendChild(img);
-                          div.appendChild(spanner);
-                          document.getElementById('localContextsLabels').appendChild(div);
-                        }
-                    document.getElementById("localContextsHeader").innerHTML = '<b><i>' + localContextsJson.title +"</i></b>";
-                  } else {
-                    document.getElementById("localContextsHeader").innerHTML='Error Loading Local Contexts Data...';
-                    console.log("Error", xmlHttp.statusText);
+                var localContextsJson = JSON.parse(xmlHttp.responseText);
+                var allNotices = []
+                try {
+                  for (var i = 0; i < localContextsJson.notice.length; i++) {
+                    allLabels.push(localContextsJson.bc_labels[i]);
                   }
+                } catch (e) {
+                }
+                for (var i = 0; i < allNotices.length; i++) {
+                  var obj = allLabels[i];
+
+                  var div = document.createElement('div');
+                  div.setAttribute("style", "padding: 5px;")
+
+                  var img = document.createElement('img');
+                  img.src = obj.img_url
+                  img.height = height
+                  img.setAttribute("style", "padding: 2px; max-height: 70px; float: left;")
+
+                  var spanner = document.createElement('div')
+                  spanner.setAttribute("style", "display:block;height:70px;overflow:scroll;")
+                  spanner.innerHTML = "<a target=_blank href='" + obj.project_page + "'>" + obj.name + "</a>"
+                  spanner.innerHTML += "<p>" + obj.default_text + "<p>";
+
+                  div.appendChild(img);
+                  div.appendChild(spanner);
+                  document.getElementById('localContextsLabels').appendChild(div);
+                }
+
+                var allLabels = []
+                try {
+                  for (var i = 0; i < localContextsJson.bc_labels.length; i++) {
+                    allLabels.push(localContextsJson.bc_labels[i]);
+                  }
+                } catch (e) {
+                }
+                try {
+                  for (var i = 0; i < localContextsJson.tk_labels.length; i++) {
+                    allLabels.push(localContextsJson.tk_labels[i]);
+                  }
+                } catch (e) {
+                }
+
+                for (var i = 0; i < allLabels.length; i++) {
+                  var obj = allLabels[i];
+
+                  var div = document.createElement('div');
+                  div.setAttribute("style", "padding: 5px;")
+
+                  var img = document.createElement('img');
+                  img.src = obj.img_url
+                  img.height = height
+                  img.setAttribute("style", "padding: 2px; max-height: 70px; float: left;")
+
+                  var spanner = document.createElement('div')
+                  spanner.setAttribute("style", "display:block;height:70px;overflow:scroll;")
+                  spanner.innerHTML = "<a target=_blank href='" + obj.project_page + "'>" + obj.name + "</a>"
+                  spanner.innerHTML += "<p>" + obj.label_text + "<p>";
+                  spanner.innerHTML += "<p><i>" + obj.community + "</i>"
+
+                  div.appendChild(img);
+                  div.appendChild(spanner);
+                  document.getElementById('localContextsLabels').appendChild(div);
+                }
+                document.getElementById("localContextsHeader").innerHTML = '<b><i>' + localContextsJson.title + "</i></b>";
+              } else {
+                document.getElementById("localContextsHeader").innerHTML = 'Error Loading Local Contexts Data...';
+                console.log("Error", xmlHttp.statusText);
               }
+            }
           };
           xmlHttp.send(null);
         }
