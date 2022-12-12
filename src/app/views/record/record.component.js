@@ -282,7 +282,7 @@ class RecordController {
 
                     var spanner = document.createElement('div')
                     spanner.setAttribute("style", "display:block;height:70px;overflow:scroll;")
-                    spanner.innerHTML = "<a target=_blank href='" + obj.project_page + "'>" + obj.name + "</a>"
+                    spanner.innerHTML = "<a target=_blank href='" + localContextsJson.project_page + "'>" + obj.name + "</a>"
                     spanner.innerHTML += "<p>" + obj.default_text + "<p>";
 
                     div.appendChild(img);
@@ -320,7 +320,7 @@ class RecordController {
 
                   var spanner = document.createElement('div')
                   spanner.setAttribute("style", "display:block;height:70px;overflow:scroll;")
-                  spanner.innerHTML = "<a target=_blank href='" + obj.project_page + "'>" + obj.name + "</a>"
+                  spanner.innerHTML = "<a target=_blank href='" + localContextsJson.project_page + "'>" + obj.name + "</a>"
                   spanner.innerHTML += "<p>" + obj.label_text + "<p>";
                   spanner.innerHTML += "<p><i>" + obj.community + "</i>"
 
