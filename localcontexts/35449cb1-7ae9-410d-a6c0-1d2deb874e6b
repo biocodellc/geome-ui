@@ -1,32 +1,28 @@
 {
-unique_id: "35449cb1-7ae9-410d-a6c0-1d2deb874e6b",
-providers_id: null,
-project_page: "https://localcontextshub.org/projects/35449cb1-7ae9-410d-a6c0-1d2deb874e6b",
-title: "Metapopulation structure of Intertidal Invertebrates",
-project_privacy: "Public",
-date_added: "2022-09-28T00:22:18.558924Z",
-date_modified: "2022-12-30T06:28:32.348885Z",
-created_by: [
-{
-institution: null,
-researcher: {
-id: 121,
-user: "Eric Crandall",
-orcid: "https://orcid.org/0000-0001-8580-3651"
-},
-community: null
-}
-],
-notice: [
-{
-notice_type: "biocultural",
-name: "Biocultural (BC) Notice",
-img_url: "https://storage.googleapis.com/anth-ja77-local-contexts-8985.appspot.com/labels/notices/bc-notice.png",
-svg_url: "https://storage.googleapis.com/anth-ja77-local-contexts-8985.appspot.com/labels/notices/bc-notice.svg",
-default_text: "The BC (Biocultural) Notice is a visible notification that there are accompanying cultural rights and responsibilities that need further attention for any future sharing and use of this material or data. The BC Notice recognizes the rights of Indigenous peoples to permission the use of information, collections, data and digital sequence information (DSI) generated from the biodiversity or genetic resources associated with traditional lands, waters, and territories. The BC Notice may indicate that BC Labels are in development and their implementation is being negotiated.",
-created: "2022-12-30T06:28:33.796144Z",
-updated: "2022-12-30T06:28:33.796177Z"
-}
-],
-project_boundary_geojson: null
+	"unique_id": "35449cb1-7ae9-410d-a6c0-1d2deb874e6b",
+	"providers_id": null,
+	"project_page": "https://localcontextshub.org/projects/35449cb1-7ae9-410d-a6c0-1d2deb874e6b",
+	"title": "Metapopulation structure of Intertidal Invertebrates",
+	"project_privacy": "Public",
+	"date_added": "2022-09-28T00:22:18.558924Z",
+	"date_modified": "2022-12-30T06:28:32.348885Z",
+	"created_by": [{
+		"institution": null,
+		"researcher": {
+			"id": 121,
+			"user": "Eric Crandall",
+			"orcid": "https://orcid.org/0000-0001-8580-3651"
+		},
+		"community": null
+	}],
+	"notice": [{
+		"notice_type": "biocultural",
+		"name": "Biocultural (BC) Notice",
+		"img_url": "https://storage.googleapis.com/anth-ja77-local-contexts-8985.appspot.com/labels/notices/bc-notice.png",
+		"svg_url": "https://storage.googleapis.com/anth-ja77-local-contexts-8985.appspot.com/labels/notices/bc-notice.svg",
+		"default_text": "The BC (Biocultural) Notice is a visible notification that there are accompanying cultural rights and responsibilities that need further attention for any future sharing and use of this material or data. The BC Notice recognizes the rights of Indigenous peoples to permission the use of information, collections, data and digital sequence information (DSI) generated from the biodiversity or genetic resources associated with traditional lands, waters, and territories. The BC Notice may indicate that BC Labels are in development and their implementation is being negotiated.",
+		"created": "2022-12-30T06:28:33.796144Z",
+		"updated": "2022-12-30T06:28:33.796177Z"
+	}],
+	"project_boundary_geojson": null
 }
