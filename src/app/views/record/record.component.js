@@ -259,7 +259,9 @@ class RecordController {
       .then(project => {
         if (project.localcontextsId) {
           localContextsPresent = true;
-          var lcUrl = 'https://localcontextshub.org/api/v1/projects/' + project.localcontextsId + '/?format=json';
+          //var lcUrl = 'https://localcontextshub.org/api/v1/projects/' + project.localcontextsId + '/?format=json';
+		  // This is a temporary storage directory for localcontexts projects that have been created in GEOME
+		  var lcUrl = 'https://raw.githubusercontent.com/biocodellc/geome-ui/master/localcontexts/' + project.localcontextsId 
           var xmlHttp = new XMLHttpRequest();
           xmlHttp.open("GET", lcUrl, true); // false for synchronous request
           xmlHttp.onreadystatechange = function (oEvent) {
