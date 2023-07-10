@@ -72,7 +72,7 @@ class QueryFormController {
 
   $onInit() {
     this.resetExpeditions = true;
-    this.moreSearchOptions = false;
+    this.moreSearchOptions = true;
     this.entity = this.$stateParams.entity || 'Sample';
     this.queryEntities = QUERY_ENTITIES;
     this.teams = [];
