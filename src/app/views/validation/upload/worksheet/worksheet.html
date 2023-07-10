@@ -63,7 +63,7 @@
           </md-popover>
           <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
         </md-button>
-      <br>It is highly reccomended to first run the "Only validate data" option (above) and fix errors,  before replacing expedition data.
+      <br>"Replace expedition data" should be selected when samples need to be entirely removed from an expedition, or when the materialSampleID field needs to be changed. The replacement will occur for each data worksheet within the loaded workbook. All existing data will be removed and replaced with the Data in the workbook. Data worksheets not found in this workbook will not be removed. It is highly recommended to first run the "Only validate data" option (above) and fix errors, before replacing expedition data. Make sure that critical columns are intact, eg. "Sample_bcid", "Tissue_bcid", "tissue_ID", "tissue_Plate" and "tissue_Well"
       </label>
     </div>
   </div>
