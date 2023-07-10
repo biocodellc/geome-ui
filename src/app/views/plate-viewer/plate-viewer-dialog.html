@@ -15,26 +15,69 @@
   </md-toolbar>
   <md-dialog-content layout="column">
     <md-content flex layout="column">
-      <div class="plate-viewer-details">
+      <div class="plate-viewer-details" layout="row">
         <div ng-show="!$ctrl.newPlate" layout="row">
-          <span flex />
+
+          <span flex>
           <md-autocomplete
             md-no-cache
             md-selected-item="$ctrl.displayColumn"
             md-items="c in $ctrl.metadataColumns | filter:searchText"
-            md-floating-label="Display Column"
+            md-floating-label="1st Display Column"
             md-require-match
             md-search-text="searchText"
             class="no-floating-label"
             md-min-length="0"
             ng-click="searchText = ''"
             md-show-arrow="true"
+			style="width: 35em;"
           >
             <md-item-template>
               <span md-highlight-text="searchText" md-highlight-flags="i">{{c}}</span>
             </md-item-template>
           </md-autocomplete>
           <span flex />
+
+          <span flex>
+          <md-autocomplete
+            md-no-cache
+            md-selected-item="$ctrl.displayColumn2"
+            md-items="c in $ctrl.metadataColumns | filter:searchText2"
+            md-floating-label="2nd Display Column"
+            md-require-match
+            md-search-text="searchText2"
+            class="no-floating-label"
+            md-min-length="0"
+            ng-click="searchText2 = ''"
+            md-show-arrow="true"
+			style="width: 35em;"
+          >
+            <md-item-template>
+              <span md-highlight-text="searchText2" md-highlight-flags="i">{{c}}</span>
+            </md-item-template>
+          </md-autocomplete>
+          <span flex />
+		  
+          <span flex >
+          <md-autocomplete
+            md-no-cache
+            md-selected-item="$ctrl.displayColumn3"
+            md-items="c in $ctrl.metadataColumns | filter:searchText3"
+            md-floating-label="3rd Display Column"
+            md-require-match
+            md-search-text="searchText3"
+            class="no-floating-label"
+            md-min-length="0"
+            ng-click="searchText3 = ''"
+            md-show-arrow="true"
+			style="width: 35em;"
+          >
+            <md-item-template>
+              <span md-highlight-text="searchText3" md-highlight-flags="i">{{c}}</span>
+            </md-item-template>
+          </md-autocomplete>
+          <span flex />
+
         </div>
         <div ng-show="$ctrl.errors && $ctrl.errors.length > 0" class="errors">
           <p>
@@ -54,7 +97,7 @@
         <table class="table table-bordered">
           <thead>
             <tr>
-              <th></th>
+              <th>.</th>
               <th ng-repeat="c in [1,2,3,4,5,6,7,8,9,10,11,12]">{{c}}</th>
             </tr>
           </thead>
@@ -72,12 +115,24 @@
                   <div ng-click="$ctrl.tissueDetails($ctrl.plateData[r][c])">
                     {{$ctrl.plateData[r][c].tissueID}}
                   </div>
+
                   <div
                     class="sub-column"
                     ng-if="$ctrl.displayColumn && $ctrl.displayColumn !== 'tissueID'"
                   >
                     {{$ctrl.getValue(r,c)}}
                   </div>
+                  <div
+                    class="sub-column"
+                    ng-if="$ctrl.displayColumn2 && $ctrl.displayColumn2 !== 'tissueID'"
+                  >
+                    {{$ctrl.getValue2(r,c)}}
+                  </div>
+                  <div
+                    class="sub-column"
+                    ng-if="$ctrl.displayColumn3 && $ctrl.displayColumn3 !== 'tissueID'"
+                  >
+                    {{$ctrl.getValue3(r,c)}}
                 </div>
                 <md-autocomplete
                   ng-if="$ctrl.canEdit && (!$ctrl.plateData[r][c] || $ctrl.editedData[r][c])"
