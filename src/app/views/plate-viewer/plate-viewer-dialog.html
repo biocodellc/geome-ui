@@ -15,7 +15,8 @@
   </md-toolbar>
   <md-dialog-content layout="column">
     <md-content flex layout="column">
-      <div class="plate-viewer-details" layout="row">
+      <!--<div class="plate-viewer-details" layout="row">-->
+      <div class="plate-viewer-details">
         <div ng-show="!$ctrl.newPlate" layout="row">
 
           <span flex>
@@ -23,21 +24,21 @@
             md-no-cache
             md-selected-item="$ctrl.displayColumn"
             md-items="c in $ctrl.metadataColumns | filter:searchText"
-            md-floating-label="1st Display Column"
+            md-floating-label="Display Column"
             md-require-match
             md-search-text="searchText"
             class="no-floating-label"
             md-min-length="0"
             ng-click="searchText = ''"
             md-show-arrow="true"
-			style="width: 35em;"
           >
+		<!--	style="width: 35em;"-->
             <md-item-template>
               <span md-highlight-text="searchText" md-highlight-flags="i">{{c}}</span>
             </md-item-template>
           </md-autocomplete>
           <span flex />
-
+<!--
           <span flex>
           <md-autocomplete
             md-no-cache
@@ -77,7 +78,7 @@
             </md-item-template>
           </md-autocomplete>
           <span flex />
-
+-->
         </div>
         <div ng-show="$ctrl.errors && $ctrl.errors.length > 0" class="errors">
           <p>
@@ -122,7 +123,7 @@
                   >
                     {{$ctrl.getValue(r,c)}}
                   </div>
-                  <div
+                  <!--<div
                     class="sub-column"
                     ng-if="$ctrl.displayColumn2 && $ctrl.displayColumn2 !== 'tissueID'"
                   >
@@ -132,7 +133,7 @@
                     class="sub-column"
                     ng-if="$ctrl.displayColumn3 && $ctrl.displayColumn3 !== 'tissueID'"
                   >
-                    {{$ctrl.getValue3(r,c)}}
+                    {{$ctrl.getValue3(r,c)}}-->
                 </div>
                 <md-autocomplete
                   ng-if="$ctrl.canEdit && (!$ctrl.plateData[r][c] || $ctrl.editedData[r][c])"
