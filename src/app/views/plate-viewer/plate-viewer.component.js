@@ -29,6 +29,7 @@ class PlateViewerController {
     currentUser,
     canEdit,
     newPlate,
+	enableEditing,
   ) {
     'ngInject';
 
@@ -42,6 +43,7 @@ class PlateViewerController {
     this.currentProject = currentProject;
     this.currentUser = currentUser;
     this.canEdit = canEdit;
+    this.enableEditing = false;
     this.newPlate = newPlate || false;
 
     this.searchTexts = {};
@@ -67,6 +69,13 @@ class PlateViewerController {
     this.metadataColumns.sort();
   }
 
+  toggleEditing () {
+  	if (this.enableEditing) {
+		this.enableEditing = false;
+	} else {
+		this.enableEditing = true;
+	}
+  }
   canDelete(row, column) {
     if (!this.canEdit) return false;
 
@@ -316,6 +325,7 @@ class PlatesController {
           canEdit:
             this.currentProject.currentUserIsMember && !this.hashedSample,
           newPlate: this.isNewPlate,
+		  enableEditing: this.enableEditing,
         },
         controller: PlateViewerController,
         controllerAs: '$ctrl',
