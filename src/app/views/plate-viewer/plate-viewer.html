@@ -43,6 +43,10 @@
         </div>
         <p ng-if="!$ctrl.loading && $ctrl.plates.length === 0">No Plates found</p>
 
+        <!--<div flex layout="row"> 
+			<input type="checkbox" ng-model="viewonly" ng-click="$ctrl.toggleviewonly();">view only</input>
+		</div>-->
+
         <div flex layout="row">
           <span flex></span>
           <div>
@@ -70,6 +74,7 @@
           </md-button>
           <span flex></span>
         </div>
+
         <p class="small" ng-show="!$ctrl.loading && !$ctrl.currentUser">
           If you'd like to add a plate, please
           <a ui-sref="login({ nextState: 'plates' })">Sign In</a>

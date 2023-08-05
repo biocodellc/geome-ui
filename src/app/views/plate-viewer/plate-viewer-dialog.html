@@ -17,6 +17,7 @@
     <md-content flex layout="column">
       <!--<div class="plate-viewer-details" layout="row">-->
       <div class="plate-viewer-details">
+		<input type="checkbox" ng-click="$ctrl.toggleEditing();"> Enable editing</input>
         <div ng-show="!$ctrl.newPlate" layout="row">
 
           <span flex>
@@ -38,8 +39,8 @@
             </md-item-template>
           </md-autocomplete>
           <span flex />
-<!--
-          <span flex>
+
+          <span ng-if="!$ctrl.enableEditing" ng-show="!$ctrl.canEdit" flex>
           <md-autocomplete
             md-no-cache
             md-selected-item="$ctrl.displayColumn2"
@@ -59,7 +60,7 @@
           </md-autocomplete>
           <span flex />
 		  
-          <span flex >
+          <span ng-if="!$ctrl.enableEditing" ng-show="!$ctrl.canEdit" flex>
           <md-autocomplete
             md-no-cache
             md-selected-item="$ctrl.displayColumn3"
@@ -78,7 +79,7 @@
             </md-item-template>
           </md-autocomplete>
           <span flex />
--->
+
         </div>
         <div ng-show="$ctrl.errors && $ctrl.errors.length > 0" class="errors">
           <p>
@@ -123,17 +124,19 @@
                   >
                     {{$ctrl.getValue(r,c)}}
                   </div>
-                  <!--<div
+                  <div
+         			ng-show="!$ctrl.enableEditing"
                     class="sub-column"
                     ng-if="$ctrl.displayColumn2 && $ctrl.displayColumn2 !== 'tissueID'"
                   >
                     {{$ctrl.getValue2(r,c)}}
                   </div>
                   <div
+         			ng-show="!$ctrl.enabledEditing"
                     class="sub-column"
                     ng-if="$ctrl.displayColumn3 && $ctrl.displayColumn3 !== 'tissueID'"
                   >
-                    {{$ctrl.getValue3(r,c)}}-->
+                    {{$ctrl.getValue3(r,c)}}
                 </div>
                 <md-autocomplete
                   ng-if="$ctrl.canEdit && (!$ctrl.plateData[r][c] || $ctrl.editedData[r][c])"

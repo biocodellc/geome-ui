@@ -29,6 +29,7 @@ class PlateViewerController {
     currentUser,
     canEdit,
     newPlate,
+	enableEditing,
   ) {
     'ngInject';
 
@@ -42,6 +43,7 @@ class PlateViewerController {
     this.currentProject = currentProject;
     this.currentUser = currentUser;
     this.canEdit = canEdit;
+    this.enableEditing = false;
     this.newPlate = newPlate || false;
 
     this.searchTexts = {};
@@ -67,6 +69,13 @@ class PlateViewerController {
     this.metadataColumns.sort();
   }
 
+  toggleEditing () {
+  	if (this.enableEditing) {
+		this.enableEditing = false;
+	} else {
+		this.enableEditing = true;
+	}
+  }
   canDelete(row, column) {
     if (!this.canEdit) return false;
 
@@ -85,12 +94,12 @@ class PlateViewerController {
   getValue(row, column) {
     return this.plateData[row][column][this.displayColumn] || 'N/A';
   }
-  //getValue2(row, column) {
-  //  return this.plateData[row][column][this.displayColumn2] || 'N/A';
- // }
-  //getValue3(row, column) {
-   // return this.plateData[row][column][this.displayColumn3] || 'N/A';
-  //}
+  getValue2(row, column) {
+    return this.plateData[row][column][this.displayColumn2] || 'N/A';
+  }
+  getValue3(row, column) {
+    return this.plateData[row][column][this.displayColumn3] || 'N/A';
+  }
 
   // eslint-disable-next-line class-methods-use-this
   getWell(row, column) {
@@ -316,6 +325,7 @@ class PlatesController {
           canEdit:
             this.currentProject.currentUserIsMember && !this.hashedSample,
           newPlate: this.isNewPlate,
+		  enableEditing: this.enableEditing,
         },
         controller: PlateViewerController,
         controllerAs: '$ctrl',
