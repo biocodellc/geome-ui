@@ -85,12 +85,12 @@ class PlateViewerController {
   getValue(row, column) {
     return this.plateData[row][column][this.displayColumn] || 'N/A';
   }
-  //getValue2(row, column) {
-  //  return this.plateData[row][column][this.displayColumn2] || 'N/A';
- // }
-  //getValue3(row, column) {
-   // return this.plateData[row][column][this.displayColumn3] || 'N/A';
-  //}
+  getValue2(row, column) {
+    return this.plateData[row][column][this.displayColumn2] || 'N/A';
+  }
+  getValue3(row, column) {
+    return this.plateData[row][column][this.displayColumn3] || 'N/A';
+  }
 
   // eslint-disable-next-line class-methods-use-this
   getWell(row, column) {
