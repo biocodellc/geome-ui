@@ -22,14 +22,28 @@
             <md-icon md-font-icon="fa fa-question-circle fa-sm"></md-icon>
           </md-button>
         </div>
-
+<!--
         <md-input-container class="entity-radio">
-          <md-radio-group ng-model="$ctrl.entity" layout-gt-sm="row" class="md-primary">
-            <md-radio-button ng-repeat="entity in $ctrl.queryEntities" ng-value="entity" flex
-              >{{ entity }}</md-radio-button
-            >
+          <md-radio-group ng-model="$ctrl.entity" layout-gt-sm="column" class="md-primary">
+            <md-radio-button ng-repeat="entity in $ctrl.queryEntities" ng-value="entity" flex> 
+				<span style="white-space: normal;"> {{entity}} </span>
+			</md-radio-button>
           </md-radio-group>
         </md-input-container>
+-->
+          <md-select ng-model="$ctrl.entity" md-container-class>
+            <md-option value="Event" ng-selected="false">Event</md-option>
+            <md-option value="Sample" ng-selected="true" >Sample</md-option>
+            <md-option value="Tissue" ng-selected="false">Tissue</md-option>
+            <md-option value="Fastq" ng-selected="false">Fastq</md-option>
+            <md-option value="Sample_Photo" ng-selected="false">Sample_Photo</md-option>
+            <md-option value="Event_Photo" ng-selected="false">Event_Photo</md-option>
+            <md-option value="Diagnostics" ng-selected="false">Diagnostics</md-option>
+              <!--ng-value="entity"
+              ng-repeat="entity in $ctrl.queryEntities">
+				{{ entity }}
+		    </md-option>-->
+          </md-select>
       </div>
     </div>
 
