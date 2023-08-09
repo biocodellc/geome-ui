@@ -22,12 +22,10 @@ function transformResults(data, entity) {
     const samples = getRecords('Sample', 'materialSampleID');
     data.Diagnostics.forEach(d => {
       const record = d;
-      let sampleBcid;
-      const { bcid } = d;
+	  const { bcid } = d;
       if (samples) {
         const sample = samples[d.materialSampleID];
-
-        sampleBcid = sample.bcid;
+		const {bcid: sampleBcid } = sample;
         Object.assign(record, sample, { bcid, sampleBcid });
 
         let event = {};
@@ -74,6 +72,28 @@ function transformResults(data, entity) {
       }
       records.push(record);
     });
+  } else if (entity === 'Sample_Photo') {
+    const events = getRecords('Event', 'eventID');
+    const samples = getRecords('Sample', 'materialSampleID');
+    data.Sample_Photo.forEach(t => {
+      const record = t;
+      const { bcid } = t;
+      if (samples) {
+        const sample = samples[t.materialSampleID];
+        const { bcid: sampleBcid } = sample;
+        Object.assign(record, sample, { bcid, sampleBcid });
+
+        let event = {};
+        let eventBcid;
+
+        if (events) {
+          event = events[record.eventID];
+          eventBcid = event.bcid;
+        }
+        Object.assign(record, sample, event, { bcid, sampleBcid, eventBcid });
+      }
+      records.push(record);
+    });
   } else if (entity === 'Tissue') {
     const events = getRecords('Event', 'eventID');
     const samples = getRecords('Sample', 'materialSampleID');
@@ -96,10 +116,20 @@ function transformResults(data, entity) {
       }
       records.push(record);
     });
-  } else if (entity === 'Sample') {
+  } else if (entity === 'Event_Photo') {
     const events = getRecords('Event', 'eventID');
-    data.Sample.forEach(s => {
+    data.Event_Photo.forEach(s => {
       const record = s;
+      const { bcid } = s;
+      if (events) {
+        const event = events[s.eventID];
+        const { bcid: eventBcid } = event;
+        Object.assign(record, event, { bcid, eventBcid });
+        // record.event = events[s.eventID];
+      }
+      records.push(record);
+    });
+  } else if (entity === 'Sample') { const events = getRecords('Event', 'eventID'); data.Sample.forEach(s => { const record = s;
       const { bcid } = s;
       if (events) {
         const event = events[s.eventID];

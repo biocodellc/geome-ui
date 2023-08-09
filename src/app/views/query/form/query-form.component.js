@@ -3,13 +3,16 @@ import angular from 'angular';
 
 const template = require('./query-form.html');
 
-const QUERY_ENTITIES = ['Event', 'Sample', 'Tissue', 'Fastq'];
+const QUERY_ENTITIES = ['Event', 'Sample', 'Tissue', 'Fastq', 'Sample_Photo', 'Event_Photo', 'Diagnostics'];
 
 const SELECT_ENTITIES = {
   Event: [],
   Sample: ['Event'],
   Tissue: ['Event', 'Sample'],
   fastqMetadata: ['Event', 'Sample', 'Tissue'],
+  Sample_Photo : ['Event', 'Sample'],
+  Event_Photo : ['Event'],
+  Diagnostics : ['Event', 'Sample']
 };
 
 const SOURCE = [
@@ -40,6 +43,26 @@ const SOURCE = [
   'Tissue.tissueType',
   'Tissue.tissuePlate',
   'Tissue.tissueWell',
+  'Sample_Photo.bcid',
+  'Sample_Photo.photoID',
+  'Sample_Photo.materialSampleID',
+  'Sample_Photo.qualityScore',
+  'Sample_Photo.photographer',
+  'Sample_Photo.img128',
+  'Event_Photo.bcid',
+  'Event_Photo.photoID',
+  'Event_Photo.eventID',
+  'Event_Photo.qualityScore',
+  'Event_Photo.photographer',
+  'Event_Photo.img128',
+  'Diagnostics.bcid',
+  'Diagnostics.materialSampleID',
+  'Diagnostics.diagnosticsID',
+  'Diagnostics.measurementType',
+  'Diagnostics.measurementValue',
+  'Diagnostics.measurementUnit',
+  'Diagnostics.diseaseTested',
+  'Diagnostics.diseaseDetected',
   'expeditionCode',
 ];
 
