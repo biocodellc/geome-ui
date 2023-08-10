@@ -116,7 +116,8 @@ export const childRecordDetails = {
   entityIdentifier: {
     query: e => ({
       text: `Query All ${e.expedition.expeditionTitle} ${e.conceptAlias}s`,
-      queryLink: `query`,
+      href: `query/?q=_expeditions_:[${e.expedition.expeditionCode}]&entity=${e.conceptAlias}`,
+      //queryLink: `query`,
     }),
   },
 };
