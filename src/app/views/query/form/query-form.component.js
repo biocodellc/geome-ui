@@ -133,6 +133,12 @@ class QueryFormController {
       this.setNetworkConfig();
     });
 
+    // Set entity parameter
+	this.entity = this.$location.search().entity;
+	if (!this.entity) {
+		this.entity = "Sample";
+	}
+
     // Query Results from Url
     const { q } = this.$location.search();
     if (q) {

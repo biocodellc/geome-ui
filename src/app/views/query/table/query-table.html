@@ -34,8 +34,14 @@
               popover-placement="bottom"
               popover-append-to-body="true"
               ng-repeat="column in $ctrl.tableColumns"
-              ng-bind-html="$ctrl.getVal(resource, column) | trusted_html"
-            ></td>
+            >
+              <!--ng-bind-html="$ctrl.getVal(resource, column) | trusted_html"-->
+			<div ng-switch="column === 'img128'">
+			    <img ng-switch-when="true" ng-src="{{ $ctrl.getVal(resource, column) }}" alt="Image" />
+				<span ng-switch-default> {{ $ctrl.getVal(resource, column) | trusted_html }}</span>
+
+			</div>
+			</td>
           </tr>
           <tr ng-if="$ctrl.results.totalElements === 0" class="h4">
             <td class="text-primary" colspan="100">No Data Found</td>
