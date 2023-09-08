@@ -44,6 +44,7 @@
       <md-button
         ng-click="$ctrl.togglePhoto(true)"
         ng-disabled="$ctrl.showPhoto"
+        ng-if="$ctrl.entity === 'Sample_Photo' || $ctrl.entity === 'Event_Photo'"
         class="groupX right md-raised"
         >Browse Photos</md-button
       >
