@@ -15,6 +15,7 @@ import fimsQueryForm from './form/query-form.component';
 import fimsTeamQueryForm from './team-query/team-form/team-query-form.component';
 import amphibianDiseaseForm from './team-query/team-form/amphibian-disease-form.component';
 import fimsQueryTable from './table/query-table.component';
+import fimsQueryPhoto from './photo/query-photo.component';
 import fimsTeamQueryTable from './team-query/team-table/team-query-table.component';
 import fimsFilterButtons from './form/filter-buttons/filter-buttons.component';
 
@@ -28,5 +29,6 @@ export default angular
   .component('amphibianDiseaseForm', amphibianDiseaseForm)
   .component('fimsTeamQueryForm', fimsTeamQueryForm)
   .component('fimsQueryTable', fimsQueryTable)
+  .component('fimsQueryPhoto', fimsQueryPhoto)
   .component('fimsTeamQueryTable', fimsTeamQueryTable)
   .component('fimsFilterButtons', fimsFilterButtons).name;

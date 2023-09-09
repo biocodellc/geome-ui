@@ -129,7 +129,9 @@ function transformResults(data, entity) {
       }
       records.push(record);
     });
-  } else if (entity === 'Sample') { const events = getRecords('Event', 'eventID'); data.Sample.forEach(s => { const record = s;
+  } else if (entity === 'Sample') { 
+      const events = getRecords('Event', 'eventID'); 
+      data.Sample.forEach(s => { const record = s;
       const { bcid } = s;
       if (events) {
         const event = events[s.eventID];

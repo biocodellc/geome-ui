@@ -36,10 +36,17 @@
         >Map</md-button
       >
       <md-button
-        ng-click="$ctrl.toggleMap(false)"
-        ng-disabled="!$ctrl.showMap"
+        ng-click="$ctrl.toggleTable(true)"
+        ng-disabled="$ctrl.showTable"
         class="groupX right md-raised"
         >Table</md-button
+      >
+      <md-button
+        ng-click="$ctrl.togglePhoto(true)"
+        ng-disabled="$ctrl.showPhoto"
+        ng-if="$ctrl.entity === 'Sample_Photo' || $ctrl.entity === 'Event_Photo'"
+        class="groupX right md-raised"
+        >Browse Photos</md-button
       >
     </div>
   </div>
@@ -105,7 +112,7 @@
     <!-- table -->
     <md-content>
       <fims-query-table
-        ng-show="!$ctrl.showMap && $ctrl.teamIdNum !== 45"
+        ng-show="$ctrl.showTable && $ctrl.teamIdNum !== 45"
         class="query-table"
         ng-class="{'full-page-query-table': !$ctrl.showSidebar}"
         results="$ctrl.results"
@@ -113,11 +120,22 @@
       ></fims-query-table>
       <!--For now, we just use team table for amphibian disease-->
       <fims-team-query-table
-        ng-show="!$ctrl.showMap && $ctrl.teamIdNum === 45"
+        ng-show="$ctrl.showTable && $ctrl.teamIdNum === 45"
         class="query-table"
         ng-class="{'full-page-query-table': !$ctrl.showSidebar}"
         results="$ctrl.results"
       ></fims-team-query-table>
+
+       <!-- photo -->
+    <md-content>
+      <fims-query-photo
+        ng-show="$ctrl.showPhoto"
+        class="query-photo"
+        ng-class="{'full-page-query-photo': !$ctrl.showSidebar}"
+        results="$ctrl.results"
+        entity="$ctrl.entity"
+      ></fims-query-photo>
     </md-content>
+
   </div>
 </div>

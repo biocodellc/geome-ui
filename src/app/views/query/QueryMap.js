@@ -51,6 +51,34 @@ function samplePopup({
   );
 }
 
+function photoPopup({
+  bcid,
+  img128,   
+}) {      
+  return (`${`<a href='${this.$state.href(
+    'record',
+    {
+      bcid,
+    },
+  )}' target='_blank'><img width="128" height="128" src=${img128}></a>`}`) 
+}
+   
+
+  function diagnosticsPopup({
+    bcid,
+    materialSampleID,
+    scientificName,
+    measurementType,
+    measurementValue,
+    measurementUnit   
+  }) {    
+    return (`${`<strong>materialSampleID</strong>  ${materialSampleID}</strong>}<br>` +
+    `<strong>scientificName</strong> ${scientificName || 'N/A'}<br>` +
+    `<strong>measurementType</strong> ${measurementType || 'N/A'}<br>` +
+    `<strong>measurementValue</strong> ${measurementValue || 'N/A'}<br>` +
+    `<strong>measurementUnit</strong> ${measurementUnit || 'N/A'}<br>`}`);    
+  }
+
 function tissuePopup({
   bcid,
   tissueType,
@@ -144,6 +172,9 @@ const POPUP_GENERATORS = {
   Sample: samplePopup,
   Tissue: tissuePopup,
   fastqMetadata: fastqPopup,
+  Sample_Photo: photoPopup,
+  Event_Photo: photoPopup,
+  Diagnostics: diagnosticsPopup
 };
 
 export default class QueryMap extends Map {
