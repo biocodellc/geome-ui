@@ -195,9 +195,9 @@ class RecordController {
         acc[key] = flatRecord[key];
       }
 
-      if (key === 'imageProcessingErrors') {
-        this.invalidPhoto = true;
-      }
+      //if (key === 'imageProcessingErrors') {
+      //  this.invalidPhoto = true;
+      //}
 
       return acc;
     }, {});
