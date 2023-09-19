@@ -14,7 +14,9 @@ function getStates() {
             ProjectService,
             ExpeditionService,
           ) =>
-            ExpeditionService.all(ProjectService.currentProject().projectId)
+			ExpeditionService.getExpeditionsForUser( ProjectService.currentProject().projectId, true)
+			//
+            //ExpeditionService.all(ProjectService.currentProject().projectId)
               .then(({ data }) => data.sort(compareValues('expeditionTitle')))
               .catch(() => $state.go('project')),
         },
