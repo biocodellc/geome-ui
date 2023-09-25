@@ -14,7 +14,8 @@ function getStates() {
             ProjectService,
             ExpeditionService,
           ) =>
-			ExpeditionService.getExpeditionsForUser( ProjectService.currentProject().projectId, true)
+			ExpeditionService.getExpeditionsForAdmin( ProjectService.currentProject().projectId)
+			//ExpeditionService.getExpeditionsForUser( ProjectService.currentProject().projectId, true)
 			//
             //ExpeditionService.all(ProjectService.currentProject().projectId)
               .then(({ data }) => data.sort(compareValues('expeditionTitle')))

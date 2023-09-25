@@ -63,6 +63,10 @@ const SOURCE = [
   'Diagnostics.measurementUnit',
   'Diagnostics.diseaseTested',
   'Diagnostics.diseaseDetected',
+  'Diagnostics.derivedDataType',
+  'Diagnostics.derivedDataFormat',
+  'Diagnostics.derivedDataURI',
+  'Diagnostics.derivedDataFilename',
   'expeditionCode',
 ];
 

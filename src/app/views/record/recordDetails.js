@@ -166,6 +166,11 @@ export const mainRecordDetails = {
   },
   Diagnostics: {
     diagnosticID: getKey('diagnosticID'),
+    measurementType: getKey('measurementType'),
+    derivedDataType: getKey('derivedDataType'),
+    derivedDataFormat: getKey('derivedDataFormat'),
+    derivedDataURI: getKey('derivedDataURI'),
+    derivedDataFilename: getKey('derivedDataFilename')
   },
   Tissue: {
     tissueID: getKey('tissueID'),

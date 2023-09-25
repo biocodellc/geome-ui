@@ -97,7 +97,7 @@ class ExpeditionService {
       return Promise.reject({ data: { error: 'No project is selected' } });
     }
 
-    return this.$http.get(`${restRoot}projects/${projectId}/expeditions?admin`);
+    return this.$http.get(`${restRoot}projects/${projectId}/expeditions?admin&includePrivate=true`);
   }
 
   updateExpeditions(projectId, expeditions) {

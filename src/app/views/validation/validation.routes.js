@@ -26,7 +26,8 @@ function getStates() {
                   true,
                 );
               } else {
-				fetchExpeditions = ExpeditionService.getExpeditionsForUser( ProjectService.currentProject().projectId, true);
+				fetchExpeditions = ExpeditionService.getExpeditionsForAdmin( ProjectService.currentProject().projectId);
+				//fetchExpeditions = ExpeditionService.getExpeditionsForUser( ProjectService.currentProject().projectId, true);
                 //fetchExpeditions = ExpeditionService.all(
                 //  ProjectService.currentProject().projectId,
                 //);
