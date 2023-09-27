@@ -4,9 +4,7 @@
       <span>{{ $ctrl.currentUser.username }}'s Expeditions</span>
     </md-card-title>
     <p align="center">
-      The following expeditions belong to
-      <strong>{{ $ctrl.currentUser.username }}</strong>
-      and may not represent a comprehensive list of expeditions for this project, which can be found
+      The following may not represent a comprehensive list of expeditions for this project, which can be found
       under
       <br />
       <md-button href ui-sref="project-overview">
@@ -49,6 +47,10 @@
             <li>
               <strong>Visibility: </strong>
               {{ expedition.visibility }}
+            </li>
+            <li>
+              <strong>Owner: </strong>
+              {{ expedition.user.username }} ({{ expedition.user.email }})
             </li>
           </ul>
         </div>
