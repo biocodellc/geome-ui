@@ -29,6 +29,7 @@
   <md-card-content>
       <a
         class="list-group-item clearfix"
+	    ng-if="expedition.user.username === $ctrl.currentUser.username" 
         ng-repeat="expedition in $ctrl.expeditions"
         href
         ui-sref="expeditions.detail({ id: expedition.expeditionId })"
