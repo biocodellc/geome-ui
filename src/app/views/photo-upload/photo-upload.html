@@ -39,9 +39,8 @@
         </li>
         <ul>
           <li>{parentIdentifier}+{imgIdentifier}.{ext}</li>
-          <p ng-show="$ctrl.entity.generateID" class="small">
-            If you select "Auto-Generate Ids" below, the parsed 'imgIdentifier' will be ignored. {parentIdentifier} will be either materialSampleID or eventID
-
+          <p class="small">
+            <b>IMPORTANT! Be sure that your {imgIdentifier} does not contain any special characters including spaces or dashes.</b> 
           </p>
         </ul>
         <li><strong>Metadata option</strong>: Include a <i>metadata.csv</i> with the following fields:</li>
