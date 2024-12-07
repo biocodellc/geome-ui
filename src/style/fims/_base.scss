@@ -288,7 +288,7 @@ md-chips {
   }
 }
 
-// mdDialog
+// mdDialog - Customizing md-autocomplete
 md-autocomplete {
   &.no-floating-label {
     md-input-container {
@@ -299,6 +299,16 @@ md-autocomplete {
       label {
         display: none;
       }
+    }
+  }
+
+  // Additional Customizations for Wider Dropdown
+  &.wide-dropdown {
+    .md-virtual-repeat-container {
+      width: 400px; /* Set the width of the dropdown */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 }
