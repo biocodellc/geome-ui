@@ -190,6 +190,8 @@ class RecordController {
             text: flatRecord[key],
             href: flatRecord[key],
           };
+        } else {
+          acc[key] = flatRecord[key];
         }
       } else {
         acc[key] = flatRecord[key];
