@@ -54,30 +54,29 @@
               </div>
             </md-input-container>
 
-            <md-switch
+            <!-- <md-switch
               ng-model="$ctrl.teamConfig"
               class="md-primary"
               aria-label="Join a team workspace?"
             >
               Join a team workspace?
-
-              <md-hints>
+          -->
+              <!-- <md-hints>
                 <md-hint>
-                  Join a team if you have been invited to do so and if you agree to use all of the
-                  attributes and rules and data formatting options for that team.
+                  Join a team if you agree to use all of the
+                  attributes and rules and data formatting options for that team. 
                 </md-hint>
-              </md-hints>
-            </md-switch>
+              </md-hints> -->
+            <!--</md-switch>-->
 
-            <md-autocomplete
-              ng-show="$ctrl.teamConfig"
+            <md-autocomplete              
               flex
               required
               md-no-cache
               md-show-arrow="true"
               md-selected-item="$ctrl.existingConfig"
               md-items="c in $ctrl.getConfigurations() | filter:{name: configSearchText}"
-              md-floating-label="Existing Team Workspace"
+              md-floating-label="Select Team Workspace to Join"
               md-require-match
               md-search-text="configSearchText"
               md-min-length="0"
@@ -90,7 +89,7 @@
                 >
               </md-item-template>
               <md-hints>
-                <md-hint>Select an existing team workspace.</md-hint>
+                <md-hint>Join a team if you agree to use all of the attributes and rules for that team. For more information visit the Getting Started page.</md-hint>
               </md-hints>
             </md-autocomplete>
 
