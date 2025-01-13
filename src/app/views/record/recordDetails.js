@@ -26,7 +26,7 @@ export const parentRecordDetails = {
     tissueWell: getKey('tissueWell'),
     fromTissue: getKey('fromTissue'),
     tissueInstitution: getKey('tissueInstitution'),
-    // tissueType: getKey('tissueType'),
+    tissueType: getKey('tissueType'),
     // tissueInstitution: getKey('tissueInstitution'),
   },
   expedition: {
@@ -80,6 +80,7 @@ export const childRecordDetails = {
     tissueWell: getKey('tissueWell'),
     fromTissue: getKey('fromTissue'),
     tissueInstitution: getKey('tissueInstitution'),
+    tissueType: getKey('tissueType'),
   },
   fastaSequence: {
     marker: sq => ({
