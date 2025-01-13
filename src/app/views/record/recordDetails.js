@@ -13,8 +13,9 @@ export const parentRecordDetails = {
       text: sample.materialSampleID,
       href: `/record/${sample.bcid}`,
     }),
-    genus: getKey('genus'),
-    specificEpithet: getKey('specificEpithet'),
+    scientificName: getKey('scientificName'),
+    lowestTaxonRank: getKey('lowestTaxonRank'),
+    catalogNumber: getKey('catalogNumber'),
   },
   Tissue: {
     tissueID: tissue => ({
@@ -54,8 +55,9 @@ export const childRecordDetails = {
       text: sample.materialSampleID,
       href: `/record/${sample.bcid}`,
     }),
-    genus: getKey('genus'),
-    specificEpithet: getKey('specificEpithet'),
+    scientificName: getKey('scientificName'),
+    lowestTaxonRank: getKey('lowestTaxonRank'),
+    catalogNumber: getKey('catalogNumber'),
   },
   Diagnostics: {
     diagnosticID: record => ({
