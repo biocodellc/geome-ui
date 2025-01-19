@@ -22,7 +22,8 @@ class TeamOverviewController {
   $onInit() {
     this.url =  this.$location.absUrl().split('?')[0];
     this.teamUrl = this.url + "?teamId=" + this.currentProject.projectConfiguration.id;
-    this.administrator = this.currentProject.projectConfiguration.user.username;
+    //this.administrator = this.currentProject.projectConfiguration.user.username;
+    this.administrator = this.currentProject.projectConfiguration.user.first_name + " " +  this.currentProject.projectConfiguration.user.last_name;
     this.contact = this.currentProject.projectConfiguration.user.email;
 
     if (this.currentProject.limitedAccess) return;
