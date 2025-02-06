@@ -1,0 +1,7 @@
+.accordion-button:focus{
+    box-shadow: none;
+}
+
+@media screen and (max-width: 991px) {
+    img{ max-width: 80%; }
+}

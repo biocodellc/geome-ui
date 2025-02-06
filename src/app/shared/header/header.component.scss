@@ -1,0 +1,12 @@
+ul li.cursor-pointer{
+    &:hover, &.active{
+        background-color: #f0f0f0;
+        color: #1360a4;
+        border-radius: 5px;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .dropdown-toggle::after{ display: none; }
+    .header-container ul{ gap: 0.5rem !important; }
+}

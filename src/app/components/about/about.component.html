@@ -1,0 +1,395 @@
+<section id="about" class="p-3 mt-3 mb-4">
+    <div class="container">
+        <div>
+            <h2>Quick Start</h2>
+            <ol style="padding-left: 5rem;">
+                <li><span class="text-primary cursor-pointer fw-semibold" [routerLink]="['/register']">Create an account</span></li>
+                <li class="mt-2"><span class="text-primary cursor-pointer fw-semibold">Create a project</span></li>
+            </ol>
+        </div>
+
+        <!-- About Body -->
+        <div class="mt-4">
+            <h2>About GEOME</h2>
+            <div ngbAccordion [closeOthers]="true">
+                <div ngbAccordionItem>
+                    <h2 ngbAccordionHeader>
+                        <button ngbAccordionButton>Creating Projects and Expeditions</button>
+                    </h2>
+                    <div ngbAccordionCollapse>
+                        <div ngbAccordionBody>
+                            <ng-template>
+                                <div class="f-14">
+                                    @for(item of firstSection; track item){
+                                    @if(item.type == 'container'){
+                                    <div class="mb-4">
+                                        @if(item.title){ <h6 class="fw-semibold">{{item.title}}</h6> }
+                                        <p>{{item.disc}}</p>
+                                        @if(item.img){
+                                        <img [src]="item.img" style="max-height: 350px;" class="m-auto my-2 d-block">
+                                        <span class="my-2 text-center d-block fw-semibold">{{item.imgLabel}}</span>
+                                        }
+                                    </div>
+                                    }
+                                    @else{
+                                    <p>{{item.disc}}</p>
+                                    <div ngbAccordion [closeOthers]="true">
+                                        @for (team of teams; track team.id) {
+                                        <div ngbAccordionItem>
+                                            <h2 ngbAccordionHeader>
+                                                <button ngbAccordionButton>{{ team.name }}</button>
+                                            </h2>
+                                            <div ngbAccordionCollapse>
+                                                <div ngbAccordionBody>
+                                                    <ng-template>
+                                                        <p class="mb-4">{{team.description}}</p>
+                                                    </ng-template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        }
+                                    </div>
+                                    }
+                                    }
+
+                                </div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+                <div ngbAccordionItem>
+                    <h2 ngbAccordionHeader>
+                        <button ngbAccordionButton>Minimum Information Requirements</button>
+                    </h2>
+                    <div ngbAccordionCollapse>
+                        <div ngbAccordionBody>
+                            <ng-template>
+                                <div>
+                                    <p>GEOME requires the following fields to be entered for ALL projects:</p>
+                                    <ul>
+                                        <li>materialSampleID</li>
+                                        <li>yearCollected</li>
+                                        <li>country</li>
+                                        <li>locality</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="fw-semibold">Notes:</h4>
+                                    <ul>
+                                        <li>Locality is required but not decimalLatitude/decimalLongitude as the
+                                            coordinates of a collected sample may not be, or cannot be, stated.</li>
+                                        <li>Each team workspace or project may choose to enforce additional rules which
+                                            extend the GEOME network rules.</li>
+                                        <li>GEOME provides the following controlled vocabularies which all projects must
+                                            adopt: country, container, horizontalDatum, lengthUnits, lifeStage, markers,
+                                            phylum, preservative, relaxant, sex, taxonRank, basisOfIdentification, and
+                                            weightUnits. FASTQ metadata controlled vocabularies include: libraryLayout,
+                                            librarySelection, librarySource, libraryStrategy. Some of the controlled
+                                            vocabularies accept the value of 'Unknown' in cases where none of the listed
+                                            options are suitabled.</li>
+                                        <li>The technical specification for the GEOME network is represented in
+                                            javascript object notation (JSON) format at<a
+                                                href="https://api.geome-db.org/v1/network/1/config" target="_blank"
+                                                class="">https://api.geome-db.org/v1/network/1/config</a></li>
+                                    </ul>
+                                    <img src="images/geomeRequired.png" class="d-block m-auto"
+                                        style="max-height: 350px;">
+                                    <span class="d-block text-center">Minimum required fields for teams and available
+                                        project configurations</span>
+                                </div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+                <div ngbAccordionItem>
+                    <h2 ngbAccordionHeader>
+                        <button ngbAccordionButton>Workflow Diagram</button>
+                    </h2>
+                    <div ngbAccordionCollapse>
+                        <div ngbAccordionBody>
+                            <ng-template>
+                                <img class="d-block m-auto" src="images/geomeWorkflow.png" style="max-height: 350px;">
+                                <span class="d-block text-center">This diagram shows how data is managed in the GEOME
+                                    environment. Boxes in solid blue indicate GEOME functions that the user interacts
+                                    with, such as generating templates and loading data. The white boxes with a green
+                                    border are functions that happen outside of the GEOME environment, such as data
+                                    entry into a spreadsheet.</span>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+                <div ngbAccordionItem>
+                    <h2 ngbAccordionHeader>
+                        <button ngbAccordionButton>The GEOME R Package</button>
+                    </h2>
+                    <div ngbAccordionCollapse>
+                        <div ngbAccordionBody>
+                            <ng-template>
+                                <p class="p-3">
+                                    The
+                                    <a href="https://github.com/biocodellc/geomedb" target="_blank">GEOME R package</a> is
+                                    used to retrieve GEOME data for analysis.  Please visit our github page to run the current code.  The GEOME R package is no longer
+                                    available under CRAN and only available using the github installer.
+                                  </p>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+                <div ngbAccordionItem>
+                    <h2 ngbAccordionHeader>
+                        <button ngbAccordionButton>The Biocode LIMS Plugin</button>
+                    </h2>
+                    <div ngbAccordionCollapse>
+                        <div ngbAccordionBody>
+                            <ng-template>
+                                <p>
+                                    All data uploaded to GEOME can be manipulated in a laboratory information management system
+                                    (LIMS) using a specially built
+                                    <a href="https://github.com/biocodellc/biocode-lims/releases" target="_blank">LIMS plugin</a> that operates
+                                    within the Geneious environment. The purpose of the LIMS tool is to help manage lab and
+                                    sequence analysis workflows.Use the
+                                    <a href="https://github.com/biocodellc/biocode-lims/wiki" target="_blank">LIMS plugin wiki</a> to learn about
+                                    how to use the LIMS.
+                                </p>
+                                <ul>
+                                    <li><span class="me-1 fw-semibold">Field Database Connection:</span>GEOME FIMS</li>
+                                    <li><span class="me-1 fw-semibold">Host:</span>https://api.geome-db.org/</li>
+                                    <li><span class="me-1 fw-semibold">Username/password:</span>User your GEOME username and password to access your data in the LIMS system.</li>
+                                </ul>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+                <div ngbAccordionItem>
+                    <h2 ngbAccordionHeader>
+                        <button ngbAccordionButton>Video Library: Instructional and Technical Presentations</button>
+                    </h2>
+                    <div ngbAccordionCollapse>
+                        <div ngbAccordionBody>
+                            <ng-template>
+                                <div>
+                                    <iframe class="d-block m-auto" width="560" height="315" src="https://youtube.com/embed/WyJKmFsUVKc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+                                    <span class="d-block text-center pt-2">Instructions for the FuTRES team... Using GEOME to load data.</span>
+                                </div>
+                                <div class="my-3">
+                                    <iframe class="d-block m-auto" width="560" height="315" src="https://www.youtube.com/embed/GX-2Zk9MVws" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+                                    <span class="d-block text-center pt-2">This video discusses uploading data, logging in, creating a new project, generating spreadsheet templates, and loading data.</span>
+                                </div>
+                                <div>
+                                    <iframe class="d-block m-auto" width="560" height="315" src="https://www.youtube.com/embed/hYlyqtW-bn8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+                                    <span class="d-block text-center pt-2">This video talks about download functions including querying and working with GEOME in the GEOME R package.</span>
+                                </div>
+                                <div class="mt-3">
+                                    <iframe class="d-block m-auto" width="560" height="315" src="https://www.youtube.com/embed/cuAN9LbDO-U" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+                                    <span class="d-block text-center pt-2">This video talks about GEOME's technical architecture, and how metadata is handled.</span>
+                                </div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+                <div ngbAccordionItem>
+                    <h2 ngbAccordionHeader>
+                        <button ngbAccordionButton>Enterprise Services</button>
+                    </h2>
+                    <div ngbAccordionCollapse>
+                        <div ngbAccordionBody>
+                            <ng-template>
+                                <div>
+                                    <p>GEOME offers the following enterprise-level services under contract:</p>
+                                    <ul>
+                                        <li>Creating and customizing team environments</li>
+                                        <li>Technical assistance with GEOME as well as the Biocode LIMS plugin</li>
+                                        <li>Loading photos and media</li>
+                                        <li>Training</li>
+                                        <li>Customized installations</li>
+                                    </ul>
+                                    <p><span [routerLink]="['/contact']" class="text-primary cursor-pointer">Contact us</span> to discuss options.</p>
+                                </div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+                <div ngbAccordionItem>
+                    <h2 ngbAccordionHeader>
+                        <button ngbAccordionButton>History</button>
+                    </h2>
+                    <div ngbAccordionCollapse>
+                        <div ngbAccordionBody>
+                            <ng-template>
+                                <p>GEOME has its roots in the Moorea Biocode project database, developed from 2006 to 2011 to support data collection for the Moore Foundation funded Moorea Biocode Project: an all taxa biotic inventory of a single tropical island involving 6 teams, 50 researchers, and thousands of collecting events. The Moorea Biocode field information management system, also known as "FIMS1", was developed to ingest spreadsheet data from researchers working on the project and employed data validation on data ingest. The tools were written in Perl and Java. FIMS1 has been running from 2006 through 2018 and developed tools such as the Plate Matcher (to easily map tissues to 96 well plates), the bioValidator (for loading and validating spreadsheets), and a web interface for managing data.</p>
+                                <p class="mt-2">
+                                    From 2012 to 2015, the National Science Foundation funded the BiSciCol (Biological Sciences
+                                    Collections) project. While BiSciCol focused on identifiers, ontologies, and semantic
+                                    technologies for linking biodiversity data, the primary use case was to work on a solution for
+                                    linking events, samples, and tissues across many different systems using linked data
+                                    technology with the Moorea Biocode Project data integration with member institution databases.
+                                    BiScicol brought us the following products: a clearer understanding of the role of persistent
+                                    identifiers, the
+                                    <a href="https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-15-257" target="_blank">BiSciCol triplifier</a>, the development of the
+                                    <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0089606" target="_blank">
+                                      Biological Collections Ontology (BCO)</a>, and the development of FIMS2, also known as the
+                                    <a href="http://biscicol.org/" target="_blank">BiSciCol FIMS</a>. The BiSciCol FIMS adopted ARK identifiers
+                                    (through California Digital Library's EZID system) for all samples, events and tissues. In
+                                    addition, all data inserted into BiSciCol FIMS was backed by a Fuseki triplestore with
+                                    metadata configurations specified using an XML configuration file, stored and managed
+                                    separately by each project.
+                                  </p>
+                                  <p class="mt-2">
+                                    From 2014-2017, BiSciCol FIMS began hosting the Diversity of the IndoPacific Network (DIPNet)
+                                    to develop a coherent metadata repository for assembling metadata from across the IndoPacific
+                                    region. DIPNet added the ability to upload FASTA and FASTQ metadata to the FIMS2 site and also
+                                    developed the name "GEOME" (eventually becaming the brand name for FIMS3). During this
+                                    time-frame, another FIMS system was developed for the Smithosnian National Museum of Natural
+                                    History ("NMNH FIMS") with the goal of creating a centralized field data ingestion system for
+                                    all NMNH field data. The NMNH FIMS has since been discontinued with SI users using the
+                                    BiSciCol FIMS (Barcode of Wildlife Project, ARMS portal, and Global Genome Initiative) and
+                                    FIMS1 installations (Invertebrate Zoology and LAB applications).
+                                  </p>
+                                  <p class="mt-2">
+                                    Beginning in 2016, John Deck and RJ Ewing started work on a redesigned FIMS system, utilizing
+                                    a Postgres backend to control project management features and JSON metadata objects to store
+                                    data and configurations. This FIMS system (FIMS3) assumed the name GEOME. It incorporates
+                                    features from FIMS1 (including photo uploading, specimen, tissue, and event pages,
+                                    plate-matching tools) along with features of the BiSciCol FIMS (persistent id generation,
+                                    flexible project configuration with attributes stored in a non-relational system guided by a
+                                    configuration file). In addition, FIMS3 brings in the concept of a network which governs
+                                    multiple configuration templates and the ability to easily create projects through a user
+                                    interface. The goal of GEOME is to integrate all previous FIMS1 and FIMS2, with FIMS1 and
+                                    FIMS2 projects removed from their current hosting environment by Spring of 2019.
+                                  </p>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+                <div ngbAccordionItem>
+                    <h2 ngbAccordionHeader>
+                        <button ngbAccordionButton>Data usage policy</button>
+                    </h2>
+                    <div ngbAccordionCollapse>
+                        <div ngbAccordionBody>
+                            <ng-template>
+                                <div>
+                                    <p>GEOME has the following objectives:</p>
+                                    <ul>
+                                        <li>To advance genetic diversity research worldwide</li>
+                                        <li>To aggregate sample and genetic data in raw formats in a searchable database such that original datasets can
+                                            be utilized for further investigation.</li>
+                                        <li>To promote and advocate open and collaborative science as a best practice for conducting biodiversity
+                                            research</li>
+                                        <li>To promote and provide capacity-building within developing countries for monitoring, study and protection of
+                                            their biodiversity resources.</li>
+                                    </ul>
+                                
+                                    <p> Recalling that access to and utilization of genetic resources and data taken should be consistent with the
+                                        provisions of the Convention on Biological Diversity (CBD) taking into account their specifications by the Bonn
+                                        Guidelines on Access to Genetic Resources and the Fair and Equitable Sharing of Benefits arising from their
+                                        Utilization, and, where appropriate, the Nagoya Protocol on Access to Genetic Resources and the Fair and
+                                        Equitable Sharing of Benefits arising from their Utilization (NP),
+                                    </p>
+                                
+                                    <p>Recalling that according to these provisions non-monetary and/or monetary benefits from the
+                                        utilization of the genetic resources shall be shared with the Country of Origin if the same so
+                                        requires and as it is set out in mutually agreed terms,<br> Acknowledging that research and development on
+                                        genetic resources can be for the public domain (non-commercial) or for commercial purposes and,
+                                    </p>
+                                
+                                    <p>Recalling that according to these provisions, non-commercial research purposes may contribute to the conservation
+                                        and sustainable use of biodiversity</p>
+                                
+                                    <p>By uploading data to or downloading data from the GEOME database, GEOME contributors and Recipients of GEOME data
+                                        agree as follows:</p>
+                                
+                                    <p><b>ARTICLE 1 – UPLOADING OF LEGAL AND ACCURATE GENETIC DATA AND ASSOCIATED METADATA</b></p>
+                                
+                                    <p>
+                                        By uploading Genetic Data and associated metadata to GeOME database, Contributors certify the
+                                        following:
+                                    </p>
+                                    <p>
+                                        <b>1.1</b> The Genetic Resources from which Genetic Data and Associated Metadata were derived
+                                        were collected under appropriate and legal access permits or their equivalent by each Country
+                                        of Origin, and
+                                    </p>
+                                    <p>
+                                        <b>1.2</b> All co-authors on the data’s primary publication have consented to share the data
+                                        in the GEOME database.
+                                    </p>
+                                
+                                    <p><b>ARTICLE 2 – USAGE OF DOWNLOADED GENETIC DATA AND ASSOCIATED METADATA</b></p>
+                                
+                                    <p>
+                                        <b>2.1</b> The Recipient shall be entitled to the Use of the Genetic Data and Associated
+                                        Metadata for the Public Domain.
+                                    </p>
+                                
+                                    <p>
+                                        <b>2.2</b> Should the Recipient intend to utilize the Genetic Data and Associated Metadata for
+                                        Commercial Purposes they will seek consent of the Country of Origin, subject to the mutually
+                                        agreed terms between the GEOME contributor and Country of Origin.
+                                    </p>
+                                
+                                    <p>
+                                        <b>2.3</b> When used for Commercial Purposes or in the Public Domain, data should be
+                                        recognized as follows: “Data were made available through GEOME (https://geome-db.org/)”.
+                                    </p>
+                                
+                                    <p>
+                                        <b>2.4</b> Every attempt should be made to cite the original studies having contributed data
+                                        to the new analyses. Attribution would include any publications first describing these data as
+                                        well as reference to electronic depositions (such as DOI associated with dataDryad). This
+                                        information may often be found in the “associatedReferences” field of the database.
+                                    </p>
+                                
+                                    <p>
+                                        <b>2.5</b> The Recipient may transfer downloaded Genetic Data and Associated Metadata to
+                                        Subsequent Recipients provided that Subsequent Recipients agree in writing to use the data
+                                        under the terms of this agreement.
+                                    </p>
+                                
+                                    <p>
+                                        <b>2.6</b> GEOME does not undertake to monitor the rights of any Country of Origin for their
+                                        Genetic Resources downstream from our database portal.
+                                    </p>
+                                </div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+                <div ngbAccordionItem>
+                    <h2 ngbAccordionHeader>
+                        <button ngbAccordionButton>Steering Committee</button>
+                    </h2>
+                    <div ngbAccordionCollapse>
+                        <div ngbAccordionBody>
+                            <ng-template>
+                                The GEOME Steering Committee is responsible for guiding the development of GEOME software, its implementation, and setting strategic direction. The GEOME steering committee consists of Neil Davies (UC Berkeley), John Deck (UC Berkeley and Biocode, LLC), RJ Ewing (Biocode, LLC), Rob Toonen (University of Hawaii), Cynthia Riginos (University of Queensland), Eric Crandall (CSU Monterey), Libby Liggins (Massey University), Chris Meyer (Smithsonian National Museum of Natural History), and Michelle Gaither (University of Central Florida).
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <p>
+                  <i>
+                    <a href="https://doi.org/10.1371/journal.pbio.2002925" target="_blank">
+                      "The Genomic Observatories Metadatabase (GEOME): A new repository for field and sampling
+                      event metadata associated with genetic samples"</a>, John Deck , Michelle R. Gaither, Rodney Ewing, Christopher E. Bird, Neil Davies,
+                    Christopher Meyer, Cynthia Riginos, Robert J. Toonen, Eric D. Crandall Published: August 3,
+                    2017 <a href="https://doi.org/10.1371/journal.pbio.2002925" target="_blank">https://doi.org/10.1371/journal.pbio.2002925</a>
+                  </i>
+                </p>
+              
+                <p>
+                  Development of GEOME has been supported by the
+                  <a href="https://www.moore.org/article-detail?newsUrlName=ambitious-project-to-create-genetic-catalog-of-a-model-ecosystem-gets-$5-2-million-from-the-gordon-and-betty-moore-foundation " target="_blank">Gordon and Betty Moore Foundation</a>, the National Science Foundation (
+                  <a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=0956426&amp;HistoricalAwards=false " target="_blank">DEB-0956426</a>
+                  and <a href="https://nsf.gov/awardsearch/showAward?AWD_ID=1457848 " target="_blank">DEB-1457848</a>), the
+                  <a href="https://bnhm.berkeley.edu/ " target="_blank">Berkeley Natural History Museums</a>, and contracts from
+                  the
+                  <a href="https://naturalhistory.si.edu/" target="_blank">Smithsonian National Museum of Natural History</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>

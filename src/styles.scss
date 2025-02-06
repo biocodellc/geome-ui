@@ -1,0 +1,88 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Importing Bootstrap SCSS file. */
+@import 'bootstrap/scss/bootstrap';
+
+input:-webkit-autofill {
+    transition: background-color 5000s ease-in-out 0s !important;
+    -webkit-text-fill-color: #000 !important;
+}
+
+:root,[data-bs-theme="light"]{
+    --primary-color: #2196f3;
+    --warn-color: #ff6d00;
+}
+
+body{
+    font-family: "Roboto", "Helvetica Neue", sans-serif;
+    font-size: 15px;
+    line-height: 1.42857;
+}
+
+.primary-text{ color: var(--primary-color) !important;}
+.warn-text{ color: var(--warn-color) !important;}
+
+.f-12{ font-size: 12px !important; }
+.f-14{ font-size: 14px !important; }
+.f-15{ font-size: 15px !important; }
+.f-16{ font-size: 16px !important; }
+.f-18{ font-size: 18px !important; }
+.f-20{ font-size: 20px !important; }
+.f-25{ font-size: 25px !important; }
+.f-30{ font-size: 30px !important; }
+
+.cursor-pointer{ cursor: pointer; }
+
+.base-text-color{ color: rgba(0, 0, 0, 0.67); }
+
+a{ text-decoration: none; }
+
+
+// Theme Button
+.btn-primary.custom{
+    --bs-btn-bg: var(--primary-color);
+    --bs-btn-border-color: var(--primary-color);
+    --bs-btn-hover-bg: #1e88e5;
+    --bs-btn-hover-border-color: #1e88e5;
+    --bs-btn-focus-shadow-rgb: 49, 132, 253;
+    --bs-btn-active-bg: #1a87e6;
+    --bs-btn-active-border-color: #1a87e6;
+}
+
+// Authentication pages
+section#login-container, section#register-container, section#resetPass-container{
+    .form-control,
+    .form-control-plaintext{
+        border: none;
+        box-shadow: none;
+        border-bottom: 1px solid var(--primary-color);
+        border-radius: 0px;
+        border-color: #0000001f;
+        padding: 0.75rem 0.75rem 0px 0px !important;
+        height: calc(3rem + calc(var(--bs-border-width)* 2));
+        min-height: calc(3rem + calc(var(--bs-border-width)* 2));
+        &:focus{
+            border-color: blue;
+            ~ label { color: var(--primary-color); }
+        }
+        &.ng-invalid.ng-touched, .ng-invalid.ng-touched:focus{
+            border-color: var(--warn-color);
+            ~ label { color: var(--warn-color); }
+        }
+    }
+
+    .form-control:focus,
+    .form-control:not(:placeholder-shown),
+    .form-control-plaintext,
+    .form-select {
+        ~ label { transform: scale(0.85) translateY(-1.5rem) translateX(0.15rem) !important; }
+    }
+}
+
+@media (min-width: 1400px) {
+    .container-xxl, .container-xl, .container-lg, .container-md, .container-sm, .container {
+        max-width: 1230px;
+    }
+}
+
+@media screen and (max-width: 991px) {}
