@@ -10,7 +10,7 @@
                             <input type="text" formControlName="firstName" class="form-control" id="floatingFirstName" placeholder="firstName">
                             <label for="floatingFirstName" class="ps-0 fw-semibold">First Name *</label>
                         </div>
-                        @if(form['firstName'].touched &&form['firstName'].invalid){
+                        @if(form['firstName'].touched && form['firstName'].invalid){
                             <span class="warn-text f-12">{{ form['firstName'].hasError('required') ? 'First Name is required.' : '' }}</span>
                         }
                     </div>
@@ -19,7 +19,7 @@
                             <input type="text" formControlName="lastName" class="form-control" id="floatingLastName" placeholder="lastName">
                             <label for="floatingLastName" class="ps-0 fw-semibold">Last Name *</label>
                         </div>
-                        @if(form['lastName'].touched &&form['lastName'].invalid){
+                        @if(form['lastName'].touched && form['lastName'].invalid){
                             <span class="warn-text f-12">{{ form['lastName'].hasError('required') ? 'Last Name is required.' : '' }}</span>
                         }
                     </div>
@@ -28,7 +28,7 @@
                             <input type="email" formControlName="email" class="form-control" id="floatingEmail" placeholder="email">
                             <label for="floatingEmail" class="ps-0 fw-semibold">Email *</label>
                         </div>
-                        @if(form['email'].touched &&form['email'].invalid){
+                        @if(form['email'].touched && form['email'].invalid){
                             <span class="warn-text f-12">{{ form['email'].hasError('required') ? 'Email is required.' : 'Please enter a valid email address.' }}</span>
                         }
                     </div>
@@ -41,11 +41,11 @@
                     
                     <div class="mb-4">
                         <div class="form-floating mb-1">
-                            <input type="text" formControlName="username" class="form-control" id="floatingName" placeholder="username">
+                            <input type="text" formControlName="username" class="form-control" [class.invalid]="isUserNameTaken" id="floatingName" placeholder="username">
                             <label for="floatingName" class="ps-0 fw-semibold">Username *</label>
                         </div>
-                        @if(form['username'].touched &&form['username'].invalid){
-                            <span class="warn-text f-12">{{ form['username'].hasError('required') ? 'Username is required.' : '' }}</span>
+                        @if(form['username'].touched && (form['username'].invalid || isUserNameTaken)){
+                            <span class="warn-text f-12">{{ form['username'].hasError('required') ? 'Username is required.' : 'That username already exists.' }}</span>
                         }
                     </div>
                     <div class="mb-4">
@@ -71,7 +71,14 @@
                     </div>
 
                     <div class="d-flex flex-column align-items-center gap-3">
-                        <button type="submit" class="btn btn-primary custom" style="min-width: 200px;">CREATE ACCOUNT</button>
+                        <button type="submit" class="btn btn-primary custom" style="min-width: 200px;" [disabled]="isLoading">
+                            @if(!isLoading){ CREATE ACCOUNT }
+                            @else{
+                                <div class="spinner-border text-light" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            }
+                        </button>
                         <p>Already have an account?<span class="primary-text ms-1 cursor-pointer" [routerLink]="['/login']">Login!</span></p>
                     </div>
                 </form>

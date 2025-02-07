@@ -29,7 +29,8 @@ export class AppComponent {
   constructor(){
     this.onResize();
     this.authService.currentUser.subscribe((x:any)=>{
-      if(x) this.currentUser = x;
+      this.currentUser = x;
+      console.log(x);
     })
   }
 }

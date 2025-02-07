@@ -65,7 +65,7 @@ section#login-container, section#register-container, section#resetPass-container
             border-color: blue;
             ~ label { color: var(--primary-color); }
         }
-        &.ng-invalid.ng-touched, .ng-invalid.ng-touched:focus{
+        &.ng-invalid.ng-touched, .ng-invalid.ng-touched:focus, &.invalid.ng-touched{
             border-color: var(--warn-color);
             ~ label { color: var(--warn-color); }
         }

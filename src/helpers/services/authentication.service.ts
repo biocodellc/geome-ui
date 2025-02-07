@@ -48,8 +48,6 @@ export class AuthenticationService {
         oAuthTimestamp: new Date().getTime(),
       }
       localStorage.setItem( this.storageKey, btoa(JSON.stringify(user)) );
-      this.setCurrentUser(user);
-      this.isLoggedIn = true;
     }
   }
 
@@ -57,6 +55,7 @@ export class AuthenticationService {
     if(JSON.stringify(user) == JSON.stringify(this.currentUserSubject.value)) return;
     this.currentUserSubject.next(user);
     this.currentUser = this.currentUserSubject.asObservable();
+    this.isLoggedIn = user ? true : false;
   }
 
   isTokenExpired():boolean{

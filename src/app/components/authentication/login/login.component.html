@@ -38,7 +38,14 @@
                             <span class="primary-text cursor-pointer" (click)="changeMode('forgot')">Forgot Password?</span>
                         }
                         @else{
-                            <button type="button" class="btn btn-primary custom" style="min-width: 200px;" (click)="sendResetPassReq()">RESET PASSWORD</button>
+                            <button type="button" class="btn btn-primary custom" style="min-width: 200px;" (click)="sendResetPassReq()" [disabled]="isLoading">
+                                @if(!isLoading){ RESET PASSWORD }
+                                @else{
+                                    <div class="spinner-border text-light" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                }
+                            </button>
                             <span class="primary-text cursor-pointer" (click)="changeMode('login')">Login?</span>
                         }
                         <p>New to GEOME?<span class="primary-text ms-1 cursor-pointer" [routerLink]="['/register']">Sign up!</span></p>
