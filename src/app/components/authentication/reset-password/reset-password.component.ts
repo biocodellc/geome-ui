@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../../../helpers/services/user.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-reset-password',
@@ -16,6 +17,7 @@ export class ResetPasswordComponent {
   fb: FormBuilder = inject(FormBuilder);
   activatedRoute = inject(ActivatedRoute);
   userService = inject(UserService);
+  toastr = inject(ToastrService);
   router = inject(Router);
 
   // Variables
@@ -51,10 +53,14 @@ export class ResetPasswordComponent {
     this.userService.resetPassword(data).subscribe({
       next: (res:any)=>{
         if(res.success){
+          this.toastr.success('Successfully reset your password');
           this.router.navigate(['/login']);
         }
       },
-      error: (res:any)=>{}
+      error: (err:any)=>{
+        this.toastr.error(err.error?.usrMessage || 'Something went wrong!');
+        this.isLoading = false;
+      }
     })
   }
 }

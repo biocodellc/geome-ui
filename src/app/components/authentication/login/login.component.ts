@@ -58,7 +58,10 @@ export class LoginComponent {
         this.toastrService.success('Login Successful');
         this.router.navigate(['']);
       },
-      error: (err:any)=>{}
+      error: (err:any)=>{
+        this.toastrService.error(err.error?.usrMessage || 'Something went wrong!');
+        this.isLoading = false;
+      }
     })
   }
 
@@ -71,9 +74,12 @@ export class LoginComponent {
     this.userService.sendResetPasswordToken(this.getControlVal('username')).subscribe({
       next: (res:any)=>{
         this.isLoading = false;
-        this.toastrService.success('Reset Email Sent');
+        this.toastrService.success('If you have provided a valid username, check your email for further instructions.');
       },
-      error: (err:any)=>{}
+      error: (err:any)=>{
+        this.toastrService.error(err.error?.usrMessage || 'Something went wrong!');
+        this.isLoading = false;
+      }
     })
   }
 

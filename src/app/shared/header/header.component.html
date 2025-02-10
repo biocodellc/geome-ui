@@ -3,7 +3,7 @@
         <img src="logo/geome-logo.png" class="header-logo cursor-pointer" height="48px" routerLink="">
         @if(currentUser){
             <div class="d-flex align-items-center gap-2">
-                <button type="button" class="btn btn-primary custom">CREATE PROJECT</button>
+                <button type="button" class="btn btn-primary custom" [routerLink]="['/project/new']">CREATE PROJECT</button>
             </div>
         }
         <ul class="d-flex m-0 pe-2 align-items-center gap-3" style="list-style: none;">

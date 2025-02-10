@@ -25,4 +25,8 @@ export const routes: Routes = [
         path: 'resetPass',
         loadComponent: () => import('./components/authentication/reset-password/reset-password.component').then(m => m.ResetPasswordComponent)
     },
+    {
+        path: 'project/new',
+        loadComponent: ()=> import('./components/create-project/create-project.component').then(m => m.CreateProjectComponent)
+    }
 ];
