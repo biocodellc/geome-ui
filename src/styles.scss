@@ -22,6 +22,7 @@ body{
 .primary-text{ color: var(--primary-color) !important;}
 .warn-text{ color: var(--warn-color) !important;}
 
+.f-11{ font-size: 11px !important; }
 .f-12{ font-size: 12px !important; }
 .f-14{ font-size: 14px !important; }
 .f-15{ font-size: 15px !important; }
@@ -50,7 +51,7 @@ a{ text-decoration: none; }
 }
 
 // Authentication pages
-section#login-container, section#register-container, section#resetPass-container{
+section#login-container, section#register-container, section#resetPass-container, section#dashboard-container, section#teams-list-container{
     .form-control,
     .form-control-plaintext{
         border: none;
@@ -77,6 +78,13 @@ section#login-container, section#register-container, section#resetPass-container
     .form-select {
         ~ label { transform: scale(0.85) translateY(-1.5rem) translateX(0.15rem) !important; }
     }
+}
+
+// Workbench Page
+.main-content-container{
+    flex: 1;
+    max-height: calc( 100vh - 62px );
+    overflow-y: auto;
 }
 
 @media (min-width: 1400px) {

@@ -1,1 +1,10 @@
-<p>sidebar works!</p>
+<div id="sidebar" style="width: 320px; height: calc(100vh - 62px); overflow-y:auto" class="py-3 shadow">
+    <div class="d-flex flex-column">
+        @for(item of menuItems; track item){
+            <button type="button" [routerLink]="[item.route]" class="btn sidebar-item cursor-pointer border-0 p-3 ps-4 text-start f-15">
+                <i class="fas me-2" [ngClass]="item.icon" style="min-width: 30px;"></i>
+                {{item.name}}
+            </button>
+        }
+    </div>
+</div>

@@ -28,5 +28,16 @@ export const routes: Routes = [
     {
         path: 'project/new',
         loadComponent: ()=> import('./components/create-project/create-project.component').then(m => m.CreateProjectComponent)
+    },
+    {
+        path: 'workbench',
+        loadComponent: ()=> import('./components/workbench/workbench.component').then(m => m.WorkbenchComponent),
+        children:[
+            { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+            {
+                path: 'dashboard',
+                loadComponent: ()=> import('./components/workbench/dashboard/dashboard.component').then(m => m.DashboardComponent)
+            }
+        ]
     }
 ];

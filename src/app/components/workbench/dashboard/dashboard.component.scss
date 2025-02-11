@@ -1,0 +1,10 @@
+table{
+    th{ min-width: 120px; }
+    td{
+        div.centered{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+}

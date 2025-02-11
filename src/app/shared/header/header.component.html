@@ -1,4 +1,4 @@
-<section class="header-container px-2 py-1 shadow">
+<section class="header-container px-2 py-1 shadow position-relative" style="z-index: 999">
     <div class="d-flex justify-content-between">
         <img src="logo/geome-logo.png" class="header-logo cursor-pointer" height="48px" routerLink="">
         @if(currentUser){
@@ -10,7 +10,7 @@
             @if(largeDevice){
                 <li class="p-2 f-14 cursor-pointer" routerLink="/about" [routerLinkActive]="'active'">GETTING STARTED</li>
                 <li class="p-2 f-14 cursor-pointer">QUERY</li>
-                <li class="p-2 f-14 cursor-pointer">WORKBENCH</li>
+                <li class="p-2 f-14 cursor-pointer" [routerLink]="['/workbench']">WORKBENCH</li>
             }
             @else{
                 <li ngbDropdown class="d-inline-block p-2">
@@ -20,7 +20,7 @@
                     <div ngbDropdownMenu class="f-14" aria-labelledby="homeDropdown">
                         <button ngbDropdownItem [routerLink]="['/about']">Gettign Started</button>
                         <button ngbDropdownItem>Query</button>
-                        <button ngbDropdownItem>Workbench</button>
+                        <button ngbDropdownItem [routerLink]="['/workbench']">Workbench</button>
                     </div>
                 </li>
             }
