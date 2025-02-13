@@ -4,6 +4,8 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { AuthenticationService } from '../../../helpers/services/authentication.service';
+import { ProjectService } from '../../../helpers/services/project.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -18,6 +20,17 @@ export class HeaderComponent {
 
   // Injectors
   authService = inject(AuthenticationService);
+  projectService = inject(ProjectService);
+  
+  allPublicProjects:Array<any> = [];
+
+  constructor(){ this.getPublicProjects(); }
+
+  getPublicProjects(){
+    this.projectService.getProjectStats(true).pipe(take(1)).subscribe({
+      next: (res:any)=> this.allPublicProjects = res
+    })
+  }
 
   signoutUser(){ this.authService.logoutUser(); }
 }

@@ -37,6 +37,10 @@ export const routes: Routes = [
             {
                 path: 'dashboard',
                 loadComponent: ()=> import('./components/workbench/dashboard/dashboard.component').then(m => m.DashboardComponent)
+            },
+            {
+                path: 'teams-list',
+                loadComponent: ()=> import('./components/workbench/teams-list/teams-list.component').then(m => m.TeamsListComponent)
             }
         ]
     }

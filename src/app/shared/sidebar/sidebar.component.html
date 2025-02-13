@@ -1,10 +1,22 @@
 <div id="sidebar" style="width: 320px; height: calc(100vh - 62px); overflow-y:auto" class="py-3 shadow">
     <div class="d-flex flex-column">
         @for(item of menuItems; track item){
-            <button type="button" [routerLink]="[item.route]" class="btn sidebar-item cursor-pointer border-0 p-3 ps-4 text-start f-15">
-                <i class="fas me-2" [ngClass]="item.icon" style="min-width: 30px;"></i>
-                {{item.name}}
-            </button>
+            @if(item.alwaysVisible || (currentUser && !item.alwaysVisible)){
+                <button type="button" [routerLink]="[item.route]" class="btn sidebar-item cursor-pointer border-0 p-3 ps-4 text-start f-15">
+                    <i class="fas me-2" [ngClass]="item.icon" style="min-width: 30px;"></i>
+                    {{item.name}}
+                </button>
+            }
+        }
+        <div style="height: 1px;" class="w-100 border my-2"></div>
+        @if(currentUser){
+            <h6 class="m-0 text-secondary f-15 p-3">Admin</h6>
+            @for(item of adminTabs; track item){
+                <button type="button" [routerLink]="[item.route]" class="btn sidebar-item cursor-pointer border-0 p-3 ps-4 text-start f-15">
+                    <i class="fas me-2" [ngClass]="item.icon" style="min-width: 30px;"></i>
+                    {{item.name}}
+                </button>
+            }
         }
     </div>
 </div>

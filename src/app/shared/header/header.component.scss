@@ -6,6 +6,19 @@ ul li.cursor-pointer{
     }
 }
 
+::ng-deep .projectsDropdownMenu{
+    .dropdown-menu.f-14.show{
+        max-width: 330px;
+        max-height: 300px;
+        overflow-y: auto;
+        button{
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+}
+
 @media screen and (max-width: 991px) {
     .dropdown-toggle::after{ display: none; }
     .header-container ul{ gap: 0.5rem !important; }
