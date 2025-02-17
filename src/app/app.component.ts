@@ -2,6 +2,7 @@ import { Component, HostListener, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './shared/header/header.component';
 import { AuthenticationService } from '../helpers/services/authentication.service';
+import { ProjectService } from '../helpers/services/project.service';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +14,7 @@ import { AuthenticationService } from '../helpers/services/authentication.servic
 export class AppComponent {
   // Injectables
   authService = inject(AuthenticationService);
+  projectService = inject(ProjectService);
 
   // Variables
   title = 'geome';
@@ -30,7 +32,7 @@ export class AppComponent {
     this.onResize();
     this.authService.currentUser.subscribe((x:any)=>{
       this.currentUser = x;
-      console.log(x);
     })
+    this.projectService.loadFromSession();
   }
 }

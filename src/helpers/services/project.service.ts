@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, catchError, map, of } from 'rxjs';
-// import { StorageService } from './storage.service';
+import { BehaviorSubject, Observable, catchError, forkJoin, map, of } from 'rxjs';
 // import { ProjectConfigurationService } from './project-configuration.service';
 // import { ProjectConfige } from '../models/ProjectConfig';
 import { environment } from '../../environments/environment';
+import { AuthenticationService } from './authentication.service';
 
 export const PROJECT_CHANGED_EVENT = 'projectChanged';
 
@@ -23,40 +23,38 @@ export class ProjectService {
   private apiUrl = environment.restRoot;
   private currentProject: Project | null = null;
   private projectSubject = new BehaviorSubject<Project | null>(null);
-  allProjectSubject = new BehaviorSubject<Project[] | null>(null);
+  private allProjectSubject = new BehaviorSubject<Project[] | null>(null);
 
   constructor(
     private http: HttpClient,
     private router: Router,
-    // private storageService: StorageService,
-    // private projectConfigService: ProjectConfigurationService
-  ) {}
+    private authService: AuthenticationService,
+  ) {
+    this.loadAllProjects();
+  }
 
   get currentProject$(): Observable<Project | null> {
     return this.projectSubject.asObservable();
   }
 
-  setCurrentProject(project: Project | null, ignoreReload = false, redirectIfNull = true): void {
-    if (!project) {
+  getAllProjectsValue():Observable<any>{
+    return this.allProjectSubject.asObservable();
+  }
+
+  setCurrentProject(projectID: any, redirectIfNull = true): void {
+    if (!projectID) {
       this.currentProject = null;
       this.projectSubject.next(null);
       if (redirectIfNull) {
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/workbench/dashboard']);
       }
       return;
     }
-
-    this.getProject(project.projectId).subscribe((p) => {
-      if (p) {
-        // this.storageService.set('projectId', p.projectId);
-        this.currentProject = p;
-        this.projectSubject.next(p);
-      }
-    });
+    this.cacheProject(projectID);
   }
 
   cacheProject(projectId: string): void {
-    // this.storageService.set('projectId', projectId);
+    this.authService.apendUserVal('projectId', projectId);
   }
 
   getProject(projectId: string, includeConfig = true): Observable<Project | null> {
@@ -73,7 +71,7 @@ export class ProjectService {
   getProjectConfig(projectId: string): Observable<any | null> {
     if (!projectId) {
       return of(null);
-    }
+     }
     return this.http
       .get<any>(`${this.apiUrl}projects/${projectId}/config`)
       .pipe(catchError(() => of(null)));
@@ -83,6 +81,10 @@ export class ProjectService {
     return this.http
       .get<Project[]>(`${this.apiUrl}projects?includePublic=${includePublic}`)
       .pipe(catchError(() => of([])));
+  }
+
+  loadAllProjects(){
+    this.getAllProjects(true).subscribe((res:any) => this.allProjectSubject.next(res))
   }
 
   findProject(includePublic: boolean, projectTitle: string): Observable<Project[]> {
@@ -124,8 +126,10 @@ export class ProjectService {
     );
   }
 
-  loadFromSession(projectId:any): Observable<Project | null> {
-    // const projectId = this.storageService.get('projectId');
-    return projectId ? this.getProject(projectId) : of(null);
-  }
+  loadFromSession(){
+    const storedData = this.authService.getUserFromStorage;
+    const userVal = storedData ? JSON.parse(storedData) : undefined;
+    const projectId = userVal?.projectId || null;
+    if(projectId) this.setCurrentProject(projectId);
+  } 
 }

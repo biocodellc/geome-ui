@@ -38,6 +38,12 @@ body{
 
 a{ text-decoration: none; }
 
+.text-eclipse{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 
 // Theme Button
 .btn-primary.custom{

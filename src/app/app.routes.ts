@@ -10,7 +10,7 @@ export const routes: Routes = [
         loadComponent: () => import('./components/about/about.component').then(m => m.AboutComponent)
     },
     {
-        path: 'contact',
+          path: 'contact',
         loadComponent: () => import('./components/contact-us/contact-us.component').then(m => m.ContactUsComponent)
     },
     {
@@ -41,6 +41,10 @@ export const routes: Routes = [
             {
                 path: 'teams-list',
                 loadComponent: ()=> import('./components/workbench/teams-list/teams-list.component').then(m => m.TeamsListComponent)
+            },
+            {
+                path: 'project-overview',
+                loadComponent: ()=> import('./components/workbench/project-overview/project-overview.component').then(m => m.ProjectOverviewComponent)
             }
         ]
     }

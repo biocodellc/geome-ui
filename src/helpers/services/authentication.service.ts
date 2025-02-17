@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthenticationService {
-  private storageKey:string = 'abcgeome-appxyz-Token';
+  private storageKey:string = 'biscicol';
   private currentUserSubject!: BehaviorSubject<any>;
   currentUser!: Observable<any>;
   isLoggedIn:boolean = false;
@@ -51,6 +51,13 @@ export class AuthenticationService {
     }
   }
 
+  apendUserVal(key:string, val:any){
+    const newUserVal = this.getUserFromStorage;
+    const userData = JSON.parse(newUserVal) || {};
+    userData[key] = val;
+    localStorage.setItem( this.storageKey, btoa(JSON.stringify(userData)) );
+  }
+
   setCurrentUser(user:any){
     if(JSON.stringify(user) == JSON.stringify(this.currentUserSubject.value)) return;
     this.currentUserSubject.next(user);
@@ -89,5 +96,6 @@ export class AuthenticationService {
   get getUserFromStorage():any{
     const storedUser:any = localStorage.getItem(this.storageKey);
     if(storedUser) return atob(storedUser);
+    else return null
   }
 }
