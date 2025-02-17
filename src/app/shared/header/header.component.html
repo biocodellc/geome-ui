@@ -2,12 +2,9 @@
     <div class="d-flex justify-content-between">
         <img src="logo/geome-logo.png" class="header-logo cursor-pointer" height="48px" routerLink="">
         <div class="d-flex align-items-center gap-2 projectsDropdownMenu">
-            @if(currentUser){
-                <button type="button" class="btn btn-primary custom" [routerLink]="['/project/new']">CREATE PROJECT</button>
-            }
-            @else if(['/workbench/dashboard', '/workbench/teams-list'].includes(currentRouteUrl)){
+            @if(['/workbench/dashboard', '/workbench/teams-list', '/workbench/project-overview', '/workbench/team-overview'].includes(currentRouteUrl)){
                 <div ngbDropdown class="d-inline-block p-2">
-                    <button id="projectsDropdown" class="btn primary-text text-eclipse" style="max-width: 300px;" ngbDropdownToggle>{{currentProject || 'CHOOSE A PROJECT'}}</button>
+                    <button id="projectsDropdown" class="btn primary-text text-eclipse" style="max-width: 300px;" ngbDropdownToggle>{{currentProject?.projectTitle || 'CHOOSE A PROJECT'}}</button>
                     <div ngbDropdownMenu class="f-14" aria-labelledby="projectsDropdown" >
                         @for(project of allPublicProjects; track project){
                             <button ngbDropdownItem (click)="onProjectChange(project)">{{ project.projectTitle }}</button>
@@ -15,6 +12,9 @@
                         @empty{ <span>No Project Found</span> }
                     </div>
                 </div>
+            }
+            @else if(currentUser){
+                <button type="button" class="btn btn-primary custom" [routerLink]="['/project/new']">CREATE PROJECT</button>
             }
         </div>
         <ul class="d-flex m-0 pe-2 align-items-center gap-3" style="list-style: none;">

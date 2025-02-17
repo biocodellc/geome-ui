@@ -12,9 +12,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthenticationService);
   const userService = inject(UserService);
   const toastr = inject(ToastrService);
-  let currentUser = authService.getCurrentUserVal();
+  let userFromStorage = authService.getUserFromStorage();
+  
+  const currentUser = userFromStorage ? JSON.parse(userFromStorage) : null;
 
-  if (currentUser?.accessToken && !req.params.keys().includes('accessToken')) { // && !req.headers.keys().includes('Authorization')
+  if (userFromStorage && currentUser?.accessToken && !req.params.keys().includes('accessToken')) {
     req = addToken(req, currentUser.accessToken);
   }
 
@@ -31,7 +33,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
 function addToken(request: HttpRequest<any>, token: string): HttpRequest<any> {
   return request.clone({
-    setParams: { "accessToken": token }
+    setParams: { "access_token": token }
   });
 }
 

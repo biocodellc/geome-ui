@@ -23,7 +23,7 @@
                 @for (item of filteredPublicProjects; track item.projectId) {
                     <tr>
                         <td>
-                            <h6 class="text-primary m-0 mb-1 cursor-pointer"  placement="top" [ngbTooltip]="item.projectTitle">{{item.projectTitle}}</h6>
+                            <h6 class="text-primary m-0 mb-1 cursor-pointer"  placement="top" [ngbTooltip]="item.projectTitle" (click)="selectProject(item)">{{item.projectTitle}}</h6>
                             <div class="d-flex justify-content-between align-items-center">
                                 <p class="m-0 f-12">Latest Activity: {{ item.latestDataModification | date: 'shortDate' }}</p>
                                 <button type="button" class="btn btn-primary custom d-inline f-11" style="padding: 5px 8px;">{{item.projectConfiguration.name}}</button>

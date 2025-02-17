@@ -53,4 +53,8 @@ export class DashboardComponent {
       this.filteredPublicProjects = this.allPublicProjects.filter((proj:any)=> proj.projectTitle.toLowerCase().includes(newVal));
     else this.filteredPublicProjects = this.allPublicProjects;
   }
+
+  selectProject(project:any){
+    this.projectService.setCurrentProject(project);
+  }
 }

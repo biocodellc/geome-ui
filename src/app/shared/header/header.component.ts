@@ -26,29 +26,27 @@ export class HeaderComponent implements OnDestroy{
   allPublicProjects:Array<any> = [];
   filteredPublicProjects:Array<any> = [];
   currentRouteUrl:string = '';
-  currentProject:string | undefined = '';
+  currentProject:any;
   routerChangeSub:Subscription;
 
-  constructor(){ this.getPublicProjects();
+  constructor(){
+    this.projectService.getAllProjectsValue().subscribe((res:any)=>{
+      if(res) this.allPublicProjects = this.filteredPublicProjects = res;
+    })
     this.routerChangeSub = this.router.events.pipe( filter((event:any) => event instanceof NavigationEnd))
       .subscribe(event => this.currentRouteUrl = event.urlAfterRedirects);
-  }
-
-  getPublicProjects(){
-    this.projectService.getProjectStats(true).pipe(take(1)).subscribe({
-      next: (res:any)=> this.allPublicProjects = this.filteredPublicProjects = res
+    this.projectService.currentProject$.subscribe((res:any) =>{
+      if(res) this.currentProject = res;
     })
   }
 
   onProjectChange(project:any){
-    console.log(project);
-    this.currentProject = project.projectTitle;
-    this.projectService.setCurrentProject(project.projectId);
+    this.projectService.setCurrentProject(project);
   }
 
   signoutUser(){ this.authService.logoutUser(); }
 
   ngOnDestroy(): void {
-      this.routerChangeSub.unsubscribe();
+    this.routerChangeSub.unsubscribe();
   }
 }

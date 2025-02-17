@@ -20,7 +20,7 @@ export class AuthenticationService {
   }
 
   checkUser(){
-    let val:any = this.getUserFromStorage,
+    let val:any = this.getUserFromStorage(),
     user:any;
     if(val) user = JSON.parse(val);
     if(user && user?.accessToken){
@@ -52,7 +52,7 @@ export class AuthenticationService {
   }
 
   apendUserVal(key:string, val:any){
-    const newUserVal = this.getUserFromStorage;
+    const newUserVal = this.getUserFromStorage();
     const userData = JSON.parse(newUserVal) || {};
     userData[key] = val;
     localStorage.setItem( this.storageKey, btoa(JSON.stringify(userData)) );
@@ -93,7 +93,7 @@ export class AuthenticationService {
     this.isLoggedIn = false;
   }
 
-  get getUserFromStorage():any{
+  getUserFromStorage():any{
     const storedUser:any = localStorage.getItem(this.storageKey);
     if(storedUser) return atob(storedUser);
     else return null

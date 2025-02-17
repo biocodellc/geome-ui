@@ -24,14 +24,13 @@ export class ProjectService {
   private currentProject: Project | null = null;
   private projectSubject = new BehaviorSubject<Project | null>(null);
   private allProjectSubject = new BehaviorSubject<Project[] | null>(null);
+  userProjectSubject = new BehaviorSubject<any>(null);
 
   constructor(
     private http: HttpClient,
     private router: Router,
     private authService: AuthenticationService,
-  ) {
-    this.loadAllProjects();
-  }
+  ) {}
 
   get currentProject$(): Observable<Project | null> {
     return this.projectSubject.asObservable();
@@ -41,8 +40,8 @@ export class ProjectService {
     return this.allProjectSubject.asObservable();
   }
 
-  setCurrentProject(projectID: any, redirectIfNull = true): void {
-    if (!projectID) {
+  setCurrentProject(project: any, redirectIfNull = true): void {
+    if (!project.projectId) {
       this.currentProject = null;
       this.projectSubject.next(null);
       if (redirectIfNull) {
@@ -50,7 +49,22 @@ export class ProjectService {
       }
       return;
     }
-    this.cacheProject(projectID);
+    else if(project.config){
+      this.currentProject = project;
+      this.projectSubject.next(project);
+      this.cacheProject(project.projectId);
+    }
+    else{
+      this.getProjectConfig(project?.projectId || project).subscribe({
+        next: (res:any) => {
+          project.config = res;
+          this.currentProject = project;
+          this.projectSubject.next(project);
+          this.cacheProject(project.projectId);
+        }
+      })
+    }
+    
   }
 
   cacheProject(projectId: string): void {
@@ -63,7 +77,7 @@ export class ProjectService {
     }
 
     return this.getAllProjects(true).pipe(
-      map((projects) => projects.find((p) => p.projectId === projectId) || null),
+      map((projects) => projects.find((p:any) => p.projectId === projectId) || null),
       catchError(() => of(null))
     );
   }
@@ -77,14 +91,17 @@ export class ProjectService {
       .pipe(catchError(() => of(null)));
   }
 
-  getAllProjects(includePublic: boolean): Observable<Project[]> {
+  getAllProjects(includePublic: boolean): Observable<any> {
     return this.http
-      .get<Project[]>(`${this.apiUrl}projects?includePublic=${includePublic}`)
-      .pipe(catchError(() => of([])));
+      .get(`${this.apiUrl}projects?includePublic=${includePublic}`)
+      .pipe(catchError((err:any) => of([])));
   }
 
   loadAllProjects(){
-    this.getAllProjects(true).subscribe((res:any) => this.allProjectSubject.next(res))
+    this.getAllProjects(true).subscribe((res:any) =>{
+      this.allProjectSubject.next(res);
+      this.loadFromSession();
+    })
   }
 
   findProject(includePublic: boolean, projectTitle: string): Observable<Project[]> {
@@ -127,9 +144,12 @@ export class ProjectService {
   }
 
   loadFromSession(){
-    const storedData = this.authService.getUserFromStorage;
+    const storedData = this.authService.getUserFromStorage();
     const userVal = storedData ? JSON.parse(storedData) : undefined;
     const projectId = userVal?.projectId || null;
-    if(projectId) this.setCurrentProject(projectId);
-  } 
+    if(projectId){
+      const projectData = this.allProjectSubject.value?.filter((item:any) => item.projectId == projectId)[0];
+      this.setCurrentProject(projectData);
+    }
+  }
 }

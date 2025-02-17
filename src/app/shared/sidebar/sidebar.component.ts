@@ -20,12 +20,13 @@ export class SidebarComponent {
     { name: "Fastq SRA Upload", route: '' , icon: 'fa-image', alwaysVisible: false },
     { name: "Plate Viewer", route: '' , icon: 'fa-table-cells', alwaysVisible: false },
     { name: "Validate Data", route: '' , icon: 'fa-upload', alwaysVisible: true },
-    { name: "Project Overview", route: '' , icon: 'fa-laptop' , alwaysVisible: true},
+    { name: "Team Overview", route: '/workbench/team-overview' , icon: 'fa-clipboard-user' , alwaysVisible: true},
+    { name: "Project Overview", route: '/workbench/project-overview' , icon: 'fa-laptop' , alwaysVisible: true},
   ]
 
   adminTabs:Array<any> = [
-    { name: "Project Expenditure", route: '' , icon: 'fa-gear', alwaysVisible: true },
-    { name: "My Profile", route: '' , icon: 'fa-user', alwaysVisible: true },
+    { name: "Project Expenditure", route: '/workbench/expeditions' , icon: 'fa-gear', alwaysVisible: true },
+    { name: "My Profile", route: '/workbench/user/profile' , icon: 'fa-user', alwaysVisible: true },
   ]
 
   constructor(){}

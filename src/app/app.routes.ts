@@ -45,6 +45,18 @@ export const routes: Routes = [
             {
                 path: 'project-overview',
                 loadComponent: ()=> import('./components/workbench/project-overview/project-overview.component').then(m => m.ProjectOverviewComponent)
+            },
+            {
+                path: 'team-overview',
+                loadComponent: ()=> import('./components/workbench/team-overview/team-overview.component').then(m => m.TeamOverviewComponent)
+            },
+            {
+                path: 'expeditions',
+                loadComponent: ()=> import('./components/workbench/expeditions/expeditions.component').then(m => m.ExpeditionsComponent)
+            },
+            {
+                path: 'user/profile',
+                loadComponent: ()=> import('./components/workbench/user-profile/user-profile.component').then(m => m.UserProfileComponent)
             }
         ]
     }
