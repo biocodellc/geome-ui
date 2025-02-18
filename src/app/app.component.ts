@@ -1,9 +1,10 @@
-import { Component, HostListener, inject } from '@angular/core';
+import { Component, HostListener, inject, OnDestroy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './shared/header/header.component';
 import { AuthenticationService } from '../helpers/services/authentication.service';
 import { ProjectService } from '../helpers/services/project.service';
 import { UserService } from '../helpers/services/user.service';
+import { Subject, take, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -12,13 +13,14 @@ import { UserService } from '../helpers/services/user.service';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy{
   // Injectables
   authService = inject(AuthenticationService);
   projectService = inject(ProjectService);
   userService = inject(UserService);
 
   // Variables
+  private destroy$ = new Subject<void>();
   title = 'geome';
   isLargeDevice:boolean = false;
   currentUser:any;
@@ -32,7 +34,8 @@ export class AppComponent {
 
   constructor(){
     this.onResize();
-    this.authService.currentUser.subscribe((x:any)=>{
+    this.authService.currentUser.pipe(takeUntil(this.destroy$))
+    .subscribe((x:any)=>{
       this.currentUser = x;
       if(x && !x.accessToken) this.getUserProjects()
       else if(x && x.accessToken) this.getUserDetails(x)
@@ -41,14 +44,20 @@ export class AppComponent {
   }
 
   getUserDetails(user:any){
-    this.userService.getUserData(user.username, user.accessToken).subscribe({
+    this.userService.getUserData(user.username, user.accessToken).pipe(take(1), takeUntil(this.destroy$))
+    .subscribe({
       next: (res:any) => this.authService.setCurrentUser(res)
     })
   }
 
   getUserProjects(){
-    this.projectService.getAllProjects(false).subscribe({
+    this.projectService.getAllProjects(false).pipe(takeUntil(this.destroy$)).subscribe({
       next: (res:any)=> this.projectService.userProjectSubject.next(res)
     })
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

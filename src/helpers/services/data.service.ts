@@ -11,7 +11,7 @@ export class DataService {
     return [
       { img: 'images/about7.png', title: 'Getting Started', disc: 'Getting started and additional information about GEOME', route: '/about' },
       { img: 'images/search.png', title: 'Query', disc: 'Search and download sequence files and associated metadata', route: '' },
-      { img: 'images/workbench.png', title: 'Workbench', disc: 'View and manage project specific data', route: '' },
+      { img: 'images/workbench.png', title: 'Workbench', disc: 'View and manage project specific data', route: '/workbench' },
     ];
   }
 

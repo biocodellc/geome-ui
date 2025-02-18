@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../../../helpers/services/user.service';
 import { AuthenticationService } from '../../../../helpers/services/authentication.service';
 import { ToastrService } from 'ngx-toastr';
-import { catchError, of, switchMap } from 'rxjs';
+import { catchError, of, Subject, switchMap, take, takeUntil, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +14,7 @@ import { catchError, of, switchMap } from 'rxjs';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
+export class LoginComponent implements OnDestroy{
   // Injectors
   router = inject(Router);
   userService = inject(UserService);
@@ -23,6 +23,7 @@ export class LoginComponent {
   authService = inject(AuthenticationService);
   
   // Variables
+  private destroy$ = new Subject<void>();
   loginForm!:FormGroup;
   isLoading:boolean = false;
   activePage:string = 'login';
@@ -46,11 +47,13 @@ export class LoginComponent {
     this.isLoading = true;
     this.userService.authenticate(this.loginForm.value)
     .pipe(
+      take(1),
+      takeUntil(this.destroy$),
       switchMap(response => {
         this.authService.saveUser(response, this.getControlVal('username'));
         return this.userService.getUserData(this.getControlVal('username'), response.access_token)
       }),
-      catchError(e => of(e))
+      catchError(e => throwError(() => e))
     )
     .subscribe({
       next: (res:any)=>{
@@ -71,7 +74,9 @@ export class LoginComponent {
 
     // Proceed API Hit with username
     this.isLoading = true;
-    this.userService.sendResetPasswordToken(this.getControlVal('username')).subscribe({
+    this.userService.sendResetPasswordToken(this.getControlVal('username'))
+    .pipe(take(1), takeUntil(this.destroy$))
+    .subscribe({
       next: (res:any)=>{
         this.isLoading = false;
         this.toastrService.success('If you have provided a valid username, check your email for further instructions.');
@@ -88,4 +93,9 @@ export class LoginComponent {
   getControlVal(controlName:string){ return this.form[controlName].value; }
 
   changeMode(page:string){ this.activePage = page };
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

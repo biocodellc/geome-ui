@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, catchError, forkJoin, map, of } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BehaviorSubject, Observable, catchError, map, of, take } from 'rxjs';
 // import { ProjectConfigurationService } from './project-configuration.service';
 // import { ProjectConfige } from '../models/ProjectConfig';
 import { environment } from '../../environments/environment';
@@ -24,15 +24,17 @@ export class ProjectService {
   private currentProject: Project | null = null;
   private projectSubject = new BehaviorSubject<Project | null>(null);
   private allProjectSubject = new BehaviorSubject<Project[] | null>(null);
+  private allProjectStatsSubject = new BehaviorSubject<any>(null);
   userProjectSubject = new BehaviorSubject<any>(null);
 
   constructor(
-    private http: HttpClient,
     private router: Router,
+    private http: HttpClient,
+    private activatedRoute: ActivatedRoute,
     private authService: AuthenticationService,
   ) {}
 
-  get currentProject$(): Observable<Project | null> {
+  currentProject$(): Observable<Project | null> {
     return this.projectSubject.asObservable();
   }
 
@@ -40,31 +42,40 @@ export class ProjectService {
     return this.allProjectSubject.asObservable();
   }
 
-  setCurrentProject(project: any, redirectIfNull = true): void {
+  allProjectsStats():Observable<any>{
+    return this.allProjectStatsSubject.asObservable();
+  }
+
+  setCurrentProject(project: any, redirect = true): void {
     if (!project.projectId) {
       this.currentProject = null;
       this.projectSubject.next(null);
-      if (redirectIfNull) {
-        this.router.navigate(['/workbench/dashboard']);
-      }
+      this.router.navigate(['/workbench/dashboard']);
       return;
     }
     else if(project.config){
       this.currentProject = project;
       this.projectSubject.next(project);
       this.cacheProject(project.projectId);
+      if(redirect) this.router.navigate(['/workbench/project-overview']);
     }
     else{
-      this.getProjectConfig(project?.projectId || project).subscribe({
+      const projectData = this.getProjectFromLocal(project.projectId) || project;
+      this.getProjectConfig(projectData.projectId).pipe(take(1)).subscribe({
         next: (res:any) => {
-          project.config = res;
-          this.currentProject = project;
-          this.projectSubject.next(project);
-          this.cacheProject(project.projectId);
+          const updatedProject = { ...projectData ,config : res };
+          this.currentProject = updatedProject;
+          this.projectSubject.next(updatedProject);
+          this.cacheProject(updatedProject.projectId);
+          if(redirect) this.router.navigate(['/workbench/project-overview']);
         }
       })
     }
-    
+  }
+
+  getProjectFromLocal(projectId:string){
+    const allPublicProj = this.allProjectSubject.value || [];
+    return allPublicProj.filter((proj:any) => proj.projectId == projectId)[0];
   }
 
   cacheProject(projectId: string): void {
@@ -98,7 +109,7 @@ export class ProjectService {
   }
 
   loadAllProjects(){
-    this.getAllProjects(true).subscribe((res:any) =>{
+    this.getAllProjects(true).pipe(take(1)).subscribe((res:any) =>{
       this.allProjectSubject.next(res);
       this.loadFromSession();
     })
@@ -149,7 +160,15 @@ export class ProjectService {
     const projectId = userVal?.projectId || null;
     if(projectId){
       const projectData = this.allProjectSubject.value?.filter((item:any) => item.projectId == projectId)[0];
-      this.setCurrentProject(projectData);
+      this.setCurrentProject(projectData, false);
+    }
+    else{
+      this.activatedRoute.queryParams.pipe(take(1)).subscribe((res:any)=>{
+        if(res && res.projectId){
+          const projectData = this.allProjectSubject.value?.filter((item:any) => item.projectId == res.projectId)[0];
+          this.setCurrentProject(projectData, false);
+        }
+      });
     }
   }
 }

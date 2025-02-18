@@ -4,13 +4,14 @@ import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/ro
 
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { AuthenticationService } from '../../../helpers/services/authentication.service';
-import { Project, ProjectService } from '../../../helpers/services/project.service';
-import { filter, Subscription, take } from 'rxjs';
+import { ProjectService } from '../../../helpers/services/project.service';
+import { debounceTime, filter, Subject, Subscription, takeUntil } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [ CommonModule, NgbDropdownModule, RouterLink, RouterLinkActive],
+  imports: [ CommonModule, NgbDropdownModule, RouterLink, RouterLinkActive, FormsModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
@@ -23,30 +24,43 @@ export class HeaderComponent implements OnDestroy{
   projectService = inject(ProjectService);
   router = inject(Router);
   
+  // Variables
+  private destroy$ = new Subject<void>();
   allPublicProjects:Array<any> = [];
   filteredPublicProjects:Array<any> = [];
+  searchedProject:string = '';
+  filterProjectSubject:Subject<any> = new Subject();
+
   currentRouteUrl:string = '';
   currentProject:any;
-  routerChangeSub:Subscription;
 
   constructor(){
-    this.projectService.getAllProjectsValue().subscribe((res:any)=>{
+    this.projectService.getAllProjectsValue().pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if(res) this.allPublicProjects = this.filteredPublicProjects = res;
     })
-    this.routerChangeSub = this.router.events.pipe( filter((event:any) => event instanceof NavigationEnd))
+    this.router.events.pipe( filter((event:any) => event instanceof NavigationEnd), takeUntil(this.destroy$))
       .subscribe(event => this.currentRouteUrl = event.urlAfterRedirects);
-    this.projectService.currentProject$.subscribe((res:any) =>{
+    this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any) =>{
       if(res) this.currentProject = res;
     })
+    this.filterProjectSubject.pipe(debounceTime(100)).pipe(takeUntil(this.destroy$)).subscribe(() => this.filterProject());
   }
 
   onProjectChange(project:any){
     this.projectService.setCurrentProject(project);
   }
 
+  filterProject(){
+    const newVal = this.searchedProject.trim().toLowerCase();
+    if(newVal)
+      this.filteredPublicProjects = this.allPublicProjects.filter((proj:any)=> proj.projectTitle.toLowerCase().includes(newVal));
+    else this.filteredPublicProjects = this.allPublicProjects;
+  }
+
   signoutUser(){ this.authService.logoutUser(); }
 
   ngOnDestroy(): void {
-    this.routerChangeSub.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

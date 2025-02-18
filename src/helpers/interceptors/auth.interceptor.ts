@@ -25,7 +25,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       if (error.status === 401) {
         return handle401Error(req, next, authService, userService);
       }
-      toastr.error(error.message);
+      toastr.error(error.error.usrMessage);
       return throwError(() => error);
     })
   );

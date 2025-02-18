@@ -4,7 +4,7 @@ import { UserService } from '../../../../helpers/services/user.service';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { MustMatch } from '../../../../helpers/validators/must-match.validator';
-import { catchError, debounceTime, map, of, switchMap } from 'rxjs';
+import { catchError, debounceTime, map, of, Subject, switchMap, take, takeUntil } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from '../../../../helpers/services/authentication.service';
 
@@ -24,6 +24,7 @@ export class RegisterComponent {
   authService = inject(AuthenticationService);
 
   // Variables
+  private destroy$ = new Subject<void>();
   registerForm!: FormGroup;
   isLoading: boolean = false;
   isUserNameTaken: boolean = false;
@@ -46,7 +47,9 @@ export class RegisterComponent {
     }, {
       validator: MustMatch('password', 'verifyPass'),
     })
-    this.form['username'].valueChanges.pipe(debounceTime(500)).subscribe(val => this.validateName(val));
+    this.form['username'].valueChanges
+    .pipe(debounceTime(500), takeUntil(this.destroy$))
+    .subscribe(val => this.validateName(val));
   }
 
   register() {
@@ -59,6 +62,7 @@ export class RegisterComponent {
 
     this.userService.registerUser(data)
       .pipe(
+        take(1), takeUntil(this.destroy$),
         switchMap(userData => 
           this.userService.authenticate(userCred).pipe( map( authData => ({ authData, userData }) ))
         ),
@@ -85,12 +89,17 @@ export class RegisterComponent {
   validateName(name: string) {
     const username = name.trim();
     if (username) {
-      this.userService.verifyUserName(username).subscribe({
+      this.userService.verifyUserName(username).pipe(takeUntil(this.destroy$)).subscribe({
         next: (res: any) => {
           if (res) this.isUserNameTaken = true
           else this.isUserNameTaken = false;
         }
       })
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

@@ -1,6 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { debounceTime, Subject, take } from 'rxjs';
+import { debounceTime, Subject, take, takeUntil } from 'rxjs';
 import { ProjectConfigurationService } from '../../../../helpers/services/project-config.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -14,12 +14,13 @@ import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './teams-list.component.html',
   styleUrl: './teams-list.component.scss'
 })
-export class TeamsListComponent {
+export class TeamsListComponent implements OnDestroy{
   // Injectors
   toastr = inject(ToastrService);
   projectConfService = inject(ProjectConfigurationService);
 
   // Variables
+  private destroy$ = new Subject<void>();
   isLoading: boolean = false;
   searchedTeam: string = '';
   filterTeamSubject: Subject<any> = new Subject();
@@ -28,12 +29,12 @@ export class TeamsListComponent {
 
   constructor() {
     this.getAllPublicTeams();
-    this.filterTeamSubject.pipe(debounceTime(100)).subscribe(() => this.filterTeam())
+    this.filterTeamSubject.pipe(debounceTime(100), takeUntil(this.destroy$)).subscribe(() => this.filterTeam())
   }
 
   getAllPublicTeams() {
     this.isLoading = true;
-    this.projectConfService.allProjConfigSubject.subscribe((res:any)=>{
+    this.projectConfService.allProjConfigSubject.pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if(res){
         const allTeams:[] = res.filter((team:any)=> team.networkApproved);
         allTeams.forEach((team:any, i:number)=> this.getTeamModules(team.id));
@@ -43,9 +44,8 @@ export class TeamsListComponent {
   }
 
   getTeamModules(id:number){
-    this.projectConfService.get(id).pipe(take(1)).subscribe({
+    this.projectConfService.get(id).pipe(take(1), takeUntil(this.destroy$)).subscribe({
       next: (res:any)=>{
-        console.log('====',res);
         this.allPublicTeams.push(res);
         this.filteredPublicTeams = this.allPublicTeams;
       },
@@ -60,5 +60,10 @@ export class TeamsListComponent {
     if (newVal)
       this.filteredPublicTeams = this.allPublicTeams.filter((proj: any) => proj.name.toLowerCase().includes(newVal));
     else this.filteredPublicTeams = this.allPublicTeams;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

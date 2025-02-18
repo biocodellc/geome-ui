@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../../../helpers/services/user.service';
 import { ToastrService } from 'ngx-toastr';
+import { Subject, take, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-reset-password',
@@ -12,7 +13,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.scss'
 })
-export class ResetPasswordComponent {
+export class ResetPasswordComponent implements OnDestroy{
   // Injectors
   fb: FormBuilder = inject(FormBuilder);
   activatedRoute = inject(ActivatedRoute);
@@ -21,6 +22,7 @@ export class ResetPasswordComponent {
   router = inject(Router);
 
   // Variables
+  private destroy$ = new Subject<void>();
   resetForm!: FormGroup;
   isLoading: boolean = false;
   token:string = '';
@@ -28,7 +30,7 @@ export class ResetPasswordComponent {
 
   constructor() {
     this.initForm();
-    this.activatedRoute.queryParamMap.subscribe(
+    this.activatedRoute.queryParamMap.pipe(take(1), takeUntil(this.destroy$)).subscribe(
       (res:any)=>{
         if(res.params && res.params?.resetToken) this.token = res.params?.resetToken;
       }
@@ -50,7 +52,7 @@ export class ResetPasswordComponent {
     // Proceeding Login Process
     this.isLoading = true;
     const data = { resetToken: this.token, password: this.form['password'].value };
-    this.userService.resetPassword(data).subscribe({
+    this.userService.resetPassword(data).pipe(take(1), takeUntil(this.destroy$)).subscribe({
       next: (res:any)=>{
         if(res.success){
           this.toastr.success('Successfully reset your password');
@@ -62,5 +64,10 @@ export class ResetPasswordComponent {
         this.isLoading = false;
       }
     })
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
