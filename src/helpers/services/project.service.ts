@@ -73,7 +73,7 @@ export class ProjectService {
     }
   }
 
-  getProjectFromLocal(projectId:string){
+  getProjectFromLocal(projectId:number){
     const allPublicProj = this.allProjectSubject.value || [];
     return allPublicProj.filter((proj:any) => proj.projectId == projectId)[0];
   }
@@ -155,8 +155,7 @@ export class ProjectService {
   }
 
   loadFromSession(){
-    const storedData = this.authService.getUserFromStorage();
-    const userVal = storedData ? JSON.parse(storedData) : undefined;
+    const userVal = this.authService.getUserFromStorage();
     const projectId = userVal?.projectId || null;
     if(projectId){
       const projectData = this.allProjectSubject.value?.filter((item:any) => item.projectId == projectId)[0];

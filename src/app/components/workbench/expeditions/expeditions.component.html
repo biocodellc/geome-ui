@@ -1,0 +1,80 @@
+<section id="dashboard-container" class="p-3 pt-4 mb-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h4 class="m-0 text-center mb-3">Project Expeditions</h4>
+                <p class="mt-2 mb-3 text-center">
+                    The following may not represent a comprehensive list of expeditions for this project, which can be
+                    found under
+                </p>
+                <div class="proj-btn-sec">
+                    <button class="proj-btn"><span class="desk-icon"><i class="fa-solid fa-desktop"></i></span><span
+                            class="pro-over"> PROJECT OVERVIEW</span></button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="create-btn-sec">
+                    <button type="button" class="create-btn" (click)="openCreateModal(new_expedition_modal)">
+                        <span class="exp-icon"><i class="fa-solid fa-plus"></i></span> CREATE EXPEDITION
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-lg-12">
+                @for(item of projectExpeditions; track item){
+                    <div class="d-flex flex-wrap p-3 mb-3 shadow cursor-pointer" [routerLink]="[item.expeditionId, 'settings']">
+                        <div class="col-12 col-md-6">
+                            <h4 class="m-0 mb-3">{{item.expeditionTitle}}</h4>
+                            <p class="m-0"><span class="fw-semibold">Code:</span> {{item.expeditionCode}}</p>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <p class="m-0"><span class="fw-semibold">Identifier:</span> http://n2t.net/{{item.identifier}}</p>
+                            <p class="mt-2 mb-0"><span class="fw-semibold">Visibility:</span> {{item.visibility}}</p>
+                            <p class="mt-2 mb-0"><span class="fw-semibold">Owner:</span> {{item.user.username}} ({{item.user.email}})</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<ng-template #new_expedition_modal let-modal>
+    <div class="modal-header border-0 py-2">
+		<h4 class="modal-title" id="modal-basic-title">New Expedition</h4>
+	</div>
+	<div class="modal-body p-2 px-4 border-0" id="expedition_modal">
+        <form [formGroup]="expeditionForm">
+            <div class="mb-3">
+                <div class="form-floating mb-1">
+                    <input type="text" formControlName="expeditionTitle" class="form-control" id="floatingExpeditionTitle" placeholder="Enter Expedition Title">
+                    <label for="floatingExpeditionTitle" class="ps-0 fw-semibold">Expedition Title *</label>
+                </div>
+                @if(form['expeditionTitle'].touched &&form['expeditionTitle'].invalid){
+                    <span class="warn-text f-12">{{ form['expeditionTitle'].hasError('required') ? 'Title is required.' : '' }}</span>
+                }
+            </div>
+            <div class="">
+                <div class="form-floating mb-1">
+                    <input type="text" formControlName="expeditionCode" class="form-control" id="floatingExpeditionCode" placeholder="Enter Expedition Code">
+                    <label for="floatingExpeditionCode" class="ps-0 fw-semibold">Expedition Title *</label>
+                </div>
+                @if(form['expeditionCode'].touched &&form['expeditionCode'].invalid){
+                    <span class="warn-text f-12">{{ form['expeditionCode'].hasError('required') ? 'Code is required.' : 'Min. length is 4.' }}</span>
+                }
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer border-0 pt-0">
+		<div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-primary custom" [disabled]="expeditionForm.invalid" (click)="createNew()">Create</button>
+            <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">Cancel</button>
+        </div>
+	</div>
+</ng-template>

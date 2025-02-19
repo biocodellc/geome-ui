@@ -43,11 +43,9 @@ export class UserProfileComponent {
   setCurrentUser(){
     if(this.currentUser && this.currentUser?.userId){
       ['email', 'firstName', 'lastName', 'institution'].forEach((key:string) => {
-        console.log(key, this.currentUser[key]);
         this.form[key].setValue(this.currentUser[key]);
         this.form[key].updateValueAndValidity();
       })
-      console.log(this.userForm.value);
     }
   }
 

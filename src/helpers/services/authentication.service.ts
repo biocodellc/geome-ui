@@ -20,9 +20,7 @@ export class AuthenticationService {
   }
 
   checkUser(){
-    let val:any = this.getUserFromStorage(),
-    user:any;
-    if(val) user = JSON.parse(val);
+    let user:any = this.getUserFromStorage();
     if(user && user?.accessToken){
       this.isLoggedIn = true;
       this.currentUserSubject = new BehaviorSubject<any>(user);
@@ -46,14 +44,14 @@ export class AuthenticationService {
         accessToken: userData.access_token,
         refreshToken: userData.refresh_token,
         oAuthTimestamp: new Date().getTime(),
+        ...this.getUserFromStorage()
       }
       localStorage.setItem( this.storageKey, btoa(JSON.stringify(user)) );
     }
   }
 
   apendUserVal(key:string, val:any){
-    const newUserVal = this.getUserFromStorage();
-    const userData = JSON.parse(newUserVal) || {};
+    const userData = this.getUserFromStorage() || {};
     userData[key] = val;
     localStorage.setItem( this.storageKey, btoa(JSON.stringify(userData)) );
   }
@@ -88,14 +86,18 @@ export class AuthenticationService {
   }
 
   resetUser(){
-    localStorage.removeItem(this.storageKey);
+    const user = this.getUserFromStorage();
+    const newData =  user?.projectId ? { projectId: user?.projectId } : null;
     this.setCurrentUser(null);
     this.isLoggedIn = false;
+    if(newData) localStorage.setItem( this.storageKey, btoa(JSON.stringify(newData)) );
+    else localStorage.removeItem(this.storageKey);
   }
 
   getUserFromStorage():any{
     const storedUser:any = localStorage.getItem(this.storageKey);
-    if(storedUser) return atob(storedUser);
+    const parsedData = storedUser ? atob(storedUser) : null;
+    if(parsedData) return JSON.parse(parsedData);
     else return null
   }
 }

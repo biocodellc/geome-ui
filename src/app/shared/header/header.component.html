@@ -2,7 +2,7 @@
     <div class="d-flex justify-content-between">
         <img src="logo/geome-logo.png" class="header-logo cursor-pointer" height="48px" routerLink="">
         <div class="d-flex align-items-center gap-2 projectsDropdownMenu">
-            @if(['/workbench/dashboard', '/workbench/teams-list', '/workbench/project-overview', '/workbench/team-overview'].includes(currentRouteUrl)){
+            @if(!['/'].includes(currentRouteUrl)){
                 <div ngbDropdown class="d-inline-block p-2">
                     <button id="projectsDropdown" class="btn primary-text text-eclipse" style="max-width: 300px;" ngbDropdownToggle>{{currentProject?.projectTitle || 'CHOOSE A PROJECT'}}</button>
                     <div ngbDropdownMenu class="f-14 pt-0" aria-labelledby="projectsDropdown">

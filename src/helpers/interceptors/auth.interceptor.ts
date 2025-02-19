@@ -12,11 +12,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthenticationService);
   const userService = inject(UserService);
   const toastr = inject(ToastrService);
-  let userFromStorage = authService.getUserFromStorage();
-  
-  const currentUser = userFromStorage ? JSON.parse(userFromStorage) : null;
+  let currentUser = authService.getUserFromStorage();
 
-  if (userFromStorage && currentUser?.accessToken && !req.params.keys().includes('accessToken')) {
+  if (currentUser && currentUser?.accessToken && !req.params.keys().includes('accessToken')) {
     req = addToken(req, currentUser.accessToken);
   }
 
@@ -42,7 +40,7 @@ function handle401Error(request: HttpRequest<any>, next: HttpHandlerFn, authServ
     isRefreshing = true;
     refreshTokenSubject.next(null);
 
-    const refreshToken = authService.getCurrentUserVal()?.refreshToken;
+    const refreshToken = authService.getUserFromStorage()?.refreshToken;
     if (!refreshToken) {
       authService.logoutUser();
       return throwError(() => 'Refresh token is missing');
@@ -54,7 +52,7 @@ function handle401Error(request: HttpRequest<any>, next: HttpHandlerFn, authServ
           const newToken = res.access_token;
           refreshTokenSubject.next(newToken);
           const body = { access_token: res.access_token, refresh_token: res.refresh_token };
-          updateUserVal(authService.getCurrentUserVal(), body, authService);
+          updateUserVal(authService.getUserFromStorage(), body, authService);
           isRefreshing = false;
           return next(addToken(request, newToken));
         } else {

@@ -57,7 +57,7 @@ a{ text-decoration: none; }
 }
 
 // Authentication pages
-section#login-container, section#register-container, section#resetPass-container, section#dashboard-container, section#teams-list-container{
+section#login-container, section#register-container, section#resetPass-container, section#dashboard-container, section#teams-list-container, #expedition_modal{
     .form-control,
     .form-control-plaintext{
         border: none;
