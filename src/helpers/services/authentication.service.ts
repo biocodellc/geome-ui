@@ -63,22 +63,6 @@ export class AuthenticationService {
     this.isLoggedIn = user ? true : false;
   }
 
-  isTokenExpired():boolean{
-    const user = this.getCurrentUserVal();
-    if(user && user.accessToken){
-      // const decodedUser = jwtDecode(user.accessToken);
-      // if(decodedUser && decodedUser.exp){
-      //   let currentTime = new Date().getTime();
-      //   let tokenExpTime = decodedUser.exp * 1000;
-      //   let isTokenExp:any = (tokenExpTime - 2000 > currentTime) ? false : true;
-      //   return isTokenExp;
-      // }
-      // else return true;
-      return false;
-    }
-    else return true;
-  }
-
   logoutUser(){
     this.resetUser();
     this.router.navigate(['/']);

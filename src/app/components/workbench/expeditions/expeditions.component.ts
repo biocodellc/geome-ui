@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnDestroy, TemplateRef } from '@angular/core';
 import { ProjectService } from '../../../../helpers/services/project.service';
 import { Router, RouterLink } from '@angular/router';
-import { Subject, take, takeUntil } from 'rxjs';
+import { debounceTime, Subject, take, takeUntil } from 'rxjs';
 import { ExpeditionService } from '../../../../helpers/services/expedition.service';
 import { AuthenticationService } from '../../../../helpers/services/authentication.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -31,8 +31,10 @@ export class ExpeditionsComponent implements OnDestroy{
   currentUser:any;
   currentProject:any;
   isLoading:boolean = true;
+  codeExists:boolean = true;
   projectExpeditions:Array<any> = [];
   modalRef!:NgbModalRef;
+  codeRegex:any = /^[a-zA-Z0-9_]{4,50}$/;
 
   // Modal Variables
   expeditionForm!:FormGroup;
@@ -68,17 +70,30 @@ export class ExpeditionsComponent implements OnDestroy{
 
   initForm(){
     this.expeditionForm = this.fb.group({
-      expeditionCode: ['', [Validators.required, Validators.minLength(4)]],
+      expeditionCode: ['', [Validators.required, Validators.pattern(this.codeRegex)]],
       expeditionTitle: ['', [Validators.required]],
       metadata: [{}],
       public: [true],
       visibility: ['anyone']
     })
+    this.form['expeditionCode'].valueChanges.pipe(debounceTime(500), takeUntil(this.destroy$)).subscribe((res:any)=> this.validateCode(res))
+  }
+
+  validateCode(code: string) {
+    const newCode = code.trim();
+    if (newCode && newCode.length >= 4 && !this.form['expeditionCode'].errors) {
+      this.expeditionService.getExpeditionByCode( this.currentProject.projectId, newCode).pipe(takeUntil(this.destroy$)).subscribe({
+        next: (res: any) => {
+          if (res) this.codeExists = true
+          else this.codeExists = false;
+        }
+      })
+    }
   }
 
   createNew(){
     this.expeditionForm.markAllAsTouched();
-    if(this.expeditionForm.invalid) return;
+    if(this.expeditionForm.invalid || this.codeExists) return;
     this.isLoading = true;
     this.expeditionService.createExpedition(this.currentProject.projectId, this.expeditionForm.value)
     .pipe(take(1), takeUntil(this.destroy$)).subscribe({

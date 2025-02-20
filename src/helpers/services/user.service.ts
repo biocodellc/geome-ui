@@ -48,6 +48,14 @@ export class UserService {
     return this.http.post(`${this.apiURL}users/${username}/sendResetToken`, '');
   }
 
+  updateUserData(username:string, data:any):Observable<any>{
+    return this.http.put(`${this.apiURL}users/${username}`, data);
+  }
+
+  updatePassword(username:string, data:any):Observable<any>{
+    return this.http.put(`${this.apiURL}users/${username}/password`, this.formattedReqBody(data), { headers: this.headers });
+  }
+
   refreshUserToken(refreshToken:string):Observable<any> {
     const data = {
       client_id: environment.fimsClientId,

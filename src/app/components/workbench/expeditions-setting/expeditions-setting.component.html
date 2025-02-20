@@ -1,0 +1,126 @@
+<section id="expedition-setting-container" class="p-3 pt-4 mb-3">
+    <div class="container">
+        <div class="row mb-3">
+            <span class="mb-0 text-primary cursor-pointer" [routerLink]="['/workbench','expeditions']">
+                <i class="fas fa-angle-left fw-semibold me-2"></i>Expedition
+            </span>
+        </div>
+        
+        <div class="row mb-3">
+            <div class="container-bg shadow px-3 py-4">
+                <h3 class="m-0 mb-3">{{currentExpedition?.expeditionTitle}}</h3>
+                <p class="m-0 mb-3">
+                    <span class="fw-semibold">Expedition Code: </span>
+                    {{currentExpedition?.expeditionCode}}
+                </p>
+                <p class="m-0">
+                    <span class="fw-semibold">Identifier: </span>
+                    <a href="http://n2t.net/{{currentExpedition?.identifier}}" target="_blank">
+                        http://n2t.net/{{currentExpedition?.identifier}}
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="container-bg shadow px-3 py-4">
+                <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs">
+                    <li [ngbNavItem]="'settings'">
+                        <button ngbNavLink>Settings</button>
+                        <ng-template ngbNavContent>
+                            <div class="p-3">
+                                <form [formGroup]="expeditionForm" (ngSubmit)="updateExpedition()">
+                                    <div class="form-group-div">
+                                        <label for="title" class="form-group-label">Title</label>
+                                        <input id="title" type="text" class="input-cus d-block" style="width: 280px" placeholder="Enter first name" formControlName="expeditionTitle">
+                                        @if(form['expeditionTitle'].touched && form['expeditionTitle'].invalid){
+                                            <span class="warn-text f-12">{{ form['expeditionTitle'].hasError('required') ? 'Title is required.' : '' }}</span>
+                                        }
+                                    </div>
+                                    <div class="form-group-div">
+                                        <label for="visibility" class="form-group-label">Visibility</label>
+                                        <select id="visibility" formControlName="visibility" class="d-block rounded bg-white border border-dark-subtle" style="width: 280px; padding: 8px 12px;">
+                                            <option value="anyone">Anyone</option>
+                                            <option value="project members">Project Members</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group-div">
+                                        <button type="submit" class="pro-save">Save</button>
+                                    </div>
+                                </form>
+                                <div class="mt-3">
+                                    <div class="border border-danger bg-danger-subtle p-3 rounded">
+                                        <div class="mb-1 d-flex justify-content-between">
+                                            <h5 class="m-0 fw-semibold">Delete this expedition</h5>
+                                            <button type="button" class="btn btn-danger" (click)="openDeleteModal(new_expedition_modal)">Delete</button>
+                                        </div>
+                                        <p class="m-0">
+                                            <span class="text-danger">Warning! This will delete all records associated with this expeditions.</span>
+                                            Please <span class="text-primary">export your data</span> before deleting this expedition.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </li>
+                    <li [ngbNavItem]="'resources'">
+                        <button ngbNavLink>Resources</button>
+                        <ng-template ngbNavContent>
+                            <div class="p-3">
+                                <div class="d-flex p-2 border-bottom">
+                                    <div class="col-4 fw-semibold"><h4 class="m-0">Entity</h4></div>
+                                    <div class="col-8"><h4 class="m-0">Root Identifier</h4></div>
+                                </div>
+                                @for(entityIdentifier of currentExpedition?.entityIdentifiers; track entityIdentifier){
+                                    <div class="d-flex p-2 border-bottom">
+                                        <div class="col-4">{{ entityIdentifier.conceptAlias }}</div>
+                                        <div class="col-8">
+                                            <a href="http://n2t.net/{{entityIdentifier.identifier}}">
+                                                http://n2t.net/{{ entityIdentifier.identifier }}
+                                            </a>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </ng-template>
+                    </li>
+                    <li [ngbNavItem]="'members'">
+                        <button ngbNavLink>Members</button>
+                        <ng-template ngbNavContent>
+                            <div class="p-3">
+                                A project can be setup to disable expedition access checks, allowing all project members to upload
+                                to any expedition. To allow expedition access to all project members, the project administrator
+                                may do the following:
+                                <ul>
+                                  <li>Visit <span class="text-primary cursor-pointer" [routerLink]="currentProject.user.email == currentExpedition.user.email ? ['/workbench/project/settings'] : ['']">"Project Settings"</span> under Workbench</li>
+                                  <li>Uncheck the "Enforce Expedition Access Control" checkbox</li>
+                                </ul>
+                                <br />
+                                Having multiple members in one expedition is a feature that will be implemented in the future.
+                              </div>
+                        </ng-template>
+                    </li>
+                </ul>
+                
+                <div [ngbNavOutlet]="nav" class="mt-2"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<ng-template #new_expedition_modal let-modal>
+    <div class="modal-header border-0 py-2 bg-danger justify-content-center">
+		<h4 class="modal-title fw-semibold" id="modal-basic-title">Warning!</h4>
+	</div>
+	<div class="modal-body p-2 px-4 border-0" id="expedition_modal">
+        <p class="m-0">
+            Are you sure you want to delete this expedition? All associated records will be lost. <b>We recommend that you export the data before deleting.</b>
+        </p>
+    </div>
+    <div class="modal-footer border-0 pt-0">
+		<div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-danger" (click)="deleteExpedition()">Delete</button>
+            <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">Cancel</button>
+        </div>
+	</div>
+</ng-template>

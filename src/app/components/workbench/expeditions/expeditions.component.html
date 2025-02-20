@@ -1,4 +1,4 @@
-<section id="dashboard-container" class="p-3 pt-4 mb-3">
+<section id="expedition-container" class="p-3 pt-4 mb-3 container-bg shadow">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
@@ -56,17 +56,19 @@
                     <input type="text" formControlName="expeditionTitle" class="form-control" id="floatingExpeditionTitle" placeholder="Enter Expedition Title">
                     <label for="floatingExpeditionTitle" class="ps-0 fw-semibold">Expedition Title *</label>
                 </div>
-                @if(form['expeditionTitle'].touched &&form['expeditionTitle'].invalid){
+                @if(form['expeditionTitle'].touched && form['expeditionTitle'].invalid){
                     <span class="warn-text f-12">{{ form['expeditionTitle'].hasError('required') ? 'Title is required.' : '' }}</span>
                 }
             </div>
             <div class="">
                 <div class="form-floating mb-1">
                     <input type="text" formControlName="expeditionCode" class="form-control" id="floatingExpeditionCode" placeholder="Enter Expedition Code">
-                    <label for="floatingExpeditionCode" class="ps-0 fw-semibold">Expedition Title *</label>
+                    <label for="floatingExpeditionCode" class="ps-0 fw-semibold">Expedition Code *</label>
                 </div>
-                @if(form['expeditionCode'].touched &&form['expeditionCode'].invalid){
-                    <span class="warn-text f-12">{{ form['expeditionCode'].hasError('required') ? 'Code is required.' : 'Min. length is 4.' }}</span>
+                @if(form['expeditionCode'].touched && (form['expeditionCode'].invalid || codeExists)){
+                    <span class="warn-text f-12">
+                        {{ form['expeditionCode'].hasError('required') ? 'Code is required.' : form['expeditionCode'].hasError('pattern') ? 'Expedition Code must contain only numbers, letters, or underscores and be 4 to 50 characters long.' : 'Expedition with that code already exists' }}
+                    </span>
                 }
             </div>
         </form>

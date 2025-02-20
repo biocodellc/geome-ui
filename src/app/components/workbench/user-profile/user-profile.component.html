@@ -1,4 +1,4 @@
-<section id="dashboard-container" class="p-3 pt-4 mb-3">
+<section id="user-profile-container" class="p-3 pt-4 mb-3 container-bg shadow">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
@@ -9,8 +9,8 @@
 
             </div>
         </div>
-        <form [formGroup]="userForm">
-            <div class="profile-section">
+        <div class="profile-section">
+            <form [formGroup]="userForm" (ngSubmit)="updateUserData()">
                 <div class="row">
                     <div class="col-lg-12">
                         <h3 class="profile-hed">Profile</h3>
@@ -20,74 +20,105 @@
                     <div class="col-lg-6">
                         <div class="form-group-div">
                             <label for="" class="form-group-label">First Name</label>
-                            <input type="text" class="input-cus" placeholder="Enter first name" formControlName="firstName">
+                            <input type="text" class="input-cus" placeholder="Enter first name"
+                                formControlName="firstName">
+                            @if(form['firstName'].touched && form['firstName'].invalid){
+                            <span class="warn-text f-12">{{ form['firstName'].hasError('required') ? 'First Name is
+                                required.' : '' }}</span>
+                            }
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="NordVPN-div">
                             <label for="" class="form-group-label">Last Name</label>
-                            <input type="text" class="input-cus" placeholder="enter last name" formControlName="lastName">
+                            <input type="text" class="input-cus" placeholder="enter last name"
+                                formControlName="lastName">
+                            @if(form['lastName'].touched && form['lastName'].invalid){
+                            <span class="warn-text f-12">{{ form['lastName'].hasError('required') ? 'Last Name is
+                                required.' : '' }}</span>
+                            }
                         </div>
                     </div>
-    
+
                     <div class="col-lg-6">
                         <div class="form-group-div">
                             <label for="" class="form-group-label">Email</label>
                             <input type="text" class="input-cus" placeholder="enter email" formControlName="email">
+                            @if(form['email'].touched && form['email'].invalid){
+                            <span class="warn-text f-12">{{ form['email'].hasError('required') ? 'Email is required.' :
+                                form['email'].hasError('email') ? 'Enter valid Email' : '' }}</span>
+                            }
                         </div>
                     </div>
-    
+
                     <div class="col-lg-6">
                         <div class="form-group-div">
                             <label for="" class="form-group-label">Institution</label>
-                            <input type="text" class="input-cus" placeholder="enter institute" formControlName="institution">
+                            <input type="text" class="input-cus" placeholder="enter institute"
+                                formControlName="institution">
+                            @if(form['institution'].touched && form['institution'].invalid){
+                            <span class="warn-text f-12">{{ form['institution'].hasError('required') ? 'Institution name
+                                is required.' : '' }}</span>
+                            }
                         </div>
                     </div>
                 </div>
-    
+
                 <div class="col-lg-12">
                     <div class="form-group-div">
-                        <button type="button" class="pro-save">Save</button>
+                        <button type="submit" class="pro-save">Save</button>
                     </div>
                 </div>
-    
-            </div>
-            <div class="profile-section change-password">
+            </form>
+        </div>
+        <div class="profile-section change-password">
+            <form [formGroup]="passwordForm" (ngSubmit)="updateUserPassword()">
                 <div class="row">
                     <div class="col-lg-12">
                         <h3 class="profile-hed">Change Password</h3>
                     </div>
                 </div>
-    
+
                 <div class="row">
                     <div class="col-lg-3">
                         <div class="form-group-div">
                             <label for="" class="form-group-label">Current Password</label>
-                            <input type="text" class="input-cus" placeholder="">
+                            <input type="password" class="input-cus" placeholder="" formControlName="currentPassword">
+                            @if(passForm['currentPassword'].touched && passForm['currentPassword'].invalid){
+                                <span class="warn-text f-12">{{ passForm['currentPassword'].hasError('required') ? 'Current Password
+                                    is required.' : '' }}</span>
+                            }
                         </div>
                     </div>
                     <div class="col-lg-3">
                         <div class="NordVPN-div">
                             <label for="" class="form-group-label">New Password</label>
-                            <input type="text" class="input-cus" placeholder="">
+                            <input type="password" class="input-cus" placeholder="" formControlName="newPassword">
+                            @if(passForm['newPassword'].touched && passForm['newPassword'].invalid){
+                                <span class="warn-text f-12">{{ passForm['newPassword'].hasError('required') ? 'New Password
+                                    is required.' : 'Password is not strong enough.' }}</span>
+                            }
                         </div>
                     </div>
-    
+
                     <div class="col-lg-3">
                         <div class="form-group-div">
                             <label for="" class="form-group-label">Verify Password</label>
-                            <input type="text" class="input-cus" placeholder="">
+                            <input type="password" class="input-cus" placeholder="" formControlName="verifyPassword">
+                            @if(passForm['verifyPassword'].touched && passForm['verifyPassword'].errors){
+                                <span class="warn-text f-12">Passwords do not match.</span>
+                            }
                         </div>
                     </div>
-    
+
                     <div class="col-lg-3">
                         <div class="form-group-div">
                             <br>
-                            <button type="button" class="pro-save change-passw">Change Password</button>
+                            <button type="submit" class="pro-save change-passw">Change Password</button>
                         </div>
                     </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </section>

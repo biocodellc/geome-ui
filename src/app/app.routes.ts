@@ -55,6 +55,10 @@ export const routes: Routes = [
                 loadComponent: ()=> import('./components/workbench/expeditions/expeditions.component').then(m => m.ExpeditionsComponent)
             },
             {
+                path: 'expeditions/:id/settings',
+                loadComponent: ()=> import('./components/workbench/expeditions-setting/expeditions-setting.component').then(m => m.ExpeditionsSettingComponent)
+            },
+            {
                 path: 'user/profile',
                 loadComponent: ()=> import('./components/workbench/user-profile/user-profile.component').then(m => m.UserProfileComponent)
             }
