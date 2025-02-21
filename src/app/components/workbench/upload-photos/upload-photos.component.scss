@@ -1,0 +1,27 @@
+ul.first-list {
+    list-style: auto;
+}
+.form-select.color-change {
+    color: #ff6d00;
+}
+select#expedition {
+    border: none;
+    border-bottom: 1px solid #ff6d00;
+    border-radius: 0px;
+}
+.footer-top-section {
+    width: 100%;
+    max-width: 85%;
+    margin: auto;
+    padding: 30px 0px;
+}
+.auto-gen {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.auto-gen1 p {
+    margin-bottom: 0px;
+    padding-left: 20px;
+    color: #777;
+}

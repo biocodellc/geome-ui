@@ -23,6 +23,7 @@
         </div>
 
         <div class="row mb-3">
+        <div class="col-lg-9">
             <div class="container-bg shadow px-3 py-4">
                 <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs">
                     <li [ngbNavItem]="'settings'">
@@ -104,6 +105,19 @@
                 
                 <div [ngbNavOutlet]="nav" class="mt-2"></div>
             </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="view-section container-bg shadow px-3 py-4">
+                <ul class="view-list">
+                    <li><button class="view-data">View Data <i class="fa-solid fa-location-dot"></i></button></li>
+                    <li><button class="view-data">Load Data <i class="fa-solid fa-upload"></i></button></li>
+                    <li><button class="view-data">Export Data <i class="fa-solid fa-download"></i></button></li>
+                </ul>
+            </div>
+
+        </div>
+
         </div>
     </div>
 </section>

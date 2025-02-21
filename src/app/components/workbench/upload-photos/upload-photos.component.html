@@ -20,7 +20,40 @@
                 </ul>
                 <p class="valid-hed1"><strong>OPTION 2: Upload photos from your hard-drive.</strong></p>
                 <p class="valid-hed1">The GEOME bulk image loader accepts a directory of images zipped into a single file. The max file size is 2GB. If you need to upload more than that, split the upload into multiple uploads. The image loader should be able to accept multiple formats, however, the JPEG format is the most reliable format when uploading. When uploading images, you have the following options:</p>
+                <ul class="first-list">
+                    <li><strong>File name option:</strong> Name each file according to the following template. Each file will then be parsed and attached to the appropriate record:</li>
+                    <ul class="second-list">
+                        <li>parentIdentifier+imgIdentifier.ext<p><strong>IMPORTANT! Be sure that your imgIdentifier does not contain any special characters including spaces or dashes.</strong></p></li>
+                    </ul>
+                    <li><strong>Metadata option:</strong> Include a metadata.csv with the following fields:</li>
+                    <ul class="second-list">
+                        <li>materialSampleID OR eventID (required - the identifier of the record to attach the photo to. Use either materialSampleID or eventID to denote the parentIdentifier)</li>
+                        <li>fileName (required -the name of the file in the directory)</li>
+                        <li>expeditionCode (required if photos span multiple expeditions)</li>
+                        <li>other fields (see photo fields under "Generate Template")</li>
+                    </ul>
+                </ul>
+                <p class="valid-hed1">Once you upload it may take several minutes to an hour or more for all photos to appear.</p>
             </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="footer-top-section">
+                <label for="expedition" class="form-label">Expedition <span class="text-danger">*</span></label>
+                <select id="expedition" class="form-select color-change"><option>Expedition <span class="text-danger">*</span></option></select>
+                <p class="error-text">Expedition is required.</p>
+
+                <div class="auto-gen">
+                    <button type="button" class="btn btn-primary float-end export-btn-1">CHOOSE FILE</button>
+                    <div class="auto-gen1">
+                        <p class="no-file file-sel">No file selected</p>
+                        <p class="no-file">A zipped directory of photos to upload</p>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary float-end export-btn-1">UPLOAD</button>
+            </div>
+        </div>
         </div>
 
             
