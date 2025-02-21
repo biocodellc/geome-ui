@@ -65,6 +65,26 @@ export const routes: Routes = [
             {
                 path: 'template',
                 loadComponent: ()=> import('./components/workbench/template/template.component').then(m => m.TemplateComponent)
+            },
+            {
+                path: 'upload',
+                loadComponent: ()=>import('./components/workbench/validation/validation.component').then(m => m.ValidationComponent)
+            },
+            {
+                path: 'upload/photos',
+                loadComponent: ()=>import('./components/workbench/upload-photos/upload-photos.component').then(m => m.UploadPhotosComponent)
+            },
+            {
+                path: 'upload/sra',
+                loadComponent: ()=>import('./components/workbench/upload-sra/upload-sra.component').then(m => m.UploadSraComponent)
+            },
+            {
+                path: 'plates',
+                loadComponent: ()=>import('./components/workbench/plates/plates.component').then(m => m.PlatesComponent)
+            },
+            {
+                path: 'project/settings',
+                loadComponent: ()=>import('./components/workbench/project-settings/project-settings.component').then(m => m.ProjectSettingsComponent)
             }
         ]
     }

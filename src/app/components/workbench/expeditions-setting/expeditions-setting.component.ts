@@ -81,7 +81,6 @@ export class ExpeditionsSettingComponent implements OnDestroy{
               this.form[key].setValue(this.currentExpedition[key]);
               this.form[key].updateValueAndValidity();
             })
-            console.log('======current expedition======',this.currentExpedition);
           }
         }
       },

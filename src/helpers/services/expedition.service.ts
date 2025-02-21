@@ -23,11 +23,15 @@ export class ExpeditionService {
     return this.http.get(url);
   }
 
-  getExpeditionsForUser(projectId:number, includePrivate = false) {
+  getAllExpeditions(projectId:number):Observable<any>{
+    return this.http.get(`${this.apiURL}projects/${projectId}/expeditions`);
+  }
+
+  getExpeditionsForUser(projectId:number, includePrivate = false):Observable<any> {
     return this.http.get(`${this.apiURL}projects/${projectId}/expeditions?user&includePrivate=${includePrivate}`);
   }
 
-  getExpeditionByCode(projectId:string, code:string):Observable<any>{
+  getExpeditionByCode(projectId:number, code:string):Observable<any>{
     return this.http.get(`${this.apiURL}projects/${projectId}/expeditions/${code}`);
   }
 

@@ -245,6 +245,181 @@ button.pro-save.change-passw {
     background: #777;
 }
 
+
+
+// New Scss
+.Mekong {
+    padding: 30px 0 0 0;
+}
+.col-form-label {
+    text-align: end;
+}
+.mek-hed1{
+    color: #444;
+}
+.accordion-section .accordion-button:not(.collapsed){
+    background-color: #fff !important;
+    border: none !important;
+}
+select.form-control.temp-dropdown {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path d="M1.5 5.5l6.5 6 6.5-6H1.5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    padding-right: 30px;
+    border-radius: 0px;
+}
+.export-btn {
+    background: #2196f3;
+    border: none;
+}
+#flexSwitchCheckDefault {
+    width: 50px;
+    height: 25px;
+    border: none;
+}
+.form-switch .form-check-input {
+    background-color: #ddd;
+    border-color: #aaa;
+}
+.form-switch .form-check-input:checked {
+    background-color: #bbb;
+    border-color: #888;
+}
+.form-check.form-switch{
+    display: flex;
+    align-items: center;
+}
+.include-prop {
+    margin-bottom: 0px;
+    padding: 0 0 0 10px;
+}
+.defin {
+    color: #444;
+    margin: 30px 0px 10px 0px;
+}
+.accordion-section {
+    margin: 20px 0px 0px 0px;
+}
+button.save-btn {
+    border: none;
+    background: none;
+    color: #1e88e5;
+}
+.checkbox-sec {
+    margin: 0 0 4px 0;
+}
+.accordion-section .accordion-item{
+    margin: 0 0 10px 0;
+}
+.save-btn-row {
+    margin-bottom: 10px;
+}
+.accordion-button::after {
+    display: none !important;
+}
+.save-temp {
+    margin: 50px 0 0 0;
+}
+
+
+// ================Validate Data==================
+
+.valid-hed {
+    text-align: center;
+    color: #444;
+    margin-bottom: 30px;
+}
+.valid-hed1 {
+    margin: 0 0 10px 0;
+    color: #000000de;
+}
+.valid-hed2 {
+    margin: 20px 0 10px 0;
+    color: #000000de;
+}
+
+
+
+// =======================SRA Submission====================
+.form-container.SRA {
+    position: relative;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 40px auto;
+}
+.step-list {
+    list-style: none;
+    padding: 0;
+}
+.step-list li {
+    padding: 10px 0 0 0;
+    font-size: 16px;
+}
+.step-active {
+    margin-bottom: 5px;
+}
+.error-text {
+    color: #ff6d00;
+    font-size: 12px;
+}
+.step-list {
+    position: relative;
+}
+select#expedition {
+    border: none;
+    border-bottom: 1px solid #ff6d00;
+    border-radius: 0px;
+}
+.form-select.color-change{
+    color: #ff6d00;
+}
+
+.bio-next{
+    background: #00000061;
+    border: none;
+    color: #ddd;
+    width: 100%;
+    max-width: 120px;
+    padding: 8px 0px;
+}
+.step-list::after {
+    position: absolute;
+    left: 0;
+    top: 22px;
+    bottom: 22px;
+    width: 2px;
+    content: "";
+    background: rgb(0, 130, 199);
+    height: 190px;
+}
+.step-line {
+    margin-bottom: 20px;
+}
+.step-list li {
+    position: relative;
+    padding-left: 20px;
+}
+
+.step-list li::after {
+    position: absolute;
+    left: -4px;
+    top: 17px;
+    background: rgba(0, 130, 199, 1);
+    width: 10px;
+    height: 10px;
+    content: "";
+    border-radius: 10px;
+    z-index: 9;
+}
+
+
+
 @media (min-width: 1400px) {
     .container-xxl, .container-xl, .container-lg, .container-md, .container-sm, .container {
         max-width: 1230px;
