@@ -61,6 +61,10 @@ export const routes: Routes = [
             {
                 path: 'user/profile',
                 loadComponent: ()=> import('./components/workbench/user-profile/user-profile.component').then(m => m.UserProfileComponent)
+            },
+            {
+                path: 'template',
+                loadComponent: ()=> import('./components/workbench/template/template.component').then(m => m.TemplateComponent)
             }
         ]
     }
