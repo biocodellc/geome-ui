@@ -1,0 +1,53 @@
+.bottom-form-section {
+    border-top: 1px solid #ddd;
+}
+.form-container.FASTQ {
+    padding: 40px 0px;
+}
+.input-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+label.input-label.fastq-label {
+    width: 100%;
+    max-width: 200px;
+    text-align: end;
+    padding: 0 25px 0 0;
+}
+button.info-btn {
+    border: none;
+    background: none;
+}
+button.info-btn i {
+color: #42516a;
+}
+.input-med-sec {
+    width: 100%;
+}
+.form-check-inline {
+    display: flex;
+    margin-right: 1rem;
+    align-items: center;
+    gap: 10px;
+}
+.input-med-sec .form-select {
+    color: #777;
+}
+.load{
+    color: #00000061;
+    background-color: #0000001f;
+    border: none;
+    padding: 5px 20px;
+    float: inline-end;
+    font-size: 16px;
+    font-weight: 500;
+}
+.instr-box {
+    padding: 40px 0px;
+}
+h6.inst-hed {
+    padding: 0 0 0 32px;
+    font-weight: 600;
+}
+
