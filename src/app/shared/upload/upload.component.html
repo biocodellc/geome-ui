@@ -1,0 +1,37 @@
+<div class="row bottom-form-section">
+    <div class="col-lg-8">
+        <div class="input-section align-items-baseline">
+            <label class="input-label fastq-label">{{ sectionData.label == "Workbook" ? 'Excel '+sectionData?.label : sectionData.label + ' CSV' }}</label>
+            <div class="input-med-sec">
+                <div class="d-flex">
+                    <label for="file_{{sectionData.label}}" class="custom_file_label rounded-start">Browse...</label>
+                    <input type="file" name="file_{{sectionData.label}}" id="file_{{sectionData.label}}" class="form-control fastq-control" placeholder="" hidden (change)=onFileSelect($event) [accept]="fileTypes()"/>
+                    <input type="text" [(ngModel)]="fileName" name="file_name_{{sectionData.label}}" class="form-control fastq-control rounded-start-0 bg-secondary-subtle border border-white" style="flex: 1; box-shadow:none" placeholder="" readonly/>
+                </div>
+                @if(sectionData?.showReplace){
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault_{{sectionData.label}}" [(ngModel)]="replaceChecked">
+                        <label class="form-check-label" for="flexCheckDefault_{{sectionData.label}}">
+                            Replace expedition data
+                            <i class="fa-solid fa-circle-question"></i>
+                        </label>
+                    </div>
+                    <p style="padding-left: 1.5rem;">Replace expedition data" should be selected when samples need to be entirely removed from an expedition, or when the materialSampleID field needs to be changed. The replacement will occur for each data worksheet within the loaded workbook. All existing data will be removed and replaced with the Data in the workbook. Data worksheets not found in this workbook will not be removed. It is highly recommended to first run the "Only validate data" option (above) and fix errors, before replacing expedition data. Make sure that critical columns are intact, eg. "Sample_bcid", "Tissue_bcid", "tissue_ID", "tissue_Plate" and "tissue_Well"</p>
+                }
+            </div>
+            @if(sectionData.icon){
+                <button class="info-btn"><i class="fa-solid {{sectionData.icon}}"></i></button>
+            }
+        </div>
+        <!-- <div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                    Replace expedition data
+                    <i class="fa-solid fa-circle-question"></i>
+                </label>
+            </div>
+        </div> -->
+    </div>
+    <div class="col-lg-4"></div>
+</div>

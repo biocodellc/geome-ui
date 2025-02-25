@@ -281,18 +281,24 @@ select.form-control.temp-dropdown {
     height: 25px;
     border: none;
 }
-.form-switch .form-check-input {
-    background-color: #ddd;
-    border-color: #aaa;
+.form-switch .form-check-input{
+    width: 3rem;
+    height: 1.5rem;
+    margin-top: 0px;
+    margin-right: 5px;
 }
-.form-switch .form-check-input:checked {
-    background-color: #bbb;
-    border-color: #888;
-}
-.form-check.form-switch{
-    display: flex;
-    align-items: center;
-}
+// .form-switch .form-check-input {
+//     background-color: #ddd;
+//     border-color: #aaa;
+// }
+// .form-switch .form-check-input:checked {
+//     background-color: #bbb;
+//     border-color: #888;
+// }
+// .form-check.form-switch{
+//     display: flex;
+//     align-items: center;
+// }
 .include-prop {
     margin-bottom: 0px;
     padding: 0 0 0 10px;
@@ -418,6 +424,63 @@ select#expedition {
     z-index: 9;
 }
 
+
+
+// Validate Data
+.validate-data{
+    .bottom-form-section {
+        border-top: 1px solid #ddd;
+        padding: 1.5rem 3rem;
+    }
+    .form-container.FASTQ {
+        // padding: 40px 0px;
+    }
+    .input-section {
+        display: flex;
+        align-items: center;
+    }
+    label.input-label.fastq-label {
+        width: 100%;
+        max-width: 200px;
+        text-align: end;
+        padding: 0 25px 0 0;
+    }
+    button.info-btn {
+        border: none;
+        background: none;
+    }
+    button.info-btn i {
+    color: #42516a;
+    }
+    .input-med-sec {
+        width: 100%;
+    }
+    .form-check-inline {
+        display: flex;
+        margin-right: 1rem;
+        align-items: center;
+        gap: 10px;
+    }
+    .input-med-sec .form-select {
+        color: #777;
+    }
+    .load{
+        color: #00000061;
+        background-color: #0000001f;
+        border: none;
+        padding: 5px 20px;
+        float: inline-end;
+        font-size: 16px;
+        font-weight: 500;
+    }
+    .instr-box {
+        // padding: 40px 0px;
+    }
+    h6.inst-hed {
+        padding: 0 0 0 32px;
+        font-weight: 600;
+    }    
+}
 
 
 @media (min-width: 1400px) {

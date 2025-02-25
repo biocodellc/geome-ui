@@ -3,14 +3,14 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <h3 class="mek-hed1">Mekong River Template Generator</h3>
-                <p class="mek-hed1">Population genetics evaluation of fishes within the Lower Mekong Basin and the
-                    Mekong Delta.</p>
+                <h3 class="mek-hed1">{{ currentProject?.projectTitle }}</h3>
+                <p class="mek-hed1">{{ currentProject?.description }}</p>
                 <form class="form-horizontal">
                     <div class="mb-3 row">
                         <label class="col-sm-3 col-form-label">Worksheet:</label>
                         <div class="col-sm-4">
-                            <select class="form-control temp-dropdown" [disabled]="worksheets.length == 1">
+                            <select class="form-control temp-dropdown" name="worksheet" [disabled]="worksheets.length == 1" [(ngModel)]="selectedWorksheet" (change)="onWorksheetChange($event)">
+                                <option value="" disabled>Select Worksheet</option>
                                 @for(sheet of worksheets; track sheet){
                                     <option [value]="sheet">{{sheet}}</option>
                                 }
@@ -18,17 +18,19 @@
                         </div>
                     </div>
 
-                    <div class="mb-3 row">
-                        <label class="col-sm-3 col-form-label">Template Config:</label>
-                        <div class="col-sm-4">
-                            <select class="form-control temp-dropdown">
-                                <option selected>DEFAULT</option>
-                                @for(template of allTemplates; track allTemplates){
-                                    <option [value]="template.name">{{template.name}}</option>
-                                }
-                            </select>
+                    @if(selectedWorksheet != 'Workbook'){
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label">Template Config:</label>
+                            <div class="col-sm-4">
+                                <select class="form-control temp-dropdown" name="templates" [(ngModel)]="selectedTemplate" (change)="onTemplateChange()">
+                                    <option value="">DEFAULT</option>
+                                    @for(template of filteredTemplates; track template){
+                                        <option [value]="template">{{template}}</option>
+                                    }
+                                </select>
+                            </div>
                         </div>
-                    </div>
+                    }
 
                     <div class="row">
                         <div class="col-sm-6">
@@ -41,83 +43,71 @@
         <div class="save-temp">
             <div class="row">
                 <div class="col-lg-6">
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                        <p class="include-prop">Include properties for all Samples</p>
-                    </div>
                     <div class="accordion-section" ngbAccordion>
-                        <div class="save-btn-row">
-                            <button class="save-btn">Save template</button>
-                        </div>
-                        <div ngbAccordionItem [collapsed]="false">
-                            <h2 ngbAccordionHeader>
-                                <button ngbAccordionButton>Minimum Information Standard Items</button>
-                            </h2>
-                            <div ngbAccordionCollapse>
-                                <div ngbAccordionBody>
-                                    <ng-template>
-                                        <div class="panel-body">
-                                            <div class="checkbox-sec">
-                                                <label>
-                                                    <input type="checkbox" disabled checked>
-                                                    materialSampleID
-                                                    <a class="popover-button">DEF</a>
-                                                </label>
-                                            </div>
-
-                                            <div class="checkbox-sec">
-                                                <label>
-                                                    <input type="checkbox" disabled checked>
-                                                    principalInvestigator
-                                                    <a class="popover-button">DEF</a>
-                                                </label>
-                                            </div>
-
-                                            <div class="checkbox-sec">
-                                                <label>
-                                                    <input type="checkbox" disabled checked>
-                                                    yearCollected
-                                                    <a class="popover-button">DEF</a>
-                                                </label>
-                                            </div>
-
-                                            <div class="checkbox-sec">
-                                                <label>
-                                                    <input type="checkbox" disabled checked>
-                                                    decimalLatitude
-                                                    <a class="popover-button">DEF</a>
-                                                </label>
-                                            </div>
-
-                                            <div class="checkbox-sec">
-                                                <label>
-                                                    <input type="checkbox" disabled checked>
-                                                    decimalLongitude
-                                                    <a class="popover-button">DEF</a>
-                                                </label>
-                                            </div>
-
-                                            <div class="checkbox-sec">
-                                                <label>
-                                                    <input type="checkbox" disabled checked>
-                                                    locality
-                                                    <a class="popover-button">DEF</a>
-                                                </label>
-                                            </div>
-
-                                            <div class="checkbox-sec">
-                                                <label>
-                                                    <input type="checkbox" disabled checked>
-                                                    country
-                                                    <a class="popover-button">DEF</a>
-                                                </label>
+                        @if(selectedWorksheet == 'Workbook'){
+                            <div class="form-check form-switch mt-3">
+                                <input class="form-check-input" type="checkbox" role="switch" (change)="toggleSelectAll($event)">
+                                <p class="include-prop">Include all properties</p>
+                            </div>
+                        }
+                        @for(item of attributeArray; track item){
+                            @if( selectedWorksheet == 'Workbook' || selectedWorksheet == item.worksheet){
+                                <div class="form-check form-switch mt-3">
+                                    <input class="form-check-input" type="checkbox" role="switch" (change)="toggleSelect($event, item.worksheet)">
+                                    <p class="include-prop">Include properties for all {{item.worksheet}}</p>
+                                </div>
+                                @if(selectedWorksheet == item.worksheet){
+                                    <div class="save-btn-row mt-3">
+                                        <button class="save-btn" (click)="openSaveModal(save_template_modal)">Save template</button>
+                                    </div>
+                                }
+                                @else{
+                                    <h3 class="my-3">{{item.worksheet}}</h3>
+                                }
+                                @for(attribute of Object.keys(item.data.attributes); track attribute){
+                                    <div ngbAccordionItem [collapsed]="false">
+                                        <h2 ngbAccordionHeader>
+                                            <button ngbAccordionButton>{{attribute}}</button>
+                                        </h2>
+                                        <div ngbAccordionCollapse>
+                                            <div ngbAccordionBody>
+                                                <ng-template>
+                                                    <div class="panel-body">
+                                                        @for(entity of item.data.attributes[attribute]; track entity){
+                                                            <div class="checkbox-sec">
+                                                                <label>
+                                                                    @switch(item.worksheet){
+                                                                        @case('Samples'){
+                                                                            <input type="checkbox" (change)="inputChange($event, entity, item.worksheet)" [disabled]="attribute == 'Minimum Information Standard Items'" [checked]="attribute == 'Minimum Information Standard Items' || sampleChecks.includes(entity.column)">
+                                                                        }
+                                                                        @case('Events'){
+                                                                            <input type="checkbox" (change)="inputChange($event, entity, item.worksheet)" [disabled]="attribute == 'Minimum Information Standard Items'" [checked]="attribute == 'Minimum Information Standard Items' || eventChecks.includes(entity.column)">
+                                                                        }
+                                                                        @case('Tissues'){
+                                                                            <input type="checkbox" (change)="inputChange($event, entity, item.worksheet)" [disabled]="attribute == 'Minimum Information Standard Items'" [checked]="attribute == 'Minimum Information Standard Items' || tissueChecks.includes(entity.column)">
+                                                                        }
+                                                                        @case('event_photos'){
+                                                                            <input type="checkbox" (change)="inputChange($event, entity, item.worksheet)" [disabled]="attribute == 'Minimum Information Standard Items'" [checked]="attribute == 'Minimum Information Standard Items' || eventPhotoChecks.includes(entity.column)">
+                                                                        }
+                                                                        @case('sample_photos'){
+                                                                            <input type="checkbox" (change)="inputChange($event, entity, item.worksheet)" [disabled]="attribute == 'Minimum Information Standard Items'" [checked]="attribute == 'Minimum Information Standard Items' || samplePhotoChecks.includes(entity.column)">
+                                                                        }
+                                                                        @default {}
+                                                                    }
+                                                                    {{entity.column}}
+                                                                </label>
+                                                                <a class="popover-button ms-2 cursor-pointer" (click)="openDef(entity, item.worksheet)">DEF</a>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </ng-template>
                                             </div>
                                         </div>
-                                    </ng-template>
-                                </div>
-                            </div>
-                        </div>
-                        <div ngbAccordionItem>
+                                    </div>
+                                }
+                            }
+                        }
+                        <!-- <div ngbAccordionItem>
                             <h2 ngbAccordionHeader>
                                 <button ngbAccordionButton>Taxonomy and Life History</button>
                             </h2>
@@ -138,7 +128,7 @@
                                     </ng-template>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -147,151 +137,53 @@
                         <p class="click-def">Click on "DEF" next to any of the headings to see the definition of the
                             term.</p>
                     </div>
+                    @if(currentStats){
+                        <div class="mt-3">
+                            <p class="mb-2"><span class="fw-semibold me-2">Column Name:</span>{{currentStats.column}}</p>
+                            <p class="mb-2"><span class="fw-semibold me-2">Defined By:</span><a href="{{currentStats.definedBy}}" target="_blank">{{currentStats.definedBy}}</a></p>
+                            <p class="mb-2"><span class="fw-semibold me-2">Data Type:</span>{{currentStats.dataType}}</p>
+                            <p class="mb-2"><span class="fw-semibold me-2">Definition</span><br>{{currentStats.definition}}</p>
+                        </div>
+                        @if(currentStats.errors.length > 0){ <h5 class="mt-3">Validation Rules</h5> }
+                        @for(error of currentStats.errors; track error){
+                            <div class="mt-3">
+                                <p class="mb-2"><span class="fw-semibold me-2">Type:</span>{{error.name}}</p>
+                                <p class="mb-2"><span class="fw-semibold me-2">Level:</span>{{error.level}}</p>
+                                <p class="mb-2"><span class="fw-semibold me-2">Entity:</span>{{currentStats.entity}}</p>
+                            </div>
+                        }
+                        @if(currentStats.list.length > 0){ <p class="fw-semibold mb-2">list:</p> }
+                        <ul>
+                            @for(item of currentStats.list; track item){ <li>{{item.value}}</li> }
+                        </ul>
+                    }
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-
-<!-- <Section class="validate-data">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <h3 class="valid-hed">Validate Data</h3>
-                <p class="valid-hed1"><strong>To upload data users must have an account.</strong>To set up an account send an email with your name, title and affiliation to <a class="valid-link" href="#">geome.database&#64;gmail.com</a> </p>
-                <p class="valid-hed2">Data is subject to our <a class="valid-link" href="#">Data Usage Policy.</a></p>
-            </div>
-
-
-            <div class="col-lg-9">
-                <div class="container">
-                    <div class="form-container">
-                        <div class="input-section">
-                            <label class="input-label">FASTQ Filenames</label>
-                            <input type="file" class="form-control" />
-                        </div>
-                        <div class="input-section">
-                            <label class="input-label">Library Layout</label>
-                            <div class="btn-group-custom d-flex">
-                                <button class="btn btn-outline-primary">Single End</button>
-                                <button class="btn btn-outline-primary">Paired End</button>
-                            </div>
-                        </div>
-                        <div class="input-section">
-                            <label class="input-label">Library Strategy</label>
-                            <select class="form-select">
-                                <option selected>-- Select a Library Strategy --</option>
-                            </select>
-                        </div>
-                        <div class="input-section">
-                            <label class="input-label">Library Source</label>
-                            <select class="form-select">
-                                <option selected>-- Select a Library Source --</option>
-                            </select>
-                        </div>
-                        <div class="input-section">
-                            <label class="input-label">Library Selection</label>
-                            <select class="form-select">
-                                <option selected>-- Select a Library Selection --</option>
-                            </select>
-                        </div>
-                        <div class="input-section">
-                            <label class="input-label">Platform</label>
-                            <select class="form-select">
-                                <option selected>-- Select a Platform --</option>
-                            </select>
-                        </div>
-                    </div>
+<ng-template #save_template_modal let-modal>
+    <div class="modal-header border-0 justify-content-center">
+		<h5 class="modal-title fw-semibold" id="modal-basic-title">What would you like to name your template?</h5>
+	</div>
+	<div class="modal-body p-2 px-4 border-0" id="expedition_modal">
+        <form [formGroup]="templateForm">
+            <div class="mb-3">
+                <div class="form-floating mb-1">
+                    <input type="text" formControlName="templateName" class="form-control" id="floatingtemplateName" placeholder="templateName">
+                    <label for="floatingtemplateName" class="ps-0 fw-semibold">Template Name *</label>
                 </div>
-            
-            
+                @if(form['templateName'].touched && form['templateName'].invalid){
+                    <span class="warn-text f-12">{{ form['templateName'].hasError('required') ? 'templateName is required.' : '' }}</span>
+                }
             </div>
-        </div>
+        </form>
     </div>
-</Section> -->
-
-
-<!-- <section>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <h3 class="valid-hed">Plate Viewer</h3>
-                <p>No Plates found</p>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <button type="button" class="btn btn-primary float-end export-btn">NEW PLATE</button>
-                    </div>
-                </div>
-            </div>
+    <div class="modal-footer border-0 pt-0">
+		<div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">Cancel</button>
+            <button type="button" class="btn btn-primary" (click)="saveTemplate()" [disabled]="templateForm.invalid">Save</button>
         </div>
-    </div>
-</section> -->
-
-
-<!-- <section class="SRA-sub">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <h3 class="valid-hed">SRA Submission</h3>
-                <p class="valid-hed1">This tool will facilitate the submission of FASTQ data to the SRA database. <strong>This tool is in beta. Please email us at <a class="valid-link" href="#">geome.help&#64;gmail.com </a>if you experience any errors.</strong> </p>
-            </div>
-        </div>
-
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="form-container SRA">
-                            <ul class="step-list mt-4">
-                                <li class="step-line">
-                            <p class="step-active"> <strong>BioProject</strong></p>
-                            <p>A BioProject describes the goals of your research.</p>
-                            <select id="expedition" class="form-select color-change">
-                                <option value="">Expedition <span class="text-danger">*</span></option>
-                            </select>
-                            <p class="error-text">Expedition is required.</p>
-                            <button class="btn bio-next mt-3" disabled>NEXT</button>
-                        </li>
-                                <li class="step-active">BioProject</li>
-                                <li class="step-active">Submission Info</li>
-                                <li class="step-active">BioSample Type</li>
-                                <li class="step-active">BioSamples</li>
-                                <li class="step-active">SRA Metadata</li>
-                                <li class="step-active">File Upload</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-          
-    </div>
-</section> -->
-
-
-<!-- <section class="SRA-sub">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <h3 class="valid-hed">Upload Photos</h3>
-                <p class="valid-hed1"><strong>About Photo Uploading in GEOME</strong></p>
-                <p class="valid-hed1">There are two primary methods for uploading photos to GEOME described below. Changing photos involves removing photo metadata from your expedition and the "re-loading" your expedition. For detailed instructions about this process refer to "User Help", located under the gear icon menu in the upper right hand corner of your screen.</p>
-                <p class="valid-hed1"><strong>OPTION 1: Upload metadata that references images that are already online.</strong></p>
-                <p class="valid-hed1">This option is used when your photos are already accessible online. You simply need to load a CSV file telling GEOME where these photos are located along with relevant metadata. Goto Workbench->Load Data and select the sample_photos_csv or the event_photos_csv option.</p>
-                <ul class="first-list">
-                    <li>You can upload photos on a project by project basis</li>
-                    <li>If your photos span multiple expeditions, select “multiple expeditions” in the expedition code option and specify the expeditionCode in the upload file.</li>
-                    <li>Fields to include in the CSV file:</li>
-                    <ul class="second-list">
-                        <li>photoID (May be required. A good idea to specify this so you can update photos using the ID later.).</li>
-                        <li>originalUrl (required. URL location of photo that GEOME will obtain)</li>
-                        <li>expeditionCode (required if photos span multiple expeditions)</li>
-                        <li>other fields (see photo fields under "Generate Template")</li>
-                    </ul>
-                </ul>
-                <p class="valid-hed1"><strong>OPTION 2: Upload photos from your hard-drive.</strong></p>
-                <p class="valid-hed1">The GEOME bulk image loader accepts a directory of images zipped into a single file. The max file size is 2GB. If you need to upload more than that, split the upload into multiple uploads. The image loader should be able to accept multiple formats, however, the JPEG format is the most reliable format when uploading. When uploading images, you have the following options:</p>
-            </div>
-        </div>
-
-            
-          
-    </div>
-</section> -->
+	</div>
+</ng-template>

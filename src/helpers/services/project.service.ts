@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable, catchError, map, of, take } from 'rxjs';
 // import { ProjectConfigurationService } from './project-configuration.service';
 // import { ProjectConfige } from '../models/ProjectConfig';
+import { ProjectConfigurationService } from './project-config.service';
+import { ProjectConfig } from '../models/projectConfig.model';
 import { environment } from '../../environments/environment';
 import { AuthenticationService } from './authentication.service';
 
@@ -63,7 +65,7 @@ export class ProjectService {
       const projectData = this.getProjectFromLocal(project.projectId) || project;
       this.getProjectConfig(projectData.projectId).pipe(take(1)).subscribe({
         next: (res:any) => {
-          const updatedProject = { ...projectData ,config : res };
+          const updatedProject = { ...projectData ,config : new ProjectConfig(res) };
           this.currentProject = updatedProject;
           this.projectSubject.next(updatedProject);
           this.cacheProject(updatedProject.projectId);

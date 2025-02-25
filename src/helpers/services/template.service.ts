@@ -26,7 +26,7 @@ export class TemplateService {
   }
 
   saveTempates(projectId:number, templateName:string, data:any):Observable<any>{
-    return this.http.post(`${this.apiURL}projects/${projectId}/templates/${templateName}`, this.formattedReqBody(data), { headers: this.headers });
+    return this.http.post(`${this.apiURL}projects/${projectId}/templates/${templateName}`, this.formatFormData(data), { headers: this.headers });
   }
 
   deleteTempates(projectId:number, templateName:string):Observable<any>{
@@ -36,5 +36,11 @@ export class TemplateService {
   // Helper
   formattedReqBody(body:any):any{
     return new URLSearchParams(Object.entries(body));
+  }
+
+  formatFormData(formData:FormData):any{
+    const params = new URLSearchParams();
+    formData.forEach((val:any, key:any)=> params.append(key, val));
+    return params;
   }
 }
