@@ -37,7 +37,7 @@ export class AppComponent implements OnDestroy{
     this.authService.currentUser.pipe(takeUntil(this.destroy$))
     .subscribe((x:any)=>{
       this.currentUser = x;
-      if(x && !x.accessToken) this.getUserProjects()
+      if(x && !x.accessToken) this.projectService.loadPrivateProjects()
       else if(x && x.accessToken) this.getUserDetails(x)
     })
     this.projectService.loadAllProjects();
@@ -47,12 +47,6 @@ export class AppComponent implements OnDestroy{
     this.userService.getUserData(user.username, user.accessToken).pipe(take(1), takeUntil(this.destroy$))
     .subscribe({
       next: (res:any) => this.authService.setCurrentUser(res)
-    })
-  }
-
-  getUserProjects(){
-    this.projectService.getAllProjects(false).pipe(takeUntil(this.destroy$)).subscribe({
-      next: (res:any)=> this.projectService.userProjectSubject.next(res)
     })
   }
 

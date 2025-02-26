@@ -1,6 +1,6 @@
 export const environment = {
     production: false,
-    naan: 99999,
+    naan: 21547,
     restRoot: 'https://api.geome-db.org/',
     appRoot: '/', // When changing this, also need to change <base> tag in index.html
     mapboxToken: 'pk.eyJ1Ijoicm9kbmV5NzU3IiwiYSI6IjAwMjFhMjNkNzkyMmI0ZWE3MmY2YzZmY2NhOGJmMjgwIn0.jUF8Mur9QX59xvbxEOKJYA',

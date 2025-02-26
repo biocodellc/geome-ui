@@ -4,59 +4,88 @@
             <div class="col-lg-12">
                 <h3 class="valid-hed">Upload Photos</h3>
                 <p class="valid-hed1"><strong>About Photo Uploading in GEOME</strong></p>
-                <p class="valid-hed1">There are two primary methods for uploading photos to GEOME described below. Changing photos involves removing photo metadata from your expedition and the "re-loading" your expedition. For detailed instructions about this process refer to "User Help", located under the gear icon menu in the upper right hand corner of your screen.</p>
-                <p class="valid-hed1"><strong>OPTION 1: Upload metadata that references images that are already online.</strong></p>
-                <p class="valid-hed1">This option is used when your photos are already accessible online. You simply need to load a CSV file telling GEOME where these photos are located along with relevant metadata. Goto Workbench->Load Data and select the sample_photos_csv or the event_photos_csv option.</p>
+                <p class="valid-hed1">There are two primary methods for uploading photos to GEOME described below.
+                    Changing photos involves removing photo metadata from your expedition and the "re-loading" your
+                    expedition. For detailed instructions about this process refer to "User Help", located under the
+                    gear icon menu in the upper right hand corner of your screen.</p>
+                <p class="valid-hed1"><strong>OPTION 1: Upload metadata that references images that are already
+                        online.</strong></p>
+                <p class="valid-hed1">This option is used when your photos are already accessible online. You simply
+                    need to load a CSV file telling GEOME where these photos are located along with relevant metadata.
+                    Goto Workbench->Load Data and select the sample_photos_csv or the event_photos_csv option.</p>
                 <ul class="first-list">
                     <li>You can upload photos on a project by project basis</li>
-                    <li>If your photos span multiple expeditions, select “multiple expeditions” in the expedition code option and specify the expeditionCode in the upload file.</li>
+                    <li>If your photos span multiple expeditions, select “multiple expeditions” in the expedition code
+                        option and specify the expeditionCode in the upload file.</li>
                     <li>Fields to include in the CSV file:</li>
                     <ul class="second-list">
-                        <li>photoID (May be required. A good idea to specify this so you can update photos using the ID later.).</li>
+                        <li>photoID (May be required. A good idea to specify this so you can update photos using the ID
+                            later.).</li>
                         <li>originalUrl (required. URL location of photo that GEOME will obtain)</li>
                         <li>expeditionCode (required if photos span multiple expeditions)</li>
                         <li>other fields (see photo fields under "Generate Template")</li>
                     </ul>
                 </ul>
                 <p class="valid-hed1"><strong>OPTION 2: Upload photos from your hard-drive.</strong></p>
-                <p class="valid-hed1">The GEOME bulk image loader accepts a directory of images zipped into a single file. The max file size is 2GB. If you need to upload more than that, split the upload into multiple uploads. The image loader should be able to accept multiple formats, however, the JPEG format is the most reliable format when uploading. When uploading images, you have the following options:</p>
+                <p class="valid-hed1">The GEOME bulk image loader accepts a directory of images zipped into a single
+                    file. The max file size is 2GB. If you need to upload more than that, split the upload into multiple
+                    uploads. The image loader should be able to accept multiple formats, however, the JPEG format is the
+                    most reliable format when uploading. When uploading images, you have the following options:</p>
                 <ul class="first-list">
-                    <li><strong>File name option:</strong> Name each file according to the following template. Each file will then be parsed and attached to the appropriate record:</li>
+                    <li><strong>File name option:</strong> Name each file according to the following template. Each file
+                        will then be parsed and attached to the appropriate record:</li>
                     <ul class="second-list">
-                        <li>parentIdentifier+imgIdentifier.ext<p><strong>IMPORTANT! Be sure that your imgIdentifier does not contain any special characters including spaces or dashes.</strong></p></li>
+                        <li>parentIdentifier+imgIdentifier.ext<p><strong>IMPORTANT! Be sure that your imgIdentifier does
+                                    not contain any special characters including spaces or dashes.</strong></p>
+                        </li>
                     </ul>
                     <li><strong>Metadata option:</strong> Include a metadata.csv with the following fields:</li>
                     <ul class="second-list">
-                        <li>materialSampleID OR eventID (required - the identifier of the record to attach the photo to. Use either materialSampleID or eventID to denote the parentIdentifier)</li>
+                        <li>materialSampleID OR eventID (required - the identifier of the record to attach the photo to.
+                            Use either materialSampleID or eventID to denote the parentIdentifier)</li>
                         <li>fileName (required -the name of the file in the directory)</li>
                         <li>expeditionCode (required if photos span multiple expeditions)</li>
                         <li>other fields (see photo fields under "Generate Template")</li>
                     </ul>
                 </ul>
-                <p class="valid-hed1">Once you upload it may take several minutes to an hour or more for all photos to appear.</p>
+                <p class="valid-hed1">Once you upload it may take several minutes to an hour or more for all photos to
+                    appear.</p>
             </div>
         </div>
 
         <div class="row">
             <div class="col-lg-12">
                 <div class="footer-top-section">
-                <label for="expedition" class="form-label">Expedition <span class="text-danger">*</span></label>
-                <select id="expedition" class="form-select color-change"><option>Expedition <span class="text-danger">*</span></option></select>
-                <p class="error-text">Expedition is required.</p>
+                    <div class="form-floating mb-3">
+                        <select class="form-select" id="floatingSelect_entities" aria-label="Photo Entity" [(ngModel)]="entity">
+                            @for(entity of photoEntities; track entity){
+                              <option [value]="entity.conceptAlias">{{entity.conceptAlias.replace('_', ' ')}}</option>
+                            }
+                        </select>
+                        <label for="floatingSelect_entities">Photo Entity <span>*</span></label>
+                      </div>
+                      
+                      @if(entity && entity == "Event_Photo"){
+                          <div class="form-floating mb-3">
+                            <select class="form-select" id="floatingSelect_expeditions" aria-label="Expeditions" [(ngModel)]="selectedExp">
+                                @for(exp of expeditions; track exp){
+                                    <option [value]="exp">{{exp.expeditionTitle}}</option>
+                                }
+                            </select>
+                            <label for="floatingSelect_expeditions">Expeditons <span>*</span></label>
+                          </div>
+                      }
 
-                <div class="auto-gen">
-                    <button type="button" class="btn btn-primary float-end export-btn-1">CHOOSE FILE</button>
-                    <div class="auto-gen1">
-                        <p class="no-file file-sel">No file selected</p>
-                        <p class="no-file">A zipped directory of photos to upload</p>
+                    <div class="auto-gen">
+                        <button type="button" class="btn btn-primary float-end export-btn-1">CHOOSE FILE</button>
+                        <div class="auto-gen1">
+                            <p class="no-file file-sel">No file selected</p>
+                            <p class="no-file">A zipped directory of photos to upload</p>
+                        </div>
                     </div>
+                    <button type="button" class="btn btn-primary float-end export-btn-1">UPLOAD</button>
                 </div>
-                <button type="button" class="btn btn-primary float-end export-btn-1">UPLOAD</button>
             </div>
         </div>
-        </div>
-
-            
-          
     </div>
 </section>

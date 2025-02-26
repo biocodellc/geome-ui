@@ -1,12 +1,22 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnDestroy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthenticationService } from '../../../../helpers/services/authentication.service';
 import { ProjectService } from '../../../../helpers/services/project.service';
-import { Subject, take, takeUntil } from 'rxjs';
+import { Observable, Subject, take, takeUntil } from 'rxjs';
 import { ExpeditionService } from '../../../../helpers/services/expedition.service';
 import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { UploadComponent } from '../../../shared/upload/upload.component';
+import { environment } from '../../../../environments/environment';
+
+// Uploads
+import { ExcelParserService } from '../../../../helpers/services/excel-parser.service';
+
+const MULTI_EXPEDITION = 'MULTI_EXPEDITION';
+const EXCEL_MAX_ROWS_TO_PARSE = 10000;
+
+const LAT_URI = 'urn:decimalLatitude';
+const LNG_URI = 'urn:decimalLongitude';
 
 @Component({
   selector: 'app-validation',
@@ -17,9 +27,11 @@ import { UploadComponent } from '../../../shared/upload/upload.component';
 })
 export class ValidationComponent implements OnDestroy{
   // Injectors
+  cdr = inject(ChangeDetectorRef);
   projectService = inject(ProjectService);
   authService = inject(AuthenticationService);
   expeditionService = inject(ExpeditionService);
+  excelService = inject(ExcelParserService);
   
   // Variables
   private destroy$ = new Subject<void>();
@@ -29,6 +41,7 @@ export class ValidationComponent implements OnDestroy{
   activeTab:string = 'load';
   allDataTypes:Array<any> = [];
   allExpeditions:Array<any> = [];
+  userExpeditions:Array<any> = [];
   checkedTypes:Array<any> = ['Workbook'];
 
   // Fastq Variables
@@ -111,10 +124,6 @@ export class ValidationComponent implements OnDestroy{
         val.push(newObj)
         return val;
       }, []);
-    console.log('========libraryStrategies=====',this.fastq.libraryStrategies);
-    console.log('======librarySources=======',this.fastq.librarySources);
-    console.log('======librarySelections=======',this.fastq.librarySelections);
-    console.log('======platforms=======',this.fastq.platforms);
   }
 
   get selectedTypes(){ return this.checkedTypes; }
@@ -139,16 +148,202 @@ export class ValidationComponent implements OnDestroy{
 
   onPlatformsChange(event:any){
     const val = event.target.value;
-    console.log('===event======',val);
     const platformData = this.fastq.platforms.find((item:any)=> item.name == val);
-    if(platformData)
-      this.fastq.models = platformData.data
+    if(platformData) this.fastq.models = platformData.data
   }
 
   onExpeditionChange(event:any){
     const val = event.target.value;
-    console.log('===val====',val);
   }
+
+  // Uploading Functionws and variables
+  naan = environment.naan;
+  parsing:boolean = false;
+  coordinateWorksheets:Array<any>= []
+  expeditionCodes:Set<any> = new Set();
+  expeditionCode:any;
+  multiExpeditionAllowed:boolean = false;
+  showExpeditions:boolean = false;
+  uploading:boolean = false;
+
+  handleWorksheetDataChange(worksheet:string, file:File, reload:boolean) {
+    let data = this.allDataTypes.find(d => d.worksheet === worksheet);
+
+    const fileChanged = (!data && file) || data.file !== file;
+    if (data) {
+      data.file = file;
+      data.reload = reload;
+    } else {
+      data = { worksheet, file, reload };
+      this.allDataTypes.push(data);
+    }
+
+    if (fileChanged && file) {
+      this.parsing = true;
+      if (worksheet === 'Workbook') {
+        this.parseSpreadsheet('~naan=[0-9]+~', 'Instructions', file).then((n:any) => {
+          if (this.naan && n && n > 0 && Number(n) !== Number(this.naan)) {
+            // show diallof and on confirmation go achead for handleNewWorksheet
+            this.handleNewWorksheet(data)
+
+            // this.$mdDialog
+            //   .show(
+            //     this.$mdDialog
+            //       .alert('naanDialog')
+            //       .clickOutsideToClose(true)
+            //       .title('Incorrect NAAN')
+            //       .htmlContent(
+            //         `Spreadsheet appears to have been created using a different FIMS/BCID system.
+            //        <br/>
+            //        <br/>
+            //        Spreadsheet says <strong>NAAN = ${n}</strong>
+            //        <br/>
+            //        System says <strong>NAAN = ${naan}</strong>
+            //        <br/>
+            //        <br/>
+            //        Proceed only if you are SURE that this spreadsheet is being called.
+            //        Otherwise, re-load the proper FIMS system or re-generate your spreadsheet template.`,
+            //       )
+            //       .ok('Proceed Anyways'),
+            //   )
+            //   .then(() => this.handleNewWorksheet(data));
+          } else {
+            this.handleNewWorksheet(data);
+          }
+        });
+      } else {
+        this.handleNewWorksheet(data);
+      }
+    } else if (!file) {
+      const i = this.coordinateWorksheets.findIndex(v => v === worksheet);
+      if (i > -1) {
+        this.coordinateWorksheets.splice(i, 1);
+      }
+    }
+  }
+
+  handleNewWorksheet(data:any){}
+
+  // async handleNewWorksheet({ worksheet, file }: { worksheet: string; file: File }) {
+  //   const expeditionCodes = new Set<string>();
+  //   let timedOut = false;
+  
+  //   const updateView = (parsedEntireBook = false) => {
+  //     this.parsing = false;
+  //     if (timedOut && this.expeditionCode) return;
+  
+  //     if (expeditionCodes.size === 1) {
+  //       const expeditionCode = Array.from(expeditionCodes)[0];
+  //       if (this.userExpeditions.some(e => e.expeditionCode === expeditionCode)) {
+  //         this.expeditionCode = expeditionCode;
+  //       }
+  //     } else if (expeditionCodes.size > 1 && this.multiExpeditionAllowed) {
+  //       this.expeditionCode = MULTI_EXPEDITION;
+  //     } else if (parsedEntireBook) {
+  //       this.multiExpeditionAllowed = false;
+  //     }
+  
+  //     this.showExpeditions = true;
+  //     this.cdr.detectChanges(); // Manually trigger change detection
+  //   };
+  
+  //   const showError = (message: string) => {
+  //     // this.snackBar.open(message, 'Close', { duration: 5000 });
+  //   };
+  
+  //   if (worksheet === 'Workbook') {
+  //     const parseWorkbook = async () => {
+  //       return this.excelService.parseWorkbookWithHeaders(file).subscribe(async(response:any)=>{
+  //         const wb = response;
+  //         let rowCount = 0;
+  //         let hasCoordinateWorksheet = false;
+  //         const worksheets: string[] = [];
+    
+  //         for (const sheetName of wb.SheetNames) {
+  //           if (this.setCoordinateWorksheet(sheetName)) {
+  //             hasCoordinateWorksheet = true;
+  //           }
+  //           if (this.currentProject.config.worksheets().includes(sheetName)) {
+  //             worksheets.push(sheetName);
+  //           }
+  //           rowCount += wb.Sheets[sheetName]?.rowCount || 0;
+  //         }
+    
+  //         let fullWorkbookPromise: Observable<any> | undefined;
+  //         if (hasCoordinateWorksheet && rowCount <= EXCEL_MAX_ROWS_TO_PARSE) {
+  //           fullWorkbookPromise = this.excelService.workbookToJson(file);
+  //           fullWorkbookPromise.subscribe((fullWorkbook:any) => {
+  //             if (!timedOut && (!this.uploading || this.allDataTypes.every(d => d.file))) {
+  //               this.verifyCoordinates(worksheet, fullWorkbook);
+  //               this.coordinateWorksheets.push('Workbook');
+  //             }
+  //           });
+  //         }
+    
+  //         let parsedEntireBook = true;
+  //         if (worksheets.length > 0) {
+  //           const hasExpeditionCodeSheet = worksheets.some(sheet => wb.Sheets[sheet]?.headers.includes('expeditionCode'));
+    
+  //           if (hasExpeditionCodeSheet) {
+  //             parsedEntireBook = rowCount <= EXCEL_MAX_ROWS_TO_PARSE;
+  //             const opts = parsedEntireBook ? {} : { sheetRows: Math.floor(EXCEL_MAX_ROWS_TO_PARSE / worksheets.length) };
+  //             fullWorkbookPromise = fullWorkbookPromise || this.excelService.workbookToJson(file, opts);
+    
+  //             const fullWorkbook:any = await fullWorkbookPromise;
+  //             if (!timedOut && (!this.uploading || this.allDataTypes.every(d => d.file))) {
+  //               for (const sheet of worksheets) {
+  //                 const records = fullWorkbook[sheet] || [];
+  //                 records.forEach((record:any) => record.expeditionCode && expeditionCodes.add(record.expeditionCode));
+  //               }
+  //             }
+  //           }
+  //         } else {
+  //           showError(`Failed to find one of the following worksheets: ${this.currentProject.config.worksheets().join(', ')}`);
+  //         }
+    
+  //         return parsedEntireBook;
+  //       })
+  //     };
+  
+  //     const timeout = setTimeout(() => {
+  //       timedOut = true;
+  //       showError('Timed out attempting to parse Workbook for coordinate verification.');
+  //       updateView();
+  //     }, 2000);
+  
+  //     parseWorkbook().then((parsedEntireBook:any) => {
+  //       if (!timedOut) clearTimeout(timeout);
+  //       updateView(parsedEntireBook);
+  //     });
+  //   } else {
+  //     this.excelService.workbookToJson(file).subscribe((res:any)=>{
+  //       const workbook = res;
+  //       if (this.setCoordinateWorksheet(worksheet)) {
+  //         this.verifyCoordinates(worksheet, workbook);
+  //         this.coordinateWorksheets.push(worksheet);
+  //       }
+    
+  //       (workbook.default || []).forEach((record:any) => record.expeditionCode && expeditionCodes.add(record.expeditionCode));
+  //       updateView();
+  //     })
+  //   }
+  // }
+  
+
+  parseSpreadsheet:any = (regExpression:RegExp, sheetName:string, file:File) => {
+    if (this.excelService.isExcelFile(file)) {
+      return this.excelService.findExcelCell(file, regExpression, sheetName).subscribe((match:any) =>
+        match
+          ? match
+              .toString()
+              .split('=')[1]
+              .slice(0, -1)
+          : match,
+      );
+    }
+  
+    return Promise.resolve();
+  };
 
   ngOnDestroy(): void {
     this.destroy$.next();

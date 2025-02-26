@@ -8,6 +8,7 @@ ul li.cursor-pointer{
 
 ::ng-deep .projectsDropdownMenu{
     .dropdown-menu.f-14.show{
+        min-width: 330px;
         max-width: 330px;
         max-height: 300px;
         overflow-y: auto;

@@ -22,7 +22,7 @@ export class TemplateService {
   }
 
   generateTempate(projectId:number, worksheetTemplate:any):Observable<any>{
-    return this.http.post(`${this.apiURL}projects/${projectId}/templates/generate`, this.formattedReqBody(worksheetTemplate), { headers: this.headers });
+    return this.http.post(`${this.apiURL}projects/${projectId}/templates/generate`, worksheetTemplate);
   }
 
   saveTempates(projectId:number, templateName:string, data:any):Observable<any>{

@@ -7,6 +7,7 @@ import { AuthenticationService } from '../../../../helpers/services/authenticati
 import { Subject, take, takeUntil } from 'rxjs';
 import { TemplateService } from '../../../../helpers/services/template.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FileService } from '../../../../helpers/services/file.service';
 
 @Component({
   selector: 'app-template',
@@ -22,9 +23,9 @@ export class TemplateComponent implements OnDestroy{
   authService = inject(AuthenticationService);
   modalService = inject(NgbModal);
   fb = inject(FormBuilder);
-  // expeditionService = inject(ExpeditionService);
+  fileService = inject(FileService);
 
-  // Variablesthis
+  // Variables
   private destroy$ = new Subject<void>();
   currentUser: any;
   currentProject: any;
@@ -237,6 +238,30 @@ export class TemplateComponent implements OnDestroy{
         if(res){
           this.isLoading = false;
         }
+      },
+      error: (err:any)=> this.isLoading = false
+    })
+  }
+
+  // Generate File
+  generate(){
+    this.isLoading = true;
+    let payLoad:Array<any> = [];
+    for (const worksheet of Object.keys(this.selected)) {
+      const data = { worksheet: worksheet, columns: this.selected[worksheet].map((col:any)=> col.column) };
+      if(this.selectedWorksheet == 'Workbook')
+        payLoad.push(data);
+      else if(this.selectedWorksheet == worksheet){
+        payLoad.push(data);
+        break;
+      }
+    }
+    console.log(payLoad);
+    this.templateService.generateTempate(this.currentProject.projectId, payLoad)
+    .pipe(take(1), takeUntil(this.destroy$)).subscribe({
+      next: (res:any)=>{
+        this.fileService.download(res.url)
+        this.isLoading = false
       },
       error: (err:any)=> this.isLoading = false
     })

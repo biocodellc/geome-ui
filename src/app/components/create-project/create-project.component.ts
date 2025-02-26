@@ -70,7 +70,10 @@ export class CreateProjectComponent implements OnDestroy{
     this.isLoading = true;
     const projectData = { ...this.projectForm.value, "projectConfiguration": this.selectedTeam };
     this.projectService.createProject(projectData).pipe(take(1), takeUntil(this.destroy$)).subscribe({
-      next: (res:any)=>{},
+      next: (res:any)=>{
+        this.projectService.loadPrivateProjects();
+        this.projectService.setCurrentProject(res);
+      },
       error: (err:any)=>{
         this.isLoading = false;
         this.toastr.error(err.error.usrmessage || 'Something Went Wrong!');

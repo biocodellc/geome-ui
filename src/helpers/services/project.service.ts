@@ -49,7 +49,7 @@ export class ProjectService {
   }
 
   setCurrentProject(project: any, redirect = true): void {
-    if (!project.projectId) {
+    if (!project?.projectId) {
       this.currentProject = null;
       this.projectSubject.next(null);
       this.router.navigate(['/workbench/dashboard']);
@@ -114,6 +114,12 @@ export class ProjectService {
     this.getAllProjects(true).pipe(take(1)).subscribe((res:any) =>{
       this.allProjectSubject.next(res);
       this.loadFromSession();
+    })
+  }
+
+  loadPrivateProjects(){
+    this.getAllProjects(false).pipe(take(1)).subscribe((res:any) =>{
+      this.userProjectSubject.next(res);
     })
   }
 

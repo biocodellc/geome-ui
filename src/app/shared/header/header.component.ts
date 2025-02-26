@@ -26,17 +26,25 @@ export class HeaderComponent implements OnDestroy{
   
   // Variables
   private destroy$ = new Subject<void>();
+  projectList:Array<any> = [];
+  allPrivateProjects:Array<any> = [];
   allPublicProjects:Array<any> = [];
-  filteredPublicProjects:Array<any> = [];
+  allFilteredProjects:Array<any> = [];
   searchedProject:string = '';
   filterProjectSubject:Subject<any> = new Subject();
 
   currentRouteUrl:string = '';
   currentProject:any;
+  isFilterActive: boolean = false;
 
   constructor(){
     this.projectService.getAllProjectsValue().pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-      if(res) this.allPublicProjects = this.filteredPublicProjects = res;
+      if(res) this.allPublicProjects = res;
+    })
+    this.projectService.userProjectSubject.pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+      if(!res) return
+      this.allPrivateProjects = res;
+      this.projectList = this.allFilteredProjects = [ ...this.allPrivateProjects ];
     })
     this.router.events.pipe( filter((event:any) => event instanceof NavigationEnd), takeUntil(this.destroy$))
       .subscribe(event => this.currentRouteUrl = event.urlAfterRedirects);
@@ -52,9 +60,19 @@ export class HeaderComponent implements OnDestroy{
 
   filterProject(){
     const newVal = this.searchedProject.trim().toLowerCase();
-    if(newVal)
-      this.filteredPublicProjects = this.allPublicProjects.filter((proj:any)=> proj.projectTitle.toLowerCase().includes(newVal));
-    else this.filteredPublicProjects = this.allPublicProjects;
+    if(newVal){
+      this.isFilterActive = true;
+      const matchingPrivateProj = this.projectList.filter((proj:any)=> proj.projectTitle.toLowerCase().includes(newVal));
+    }
+    else this.isFilterActive = false
+  }
+
+  onProjectPrefChange(event:any){
+    this.searchedProject = '';
+    const isChecked = event.target.checked;
+    if(isChecked) this.projectList = [ ...this.allPrivateProjects, ...this.allPublicProjects];
+    else this.projectList = [ ...this.allPrivateProjects ];
+    this.allFilteredProjects = [ ...this.projectList ];
   }
 
   signoutUser(){ this.authService.logoutUser(); }
