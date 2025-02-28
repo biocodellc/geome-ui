@@ -2,6 +2,7 @@
 
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
+@import "leaflet/dist/leaflet.css";
 
 input:-webkit-autofill {
     transition: background-color 5000s ease-in-out 0s !important;
@@ -38,6 +39,8 @@ body{
 .f-25{ font-size: 25px !important; }
 .f-30{ font-size: 30px !important; }
 
+.h-1{ height: 1px; overflow: hidden;}
+
 .cursor-pointer{ cursor: pointer; }
 
 .base-text-color{ color: rgba(0, 0, 0, 0.67); }
@@ -63,7 +66,7 @@ a{ text-decoration: none; }
 }
 
 // Authentication pages
-section#login-container, section#register-container, section#resetPass-container, section#dashboard-container, section#teams-list-container, #expedition_modal{
+section#login-container, section#register-container, section#resetPass-container, section#dashboard-container, section#teams-list-container, #expedition_modal, section.SRA-sub{
     .form-control,
     .form-control-plaintext{
         border: none;
@@ -427,7 +430,7 @@ select#expedition {
 
 
 // Validate Data
-.validate-data{
+.validate-data, .SRA-sub{
     .bottom-form-section {
         border-top: 1px solid #ddd;
         padding: 1.5rem 3rem;

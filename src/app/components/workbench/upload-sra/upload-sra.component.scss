@@ -1,0 +1,13 @@
+.accordion-button{
+    background-color: transparent !important;
+}
+
+.accordion{
+    --bs-accordion-border-color: transparent;
+}
+
+.item-pointer{
+    top: calc(-1rem - 37px);
+    left: 0px;
+    bottom: 0px;
+}

@@ -87,5 +87,9 @@ export const routes: Routes = [
                 loadComponent: ()=>import('./components/workbench/project-settings/project-settings.component').then(m => m.ProjectSettingsComponent)
             }
         ]
+    },
+    {
+        path: 'query',
+        loadComponent: ()=> import('./components/query/query.component').then(m => m.QueryComponent)
     }
 ];

@@ -3,34 +3,106 @@
         <div class="row">
             <div class="col-lg-12">
                 <h3 class="valid-hed">SRA Submission</h3>
-                <p class="valid-hed1">This tool will facilitate the submission of FASTQ data to the SRA database. <strong>This tool is in beta. Please email us at <a class="valid-link" href="#">geome.help&#64;gmail.com </a>if you experience any errors.</strong> </p>
+                <p class="valid-hed1">This tool will facilitate the submission of FASTQ data to the SRA database.
+                    <strong>This tool is in beta. Please email us at <a class="valid-link"
+                            href="#">geome.help&#64;gmail.com </a>if you experience any errors.</strong> </p>
             </div>
         </div>
 
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="form-container SRA">
-                            <ul class="step-list mt-4">
-                                <li class="step-line">
-                            <p class="step-active"> <strong>BioProject</strong></p>
-                            <p>A BioProject describes the goals of your research.</p>
-                            <select id="expedition" class="form-select color-change">
-                                <option value="">Expedition <span class="text-danger">*</span></option>
-                            </select>
-                            <p class="error-text">Expedition is required.</p>
-                            <button class="btn bio-next mt-3" disabled>NEXT</button>
-                        </li>
-                                <li class="step-active">BioProject</li>
-                                <li class="step-active">Submission Info</li>
-                                <li class="step-active">BioSample Type</li>
-                                <li class="step-active">BioSamples</li>
-                                <li class="step-active">SRA Metadata</li>
-                                <li class="step-active">File Upload</li>
-                            </ul>
+        <div class="row">
+            <div class="col-lg-12">
+                <form [formGroup]="sraForm">
+                    <div class="form-container SRA">
+                        <div ngbAccordion  #accordion="ngbAccordion" [closeOthers]="true">
+                            @for(item of data; track item; let i=$index){
+                                <div ngbAccordionItem="{{i}}" [disabled]="true">
+                                    <h2 ngbAccordionHeader>
+                                        <button ngbAccordionButton><span  style="padding-left: 35px;">{{item.name}}</span></button>
+                                    </h2>
+                                    <div ngbAccordionCollapse>
+                                        <div ngbAccordionBody>
+                                            <ng-template>
+                                                <div style="padding-left: 35px;" class="position-relative" formGroupName="bioProjectForm">
+                                                    
+                                                    <div class="mb-3">
+                                                        <div class="form-floating mb-1">
+                                                            <select class="form-select" id="floatingSelect_expeditions" aria-label="Expeditions" formControlName="expedition">
+                                                                @for(exp of expeditions; track exp){
+                                                                <option [value]="exp.expeditionTitle">{{exp.expeditionTitle}}</option>
+                                                                }
+                                                            </select>
+                                                            <label for="floatingSelect_expeditions">Expeditons <span>*</span></label>
+                                                        </div>
+                                                        @if(bioProjForm['expedition'].touched && bioProjForm['expedition'].errors){
+                                                            <span class="text-danger f-12">Expedition is Required</span>
+                                                        }
+                                                        @else{
+                                                            <span class="text-secondary f-12">Only expeditions with existing FastqMetadata will appear</span>
+                                                        }
+                                                    </div>
+
+                                                    @if(bioProjForm['expedition'].valid){
+                                                        <div class="auto-gen mb-3 align-items-start">
+                                                            <div class="form-check form-switch">
+                                                                <input class="form-check-input" type="checkbox" role="switch" id="newBioProj" formControlName="createBioProject">
+                                                                <div class="auto-gen1" style="padding-left: 30px;">
+                                                                    <label class="form-check-label" for="newBioProj">Create new BioProject?</label>
+                                                                    <p class="no-file">Did you already register a BioProject for this research? (for the submission of the reads to SRA and/or of the genome to GenBank)</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        @if(bioProjForm['createBioProject'].value){
+                                                            <div class="mb-3">
+                                                                <div class="form-floating mb-1">
+                                                                    <input type="text" formControlName="title" class="form-control" id="floatingTitle" placeholder="">
+                                                                    <label for="floatingTitle" class="ps-0 fw-semibold">Title *</label>
+                                                                </div>
+                                                                @if(bioProjForm['title'].touched && bioProjForm['title'].invalid){
+                                                                    <span class="warn-text f-12">{{ bioProjForm['title'].hasError('required') ? 'Title is required.' : '' }}</span>
+                                                                }
+                                                            </div>
+    
+                                                            <div class="mb-3">
+                                                                <div class="form-floating mb-1">
+                                                                    <input type="text" formControlName="discription" class="form-control" id="floatingDisc" placeholder="What are the study goals and relavence">
+                                                                    <label for="floatingDisc" class="ps-0 fw-semibold">Discription *</label>
+                                                                </div>
+                                                                @if(bioProjForm['discription'].touched && bioProjForm['discription'].invalid){
+                                                                    <span class="warn-text f-12">{{ bioProjForm['discription'].hasError('required') ? 'Discription is required.' : '' }}</span>
+                                                                }
+                                                            </div>
+                                                        }
+                                                        @else{
+                                                            <div class="mb-3">
+                                                                <div class="form-floating mb-1">
+                                                                    <input type="text" formControlName="projAccession" class="form-control" id="floatingAccession" placeholder="PRJNA371471">
+                                                                    <label for="floatingAccession" class="ps-0 fw-semibold">Project Accession *</label>
+                                                                </div>
+                                                                @if(bioProjForm['projAccession'].touched && bioProjForm['projAccession'].invalid){
+                                                                    <span class="warn-text f-12">{{ bioProjForm['projAccession'].hasError('required') ? 'Project Accession is required.' : '' }}</span>
+                                                                }
+                                                            </div>
+                                                        }
+                                                    }
+    
+                                                    <div class="d-flex flex-column align-items-center position-absolute item-pointer">
+                                                        <span class="rounded-circle d-flex justify-content-center align-items-center" [ngClass]="currentTab != i ? 'bg-secondary' : 'bg-primary text-white'" style="width: 22px; height: 22px">{{i + 1}}</span>
+                                                        <div class="border" style="width: 1px; flex: 1;"></div>
+                                                    </div>
+                                                    <button class="btn btn-secondary" (click)="next(i)" [ngClass]="i == 5 ? 'd-none' : ''" [disabled]="bioProjForm['expedition'].invalid">Next</button>
+                                                    <button class="btn btn-outline-secondary" (click)="back(i)" [ngClass]="i == 0 ? 'd-none' : ''">Back</button>
+                                                </div>
+                                            </ng-template>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
                         </div>
                     </div>
-                </div>
-          
+                </form>
+            </div>
+        </div>
+
     </div>
 </section>
-

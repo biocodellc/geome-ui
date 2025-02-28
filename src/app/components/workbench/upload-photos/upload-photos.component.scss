@@ -25,3 +25,7 @@ select#expedition {
     padding-left: 20px;
     color: #777;
 }
+
+::ng-deep ngb-modal-window.d-block.modal.fade.show{
+    background-color: #00000080;
+}
