@@ -3,9 +3,9 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="flower-section">
-                    <h3 class="flow-hed">Flower</h3>
-                    <p>Nothing to do. Just testing app.</p>
-                    <p><strong>Project Owner:</strong> Soln</p>
+                    <h3 class="flow-hed">{{currentProject?.projectTitle}}</h3>
+                    <p>{{currentProject?.description}}</p>
+                    <p><strong>Project Owner:</strong> {{currentProject?.user.username}}</p>
                 </div>
             </div>
         </div>
@@ -19,37 +19,43 @@
                                 <div class="col-lg-9">
 
                                     <div class="box-container mt-4 pl-4">
-                                        <fieldset>
+                                        <form [formGroup]="projectForm" (ngSubmit)="update()">
                                             <div class="mb-3">
                                                 <label class="form-label">Title*</label>
-                                                <input type="text" class="form-control" required placeholder="Flower">
+                                                <input type="text" class="form-control" required placeholder="Flower" formControlName="projectTitle">
+                                                @if(form['projectTitle'].touched && form['projectTitle'].errors){
+                                                    <span class="text-danger f-12 mt-2">{{ form['projectTitle'].hasError('required') ? 'Title is Required' : '' }}</span>
+                                                }
                                             </div>
 
                                             <div class="mb-3">
                                                 <label class="form-label">Description*</label>
-                                                <textarea class="form-control" rows="3" required></textarea>
+                                                <textarea class="form-control" rows="3" formControlName="description"></textarea>
+                                                @if(form['description'].touched && form['description'].errors){
+                                                    <span class="text-danger f-12 mt-2">{{ form['description'].hasError('required') ? 'Description is Required' : '' }}</span>
+                                                }
                                             </div>
 
                                             <div class="mb-3">
                                                 <label class="form-label">Visibility*</label>
-                                                <select class="form-select" required>
-                                                    <option value="public">Public</option>
-                                                    <option value="private" selected>Private</option>
+                                                <select class="form-select" formControlName="public">
+                                                    <option value="true">Public</option>
+                                                    <option value="false">Private</option>
                                                 </select>
                                             </div>
 
                                             <div class="mb-3">
                                                 <label class="form-label">Discoverable*</label>
-                                                <select class="form-select" required>
+                                                <select class="form-select" formControlName="discoverable">
                                                     <option value="true">True</option>
-                                                    <option value="false" selected>False</option>
+                                                    <option value="false">False</option>
                                                 </select>
                                                 <small class="form-text text-muted">Disallows public users from viewing
                                                     project metadata and project statistics.</small>
                                             </div>
 
                                             <div class="mb-3 form-check">
-                                                <input type="checkbox" class="form-check-input">
+                                                <input type="checkbox" class="form-check-input" formControlName="enforceExpeditionAccess">
                                                 <label class="form-check-label">Enforce Expedition Access
                                                     Control?</label>
                                                 <small class="form-text text-muted d-block">Enforcing Expedition access
@@ -60,21 +66,21 @@
 
                                             <div class="mb-3">
                                                 <label class="form-label">Principal Investigator</label>
-                                                <input type="text" class="form-control">
+                                                <input type="text" class="form-control" formControlName="principalInvestigator">
                                                 <small class="form-text text-muted d-block">The principal investigator
                                                     for this project</small>
                                             </div>
 
                                             <div class="mb-3">
                                                 <label class="form-label">Principal Investigator Affiliation</label>
-                                                <input type="text" class="form-control">
+                                                <input type="text" class="form-control" formControlName="principalInvestigatorAffiliation">
                                                 <small class="form-text text-muted d-block">The affiliation of the
                                                     principal investigator for this project</small>
                                             </div>
 
                                             <div class="mb-3">
                                                 <label class="form-label">Project Contact</label>
-                                                <input type="text" class="form-control">
+                                                <input type="text" class="form-control" formControlName="projectContact">
                                                 <small class="form-text text-muted d-block">Name of an individual to
                                                     contact for this project. Typically this is the name of the person
                                                     with the user account for this project, but in some cases the
@@ -83,21 +89,21 @@
 
                                             <div class="mb-3">
                                                 <label class="form-label">Project Contact Email</label>
-                                                <input type="email" class="form-control">
+                                                <input type="email" class="form-control" formControlName="projectContactEmail">
                                                 <small class="form-text text-muted d-block">Email for the project
                                                     contact</small>
                                             </div>
 
                                             <div class="mb-3">
                                                 <label class="form-label">Publication DOI</label>
-                                                <input type="text" class="form-control">
+                                                <input type="text" class="form-control" formControlName="publicationGuid">
                                                 <small class="form-text text-muted d-block">A globally unique identifier
                                                     for a written publication pertaining to this dataset</small>
                                             </div>
 
                                             <div class="mb-3">
                                                 <label class="form-label">Project Data GUID</label>
-                                                <input type="text" class="form-control">
+                                                <input type="text" class="form-control" formControlName="projectDataGuid">
                                                 <small class="form-text text-muted d-block">A globally unique identifier
                                                     for the data in this project. Recommended to use a resolvable URL
                                                     containing a DOI or ARK identifier. GEOME does not automatically
@@ -107,7 +113,7 @@
 
                                             <div class="mb-3">
                                                 <label class="form-label">Permit GUID</label>
-                                                <input type="text" class="form-control">
+                                                <input type="text" class="form-control" formControlName="permitGuid">
                                                 <small class="form-text text-muted d-block">EA globally unique
                                                     identifier referencing a permit. Recommended to use a resolvable URL
                                                     containing a DOI or ARK identifier.</small>
@@ -115,8 +121,8 @@
 
                                             <div class="mb-3">
                                                 <label class="form-label">License</label>
-                                                <select class="form-select" required>
-                                                    <option selected disabled>Select License</option>
+                                                <select class="form-select" formControlName="license">
+                                                    <option value="" disabled>Select License</option>
                                                     <option value="CC0">CC0</option>
                                                     <option value="CC-by">CC-by</option>
                                                     <option value="BSD">BSD</option>
@@ -129,14 +135,14 @@
 
                                             <div class="mb-3">
                                                 <label class="form-label">Recommended Citation</label>
-                                                <input type="text" class="form-control">
+                                                <input type="text" class="form-control" formControlName="recommendedCitation">
                                                 <small class="form-text text-muted">Indicate a recommended citation for
                                                     this data resource.</small>
                                             </div>
 
                                             <div class="mb-3">
                                                 <label class="form-label">Local Contexts HUB ID</label>
-                                                <input type="text" class="form-control">
+                                                <input type="text" class="form-control" formControlName="localcontextsId">
                                                 <small class="form-text text-muted">This Identifier links your GEOME
                                                     project with a Local Contexts Project. Paste the Local Contexts
                                                     Unique Identifier found on your Local Contexts HUB project overview
@@ -148,8 +154,8 @@
                                                 <label class="form-label">*Required Elements</label>
                                             </div>
 
-                                            <button class="btn req-save">Save</button>
-                                        </fieldset>
+                                            <button type="submit" class="btn req-save">Save</button>
+                                        </form>
                                     </div>
                                 </div>
                                 <div class="card-sec border-danger">
@@ -162,7 +168,7 @@
                                                 <br>Please export your data before deleting this project.
                                             </p>
                                         </div>
-                                        <button class="btn btn-danger" onclick="deleteProject()">Delete</button>
+                                        <button class="btn btn-danger" (click)="openModal(delete_modal, 'project')">Delete</button>
                                     </div>
                                 </div>
                             </ng-template>
@@ -171,14 +177,36 @@
                             <button ngbNavLink> Expeditions </button>
                             <ng-template ngbNavContent>
                                 <div class="p-3">
-                                    <div class="d-flex p-2 border-bottom">
-                                        <div class="col-4 fw-semibold">
-                                            <h4 class="m-0">Entity</h4>
+                                    <ul style="list-style-type: none;" class="p-0">
+                                        @for(item of allExpeditions; track item){
+                                            <li>
+                                                <div class="d-flex gap-4 align-items-center">
+                                                    <div class="d-flex gap-2">
+                                                        <i class="fas fa-pen tetx-secondary" [routerLink]="['workbench','expeditions', item.expeditionCode,'settings']"></i>
+                                                        <i class="fas fa-download text-secondary"></i>
+                                                        <i class="fas fa-trash-can text-danger" (click)="openModal(delete_modal, item)"></i>
+                                                    </div>
+                                                    <div class="d-flex flex-column">
+                                                        <p class="fw-semibold">{{item?.expeditionTitle}}</p>
+                                                        <div class="d-flex gap-2">
+                                                            <p class="m-0"><span class="fw-semibold">Code:</span> {{item?.expeditionCode}}</p>
+                                                            <p class="m-0"><span class="fw-semibold">Owner:</span> {{item?.user.username}}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        }
+                                    </ul>
+                                    @if(!allExpeditions.length){
+                                        <div class="d-flex p-2 border-bottom">
+                                            <div class="col-4 fw-semibold">
+                                                <h4 class="m-0">Entity</h4>
+                                            </div>
+                                            <div class="col-8">
+                                                <h4 class="m-0">Root Identifier</h4>
+                                            </div>
                                         </div>
-                                        <div class="col-8">
-                                            <h4 class="m-0">Root Identifier</h4>
-                                        </div>
-                                    </div>
+                                    }
 
                                 </div>
                             </ng-template>
@@ -207,14 +235,16 @@
                                     </div>
                                     <!-- Members List -->
                                     <ul class="list-group mt-3" id="membersList">
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <button class="btn-ban">
-                                                    <i class="fa fa-ban"></i>
-                                                </button>
-                                                <span class="ban-cont">Soln</span> <br>
-                                            </div>
-                                        </li>
+                                        @for(member of allMembers; track member){
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <button class="btn-ban">
+                                                        <i class="fa fa-ban" (click)="removeMember(member.username)"></i>
+                                                    </button>
+                                                    <span class="ban-cont">{{member.username}}</span> <br>
+                                                </div>
+                                            </li>
+                                        }
                                     </ul>
                                 </div>
                             </ng-template>
@@ -227,3 +257,20 @@
         </div>
     </div>
 </section>
+
+<ng-template #delete_modal let-modal>
+    <div class="modal-header border-0 py-2 bg-danger justify-content-center">
+		<h4 class="modal-title fw-semibold" id="modal-basic-title">Delete {{modal == 'project' ? 'Project' : 'Expedition'}}!</h4>
+	</div>
+	<div class="modal-body p-2 px-4 border-0" id="expedition_modal">
+        <p class="m-0">
+            Are you sure you want to delete this {{modal == 'project' ? 'project' : 'expedition'}}? All associated expeditions and records will be lost. <b>We recommend that you export the data before deleting.</b>
+        </p>
+    </div>
+    <div class="modal-footer border-0 pt-0">
+		<div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">Cancel</button>
+            <button type="button" class="btn btn-danger" (click)="modal == 'project' ? deleteProject() : deleteExp()">Delete</button>
+        </div>
+	</div>
+</ng-template>

@@ -47,6 +47,10 @@ export class ExpeditionService {
     return this.http.delete(`${this.apiURL}projects/${projectId}/expeditions/${data.expeditionCode}`);
   }
 
+  getExpeditionForAdmin(projectId:number):Observable<any>{
+    return this.http.get(`${this.apiURL}projects/${projectId}/expeditions?admin&includePrivate=true`);
+  }
+
   // Helper
   private formattedReqBody(body:any):any{
     return new URLSearchParams(Object.entries(body));

@@ -178,4 +178,19 @@ export class ProjectService {
       });
     }
   }
+
+
+  // Members APIs
+
+  allMembers(projectId:number):Observable<any> {
+    return this.http.get(`${this.apiUrl}projects/${projectId}/members`);
+  }
+
+  addMember(projectId:number, username:string):Observable<any> {
+    return this.http.put(`${this.apiUrl}projects/${projectId}/members/${username}`,'');
+  }
+
+  removeMember(projectId:number, username:string):Observable<any> {
+    return this.http.delete(`${this.apiUrl}projects/${projectId}/members/${username}`);
+  }
 }
