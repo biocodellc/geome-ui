@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { distinctUntilChanged, Subject, take, takeUntil } from 'rxjs';
 import { ExpeditionService } from '../../../../helpers/services/expedition.service';
 import { AuthenticationService } from '../../../../helpers/services/authentication.service';
-import { PhotoService } from '../../../../helpers/services/services/photo.service';
+import { PhotoService } from '../../../../helpers/services/photo.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({

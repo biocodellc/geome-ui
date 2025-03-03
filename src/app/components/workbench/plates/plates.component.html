@@ -1,32 +1,109 @@
-<section>
+<section class="plates-container">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
                 <h3 class="valid-hed">Plate Viewer</h3>
                 @if(userPlates.length){
-                    <!-- <div class="mb-3">
-                        <div class="form-floating mb-1">
-                            <select class="form-select" id="floatingSelect_expeditions" aria-label="Expeditions" formControlName="expedition">
-                                @for(exp of expeditions; track exp){
-                                <option [value]="exp.expeditionTitle">{{exp.expeditionTitle}}</option>
-                                }
-                            </select>
-                            <label for="floatingSelect_expeditions">Expeditons <span>*</span></label>
+                    <form [formGroup]="plateForm">
+                        <div class="mb-3">
+                            <div class="form-floating mb-1">
+                                <select class="form-select form-select-lg" id="floatingSelect_plates" aria-label="Plates" formControlName="plate" (change)="onPlateChange($event)">
+                                    @for(plate of userPlates; track plate){
+                                    <option [value]="plate" style="padding:8px;">{{plate}}</option>
+                                    }
+                                </select>
+                                <label for="floatingSelect_plates">Tissue Plate <span>*</span></label>
+                            </div>
+                            <span class="text-secondary f-12">Choose a plate to view data.</span>
                         </div>
-                        @if(form['expedition'].touched && form['expedition'].errors){
-                            <span class="text-danger">Expedition is Required</span>
-                        }
-                    </div> -->
+                    </form>
                 }
                 @else{
                     <p>No Plates found</p>
                 }
                 <div class="row">
-                    <div class="col-sm-6">
-                        <button type="button" class="btn btn-primary float-end export-btn">NEW PLATE</button>
+                    <div class="d-flex justify-content-center gap-3">
+                        <button type="button" class="btn btn-primary float-end export-btn" (click)="openModal(newPlateModal)">NEW PLATE</button>
+                        @if(getControlVal('plate')){
+                            <button type="button" class="btn btn-primary float-end export-btn" (click)="openModal(plateDataModal, true)">View PLATE</button>
+                        }
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+
+<ng-template #newPlateModal let-modal>
+	<div class="modal-header bg-primary py-2">
+		<h4 class="modal-title" id="modal-basic-title">New Tissue Plate</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.close()"></button>
+	</div>
+	<div class="modal-body p-2 px-4 border-0 custom-fields">
+        <form [formGroup]="plateForm">
+            <p>Enter a unique name for the plate.</p>
+            <div class="mb-3">
+                <div class="form-floating mb-1">
+                    <input type="text" formControlName="plateName" class="form-control" id="floatingPateName" placeholder="" style="max-width: 70%;">
+                    <label for="floatingPlateName" class="ps-0 fw-semibold">Plate Name *</label>
+                </div>
+                @if(form['plateName'].touched && form['plateName'].invalid){
+                    <span class="warn-text f-12">{{ form['plateName'].hasError('required') ? 'Plate Name is required.' : '' }}</span>
+                }
+            </div>
+        </form>
+	</div>
+	<div class="modal-footer border-0 pt-0">
+		<div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">Cancel</button>
+            <button type="button" class="btn btn-primary custom" (click)="openPlateDataModal()" [disabled]="form['plateName'].invalid">Create</button>
+        </div>
+	</div>
+</ng-template>
+
+<ng-template #plateDataModal let-modal>
+	<div class="modal-header border-0 py-2">
+		<h4 class="modal-title" id="modal-basic-title">Tissue Plate: {{getControlVal('plate')}}</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.close()"></button>
+	</div>
+	<div class="modal-body p-2 px-4 border-0 custom-fields">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    @for(header of ['.',1,2,3,4,5,6,7,8,9,10,11,12]; track header){
+                        <th scope="col" class="fw-semibold">{{header}}</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @for (item of getControlVal('plateData'); track item.key) {
+                    <tr>
+                        <td class="fw-semibold">{{item.key}}</td>
+                        @for(data of item.data; track i; let i=$index){
+                            <td>
+                                @if(data?.tissueID){
+                                    <div class="d-flex px-2">
+                                        <span class="d-block" style="flex:1;">{{data?.tissueID}}</span>
+                                        <i class="fas fa-trash ms-2 text-danger f-12 cursor-pointer" (click)="deleteTissue(item.key, i+1, data)"></i>
+                                    </div>
+                                }
+                                @else{
+                                    <input id={{item.key}}_tissue_data_{{i+1}} type="text" [value]="data?.materialSampleID" placeholder="Create Tissue" (input)="onDialogInputChange($event, item.key, i+1)" (change)="onInputBlurAfterChanges(item.key, i+1)">
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+	</div>
+	<div class="modal-footer border-0 pt-0">
+		<div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">Cancel</button>
+            @if(dataChanged){
+                <button type="button" class="btn btn-primary custom" (click)="getControlVal('plateName') ? createNew() : saveTissueData()">Save</button>
+            }
+        </div>
+	</div>
+</ng-template>

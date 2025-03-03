@@ -30,6 +30,19 @@ export class DataService {
     ]
   }
 
+  getBaseData(): Array<any> {
+    return [
+      { key: 'A', data:[ null, null, null, null, null, null, null, null, null, null, null, null ]},
+      { key: 'B', data:[ null, null, null, null, null, null, null, null, null, null, null, null ]},
+      { key: 'C', data:[ null, null, null, null, null, null, null, null, null, null, null, null ]},
+      { key: 'D', data:[ null, null, null, null, null, null, null, null, null, null, null, null ]},
+      { key: 'E', data:[ null, null, null, null, null, null, null, null, null, null, null, null ]},
+      { key: 'F', data:[ null, null, null, null, null, null, null, null, null, null, null, null ]},
+      { key: 'G', data:[ null, null, null, null, null, null, null, null, null, null, null, null ]},
+      { key: 'H', data:[ null, null, null, null, null, null, null, null, null, null, null, null ]},
+    ]
+  }
+
   getDummyTeamsData(): Array<any> {
     return [
       {

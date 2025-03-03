@@ -1,0 +1,10 @@
+::ng-deep ngb-modal-window.d-block.modal.fade.show{
+    background-color: #00000080;
+    &.max-width{
+        --bs-modal-width: 90%;
+    }
+}
+.modal-body{
+    overflow-x: auto;
+    input{ max-width: 120px; }
+}

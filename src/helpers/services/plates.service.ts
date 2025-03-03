@@ -26,11 +26,11 @@ export class PlatesService {
   }
 
   save(projectId:number, plateName:string, data:any):Observable<any>{
-    return this.http.put(`${this.apiURL}tissues/plates/${projectId}/${plateName}`, this.formattedReqBody(data), { headers: this.headers });
+    return this.http.put(`${this.apiURL}tissues/plates/${projectId}/${plateName}`, data);
   }
 
   create(projectId:number, plateName:string, data:any):Observable<any>{
-    return this.http.post(`${this.apiURL}tissues/plates/${projectId}/${plateName}`, this.formattedReqBody(data), { headers: this.headers });
+    return this.http.post(`${this.apiURL}tissues/plates/${projectId}/${plateName}`, data);
   }
 
 
