@@ -64,3 +64,7 @@ button.btn-ban i{
 .box-container{
     padding: 0 0 0 40px;
 }
+
+::ng-deep ngb-modal-window.d-block.modal.no-backdrop.fade.show{
+    background-color: #00000080;
+}
