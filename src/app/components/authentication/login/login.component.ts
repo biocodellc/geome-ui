@@ -51,7 +51,7 @@ export class LoginComponent implements OnDestroy{
       takeUntil(this.destroy$),
       switchMap(response => {
         this.authService.saveUser(response, this.getControlVal('username'));
-        return this.userService.getUserData(this.getControlVal('username'), response.access_token)
+        return this.userService.getUserData(this.getControlVal('username'))
       }),
       catchError(e => throwError(() => e))
     )

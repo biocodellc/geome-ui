@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ExcelParserService } from './excel-parser.service';
+import { ProjectService } from '../project.service';
 
-describe('ExcelParserService', () => {
-  let service: ExcelParserService;
+describe('ProjectService', () => {
+  let service: ProjectService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ExcelParserService);
+    service = TestBed.inject(ProjectService);
   });
 
   it('should be created', () => {

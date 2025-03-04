@@ -1,0 +1,155 @@
+<div class="col-lg-9">
+
+    <div class="box-container mt-4 pl-4">
+        <form [formGroup]="projectForm" (ngSubmit)="update()">
+            <div class="mb-3">
+                <label class="form-label">Title*</label>
+                <input type="text" class="form-control" required placeholder="Flower" formControlName="projectTitle">
+                @if(form['projectTitle'].touched && form['projectTitle'].errors){
+                    <span class="text-danger f-12 mt-2">{{ form['projectTitle'].hasError('required') ? 'Title is Required' : '' }}</span>
+                }
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Description*</label>
+                <textarea class="form-control" rows="3" formControlName="description"></textarea>
+                @if(form['description'].touched && form['description'].errors){
+                    <span class="text-danger f-12 mt-2">{{ form['description'].hasError('required') ? 'Description is Required' : '' }}</span>
+                }
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Visibility*</label>
+                <select class="form-select" formControlName="public">
+                    <option value="true">Public</option>
+                    <option value="false">Private</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Discoverable*</label>
+                <select class="form-select" formControlName="discoverable">
+                    <option value="true">True</option>
+                    <option value="false">False</option>
+                </select>
+                <small class="form-text text-muted">Disallows public users from viewing
+                    project metadata and project statistics.</small>
+            </div>
+
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" formControlName="enforceExpeditionAccess">
+                <label class="form-check-label">Enforce Expedition Access
+                    Control?</label>
+                <small class="form-text text-muted d-block">Enforcing Expedition access
+                    will allow only the expedition owner to update the expedition. If
+                    disabled, any project member will be able to update the expedition
+                    data.</small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Principal Investigator</label>
+                <input type="text" class="form-control" formControlName="principalInvestigator">
+                <small class="form-text text-muted d-block">The principal investigator
+                    for this project</small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Principal Investigator Affiliation</label>
+                <input type="text" class="form-control" formControlName="principalInvestigatorAffiliation">
+                <small class="form-text text-muted d-block">The affiliation of the
+                    principal investigator for this project</small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Project Contact</label>
+                <input type="text" class="form-control" formControlName="projectContact">
+                <small class="form-text text-muted d-block">Name of an individual to
+                    contact for this project. Typically this is the name of the person
+                    with the user account for this project, but in some cases the
+                    contact will be someone else</small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Project Contact Email</label>
+                <input type="email" class="form-control" formControlName="projectContactEmail">
+                <small class="form-text text-muted d-block">Email for the project
+                    contact</small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Publication DOI</label>
+                <input type="text" class="form-control" formControlName="publicationGuid">
+                <small class="form-text text-muted d-block">A globally unique identifier
+                    for a written publication pertaining to this dataset</small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Project Data GUID</label>
+                <input type="text" class="form-control" formControlName="projectDataGuid">
+                <small class="form-text text-muted d-block">A globally unique identifier
+                    for the data in this project. Recommended to use a resolvable URL
+                    containing a DOI or ARK identifier. GEOME does not automatically
+                    assign identifiers for all datasets since many datasets have been
+                    given GUIDs elsewhere.</small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Permit GUID</label>
+                <input type="text" class="form-control" formControlName="permitGuid">
+                <small class="form-text text-muted d-block">EA globally unique
+                    identifier referencing a permit. Recommended to use a resolvable URL
+                    containing a DOI or ARK identifier.</small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">License</label>
+                <select class="form-select" formControlName="license">
+                    <option value="" disabled>Select License</option>
+                    <option value="CC0">CC0</option>
+                    <option value="CC-by">CC-by</option>
+                    <option value="BSD">BSD</option>
+                </select>
+                <small class="form-text text-muted d-block">Indicate a license for this
+                    data resource.</small>
+                <small class="form-text text-muted">We recommend CC0 because it best
+                    supports the open data movement</small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Recommended Citation</label>
+                <input type="text" class="form-control" formControlName="recommendedCitation">
+                <small class="form-text text-muted">Indicate a recommended citation for
+                    this data resource.</small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Local Contexts HUB ID</label>
+                <input type="text" class="form-control" formControlName="localcontextsId">
+                <small class="form-text text-muted">This Identifier links your GEOME
+                    project with a Local Contexts Project. Paste the Local Contexts
+                    Unique Identifier found on your Local Contexts HUB project overview
+                    page here (this will look something like:
+                    08c44d9d-c009-430b-bbc0-760200129184).</small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">*Required Elements</label>
+            </div>
+
+            <button type="submit" class="btn req-save">Save</button>
+        </form>
+    </div>
+</div>
+<div class="card-sec border-danger">
+    <div class="card-body d-flex justify-content-between align-items-center">
+        <div>
+            <p class="fw-bold text-danger">Delete this project</p>
+            <p class="small">
+                <span class="span-text">Warning! This will delete all expeditions and
+                    records associated with this project.</span>
+                <br>Please export your data before deleting this project.
+            </p>
+        </div>
+        <button class="btn btn-danger" (click)="openModal()">Delete</button>
+    </div>
+</div>

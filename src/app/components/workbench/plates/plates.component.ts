@@ -7,7 +7,7 @@ import { AuthenticationService } from '../../../../helpers/services/authenticati
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { QueryService, QueryBuilder } from '../../../../helpers/services/query.service';
-import { DataService } from '../../../../helpers/services/data.service';
+import { DummyDataService } from '../../../../helpers/services/dummy-data.service';
 import { ToastrService } from 'ngx-toastr';
 import { RecordService } from '../../../../helpers/services/record.service';
 
@@ -22,7 +22,7 @@ export class PlatesComponent {
   // Injectors
   fb = inject(FormBuilder);
   modalService =  inject(NgbModal);
-  dataService = inject(DataService);
+  dataService = inject(DummyDataService);
   queryService = inject(QueryService);
   plateService = inject(PlatesService);
   recordService = inject(RecordService);

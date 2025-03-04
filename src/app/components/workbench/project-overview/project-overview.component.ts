@@ -33,8 +33,8 @@ export class ProjectOverviewComponent implements OnDestroy{
     this.projectService.currentProject$()
     .pipe(takeUntil(this.destroy$))
     .subscribe((res:any)=>{
+      this.projectDetails = res;
       if(res){
-        this.projectDetails = res;
         this.getExpeditionStats();
         this.templateUrl = currentUrl.replace('project-overview', 'template') + `?projectId=${res.projectId}`;
         this.teamUrl = currentUrl.replace('project-overview', 'team-overview') + `?projectId=${res.projectId}`;

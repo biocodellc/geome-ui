@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, TemplateRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgbTooltipModule, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { DataService } from '../../../helpers/services/data.service';
+import { DummyDataService } from '../../../helpers/services/dummy-data.service';
 
 @Component({
   selector: 'app-homepage',
@@ -14,7 +14,7 @@ import { DataService } from '../../../helpers/services/data.service';
 export class HomepageComponent {
   // Injectables
   private modalService = inject(NgbModal);
-  private dataService = inject(DataService);
+  private dataService = inject(DummyDataService);
 
   // Variables
   homeItems:Array<any> = this.dataService.getHomePageItems();

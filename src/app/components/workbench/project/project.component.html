@@ -1,0 +1,25 @@
+<section class="projects">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="flower-section">
+                    <h3 class="flow-hed">{{currentProject?.projectTitle}}</h3>
+                    <p>{{currentProject?.description}}</p>
+                    <p><strong>Project Owner:</strong> {{currentProject?.user.username}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="flower-section">
+                    <div class="d-flex mb-3">
+                        <button class="btn" [routerLink]="['/workbench','project', 'settings']" routerLinkActive="btn-primary custom">Settings</button>
+                        <button class="btn" [routerLink]="['/workbench','project', 'expeditions']" routerLinkActive="btn-primary custom">Expeditions</button>
+                        <button class="btn" [routerLink]="['/workbench','project', 'members']" routerLinkActive="btn-primary custom">Members</button>
+                    </div>
+                    <router-outlet />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

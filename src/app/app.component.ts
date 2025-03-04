@@ -44,7 +44,7 @@ export class AppComponent implements OnDestroy{
   }
 
   getUserDetails(user:any){
-    this.userService.getUserData(user.username, user.accessToken).pipe(take(1), takeUntil(this.destroy$))
+    this.userService.getUserData(user.username).pipe(take(1), takeUntil(this.destroy$))
     .subscribe({
       next: (res:any) => this.authService.setCurrentUser(res)
     })

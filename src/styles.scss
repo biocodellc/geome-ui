@@ -489,6 +489,97 @@ select#expedition {
     }    
 }
 
+section.projects{
+    .flower-section {
+        background-color: #fff;
+        border: 1px solid #d6dbdb;
+        padding: 15px;
+        margin: 0 0 20px 0;
+    }
+    .flow-hed{
+        color: #444;
+    }
+    .flower-section ul.nav.nav-tabs{
+        border-top: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+    }
+    .flower-section ul.nav.nav-tabs .nav-link{
+        border: none;
+        border-radius: 0 0 0 0;
+        background: transparent;
+    }
+    .flower-section .nav-tabs .nav-link.active, 
+    .nav-tabs .nav-link.active {
+        background-color: #ddd !important;
+    }
+    .req-save{
+        background-color: #42516a;
+        color: #fff;
+    }
+    .card-sec.border-danger {
+        border: 1px solid #dc3545;
+        margin: 20px 0 0 40px;
+        padding: 10px 30px;
+        border-radius: 5px;
+        background-color: #fbddda;
+    }
+    .span-text{
+        color: #b94a48;
+    }
+    .grant-user{
+        background: #cbe6c2;
+    }
+    .setting-bar{
+        border-top: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+    }
+    button.btn-ban {
+        border: none;
+        background: transparent;
+    }
+    button.btn-ban i{
+        color: #dc3545;
+    
+    }
+    .ban-cont{
+        font-size: 20px;
+        font-weight: 500;
+    
+    }
+    .list-group-item {
+        border: none;
+    }
+    .list-group{
+        border-top: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+    }
+    .box-container{
+        padding: 0 0 0 40px;
+    }
+    
+    ::ng-deep ngb-modal-window.d-block.modal.no-backdrop.fade.show{
+        background-color: #00000080;
+    }
+    
+    .user-dropdown{
+        max-height: 250px;
+        overflow-y: auto;
+        max-width: 50vw;
+        .dropdown-item p{
+            max-width: 50vw;
+        }
+    }
+    .dropdown-toggle{
+        position: relative;
+        &::after{
+            position: absolute;
+            right: 10px;
+            top: 1em;
+            bottom: 0px;
+        }
+    }
+}
+
 
 @media (min-width: 1400px) {
     .container-xxl, .container-xl, .container-lg, .container-md, .container-sm, .container {

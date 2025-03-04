@@ -10,12 +10,12 @@
                             <span>Switch Project</span>
                             @if(currentUser){
                                 <div class="form-check">
-                                    <input class="form-check-input" id="projects" type="checkbox" id="projects" (change)="onProjectPrefChange($event)">
+                                    <input class="form-check-input" id="projects" type="checkbox" id="projects" [(ngModel)]="includePublicProj" (change)="onProjectPrefChange($event)">
                                     <label class="form-check-label" for="projects">Include Public</label>
                                 </div>
                             }
                             @else{
-                                <button class="btn btn-outline-secondary" [routerLink]="['/login']">SIGN IN</button>
+                                <button class="btn btn-outline-secondary btn-sm" [routerLink]="['/login']">SIGN IN</button>
                             }
                         </div>
                         <input type="text" placeholder="Filter Projects" class="form-control mb-2 border-top-0 border-start-0 border-end-0 rounded-0" [(ngModel)]="searchedProject" (ngModelChange)="filterProjectSubject.next('')" style="box-shadow: none;">

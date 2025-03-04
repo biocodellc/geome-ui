@@ -21,7 +21,7 @@ export class AuthenticationService {
 
   checkUser(){
     let user:any = this.getUserFromStorage();
-    if(user && user?.accessToken){
+    if(user && user?.accessToken && this.isTokenTimeExpired(user)){
       this.isLoggedIn = true;
       this.currentUserSubject = new BehaviorSubject<any>(user);
       this.currentUser = this.currentUserSubject.asObservable();
@@ -30,6 +30,7 @@ export class AuthenticationService {
       this.isLoggedIn = false;
       this.currentUserSubject = new BehaviorSubject<any>(null);
       this.currentUser = this.currentUserSubject.asObservable();
+      this.resetUser();
     }
   }
 
@@ -76,6 +77,14 @@ export class AuthenticationService {
     this.isLoggedIn = false;
     if(newData) localStorage.setItem( this.storageKey, btoa(JSON.stringify(newData)) );
     else localStorage.removeItem(this.storageKey);
+  }
+
+  isTokenTimeExpired(user:any):boolean{
+    if(!user || !user.accessToken || !user.oAuthTimestamp) return true
+    const currentTime = new Date().getTime();
+    const loginTime = user.oAuthTimestamp;
+    if(loginTime > currentTime - 2000) return false
+    else return true;
   }
 
   getUserFromStorage():any{

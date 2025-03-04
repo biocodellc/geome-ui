@@ -1,0 +1,33 @@
+<div class="p-3">
+    <!-- Settings Bar -->
+    <div class="d-flex justify-content-between align-items-center p-3 setting-bar">
+        <div ngbDropdown class="d-inline-block">
+            <button class="btn dropdown-toggle" type="button" ngbDropdownToggle style="min-width: 200px;">
+                <strong>Order by:</strong> <span id="orderByText"> {{memberOrderBy}}</span>
+            </button>
+            <div ngbDropdownMenu aria-labelledby="orderByText">
+                <button ngbDropdownItem (click)="memberOrderChange('Username')">Username</button>
+                <button ngbDropdownItem (click)="memberOrderChange('Institution')">Institution</button>
+                <button ngbDropdownItem (click)="memberOrderChange('Email')">Email</button>
+                <button ngbDropdownItem (click)="memberOrderChange('First Name')">First Name</button>
+                <button ngbDropdownItem (click)="memberOrderChange('Last Name')">Last Name</button>
+            </div>
+        </div>
+        <a href="javascript:void()" [routerLink]="['/workbench','project','members','add']" class="btn grant-user">
+            <i class="fa fa-plus"></i> Grant User Access
+        </a>
+    </div>
+    <!-- Members List -->
+    <ul class="list-group mt-3" id="membersList">
+        @for(member of allMembers; track member){
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <button class="btn-ban me-3">
+                        <i class="fa fa-ban" (click)="removeMember(member.username)"></i>
+                    </button>
+                    <span class="ban-cont">{{member.username}}</span> <br>
+                </div>
+            </li>
+        }
+    </ul>
+</div>

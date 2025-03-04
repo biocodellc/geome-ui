@@ -17,8 +17,8 @@ export class UserService {
     'Content-Type': 'application/x-www-form-urlencoded'
   });
 
-  getUserData(username:string, token:string):Observable<any>{
-    return this.http.get(`${this.apiURL}users/${username}?access_token=${token}`);
+  getUserData(username:string = ''):Observable<any>{
+    return this.http.get(`${this.apiURL}users/${username}`);
   }
 
   authenticate(userData:any):Observable<any>{
@@ -64,6 +64,9 @@ export class UserService {
     return this.http.post(`${this.apiURL}oauth/refresh`, this.formattedReqBody(data), { headers: this.headers });
   }
 
+  invite(data:any):Observable<any> {
+    return this.http.post(`${this.apiURL}users/invite`, this.formattedReqBody(data), { headers: this.headers });
+  }
 
   // Helper
   formattedReqBody(body:any):any{

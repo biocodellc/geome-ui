@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../../../helpers/services/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, take, takeUntil } from 'rxjs';
+import { passwordStrengthValidator } from '../../../../helpers/validators/passowrd.validator';
 
 @Component({
   selector: 'app-reset-password',
@@ -41,7 +42,7 @@ export class ResetPasswordComponent implements OnDestroy{
 
   initForm() {
     this.resetForm = this.fb.group({
-      password: ['', [Validators.required, Validators.pattern(this.passwordReg)]]
+      password: ['', [Validators.required, passwordStrengthValidator()]]
     })
   }
 

@@ -13,7 +13,7 @@
             <div class="col-lg-12">
                 <div class="flower-section">
                     <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs">
-                        <li [ngbNavItem]="'settings'">
+                        <!-- <li [ngbNavItem]="'settings'">
                             <button ngbNavLink>Settings</button>
                             <ng-template ngbNavContent>
                                 <div class="col-lg-9">
@@ -172,19 +172,19 @@
                                     </div>
                                 </div>
                             </ng-template>
-                        </li>
-                        <li [ngbNavItem]="'resources'">
+                        </li> -->
+                        <!-- <li [ngbNavItem]="'resources'">
                             <button ngbNavLink> Expeditions </button>
                             <ng-template ngbNavContent>
                                 <div class="p-3">
                                     <ul style="list-style-type: none;" class="p-0">
                                         @for(item of allExpeditions; track item){
-                                            <li>
-                                                <div class="d-flex gap-4 align-items-center">
+                                            <li class="border-top border-bottom">
+                                                <div class="d-flex gap-4 align-items-center p-2">
                                                     <div class="d-flex gap-2">
-                                                        <i class="fas fa-pen tetx-secondary" [routerLink]="['workbench','expeditions', item.expeditionCode,'settings']"></i>
-                                                        <i class="fas fa-download text-secondary"></i>
-                                                        <i class="fas fa-trash-can text-danger" (click)="openModal(delete_modal, item)"></i>
+                                                        <i class="fas fa-pen cursor-pointer" [routerLink]="['/workbench','expeditions', item.expeditionId,'settings']"></i>
+                                                        <i class="fas fa-download cursor-pointer" (click)="exportExpedtionData(item.expeditionCode)"></i>
+                                                        <i class="fas fa-trash-can text-danger cursor-pointer" (click)="openModal(delete_modal, item)"></i>
                                                     </div>
                                                     <div class="d-flex flex-column">
                                                         <p class="fw-semibold">{{item?.expeditionTitle}}</p>
@@ -210,43 +210,74 @@
 
                                 </div>
                             </ng-template>
-                        </li>
+                        </li> -->
                         <li [ngbNavItem]="'members'">
                             <button ngbNavLink>Members</button>
                             <ng-template ngbNavContent>
-                                <div class="p-3">
-                                    <!-- Settings Bar -->
-                                    <div class="d-flex justify-content-between align-items-center p-3 setting-bar">
-                                        <div class="dropdown">
-                                            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                                <strong>Order by:</strong> <span id="orderByText"> Username</span>
-                                            </button>
-                                            <ul class="dropdown-menu" id="orderOptions">
-                                                <li><a class="dropdown-item" href="#">Username</a></li>
-                                                <li><a class="dropdown-item" href="#">Institution</a></li>
-                                                <li><a class="dropdown-item" href="#">Email</a></li>
-                                                <li><a class="dropdown-item" href="#">First Name</a></li>
-                                                <li><a class="dropdown-item" href="#">Last Name</a></li>
-                                            </ul>
-                                        </div>
-                                        <a href="/workbench/project/members/add" class="btn grant-user">
-                                            <i class="fa fa-plus"></i> Grant User Access
-                                        </a>
-                                    </div>
-                                    <!-- Members List -->
-                                    <ul class="list-group mt-3" id="membersList">
-                                        @for(member of allMembers; track member){
-                                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                <div>
-                                                    <button class="btn-ban">
-                                                        <i class="fa fa-ban" (click)="removeMember(member.username)"></i>
-                                                    </button>
-                                                    <span class="ban-cont">{{member.username}}</span> <br>
+                                @if(!addNewUser){a
+                                    <!-- <div class="p-3">
+                                        <div class="d-flex justify-content-between align-items-center p-3 setting-bar">
+                                            <div ngbDropdown class="d-inline-block">
+                                                <button class="btn dropdown-toggle" type="button" ngbDropdownToggle style="min-width: 200px;">
+                                                    <strong>Order by:</strong> <span id="orderByText"> {{memberOrderBy}}</span>
+                                                </button>
+                                                <div ngbDropdownMenu aria-labelledby="orderByText">
+                                                    <button ngbDropdownItem (click)="memberOrderChange('Username')">Username</button>
+                                                    <button ngbDropdownItem (click)="memberOrderChange('Institution')">Institution</button>
+                                                    <button ngbDropdownItem (click)="memberOrderChange('Email')">Email</button>
+                                                    <button ngbDropdownItem (click)="memberOrderChange('First Name')">First Name</button>
+                                                    <button ngbDropdownItem (click)="memberOrderChange('Last Name')">Last Name</button>
                                                 </div>
-                                            </li>
-                                        }
-                                    </ul>
-                                </div>
+                                            </div>
+                                            <a href="javascript:void()" (click)="getAllUsers()" class="btn grant-user">
+                                                <i class="fa fa-plus"></i> Grant User Access
+                                            </a>
+                                        </div>
+                                        <ul class="list-group mt-3" id="membersList">
+                                            @for(member of allMembers; track member){
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <button class="btn-ban">
+                                                            <i class="fa fa-ban" (click)="removeMember(member.username)"></i>
+                                                        </button>
+                                                        <span class="ban-cont">{{member.username}}</span> <br>
+                                                    </div>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div> -->
+                                }
+                                @else{
+                                    <div class="p-3">
+                                        <div class="d-flex gap-2 mb-3 text-primary">
+                                            <i class="fas fa-angle-left"></i>
+                                            <span (click)="addNewUser = false">Members</span>
+                                        </div>
+                                        <div class="p-3 setting-bar">
+                                            <h6>User</h6>
+                                            <div ngbDropdown #userDropdown="ngbDropdown" class="d-inline-block">
+                                                <button class="btn dropdown-toggle text-start border" type="button" ngbDropdownToggle style="width: 300px;" (click)="showInput = true">
+                                                    @if(!showInput){ {{ selectedUser?.username }} }
+                                                    @else{
+                                                        <input type="text" class="form-control border-0 shadow-0" id="userList" [(ngModel)]="selectedUser.username" placeholder="Select user" (ngModelChange)="userDetailSub.next('')">
+                                                    }
+                                                </button>
+                                                <div ngbDropdownMenu aria-labelledby="userList" autoClose="false" class="user-dropdown">
+                                                    @for(user of userList; track user){
+                                                        <div ngbDropdownItem class="border-bottom cursor-pointer" (click)="onUserSelect(user)">
+                                                            <span class="f-14">{{user.username}}</span>
+                                                            <div class="d-flex gap-2 f-14">
+                                                                <p><span class="fw-semibold">email: </span> {{user.email}}</p>
+                                                                <p><span class="fw-semibold">name: </span> {{user.sraFirstName}}  {{user.sraLastName}}</p>
+                                                                <p><span class="fw-semibold">institution: </span> {{user.institution}}</p>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
                             </ng-template>
                         </li>
                     </ul>

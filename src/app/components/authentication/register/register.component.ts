@@ -2,11 +2,12 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../../../../helpers/services/user.service';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MustMatch } from '../../../../helpers/validators/must-match.validator';
 import { catchError, debounceTime, map, of, Subject, switchMap, take, takeUntil } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from '../../../../helpers/services/authentication.service';
+import { passwordStrengthValidator } from '../../../../helpers/validators/passowrd.validator';
 
 @Component({
   selector: 'app-register',
@@ -22,6 +23,7 @@ export class RegisterComponent {
   userService = inject(UserService);
   toastrService = inject(ToastrService);
   authService = inject(AuthenticationService);
+  activatedRoute = inject(ActivatedRoute);
 
   // Variables
   private destroy$ = new Subject<void>();
@@ -33,6 +35,7 @@ export class RegisterComponent {
 
   constructor() {
     this.initForm();
+    this.extractDataFromUrl();
   }
 
   initForm() {
@@ -42,14 +45,23 @@ export class RegisterComponent {
       email: ['', [Validators.required, Validators.email, Validators.pattern(this.emailReg)]],
       institution: [''],
       username: ['', [Validators.required]],
-      password: ['', [Validators.required, Validators.pattern(this.passwordReg)]],
+      password: ['', [Validators.required, passwordStrengthValidator()]],
       verifyPass: ['', [Validators.required]],
+      inviteId: ['']
     }, {
       validator: MustMatch('password', 'verifyPass'),
     })
     this.form['username'].valueChanges
     .pipe(debounceTime(500), takeUntil(this.destroy$))
     .subscribe(val => this.validateName(val));
+  }
+
+  extractDataFromUrl(){
+    this.activatedRoute.queryParams.pipe(take(1)).subscribe((param:any)=>{
+      if(param.email || param.inviteId){
+        Object.keys(param).forEach((key:string)=> this.setControlVal(key, param[key]));
+      }
+    })
   }
 
   register() {
@@ -59,8 +71,9 @@ export class RegisterComponent {
     let data = { ...this.registerForm.value };
     let userCred = { username: this.getControlVal('username'), password: this.getControlVal('password') };
     delete data['verifyPass'];
+    delete data['inviteId'];
 
-    this.userService.registerUser(data)
+    this.userService.registerUser(data, this.getControlVal('inviteId'))
       .pipe(
         take(1), takeUntil(this.destroy$),
         switchMap(userData => 
@@ -73,7 +86,9 @@ export class RegisterComponent {
           this.authService.saveUser(res.authData, this.getControlVal('username'));
           this.authService.setCurrentUser(res.userData);
           this.toastrService.success('Register Successful');
-          this.router.navigate(['']);
+          if(this.getControlVal('inviteId'))
+            this.router.navigate(['/workbench','project-overview']);
+          else this.router.navigate(['']);
         },
         error: (err: any) =>{
           this.isLoading = false;
@@ -85,6 +100,11 @@ export class RegisterComponent {
   get form() { return this.registerForm.controls; }
 
   getControlVal(controlName: string) { return this.form[controlName].value; }
+
+  setControlVal(controlName:string, val:any){
+    this.form[controlName].setValue(val);
+    this.form[controlName].updateValueAndValidity();
+  }
 
   validateName(name: string) {
     const username = name.trim();

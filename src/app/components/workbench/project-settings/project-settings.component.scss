@@ -68,3 +68,18 @@ button.btn-ban i{
 ::ng-deep ngb-modal-window.d-block.modal.no-backdrop.fade.show{
     background-color: #00000080;
 }
+
+.user-dropdown{
+    max-height: 400px;
+    overflow-y: auto;
+    max-width: 50vw;
+}
+.dropdown-toggle{
+    position: relative;
+    &::after{
+        position: absolute;
+        right: 10px;
+        top: 1em;
+        bottom: 0px;
+    }
+}

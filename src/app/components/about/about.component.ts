@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
-import { DataService } from '../../../helpers/services/data.service';
+import { DummyDataService } from '../../../helpers/services/dummy-data.service';
 
 @Component({
   selector: 'app-about',
@@ -13,7 +13,7 @@ import { DataService } from '../../../helpers/services/data.service';
 })
 export class AboutComponent {
   // Injectables
-  dataService = inject(DataService);
+  dataService = inject(DummyDataService);
 
   // Variables
   firstSection:Array<any> = this.dataService.getAboutFirstSectionData();

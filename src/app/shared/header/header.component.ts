@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnDestroy } from '@angular/core';
+import { Component, inject, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { AuthenticationService } from '../../../helpers/services/authentication.service';
 import { ProjectService } from '../../../helpers/services/project.service';
-import { debounceTime, filter, Subject, Subscription, takeUntil } from 'rxjs';
+import { debounceTime, filter, Subject, take, takeUntil } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -15,7 +15,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent implements OnDestroy{
+export class HeaderComponent implements OnChanges, OnDestroy{
   @Input() largeDevice:boolean = false;
   @Input() currentUser:any;
 
@@ -36,22 +36,56 @@ export class HeaderComponent implements OnDestroy{
   currentRouteUrl:string = '';
   currentProject:any;
   isFilterActive: boolean = false;
+  includePublicProj:boolean = false;
+
+  setCurrentProj:boolean = false;
 
   constructor(){
     this.projectService.getAllProjectsValue().pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-      if(res) this.allPublicProjects = res;
+      if(res){
+        this.allPublicProjects = res;
+        this.setInitialProjects();
+      }
     })
     this.projectService.userProjectSubject.pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if(!res) return
       this.allPrivateProjects = res;
       this.projectList = this.allFilteredProjects = [ ...this.allPrivateProjects ];
+      if(this.setCurrentProj){
+        this.setCurrentProj = false;
+        this.onProjectChange(this.allPrivateProjects[0]);
+      }
     })
     this.router.events.pipe( filter((event:any) => event instanceof NavigationEnd), takeUntil(this.destroy$))
-      .subscribe(event => this.currentRouteUrl = event.urlAfterRedirects);
+      .subscribe(event =>{
+        if(this.currentRouteUrl.includes('register') && this.allPrivateProjects.length) this.onProjectChange(this.allPrivateProjects[0]);
+        else if(this.currentRouteUrl.includes('register') && !this.allPrivateProjects.length) this.setCurrentProj = true;
+        this.currentRouteUrl = event.urlAfterRedirects;
+      });
     this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any) =>{
-      if(res) this.currentProject = res;
+      this.currentProject = res;
     })
     this.filterProjectSubject.pipe(debounceTime(100)).pipe(takeUntil(this.destroy$)).subscribe(() => this.filterProject());
+    // this.router.events.pipe(filter(event=> event instanceof NavigationEnd), take(3) ).subscribe(event => {
+    //   console.log(event.url);
+    //   this.previousUrl = event.url;
+    //   this.currentRouteUrl = 
+    // });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes['currentUser']) this.setInitialProjects();
+  }
+
+  setInitialProjects(){
+    this.includePublicProj = false;
+    if(this.currentUser && this.includePublicProj) this.projectList = [ ...this.allPrivateProjects, ...this.allPublicProjects];
+    else if(this.currentUser && !this.includePublicProj) this.projectList = [ ...this.allPrivateProjects];
+    else{
+      this.allPrivateProjects = [];
+      this.projectList = [ ...this.allPublicProjects ];
+    }
+    this.allFilteredProjects = [ ...this.projectList ];
   }
 
   onProjectChange(project:any){

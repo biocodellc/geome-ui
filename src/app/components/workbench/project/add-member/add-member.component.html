@@ -1,0 +1,44 @@
+<div class="p-3">
+    <div class="d-flex gap-2 mb-3 text-primary cursor-pointer" [routerLink]="['/workbench','project','members']">
+        <i class="fas fa-angle-left"></i>
+        <span>Members</span>
+    </div>
+    <div class="p-3 setting-bar">
+        <h6>User</h6>
+        <div>
+            <div ngbDropdown #userDropdown="ngbDropdown" class="d-inline-block">
+                <button class="btn dropdown-toggle text-start border" type="button" ngbDropdownToggle style="width: 300px;">
+                    {{ (selectedUser?.username || selectedUser?.name ) || 'Select User' }}
+                </button>
+                <div ngbDropdownMenu aria-labelledby="userList" autoClose="false" class="user-dropdown">
+                    <div class="mb-2">
+                        <input type="text" autocomplete="off" class="form-control border-0 shadow-none border-bottom" id="userList" [(ngModel)]="searchUser" placeholder="Search user" (ngModelChange)="searchUserSub.next('')" (keyup.enter)="sendInvite()">
+                    </div>
+                    @for(user of filteredUserList; track user){
+                        <div ngbDropdownItem class="border-bottom cursor-pointer" (click)="onUserSelect(user)">
+                            <span class="f-14">{{user.username}}</span>
+                            <div class="f-14">
+                                <p class="text-eclipse">
+                                    <span class="fw-semibold">email: </span> {{user.email}}
+                                    <span class="fw-semibold ms-2">name: </span> {{user.sraFirstName}}  {{user.sraLastName}}
+                                    <span class="fw-semibold">institution: </span> {{user.institution}}
+                                </p>
+                            </div>
+                        </div>
+                    }
+                    @empty{
+                        <div class="p-3">
+                            Enter email ID of user you want to add and press enter. We'll send inviation mail to them.
+                        </div>
+                    }
+                </div>
+            </div>
+            @if(selectedUser){
+                <button type="button" class="btn btn-secondary" (click)="addUser()">Add User</button>
+            }
+        </div>
+        <span class="text-secondary mt-3 f-12">
+            To add new user, enter their email and we will send them an invitation to create an account. Upon account creation they will be added as a project member.
+        </span>
+    </div>
+</div>

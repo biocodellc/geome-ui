@@ -83,9 +83,20 @@ export const routes: Routes = [
                 loadComponent: ()=>import('./components/workbench/plates/plates.component').then(m => m.PlatesComponent)
             },
             {
-                path: 'project/settings',
-                loadComponent: ()=>import('./components/workbench/project-settings/project-settings.component').then(m => m.ProjectSettingsComponent)
+                path:'project',
+                loadComponent: ()=>import('./components/workbench/project/project.component').then(m => m.ProjectComponent),
+                children:[
+                    { path: '', redirectTo:'settings', pathMatch: 'full' },
+                    { path: 'settings', loadComponent: ()=>import('./components/workbench/project/project-setting/project-setting.component').then(m => m.ProjectSettingComponent) },
+                    { path: 'expeditions', loadComponent: ()=>import('./components/workbench/project/project-expedition/project-expedition.component').then(m => m.ProjectExpeditionComponent) },
+                    { path: 'members', loadComponent: ()=>import('./components/workbench/project/project-members/project-members.component').then(m => m.ProjectMembersComponent) },
+                    { path: 'members/add', loadComponent: ()=>import('./components/workbench/project/add-member/add-member.component').then(m => m.AddMemberComponent) },
+                ]
             },
+            // {
+            //     path: 'project/settings',
+            //     loadComponent: ()=>import('./components/workbench/project-settings/project-settings.component').then(m => m.ProjectSettingsComponent)
+            // },
             {
                 path: 'project/config',
                 loadComponent: ()=>import('./components/workbench/project-configuration/project-configuration.component').then(m => m.ProjectConfigurationComponent)
