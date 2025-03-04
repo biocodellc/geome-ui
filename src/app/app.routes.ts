@@ -85,6 +85,10 @@ export const routes: Routes = [
             {
                 path: 'project/settings',
                 loadComponent: ()=>import('./components/workbench/project-settings/project-settings.component').then(m => m.ProjectSettingsComponent)
+            },
+            {
+                path: 'project/config',
+                loadComponent: ()=>import('./components/workbench/project-configuration/project-configuration.component').then(m => m.ProjectConfigurationComponent)
             }
         ]
     },
