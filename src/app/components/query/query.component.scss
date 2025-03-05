@@ -1,0 +1,95 @@
+.top-tab-sec{
+    background: #60869899;
+    padding: 0 10px;
+}
+.map-tbl {
+    display: flex;
+    justify-content: flex-end;
+    list-style: none;
+    padding: 20px 0px;
+}
+.map-tbl li {
+    width: 100%;
+    max-width: 70px;
+}
+
+.map-tbl li button {
+    width: 100%;
+    padding: 8px 0px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+}
+.down-btn button {
+    background: #2196f3;
+    color: #fff;
+}
+li.map-btn1 button {
+    background: #fff;
+}
+.form-section{
+    padding: 0px 20px;
+    overflow: auto;
+    height: 550px;
+}
+.form-btns {
+    padding: 0px 0px 0px 0px;
+    list-style: none;
+    margin: 15px 0px;
+}
+ul.form-btns li {
+    margin: 0 0 10px 0px;
+}
+.form-btns li button{ 
+    border: none;
+    background-color: #b0bec5;
+    color: #000000de;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    padding: 10px;
+    font-weight: 500;
+}
+ul.check-list {
+    list-style: none;
+    padding: 0px;
+}
+.form-section .form-group{
+    margin-bottom: 10px;
+}
+.form-section .form-group label {
+    font-size: 16px;
+    padding: 0 0 5px 0;
+    font-weight: 600;
+}
+
+ul.check-list label {
+    padding-left: 10px !important;
+    font-weight: 400 !important;
+}
+
+.custom-table-container {
+    width: 100%;
+    padding: 0px 20px 0 0;
+}
+table.custom-table.table-bordered {
+    width: 100%;
+}
+.custom-table th, .custom-table td {
+    text-align: left;
+}
+.form-group.search-btn-div {
+    text-align: end;
+    padding: 15px 0px;
+}
+.form-group.search-btn-div .search-btn{
+    border: none;
+    padding: 10px 10px;
+    font-size: 16px;
+    background-color: #2196f3;
+    color: #fff;
+}
+button.search-btn i {
+    padding-right: 10px;
+}
+
+
+

@@ -17,7 +17,7 @@ export class QueryComponent implements AfterViewInit{
   });
 
   ngAfterViewInit(): void {
-    this.initMap();
+    // this.initMap();
   }
 
   private initMap(): void {
