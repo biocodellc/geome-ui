@@ -1,0 +1,68 @@
+<div class="mt-4">
+    @for(entity of entitiesList; track entity; let i=$index;){
+        <ul class="list-group">
+            <li class="list-group-box d-flex align-items-center">
+                <div class="d-flex align-items-center events-first">
+                    <i class="fa fa-arrows cursor-pointer text-secondary"></i>
+                    <i class="fa fa-pencil ms-3 cursor-pointer text-secondary" (click)="openEditPopup(p, entity)"></i>
+                </div>
+                <div class="third-list cursor-ointer" [ngbPopover]="popContent" [autoClose]="false" triggers="manual" #p="ngbPopover">
+                    <a href="javascript:void(0)" class="event-hed">{{entity.conceptAlias}}</a>
+                    <ul class="work-list">
+                        <li><strong>worksheet:</strong> {{entity.worksheet}}</li>
+                        @if(entity.parentEntity){ <li><strong>parentEntity:</strong> {{entity.parentEntity}}</li> }
+                        <li><strong>uniqueAcrossProject:</strong> {{entity.uniqueAcrossProject}}</li>
+                    </ul>
+                </div>
+                <div>
+                    <ul class="list-inline mb-0">
+                        <li class="lists-attributes mb-1" [routerLink]="['/workbench','config','entities', entity.conceptAlias,'attributes']">
+                            <span class="badge bg-primary">{{entity.attributes.length}}</span> Attributes
+                        </li>
+                        <li class="lists-attributes" [routerLink]="['/workbench','config','entities', entity.conceptAlias, 'rules']">
+                            <span class="badge bg-success">{{entity.rules.length}}</span> Rules
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    }
+</div>
+
+<ng-template #popContent>
+    <div style="min-width: 300px; max-width:500px">
+        <i class="fas fa-xmark cursor-pointer" (click)="openedPopup.close()"></i>
+        <form [formGroup]="entityForm">
+            <div class="mb-2 f-14 d-flex align-items-center justify-content-between">
+                <div class="col-3 text-end">Concept Alias</div>
+                <div class="col-8">
+                    <input class="form-control f-14" type="text" formControlName="conceptAlias">
+                </div>
+            </div>
+            <div class="mb-2 f-14 d-flex align-items-center justify-content-between">
+                <div class="col-3 text-end">Unique Key Column</div>
+                <div class="col-8">
+                    <input class="form-control f-14" type="text" formControlName="uniqueKey">
+                </div>
+            </div>
+            <div class="mb-2 f-14 d-flex align-items-center justify-content-between">
+                <div class="col-3 text-end">Concept URI</div>
+                <div class="col-8">
+                    <input class="form-control f-14" type="text" formControlName="conceptURI">
+                </div>
+            </div>
+            <div class="mb-2 f-14 d-flex align-items-center justify-content-between">
+                <div class="col-3 text-end">Concept Forwarding Address</div>
+                <div class="col-8">
+                    <input class="form-control f-14" type="text" formControlName="address">
+                </div>
+            </div>
+            <div class="mb-2 f-14 d-flex align-items-center justify-content-between">
+                <div class="col-3 text-end">Parent Entity</div>
+                <div class="col-8">
+                    <input class="form-control f-14" type="text" formControlName="parentEntity">
+                </div>
+            </div>
+        </form>
+    </div>
+</ng-template>

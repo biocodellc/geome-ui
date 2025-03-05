@@ -1,0 +1,64 @@
+<div class="custom-table-container">
+    <!-- <table class="table table-bordered align-middle custom-table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Name <span>↑</span></th>
+                <th>Type</th>
+                <th>Required</th>
+                <th><button class="prop-btn"><a href="#" class="text-primary">+ ADD NEW
+                            PROPERTY</a></button></th>
+            </tr>
+        </thead>
+        <tbody>
+            @for
+            <tr>
+                <td>
+                    <span class="action-icon edit-icon"><i
+                            class="fa-solid fa-pencil"></i></span>
+                    <span class="action-icon delete-icon"><i
+                            class="fa-solid fa-trash"></i></span>
+                </td>
+                <td>Test</td>
+                <td>STRING</td>
+                <td>
+                    <input type="checkbox" checked disabled>
+                </td>
+
+            </tr>
+        </tbody>
+    </table> -->
+
+    <div class="d-flex justify-content-end py-3 mb-2">
+        @if(changedItems.length){
+            <button type="button" class="btn btn-primary custom" (click)="saveConfig()">
+                <i class="fas fa-upload"></i> Save Config
+            </button>
+        }
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Name</th>
+                <th scope="col">Type</th>
+                <th scope="col">Required</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (item of metaDataList; track item) {
+                <tr class="f-14">
+                    <td>
+                        <div>
+                            <i class="fas fa-pen me-2"></i>
+                            <i class="fas fa-trash-can text-danger"></i>
+                        </div>
+                    </td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.type }}</td>
+                    <td><input type="checkbox" [checked]="item.required" (change)="onRequireChange($event, item)"></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

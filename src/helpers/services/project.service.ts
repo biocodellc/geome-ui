@@ -53,7 +53,6 @@ export class ProjectService {
       this.currentProject = null;
       this.projectSubject.next(null);
       this.router.navigate(['/workbench/dashboard']);
-      return;
     }
     else if(project.config){
       this.currentProject = project;
@@ -166,8 +165,8 @@ export class ProjectService {
     const userVal = this.authService.getUserFromStorage();
     const projectId = userVal?.projectId || null;
     if(projectId){
-      const projectData = this.allProjectSubject.value?.filter((item:any) => item.projectId == projectId)[0];
-      this.setCurrentProject(projectData, false);
+      const projectData = this.allProjectSubject.value?.find((item:any) => item.projectId == projectId);
+      if(projectData) this.setCurrentProject(projectData, false);
     }
     else{
       this.activatedRoute.queryParams.pipe(take(1)).subscribe((res:any)=>{

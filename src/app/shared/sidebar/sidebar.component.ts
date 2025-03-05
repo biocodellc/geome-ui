@@ -27,7 +27,7 @@ export class SidebarComponent {
 
   adminTabs:Array<any> = [
     { name: "Project Expeditions", route: '/workbench/expeditions' , icon: 'fa-gear', alwaysVisible: true },
-    { name: "Project Configuration", route: '/workbench/project/config' , icon: 'fa-wrench', alwaysVisible: true },
+    { name: "Project Configuration", route: '/workbench/config' , icon: 'fa-wrench', alwaysVisible: true },
     { name: "Project Settings", route: '/workbench/project/settings' , icon: 'fa-wrench', alwaysVisible: true },
     { name: "My Profile", route: '/workbench/user/profile' , icon: 'fa-user', alwaysVisible: true },
   ]

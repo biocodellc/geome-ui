@@ -66,11 +66,6 @@ export class HeaderComponent implements OnChanges, OnDestroy{
       this.currentProject = res;
     })
     this.filterProjectSubject.pipe(debounceTime(100)).pipe(takeUntil(this.destroy$)).subscribe(() => this.filterProject());
-    // this.router.events.pipe(filter(event=> event instanceof NavigationEnd), take(3) ).subscribe(event => {
-    //   console.log(event.url);
-    //   this.previousUrl = event.url;
-    //   this.currentRouteUrl = 
-    // });
   }
 
   ngOnChanges(changes: SimpleChanges) {

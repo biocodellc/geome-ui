@@ -98,8 +98,17 @@ export const routes: Routes = [
             //     loadComponent: ()=>import('./components/workbench/project-settings/project-settings.component').then(m => m.ProjectSettingsComponent)
             // },
             {
-                path: 'project/config',
-                loadComponent: ()=>import('./components/workbench/project-configuration/project-configuration.component').then(m => m.ProjectConfigurationComponent)
+                path: 'config',
+                loadComponent: ()=>import('./components/workbench/project-configuration/project-configuration.component').then(m => m.ProjectConfigurationComponent),
+                children:[
+                    { path: '', redirectTo: 'entities', pathMatch: 'full' },
+                    { path: 'entities', loadComponent:()=>import('./components/workbench/project-configuration/entities/entities.component').then(m => m.EntitiesComponent) },
+                    { path: 'entities/:entity/:type', loadComponent:()=>import('./components/workbench/project-configuration/entity-details/entity-details.component').then(m => m.EntityDetailsComponent) },
+                    { path: 'expedition/properties', loadComponent:()=>import('./components/workbench/project-configuration/expedition-properties/expedition-properties.component').then(m => m.ExpeditionPropertiesComponent) },
+                    { path: 'lists', loadComponent:()=>import('./components/workbench/project-configuration/lists/lists.component').then(m => m.ListsComponent) },
+                    { path: 'lists/:id', loadComponent:()=>import('./components/workbench/project-configuration/list-details/list-details.component').then(m => m.ListDetailsComponent) },
+                    { path: 'settings', loadComponent:()=>import('./components/workbench/project-configuration/settings/settings.component').then(m => m.SettingsComponent) },
+                ]
             }
         ]
     },

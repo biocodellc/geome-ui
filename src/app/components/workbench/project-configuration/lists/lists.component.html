@@ -1,0 +1,60 @@
+<div class="mt-4">
+    <div class="add-btn py-2">
+        <button type="button" class="btn btn-primary custom" (click)="openModal(add_modal)">+ ADD LIST</button>
+        @if(changesDone){
+            <button type="button" class="btn btn-primary custom ms-3" (click)="saveConfig()">
+                <i class="fas fa-upload"></i> Save Config
+            </button>
+        }
+    </div>
+    @for(item of allLists; track item){
+        <ul class="list-group">
+            <li class="list-group-box list-section d-flex align-items-center">
+                <i class="fas fa-trash-can text-danger pe-5 cursor-pointer" (click)="removeList(item)" [ngClass]="item?.addedByUser ? 'visible' : 'invisible'"></i>
+                <div class="work-boxes">
+                    <span class="event-hed">{{item.alias}}</span>
+                    <ul class="work-list mt-2">
+                        <li><strong>caseSensitive:</strong> {{!item.caseInsensitive}}</li>
+                        <li><strong>isNetworkList: </strong> {{item.networkList}}</li>
+                    </ul>
+                </div>
+                <div>
+                    <ul class="list-inline mb-0">
+                        <li class="lists-attributes">
+                            <span class="badge bg-primary me-2">{{item.fields.length}}</span> Fields
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    }
+</div>
+
+<ng-template #add_modal let-modal>
+    <div class="modal-header border-0 py-2 bg-primary justify-content-center">
+		<h4 class="modal-title fw-semibold" id="modal-basic-title">New List</h4>
+	</div>
+	<div class="modal-body p-2 py-3 px-4 border-0" id="expedition_modal">
+        <form class="custom-fields" [formGroup]="listForm">
+            <div class="mb-3">
+                <div class="form-floating mb-1">
+                    <input type="text" formControlName="alias" class="form-control" id="floatingalias" placeholder="alias">
+                    <label for="alias" class="ps-0 fw-semibold">List Name *</label>
+                </div>
+                @if(form['alias'].touched && form['alias'].invalid){
+                    <span class="warn-text f-12">{{ form['alias'].hasError('required') ? 'Name is required.' : '' }}</span>
+                }
+            </div>
+            <div class="d-flex form-check">
+                <input id="caseInsensitive" type="checkbox" class="form-check-input" formControlName="caseInsensitive">
+                <label for="caseInsensitive" class="ms-2">Case Insensitive?</label>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer border-0 pt-0">
+		<div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">Cancel</button>
+            <button type="button" class="btn btn-primary custom" (click)="saveList()" [disabled]="form['alias'].invalid">Save</button>
+        </div>
+	</div>
+</ng-template>
