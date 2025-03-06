@@ -21,7 +21,7 @@
                 <div>
                     <ul class="list-inline mb-0">
                         <li class="lists-attributes">
-                            <span class="badge bg-primary me-2">{{item.fields.length}}</span> Fields
+                            <span class="badge bg-primary me-2">{{item.fields?.length || 0}}</span> Fields
                         </li>
                     </ul>
                 </div>
@@ -38,7 +38,7 @@
         <form class="custom-fields" [formGroup]="listForm">
             <div class="mb-3">
                 <div class="form-floating mb-1">
-                    <input type="text" formControlName="alias" class="form-control" id="floatingalias" placeholder="alias">
+                    <input type="text" autocomplete="off" formControlName="alias" class="form-control" id="floatingalias" placeholder="alias">
                     <label for="alias" class="ps-0 fw-semibold">List Name *</label>
                 </div>
                 @if(form['alias'].touched && form['alias'].invalid){

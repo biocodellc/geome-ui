@@ -1,15 +1,37 @@
 <div class="mt-4 ps-4">
-    <div class="form-check master-conf">
-        <input class="form-check-input" type="checkbox">
-        <label class="form-check-label" for="masterConfig">
-            Master Configuration?
-        </label>
-        <p class="form-text text-muted">
-            Master Configurations are for subscribing teams only. This enables team
-            collaboration and multiple projects to be created using the same
-            configuration.
-            See <a href="/about#subscriptions" class="text-decoration-none">our about
-                page</a> for more information.
-        </p>
-    </div>
+    <form [formGroup]="settingForm" class="custom-fields">
+        @if(isNetworkAdmin){
+            <div class="mb-3">
+                <div class="form-floating mb-1">
+                    <input type="text" formControlName="name" class="form-control" id="floatingName" placeholder="name">
+                    <label for="floatingName" class="ps-0 fw-semibold">Name *</label>
+                </div>
+                @if(form['name'].touched && form['name'].invalid){
+                    <span class="warn-text f-12">{{ form['name'].hasError('required') ? 'Name is required.' : '' }}</span>
+                }
+            </div>
+            <div class="mb-3">
+                <div class="form-floating mb-1">
+                    <input type="text" formControlName="description" class="form-control" id="floatingdescription" placeholder="description">
+                    <label for="floatingdescription" class="ps-0 fw-semibold">Description *</label>
+                </div>
+                @if(form['description'].touched && form['description'].invalid){
+                    <span class="warn-text f-12">{{ form['description'].hasError('required') ? 'Description is required.' : '' }}</span>
+                }
+            </div>
+        }
+        <div class="form-check master-conf" [ngStyle]="{'cursor': !isNetworkAdmin ? 'not-allowed': 'pointer'}">
+            <input class="form-check-input" type="checkbox" formControlName="networkApproved">
+            <label class="form-check-label" for="masterConfig">
+                Master Configuration?
+            </label>
+            <p class="form-text text-muted">
+                Master Configurations are for subscribing teams only. This enables team
+                collaboration and multiple projects to be created using the same
+                configuration.
+                See <a href="javascript:void(0)" class="text-decoration-none" routerLink="/about">our about
+                    page</a> for more information.
+            </p>
+        </div>
+    </form>
 </div>

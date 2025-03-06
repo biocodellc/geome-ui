@@ -1,14 +1,18 @@
+import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component } from '@angular/core';
 import * as L from 'leaflet';
+import { QueryFormComponent } from './query-form/query-form.component';
 
 @Component({
   selector: 'app-query',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, QueryFormComponent],
   templateUrl: './query.component.html',
   styleUrl: './query.component.scss'
 })
 export class QueryComponent implements AfterViewInit{
+  active:string = 'map';
+  isSidebarVisible:boolean = true;
   private map!: L.Map;
   customIcon = L.icon({
     iconUrl: 'images/marker.svg',
@@ -17,7 +21,7 @@ export class QueryComponent implements AfterViewInit{
   });
 
   ngAfterViewInit(): void {
-    // this.initMap();
+    this.initMap();
   }
 
   private initMap(): void {

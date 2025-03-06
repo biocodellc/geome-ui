@@ -9,7 +9,7 @@
                             <input type="text" formControlName="username" class="form-control" id="floatingName" placeholder="username">
                             <label for="floatingName" class="ps-0 fw-semibold">Username *</label>
                         </div>
-                        @if(form['username'].touched &&form['username'].invalid){
+                        @if(form['username'].touched && form['username'].invalid){
                             <span class="warn-text f-12">{{ form['username'].hasError('required') ? 'Username is required.' : '' }}</span>
                         }
                     </div>

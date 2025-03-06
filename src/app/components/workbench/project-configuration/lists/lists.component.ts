@@ -18,7 +18,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 })
 export class ListsComponent {
   // Injectors
-  fb = inject(FormBuilder);
+  fb = inject(FormBuilder)
   toastr = inject(ToastrService);
   modalService = inject(NgbModal);
   projectService = inject(ProjectService);
@@ -75,11 +75,22 @@ export class ListsComponent {
   saveList(){
     const newData = [ ...this.allLists, this.listForm.value ];
     this.allLists = this.sortList(newData);
-    this.listForm.reset();
+    this.setControlVal('alias', '');
+    this.setControlVal('addedByUser', true);
     this.modalRef.close();
   }
 
-  saveConfig(){}
+  saveConfig(){
+    const projectData = { ...this.currentProject };
+    projectData.config.lists = this.allLists;
+    this.projectConfService.save(projectData).pipe(take(1), takeUntil(this.destroy$)).subscribe((res:any)=>{
+      this.toastr.success('Configs Updated!');
+      this.allLists = this.allLists.map((item:any)=>{
+        if(item.addedByUser) delete item.addedByUser;
+        return item;
+      })
+    })
+  }
 
   removeList(list:any){
     const idx = this.allLists.findIndex((item:any)=> item.alias == list.alias && item.addedByUser);
@@ -88,6 +99,11 @@ export class ListsComponent {
   }
 
   get form(){ return this.listForm.controls; }
+
+  setControlVal(control:string, val:any){
+    this.form[control].setValue(val);
+    this.form[control].updateValueAndValidity();
+  }
 
   get changesDone(){ return this.allLists.find((item:any)=> item && item?.addedByUser) };
 }

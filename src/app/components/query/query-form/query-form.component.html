@@ -1,0 +1,166 @@
+<div class="form-section">
+    <form class="form-section-start">
+        <div class="form-group">
+            <label for="exampleFormControlSelect1">Query Entity <i class="fas fa-circle-question ms-2 text-secondary"></i></label>
+            <select class="form-control" id="exampleFormControlSelect1">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlSelect1">Team <i class="fas fa-circle-question ms-2 text-secondary"></i></label>
+            <select class="form-control" id="exampleFormControlSelect1">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlSelect1">Individual Projects <i class="fas fa-circle-question ms-2 text-secondary"></i></label>
+            <select class="form-control" id="exampleFormControlSelect1">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlSelect1">Expeditions</label>
+            <select class="form-control" id="exampleFormControlSelect1">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlInput1">Any Term <i class="fas fa-circle-question ms-2 text-secondary"></i></label>
+            <input type="text" class="form-control" id="exampleFormControlInput1" name="anyTerm" placeholder="" [(ngModel)]="params.queryString">
+        </div>
+<!-- ===================================================== -->
+        <div class="form-group">
+            <label for="MaterialSampleID">MaterialSampleID <i class="fas fa-circle-question ms-2 text-secondary"></i></label>
+            <input type="text" class="form-control" id="MaterialSampleID" name="MaterialSampleID" placeholder="" [(ngModel)]="params.materialSampleID">
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlSelect1">Expeditions</label>
+            <select class="form-control" id="exampleFormControlSelect1" name="country" [(ngModel)]="params.country">
+                @for(country of countries; track country){ <option [value]="country.value">{{country.value}}</option> }
+            </select>
+        </div>
+        <div class="form-group" style="flex: 1">
+            <label>Year Collected</label>
+            <div class="d-flex align-items-center">
+                <input type="number" class="form-control" id="fromYear" name="fromYear" [(ngModel)]="params.fromYear" placeholder="YYYY" style="flex: 1;">
+                <span class="px-2">to</span>
+                <input type="number" class="form-control" id="toYear" name="toYear" [(ngModel)]="params.toYear" placeholder="YYYY" style="flex: 1;">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlSelect1">Phylum</label>
+            <select class="form-control" name="Phylum" id="Phylum" [(ngModel)]="params.phylum">
+                @for(item of phylums; track item){ <option [value]="item.value">{{item.value}}</option> }
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="Genus">Genus</label>
+            <input type="text" class="form-control" id="Genus" name="genus" placeholder="" [(ngModel)]="params.genus">
+        </div>
+        <div class="form-group">
+            <label for="specificEpithet">Specific Epithet (species)</label>
+            <input type="text" class="form-control" id="specificEpithet" placeholder="" name="specificEpithet" [(ngModel)]="params.specificEpithet">
+        </div>
+<!-- ===================================================== -->
+
+        <div>
+            <ul class="form-btns">
+                <li><button> + ADD EVENT FILTER</button> <i class="fas fa-circle-question ms-2 text-secondary"></i></li>
+                <li><button> + ADD SAMPLE FILTER</button> <i class="fas fa-circle-question ms-2 text-secondary"></i></li>
+                <li><button>+ ADD TISSUE FILTER</button> <i class="fas fa-circle-question ms-2 text-secondary"></i></li>
+                <li><button>+ ADD SAMPLE_PHOTO FILTER</button> <i class="fas fa-circle-question ms-2 text-secondary"></i></li>
+                <li><button>+ ADD EVENT_PHOTO FILTER</button> <i class="fas fa-circle-question ms-2 text-secondary"></i></li>
+            </ul>
+        </div>
+
+        <div class="form-group">
+            <label for="exampleFormControlInput1">Filter Options</label>
+            @if(params.bounds?.northEast && params.bounds?.southWest){
+                <div class="my-2">
+                    <span class="text-primary underline">Draw Bounding Box</span>
+                    <div class="d-flex align-items-center">
+                        <div class="py-2" style="flex: 1;">
+                            <p class="mb-1"><span class="fw-semibold me-1">northEast</span>[ {{params.bounds.northEast.lat | number}}, {{params.bounds.northEast.lng | number}} ]</p>
+                            <p class="m-0"><span class="fw-semibold me-1">southWest</span>[ {{params.bounds.southWest.lat | number}}, {{params.bounds.southWest.lng | number}} ]</p>
+                        </div>
+                        <span class="text-danger">Clear Bounding Box</span>
+                    </div>
+                </div>
+            }
+            <ul class="check-list f-14">
+                <li>
+                    <input type="checkbox" class="form-check-input" id="mappable" name="mappable" [(ngModel)]="params.isMappable">
+                    <label class="form-check-label" for="mappable"> is mappable</label>
+                </li>
+                <li>
+                    <input type="checkbox" class="form-check-input" id="coordinateUncertaintyInMeters" name="coordinateUncertaintyInMeters" [(ngModel)]="params.hasCoordinateUncertaintyInMeters">
+                    <label class="form-check-label" for="coordinateUncertaintyInMeters"> has coordinateUncertaintyInMeters</label>
+                </li>
+                <li>
+                    <input type="checkbox" class="form-check-input" id="hasPermitInfo" name="hasPermitInfo" [(ngModel)]="params.hasPermitInfo">
+                    <label class="form-check-label" for="hasPermitInfo"> has permitInfo</label>
+                </li>
+                <li>
+                    <input type="checkbox" class="form-check-input" id="hasTissue" name="hasTissue" [(ngModel)]="params.hasTissue">
+                    <label class="form-check-label" for="hasTissue"> has tissue</label>
+                </li>
+                <li>
+                    <input type="checkbox" class="form-check-input" id="hasSamplePhoto" name="hasSamplePhoto" [(ngModel)]="params.hasSamplePhoto">
+                    <label class="form-check-label" for="hasSamplePhoto"> has sample photos</label>
+                </li>
+                <li>
+                    <input type="checkbox" class="form-check-input" id="hasEventPhoto" name="hasEventPhoto" [(ngModel)]="params.hasEventPhoto">
+                    <label class="form-check-label" for="hasEventPhoto"> has event photos</label>
+                </li>
+            </ul>
+
+
+        </div>
+
+        <div class="form-group">
+            <label for="exampleFormControlInput1">Sequences</label>
+            <ul class="check-list f-14">
+                <li>
+                    <input type="checkbox" class="form-check-input" id="hasFasta" name="hasFasta" [(ngModel)]="params.hasFasta">
+                    <label class="form-check-label" for="hasFasta"> has fasta sequence</label>
+                </li>
+                <li>
+                    <input type="checkbox" class="form-check-input" id="hasSRAAccessions" name="hasSRAAccessions" [(ngModel)]="params.hasSRAAccessions">
+                    <label class="form-check-label" for="hasSRAAccessions"> has NCBI Sequence Read Archive Accession Numbers</label>
+                </li>
+            </ul>
+        </div>
+
+        <div class="form-floating mb-1">
+            <select class="form-select" id="floatingSelect_expeditions" aria-label="Expeditions" name="marker" [(ngModel)]="params.marker">
+                <option class="fw-secondary" value="" selected>--Select Marker--</option>
+                @for(marker of markers; track marker){
+                    <option [value]="marker.value">{{marker.value}}</option>
+                }
+            </select>
+            <label for="floatingSelect_expeditions">Expeditons <span>*</span></label>
+        </div>
+
+        
+        <div class="form-group search-btn-div">
+            <button class="search-btn"><i class="fa-solid fa-magnifying-glass"></i>SEARCH</button>
+        </div>
+
+    </form>
+</div>
