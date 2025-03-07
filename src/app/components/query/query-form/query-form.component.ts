@@ -8,6 +8,9 @@ import { ProjectService } from '../../../../helpers/services/project.service';
 import { ProjectConfig } from '../../../../helpers/models/projectConfig.model';
 import { QueryService } from '../../../../helpers/services/query.service';
 import { QueryParams } from '../../../../helpers/scripts/queryParam';
+import { ProjectConfigurationService } from '../../../../helpers/services/project-config.service';
+import { ExpeditionService } from '../../../../helpers/services/expedition.service';
+import { MapQueryService } from '../../../../helpers/services/map-query.service';
 
 const SOURCE:Array<any> = [
   'Event.eventID',
@@ -88,6 +91,9 @@ export class QueryFormComponent implements OnDestroy{
   queryService = inject(QueryService);
   projectService = inject(ProjectService);
   networkService = inject(NetworkService);
+  mapQueryService = inject(MapQueryService);
+  expeditionService = inject(ExpeditionService);
+  projectConfigService = inject(ProjectConfigurationService);
 
   // Variables
   destroy$: Subject<any> = new Subject();
@@ -97,75 +103,44 @@ export class QueryFormComponent implements OnDestroy{
   // Other Variables
   isLoading:boolean = false;
   moreSearchOptions:boolean = false;
+  loadingExpeditions:boolean = false;
   allProjects:Array<any> = [];
   teams: Array<any> = [];
   individualProjects: Array<any> = [];
+  expeditions:Array<any> = [];
   queryEntities: Array<string> = ['Event', 'Sample', 'Tissue', 'Fastq', 'Sample_Photo', 'Event_Photo', 'Diagnostics'];
   phylums: Array<any> = [];
   countries: Array<any> = [];
   markers: Array<any> = [];
 
   config!: ProjectConfig;
+  entity:string = '';
+  configNames:Array<any> = [];
   entitiesList: Array<any> = [];
   params:QueryParams = new QueryParams();
 
+  // Extra NgModels
+  selectedTeam:string = '';
+  selectedIndividualProject:string = '';
+
   constructor(){
+    this.entity = this.queryEntities[1];
     this.moreSearchOptions = true;
-    this.initForm();
+    this.getProjects();
     this.getNetworkConfigs();
-    console.log('==========params=====',this.params);
-  }
-
-  initForm(){
-    this.queryForm = this.fb.group({
-      entity: [''],
-      teams: [[]],
-      individualProjects: [[]],
-      expeditions: [[]], // moreSearchOptions == true
-      
-      // All under params
-        queryString: [''],
-          // and moreSearchOptions == false
-          materialSampleID: [''],
-          country:  [''], //dropdown
-          fromYear: [''],
-          toYear: [''],
-          phylum: [''], //dropdown
-          genus: [''],
-          specificEpithet: [''],
-          
-      // and moreSearchOptions == true
-      eventFilters: this.fb.array([]),
-      sampleFilters: this.fb.array([]),
-      tissueFilters: this.fb.array([]),
-      samplePhotoFilters: this.fb.array([]),
-      eventPhotoFilters: this.fb.array([]),
-
-      // All Under params
-        bounds: [{ northEast: { lat: '', lng: '' }, southWest: { lat: '', lng: '' } }],
-        // checkboxes
-        isMappable: [false],
-        hasCoordinateUncertaintyInMeters: [false],
-        hasPermitInfo: [false],
-        hasTissue: [false],
-        hasSamplePhoto: [false],
-        hasEventPhoto: [false],
-        hasFasta: [false],
-        hasSRAAccessions: [false],
-        // Input
-        marker: ['']
-    })
   }
 
   getProjects(){
     this.projectService.getAllProjectsValue().pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-      this.allProjects = res;
+      if(res){
+        this.allProjects = res;
+        this.setTeamNames();
+      }
     })
   }
 
   getNetworkConfigs(){
     this.networkService.getConfig().pipe(take(1), takeUntil(this.destroy$)).subscribe((res:any)=>{
-      console.log(res,'======');
       this.networkConfig = res;
       this.phylums = this.networkConfig.getList('phylum').fields;
       this.countries = this.networkConfig.getList('country').fields;
@@ -183,8 +158,88 @@ export class QueryFormComponent implements OnDestroy{
     this.entitiesList = this.config.entities.map(e => e.conceptAlias);
   }
 
+  setTeamNames(){
+    const names = new Set();
+    this.allProjects.forEach(p => {
+      if (p.projectConfiguration.networkApproved === true) {
+        names.add(p.projectConfiguration.name);
+      }
+    });
+    this.configNames = [...names];
+  }
+
+  onDropdownChange(event:any, item:string){
+    const val = event.target.value.trim();
+    this.setDataRelatedToVariable(item, val);
+  }
+
+  private setDataRelatedToVariable(variable:string, data:any){
+    switch(variable){
+      case 'teams':
+        if(this.individualProjects.length){
+          this.selectedIndividualProject = '';
+          this.individualProjects = this.params.projects = this.expeditions = [];
+        }
+        this.teams = [data];
+        this.allProjects.forEach((p:any)=>{
+          if(p.projectConfiguration.name == data) this.params.projects.push(p);
+        })
+        if(this.teams.length == 1){
+          const project = this.allProjects.find((p:any)=> p.projectConfiguration.name == this.teams[0]);
+          this.callConfigService(project);
+        }
+        else this.setNetworkConfig();
+        break;
+      case 'individualProj':
+        if(this.teams.length){
+          this.selectedTeam = '';
+          this.teams = this.params.projects = [];
+        }
+        this.params.expeditions = [];
+        const projectData = this.allProjects.find(p => p.projectTitle == data);
+        this.individualProjects = [projectData];
+        this.allProjects.forEach((p:any) => {
+          if (p.projectId === projectData.projectId) this.params.projects.push(p);
+        });
+        if (this.individualProjects.length == 1) {
+          this.getExpeditions();
+          this.identifySpecificConfig();
+        } else {
+          this.expeditions = [];
+          this.setNetworkConfig();
+        }
+        break ;
+      case 'expedition':
+        // this.
+        break;
+      default:
+        break;
+    }
+  }
+
+  identifySpecificConfig() {
+    const specificConfigName = this.individualProjects[0].projectConfiguration.name;
+    const matchingProjectForConfigRetrieval = this.allProjects.find(p => p.projectConfiguration.name === specificConfigName);
+    this.callConfigService(matchingProjectForConfigRetrieval);
+  }
+
+  callConfigService(projectMatch:any) {
+    this.projectConfigService.get(projectMatch.projectConfiguration.id).subscribe((res:any) => {
+      this.config = res.config;
+      this.identifySpecificEntities();
+    });
+  }
+
+  getExpeditions() {
+    this.loadingExpeditions = true;
+    this.expeditionService.getAllExpeditions(this.individualProjects[0].projectId).subscribe((data:any) => {
+      this.expeditions = data;
+      this.loadingExpeditions = false;
+    })
+  }
+
   queryJson() {
-    const entity = this.getControlVal('entity') === 'Fastq' ? 'fastqMetadata' : this.getControlVal('entity');
+    const entity = this.entity === 'Fastq' ? 'fastqMetadata' : this.entity;
     this.isLoading = true;
     const entities = this.config.entities
       .filter(e =>
@@ -205,37 +260,26 @@ export class QueryFormComponent implements OnDestroy{
       entity,
       0,
       10000,
-    )
-      // .then(results => {
-      //   this.onNewResults({
-      //     results,
-      //     entity,
-      //     isAdvancedSearch: this.moreSearchOptions,
-      //   });
-      //   this.queryMap.clearBounds();
-      //   this.queryMap.setMarkers(results.data, entity);
-      // })
-      // .catch(response => {
-      //   angular.catcher('Failed to load query results')(response);
-      //   this.onNewResults({ results: undefined });
-      // })
-      // .finally(() => {
-      //   this.toggleLoading({ val: false });
-      // });
+    ).subscribe((res:any)=>{
+      console.log(res);
+      this.mapQueryService.clearBounds();
+      this.mapQueryService.setQueryMarkers(res.data, entity);
+    })
+  }
+
+  drawBoundingBox(){
+    this.mapQueryService.drawBounds((res:any)=>{
+      if(res.northEast && res.southWest) this.params.bounds = res;
+    });
+  }
+
+  clearBoundingBox(){
+    this.mapQueryService.clearBounds();
+    this.params.bounds = null;
   }
 
   ngOnDestroy(): void {
     this.destroy$.next('');
     this.destroy$.complete();
-  }
-
-  // Helper Functions
-  get form(){ return this.queryForm.controls; };
-
-  getControlVal(control:string){ return this.form[control].value; };
-
-  setControlVal(control:string, val:any){
-    this.form[control].setValue(val);
-    this.form[control].updateValueAndValidity();
   }
 }

@@ -34,7 +34,7 @@ export class QueryParams {
   specificEpithet: any;
   fromYear: any;
   toYear: any;
-  bounds: any = { northEast:{ lat: 0, lng: 0}, southWest : { lat: 0, lng: 0} };
+  bounds: any;
 
   // New Variables
   isMappable:boolean = false;
@@ -47,7 +47,7 @@ export class QueryParams {
   hasSRAAccessions:boolean = false;
 
   constructor() {
-    Object.assign(this, defaultParams);
+    // Object.assign(this, defaultParams);
   }
 
   buildQuery(selectEntities?: string[], source?: string): Query {
@@ -113,7 +113,7 @@ export class QueryParams {
       ['hasFasta', '_exists_:fastaSequence.sequence'],
     ];
     conditions.forEach(([key, value]) => {
-      if (this[key as keyof this]) builder.add(value);
+      if (this[key as keyof this]) builder.add('and ' +value );
     });
   }
 

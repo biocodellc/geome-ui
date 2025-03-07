@@ -17,7 +17,7 @@
         
         <div class="p-0 pe-2" [ngClass]="isSidebarVisible ? 'col-lg-8' : 'col-lg-12'">
             <div [ngClass]="active == 'map' ? '' : 'w-0 h-0 overflow-hidden'">
-                <div id="map" style="min-height: calc(100vh - 130px); width: 100%;"></div>
+                <app-map />
             </div>
             <div class="custom-table-container" [ngClass]="active != 'map' ? '' : 'w-0 h-0 overflow-hidden'">
                 <p class="fw-bold">Total Number of Results: 574</p>

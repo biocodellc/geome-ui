@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -45,7 +46,6 @@ export class AuthenticationService {
         accessToken: userData.access_token,
         refreshToken: userData.refresh_token,
         oAuthTimestamp: new Date().getTime(),
-        oAuthExpTimestamp: new Date().getTime() + (60 * 60 * 1000),
         ...this.getUserFromStorage()
       }
       localStorage.setItem( this.storageKey, btoa(JSON.stringify(user)) );
@@ -81,9 +81,9 @@ export class AuthenticationService {
   }
 
   isTokenTimeExpired(user:any):boolean{
-    if(!user || !user.accessToken || !user.oAuthTimestamp || !user.oAuthExpTimestamp) return true
+    if(!user || !user.accessToken || !user.oAuthTimestamp) return true
     const currentTime = new Date().getTime();
-    const expTime = user.oAuthExpTimestamp;
+    const expTime = environment.authTimeout;
     if(expTime > currentTime - 2000) return false
     else return true;
   }

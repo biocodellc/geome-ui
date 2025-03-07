@@ -3,6 +3,7 @@
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
 @import "leaflet/dist/leaflet.css";
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic');
 
 input:-webkit-autofill {
     transition: background-color 5000s ease-in-out 0s !important;
@@ -17,7 +18,8 @@ input:-webkit-autofill {
 }
 
 body{
-    font-family: "Roboto", "Helvetica Neue", sans-serif;
+    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    //"Roboto", "Helvetica Neue", sans-serif;
     font-size: 15px;
     line-height: 1.42857;
     background-color: var(--body-background);

@@ -1,0 +1,10 @@
+.btn-check:checked + .btn{
+    --bs-btn-bg: var(--primary-color);
+    --bs-btn-border-color: var(--primary-color);
+    --bs-btn-hover-bg: #1e88e5;
+    --bs-btn-hover-border-color: #1e88e5;
+    --bs-btn-focus-shadow-rgb: 49, 132, 253;
+    --bs-btn-active-bg: #1a87e6;
+    --bs-btn-active-border-color: #1a87e6;
+    --bs-btn-active-color: #fff;
+}

@@ -1,0 +1,15 @@
+<div class="position-relative">
+    <div id="{{mapId}}" style="min-height: calc(100vh - 130px); width: 100%;"></div>
+    <div class="position-absolute" style="top: 10px; right: 10px; z-index: 999">
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" class="btn-check" name="btnradio" id="map" autocomplete="off" checked>
+            <label class="btn btn-light" for="map" (click)="onViewChange('map')">Map</label>
+          
+            <input type="radio" class="btn-check" name="btnradio" id="satellite" autocomplete="off">
+            <label class="btn btn-light" for="satellite" (click)="onViewChange('sat')">Satellite</label>
+          
+            <input type="radio" class="btn-check" name="btnradio" id="oceanBase" autocomplete="off">
+            <label class="btn btn-light" for="oceanBase" (click)="onViewChange('esri')">Ocean Base</label>
+        </div>
+    </div>
+</div>
