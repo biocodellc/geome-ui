@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { MapQueryService } from './map-query.service';
+import { MapQueryService } from '../map-query.service';
 
 describe('MapQueryService', () => {
   let service: MapQueryService;

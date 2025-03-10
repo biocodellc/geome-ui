@@ -1,0 +1,17 @@
+<div class="form-section">
+    <form class="form-section-start">
+        <div class="form-group">
+            <label for="genus">Genus <i class="fas fa-circle-question ms-2 text-secondary"></i></label>
+            <input type="text" autocomplete="off" class="form-control" id="genus" name="anyTerm" placeholder="" [(ngModel)]="params.genus">
+        </div>
+        <div class="form-group">
+            <label for="species">Specific Epithet (species) <i class="fas fa-circle-question ms-2 text-secondary"></i></label>
+            <input type="text" autocomplete="off" class="form-control" id="species" name="anyTerm" placeholder="" [(ngModel)]="params.specificEpithet">
+        </div>
+        <app-map-bounding [params]="params"/>
+
+        <div class="form-group search-btn-div">
+            <button type="button" class="search-btn" (click)="queryJson()"><i class="fa-solid fa-magnifying-glass"></i>SEARCH</button>
+        </div>
+    </form>
+</div>

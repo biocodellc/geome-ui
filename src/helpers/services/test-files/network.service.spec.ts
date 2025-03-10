@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { NetworkService } from './network.service';
+import { NetworkService } from '../network.service';
 
 describe('NetworkService', () => {
   let service: NetworkService;

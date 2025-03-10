@@ -1,0 +1,32 @@
+<div class="d-flex gap-2">
+    <button type="button" (click)="setIdAsDefaultFilter()">+ ADD {{ conceptAlias | uppercase }} FILTER</button>
+    <i class="fas fa-circle-question ms-2 text-secondary"></i>
+</div>
+<div class="d-flex flex-column gap-2 mt-2">
+    @for(item of filter; track item;){
+        <div class="d-flex gap-2 form-group position-relative">
+            <select class="form-control" name="column" [(ngModel)]="params.filters[getColumnIdx(item)].column" style="width: 40%;">
+                <option value="" disabled>--Select-Option-</option>
+                @for(opt of filterOptions; track opt){ <option [value]="opt.column">{{opt.column.split('.')[1]}}</option> }
+            </select>
+            <select class="form-control" name="type" [(ngModel)]="params.filters[getColumnIdx(item)].type" (ngModelChange)="onTypeChange(item)" style="width: 10%;">
+                @for(type of getFilterOptions(item.column).queryTypes; track type){
+                    <option [value]="type">{{type}}</option>
+                }
+            </select>
+            @if(params.filters[getColumnIdx(item)].type != 'has'){
+                @if(getFilterOptions(item.column).newList.length){
+                    <select class="form-control" name="value" [(ngModel)]="params.filters[getColumnIdx(item)].value" style="width: 40%;">
+                        @for(value of getFilterOptions(item.column).newList; track value){
+                            <option [value]="value.value">{{value.value}}</option>
+                        }
+                    </select>
+                }
+                @else{
+                    <input type="text" class="form-control" [(ngModel)]="params.filters[getColumnIdx(item)].value" style="width: 45%;">
+                }
+            }
+            <i class="fas fa-close position-absolute text-danger cursor-pointer" style="right: 8px; top: 8px;" (click)="removeFilter(item)"></i>
+        </div>
+    }
+</div>

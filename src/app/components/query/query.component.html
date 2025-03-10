@@ -12,7 +12,12 @@
     </div>
     <div class="row">
         <div class="p-0 ps-2" [ngClass]="isSidebarVisible ? 'col-lg-4' : 'col-0 overflow-hidden'">
-            <app-query-form />
+            @if(teamQuery){
+                <app-query-form (queryResult)="updateQueryResult($event, 'teamQueryForm')"/>
+            }
+            @else{
+                <app-query-form (queryResult)="updateQueryResult($event, 'queryForm')"/>
+            }
         </div>
         
         <div class="p-0 pe-2" [ngClass]="isSidebarVisible ? 'col-lg-8' : 'col-lg-12'">
@@ -20,45 +25,46 @@
                 <app-map />
             </div>
             <div class="custom-table-container" [ngClass]="active != 'map' ? '' : 'w-0 h-0 overflow-hidden'">
-                <p class="fw-bold">Total Number of Results: 574</p>
-                <table class="custom-table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>MaterialSampleID</th>
-                            <th>EventID</th>
-                            <th>Locality</th>
-                            <th>DecimalLatitude</th>
-                            <th>DecimalLongitude</th>
-                            <th>YearCollected</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>BALI_7722</td>
-                            <td>INDO_123</td>
-                            <td>Horse Reef ARMS site</td>
-                            <td>-8.12787</td>
-                            <td>114.65562</td>
-                            <td>2013</td>
-                        </tr>
-                        <tr>
-                            <td>BALI_7723</td>
-                            <td>INDO_123</td>
-                            <td>Horse Reef ARMS site</td>
-                            <td>-8.12787</td>
-                            <td>114.65562</td>
-                            <td>2013</td>
-                        </tr>
-                        <tr>
-                            <td>BALI_7724</td>
-                            <td>INDO_123</td>
-                            <td>Horse Reef ARMS site</td>
-                            <td>-8.12787</td>
-                            <td>114.65562</td>
-                            <td>2013</td>
-                        </tr>
-                    </tbody>
-                </table>
+                @if(queryResult.length){
+                    <p class="fw-bold">Total Number of Results: {{queryResult.length}}</p>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">MaterialSampleID</th>
+                                <th scope="col">EventID</th>
+                                <th scope="col">Locality</th>
+                                <th scope="col">DecimalLatitude</th>
+                                <th scope="col">DecimalLongitude</th>
+                                <th scope="col">YearCollected</th>
+                                <th scope="col">Phylum</th>
+                                <th scope="col">ScientificName</th>
+                                <th scope="col">ExpeditionCode</th>
+                                <th scope="col">Bcid</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (item of queryResult; track item) {
+                                <tr>
+                                    <td>{{ item.materialSampleID }}</td>
+                                    <td>{{ item.eventID }}</td>
+                                    <td>{{ item.locality }}</td>
+                                    <td>{{ item.decimalLatitude }}</td>
+                                    <td>{{ item.decimalLongitude }}</td>
+                                    <td>{{ item.yearCollected }}</td>
+                                    <td>{{ item.phylum }}</td>
+                                    <td>{{ item.scientificName }}</td>
+                                    <td>{{ item.expeditionCode }}</td>
+                                    <td>{{ item.eventBcid }}</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                @else{
+                    <div class="d-flex justify-content-center">
+                        <p>Click <span class="fw-semibold">Search</span> on sidebar to display query results</p>
+                    </div>
+                }
             </div>
         </div>
 

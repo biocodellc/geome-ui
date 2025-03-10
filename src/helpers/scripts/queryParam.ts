@@ -63,7 +63,7 @@ export class QueryParams {
 
     this.filters.forEach(({ column, value, type }) => {
       if (value || type === 'has') {
-        builder.add('' + this.getFilterQuery(column, value, type));
+        builder.add(this.getFilterQuery(column, value, type));
       }
     });
 
@@ -113,7 +113,7 @@ export class QueryParams {
       ['hasFasta', '_exists_:fastaSequence.sequence'],
     ];
     conditions.forEach(([key, value]) => {
-      if (this[key as keyof this]) builder.add('and ' +value );
+      if (this[key as keyof this]) builder.add(value );
     });
   }
 

@@ -127,7 +127,8 @@ export class QueryBuilder {
   source:any = [];
 
   add(q:string) {
-    this.q += `${q} `;
+    if(this.q && !q.includes('_select_')) this.q += `and ${q} `;
+    else this.q += `${q} `
   }
 
   setSource(source:any) {

@@ -1,0 +1,14 @@
+<div class="my-2">
+    @if(!params?.bounds){
+        <span class="text-primary underline cursor-pointer" (click)="drawBoundingBox()">Draw Bounding Box</span>
+    }
+    @else if(params.bounds?.northEast && params.bounds?.southWest){
+        <div class="d-flex align-items-center">
+            <div class="py-2" style="flex: 1;">
+                <p class="mb-1"><span class="fw-semibold me-1">northEast</span>[ {{params.bounds.northEast.lat | number}}, {{params.bounds.northEast.lng | number}} ]</p>
+                <p class="m-0"><span class="fw-semibold me-1">southWest</span>[ {{params.bounds.southWest.lat | number}}, {{params.bounds.southWest.lng | number}} ]</p>
+            </div>
+            <span class="text-danger cursor-pointer" (click)="clearBoundingBox()">Clear Bounding Box</span>
+        </div>
+    }
+</div>

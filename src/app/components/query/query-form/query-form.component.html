@@ -81,19 +81,19 @@
                 <div>
                     <ul class="form-btns">
                         @if(entitiesList.includes('Event')){
-                            <li><button> + ADD EVENT FILTER</button> <i class="fas fa-circle-question ms-2 text-secondary"></i></li>
+                            <li><app-filter-button [conceptAlias]="'Event'" [params]="params" [currentConfig]="networkConfig"/></li>
                         }
                         @if(entitiesList.includes('Sample')){
-                            <li><button> + ADD SAMPLE FILTER</button> <i class="fas fa-circle-question ms-2 text-secondary"></i></li>
+                            <li><app-filter-button [conceptAlias]="'Sample'" [params]="params" [currentConfig]="networkConfig"/></li>
                         }
                         @if(entitiesList.includes('Tissue')){
-                            <li><button>+ ADD TISSUE FILTER</button> <i class="fas fa-circle-question ms-2 text-secondary"></i></li>
+                            <li><app-filter-button [conceptAlias]="'Tissue'" [params]="params" [currentConfig]="networkConfig"/></li>
                         }
                         @if(entitiesList.includes('Sample_Photo')){
-                            <li><button>+ ADD SAMPLE_PHOTO FILTER</button> <i class="fas fa-circle-question ms-2 text-secondary"></i></li>
+                            <li><app-filter-button [conceptAlias]="'Sample_Photo'" [params]="params" [currentConfig]="networkConfig"/></li>
                         }
                         @if(entitiesList.includes('Event_Photo')){
-                            <li><button>+ ADD EVENT_PHOTO FILTER</button> <i class="fas fa-circle-question ms-2 text-secondary"></i></li>
+                            <li><app-filter-button [conceptAlias]="'Event_Photo'" [params]="params" [currentConfig]="networkConfig"/></li>
                         }
                     </ul>
                 </div>
@@ -101,20 +101,7 @@
     
             <div class="form-group">
                 <label for="exampleFormControlInput1">Filter Options</label>
-                <div class="my-2">
-                    @if(!params.bounds){
-                        <span class="text-primary underline cursor-pointer" (click)="drawBoundingBox()">Draw Bounding Box</span>
-                    }
-                    @else if(params.bounds?.northEast && params.bounds?.southWest){
-                        <div class="d-flex align-items-center">
-                            <div class="py-2" style="flex: 1;">
-                                <p class="mb-1"><span class="fw-semibold me-1">northEast</span>[ {{params.bounds.northEast.lat | number}}, {{params.bounds.northEast.lng | number}} ]</p>
-                                <p class="m-0"><span class="fw-semibold me-1">southWest</span>[ {{params.bounds.southWest.lat | number}}, {{params.bounds.southWest.lng | number}} ]</p>
-                            </div>
-                            <span class="text-danger cursor-pointer" (click)="clearBoundingBox()">Clear Bounding Box</span>
-                        </div>
-                    }
-                </div>
+                <app-map-bounding [params]="params"/>
                 <ul class="check-list f-14">
                     <li>
                         <input type="checkbox" class="form-check-input" id="mappable" name="mappable" [(ngModel)]="params.isMappable">

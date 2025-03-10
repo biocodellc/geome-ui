@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, EventEmitter, inject, OnDestroy, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, take, takeUntil } from 'rxjs';
 import { NetworkService } from '../../../../helpers/services/network.service';
@@ -11,6 +11,8 @@ import { QueryParams } from '../../../../helpers/scripts/queryParam';
 import { ProjectConfigurationService } from '../../../../helpers/services/project-config.service';
 import { ExpeditionService } from '../../../../helpers/services/expedition.service';
 import { MapQueryService } from '../../../../helpers/services/map-query.service';
+import { MapBoundingComponent } from '../../../shared/map-bounding/map-bounding.component';
+import { FilterButtonComponent } from '../filter-button/filter-button.component';
 
 const SOURCE:Array<any> = [
   'Event.eventID',
@@ -80,13 +82,15 @@ const SELECT_ENTITIES:any = {
 @Component({
   selector: 'app-query-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MapBoundingComponent, FilterButtonComponent],
   templateUrl: './query-form.component.html',
   styleUrl: './query-form.component.scss'
 })
 export class QueryFormComponent implements OnDestroy{
+  // Decorators
+  @Output() queryResult:EventEmitter<any> = new EventEmitter();
+
   // Injectors
-  fb = inject(FormBuilder)
   toastr = inject(ToastrService);
   queryService = inject(QueryService);
   projectService = inject(ProjectService);
@@ -97,7 +101,6 @@ export class QueryFormComponent implements OnDestroy{
 
   // Variables
   destroy$: Subject<any> = new Subject();
-  queryForm!: FormGroup;
   networkConfig:any;
 
   // Other Variables
@@ -264,18 +267,8 @@ export class QueryFormComponent implements OnDestroy{
       console.log(res);
       this.mapQueryService.clearBounds();
       this.mapQueryService.setQueryMarkers(res.data, entity);
+      this.queryResult.emit(res.data);
     })
-  }
-
-  drawBoundingBox(){
-    this.mapQueryService.drawBounds((res:any)=>{
-      if(res.northEast && res.southWest) this.params.bounds = res;
-    });
-  }
-
-  clearBoundingBox(){
-    this.mapQueryService.clearBounds();
-    this.params.bounds = null;
   }
 
   ngOnDestroy(): void {
