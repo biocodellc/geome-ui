@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from '../helpers/guard/auth.guard';
 
 export const routes: Routes = [
     {
@@ -60,7 +61,8 @@ export const routes: Routes = [
             },
             {
                 path: 'user/profile',
-                loadComponent: ()=> import('./components/workbench/user-profile/user-profile.component').then(m => m.UserProfileComponent)
+                loadComponent: ()=> import('./components/workbench/user-profile/user-profile.component').then(m => m.UserProfileComponent),
+                canActivate: [authGuard]
             },
             {
                 path: 'template',
@@ -91,12 +93,9 @@ export const routes: Routes = [
                     { path: 'expeditions', loadComponent: ()=>import('./components/workbench/project/project-expedition/project-expedition.component').then(m => m.ProjectExpeditionComponent) },
                     { path: 'members', loadComponent: ()=>import('./components/workbench/project/project-members/project-members.component').then(m => m.ProjectMembersComponent) },
                     { path: 'members/add', loadComponent: ()=>import('./components/workbench/project/add-member/add-member.component').then(m => m.AddMemberComponent) },
-                ]
+                ],
+                canActivate: [authGuard]
             },
-            // {
-            //     path: 'project/settings',
-            //     loadComponent: ()=>import('./components/workbench/project-settings/project-settings.component').then(m => m.ProjectSettingsComponent)
-            // },
             {
                 path: 'config',
                 loadComponent: ()=>import('./components/workbench/project-configuration/project-configuration.component').then(m => m.ProjectConfigurationComponent),
@@ -108,7 +107,8 @@ export const routes: Routes = [
                     { path: 'lists', loadComponent:()=>import('./components/workbench/project-configuration/lists/lists.component').then(m => m.ListsComponent) },
                     { path: 'lists/:id', loadComponent:()=>import('./components/workbench/project-configuration/list-details/list-details.component').then(m => m.ListDetailsComponent) },
                     { path: 'settings', loadComponent:()=>import('./components/workbench/project-configuration/settings/settings.component').then(m => m.SettingsComponent) },
-                ]
+                ],
+                canActivate: [authGuard]
             }
         ]
     },

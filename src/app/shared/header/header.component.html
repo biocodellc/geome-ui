@@ -1,35 +1,7 @@
 <section class="header-container px-2 py-1 container-bg shadow position-relative" style="z-index: 999">
     <div class="d-flex justify-content-between">
         <img src="logo/geome-logo.png" class="header-logo cursor-pointer" height="48px" routerLink="">
-        <div class="d-flex align-items-center gap-2 projectsDropdownMenu">
-            @if(!['/'].includes(currentRouteUrl)){
-                <div ngbDropdown class="d-inline-block p-2">
-                    <button id="projectsDropdown" class="btn primary-text text-eclipse" style="max-width: 300px;" ngbDropdownToggle>{{currentProject?.projectTitle || 'CHOOSE A PROJECT'}}</button>
-                    <div ngbDropdownMenu class="f-14 pt-0" aria-labelledby="projectsDropdown">
-                        <div class="w-100 d-flex justify-content-between mb-2 pb-2 border-bottom" style="padding: 0.75rem;">
-                            <span>Switch Project</span>
-                            @if(currentUser){
-                                <div class="form-check">
-                                    <input class="form-check-input" id="projects" type="checkbox" id="projects" [(ngModel)]="includePublicProj" (change)="onProjectPrefChange($event)">
-                                    <label class="form-check-label" for="projects">Include Public</label>
-                                </div>
-                            }
-                            @else{
-                                <button class="btn btn-outline-secondary btn-sm" [routerLink]="['/login']">SIGN IN</button>
-                            }
-                        </div>
-                        <input type="text" placeholder="Filter Projects" class="form-control mb-2 border-top-0 border-start-0 border-end-0 rounded-0" [(ngModel)]="searchedProject" (ngModelChange)="filterProjectSubject.next('')" style="box-shadow: none;">
-                        @for(project of allFilteredProjects; track project){
-                            <button ngbDropdownItem (click)="onProjectChange(project)" class="my-1">{{ project.projectTitle }}</button>
-                        }
-                        @empty{ <span>No Project Found</span> }
-                    </div>
-                </div>
-            }
-            @else if(currentUser){
-                <button type="button" class="btn btn-primary custom" [routerLink]="['/project/new']">CREATE PROJECT</button>
-            }
-        </div>
+        <app-project-selector [currentUser]="currentUser"/>
         <ul class="d-flex m-0 pe-2 align-items-center gap-3" style="list-style: none;">
             @if(largeDevice){
                 <li class="p-2 f-14 cursor-pointer" routerLink="/about" [routerLinkActive]="'active'">GETTING STARTED</li>

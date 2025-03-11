@@ -1,34 +1,30 @@
 <div class="mt-2">
+    <div class="mb-2">
+        <p class="primary-text" [routerLink]="['/workbench','config','entities']"><i class="fas fa-angle-left me-2"></i> Entities</p>
+    </div>
     <table class="table table-striped">
         <thead>
             <tr>
-                <th scope="col"></th>
-                <th scope="col">Name</th>
-                <th scope="col">Level</th>
-                <th scope="col">Meta Data</th>
+                <th scope="col"><input type="checkbox" name="all_attributes" (change)="onAllCheckboxChange($event)" [checked]="selectedAttUris.length == selectedAttributes.length"></th>
+                <th scope="col">Column</th>
+                <th scope="col">Group</th>
+                <th scope="col">Data Type</th>
+                <th scope="col">Required</th>
+                <th scope="col">SheetOrder</th>
             </tr>
         </thead>
         <tbody>
-            @for (item of detailsList; track item) {
-                <!-- <tr>
-                    <td>
-                        <h6 class="text-primary m-0 mb-1 cursor-pointer"  placement="top" [ngbTooltip]="item.projectTitle" (click)="selectProject(item)">{{item.projectTitle}}</h6>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <p class="m-0 f-12">Latest Activity: {{ item.latestDataModification | date: 'shortDate' }}</p>
-                            <button type="button" class="btn btn-primary custom d-inline f-11" style="padding: 5px 8px;">{{item.projectConfiguration.name}}</button>
-                        </div>
-                    </td>
-                    <td>{{ item.entityStats.SampleCount }}</td>
-                    <td>
-                        @if(item.hasPhotos){ <i class="fas fa-check text-success f-16"></i> }
-                        @else{ <i class="fas fa-times text-danger f-16"></i> }
-                    </td>
-                    <td>
-                        @if(item.hasSRA){ <i class="fas fa-check text-success f-16"></i> }
-                        @else{ <i class="fas fa-times text-danger f-16"></i> }
-                    </td>
-                </tr> -->
+            @for (item of selectedAttributes; track item) {
+                <tr>
+                    <td><input type="checkbox" name="attributes_{{item.column}}" (change)="onSelectChange($event, item)" [checked]="selectedAttUris.includes(item.uri)" [disabled]="requiredUris.includes(item.uri)"></td>
+                    <td>{{ item.column }}</td>
+                    <td>{{ item?.group || 'Default Group' }}</td>
+                    <td>{{ item.dataType }}</td>
+                    <td>{{ requiredUris.includes(item.uri) }}</td>
+                    <td>{{ orderIdxArr.indexOf(item.uri) == -1 ? 'N/A' : orderIdxArr.indexOf(item.uri) }}</td>
+                </tr>
             }
         </tbody>
     </table>
+    <p>{{ selectedAttUris | json }}</p>
 </div>

@@ -4,6 +4,7 @@ import { ProjectService } from '../../../../../helpers/services/project.service'
 import { CommonModule } from '@angular/common';
 import { ProjectConfigurationService } from '../../../../../helpers/services/project-config.service';
 import { ToastrService } from 'ngx-toastr';
+import { DummyDataService } from '../../../../../helpers/services/dummy-data.service';
 
 @Component({
   selector: 'app-expedition-properties',
@@ -16,6 +17,7 @@ export class ExpeditionPropertiesComponent {
   // Injectors
   toastr = inject(ToastrService);
   projectService = inject(ProjectService);
+  dummyDataService = inject(DummyDataService);
   projectConfService = inject(ProjectConfigurationService);
 
   // Variables
@@ -25,6 +27,7 @@ export class ExpeditionPropertiesComponent {
   changedItems: Array<any> = [];
 
   constructor() {
+    this.dummyDataService.loadingState.next(true);
     this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
       if (res) this.getProjectConfigs(res.projectConfiguration.id);
     })
@@ -34,6 +37,7 @@ export class ExpeditionPropertiesComponent {
     this.projectConfService.get(id).pipe(take(1), takeUntil(this.destroy$)).subscribe((res: any) => {
       this.currentProject = res;
       this.metaDataList = this.currentProject.config.expeditionMetadataProperties;
+      this.dummyDataService.loadingState.next(false);
     })
   }
 

@@ -1,10 +1,16 @@
 <div id="sidebar" style="width: 320px; height: calc(100vh - 62px); overflow-y:auto" class="py-3 container-bg shadow">
     <div class="d-flex flex-column">
         @for(item of menuItems; track item){
-            @if(item.alwaysVisible || (currentUser && !item.alwaysVisible)){
-                <button type="button" [routerLink]="[item.route]" class="btn sidebar-item cursor-pointer border-0 p-3 ps-4 text-start f-15">
+            @if(item.alwaysVisible || (!currentProject?.limitedAccess && !item.checkCondition)){
+                <button type="button" (click)="checkAndNavigate(item.route)" class="btn sidebar-item cursor-pointer border-0 p-3 ps-4 text-start f-15">
                     <i class="fas me-2" [ngClass]="item.icon" style="min-width: 30px;"></i>
-                    {{item.name}}
+                    {{ item.route == '/workbench/upload' && !currentUser ? item.otherName : item.name }}
+                </button>
+            }
+            @else if(!currentProject?.limitedAccess && item.checkCondition && permissionArr[item.name]){
+                <button type="button" (click)="checkAndNavigate(item.route)" class="btn sidebar-item cursor-pointer border-0 p-3 ps-4 text-start f-15">
+                    <i class="fas me-2" [ngClass]="item.icon" style="min-width: 30px;"></i>
+                    {{ item.name }}
                 </button>
             }
         }
@@ -12,11 +18,29 @@
         @if(currentUser){
             <h6 class="m-0 text-secondary f-15 p-3">Admin</h6>
             @for(item of adminTabs; track item){
-                <button type="button" [routerLink]="[item.route]" class="btn sidebar-item cursor-pointer border-0 p-3 ps-4 text-start f-15">
-                    <i class="fas me-2" [ngClass]="item.icon" style="min-width: 30px;"></i>
-                    {{item.name}}
-                </button>
+                @if(item.alwaysVisible || (currentUser?.userId === currentProject?.user.userId || currentUser?.userId === currentProject?.projectConfiguration.user.userId) || permissionArr[item.name]){
+                    <button type="button" (click)="checkAndNavigate(item.route)" class="btn sidebar-item cursor-pointer border-0 p-3 ps-4 text-start f-15">
+                        <i class="fas me-2" [ngClass]="item.icon" style="min-width: 30px;"></i>
+                        {{item.name}}
+                    </button>
+                }
             }
         }
     </div>
 </div>
+
+<ng-template #selectProjectModal let-modal>
+    <div class="modal-header border-0 py-2 bg-primary justify-content-center">
+		<h4 class="modal-title fw-semibold" id="modal-basic-title">Select a project</h4>
+	</div>
+	<div class="modal-body p-2 px-4 border-0">
+        <div class="d-flex justify-content-center align-items-center" style="min-height: 120px; min-width: 300px">
+            <app-project-selector [currentUser]="currentUser" (updatingProject)="modal.close()"/>
+        </div>        
+    </div>
+    <div class="modal-footer border-0 pt-0">
+		<div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-outline-danger" (click)="modal.close()">Go Back</button>
+        </div>
+	</div>
+</ng-template>

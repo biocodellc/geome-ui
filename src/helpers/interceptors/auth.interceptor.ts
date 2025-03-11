@@ -4,6 +4,7 @@ import { UserService } from '../services/user.service';
 import { BehaviorSubject, catchError, Observable, switchMap, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from '../services/authentication.service';
+import { DummyDataService } from '../services/dummy-data.service';
 
 let isRefreshing: boolean = false;
 const refreshTokenSubject = new BehaviorSubject<string | null>(null);
@@ -12,6 +13,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthenticationService);
   const userService = inject(UserService);
   const toastr = inject(ToastrService);
+  const dataService = inject(DummyDataService);
   let currentUser = authService.getUserFromStorage();
 
   if (currentUser && currentUser?.accessToken && !req.params.keys().includes('accessToken')) {
@@ -24,6 +26,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         return handle401Error(req, next, authService, userService);
       }
       toastr.error(error.error.usrMessage);
+      dataService.loadingState.next(false);
       return throwError(() => error);
     })
   );

@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { DummyDataService } from '../../../../helpers/services/dummy-data.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,22 +20,22 @@ export class DashboardComponent implements OnDestroy{
   router = inject(Router);
   toastr = inject(ToastrService);
   projectService = inject(ProjectService);
+  dummyDataService = inject(DummyDataService);
 
   // Variables
   private destroy$ = new Subject<void>();
-  isLoading:boolean = false;
   searchedProject:string = '';
   filterProjectSubject:Subject<any> = new Subject();
   allPublicProjects:Array<any> = [];
   filteredPublicProjects:Array<any> = [];
 
   constructor(){
+    this.dummyDataService.loadingState.next(true);
     this.getAllPublicProjects();
     this.filterProjectSubject.pipe(debounceTime(100), takeUntil(this.destroy$)).subscribe(() => this.filterProject())
   }
 
   getAllPublicProjects(){
-    this.isLoading = true;
     this.projectService.getProjectStats(true).pipe(take(1), takeUntil(this.destroy$)).subscribe({
       next: (res:any)=>{
         res = res.map((i:any)=>{
@@ -43,8 +44,9 @@ export class DashboardComponent implements OnDestroy{
           return i;
         })
         this.allPublicProjects = this.filteredPublicProjects = res;
+        this.dummyDataService.loadingState.next(false);
       },
-      error: (err:any)=> this.toastr.error(err.error.usrmessage)
+      error: ()=> this.dummyDataService.loadingState.next(false)
     })
   }
 

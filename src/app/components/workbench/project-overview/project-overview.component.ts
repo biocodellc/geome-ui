@@ -1,10 +1,10 @@
 import { Component, inject, OnDestroy } from '@angular/core';
 import { ProjectService } from '../../../../helpers/services/project.service';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { ExpeditionService } from '../../../../helpers/services/expedition.service';
 import { Subject, take, takeUntil } from 'rxjs';
+import { DummyDataService } from '../../../../helpers/services/dummy-data.service';
 
 @Component({
   selector: 'app-project-overview',
@@ -15,7 +15,7 @@ import { Subject, take, takeUntil } from 'rxjs';
 })
 export class ProjectOverviewComponent implements OnDestroy{
   // Injectables
-  private router = inject(Router);
+  dummyDataService = inject(DummyDataService);
   private projectService = inject(ProjectService);
   private expeditionService = inject(ExpeditionService);
 
@@ -26,9 +26,9 @@ export class ProjectOverviewComponent implements OnDestroy{
   teamUrl:string = '';
   allExpedition:Array<any> = [];
   displayExpedition:Array<any> = [];
-  isLoading:boolean = true;
 
   constructor(){
+    this.dummyDataService.loadingState.next(true);
     const currentUrl = window.location.href.split('?').slice(0,1).join('');
     this.projectService.currentProject$()
     .pipe(takeUntil(this.destroy$))
@@ -46,8 +46,8 @@ export class ProjectOverviewComponent implements OnDestroy{
     this.expeditionService.stats(this.projectDetails.projectId).pipe(take(1), takeUntil(this.destroy$)).subscribe({
       next: (res:any)=>{
         if(res) this.allExpedition = this.displayExpedition = res;
+        this.dummyDataService.loadingState.next(false);
       },
-      complete: ()=> this.isLoading = false
     })
   }
 

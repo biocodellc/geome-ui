@@ -1,0 +1,17 @@
+.loader{
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #7b7b7b8c;
+}
+
+.spinner-border{
+    --bs-spinner-width: 3.5rem;
+    --bs-spinner-height: 3.5rem;
+    --bs-spinner-border-width: 0.45em;
+}

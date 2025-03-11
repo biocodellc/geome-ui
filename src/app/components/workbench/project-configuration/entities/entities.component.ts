@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { NgbPopover, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { DummyDataService } from '../../../../../helpers/services/dummy-data.service';
 
 @Component({
   selector: 'app-entities',
@@ -21,6 +22,7 @@ export class EntitiesComponent implements OnDestroy{
   fb = inject(FormBuilder);
   toastr = inject(ToastrService);
   projectService = inject(ProjectService);
+  dummyDataService = inject(DummyDataService);
   projectConfService = inject(ProjectConfigurationService);
 
   // Variables
@@ -32,7 +34,8 @@ export class EntitiesComponent implements OnDestroy{
   entityForm!:FormGroup;
 
   constructor(){
-    this.initForm()
+    this.dummyDataService.loadingState.next(true);
+    this.initForm();
     this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       this.currentProject = res;
       if(this.currentProject){
@@ -65,6 +68,7 @@ export class EntitiesComponent implements OnDestroy{
     this.projectConfService.get(id).pipe(take(1), takeUntil(this.destroy$)).subscribe((res:any)=>{
       this.currentProjectConfig = res.config;
       this.entitiesList = this.currentProjectConfig.entities;
+      this.dummyDataService.loadingState.next(false);
     })
   }
 

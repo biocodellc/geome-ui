@@ -8,6 +8,7 @@ import { ProjectConfigurationService } from '../../../../../helpers/services/pro
 import { ProjectService } from '../../../../../helpers/services/project.service';
 import { NgbModal, NgbModalModule, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { DummyDataService } from '../../../../../helpers/services/dummy-data.service';
 
 @Component({
   selector: 'app-lists',
@@ -22,6 +23,7 @@ export class ListsComponent {
   toastr = inject(ToastrService);
   modalService = inject(NgbModal);
   projectService = inject(ProjectService);
+  dummyDataService = inject(DummyDataService);
   projectConfService = inject(ProjectConfigurationService);
 
   // Variables
@@ -33,6 +35,7 @@ export class ListsComponent {
   listForm!:FormGroup;
 
   constructor() {
+    this.dummyDataService.loadingState.next(true);
     this.initForm();
     this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
       if (res) this.getProjectConfigs(res.projectConfiguration.id);
@@ -55,6 +58,7 @@ export class ListsComponent {
       this.currentProjectConfig = res.config;
       this.allLists = this.sortList(this.currentProjectConfig.lists);
       console.log(this.allLists);
+      this.dummyDataService.loadingState.next(false);
     })
   }
 

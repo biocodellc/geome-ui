@@ -4,3 +4,7 @@ div#sidebar{
         &:hover{ background-color: #f0f0f0; }
     }
 }
+
+::ng-deep ngb-modal-window.d-block.modal.no-backdrop.fade.show{
+    background-color: #00000080;
+}

@@ -16,10 +16,10 @@
                 </div>
                 <div>
                     <ul class="list-inline mb-0">
-                        <li class="lists-attributes mb-1" [routerLink]="['/workbench','config','entities', entity.conceptAlias,'attributes']">
+                        <li class="lists-attributes mb-1 cursor-pointer" [routerLink]="['/workbench','config','entities', entity.conceptAlias,'attributes']">
                             <span class="badge bg-primary">{{entity.attributes.length}}</span> Attributes
                         </li>
-                        <li class="lists-attributes" [routerLink]="['/workbench','config','entities', entity.conceptAlias, 'rules']">
+                        <li class="lists-attributes cursor-pointer" [routerLink]="['/workbench','config','entities', entity.conceptAlias, 'rules']">
                             <span class="badge bg-success">{{entity.rules.length}}</span> Rules
                         </li>
                     </ul>
