@@ -3,6 +3,7 @@ import { ProjectService } from '../../../../helpers/services/project.service';
 import { Subject, take, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { DummyDataService } from '../../../../helpers/services/dummy-data.service';
 
 @Component({
   selector: 'app-team-overview',
@@ -15,6 +16,7 @@ export class TeamOverviewComponent implements OnDestroy{
   // Injectors
   router = inject(Router);
   projectService = inject(ProjectService);
+  dummyDataService = inject(DummyDataService);
 
   // Variables
   private destroy$ = new Subject<void>();
@@ -23,6 +25,7 @@ export class TeamOverviewComponent implements OnDestroy{
   allProjectsStats:Array<any> = [];
 
   constructor(){
+    this.dummyDataService.loadingState.next(true);
     this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if(res){
         this.currentProject = res;
@@ -45,6 +48,7 @@ export class TeamOverviewComponent implements OnDestroy{
 
   filterStats(){
     this.projectStats = this.allProjectsStats.filter((proj:any)=> proj.projectConfiguration.name == this.currentProject.projectConfiguration.name);
+    this.dummyDataService.loadingState.next(false);
   }
 
   selectProject(project:any){

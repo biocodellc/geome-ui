@@ -1,30 +1,111 @@
 <div class="mt-2">
-    <div class="mb-2">
-        <p class="primary-text" [routerLink]="['/workbench','config','entities']"><i class="fas fa-angle-left me-2"></i> Entities</p>
+    <div class="d-flex justify-content-end me-3 mb-2">
+        <button type="button" class="btn btn-primary custom" (click)="saveConfigs()"><i class="fas fa-upload me-2"></i> Save Config</button>
     </div>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col"><input type="checkbox" name="all_attributes" (change)="onAllCheckboxChange($event)" [checked]="selectedAttUris.length == selectedAttributes.length"></th>
-                <th scope="col">Column</th>
-                <th scope="col">Group</th>
-                <th scope="col">Data Type</th>
-                <th scope="col">Required</th>
-                <th scope="col">SheetOrder</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (item of selectedAttributes; track item) {
+    <div class="mb-2">
+        <p class="primary-text mb-1 cursor-pointer" [routerLink]="['/workbench','config','entities']"><i class="fas fa-angle-left me-2"></i> Entities</p>
+        <p class="mb-0">Editing attributes for entity:<span class="fw-semibold ms-2">{{entity?.conceptAlias}}</span></p>
+    </div>
+    @if(paramData && paramData?.type === 'attributes'){
+        <table class="table table-striped">
+            <thead>
                 <tr>
-                    <td><input type="checkbox" name="attributes_{{item.column}}" (change)="onSelectChange($event, item)" [checked]="selectedAttUris.includes(item.uri)" [disabled]="requiredUris.includes(item.uri)"></td>
-                    <td>{{ item.column }}</td>
-                    <td>{{ item?.group || 'Default Group' }}</td>
-                    <td>{{ item.dataType }}</td>
-                    <td>{{ requiredUris.includes(item.uri) }}</td>
-                    <td>{{ orderIdxArr.indexOf(item.uri) == -1 ? 'N/A' : orderIdxArr.indexOf(item.uri) }}</td>
+                    <th scope="col"><input type="checkbox" name="all_attributes" (change)="onAllCheckboxChange($event)" [checked]="selectedAttUris.length == selectedAttributes.length"></th>
+                    <th scope="col"></th>
+                    <th scope="col">Column</th>
+                    <th scope="col">Group</th>
+                    <th scope="col">Data Type</th>
+                    <th scope="col">Required</th>
+                    <th scope="col" sortable="order" (sort)="onSort($event)">SheetOrder</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-    <p>{{ selectedAttUris | json }}</p>
+            </thead>
+            <tbody>
+                @for (item of selectedAttributes; track item) {
+                    <tr>
+                        <td><input type="checkbox" name="attributes_{{item.column}}" (change)="onSelectChange($event, item)" [checked]="selectedAttUris.includes(item.uri)" [disabled]="requiredUris.includes(item.uri)"></td>
+                        <td class="text-secondary">
+                            @if(selectedAttUris.includes(item.uri)){
+                                <i class="fas fa-arrows-up-down-left-right me-2"></i>
+                                <i class="fas fa-pen-fancy cursor-pointer" (click)="openModal(attEditModal, item)"></i>
+                            }
+                        </td>
+                        <td>{{ item.column }}</td>
+                        <td>{{ item?.group || 'Default Group' }}</td>
+                        <td>{{ item.dataType }}</td>
+                        <td>{{ requiredUris.includes(item.uri) }}</td>
+                        <td>{{ orderIdxArr.indexOf(item.uri) == -1 ? 'N/A' : orderIdxArr.indexOf(item.uri) }}</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    @else{
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Name</th>
+                    <th scope="col" sortable="level" (sort)="onSort($event)">Level</th>
+                    <th scope="col" class="position-relative">Metadata
+                        <button type="button" class="btn btn-sm btn-outline-primary custom border-0 position-absolute" style="right:8px;" (click)="openModal('rule')">
+                            <i class="fas fa-plus me-2"></i> ADD RULE
+                        </button>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (r of rules; track r) {
+                    <tr class="f-14">
+                        <td class="px-3">
+                            <div class="d-flex">
+                                <i class="fas fa-pen-fancy cursor-pointer text-secondary me-2" (click)="openModal('rule', r)"></i>
+                                <i class="fas fa-trash-can cursor-pointer text-danger" (click)="openDeleteModal(r)"></i>
+                            </div>
+                        </td>
+                        <td>{{ r.name }}</td>
+                        <td>{{ r.level }}</td>
+                        <td>
+                            <ul class="m-0 p-0 d-flex flex-wrap gap-2" style="list-style: none;">
+                                @for(item of r.metadata() | keyvalue; track item){
+                                    @if(item.value){
+                                        <li>
+                                            <strong class="text-capitalize">{{ item.key }}:</strong>
+                                            <span>{{ joinMetaData(item.value) }}</span>
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 </div>
+
+<ng-template #attEditModal let-modal>
+	<div class="modal-body p-2 px-4 pt-4 border-0" id="expedition_modal">
+        <form class="custom-fields" [formGroup]="attributeForm">
+            <div class="mb-3">
+                <div class="form-floating mb-1">
+                    <input type="text" formControlName="group" class="form-control" id="floatingGroup" placeholder="group">
+                    <label for="floatingGroup" class="ps-0 fw-semibold">Group</label>
+                </div>
+                <span class="text-secondary f-12">The group this attribute will display under when using the template generator.</span>
+            </div>
+            <div class="mb-3">
+                <div class="form-floating mb-1">
+                    <input type="text" formControlName="definition" class="form-control" id="floatingDef" placeholder="definition">
+                    <label for="floatingDef" class="ps-0 fw-semibold">Definition *</label>
+                </div>
+                <span class="text-secondary f-12">The help text to show for this attribute in the template generator and excel templates</span>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer border-0 pt-0">
+		<div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-outline-primary border-0" (click)="modal.close()">Cancel</button>
+            <button type="button" class="btn btn-outline-primary border-0" (click)="modal.dismiss('save')">Save</button>
+        </div>
+	</div>
+</ng-template>

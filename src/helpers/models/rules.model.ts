@@ -32,6 +32,17 @@ export interface RuleProps {
       this.level = props.level || 'WARNING';
       Object.assign(this, props);
     }
+
+    metadata() {
+      return Object.keys(this).reduce((result:any, k:any) => {
+        if (!['name', 'level'].includes(k)) result[k] = (this as any)[k];
+        return result;
+      }, {});
+    }
+  
+    metadataType(key:any) {
+      return METADATA_TYPES[key] || 'string';
+    }
   
     static newRule(name: string): Rule | undefined {
       return AVAILABLE_RULES.find(rule => rule.name === name);
@@ -51,6 +62,19 @@ export interface RuleProps {
     new Rule({ name: 'ValidForURI', column: undefined }),
     new Rule({ name: 'ValidURL', column: undefined }),
   ];
+
+  const METADATA_TYPES:any = {
+    column: 'column',
+    columns: 'columns',
+    uniqueAcrossProject: 'boolean',
+    listName: 'list',
+    minimumColumn: 'column',
+    maximumColumn: 'column',
+    pattern: 'string',
+    caseInsensitive: 'boolean',
+    range: 'string',
+    otherColumn: 'column',
+  };
   
   export const RULE_LEVELS: string[] = ['ERROR', 'WARNING'];
   

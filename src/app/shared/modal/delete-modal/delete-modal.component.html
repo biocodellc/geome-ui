@@ -3,7 +3,12 @@
 </div>
 <div class="modal-body p-2 px-4 border-0" id="expedition_modal">
     <p class="m-0">
-        Are you sure you want to delete this {{modalFor}}? All associated data and records will be lost.<br> <b>We recommend that you export the data before deleting.</b>
+        @if(modalFor != 'Rule'){
+            Are you sure you want to delete this {{modalFor}}? All associated data and records will be lost.<br> <b>We recommend that you export the data before deleting.</b>
+        }
+        @else if(modalFor == 'Rule'){
+            Are you sure you want to delete this rule?
+        }
     </p>
 </div>
 <div class="modal-footer border-0 pt-0">
