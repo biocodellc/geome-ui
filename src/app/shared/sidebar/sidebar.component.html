@@ -1,4 +1,4 @@
-<div id="sidebar" style="width: 320px; height: calc(100vh - 62px); overflow-y:auto" class="py-3 container-bg shadow">
+<div id="sidebar" [class.mobile-view]="device == 'small'" [class.hidden]="isSidebarHidden" class="py-3 container-bg shadow">
     <div class="d-flex flex-column">
         @for(item of menuItems; track item){
             @if(item.alwaysVisible || (!currentProject?.limitedAccess && !item.checkCondition)){
@@ -28,6 +28,9 @@
         }
     </div>
 </div>
+@if(!isSidebarHidden && device == 'small'){
+    <div class="position-absolute sidebar-overlay"></div>
+}
 
 <ng-template #selectProjectModal let-modal>
     <div class="modal-header border-0 py-2 bg-primary justify-content-center">

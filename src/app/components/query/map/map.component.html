@@ -1,5 +1,5 @@
 <div class="position-relative">
-    <div id="{{mapId}}" style="min-height: calc(100vh - 130px); width: 100%;"></div>
+    <div id="{{mapId}}" class="map-container" style="min-height: calc(100vh - 130px); width: 100%;"></div>
     <div class="position-absolute" style="top: 10px; right: 10px; z-index: 999">
         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
             <input type="radio" class="btn-check" name="btnradio" id="map" autocomplete="off" checked>
@@ -12,4 +12,7 @@
             <label class="btn btn-light" for="oceanBase" (click)="onViewChange('esri')">Ocean Base</label>
         </div>
     </div>
+    <button #t="ngbTooltip" type="button" class="btn btn-light rounded-0 rounded-end position-absolute map-sidebar-toggle" [class.hidden]="!showSidebar" (click)="toggleSidebar(t)" [placement]="showSidebar ? 'top' : 'end'" [ngbTooltip]="showSidebar ? 'hide sidebar' : 'show sidebar'">
+        <i class="fas f-14" [ngClass]="showSidebar ? 'fa-chevron-left' : 'fa-chevron-right'"></i>
+    </button>
 </div>

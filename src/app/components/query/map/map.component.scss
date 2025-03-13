@@ -8,3 +8,15 @@
     --bs-btn-active-border-color: #1a87e6;
     --bs-btn-active-color: #fff;
 }
+
+.map-sidebar-toggle{
+    top: calc(100vh / 2 - 75px);
+    z-index: 999;
+    &.hidden{
+        left: 10px;
+    }
+}
+
+.map-container{
+    transition: all 0.5s;
+}

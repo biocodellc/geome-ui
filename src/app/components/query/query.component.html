@@ -3,7 +3,16 @@
         <div class="col-lg-12">
             <div class="top-tab-sec">
                 <ul class="map-tbl mb-0">
-                    <li class="down-btn"><button><i class="fa-solid fa-download"></i></button></li>
+                    <li class="down-btn" ngbDropdown>
+                        <button type="button" class="btn btn-outline-primary" id="downloadOptions" ngbDropdownToggle>
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <div ngbDropdownMenu aria-labelledby="downloadOptions">
+                            <span ngbDropdownItem (click)="downloadCsv()">CSV Archive</span>
+                            <span ngbDropdownItem (click)="downloadExcel()">Excel Workbook</span>
+                            <span ngbDropdownItem (click)="downloadFasta()">Fasta</span>
+                        </div>
+                    </li>
                     <li class="map-btn1"><button type="button" (click)="active = 'map'">Map</button></li>
                     <li class="map-btn1"><button type="button" (click)="active = 'table'">Table</button></li>
                 </ul>
@@ -11,7 +20,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="p-0 ps-2" [ngClass]="isSidebarVisible ? 'col-lg-4' : 'col-0 overflow-hidden'">
+        <div class="p-0 ps-2" [ngClass]="isSidebarVisible ? 'col-md-4 col-3' : 'w-0 h-0 overflow-hidden'">
             @if(teamQuery){
                 <app-query-form (queryResult)="updateQueryResult($event, 'teamQueryForm')"/>
             }
@@ -20,9 +29,9 @@
             }
         </div>
         
-        <div class="p-0 pe-2" [ngClass]="isSidebarVisible ? 'col-lg-8' : 'col-lg-12'">
+        <div class="p-0 pe-2" [ngClass]="isSidebarVisible ? 'col-md-8' : 'col-md-12'">
             <div [ngClass]="active == 'map' ? '' : 'w-0 h-0 overflow-hidden'">
-                <app-map />
+                <app-map (sidebarToggle)="onSidebarToggle($event)"/>
             </div>
             <div class="custom-table-container" [ngClass]="active != 'map' ? '' : 'w-0 h-0 overflow-hidden'">
                 @if(queryResult.length){

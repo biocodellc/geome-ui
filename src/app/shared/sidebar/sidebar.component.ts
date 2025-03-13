@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
+import { Component, HostListener, inject, Input, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { ProjectService } from '../../../helpers/services/project.service';
-import { Subject, take, takeUntil } from 'rxjs';
+import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { ProjectSelectorComponent } from '../project-selector/project-selector.component';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { DummyDataService } from '../../../helpers/services/dummy-data.service';
@@ -26,7 +26,9 @@ export class SidebarComponent implements OnDestroy{
   destroy$:Subject<any> = new Subject();
   @Input() currentUser:any;
   currentProject:any;
+  device:string = '';
   isLoading:boolean = false;
+  isSidebarHidden:boolean = false;
   menuItems:Array<any> = [
     { name: "View Projects", route: '/workbench/dashboard' , icon: 'fa-list-ul', alwaysVisible: true },
     { name: "View Teams", route: '/workbench/teams-list' , icon: 'fa-users', alwaysVisible: true },
@@ -53,7 +55,14 @@ export class SidebarComponent implements OnDestroy{
     "Team Overview" : false
   };
 
+  @HostListener('window:resize')
+  onResize() {
+    if(window.innerWidth >= 991 ) this.device = 'large';
+    else this.device = 'small';
+  }
+
   constructor(){
+    this.onResize();
     this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       this.currentProject = res;
       if(this.currentProject && !this.currentProject?.limitedAccess){
@@ -63,6 +72,7 @@ export class SidebarComponent implements OnDestroy{
         Object.keys(this.permissionArr).forEach((key:string) => this.permissionArr[key] = false);
       }
     });
+    this.dummyDataService.toggleSidebarSub.pipe(distinctUntilChanged()).subscribe((res:any)=> this.isSidebarHidden = res)
   }
 
   checkItemVisiblity(item:string){

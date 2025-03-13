@@ -709,7 +709,6 @@ section.map-section{
         width: 100%;
         padding: 8px 0px;
         border: none;
-        border-radius: 5px;
         box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
     }
     .down-btn button {
@@ -753,6 +752,7 @@ section.map-section{
     ul.check-list {
         list-style: none;
         padding: 0px;
+        li{ display: flex; }
     }
     .form-section .form-group{
         margin-bottom: 10px;
@@ -761,6 +761,7 @@ section.map-section{
         font-size: 16px;
         padding: 0 0 5px 0;
         font-weight: 600;
+        word-break: break-all;
     }
     
     ul.check-list label {

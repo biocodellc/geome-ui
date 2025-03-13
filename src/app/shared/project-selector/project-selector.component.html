@@ -21,7 +21,7 @@
                 @for(project of allFilteredProjects; track project){
                     <button ngbDropdownItem (click)="onProjectChange(project)" class="my-1">{{ project.projectTitle }}</button>
                 }
-                @empty{ <span>No Project Found</span> }
+                @empty{ <span class="d-block px-3 py-2">No Project Found</span> }
             </div>
         </div>
     }

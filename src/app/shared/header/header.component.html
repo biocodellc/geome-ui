@@ -1,6 +1,11 @@
 <section class="header-container px-2 py-1 container-bg shadow position-relative" style="z-index: 999">
     <div class="d-flex justify-content-between">
-        <img src="logo/geome-logo.png" class="header-logo cursor-pointer" height="48px" routerLink="">
+        <div>
+            @if(isSmallDevice){
+                <button type="button" class="btn btn-light me-3" (click)="openSidebar()"><i class="fas fa-bars"></i></button>
+            }
+            <img src="logo/geome-logo.png" class="header-logo cursor-pointer" height="48px" routerLink="">
+        </div>
         <app-project-selector [currentUser]="currentUser"/>
         <ul class="d-flex m-0 pe-2 align-items-center gap-3" style="list-style: none;">
             @if(largeDevice){

@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpHeaders, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
+import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { BehaviorSubject, catchError, Observable, switchMap, throwError } from 'rxjs';
@@ -25,7 +25,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       if (error.status === 401) {
         return handle401Error(req, next, authService, userService);
       }
-      toastr.error(error.error.usrMessage);
+      toastr.error(error.error.usrMessage || 'Server Error');
       dataService.loadingState.next(false);
       return throwError(() => error);
     })

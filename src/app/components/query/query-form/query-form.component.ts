@@ -267,7 +267,12 @@ export class QueryFormComponent implements OnDestroy{
       console.log(res);
       this.mapQueryService.clearBounds();
       this.mapQueryService.setQueryMarkers(res.data, entity);
-      this.queryResult.emit(res.data);
+      const data = { result: res.data, entities: entities, entity: this.entity };
+      this.queryResult.emit(data);
+    },
+    (err:any) =>{
+      const data = { result: [], entities: entities, entity: this.entity };
+      this.queryResult.emit(data);
     })
   }
 

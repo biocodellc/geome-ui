@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 export class DummyDataService {
 
   loadingState:BehaviorSubject<boolean> = new BehaviorSubject(false);
+  toggleSidebarSub:BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   getHomePageItems(): Array<any> {
     return [

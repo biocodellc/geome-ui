@@ -1,8 +1,29 @@
 div#sidebar{
+    transition: all 0.3s;
+    width: 320px;
+    z-index: 999;
+    overflow-y:auto;
+    height: calc(100vh - 62px);
+    &.mobile-view{
+        position: absolute;
+        &.hidden{
+            width: 0px;
+        }
+    }
     button.sidebar-item{
         color: #2f2f2f;
         &:hover{ background-color: #f0f0f0; }
     }
+}
+
+.sidebar-overlay{
+    height: 100vh;
+    background-color: #9f9f9f85;
+    z-index: 9;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
 }
 
 ::ng-deep ngb-modal-window.d-block.modal.no-backdrop.fade.show{
