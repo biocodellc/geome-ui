@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { DummyDataService } from '../../../../helpers/services/dummy-data.service';
+import { AuthenticationService } from '../../../../helpers/services/authentication.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,18 +22,39 @@ export class DashboardComponent implements OnDestroy{
   toastr = inject(ToastrService);
   projectService = inject(ProjectService);
   dummyDataService = inject(DummyDataService);
+  authService = inject(AuthenticationService);
 
   // Variables
   private destroy$ = new Subject<void>();
+  currentUser:any;
   searchedProject:string = '';
   filterProjectSubject:Subject<any> = new Subject();
+  userProjects:Array<any> = [];
   allPublicProjects:Array<any> = [];
   filteredPublicProjects:Array<any> = [];
 
   constructor(){
     this.dummyDataService.loadingState.next(true);
+    this.getUserProjects();
     this.getAllPublicProjects();
+    this.authService.currentUser.pipe(takeUntil(this.destroy$)).subscribe(x => this.currentUser = x);
     this.filterProjectSubject.pipe(debounceTime(100), takeUntil(this.destroy$)).subscribe(() => this.filterProject())
+  }
+
+  getUserProjects(){
+    this.projectService.userProjectSubject.pipe(takeUntil(this.destroy$)).subscribe({
+      next: (res:any) => {
+        console.log(res);
+        if(res){
+          res = res.map((i:any)=>{
+            i.hasPhotos = i?.entityStats?.Sample_PhotoCount > 0 || i?.entityStats?.Event_PhotoCount > 0;
+            i.hasSRA = i?.entityStats?.fastqMetadataCount > 0;
+            return i;
+          })
+          this.userProjects = res;
+        }
+      }
+    })
   }
 
   getAllPublicProjects(){

@@ -1,3 +1,58 @@
+@if(userProjects){
+    <section id="dashboard-container" class="p-3 pt-4 mb-3 container-bg shadow">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="m-0">My Projects</h4>
+                <!-- <div style="min-width: 300px;" class="d-flex align-items-center gap-2">
+                    <i class="fas fa-search f-15" style="margin-top: 6px;"></i>
+                    <div class="form-floating mb-1" style="flex: 1;">
+                        <input type="text" [(ngModel)]="searchedProject" (ngModelChange)="filterProjectSubject.next('')" class="form-control f-15" id="floatingName" placeholder="username">
+                        <label for="floatingName" class="ps-0">Filter Project</label>
+                    </div>
+                </div> -->
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Samples</th>
+                        <th scope="col">Has SRA</th>
+                        <th scope="col">Has Photos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (item of userProjects; track item.projectId) {
+                        <tr>
+                            <td>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-primary m-0 mb-1 cursor-pointer"  placement="top" [ngbTooltip]="item.projectTitle" (click)="selectProject(item)">{{item.projectTitle}}</h6>
+                                        <p class="m-0 f-12">Latest Activity: {{ item.latestDataModification | date: 'shortDate' }}</p>
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        @if(item?.user.userId == currentUser?.userId){
+                                            <button type="button" class="btn btn-dark btn-sm d-inline f-11 mb-2" style="padding: 5px 8px;">Admin</button>
+                                        }
+                                        <button type="button" class="btn btn-primary custom d-inline f-11" style="padding: 5px 8px;">{{item.projectConfiguration.name}} Team</button>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ item?.entityStats?.SampleCount || 0 }}</td>
+                            <td>
+                                @if(item.hasPhotos){ <i class="fas fa-check text-success f-16"></i> }
+                                @else{ <i class="fas fa-times text-danger f-16"></i> }
+                            </td>
+                            <td>
+                                @if(item.hasSRA){ <i class="fas fa-check text-success f-16"></i> }
+                                @else{ <i class="fas fa-times text-danger f-16"></i> }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+}
 <section id="dashboard-container" class="p-3 pt-4 mb-3 container-bg shadow">
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -26,7 +81,7 @@
                             <h6 class="text-primary m-0 mb-1 cursor-pointer"  placement="top" [ngbTooltip]="item.projectTitle" (click)="selectProject(item)">{{item.projectTitle}}</h6>
                             <div class="d-flex justify-content-between align-items-center">
                                 <p class="m-0 f-12">Latest Activity: {{ item.latestDataModification | date: 'shortDate' }}</p>
-                                <button type="button" class="btn btn-primary custom d-inline f-11" style="padding: 5px 8px;">{{item.projectConfiguration.name}}</button>
+                                <button type="button" class="btn btn-primary custom d-inline f-11" style="padding: 5px 8px;">{{item.projectConfiguration.name}} Team</button>
                             </div>
                         </td>
                         <td>{{ item.entityStats.SampleCount }}</td>

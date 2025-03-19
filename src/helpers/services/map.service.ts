@@ -1,25 +1,26 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import * as L from 'leaflet';
-import 'leaflet-draw';
-import 'leaflet.markercluster';
 import { environment } from '../../environments/environment';
+declare let L: any; // Declare Leaflet
+// import * as L from 'leaflet';
+// import 'leaflet-draw';
+// import 'leaflet.markercluster';
 
-import 'leaflet-draw/dist/leaflet.draw.css';
-import 'leaflet/dist/leaflet.css';
-import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
-import 'leaflet.markercluster/dist/MarkerCluster.css';
+// import 'leaflet-draw/dist/leaflet.draw.css';
+// import 'leaflet/dist/leaflet.css';
+// import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
+// import 'leaflet.markercluster/dist/MarkerCluster.css';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MapService {
-  private map!: L.Map;
-  private markers: L.Marker[] = [];
-  private clusterLayer!: L.MarkerClusterGroup;
-  private baseLayer!: L.TileLayer;
-  private satelliteLayer!: L.TileLayer;
-  private oceanLayer!: L.TileLayer;
-  private boundingBox!: L.Layer;
+  private map!: any;// L.Map;
+  private markers: any;// L.Marker[] = [];
+  private clusterLayer!: any;// L.MarkerClusterGroup;
+  private baseLayer!: any;// L.TileLayer;
+  private satelliteLayer!: any;// L.TileLayer;
+  private oceanLayer!: any;// L.TileLayer;
+  private boundingBox!: any;// L.Layer;
   private mapboxToken = environment.mapboxToken;
 
   public mapInitialized = new EventEmitter<void>();
@@ -102,9 +103,8 @@ export class MapService {
     this.map.addLayer(this.oceanLayer);
   }
 
-  drawBounds(createCallback: (bounds: { northEast: L.LatLng; southWest: L.LatLng }) => void) {
-    new L.Control.Draw
-    const drawControl = new L.Draw.Rectangle(this.map as L.DrawMap, { metric: false, shapeOptions: { fillColor: 'rgb(51, 136, 255)', fillRule: 'evenodd' } });
+  drawBounds(createCallback: (bounds: { northEast: any; southWest: any }) => void) { //{ northEast: L.LatLng; southWest: L.LatLng }
+    const drawControl = new L.Draw.Rectangle(this.map as any, { metric: false, shapeOptions: { fillColor: 'rgb(51, 136, 255)', fillRule: 'evenodd' } }); //this.map as L.DrawMap
     drawControl.enable();
 
     this.map.on(L.Draw.Event.CREATED, (e: any) => {
