@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import * as L from 'leaflet';
 import { QueryFormComponent } from './query-form/query-form.component';
 import { MapComponent } from './map/map.component';
 import { TeamQueryFormComponent } from './team-query-form/team-query-form.component';
