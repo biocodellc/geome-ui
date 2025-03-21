@@ -48,7 +48,7 @@ export class QueryService {
     const params = new HttpParams({ fromObject: query });
     this.http.get<{ url: string }>(`${this.restRoot}records/${entity}/${format}`, { params }).pipe(
       map(response => {
-        if (!response.url) {
+        if (!response?.url) {
           this.toastr.warning('No results found.');
           return;
         }

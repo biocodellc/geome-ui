@@ -167,7 +167,7 @@
             @else if(displayExpedition.length > 0){
                 <div class="row mb-3">
                     <div class="d-flex justify-content-center">
-                        <button class="btn btn-primary custom" type="button" [disabled]="projectDetails?.limitedAccess">PROJECT CSV ARCHIVE <i class="fas fa-download ms-2"></i></button>
+                        <button class="btn btn-primary custom" type="button" [disabled]="projectDetails?.limitedAccess" (click)="downloadProjectCsv()">PROJECT CSV ARCHIVE <i class="fas fa-download ms-2"></i></button>
                     </div>
                 </div>
                 <table class="table table-striped">
@@ -195,7 +195,7 @@
                                 <td>{{ item.fastqMetadataCount }}</td>
                                 <td><a href="https://n2t.net/{{item.expeditionIdentifier}}">https://n2t.net/{{item.expeditionIdentifier}}</a></td>
                                 <td><i class="fas fa-search text-secondary f-16"></i></td>
-                                <td><i class="fas fa-download text-primary f-16"></i></td>
+                                <td (click)="downloadExpCsv(item.expeditionCode)" class="cursor-pointer"><i class="fas fa-download text-primary f-16"></i></td>
                             </tr>
                         }
                     </tbody>
