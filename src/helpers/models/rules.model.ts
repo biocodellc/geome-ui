@@ -11,6 +11,7 @@ export interface RuleProps {
     range?: string;
     otherColumn?: string;
     uniqueAcrossProject?: boolean;
+    requiredItems?:string[];
   }
   
   export class Rule {
@@ -26,6 +27,7 @@ export interface RuleProps {
     range?: string;
     otherColumn?: string;
     uniqueAcrossProject?: boolean;
+    requiredItems:string[] = [];
   
     constructor(props: RuleProps) {
       this.name = props.name || '';
@@ -50,17 +52,17 @@ export interface RuleProps {
   }
   
   export const AVAILABLE_RULES: Rule[] = [
-    new Rule({ name: 'CompositeUniqueValue', columns: [] }),
-    new Rule({ name: 'ControlledVocabulary', column: undefined, listName: undefined }),
-    new Rule({ name: 'MinMaxNumber', minimumColumn: undefined, maximumColumn: undefined }),
-    new Rule({ name: 'NumericRange', column: undefined, range: undefined }),
-    new Rule({ name: 'RegExp', column: undefined, pattern: undefined, caseInsensitive: true }),
-    new Rule({ name: 'RequiredValueInGroup', columns: [] }),
-    new Rule({ name: 'RequiredValue', columns: [] }),
-    new Rule({ name: 'RequireValueIfOtherColumn', column: undefined, otherColumn: undefined }),
-    new Rule({ name: 'UniqueValue', column: undefined, uniqueAcrossProject: false }),
-    new Rule({ name: 'ValidForURI', column: undefined }),
-    new Rule({ name: 'ValidURL', column: undefined }),
+    new Rule({ name: 'CompositeUniqueValue', columns: [], requiredItems: ['columns'] }),
+    new Rule({ name: 'ControlledVocabulary', column: undefined, listName: undefined, requiredItems: ['column', 'listName'] }),
+    new Rule({ name: 'MinMaxNumber', minimumColumn: undefined, maximumColumn: undefined, requiredItems: ['minimumColumn', 'maximumColumn'] }),
+    new Rule({ name: 'NumericRange', column: undefined, range: undefined, requiredItems: ['column', 'range'] }),
+    new Rule({ name: 'RegExp', column: undefined, pattern: undefined, caseInsensitive: true, requiredItems: ['column', 'pattern', 'caseInsensitive'] }),
+    new Rule({ name: 'RequiredValueInGroup', columns: [], requiredItems: ['columns'] }),
+    new Rule({ name: 'RequiredValue', columns: [], requiredItems: ['columns'] }),
+    new Rule({ name: 'RequireValueIfOtherColumn', column: undefined, otherColumn: undefined, requiredItems: ['column', 'otherColumn'] }),
+    new Rule({ name: 'UniqueValue', column: undefined, uniqueAcrossProject: false, requiredItems: ['column', 'uniqueAcrossProject'] }),
+    new Rule({ name: 'ValidForURI', column: undefined, requiredItems: ['column'] }),
+    new Rule({ name: 'ValidURL', column: undefined, requiredItems: ['column'] }),
   ];
 
   const METADATA_TYPES:any = {

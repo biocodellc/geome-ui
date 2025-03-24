@@ -1,27 +1,72 @@
-# Geome
+# Angular 18 Project - Configuration and API Endpoint Management
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.12.
+This document provides comprehensive instructions on how to configure and manage API endpoints within this Angular 18 project.  This allows you to easily switch between different backend API installations for development, testing, and production environments.
 
-## Development server
+## Project Setup
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+1.  **Clone the repository:**
 
-## Code scaffolding
+    ```
+    git clone <your-repository-url>
+    cd <your-project-directory>
+    ```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+2.  **Install dependencies:**
 
-## Build
+    ```
+    npm install
+    ```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Configuration - Environment Files
 
-## Running unit tests
+Angular projects utilize environment-specific configuration files to manage settings that vary between deployments.  These files are located in the `src/environments/` directory.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+**Key Files:**
 
-## Running end-to-end tests
+* `environment.ts`:  The default configuration file used for development.
+* `environment.prod.ts`:  The configuration file used for production builds.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+**File Structure and Contents**
 
-## Further help
+Each environment file exports a constant object named `environment`.  This object contains key-value pairs representing the application's configuration.  A crucial key is `restRoot`, which defines the base URL of your backend API.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+**Example `environment.ts`:**
+
+```
+export const environment = {
+    production: false,
+    restRoot: 'http://localhost:3000/api',  //  Development API URL
+    otherSetting: 'some-value'
+};
+```
+
+## Modifying the API URL
+
+To change the API endpoint, you need to modify the apiUrl property within the appropriate environment file.
+
+**For development:**
+*   Open the src/environments/environment.development.ts file.
+*   Locate the "restRoot" property.
+*   Replace the existing value with the URL of your development API server.
+
+**For production:**
+
+*   Open the src/environments/environment.ts file.
+*   Locate the "restRoot" property.
+*   Replace the value with the URL of your production API server.
+
+**Running with Different API Endpoints:**
+Angular's build process allows you to specify which environment configuration to use.  This enables you to run the application with different API endpoints without manually changing the environment.ts file every time.
+
+Using the --configuration Flag
+*   For development use:
+    ```
+        ng s --configuration development
+            or
+        ng s
+
+    ```
+*   For production use:
+    ```
+        ng s --configuration production
+    ```

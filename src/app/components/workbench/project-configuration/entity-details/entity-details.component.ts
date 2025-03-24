@@ -225,9 +225,14 @@ export class EntityDetailsComponent implements OnDestroy{
   saveConfigs(){
     this.dummyDataService.loadingState.next(true);
     const projectData = { ...this.currentProject };
-    const updatedAttributes = this.orderedAttributes.map(uri => this.selectedAttributeMap[uri]);
     const entityIdx = projectData.config.entities.findIndex((item:any) => item.conceptAlias == this.entity.conceptAlias);
-    projectData.config.entities[entityIdx].attributes = updatedAttributes;
+    if(this.paramData.type == 'rules'){
+      projectData.config.entities[entityIdx].rules = [ ...this.rules ];
+    }
+    else if(this.paramData.type == 'attributes'){
+      const updatedAttributes = this.orderedAttributes.map(uri => this.selectedAttributeMap[uri]);
+      projectData.config.entities[entityIdx].attributes = updatedAttributes;
+    }
     this.projectConfService.save(projectData).pipe(take(1), takeUntil(this.destroy$)).subscribe(()=>{
       this.toastr.success('Configs Updated!');
       this.dummyDataService.loadingState.next(false);
@@ -235,9 +240,6 @@ export class EntityDetailsComponent implements OnDestroy{
   }
 
   // =========================================== ATTRIBUTES ====Ends===========================================
-  // =========================================== RULES ====Starts===========================================
-
-  // =========================================== RULES ====Ends===========================================
 
   // Modal
   openModal(content:TemplateRef<any> | string, data?: any | Rule) {
@@ -266,6 +268,9 @@ export class EntityDetailsComponent implements OnDestroy{
         // Updating value in attributes of selectedAttributes
         const idx_2 = this.selectedAttributes.findIndex((att:any) => att.uri == data.uri );
         this.selectedAttributes[idx_2] = updatedData;
+      }
+      else if(res && this.paramData.type == 'rules'){
+        this.rules.push(res);
       }
     })
   }

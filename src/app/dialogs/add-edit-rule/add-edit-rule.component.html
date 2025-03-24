@@ -1,1 +1,113 @@
-<p>add-edit-rule works!</p>
+<div class="modal-header border-0 py-2 bg-primary justify-content-center">
+    <h4 class="modal-title fw-semibold" id="modal-basic-title">{{ currentRule ? currentRule.name +' Rule' : 'New Rule' }}</h4>
+</div>
+<div class="modal-body p-2 px-4 border-0" id="expedition_modal">
+    <form [formGroup]="ruleForm">
+        @if(!currentRule){
+            <div class="mb-3">
+                <div class="form-floating">
+                    <select class="form-select form-select-lg" id="floatingSelect_type" aria-label="type" formControlName="name">
+                        @for(type of modalData?.availableRules || []; track type){
+                            <option [value]="type.name" style="padding:8px;">{{type.name}}</option>
+                        }
+                    </select>
+                    <label for="floatingSelect_type">Rule Type <span>*</span></label>
+                </div>
+            </div>
+        }
+        @else if(formLoaded){
+            <div class="mb-3">
+                <div class="form-floating mb-1">
+                    <select class="form-select form-select-lg" id="floatingSelect_type" aria-label="Plates" formControlName="level">
+                        @for(level of ruleLevels; track level){
+                            <option [value]="level" style="padding:8px;">{{level}}</option>
+                        }
+                    </select>
+                    <label for="floatingSelect_type">Level <span>*</span></label>
+                </div>
+                <span class="text-secondary f-12">If 'Error' then validation will fail and data upload will be prevented</span>
+            </div>
+            @for(key of ruleMetaDataKeys; track key){
+                @switch(currentRule.metadataType(key)){
+                    @case('list'){
+                        <div class="mb-3">
+                            <div class="form-floating mb-1">
+                                <select class="form-select form-select-lg" id="floatingSelect_type" aria-label="Plates" [formControlName]="key">
+                                    @for(list of modalData?.lists || []; track list){
+                                        <option [value]="list" style="padding:8px;">{{list}}</option>
+                                    }
+                                </select>
+                                <label for="floatingSelect_type">{{key}} <span>*</span></label>
+                            </div>
+                            @if(form[key].touched && form[key].invalid){
+                                <span class="warn-text f-12">{{ form[key].hasError('required') ? key + ' is required' : '' }}</span>
+                            }
+                        </div>
+                    }
+                    @case('column'){
+                        <div class="mb-3">
+                            <div class="form-floating mb-1">
+                                <select class="form-select form-select-lg" id="floatingSelect_type" aria-label="Plates" [formControlName]="key">
+                                    @for(col of modalData?.columns || []; track col){
+                                        <option [value]="col" style="padding:8px;">{{col}}</option>
+                                    }
+                                </select>
+                                <label for="floatingSelect_type">{{key}} <span>*</span></label>
+                            </div>
+                            @if(form[key].touched && form[key].invalid){
+                                <span class="warn-text f-12">{{ form[key].hasError('required') ? key + ' is required' : '' }}</span>
+                            }
+                        </div>
+                    }
+                    @case('columns'){
+                        <div class="mb-3">
+                            <span class="text-danger">Should be multi-select</span>
+                            <div class="form-floating mb-1">
+                                <select class="form-select form-select-lg" id="floatingSelect_type" aria-label="Plates" [formControlName]="key">
+                                    @for(col of modalData?.columns || []; track col){
+                                        <option [value]="col" style="padding:8px;">{{col}}</option>
+                                    }
+                                </select>
+                                <label for="floatingSelect_type">{{key}} <span>*</span></label>
+                            </div>
+                            @if(form[key].touched && form[key].invalid){
+                                <span class="warn-text f-12">{{ form[key].hasError('required') ? key + ' is required' : '' }}</span>
+                            }
+                        </div>
+                    }
+                    @case('boolean'){
+                        @if(modalData?.rule){
+                            <div class="mb-3 f-18">
+                                <input type="checkbox" class="form-check-input" id="mappable" name="mappable" [formControlName]="key">
+                                <label class="form-check-label ms-2" for="mappable">{{key}} </label>
+                            </div>
+                        }
+                    }
+                    @case('string'){
+                        <div class="mb-3">
+                            <div class="form-floating mb-1">
+                                <input type="text" [formControlName]="key" class="form-control" id="floatingName" placeholder="username" autocomplete="off">
+                                <label for="floatingName" class="ps-0 fw-semibold">{{key}} *</label>
+                            </div>
+                            @if(form[key].touched && form[key].invalid){
+                                <span class="warn-text f-12">{{ form[key].hasError('required') ? key + ' is required' : '' }}</span>
+                            }
+                        </div>
+                    }
+                    @default{}
+                }
+            }
+        }
+    </form>
+</div>
+<div class="modal-footer border-0 pt-0">
+    <div class="d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-outline-secondary" (click)="activeModal.close()">Cancel</button>
+        @if(currentRule){
+            @if(!modalData?.rule){
+                <button type="button" class="btn btn-primary" (click)="clearRuleData()">ChangeType</button>
+            }
+            <button type="button" class="btn btn-primary" (click)="SaveRule()">{{ !modalData?.rule ? 'Add' : 'Save' }}</button>
+        }
+    </div>
+</div>
