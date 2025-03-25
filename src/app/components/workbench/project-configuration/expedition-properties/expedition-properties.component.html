@@ -1,35 +1,5 @@
 <div class="custom-table-container">
-    <!-- <table class="table table-bordered align-middle custom-table">
-        <thead>
-            <tr>
-                <th></th>
-                <th>Name <span>↑</span></th>
-                <th>Type</th>
-                <th>Required</th>
-                <th><button class="prop-btn"><a href="#" class="text-primary">+ ADD NEW
-                            PROPERTY</a></button></th>
-            </tr>
-        </thead>
-        <tbody>
-            @for
-            <tr>
-                <td>
-                    <span class="action-icon edit-icon"><i
-                            class="fa-solid fa-pencil"></i></span>
-                    <span class="action-icon delete-icon"><i
-                            class="fa-solid fa-trash"></i></span>
-                </td>
-                <td>Test</td>
-                <td>STRING</td>
-                <td>
-                    <input type="checkbox" checked disabled>
-                </td>
-
-            </tr>
-        </tbody>
-    </table> -->
-
-    <div class="d-flex justify-content-end py-3 mb-2">
+    <div class="d-flex justify-content-end mb-2">
         @if(changedItems.length){
             <button type="button" class="btn btn-primary custom" (click)="saveConfig()">
                 <i class="fas fa-upload"></i> Save Config
@@ -42,23 +12,80 @@
                 <th scope="col"></th>
                 <th scope="col">Name</th>
                 <th scope="col">Type</th>
-                <th scope="col">Required</th>
+                <th scope="col" class="position-relative">
+                    Required
+                    <button class="btn btn-outline-primary custom position-absolute" style="top: -2px; right: 8px;" (click)="openModal('add', '',addEditModal)">Add Property</button>
+                </th>
             </tr>
         </thead>
         <tbody>
             @for (item of metaDataList; track item) {
-                <tr class="f-14">
-                    <td>
-                        <div>
-                            <i class="fas fa-pen me-2"></i>
-                            <i class="fas fa-trash-can text-danger"></i>
-                        </div>
-                    </td>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.type }}</td>
-                    <td><input type="checkbox" [checked]="item.required" (change)="onRequireChange($event, item)"></td>
-                </tr>
+                @if(!item?.isDeleted){
+                    <tr class="f-14">
+                        <td>
+                            <div>
+                                <i class="fas fa-pen me-2 cursor-pointer" (click)="openModal('edit', item, addEditModal)"></i>
+                                <i class="fas fa-trash-can text-danger cursor-pointer" (click)="openModal('delete', item)"></i>
+                            </div>
+                        </td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.type }}</td>
+                        <td><input type="checkbox" [checked]="item.required" (change)="onRequireChange($event, item)"></td>
+                    </tr>
+                }
             }
         </tbody>
     </table>
 </div>
+
+<ng-template #addEditModal let-modal>
+	<div class="modal-body p-2 px-4 pt-4 border-0" id="expedition_modal">
+        <form class="custom-fields" [formGroup]="expForm">
+            <div class="mb-3">
+                <div class="form-floating mb-1">
+                    <input type="text" formControlName="name" class="form-control" id="floatingname" placeholder="name" autocomplete="off">
+                    <label for="floatingname" class="ps-0 fw-semibold">Name *</label>
+                </div>
+                @if(form['name'].touched && form['name'].invalid){
+                    <span class="warn-text f-12">Name is required.</span>
+                }
+            </div>
+            <div class="mb-3">
+                <div class="form-floating mb-1">
+                    <select class="form-select form-select-sm" id="floatingSelect_type" aria-label="type" formControlName="type">
+                        @for(type of expTypes; track type){
+                            <option [value]="type" style="padding:8px;">{{type}}</option>
+                        }
+                    </select>
+                    <label for="floatingSelect_type">Property Type *</label>
+                </div>
+            </div>
+            @if(form['type'].value === 'LIST'){
+                <div class="mb-3">
+                    <span class="text-danger">Should be multi-select</span>
+                    <div class="form-floating">
+                        <input type="text" formControlName="values" class="form-control" id="floatingvalues" placeholder="values" autocomplete="off">
+                        <label for="floatingvalues" class="ps-0 fw-semibold">List Values *</label>
+                    </div>
+                </div>
+            }
+            @if(form['type'].value !== 'BOOLEAN'){
+                <div class="mb-3">
+                    <input type="checkbox" class="form-check-input f-18" id="required" name="required" formControlName="required" autocomplete="off">
+                    <label class="form-check-label ms-2" for="required">
+                        <div class="d-flex flex-column f-14">
+                            <span>required ?</span>
+                            <span>Required this property for all expeditions?</span>
+                        </div>
+                    </label>
+                </div>
+            }
+        </form>
+    </div>
+    <div class="modal-footer border-0 pt-0">
+		<div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-outline-primary border-0" (click)="modal.close()">Cancel</button>
+            <button type="button" class="btn btn-outline-primary border-0" (click)="saveExpData()">Save</button>
+        </div>
+	</div>
+</ng-template>

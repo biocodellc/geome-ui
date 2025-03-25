@@ -227,7 +227,11 @@ export class EntityDetailsComponent implements OnDestroy{
     const projectData = { ...this.currentProject };
     const entityIdx = projectData.config.entities.findIndex((item:any) => item.conceptAlias == this.entity.conceptAlias);
     if(this.paramData.type == 'rules'){
-      projectData.config.entities[entityIdx].rules = [ ...this.rules ];
+      const rules = this.rules.map((rule:Rule) =>{
+        delete rule.requiredItems;
+        return rule;
+      })
+      projectData.config.entities[entityIdx].rules = [ ...rules ];
     }
     else if(this.paramData.type == 'attributes'){
       const updatedAttributes = this.orderedAttributes.map(uri => this.selectedAttributeMap[uri]);

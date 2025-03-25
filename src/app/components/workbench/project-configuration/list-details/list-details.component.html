@@ -1,1 +1,78 @@
-<p>list-details works!</p>
+<div class="mt-2">
+    @if(!currentList?.networkList){
+        <div class="d-flex justify-content-end me-3 mb-2">
+            <button type="button" class="btn btn-primary custom" (click)="saveConfigs()"><i class="fas fa-upload me-2"></i> Save Config</button>
+        </div>
+    }
+    <div class="mb-2">
+        <p class="primary-text mb-1 cursor-pointer" [routerLink]="['/workbench','config','lists']"><i class="fas fa-angle-left me-2"></i> Lists</p>
+        <p class="mb-0">Showing fields for list:<span class="fw-semibold ms-2">{{currentList?.alias}}</span></p>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Value</th>
+                <th scope="col">Defined By</th>
+                <th scope="col" class="position-relative">Definition
+                    @if(!currentList?.networkList){
+                        <button type="button" class="btn btn-sm btn-outline-primary custom border-0 position-absolute" style="right:8px;" (click)="openModal('add', '', add_modal)">
+                            <i class="fas fa-plus me-2"></i> ADD FIELD
+                        </button>
+                    }
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (item of allFields; track item) {
+                <tr class="f-14">
+                    <td class="text-secondary" style="width: 30px;">
+                        @if(!currentList?.networkList){
+                            <i class="fas fa-trash-can cursor-pointer text-danger" (click)="openModal('delete', item)"></i>
+                        }
+                    </td>
+                    <td>{{ item.value }}</td>
+                    <td>{{ item?.definedBy}}</td>
+                    <td>{{ item.definition }}</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<ng-template #add_modal let-modal>
+    <div class="modal-header border-0 py-2 bg-primary justify-content-center">
+		<h4 class="modal-title fw-semibold" id="modal-basic-title">New Field</h4>
+	</div>
+	<div class="modal-body p-2 py-3 px-4 border-0" id="expedition_modal">
+        <form class="custom-fields" [formGroup]="fieldForm">
+            <div class="mb-3">
+                <div class="form-floating mb-1">
+                    <input type="text" autocomplete="off" formControlName="value" class="form-control" id="floatingvalue" placeholder="value">
+                    <label for="value" class="ps-0 fw-semibold">Field *</label>
+                </div>
+                @if(form['value'].touched && (form['value'].invalid || isValueExists)){
+                    <span class="warn-text f-12">{{ form['value'].hasError('required') ? 'Field is required.' : 'A Field with this name already exists.' }}</span>
+                }
+            </div>
+            <div class="mb-3">
+                <div class="form-floating">
+                    <input type="text" autocomplete="off" formControlName="definition" class="form-control" id="floatingdefinition" placeholder="definition">
+                    <label for="definition" class="ps-0 fw-semibold">Definition</label>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="form-floating">
+                    <input type="text" autocomplete="off" formControlName="definedBy" class="form-control" id="floatingdefinedBy" placeholder="definedBy">
+                    <label for="definedBy" class="ps-0 fw-semibold">Defined By</label>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer border-0 pt-0">
+		<div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">Cancel</button>
+            <button type="button" class="btn btn-primary custom" (click)="saveField()" [disabled]="form['value'].invalid || isValueExists">Add</button>
+        </div>
+	</div>
+</ng-template>

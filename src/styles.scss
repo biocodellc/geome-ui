@@ -60,6 +60,9 @@ a{ text-decoration: none; }
     text-overflow: ellipsis;
 }
 
+.form-floating > .form-select {
+    padding-top: 1.25rem !important;
+}
 
 // Theme Button
 .btn-primary.custom{

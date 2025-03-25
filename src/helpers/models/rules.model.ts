@@ -27,11 +27,12 @@ export interface RuleProps {
     range?: string;
     otherColumn?: string;
     uniqueAcrossProject?: boolean;
-    requiredItems:string[] = [];
+    requiredItems?:string[];
   
     constructor(props: RuleProps) {
       this.name = props.name || '';
       this.level = props.level || 'WARNING';
+      if(props.requiredItems) this.requiredItems = props.requiredItems;
       Object.assign(this, props);
     }
 

@@ -57,7 +57,6 @@ export class ListsComponent {
       this.currentProject = res;
       this.currentProjectConfig = res.config;
       this.allLists = this.sortList(this.currentProjectConfig.lists);
-      console.log(this.allLists);
       this.dummyDataService.loadingState.next(false);
     })
   }
@@ -97,7 +96,7 @@ export class ListsComponent {
   }
 
   removeList(list:any){
-    const idx = this.allLists.findIndex((item:any)=> item.alias == list.alias && item.addedByUser);
+    const idx = this.allLists.findIndex((item:any)=> item.alias == list.alias && (item.addedByUser || !item.networkList));
     if(idx == -1) return;
     this.allLists = this.allLists.slice(0, idx).concat(this.allLists.slice(idx + 1));
   }

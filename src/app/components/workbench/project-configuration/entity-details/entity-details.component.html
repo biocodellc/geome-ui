@@ -67,7 +67,7 @@
                         <td>
                             <ul class="m-0 p-0 d-flex flex-wrap gap-2" style="list-style: none;">
                                 @for(item of r.metadata() | keyvalue; track item){
-                                    @if(item.value && item.key != 'requiredItems'){
+                                    @if((item.value || item.value == false) && item.key != 'requiredItems'){
                                         <li>
                                             <strong class="text-capitalize">{{ item.key }}:</strong>
                                             <span>{{ joinMetaData(item.value) }}</span>

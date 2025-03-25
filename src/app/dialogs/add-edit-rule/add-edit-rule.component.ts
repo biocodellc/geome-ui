@@ -39,8 +39,8 @@ export class AddEditRuleComponent {
 
   setCurrentRule(rule:Rule, updateValues?:boolean){
     this.currentRule = rule;
-    this.ruleMetaDataKeys = this.currentRule.requiredItems;
-    this.ruleMetaDataKeys.forEach(control => this.addControl(control, control == 'caseInsensitive' ? true: ''));
+    this.ruleMetaDataKeys = this.currentRule?.requiredItems || [];
+    this.ruleMetaDataKeys.forEach(control => this.addControl(control, ['uniqueAcrossProject', 'caseInsensitive'].includes(control) ? false: ''));
     this.formLoaded = true;
     if(updateValues){
       const ruleData:any = { ...rule };
@@ -83,7 +83,10 @@ export class AddEditRuleComponent {
   }
 
   private addControl(controlName:string, val:any){
-    this.ruleForm.addControl(controlName, this.fb.control(val, Validators.required));
+    this.ruleForm.addControl(
+      controlName,
+      this.fb.control(val, ['uniqueAcrossProject', 'caseInsensitive'].includes(controlName) ? [] : Validators.required)
+    );
   }
 
   private removeControl(controlName:string){

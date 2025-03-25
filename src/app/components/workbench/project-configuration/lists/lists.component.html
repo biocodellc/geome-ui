@@ -10,7 +10,7 @@
     @for(item of allLists; track item){
         <ul class="list-group">
             <li class="list-group-box list-section d-flex align-items-center">
-                <i class="fas fa-trash-can text-danger pe-5 cursor-pointer" (click)="removeList(item)" [ngClass]="item?.addedByUser ? 'visible' : 'invisible'"></i>
+                <i class="fas fa-trash-can text-danger pe-5 cursor-pointer" (click)="removeList(item)" [ngClass]="item?.addedByUser || !item.networkList ? 'visible' : 'invisible'"></i>
                 <div class="work-boxes">
                     <span class="event-hed">{{item.alias}}</span>
                     <ul class="work-list mt-2">
@@ -20,7 +20,7 @@
                 </div>
                 <div>
                     <ul class="list-inline mb-0">
-                        <li class="lists-attributes">
+                        <li class="lists-attributes cursor-pointer" [routerLink]="['/workbench','config','lists', item.alias]">
                             <span class="badge bg-primary me-2">{{item.fields?.length || 0}}</span> Fields
                         </li>
                     </ul>

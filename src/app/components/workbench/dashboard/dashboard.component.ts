@@ -44,7 +44,6 @@ export class DashboardComponent implements OnDestroy{
   getUserProjects(){
     this.projectService.userProjectSubject.pipe(takeUntil(this.destroy$)).subscribe({
       next: (res:any) => {
-        console.log(res);
         if(res){
           res = res.map((i:any)=>{
             i.hasPhotos = i?.entityStats?.Sample_PhotoCount > 0 || i?.entityStats?.Event_PhotoCount > 0;
