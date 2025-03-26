@@ -30,125 +30,16 @@
     
                             @for(type of allDataTypes; track type){
                                 @if(checkedTypes.includes(type.name) && !type.name.includes('Fas')){
-                                    <app-upload [sectionData]="{ label: type.name }"/>
+                                    <app-upload [sectionData]="{ label: type.name }" (onFileChange)="handleWorksheetDataChange($event)"/>
                                 }
                             }
     
+                            @if(checkedTypes.includes("Fasta")){
+                                <app-fasta-form  [config]="currentProject?.config" [fastaForm]="fastaData"/>
+                            }
+
                             @if(checkedTypes.includes("Fastq")){
-                                <div class="row bottom-form-section">
-                                    <div class="col-lg-8">
-                                        <div class="form-container FASTQ d-flex flex-column gap-3">
-                                            <div class="input-section">
-                                                <label class="input-label fastq-label">FASTQ Filenames</label>
-                                                <div class="input-med-sec">
-                                                    <input type="file" class="form-control fastq-control" />
-                                                </div>
-                                                <button class="info-btn"><i class="fa-solid fa-circle-question"></i></button>
-                                            </div>
-                                            <div class="input-section">
-                                                <label class="input-label fastq-label">Library Layout</label>
-                                                <div class="btn-group-custom d-flex">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="fileType" id="singleEnd">
-                                                        <label class="form-check-label" for="singleEnd">Single End</label>
-                                                    </div>
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="fileType" id="pairedEnd" checked>
-                                                        <label class="form-check-label" for="pairedEnd">Paired End</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="input-section">
-                                                <label class="input-label fastq-label">Library Strategy</label>
-                                                <div class="input-med-sec">
-                                                    <select class="form-select">
-                                                        <option value="" selected>-- Select a Library Strategy --</option>
-                                                        @for(item of fastq.libraryStrategies; track item){
-                                                            <option [value]="item.value">{{item.value}}</option>
-                                                        }
-                                                    </select>
-                                                </div>
-                                                <button class="info-btn"><i class="fa-solid fa-circle-question"></i></button>
-                                            </div>
-                                            <div class="input-section">
-                                                <label class="input-label fastq-label">Library Source</label>
-                                                <div class="input-med-sec">
-                                                    <select class="form-select">
-                                                        <option value="" selected>-- Select a Library Source --</option>
-                                                        @for(item of fastq.librarySources; track item){
-                                                            <option [value]="item.value">{{item.value}}</option>
-                                                        }
-                                                    </select>
-                                                </div>
-                                                <button class="info-btn"><i class="fa-solid fa-circle-question"></i></button>
-                                            </div>
-                                            <div class="input-section">
-                                                <label class="input-label fastq-label">Library Selection</label>
-                                                <div class="input-med-sec">
-                                                    <select class="form-select">
-                                                        <option value="" selected>-- Select a Library Selection --</option>
-                                                        @for(item of fastq.librarySelections; track item){
-                                                            <option [value]="item.value">{{item.value}}</option>
-                                                        }
-                                                    </select>
-                                                </div>
-                                                <button class="info-btn"><i class="fa-solid fa-circle-question"></i></button>
-                                            </div>
-                                            <div class="input-section">
-                                                <label class="input-label fastq-label">Platform</label>
-                                                <div class="input-med-sec">
-                                                    <select class="form-select" (change)="onPlatformsChange($event)">
-                                                        <option value="" selected>-- Select a Platform --</option>
-                                                        @for(item of fastq.platforms; track item){
-                                                            <option [value]="item.name">{{item.name}}</option>
-                                                        }
-                                                    </select>
-                                                </div>
-                                                <button class="info-btn"><i class="fa-solid fa-circle-question"></i></button>
-                                            </div>
-                        
-                                            <div class="input-section">
-                                                <label class="input-label fastq-label">Instrument Model</label>
-                                                <div class="input-med-sec">
-                                                    <select class="form-select">
-                                                        <option value="" selected>-- Select a Instrument Model --</option>
-                                                        @for(item of fastq.models; track item){
-                                                            <option [value]="item">{{item}}</option>
-                                                        }
-                                                    </select>
-                                                </div>
-                                                <button class="info-btn"><i class="fa-solid fa-circle-question"></i></button>
-                                            </div>
-                        
-                                            <div class="input-section">
-                                                <label class="input-label fastq-label">Protocol citation or website</label>
-                                                <div class="input-med-sec">
-                                                    <input type="text" class="form-control fastq-control" />
-                                                </div>
-                                                <button class="info-btn"><i class="fa-solid fa-circle-question"></i></button>
-                                            </div>
-                        
-                        
-                        
-                        
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="instr-box">
-                                            <h6 class="inst-hed">Instructions:</h6>
-                                            <ul class="intr-list">
-                                                <li>Instructions for loading FASTQ Filenmames to GEOME are contained in the GEOME User Guide
-                                                </li>
-                                                <li>Filenames listed in the FASTQ filenames file must start with the tissueID column value in
-                                                    your Sample metadata file. For example, given a tissueID value of 'sample1': Single End
-                                                    filename values will be sample1.fastq.gz or sample1.fq.gz, and Paired End filenames must
-                                                    have either a (-1 or -2) or (-F or -R) immediately preceding the *.fastq.gz or *.fq.gz
-                                                    names, and valid values will be sample1-1.fq.gz, sample1-2.fq.gz OR sample1-F.fastq.gz,
-                                                    sample1-R.fastq.gz</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
+                                <app-fastq-form [config]="currentProject?.config" [fastqMetadataForm]="fastqMetadataForm" />
                             }
                     
                             @if(currentUser){
@@ -167,7 +58,7 @@
                                             <button class="info-btn"><i class="fa-solid fa-plus"></i></button>
                                         </div>
                         
-                                        <button class="load">LOAD</button>
+                                        <button class="load" type="button" (click)="dataFormattingAndErrorCheck()">LOAD</button>
                                     </div>
                                     <div class="col-lg-4">
                         

@@ -10,10 +10,8 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './upload.component.scss'
 })
 export class UploadComponent {
-  file:any;
   fileName:string = '';
   selectedFile!:File;
-  fileUrl:string = '';
   replaceChecked:boolean = false;
   @Input() sectionData:any;
   @Output() onFileChange:EventEmitter<any> = new EventEmitter();
@@ -22,15 +20,14 @@ export class UploadComponent {
     console.log('=====event====',event.target.files);
     this.selectedFile = event.target.files[0];
     this.fileName = this.selectedFile.name;
-    // const reader:any = new FileReader();
-    // reader.onload = async ()=> this.fileUrl = reader.result;
-    // reader.readAsDataURL(this.selectedFile);
+    const eventData = { worksheet : this.sectionData.label, file:this.selectedFile, reload: false };
+    this.onFileChange.emit(eventData);
   }
 
   fileTypes() {
-    if (this.sectionData.label === 'Workbook') {
-      return ".xls,.xlsx";
-    }
+    if (this.sectionData.label === 'Workbook') return ".xls,.xlsx";
+    else if(this.sectionData.label === 'FASTQ Filenames') return ".txt";
+    else if(this.sectionData.label === 'Fasta Data') return ".fa,.mpfa,.fna,.fsa,.fas,.fasta,.txt";
     return ".txt,.csv,.tsv";
   }
 }

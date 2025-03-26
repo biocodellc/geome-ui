@@ -1,0 +1,39 @@
+<div class="row bottom-form-section">
+    <div class="col-lg-8">
+        @for(item of form; let i=$index; track i;){
+            <div [formGroupName]="i">
+                <div class="form-container FASTQ d-flex flex-column gap-3">
+                    <app-upload [sectionData]="{ label: 'Fasta Data' }" (onFileChange)="fileChanged($event, i)" />
+                    <div class="input-section">
+                        <label class="input-label fastq-label">Marker</label>
+                        <div class="input-med-sec">
+                            <select class="form-select" formControlName="marker">
+                                <option value="" selected>-- Select a Library Strategy --</option>
+                                @for(marker of markers; track marker;){
+                                    <option [value]="marker.value">{{marker.value}}</option>
+                                }
+                            </select>
+                        </div>
+                        <button class="info-btn"><i class="fa-solid fa-circle-question"></i></button>
+                    </div>
+                </div>
+            </div>
+        }
+        <span>{{fastaForm.value | json}}</span>
+    </div>
+    <div class="col-lg-4">
+        <div class="instr-box">
+            <h6 class="inst-hed">Instructions:</h6>
+            <ul class="intr-list">
+                <li>Instructions for loading FASTQ Filenmames to GEOME are contained in the GEOME User Guide
+                </li>
+                <li>Filenames listed in the FASTQ filenames file must start with the tissueID column value in
+                    your Sample metadata file. For example, given a tissueID value of 'sample1': Single End
+                    filename values will be sample1.fastq.gz or sample1.fq.gz, and Paired End filenames must
+                    have either a (-1 or -2) or (-F or -R) immediately preceding the *.fastq.gz or *.fq.gz
+                    names, and valid values will be sample1-1.fq.gz, sample1-2.fq.gz OR sample1-F.fastq.gz,
+                    sample1-R.fastq.gz</li>
+            </ul>
+        </div>
+    </div>
+</div>
