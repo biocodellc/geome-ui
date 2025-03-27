@@ -12,10 +12,11 @@ import { environment } from '../../../../environments/environment';
 // Uploads
 import { ExcelParserService } from '../../../../helpers/services/excel-parser.service';
 import { ToastrService } from 'ngx-toastr';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DataService } from '../../../../helpers/services/data.service';
 import { FastqFormComponent } from './fastq-form/fastq-form.component';
 import { FastaFormComponent } from './fasta-form/fasta-form.component';
+import { DummyDataService } from '../../../../helpers/services/dummy-data.service';
 
 const MULTI_EXPEDITION = 'MULTI_EXPEDITION';
 const EXCEL_MAX_ROWS_TO_PARSE = 10000;
@@ -40,7 +41,7 @@ const defaultResults = {
 @Component({
   selector: 'app-validation',
   standalone: true,
-  imports: [CommonModule, RouterLink, NgbNavModule, UploadComponent, ReactiveFormsModule, FastqFormComponent, FastaFormComponent],
+  imports: [CommonModule, RouterLink, NgbNavModule, UploadComponent, ReactiveFormsModule, FormsModule, FastqFormComponent, FastaFormComponent],
   templateUrl: './validation.component.html',
   styleUrl: './validation.component.scss'
 })
@@ -52,22 +53,22 @@ export class ValidationComponent implements OnDestroy{
   modalService = inject(NgbModal);
   dataService = inject(DataService);
   projectService = inject(ProjectService);
+  excelService = inject(ExcelParserService);
+  dummyDataService = inject(DummyDataService);
   authService = inject(AuthenticationService);
   expeditionService = inject(ExpeditionService);
-  excelService = inject(ExcelParserService);
 
   // Variables
   private destroy$ = new Subject<void>();
   currentUser:any;
   currentProject:any;
   modalRef!:NgbModalRef;
-  isLoading:boolean = true;
-  validateOnly:boolean = true;
+  validateOnly:boolean = false;
   activeTab:string = 'load';
   fastqMetadataForm!:FormGroup;
   allDataTypes:Array<any> = [];
-  worksheetData:Array<any> = [];
-  fastaData:FormArray = this.fb.array([]);
+  worksheetData:Array<any> = [{ worksheet:'Workbook', file: undefined, reload: false }];
+  fastaData:FormGroup = this.fb.group({ fastaArr: this.fb.array([]) });
   allExpeditions:Array<any> = [];
   userExpeditions:Array<any> = [];
   checkedTypes:Array<any> = ['Workbook'];
@@ -76,13 +77,13 @@ export class ValidationComponent implements OnDestroy{
   verifiedCoordinateWorksheets:any[] = [];
 
   constructor(){
+    this.dummyDataService.loadingState.next(true);
     this.authService.currentUser.pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       this.currentUser = res;
       this.validateOnly = !this.currentUser;
     });
     this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if(res){
-        console.log('====current project=====',res);
         this.currentProject = res;
         this.allDataTypes = this.getAvailableDatatypes();
         if(this.allDataTypes.find((type:any) => type.name === 'Fastq')) this.initFastqForm();
@@ -109,9 +110,8 @@ export class ValidationComponent implements OnDestroy{
     .pipe(take(1), takeUntil(this.destroy$)).subscribe({
       next: (res:any)=>{
         if(res) this.allExpeditions = res;
-        this.isLoading = false;
-      },
-      error: (err:any)=> this.isLoading = false
+        this.dummyDataService.loadingState.next(false);
+      }
     })
   }
 
@@ -119,7 +119,6 @@ export class ValidationComponent implements OnDestroy{
     const dataTypes:Array<any> = [
       { name: 'Workbook', isWorksheet: false },
     ];
-    this.worksheetData = [{ worksheet:'Workbook', file: undefined, reload: false }];
 
     this.currentProject.config.entities.forEach((e:any) => {
       let name = e.worksheet;
@@ -145,11 +144,6 @@ export class ValidationComponent implements OnDestroy{
         isRequired: (dt:any) => !dt.Workbook && name === 'Events',
         help: name === 'Events' ? 'An Events worksheet is required if you are creating a new expedition.' : undefined,
       });
-      if(isWorksheet) this.worksheetData.push({
-        worksheet: name,
-        file: undefined,
-        reload: false,
-      })
     });
     return dataTypes;
   }
@@ -162,33 +156,38 @@ export class ValidationComponent implements OnDestroy{
     if(!isChecked){
       const index = this.checkedTypes.findIndex(item => item == type);
       this.checkedTypes = this.checkedTypes.slice(0, index).concat(this.checkedTypes.slice(index + 1));
+      this.removeWorkSheetData(type);
     }
     else if(type == 'Workbook'){
       this.checkedTypes = this.checkedTypes.filter((data:any)=> !worksheets.includes(data));
       this.checkedTypes.push(type);
+      worksheets.forEach(worksheet => this.removeWorkSheetData(worksheet));
+      this.worksheetData.push({ worksheet:'Workbook', file: undefined, reload: false });
     }
     else if(type != 'Workbook' && !type.includes('Fas')){
       this.checkedTypes = this.checkedTypes.filter((data:any)=> data != 'Workbook');
       this.checkedTypes.push(type);
+      this.removeWorkSheetData('Workbook');
+      this.worksheetData.push({ worksheet:type, file: undefined, reload: false });
     }
     else this.checkedTypes.push(type);
   }
 
+  removeWorkSheetData(worksheet:string){
+    const idx = this.worksheetData.findIndex(item => item.worksheet == worksheet);
+      if(idx === -1) return;
+      this.worksheetData = this.worksheetData.slice(0, idx).concat(this.worksheetData.slice(idx + 1));
+  }
+
   onExpeditionChange(event:any){
     const val = event.target.value;
+    this.expeditionCode = val;
   }
 
   async dataFormattingAndErrorCheck() {
     // Show validation errors
-    if(this.checkedTypes.includes("Fastq")){
-      this.fastqMetadataForm.markAllAsTouched();
-      if(this.fastqMetadataForm.invalid) return
-    }
-    if(this.checkedTypes.includes("Fasta")){
-      this.fastaData.markAllAsTouched();
-      if(this.fastaData.invalid) return;
-    }
-    this.uploading = true;
+    if(!this.checkedTypes.length) return;
+
     const reqType = this.checkedTypes.filter(type => type !== 'Fastq' && type !== 'Fasta' );
     for(let type of reqType){
       const data = this.worksheetData.find(data => data.worksheet == type);
@@ -197,7 +196,21 @@ export class ValidationComponent implements OnDestroy{
         return;
       }
     }
+    if(this.checkedTypes.includes("Fastq")){
+      this.fastqMetadataForm.markAllAsTouched();
+      if(this.fastqMetadataForm.invalid) return
+    }
+    if(this.checkedTypes.includes("Fasta")){
+      this.fastaData.markAllAsTouched();
+      if(this.fastaData.invalid) return;
+    }
+
+    if(!this.expeditionCode){
+      this.toastr.warning('Please select expedition!');
+      return;
+    }
     
+    this.uploading = true;
     const data = this.getUploadData();
     const hasReload =
       !this.validateOnly &&
@@ -301,14 +314,15 @@ export class ValidationComponent implements OnDestroy{
   }
 
   validateSubmit(data:any):Promise<any> {
+    console.log(data);
     return Promise.resolve('');
     // Clear the results
     // this.results = Object.assign({}, defaultResults, {
     //   showStatus: true,
     //   status: 'Uploading...',
     // });
-    // this.openResultsModal();
-    // return this.DataService.validate(data)
+    // // this.openResultsModal();   OpenResult Dialog
+    // return this.dataService.validate(data)
     //   .then(
     //     response =>
     //       new Promise(resolve => {
@@ -407,7 +421,8 @@ export class ValidationComponent implements OnDestroy{
       }
     });
     if (this.checkedTypes.includes('Fasta')) {
-      this.fastaData.value.forEach((fd:any) => {
+      const fastaArr = this.fastaData.get('fastaArr') as FormArray;
+      fastaArr.value.forEach((fd:any) => {
         data.dataSourceMetadata.push({
           dataType: 'FASTA',
           filename: fd.file.name,
@@ -448,7 +463,7 @@ export class ValidationComponent implements OnDestroy{
 
   handleWorksheetDataChange(event:any) {
     const {worksheet, file, reload} = event;
-    let data = this.allDataTypes.find(d => d.name === worksheet);
+    let data = this.worksheetData.find(d => d.worksheet === worksheet);
 
     const fileChanged = (!data && file) || data.file !== file;
     if (data) {
@@ -456,7 +471,7 @@ export class ValidationComponent implements OnDestroy{
       data.reload = reload;
     } else {
       data = { worksheet, file, reload };
-      this.allDataTypes.push(data);
+      this.worksheetData.push(data);
     }
 
     if (fileChanged && file) {
@@ -505,8 +520,7 @@ export class ValidationComponent implements OnDestroy{
   }
 
   async handleNewWorksheet(data:any) {
-    const { file } = data;
-    const worksheet = data.name;
+    const { worksheet, file } = data;
     const expeditionCodes = new Set<string>();
     let timedOut = false;
   
@@ -534,57 +548,57 @@ export class ValidationComponent implements OnDestroy{
     };
   
     if (worksheet === 'Workbook') {
-      const parseWorkbook = async () => {
-        return this.excelService.parseWorkbookWithHeaders(file).subscribe(async(response:any)=>{
-          const wb = response;
-          let rowCount = 0;
-          let hasCoordinateWorksheet = false;
-          const worksheets: string[] = [];
-    
-          for (const sheetName of wb.SheetNames) {
-            if (this.setCoordinateWorksheet(sheetName)) {
-              hasCoordinateWorksheet = true;
-            }
-            if (this.currentProject.config.worksheets().includes(sheetName)) {
-              worksheets.push(sheetName);
-            }
-            rowCount += wb.Sheets[sheetName]?.rowCount || 0;
+      const parseWorkbook = async ():Promise<boolean> => {
+        const response = await firstValueFrom(this.excelService.parseWorkbookWithHeaders(file));
+        // .subscribe(async(response:any)=>{})
+        const wb:any = response;
+        let rowCount = 0;
+        let hasCoordinateWorksheet = false;
+        const worksheets: string[] = [];
+  
+        for (const sheetName of wb.SheetNames) {
+          if (this.setCoordinateWorksheet(sheetName)) {
+            hasCoordinateWorksheet = true;
           }
-    
-          let fullWorkbookPromise: Observable<any> | undefined;
-          if (hasCoordinateWorksheet && rowCount <= EXCEL_MAX_ROWS_TO_PARSE) {
-            fullWorkbookPromise = this.excelService.workbookToJson(file);
-            fullWorkbookPromise.subscribe((fullWorkbook:any) => {
-              if (!timedOut && (!this.uploading || this.allDataTypes.every(d => d.file))) {
-                this.verifyCoordinates(worksheet, fullWorkbook);
-                this.coordinateWorksheets.push('Workbook');
+          if (this.currentProject.config.worksheets().includes(sheetName)) {
+            worksheets.push(sheetName);
+          }
+          rowCount += wb.Sheets[sheetName]?.rowCount || 0;
+        }
+  
+        let fullWorkbookPromise: Observable<any> | undefined;
+        if (hasCoordinateWorksheet && rowCount <= EXCEL_MAX_ROWS_TO_PARSE) {
+          fullWorkbookPromise = this.excelService.workbookToJson(file);
+          fullWorkbookPromise.subscribe((fullWorkbook:any) => {
+            if (!timedOut && (!this.uploading || this.allDataTypes.every(d => d.file))) {
+              this.verifyCoordinates(worksheet, fullWorkbook);
+              this.coordinateWorksheets.push('Workbook');
+            }
+          });
+        }
+  
+        let parsedEntireBook = true;
+        if (worksheets.length > 0) {
+          const hasExpeditionCodeSheet = worksheets.some(sheet => wb.Sheets[sheet]?.headers.includes('expeditionCode'));
+  
+          if (hasExpeditionCodeSheet) {
+            parsedEntireBook = rowCount <= EXCEL_MAX_ROWS_TO_PARSE;
+            const opts = parsedEntireBook ? {} : { sheetRows: Math.floor(EXCEL_MAX_ROWS_TO_PARSE / worksheets.length) };
+            fullWorkbookPromise = fullWorkbookPromise || this.excelService.workbookToJson(file, opts);
+  
+            const fullWorkbook:any = await fullWorkbookPromise;
+            if (!timedOut && (!this.uploading || this.allDataTypes.every(d => d.file))) {
+              for (const sheet of worksheets) {
+                const records = fullWorkbook[sheet] || [];
+                records.forEach((record:any) => record.expeditionCode && expeditionCodes.add(record.expeditionCode));
               }
-            });
-          }
-    
-          let parsedEntireBook = true;
-          if (worksheets.length > 0) {
-            const hasExpeditionCodeSheet = worksheets.some(sheet => wb.Sheets[sheet]?.headers.includes('expeditionCode'));
-    
-            if (hasExpeditionCodeSheet) {
-              parsedEntireBook = rowCount <= EXCEL_MAX_ROWS_TO_PARSE;
-              const opts = parsedEntireBook ? {} : { sheetRows: Math.floor(EXCEL_MAX_ROWS_TO_PARSE / worksheets.length) };
-              fullWorkbookPromise = fullWorkbookPromise || this.excelService.workbookToJson(file, opts);
-    
-              const fullWorkbook:any = await fullWorkbookPromise;
-              if (!timedOut && (!this.uploading || this.allDataTypes.every(d => d.file))) {
-                for (const sheet of worksheets) {
-                  const records = fullWorkbook[sheet] || [];
-                  records.forEach((record:any) => record.expeditionCode && expeditionCodes.add(record.expeditionCode));
-                }
-              }
             }
-          } else {
-            showError(`Failed to find one of the following worksheets: ${this.currentProject.config.worksheets().join(', ')}`);
           }
-    
-          return parsedEntireBook;
-        })
+        } else {
+          showError(`Failed to find one of the following worksheets: ${this.currentProject.config.worksheets().join(', ')}`);
+        }
+  
+        return Promise.resolve(parsedEntireBook);
       };
   
       const timeout = setTimeout(() => {

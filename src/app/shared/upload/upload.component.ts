@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -9,18 +9,22 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './upload.component.html',
   styleUrl: './upload.component.scss'
 })
-export class UploadComponent {
+export class UploadComponent implements OnChanges{
   fileName:string = '';
   selectedFile!:File;
-  replaceChecked:boolean = false;
+  replaceData:boolean = false;
   @Input() sectionData:any;
+  @Input() onlyValidate!:boolean;
   @Output() onFileChange:EventEmitter<any> = new EventEmitter();
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['onlyValidate']?.currentValue === false) this.replaceData = false;
+  }
+
   onFileSelect(event:any){
-    console.log('=====event====',event.target.files);
     this.selectedFile = event.target.files[0];
     this.fileName = this.selectedFile.name;
-    const eventData = { worksheet : this.sectionData.label, file:this.selectedFile, reload: false };
+    const eventData = { worksheet : this.sectionData.label, file:this.selectedFile, reload: this.replaceData };
     this.onFileChange.emit(eventData);
   }
 

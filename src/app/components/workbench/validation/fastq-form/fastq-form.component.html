@@ -2,24 +2,31 @@
     <div class="col-lg-8">
         <form [formGroup]="fastqMetadataForm">
             <div class="form-container FASTQ d-flex flex-column gap-3">
-                <!-- <div class="input-section">
-                    <label class="input-label fastq-label">FASTQ Filenames</label>
-                    <div class="input-med-sec">
-                        <input type="file" class="form-control fastq-control" />
-                    </div>
-                    <button class="info-btn"><i class="fa-solid fa-circle-question"></i></button>
-                </div> -->
-                <app-upload [sectionData]="{ label: 'FASTQ Filenames' }" (onFileChange)="fileChanged($event)"/>
+                <div>
+                    <app-upload [sectionData]="{ label: 'FASTQ Filenames', mainClass: 'p-2', singleInput: true }" (onFileChange)="fileChanged($event)"/>
+                    @if(form['file'].touched && form['file'].invalid){
+                        <div class="d-flex" style="padding-left: 3rem;">
+                            <span class="d-flex col-3"></span>
+                            <span class="d-flex warn-text f-12 mt-1 col-9">File is required.</span>
+                        </div>
+                    }
+                    @else{
+                        <div class="d-flex" style="padding-left: 3rem;">
+                            <span class="d-flex col-3"></span>
+                            <span class="d-block text-secondary f-12 mt-1 col-9">Upload your list of fastq filenames (1 per line) here</span>
+                        </div>
+                    }
+                </div>
                 <div class="input-section">
                     <label class="input-label fastq-label">Library Layout</label>
                     <div class="btn-group-custom">
                         <div class="d-flex">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="singleEnd" formControlName="libraryLayout">
+                                <input class="form-check-input" type="radio" value="single" id="singleEnd" formControlName="libraryLayout">
                                 <label class="form-check-label" for="singleEnd">Single End</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="pairedEnd" formControlName="libraryLayout">
+                                <input class="form-check-input" type="radio" value="paired" id="pairedEnd" formControlName="libraryLayout">
                                 <label class="form-check-label" for="pairedEnd">Paired End</label>
                             </div>
                         </div>
@@ -39,6 +46,9 @@
                         </select>
                         @if(form['libraryStrategy'].touched && form['libraryStrategy'].invalid){
                             <span class="d-block warn-text f-12 mt-1">LibraryStrategy is required.</span>
+                        }
+                        @else{
+                            <span class="d-block text-secondary f-12 mt-1">For instance if uploading using RADSeq data this is likely to be “WGS”</span>
                         }
                     </div>
                     <button class="info-btn"><i class="fa-solid fa-circle-question"></i></button>
@@ -69,6 +79,9 @@
                         </select>
                         @if(form['librarySelection'].touched && form['librarySelection'].invalid){
                             <span class="d-block warn-text f-12 mt-1">Library Selection is required.</span>
+                        }
+                        @else{
+                            <span class="d-block text-secondary f-12 mt-1">For instance if uploading using RADSeq data this is likely to be “Reduced Representation”</span>
                         }
                     </div>
                     <button class="info-btn"><i class="fa-solid fa-circle-question"></i></button>

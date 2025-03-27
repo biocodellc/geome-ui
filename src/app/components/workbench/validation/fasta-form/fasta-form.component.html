@@ -1,38 +1,53 @@
 <div class="row bottom-form-section">
     <div class="col-lg-8">
-        @for(item of form; let i=$index; track i;){
-            <div [formGroupName]="i">
-                <div class="form-container FASTQ d-flex flex-column gap-3">
-                    <app-upload [sectionData]="{ label: 'Fasta Data' }" (onFileChange)="fileChanged($event, i)" />
-                    <div class="input-section">
-                        <label class="input-label fastq-label">Marker</label>
-                        <div class="input-med-sec">
-                            <select class="form-select" formControlName="marker">
-                                <option value="" selected>-- Select a Library Strategy --</option>
-                                @for(marker of markers; track marker;){
-                                    <option [value]="marker.value">{{marker.value}}</option>
+        <form [formGroup]="fastaForm">
+            <div formArrayName="fastaArr">
+                @for(item of fastaArr?.controls || []; let i=$index; track i;){
+                    <div [formGroupName]="i">
+                        <div class="form-container FASTQ d-flex flex-column gap-3 mb-3">
+                            <div>
+                                <app-upload [sectionData]="{ label: 'Fasta Data', mainClass: i == 0 ? 'border-0 p-2' : ' p-2', singleInput: true }" (onFileChange)="fileChanged($event, i)" />
+                                @if(formControl[i].controls['file'].touched && formControl[i].controls['file'].invalid){
+                                    <div class="d-flex" style="padding-left: 3rem;">
+                                        <span class="d-flex col-3"></span>
+                                        <span class="d-flex warn-text f-12 mt-1 col-9">File is required.</span>
+                                    </div>
                                 }
-                            </select>
+                            </div>
+                            <div class="input-section">
+                                <label class="input-label fastq-label">Marker</label>
+                                <div class="input-med-sec">
+                                    <select class="form-select" formControlName="marker">
+                                        <option value="" selected>-- Select a Library Strategy --</option>
+                                        @for(marker of markers; track marker;){
+                                            <option [value]="marker.value">{{marker.value}}</option>
+                                        }
+                                    </select>
+                                    @if(formControl[i].controls['marker'].touched && formControl[i].controls['marker'].invalid){
+                                        <span class="d-block warn-text f-12 mt-1">Marker is required.</span>
+                                    }
+                                </div>
+                                <button class="info-btn"><i class="fa-solid fa-circle-question"></i></button>
+                            </div>
                         </div>
-                        <button class="info-btn"><i class="fa-solid fa-circle-question"></i></button>
                     </div>
+                }
+                <div class="d-flex justify-content-end gap-2">
+                    @if(fastaArr.value.length > 1){
+                        <button class="btn btn-danger btn-sm rounded-circle" (click)="removeFields()"><i class="fas fa-minus"></i></button>
+                    }
+                    <button class="btn btn-dark btn-sm rounded-circle" (click)="addFields()"><i class="fas fa-plus"></i></button>
                 </div>
             </div>
-        }
-        <span>{{fastaForm.value | json}}</span>
+        </form>
     </div>
     <div class="col-lg-4">
         <div class="instr-box">
             <h6 class="inst-hed">Instructions:</h6>
             <ul class="intr-list">
-                <li>Instructions for loading FASTQ Filenmames to GEOME are contained in the GEOME User Guide
-                </li>
-                <li>Filenames listed in the FASTQ filenames file must start with the tissueID column value in
-                    your Sample metadata file. For example, given a tissueID value of 'sample1': Single End
-                    filename values will be sample1.fastq.gz or sample1.fq.gz, and Paired End filenames must
-                    have either a (-1 or -2) or (-F or -R) immediately preceding the *.fastq.gz or *.fq.gz
-                    names, and valid values will be sample1-1.fq.gz, sample1-2.fq.gz OR sample1-F.fastq.gz,
-                    sample1-R.fastq.gz</li>
+                <li>The name of your fasta sequences must match the tissue identifiers in the metadata file</li>
+                <li>You can include multiple taxa in a single fasta/metadata file</li>
+                <li>Each fasta file can only include data from a single marker type (e.g. CO1, CYB, etc). If you have multiple markers for the same taxa you must upload multiple fasta files for a single metadata file.z</li>
             </ul>
         </div>
     </div>

@@ -47,7 +47,10 @@ export class FastqFormComponent implements OnChanges{
     if(platformData) this.fastq.models = platformData.data
   }
 
-  fileChanged(event:any){}
+  fileChanged(event:any){
+    this.form['file'].setValue(event.file);
+    this.form['file'].updateValueAndValidity();
+  }
 
   get form(){ return this.fastqMetadataForm.controls; }
 

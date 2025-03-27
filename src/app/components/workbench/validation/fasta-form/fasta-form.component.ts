@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProjectConfig } from '../../../../../helpers/models/projectConfig.model';
 import { UploadComponent } from '../../../../shared/upload/upload.component';
 
@@ -16,30 +16,38 @@ export class FastaFormComponent implements OnChanges{
   fb = inject(FormBuilder);
   markers:any[] = [];
   @Input() config!:ProjectConfig;
-  @Input() fastaForm:FormArray = this.fb.array([]);
-  @Output() onFileChange:EventEmitter<any> = new EventEmitter();
-
-  constructor(){
-    this.addFields();
-  }
+  @Input() fastaForm!:FormGroup;
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['config']?.currentValue){
       this.markers = this.config.getList('markers').fields || [];
     }
+    if(changes['fastaForm']) this.addFields();
   }
 
   addFields() {
-    this.fastaForm.push(this.fb.group({
+    const fastaArr = this.fastaArr;
+    fastaArr.push(this.newFields());
+  }
+
+  removeFields(){
+    this.fastaArr.removeAt(this.fastaArr.value.length - 1);
+  }
+
+  newFields() {
+    return this.fb.group({
       file: ['', Validators.required],
       marker: ['', Validators.required]
-    }));
-    console.log(this.fastaForm.value);
+    });
   }
 
   fileChanged(event:any, idx:number){
-    console.log(this.form);
+    const formGrp = this.fastaArr.controls[idx] as FormGroup;
+    formGrp.controls['file'].setValue(event.file);
+    formGrp.controls['file'].updateValueAndValidity();
   }
 
-  get form(){ return this.fastaForm.value; }
+  get formControl(){ return this.fastaArr?.controls as FormGroup[]; };
+
+  get fastaArr():any{ return this.fastaForm?.get('fastaArr') as FormArray; }
 }
