@@ -8,9 +8,9 @@
                     <input type="file" name="file_{{sectionData.label}}" id="file_{{sectionData.label}}" class="form-control fastq-control" placeholder="" hidden (change)=onFileSelect($event) [accept]="fileTypes()"/>
                     <input type="text" [(ngModel)]="fileName" name="file_name_{{sectionData.label}}" class="form-control fastq-control rounded-start-0 bg-secondary-subtle border border-white" style="flex: 1; box-shadow:none" placeholder="" readonly/>
                 </div>
-                @if(!onlyValidate){
+                @if(!validateOnly){
                     <div class="form-check mt-2">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault_{{sectionData.label}}" [(ngModel)]="replaceData">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault_{{sectionData.label}}" [(ngModel)]="replaceData" (change)="onReplcaeChange($event)">
                         <label class="form-check-label" for="flexCheckDefault_{{sectionData.label}}">
                             <span class="d-block mb-1">Replace expedition data <i class="fa-solid fa-circle-question"></i></span>
                             <span>Replace expedition data" should be selected when samples need to be entirely removed from an expedition, or when the materialSampleID field needs to be changed. The replacement will occur for each data worksheet within the loaded workbook. All existing data will be removed and replaced with the Data in the workbook. Data worksheets not found in this workbook will not be removed. It is highly recommended to first run the "Only validate data" option (above) and fix errors, before replacing expedition data. Make sure that critical columns are intact, eg. "Sample_bcid", "Tissue_bcid", "tissue_ID", "tissue_Plate" and "tissue_Well"</span>

@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, inject, Input } from '@angular/core';
+import { Component, HostListener, inject, Input, OnDestroy } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { AuthenticationService } from '../../../helpers/services/authentication.service';
 import { ProjectSelectorComponent } from '../project-selector/project-selector.component';
 import { DummyDataService } from '../../../helpers/services/dummy-data.service';
+import { ProjectService } from '../../../helpers/services/project.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -14,12 +16,16 @@ import { DummyDataService } from '../../../helpers/services/dummy-data.service';
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnDestroy{
   @Input() largeDevice:boolean = false;
   @Input() currentUser:any;
   isSmallDevice:boolean = false;
+  currentProjectId!:string | number;
+  destroy$:Subject<any> = new Subject();
+  userProjects:any[] = [];
 
   // Injectors
+  projectService = inject(ProjectService);
   authService = inject(AuthenticationService);
   dummyDataService = inject(DummyDataService);
 
@@ -32,11 +38,23 @@ export class HeaderComponent {
   constructor(){
     this.onResize();
     if(this.isSmallDevice)  this.dummyDataService.toggleSidebarSub.next(true);
+    this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any) => this.currentProjectId = res?.projectId);
+    this.projectService.userProjectSubject.pipe(takeUntil(this.destroy$)).subscribe((res:any) => this.userProjects = res);
   }
 
   openSidebar(){
     this.dummyDataService.toggleSidebarSub.next(!this.dummyDataService.toggleSidebarSub.value);
   }
 
-  signoutUser(){ this.authService.logoutUser(); }
+  signoutUser(){
+    const isPrivateProj = this.userProjects.find((proj:any) => proj.projectId == this.currentProjectId) ? true : false;
+    if(isPrivateProj) this.projectService.setCurrentProject(null);
+    this.projectService.userProjectSubject.next([]);
+    this.authService.logoutUser();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next('');
+    this.destroy$.complete();
+  }
 }

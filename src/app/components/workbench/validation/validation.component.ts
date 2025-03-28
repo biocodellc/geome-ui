@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, inject, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnDestroy, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthenticationService } from '../../../../helpers/services/authentication.service';
 import { ProjectService } from '../../../../helpers/services/project.service';
@@ -17,6 +17,9 @@ import { DataService } from '../../../../helpers/services/data.service';
 import { FastqFormComponent } from './fastq-form/fastq-form.component';
 import { FastaFormComponent } from './fasta-form/fasta-form.component';
 import { DummyDataService } from '../../../../helpers/services/dummy-data.service';
+import { ResultDialogComponent } from '../../../dialogs/result-dialog/result-dialog.component';
+import { ReplaceDataDialogComponent } from '../../../dialogs/replace-data-dialog/replace-data-dialog.component';
+import { UploadMapDialogComponent } from '../../../dialogs/upload-map-dialog/upload-map-dialog.component';
 
 const MULTI_EXPEDITION = 'MULTI_EXPEDITION';
 const EXCEL_MAX_ROWS_TO_PARSE = 10000;
@@ -59,10 +62,11 @@ export class ValidationComponent implements OnDestroy{
   expeditionService = inject(ExpeditionService);
 
   // Variables
+  @ViewChild('naanDialog') naanDialog!:NgbModalRef;
   private destroy$ = new Subject<void>();
   currentUser:any;
   currentProject:any;
-  modalRef!:NgbModalRef;
+  modalRef!:NgbModalRef | null;
   validateOnly:boolean = false;
   activeTab:string = 'load';
   fastqMetadataForm!:FormGroup;
@@ -196,6 +200,13 @@ export class ValidationComponent implements OnDestroy{
         return;
       }
     }
+
+    const unVerifiedCoords = this.verifiedCoordinateWorksheets.filter(item => !item.isVerified);
+    if(unVerifiedCoords && unVerifiedCoords.length){
+      this.toastr.warning('All coordinates must be verified!');
+      return;
+    }
+
     if(this.checkedTypes.includes("Fastq")){
       this.fastqMetadataForm.markAllAsTouched();
       if(this.fastqMetadataForm.invalid) return
@@ -216,49 +227,33 @@ export class ValidationComponent implements OnDestroy{
       !this.validateOnly &&
       (data.reloadWorkbooks || data.dataSourceMetadata.some((d:any) => d.reload));
 
-    if(hasReload){
-      // Show Dialog then upload
+    if (hasReload) {
+      console.log('=====goes in if=====');
+      const reloadSheets:any[] = [];
+
+      if (data.reloadWorkbooks) {
+        const worksheets = this.currentProject.config.entities
+          .filter((e:any) => e.worksheet)
+          .map((e:any) => e.worksheet);
+        const workbook = await firstValueFrom(this.excelService.workbookToJson(data.workbooks[0]));
+        Object.keys(workbook)
+          .filter(k => worksheets.includes(k))
+          .forEach(s => reloadSheets.push(s));
+      }
+
+      data.dataSourceMetadata.forEach(
+        (wd:any) => wd.reload && reloadSheets.push(wd.metadata.sheetName),
+      );
+
+      const confirm:NgbModalRef = this.modalService.open(ReplaceDataDialogComponent, { animation: true, centered: true, windowClass: 'no-backdrop', backdrop: false })
+      confirm.componentInstance.reloadSheets = reloadSheets;
+
+      confirm.result.then((res:any) => {
+        if(res) this.handleUpload(data);
+      })
+    } else {
       this.handleUpload(data);
     }
-    else this.handleUpload(data);
-
-    // if (hasReload) {
-    //   const reloadSheets = [];
-
-    //   if (data.reloadWorkbooks) {
-    //     const worksheets = this.currentProject.config.entities
-    //       .filter((e:any) => e.worksheet)
-    //       .map((e:any) => e.worksheet);
-    //     const workbook = await firstValueFrom(this.excelService.workbookToJson(data.workbooks[0]));
-    //     Object.keys(workbook)
-    //       .filter(k => worksheets.includes(k))
-    //       .forEach(s => reloadSheets.push(s));
-    //   }
-
-    //   data.dataSourceMetadata.forEach(
-    //     (wd:any) => wd.reload && reloadSheets.push(wd.metadata.sheetName),
-    //   );
-
-    //   const confirm = this.$mdDialog
-    //     .confirm()
-    //     .title('Confirm Data Replace')
-    //     .htmlContent(
-    //       `<br/><p>All existing ${reloadSheets.join(
-    //         ', ',
-    //       )} data will replaced with the data in this upload.</p><p><strong>This will also delete any child data that references the removed rows.</strong></p><p><strong>Are you sure you want to continue?</strong></p>`,
-    //     )
-    //     .ok('Upload')
-    //     .cancel('Cancel');
-
-    //   this.$mdDialog
-    //     .show(confirm)
-    //     .then(() => {
-    //       upload();
-    //     })
-    //     .catch(() => {});
-    // } else {
-    //   upload();
-    // }
   }
 
   handleUpload(uploadData:any) {
@@ -279,7 +274,7 @@ export class ValidationComponent implements OnDestroy{
           this.results.successMessage = 'Successfully Validated!';
         }
         this.results.validation = data;
-        this.modalRef.close();
+        this.modalRef?.close();
         this.activeTab = 'results';
         return false;
       }
@@ -301,7 +296,7 @@ export class ValidationComponent implements OnDestroy{
         showCancelButton: true,
       });
 
-      return this.modalRef.result.then(success => {
+      return this.modalRef?.result.then(success => {
         if (success) {
           this.latestExpeditionCode = uploadData.expeditionCode;
           this.showGenbankDownload = !!uploadData.dataSourceMetadata.find(
@@ -313,36 +308,52 @@ export class ValidationComponent implements OnDestroy{
     });
   }
 
-  validateSubmit(data:any):Promise<any> {
-    console.log(data);
-    return Promise.resolve('');
-    // Clear the results
-    // this.results = Object.assign({}, defaultResults, {
-    //   showStatus: true,
-    //   status: 'Uploading...',
-    // });
-    // // this.openResultsModal();   OpenResult Dialog
-    // return this.dataService.validate(data)
-    //   .then(
-    //     response =>
-    //       new Promise(resolve => {
-    //         const listener = this.DataService.validationStatus(
-    //           response.data.id,
-    //         );
+  openResultsModal(){
+    this.modalRef = this.modalService.open(ResultDialogComponent, { animation: true, centered: true, windowClass: 'no-backdrop', backdrop: false })
+    this.modalRef.componentInstance.results = this.results;
+    this.modalRef.result.then((res:any) =>{
+      if(res == 'continue'){
+        this.continuePromise = this.continueUpload(this.results.uploadId);
+        this.results.showContinueButton = false;
+        this.results.showCancelButton = false;
+        this.results.showValidationMessages = false;
+      }
+    })
+  }
 
-    //         listener.on('status', status => {
-    //           this.results.status = `Uploading...<br/>${status}`;
-    //           this.results.validation.exception = null;
-    //         });
-    //         listener.on('result', resolve);
-    //       }),
-    //   )
-    //   .catch(response => {
-    //     this.results.validation.isValid = false;
-    //     this.results.validation.exception =
-    //       response.data.usrMessage || 'Server Error!';
-    //     this.results.showOkButton = true;
-    //   });
+  async validateSubmit(data: any): Promise<any> {
+    console.log(data);
+    // Clear the results
+    this.results = Object.assign({}, defaultResults, {
+      showStatus: true,
+      status: 'Uploading...',
+    });
+    this.openResultsModal();   //OpenResult Dialog
+
+    // -------------------------------------------------------------
+    try{
+      const validateRes:any = await firstValueFrom(this.dataService.validate(data));
+      return new Promise(resolve => {
+        this.dataService.validationStatus(validateRes.id).pipe(takeUntil(this.destroy$)).subscribe({
+          next: (event: any) => {
+            if (event.result) {
+              console.log('Validation completed:', event.result);
+              resolve(event.result);
+            } else {
+              this.results.status = `Uploading...<br/>${event.status}`;
+              this.results.validation.exception = null;
+              console.log('Validation status:', event.status);
+            }
+          }
+        })
+      })
+    }
+    catch(err:any){
+      this.results.validation.isValid = false;
+      this.results.validation.exception = err.data.usrMessage || 'Server Error!';
+      this.results.showOkButton = true;
+      return Promise.resolve('');
+    }
   }
 
   continueUpload(uploadId:number) {
@@ -351,16 +362,16 @@ export class ValidationComponent implements OnDestroy{
       .subscribe({
         next: ({ data }) => {
           this.results.successMessage = data.message;
-          this.modalRef.close(true);
+          this.modalRef?.close(true);
         },
         error: (err:any)=>{
           console.log('failed ->', err);
-          this.modalRef.close(false);
+          this.modalRef?.close(false);
           this.results.validation.isValid = false;
           this.results.validation.exception =
-          err.data.message ||
-          err.data.error ||
-          err.data.usrMessage ||'Server Error!';
+          err.error?.message ||
+          err.error?.error ||
+          err.error?.usrMessage ||'Server Error!';
         }
       })
   }
@@ -382,6 +393,7 @@ export class ValidationComponent implements OnDestroy{
   // Uploading Functionws and variables
   results:any = defaultResults;
   naan = environment.naan;
+  nValFromFile:number = 0;
   parsing:boolean = false;
   coordinateWorksheets:Array<any>= []
   expeditionCodes:Set<any> = new Set();
@@ -391,6 +403,7 @@ export class ValidationComponent implements OnDestroy{
   uploading:boolean = false;
   latestExpeditionCode:string = ''
   showGenbankDownload:boolean = false;
+  continuePromise:any;
 
   getUploadData() {
     const data:any = {
@@ -479,30 +492,21 @@ export class ValidationComponent implements OnDestroy{
       if (worksheet === 'Workbook') {
         this.parseSpreadsheet(new RegExp(`~naan=[0-9]+~`), 'Instructions', file).subscribe((n:any) => {
           if (this.naan && n && n > 0 && Number(n) !== Number(this.naan)) {
-            console.log("show diallof and on confirmation go achead for handleNewWorksheet");
-            this.handleNewWorksheet(data)
+            this.nValFromFile = n;
 
-            // this.$mdDialog
-            //   .show(
-            //     this.$mdDialog
-            //       .alert('naanDialog')
-            //       .clickOutsideToClose(true)
-            //       .title('Incorrect NAAN')
-            //       .htmlContent(
-            //         `Spreadsheet appears to have been created using a different FIMS/BCID system.
-            //        <br/>
-            //        <br/>
-            //        Spreadsheet says <strong>NAAN = ${n}</strong>
-            //        <br/>
-            //        System says <strong>NAAN = ${naan}</strong>
-            //        <br/>
-            //        <br/>
-            //        Proceed only if you are SURE that this spreadsheet is being called.
-            //        Otherwise, re-load the proper FIMS system or re-generate your spreadsheet template.`,
-            //       )
-            //       .ok('Proceed Anyways'),
-            //   )
-            //   .then(() => this.handleNewWorksheet(data));
+            this.modalRef = this.modalService.open(this.naanDialog, { animation: true, centered: true });
+            this.modalRef.result.then((res:any) => {
+              if(res) this.handleNewWorksheet(data)
+                else{
+                  this.modalRef = null;
+                  this.nValFromFile = 0;
+                }
+            },
+            (err:any) =>{
+              this.nValFromFile = 0;
+              this.modalRef = null;
+            }
+          )
           } else {
             console.log('Going in else condition')
             this.handleNewWorksheet(data);
@@ -550,7 +554,6 @@ export class ValidationComponent implements OnDestroy{
     if (worksheet === 'Workbook') {
       const parseWorkbook = async ():Promise<boolean> => {
         const response = await firstValueFrom(this.excelService.parseWorkbookWithHeaders(file));
-        // .subscribe(async(response:any)=>{})
         const wb:any = response;
         let rowCount = 0;
         let hasCoordinateWorksheet = false;
@@ -663,10 +666,12 @@ export class ValidationComponent implements OnDestroy{
     }
 
     try {
+      const worksheetInfo:any = { worksheet, scope: undefined, isVerified: false };
       const d = workbook.isExcel ? workbook[eventWorksheet] : workbook.default;
       if (!d.some((e:any) => e[latColumn] && e[lngColumn])) {
         this.toastr.error(`We didn't find any coordinates for your ${eventWorksheet} records`);
-        this.verifiedCoordinateWorksheets.push(worksheet);
+        worksheetInfo.isVerified = true;
+        this.verifiedCoordinateWorksheets.push(worksheetInfo);
         return;
       }
 
@@ -684,35 +689,30 @@ export class ValidationComponent implements OnDestroy{
         lngColumn,
         uniqueKey,
       });
-      console.log('=========OPEN MAP UPLOAD DIALOG=======');
-      // const naanDialog = this.$mdDialog('naanDialog') || Promise.resolve(true);
 
-      // naanDialog.then(
-      //   res =>
-      //     res &&
-      //     this.$mdDialog
-      //       .show({
-      //         template:
-      //           '<md-dialog class="upload-map-dialog"><upload-map-dialog layout="column" unique-key="uniqueKey" lat-column="latColumn" lng-column="lngColumn" data="d"></upload-map-dialog></md-dialog>',
-      //         scope,
-      //       })
-      //       .then(() => {
-      //         this.verifiedCoordinateWorksheets.push(worksheet);
-      //       })
-      //       .catch(() => {
-      //         const i = this.verifiedCoordinateWorksheets.findIndex(
-      //           v => v === worksheet,
-      //         );
-      //         if (i > -1) {
-      //           this.verifiedCoordinateWorksheets.splice(i, 1);
-      //         }
-      //       }),
-      // );
+      worksheetInfo.scope = scope;
+      this.verifiedCoordinateWorksheets.push(worksheetInfo);
+      this.openMapDialog(worksheetInfo);
     } catch (e) {
       this.toastr.error('Failed to load samples map');
-      const i = this.verifiedCoordinateWorksheets.findIndex((v:string) => v === worksheet);
+      const i = this.verifiedCoordinateWorksheets.findIndex(v => v.worksheet === worksheet);
       if (i > -1) this.verifiedCoordinateWorksheets.splice(i, 1);
     }
+  }
+
+  openMapDialog(data:any){
+    this.modalRef = null;
+      this.modalRef = this.modalService.open(UploadMapDialogComponent, { animation: true, centered: true, windowClass: 'no-backdrop', backdrop: false });
+      this.modalRef.componentInstance.scope = data.scope;
+
+      this.modalRef.result.then(
+        (res:any)=>{
+          if(res){
+            const i = this.verifiedCoordinateWorksheets.findIndex(v => v.worksheet === data.worksheet);
+            if(i > -1) this.verifiedCoordinateWorksheets[i].isVerified = true;
+          }
+        }
+      )
   }
 
   ngOnDestroy(): void {

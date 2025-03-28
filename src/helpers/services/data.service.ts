@@ -13,30 +13,37 @@ export class DataService {
 
   // Validations
   validate(data:any) {
-    // if (data?.dataSourceMetadata) {
-    //   data.dataSourceMetadata = this.Upload.jsonBlob(data.dataSourceMetadata);
-    // }
-    // return this.Upload.upload({
-    //   url: `${this.apiUrl}data/validate?waitForCompletion=false`,
-    //   data,
-    //   arrayKey: '',
-    // })
+    return this.http.post(`${this.apiUrl}data/validate?waitForCompletion=false`, this.formatUploadData(data));
   }
 
   validationStatus(id:number) {
     let interval:any;
+    let hitCount:number = 0;
     const emitter = new EventEmitter();
 
     const poll = () =>
-      this.http.get(`${this.apiUrl}data/validate/${id}`).subscribe(({ data }:any) => {
-        if ('isValid' in data) {
-          emitter.emit({ result: data });
-          clearInterval(interval);
-        } else emitter.emit({ status: data.status });
+      this.http.get(`${this.apiUrl}data/validate/${id}`).subscribe({
+        next: (res:any) => {
+          if (res.isValid || res.isValid == false) {
+            emitter.emit({ result: res });
+            clearInterval(interval);
+          } else emitter.emit({ status: res.status });
+        },
+        error: (err:any) =>{
+          clearInterval(interval)
+          emitter.emit({ status: 'Failed' });
+        }
       });
 
     poll();
-    interval = setInterval(() => poll(), 1000);
+    interval = setInterval(() =>{
+      if(hitCount > 10){
+        clearInterval(interval);
+        emitter.emit({ status: 'In Progress' });
+      }
+      poll();
+      hitCount++;
+    }, 2000);
     return emitter;
   }
 
@@ -57,4 +64,29 @@ export class DataService {
   fetchSraData(projectId:number, expeditionCode:string):Observable<any> {
     return this.http.get(`${this.apiUrl}sra/submissionData?projectId=${projectId}&expeditionCode=${expeditionCode}&format=json`);
   }
+
+  private formatUploadData(data:uploadData):FormData{
+    const formData = new FormData();
+    const allKeys = Object.keys(data) as (keyof uploadData)[];
+    allKeys.forEach(key=>{
+      if(key === 'workbooks' || key === 'dataSourceFiles'){
+        data[key].forEach((file:File) => formData.append(key, file));
+      }
+      else if(key !== 'expeditionCode')
+        formData.append(key, JSON.stringify(data[key]));
+      else formData.append(key, data[key]);
+    })
+    return formData;
+  }
+}
+
+
+interface uploadData{
+  "upload": boolean,
+  "reloadWorkbooks": boolean,
+  "dataSourceMetadata": any[],
+  "dataSourceFiles": File[],
+  "expeditionCode": string,
+  "workbooks": File[],
+  "projectId": number | undefined
 }

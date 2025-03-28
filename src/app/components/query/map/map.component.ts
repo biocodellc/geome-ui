@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, EventEmitter, inject, OnDestroy, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, inject, Input, OnDestroy, Output } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { MapQueryService } from '../../../../helpers/services/map-query.service';
 import { NgbTooltip, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
@@ -16,6 +16,7 @@ export class MapComponent implements AfterViewInit, OnDestroy{
   mapService = inject(MapQueryService);
 
   // Variable
+  @Input() showExtras:boolean = true;
   @Output() sidebarToggle:EventEmitter<boolean> = new EventEmitter();
   showSidebar:boolean = true;
   destroy$:Subject<any> = new Subject();

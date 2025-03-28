@@ -1,0 +1,95 @@
+<div class="modal-header border-0 py-2 bg-secondary justify-content-center">
+    <h4 class="modal-title fw-semibold" id="modal-basic-title">Validation Results</h4>
+</div>
+<div class="modal-body p-2 px-4 border-0" id="validation_result_modal">
+    @if(results?.showStatus){
+        <div [innerHTML]="sanitizeHtml(results?.status)"></div>
+    }
+
+    <!-- worksheet validation messages -->
+    @if(results?.showValidationMessages){
+        <div>
+            @for(entityResults of results.validation.messages; track entityResults.entity){
+                <div>
+                    @if(entityResults.errors.length > 0){
+                        <div class="tab-content">
+                            <p>
+                                <b>Validation results on {{ entityResults.sheetName }} worksheet, for entity: {{entityResults.entity }}.</b>
+                                <br />
+                                <b>1 or more errors found. Must fix to continue. Click each message for details</b>
+                            </p>
+                        </div>
+                    }
+                    @if(entityResults.errors.length === 0 && entityResults.warnings.length > 0){
+                        <div class="tab-content">
+                            <p>
+                                <b>Validation results on {{ entityResults.sheetName }} worksheet, for entity: {{entityResults.entity }}.</b>
+                                <br />
+                                <b>1 or more warnings found. Click each message for details</b>
+                            </p>
+                        </div>
+                    }
+            
+                    @if(entityResults.errors && entityResults.errors.length){
+                        <div ngbAccordion [closeOthers]="true">
+                            @for (group of entityResults.errors; track group; let i=$index) {
+                                <div ngbAccordionItem [collapsed]="i !== 0">
+                                    <h2 ngbAccordionHeader>
+                                        <button ngbAccordionButton>'Error': <span [innerHTML]="sanitizeHtml(group.groupMessage)"></span></button>
+                                    </h2>
+                                    <div ngbAccordionCollapse>
+                                        <div ngbAccordionBody>
+                                            <div class="message" *ngFor="let m of group.messages">
+                                                {{ m.message }}
+                                              </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    @if(entityResults.warnings && entityResults.warnings.length){
+                        <div ngbAccordion [closeOthers]="true">
+                            @for (group of entityResults.warnings; track group; let i=$index) {
+                                <div ngbAccordionItem [collapsed]="i !== 0">
+                                    <h2 ngbAccordionHeader>
+                                        <button ngbAccordionButton>Warning: <span innerHTML="sanitizeHtml(group.groupMessage)"></span></button>
+                                    </h2>
+                                    <div ngbAccordionCollapse>
+                                        <div ngbAccordionBody>
+                                            <div class="message" *ngFor="let m of group.messages">
+                                                {{ m.message }}
+                                              </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+
+    @if(results?.showUploadMessages){ <p [innerHTML]="sanitizeHtml(results?.uploadMessage)"></p>}
+    @if(results?.validation.exception){ <p [innerHTML]="sanitizeHtml(results?.validation.exception)"></p> }
+    @if(results?.showSuccessMessages){ <p [innerHTML]="sanitizeHtml(results.successMessage)"></p> }
+
+    @if(results?.validation?.isValid === undefined && results?.status != 'Failed'){
+        <app-loader />
+    }
+</div>
+<div class="modal-footer border-0 pt-0">
+    <div class="d-flex justify-content-end gap-2">
+        @if(results?.showOkButton){
+            <button type="button" class="btn btn-primary custom" (click)="activeModal.close()">OK</button>
+        }
+        @if(results?.showContinueButton){
+            <button type="button" class="btn btn-primary custom" (click)="activeModal.close('continue')">Continue</button>
+        }
+        @if(results.showCancelButton){
+            <button type="button" class="btn btn-primary custom" (click)="activeModal.dismiss()">Cancel</button>
+        }
+    </div>
+</div>

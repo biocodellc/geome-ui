@@ -1,0 +1,15 @@
+<div class="modal-header border-0 py-2 bg-warning justify-content-center">
+    <h4 class="modal-title fw-semibold" id="modal-basic-title">Confirm Data Replace!</h4>
+</div>
+<div class="modal-body p-2 px-4 border-0" id="expedition_modal">
+    <div class="d-flex flex-column gap-1">
+        <p class="m-0">All existing {{reloadSheets.join(', ')}} data will replaced with the data in this upload.</p>
+        <p class="m-0"><strong>This will also delete any child data that references the removed rows. Are you sure you want to continue?</strong></p>
+    </div>
+</div>
+<div class="modal-footer border-0 pt-0">
+    <div class="d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-outline-secondary" (click)="activeModal.close()">Cancel</button>
+        <button type="button" class="btn btn-warning" (click)="activeModal.close(true)">Upload</button>
+    </div>
+</div>

@@ -1,4 +1,4 @@
-<Section class="validate-data">
+<section class="validate-data">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
@@ -41,7 +41,12 @@
     
                             @for(type of allDataTypes; track type){
                                 @if(checkedTypes.includes(type.name) && !type.name.includes('Fas')){
-                                    <app-upload [sectionData]="{ label: type.name }" (onFileChange)="handleWorksheetDataChange($event)"/>
+                                    <app-upload [sectionData]="{ label: type.name }" (onFileChange)="handleWorksheetDataChange($event)" [validateOnly]="validateOnly"/>
+                                    @for(item of verifiedCoordinateWorksheets; track item){
+                                        @if(item.worksheet == type.name && item.scope && !item.isVerified){
+                                            <p class="m-0 warn-text">You must verify your sample locations before uploading. Click <span class="text-primary cursor-pointer" (click)="openMapDialog(item)">here</span> to verify.</p>
+                                        }
+                                    }
                                 }
                             }
     
@@ -53,7 +58,7 @@
                                 <app-fastq-form [config]="currentProject?.config" [fastqMetadataForm]="fastqMetadataForm" />
                             }
                     
-                            @if(checkedTypes.includes("Fastq") || checkedTypes.includes("Fasta") || showExpeditions){
+                            @if(checkedTypes.length || showExpeditions){
                                 <div class="row bottom-form-section">
                                     <div class="col-lg-8">
                                         <div class="input-section">
@@ -87,6 +92,9 @@
                 <li [ngbNavItem]="'results'">
                     <button ngbNavLink>Results</button>
                     <ng-template ngbNavContent>
+                        <div>
+                            {{results?.status || results?.result || ''}}
+                        </div>
                     </ng-template>
                 </li>
             </ul>
@@ -94,4 +102,30 @@
         </div>
 
     </div>
-</Section>
+</section>
+
+<ng-template #naanDialog let-modal>
+	<div class="modal-header border-0 py-2 bg-warning justify-content-center">
+        <h4 class="modal-title fw-semibold" id="modal-basic-title">Incorrect NAAN!</h4>
+    </div>
+    <div class="modal-body p-2 px-4 border-0" id="naanDialog">
+        <div>
+            Spreadsheet appears to have been created using a different FIMS/BCID system.
+            <br/>
+            <br/>
+            Spreadsheet says <strong>NAAN = {{nValFromFile}}</strong>
+            <br/>
+            System says <strong>NAAN = {{naan}}</strong>
+            <br/>
+            <br/>
+            Proceed only if you are SURE that this spreadsheet is being called.
+            Otherwise, re-load the proper FIMS system or re-generate your spreadsheet template.
+        </div>
+    </div>
+    <div class="modal-footer border-0 pt-0">
+        <div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-outline-secondary" (click)="modalRef?.close()">Cancel</button>
+            <button type="button" class="btn btn-warning" (click)="modalRef?.close(true)">Proceed Anyways</button>
+        </div>
+    </div>
+</ng-template>

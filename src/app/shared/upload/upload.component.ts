@@ -13,19 +13,27 @@ export class UploadComponent implements OnChanges{
   fileName:string = '';
   selectedFile!:File;
   replaceData:boolean = false;
+  eventData:any;
   @Input() sectionData:any;
-  @Input() onlyValidate!:boolean;
+  @Input() validateOnly!:boolean;
   @Output() onFileChange:EventEmitter<any> = new EventEmitter();
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes['onlyValidate']?.currentValue === false) this.replaceData = false;
+    if(changes['validateOnly']?.currentValue === false) this.replaceData = false;
   }
 
   onFileSelect(event:any){
     this.selectedFile = event.target.files[0];
     this.fileName = this.selectedFile.name;
-    const eventData = { worksheet : this.sectionData.label, file:this.selectedFile, reload: this.replaceData };
-    this.onFileChange.emit(eventData);
+    this.eventData = { worksheet : this.sectionData.label, file:this.selectedFile, reload: this.replaceData };
+    this.onFileChange.emit(this.eventData);
+  }
+
+  onReplcaeChange(event:any){
+    const checked = event.target.checked;
+    if(checked == this.eventData.reload) return;
+    this.eventData.reload = checked;
+    this.onFileChange.emit(this.eventData);
   }
 
   fileTypes() {

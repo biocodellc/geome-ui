@@ -1,0 +1,12 @@
+<div class="modal-body p-2 px-4 border-0" id="expedition_modal">
+    <div class="py-3 px-2">
+        <app-map [showExtras]="false" />
+        <p class="mt-2 mb-0">Please verify the sample locations above are correct</p>
+    </div>
+</div>
+<div class="modal-footer border-0 pt-0">
+    <div class="d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-outline-warning" (click)="activeModal.close()">I need to change them</button>
+        <button type="button" class="btn btn-primary custom" (click)="activeModal.close(true)">Looks Good!</button>
+    </div>
+</div>
