@@ -9,7 +9,7 @@ import { ProjectConfigurationService } from '../../../../../helpers/services/pro
 import { ProjectService } from '../../../../../helpers/services/project.service';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { DeleteModalComponent } from '../../../../shared/modal/delete-modal/delete-modal.component';
+import { DeleteModalComponent } from '../../../../dialogs/delete-modal/delete-modal.component';
 
 @Component({
   selector: 'app-list-details',

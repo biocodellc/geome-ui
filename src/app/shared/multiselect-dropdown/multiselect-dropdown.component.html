@@ -1,0 +1,32 @@
+@if(data && formType !== 'Reactive Form'){
+    <ng-multiselect-dropdown #multiSelect
+        [data]="data" 
+        [(ngModel)]="value"
+        [settings]="settings"
+        [disabled]="false"
+        (onSelect)="onItemSelect($event)" 
+        (onDeSelect)="onItemDeSelect($event)"
+        (onSelectAll)="onSelectAll($event)"
+        (onDeSelectAll)="onDeSelectAll($event)">
+        <!-- (onFilterChange)="onFilterChange($event)"
+        [formControl]="f.name" 
+        (onDropDownClose)="onDropDownClose($event)"
+        [class.is-invalid]="f?.name?.errors?.required && f?.name?.touched" -->
+    </ng-multiselect-dropdown>
+}
+@else if(data && formType === 'Reactive Form' && getFormControl(value)){
+    <ng-multiselect-dropdown #multiSelect
+        [data]="data" 
+        [formControl]="getFormControl(value)!"
+        [settings]="settings"
+        [disabled]="false">
+    </ng-multiselect-dropdown>
+    <!-- (onSelect)="onItemSelect($event)" 
+    (onDeSelect)="onItemDeSelect($event)"
+    (onSelectAll)="onSelectAll($event)"
+    (onDeSelectAll)="onDeSelectAll($event)" -->
+    <!-- (onFilterChange)="onFilterChange($event)"
+    [formControl]="f.name" 
+    (onDropDownClose)="onDropDownClose($event)"
+    [class.is-invalid]="f?.name?.errors?.required && f?.name?.touched" -->
+}

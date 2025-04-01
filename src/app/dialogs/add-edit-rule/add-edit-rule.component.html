@@ -61,7 +61,11 @@
                     }
                     @case('columns'){
                         <div class="mb-3">
-                            <span class="text-danger">Should be multi-select</span>
+                            <div class="form-group">
+                                <label for="Team">{{key}}</label>
+                                <app-multiselect-dropdown [dropDownData]="modalData?.columns || []" [value]="key" [formGroup]="ruleForm" formType="Reactive Form"/>
+                            </div>
+                            <!-- <span class="text-danger">Should be multi-select</span>
                             <div class="form-floating mb-1">
                                 <select class="form-select form-select-lg" id="floatingSelect_type" aria-label="Plates" [formControlName]="key">
                                     @for(col of modalData?.columns || []; track col){
@@ -69,7 +73,7 @@
                                     }
                                 </select>
                                 <label for="floatingSelect_type">{{key}} <span>*</span></label>
-                            </div>
+                            </div> -->
                             @if(form[key].touched && form[key].invalid){
                                 <span class="warn-text f-12">{{ form[key].hasError('required') ? key + ' is required' : '' }}</span>
                             }
@@ -107,7 +111,7 @@
             @if(!modalData?.rule){
                 <button type="button" class="btn btn-primary" (click)="clearRuleData()">ChangeType</button>
             }
-            <button type="button" class="btn btn-primary" (click)="SaveRule()">{{ !modalData?.rule ? 'Add' : 'Save' }}</button>
+            <button type="button" class="btn btn-primary" (click)="saveRule()">{{ !modalData?.rule ? 'Add' : 'Save' }}</button>
         }
     </div>
 </div>

@@ -13,7 +13,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AVAILABLE_RULES, Rule } from '../../../../../helpers/models/rules.model';
 import { AddEditRuleComponent } from '../../../../dialogs/add-edit-rule/add-edit-rule.component';
-import { DeleteModalComponent } from '../../../../shared/modal/delete-modal/delete-modal.component';
+import { DeleteModalComponent } from '../../../../dialogs/delete-modal/delete-modal.component';
 
 const compare = (v1: string | number, v2: string | number) => (v1 < v2 ? -1 : v1 > v2 ? 1 : 0);
 
@@ -88,7 +88,7 @@ export class EntityDetailsComponent implements OnDestroy{
   getNetworkConfigs(){
     this.networkService.getConfig().pipe(take(1), takeUntil(this.destroy$)).subscribe((res:any)=>{
       this.networkConfig = res;
-      this.selectedAttributes = this.entity['attributes'];
+      this.selectedAttributes = [ ...this.entity[this.paramData.type] ];
       if(this.paramData.type === 'attributes'){
         const requiredAtt = this.requiredAttributes();
         this.requiredUris = requiredAtt ? requiredAtt.map((a:any) => a.uri) : [];
@@ -96,7 +96,7 @@ export class EntityDetailsComponent implements OnDestroy{
         this.initAttributeForm();
       }
       else{
-        this.rules = this.entity[this.paramData.type];
+        this.rules = [ ...this.entity[this.paramData.type] ];
         this.lists = this.config.lists.map(l => l.alias);
       }
       this.dummyDataService.loadingState.next(false);
@@ -246,7 +246,7 @@ export class EntityDetailsComponent implements OnDestroy{
   // =========================================== ATTRIBUTES ====Ends===========================================
 
   // Modal
-  openModal(content:TemplateRef<any> | string, data?: any | Rule) {
+  openModal(content:TemplateRef<any> | string, data?: any | Rule, idx?:number) {
     if(this.paramData.type == 'attributes')
       ['group', 'definition'].forEach((key:string) => this.setAttControlVal(key, data[key] || ''));
 
@@ -257,8 +257,9 @@ export class EntityDetailsComponent implements OnDestroy{
 
     if(content == 'rule') this.modalRef.componentInstance.modalData = {
       rule: data ? Object.assign({}, data) : null,
+      ruleIdx: idx,
       availableRules: [ ...AVAILABLE_RULES ],
-      columns: this.selectedAttributes.map(att => att.column),
+      columns: this.selectedAttributes.map(att => att.column).filter(att => att),
       lists: this.lists,
     }
 
@@ -273,9 +274,10 @@ export class EntityDetailsComponent implements OnDestroy{
         const idx_2 = this.selectedAttributes.findIndex((att:any) => att.uri == data.uri );
         this.selectedAttributes[idx_2] = updatedData;
       }
-      else if(res && this.paramData.type == 'rules'){
-        this.rules.push(res);
+      else if(res?.idx >= 0 && this.paramData.type == 'rules'){
+        this.rules[res.idx] = res.rule;
       }
+      else if(!res?.idx && this.paramData.type == 'rules') this.rules.push(res.rule);
     })
   }
 
@@ -296,6 +298,12 @@ export class EntityDetailsComponent implements OnDestroy{
   joinMetaData(data:any){
     if(Array.isArray(data)) return data.join(', ');
     else return data;
+  }
+
+  get configChanges():boolean{
+    if(!this.paramData?.type) return false;
+    const newData = this.paramData.type == 'attributes' ? this.selectedAttributes : this.rules;
+    return JSON.stringify(this.entity[this.paramData.type]) !== JSON.stringify(newData);
   }
 
   ngOnDestroy(): void {

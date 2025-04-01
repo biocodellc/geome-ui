@@ -25,7 +25,7 @@
                 <app-query-form (queryResult)="updateQueryResult($event, 'teamQueryForm')"/>
             }
             @else{
-                <app-query-form (queryResult)="updateQueryResult($event, 'queryForm')"/>
+                <app-query-form (queryResult)="updateQueryResult($event, 'queryForm')" [q]="requestedQuery"/>
             }
         </div>
         
@@ -33,7 +33,7 @@
             <div [ngClass]="active == 'map' ? '' : 'w-0 h-0 overflow-hidden'">
                 <app-map (sidebarToggle)="onSidebarToggle($event)"/>
             </div>
-            <div class="custom-table-container" [ngClass]="active != 'map' ? '' : 'w-0 h-0 overflow-hidden'">
+            <div class="custom-table-container" [ngClass]="active != 'map' ? 'query-table' : 'w-0 h-0 overflow-hidden'">
                 @if(queryResult.length){
                     <p class="fw-bold">Total Number of Results: {{queryResult.length}}</p>
                     <table class="table table-striped">

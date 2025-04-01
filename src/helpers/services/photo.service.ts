@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpEvent, HttpEventType } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpEvent, HttpEventType, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
@@ -7,6 +7,11 @@ import { environment } from '../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class PhotoService {
   private restRoot = environment.restRoot;
+
+  private headers = new HttpHeaders({
+      'Accept': "*/*",
+      'Content-Type': 'application/x-zip-compressed'
+    });
 
   constructor(private http: HttpClient) {}
 
@@ -22,14 +27,14 @@ export class PhotoService {
     formData.append('file', file);
 
     const url = `${this.restRoot}photos/${entity}/upload`;
-    const params = {
+    const params:any = {
       projectId,
-      expeditionCode,
       ignoreId: ignoreId.toString(),
       type: isResume ? 'resume' : 'resumable',
     };
+    if(expeditionCode) params.expeditionCode = expeditionCode;
 
-    return this.http.put<{ success: boolean; messages: { errors?: string[]; warnings?: string[] } }>(url, formData, { params })
+    return this.http.put<{ success: boolean; messages: { errors?: string[]; warnings?: string[] } }>(url, formData, { params, headers: this.headers })
       .pipe(
         map(res => ({
           success: res.success,

@@ -9,16 +9,13 @@
             </div>
             <div class="form-group">
                 <label for="Team">Team <i class="fas fa-circle-question ms-2 text-secondary"></i></label>
-                <select class="form-control" id="Team" (change)="onDropdownChange($event, 'teams')" name="Team" [(ngModel)]="selectedTeam">
-                    @for(team of configNames; track team){ <option [value]="team">{{team}}</option> }
-                </select>
+                <app-multiselect-dropdown [dropDownData]="configNames" [value]="teams" (valueChange)="onTeamSelect($event)"/>
             </div>
             <div class="form-group">
                 <label for="Projects">Individual Projects <i class="fas fa-circle-question ms-2 text-secondary"></i></label>
-                <select class="form-control" id="Projects" (change)="onDropdownChange($event, 'individualProj')" name="Projects" [(ngModel)]="selectedIndividualProject">
-                    @for(project of allProjects; track project){ <option [value]="project.projectTitle">{{project.projectTitle}}</option> }
-                </select>
+                <app-multiselect-dropdown [dropDownData]="allProjectsName" [value]="individualProjects" (valueChange)="onProjChange($event)"/>
             </div>
+
             @if(individualProjects.length == 1 && !loadingExpeditions && expeditions.length > 0){
                 <div class="form-group">
                     <label for="expedition">Expeditions</label>
@@ -148,12 +145,12 @@
     
             <div class="form-floating mb-1">
                 <select class="form-select" id="floatingSelect_expeditions" aria-label="Expeditions" name="marker" [(ngModel)]="params.marker">
-                    <option class="fw-secondary" value="" selected>--Select Marker--</option>
+                    <option class="fw-secondary" value="" selected disabled>--Select Marker--</option>
                     @for(marker of markers; track marker){
                         <option [value]="marker.value">{{marker.value}}</option>
                     }
                 </select>
-                <label for="floatingSelect_expeditions">Expeditons <span>*</span></label>
+                <label for="floatingSelect_expeditions">Select Marker <span>*</span></label>
             </div>
         }
 

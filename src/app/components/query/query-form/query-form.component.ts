@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, take, takeUntil } from 'rxjs';
@@ -13,6 +13,7 @@ import { ExpeditionService } from '../../../../helpers/services/expedition.servi
 import { MapQueryService } from '../../../../helpers/services/map-query.service';
 import { MapBoundingComponent } from '../../../shared/map-bounding/map-bounding.component';
 import { FilterButtonComponent } from '../filter-button/filter-button.component';
+import { MultiselectDropdownComponent } from '../../../shared/multiselect-dropdown/multiselect-dropdown.component';
 
 const SOURCE:Array<any> = [
   'Event.eventID',
@@ -82,12 +83,13 @@ const SELECT_ENTITIES:any = {
 @Component({
   selector: 'app-query-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, MapBoundingComponent, FilterButtonComponent],
+  imports: [CommonModule, FormsModule, MapBoundingComponent, FilterButtonComponent, MultiselectDropdownComponent],
   templateUrl: './query-form.component.html',
   styleUrl: './query-form.component.scss'
 })
-export class QueryFormComponent implements OnDestroy{
+export class QueryFormComponent implements OnChanges,OnDestroy{
   // Decorators
+  @Input() q:any;
   @Output() queryResult:EventEmitter<any> = new EventEmitter();
 
   // Injectors
@@ -108,6 +110,7 @@ export class QueryFormComponent implements OnDestroy{
   moreSearchOptions:boolean = false;
   loadingExpeditions:boolean = false;
   allProjects:Array<any> = [];
+  allProjectsName:Array<any> = [];
   teams: Array<any> = [];
   individualProjects: Array<any> = [];
   expeditions:Array<any> = [];
@@ -121,10 +124,11 @@ export class QueryFormComponent implements OnDestroy{
   configNames:Array<any> = [];
   entitiesList: Array<any> = [];
   params:QueryParams = new QueryParams();
+  requestedQuery:string | undefined;
+  selectedTeam: string = '';
+  selectedIndividualProject: string = '';
 
   // Extra NgModels
-  selectedTeam:string = '';
-  selectedIndividualProject:string = '';
 
   constructor(){
     this.entity = this.queryEntities[1];
@@ -133,10 +137,18 @@ export class QueryFormComponent implements OnDestroy{
     this.getNetworkConfigs();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['q'] && changes['q'].currentValue){
+      this.requestedQuery = changes['q'].currentValue
+      this.params.queryString = this.requestedQuery;
+    }
+  }
+
   getProjects(){
     this.projectService.getAllProjectsValue().pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if(res){
         this.allProjects = res;
+        this.allProjectsName = this.allProjects.map(proj => proj.projectTitle);
         this.setTeamNames();
       }
     })
@@ -159,6 +171,10 @@ export class QueryFormComponent implements OnDestroy{
 
   identifySpecificEntities() {
     this.entitiesList = this.config.entities.map(e => e.conceptAlias);
+    if(this.requestedQuery){
+      this.requestedQuery = undefined;
+      this.queryJson();
+    }
   }
 
   setTeamNames(){
@@ -169,6 +185,51 @@ export class QueryFormComponent implements OnDestroy{
       }
     });
     this.configNames = [...names];
+  }
+
+  onTeamSelect(event:{ item:any, value:[] , isDeSelected?:boolean }){
+    // Clearing Project's related Data and Update ParamProjects
+    if(this.individualProjects.length){
+      this.individualProjects = this.params.projects = this.expeditions = [];
+    }
+    this.teams = event.value;
+    this.changeParamProjects(event);
+
+    // Setting Configs
+    if(this.teams.length == 1){
+      const project = this.allProjects.find((p:any)=> p.projectConfiguration.name == this.teams[0]);
+      this.callConfigService(project);
+    }
+    else this.setNetworkConfig();
+  }
+
+  onProjChange(event:{ item:any, value:[], isDeSelected?:boolean }) {
+    // Clearing Teams's related Data and Update ParamProjects
+    if (this.teams.length) {
+      this.teams = this.params.projects = [];
+    }
+    this.individualProjects = event.value;
+    this.changeParamProjects(event);
+
+    // Setting Configs
+    if (this.individualProjects.length == 1) {
+      this.getExpeditions();
+      this.identifySpecificConfig();
+    } else {
+      this.expeditions = [];
+      this.setNetworkConfig();
+    }
+  }
+
+  // Setting and Removing Teams's Project
+  changeParamProjects(event:{ item:any, value:[], isDeSelected?:boolean }){
+    this.allProjects.findIndex((p:any, i:number)=>{
+      if(p.projectConfiguration.name == event.item && event.isDeSelected){
+        const idx = this.params.projects.findIndex(item => item.projectId == p.projectId);
+        this.params.projects.splice(idx, 1);
+      }
+      else if(p.projectConfiguration.name == event.item && !event.isDeSelected) this.params.projects.push(p);
+    })
   }
 
   onDropdownChange(event:any, item:string){
@@ -212,16 +273,14 @@ export class QueryFormComponent implements OnDestroy{
           this.setNetworkConfig();
         }
         break ;
-      case 'expedition':
-        // this.
-        break;
       default:
         break;
     }
   }
 
   identifySpecificConfig() {
-    const specificConfigName = this.individualProjects[0].projectConfiguration.name;
+    const projData = this.allProjects.find(proj => proj.projectTitle == this.individualProjects[0]);
+    const specificConfigName = projData.projectConfiguration.name;
     const matchingProjectForConfigRetrieval = this.allProjects.find(p => p.projectConfiguration.name === specificConfigName);
     this.callConfigService(matchingProjectForConfigRetrieval);
   }
@@ -235,7 +294,8 @@ export class QueryFormComponent implements OnDestroy{
 
   getExpeditions() {
     this.loadingExpeditions = true;
-    this.expeditionService.getAllExpeditions(this.individualProjects[0].projectId).subscribe((data:any) => {
+    const projData = this.allProjects.find(proj => proj.projectTitle == this.individualProjects[0]);
+    this.expeditionService.getAllExpeditions(projData.projectId).subscribe((data:any) => {
       this.expeditions = data;
       this.loadingExpeditions = false;
     })

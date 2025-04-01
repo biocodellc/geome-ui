@@ -36,18 +36,22 @@ export class QueryComponent{
   queryResult:Array<any> = [];
   entities:Array<any> = [];
   params:QueryParams = new QueryParams();
+  requestedQuery:string = '';
 
   constructor(){
     this.activatedRoutes.queryParams.pipe(take(1), takeUntil(this.destroy$)).subscribe((params:any)=>{
       if(params.team){
         this.teamIdNum = parseInt(params.team, 10);
         if(this.teamIdNum === 45 ) this.teamQuery = true;
-      };
+      }
+      else if(params.q){
+        this.requestedQuery = params.q;
+      }
     })
   }
 
   updateQueryResult(data:any, tab:string){
-    // this.queryResult = data.result;
+    this.queryResult = data.result;
     console.log("=====query data=====",data);
   }
 

@@ -54,11 +54,11 @@
                 </tr>
             </thead>
             <tbody>
-                @for (r of rules; track r) {
+                @for (r of rules; let i=$index; track i) {
                     <tr class="f-14">
                         <td class="px-3">
                             <div class="d-flex">
-                                <i class="fas fa-pen-fancy cursor-pointer text-secondary me-2" (click)="openModal('rule', r)"></i>
+                                <i class="fas fa-pen-fancy cursor-pointer text-secondary me-2" (click)="openModal('rule', r, i)"></i>
                                 <i class="fas fa-trash-can cursor-pointer text-danger" (click)="openDeleteModal(r)"></i>
                             </div>
                         </td>

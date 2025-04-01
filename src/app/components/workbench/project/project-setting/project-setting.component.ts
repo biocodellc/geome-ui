@@ -5,7 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ProjectService } from '../../../../../helpers/services/project.service';
 import { Subject, take, takeUntil } from 'rxjs';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { DeleteModalComponent } from '../../../../shared/modal/delete-modal/delete-modal.component';
+import { DeleteModalComponent } from '../../../../dialogs/delete-modal/delete-modal.component';
 
 @Component({
   selector: 'app-project-setting',

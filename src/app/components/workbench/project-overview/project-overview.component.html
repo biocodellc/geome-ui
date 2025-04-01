@@ -194,8 +194,21 @@
                                 <td>{{ item.fastaSequenceCount }}</td>
                                 <td>{{ item.fastqMetadataCount }}</td>
                                 <td><a href="https://n2t.net/{{item.expeditionIdentifier}}">https://n2t.net/{{item.expeditionIdentifier}}</a></td>
-                                <td><i class="fas fa-search text-secondary f-16"></i></td>
-                                <td (click)="downloadExpCsv(item.expeditionCode)" class="cursor-pointer"><i class="fas fa-download text-primary f-16"></i></td>
+                                <td><i class="fas fa-search text-secondary f-16 cursor-pointer" (click)="viewData(item.expeditionCode)"></i></td>
+                                <td>
+                                    @if(menuOptions(item) && menuOptions(item)?.length){
+                                        <div ngbDropdown class="d-inline-block">
+                                            <span id="download-options" class="cursor-pointer" ngbDropdownToggle>
+                                                <i class="fas fa-download text-primary f-16"></i>
+                                            </span>
+                                            <div ngbDropdownMenu aria-labelledby="download-options">
+                                                @for(menu of menuOptions(item); track menu){
+                                                    <button ngbDropdownItem (click)="menu.fn()">{{menu.name}}</button>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                </td>
                             </tr>
                         }
                     </tbody>

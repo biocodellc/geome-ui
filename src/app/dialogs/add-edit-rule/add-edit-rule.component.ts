@@ -3,11 +3,12 @@ import { Component, inject, Input } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Rule, RULE_LEVELS } from '../../../helpers/models/rules.model';
+import { MultiselectDropdownComponent } from '../../shared/multiselect-dropdown/multiselect-dropdown.component';
 
 @Component({
   selector: 'app-add-edit-rule',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MultiselectDropdownComponent],
   templateUrl: './add-edit-rule.component.html',
   styleUrl: './add-edit-rule.component.scss'
 })
@@ -28,6 +29,7 @@ export class AddEditRuleComponent {
     this.initForm();
     setTimeout(() => {
       if(this.modalData.rule) this.setCurrentRule(this.modalData.rule, true);
+      console.log(this.modalData);
     }, 100);
   }
 
@@ -56,13 +58,12 @@ export class AddEditRuleComponent {
     this.form['name'].valueChanges.subscribe((val:string) => this.onRuleTypeChange(val))
   }
 
-  SaveRule(){
+  saveRule(){
     this.ruleForm.markAllAsTouched();
     if(this.ruleForm.invalid) return;
     const ruleData = { ...this.ruleForm.value };
-    if(ruleData['columns'] && !Array.isArray(ruleData['columns'])) ruleData['columns'] = [ ruleData['columns'] ];
     Object.keys(ruleData).forEach((key:string) => this.currentRule[key] = ruleData[key]);
-    this.activeModal.dismiss(this.currentRule);
+    this.activeModal.dismiss({ rule:this.currentRule, idx: this.modalData?.ruleIdx });
   }
 
   clearRuleData(){

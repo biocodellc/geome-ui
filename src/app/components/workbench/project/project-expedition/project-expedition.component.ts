@@ -7,7 +7,7 @@ import { ExpeditionService } from '../../../../../helpers/services/expedition.se
 import { ToastrService } from 'ngx-toastr';
 import { FileService } from '../../../../../helpers/services/file.service';
 import { DataService } from '../../../../../helpers/services/data.service';
-import { DeleteModalComponent } from '../../../../shared/modal/delete-modal/delete-modal.component';
+import { DeleteModalComponent } from '../../../../dialogs/delete-modal/delete-modal.component';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({

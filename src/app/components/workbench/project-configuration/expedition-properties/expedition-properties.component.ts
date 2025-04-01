@@ -6,7 +6,7 @@ import { ProjectConfigurationService } from '../../../../../helpers/services/pro
 import { ToastrService } from 'ngx-toastr';
 import { DummyDataService } from '../../../../../helpers/services/dummy-data.service';
 import { NgbModal, NgbModalModule, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { DeleteModalComponent } from '../../../../shared/modal/delete-modal/delete-modal.component';
+import { DeleteModalComponent } from '../../../../dialogs/delete-modal/delete-modal.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
