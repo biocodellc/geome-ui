@@ -10,11 +10,12 @@ import { DummyDataService } from '../../../helpers/services/dummy-data.service';
 import { QueryService } from '../../../helpers/services/query.service';
 import { ToastrService } from 'ngx-toastr';
 import { QueryParams } from '../../../helpers/scripts/queryParam';
+import { LoaderComponent } from '../../shared/loader/loader.component';
 
 @Component({
   selector: 'app-query',
   standalone: true,
-  imports: [CommonModule, QueryFormComponent, TeamQueryFormComponent, MapComponent, NgbDropdownModule],
+  imports: [CommonModule, QueryFormComponent, TeamQueryFormComponent, MapComponent, NgbDropdownModule, LoaderComponent],
   templateUrl: './query.component.html',
   styleUrl: './query.component.scss'
 })
@@ -46,17 +47,22 @@ export class QueryComponent{
       }
       else if(params.q){
         this.requestedQuery = params.q;
+        this.params.queryString = this.requestedQuery;
       }
     })
   }
 
   updateQueryResult(data:any, tab:string){
     this.queryResult = data.result;
-    console.log("=====query data=====",data);
+    this.entity = data.entity;
   }
 
   onSidebarToggle(event:boolean){
     this.isSidebarVisible = event;
+  }
+
+  downloadableEntities(event:any){
+    this.entities = event;
   }
 
   downloadExcel() {

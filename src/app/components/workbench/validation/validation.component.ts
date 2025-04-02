@@ -474,6 +474,12 @@ export class ValidationComponent implements OnDestroy{
     return data;
   }
 
+  replaceCheckChange(event:any){
+    const {worksheet, reload} = event;
+    let data = this.worksheetData.find(d => d.worksheet === worksheet);
+    if(data) data.reload = reload;
+  }
+
   handleWorksheetDataChange(event:any) {
     const {worksheet, file, reload} = event;
     let data = this.worksheetData.find(d => d.worksheet === worksheet);

@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, inject, Input, OnDestroy } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { AuthenticationService } from '../../../helpers/services/authentication.service';
 import { ProjectSelectorComponent } from '../project-selector/project-selector.component';
 import { DummyDataService } from '../../../helpers/services/dummy-data.service';
 import { ProjectService } from '../../../helpers/services/project.service';
-import { Subject, takeUntil } from 'rxjs';
+import { filter, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -23,8 +23,10 @@ export class HeaderComponent implements OnDestroy{
   currentProjectId!:string | number;
   destroy$:Subject<any> = new Subject();
   userProjects:any[] = [];
+  currentRouteUrl:string = '';
 
   // Injectors
+  router = inject(Router);
   projectService = inject(ProjectService);
   authService = inject(AuthenticationService);
   dummyDataService = inject(DummyDataService);
@@ -40,6 +42,10 @@ export class HeaderComponent implements OnDestroy{
     if(this.isSmallDevice)  this.dummyDataService.toggleSidebarSub.next(true);
     this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any) => this.currentProjectId = res?.projectId);
     this.projectService.userProjectSubject.pipe(takeUntil(this.destroy$)).subscribe((res:any) => this.userProjects = res);
+    this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd), takeUntil(this.destroy$))
+      .subscribe(event => {
+        this.currentRouteUrl = event.urlAfterRedirects;
+      });
   }
 
   openSidebar(){

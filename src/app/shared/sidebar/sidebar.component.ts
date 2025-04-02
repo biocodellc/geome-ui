@@ -75,6 +75,11 @@ export class SidebarComponent implements OnDestroy{
     this.dummyDataService.toggleSidebarSub.pipe(distinctUntilChanged()).subscribe((res:any)=> this.isSidebarHidden = res)
   }
 
+  closeSidebar(){
+    if(this.device == 'small')
+      this.dummyDataService.toggleSidebarSub.next(!this.dummyDataService.toggleSidebarSub.value);
+  }
+
   checkItemVisiblity(item:string){
     switch(item){
       case 'Upload Photos':
@@ -98,7 +103,10 @@ export class SidebarComponent implements OnDestroy{
 
   checkAndNavigate(route:string){
     if(!this.currentProject) this.openProjectSelectModal()
-    else this.router.navigateByUrl(route);
+    else{
+      this.router.navigateByUrl(route);
+      this.closeSidebar();
+    }
   }
 
   openProjectSelectModal(){

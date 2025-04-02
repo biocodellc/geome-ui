@@ -1,5 +1,5 @@
 <div class="row bottom-form-section" [ngClass]="sectionData?.mainClass">
-    <div [ngClass]="sectionData?.singleInput ? 'col-12' : 'col-8'">
+    <div [ngClass]="sectionData?.singleInput ? 'col-12' : 'col-md-8 col-12'">
         <div class="input-section align-items-baseline">
             <label class="input-label fastq-label">{{ sectionData.label == "Workbook" ? 'Excel '+sectionData?.label : sectionData.label + ' CSV' }}</label>
             <div class="input-med-sec">
@@ -7,22 +7,33 @@
                     <label for="file_{{sectionData.label}}" class="custom_file_label rounded-start">Browse...</label>
                     <input type="file" name="file_{{sectionData.label}}" id="file_{{sectionData.label}}" class="form-control fastq-control" placeholder="" hidden (change)=onFileSelect($event) [accept]="fileTypes()"/>
                     <input type="text" [(ngModel)]="fileName" name="file_name_{{sectionData.label}}" class="form-control fastq-control rounded-start-0 bg-secondary-subtle border border-white" style="flex: 1; box-shadow:none" placeholder="" readonly/>
+                    @if(sectionData?.label === 'FASTQ Filenames'){
+                        <i class="fa-solid fa-circle-question cursor-pointer ms-2" [autoClose]="'outside'" popoverClass="custom-popover fastq" popoverTitle="Ex. File Contents" [ngbPopover]="fastqPopContent"></i>
+                    }
                 </div>
-                @if(!validateOnly){
+                @if(!validateOnly && !sectionData?.singleInput){
                     <div class="form-check mt-2">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault_{{sectionData.label}}" [(ngModel)]="replaceData" (change)="onReplcaeChange($event)">
-                        <label class="form-check-label" for="flexCheckDefault_{{sectionData.label}}">
-                            <span class="d-block mb-1">Replace expedition data <i class="fa-solid fa-circle-question"></i></span>
-                            <span>Replace expedition data" should be selected when samples need to be entirely removed from an expedition, or when the materialSampleID field needs to be changed. The replacement will occur for each data worksheet within the loaded workbook. All existing data will be removed and replaced with the Data in the workbook. Data worksheets not found in this workbook will not be removed. It is highly recommended to first run the "Only validate data" option (above) and fix errors, before replacing expedition data. Make sure that critical columns are intact, eg. "Sample_bcid", "Tissue_bcid", "tissue_ID", "tissue_Plate" and "tissue_Well"</span>
-                        </label>
+                        <input class="form-check-input" type="checkbox" value="" id="replace_{{sectionData.label}}" [(ngModel)]="replaceData" (change)="onReplcaeChange($event)">
+                        <div>
+                            <label class="form-check-label" for="replace_{{sectionData.label}}">
+                                <span class="d-block">Replace expedition data</span>
+                            </label>
+                            <i class="fa-solid fa-circle-question cursor-pointer ms-2" [autoClose]="'outside'" popoverClass="custom-popover" [ngbPopover]="getPopoverData(sectionData.label)"></i>
+                        </div>
+                        <span>Replace expedition data" should be selected when samples need to be entirely removed from an expedition, or when the materialSampleID field needs to be changed. The replacement will occur for each data worksheet within the loaded workbook. All existing data will be removed and replaced with the Data in the workbook. Data worksheets not found in this workbook will not be removed. It is highly recommended to first run the "Only validate data" option (above) and fix errors, before replacing expedition data. Make sure that critical columns are intact, eg. "Sample_bcid", "Tissue_bcid", "tissue_ID", "tissue_Plate" and "tissue_Well"</span>
                     </div>
-                    <!-- <p style="padding-left: 1.5rem;"></p> -->
                 }
             </div>
-            @if(sectionData.icon){
-                <button class="info-btn"><i class="fa-solid {{sectionData.icon}}"></i></button>
-            }
         </div>
     </div>
-    <div [ngClass]="sectionData?.singleInput ? 'col-0' : 'col-4'"></div>
+    <div [ngClass]="sectionData?.singleInput ? 'col-0' : 'col-md-4 col-0'"></div>
 </div>
+
+<ng-template #fastqPopContent>
+    Lukas001.R1.fq.gz <br>
+    Lukas001.R2.fq.gz <br>
+    Lukas012.R1.fq.gz <br>
+    Lukas012.R2.fq.gz <br>
+    Lukas37.R1.fq.gz <br>
+    Lukas37.R2.fq.gz
+</ng-template>

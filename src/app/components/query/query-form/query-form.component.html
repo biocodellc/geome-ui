@@ -2,17 +2,17 @@
     <form class="form-section-start">
         @if(moreSearchOptions){
             <div class="form-group">
-                <label for="entity">Query Entity <i class="fas fa-circle-question ms-2 text-secondary"></i></label>
+                <label for="entity">Query Entity <i class="fas fa-circle-question ms-2 text-secondary cursor-pointer" popoverClass="custom-popover" [autoClose]="'outside'"  [ngbPopover]="popOverData['entity']"></i></label>
                 <select class="form-control" id="entity" name="queryEntity" [(ngModel)]="entity">
                     @for(entity of queryEntities; track entity){ <option [value]="entity">{{entity}}</option> }
                 </select>
             </div>
             <div class="form-group">
-                <label for="Team">Team <i class="fas fa-circle-question ms-2 text-secondary"></i></label>
+                <label for="Team">Team <i class="fas fa-circle-question ms-2 text-secondary cursor-pointer" popoverClass="custom-popover" [autoClose]="'outside'"  [ngbPopover]="popOverData['teams']"></i></label>
                 <app-multiselect-dropdown [dropDownData]="configNames" [value]="teams" (valueChange)="onTeamSelect($event)"/>
             </div>
             <div class="form-group">
-                <label for="Projects">Individual Projects <i class="fas fa-circle-question ms-2 text-secondary"></i></label>
+                <label for="Projects">Individual Projects <i class="fas fa-circle-question ms-2 text-secondary cursor-pointer" popoverClass="custom-popover" [autoClose]="'outside'"  [ngbPopover]="popOverData['project']"></i></label>
                 <app-multiselect-dropdown [dropDownData]="allProjectsName" [value]="individualProjects" (valueChange)="onProjChange($event)"/>
             </div>
 
@@ -32,18 +32,18 @@
                 </div>
             }
             <div class="form-group">
-                <label for="exampleFormControlInput1">Any Term <i class="fas fa-circle-question ms-2 text-secondary"></i></label>
+                <label for="exampleFormControlInput1">Any Term <i class="fas fa-circle-question ms-2 text-secondary cursor-pointer" popoverClass="custom-popover" [autoClose]="'outside'"  [ngbPopover]="popOverData['term']"></i></label>
                 <input type="text" autocomplete="off" class="form-control" id="exampleFormControlInput1" name="anyTerm" placeholder="" [(ngModel)]="params.queryString">
             </div>
         }
         @else{
             <!-- ===================================================== -->
                     <div class="form-group">
-                        <label for="MaterialSampleID">MaterialSampleID <i class="fas fa-circle-question ms-2 text-secondary"></i></label>
+                        <label for="MaterialSampleID">MaterialSampleID <i class="fas fa-circle-question ms-2 text-secondary cursor-pointer" popoverClass="custom-popover" [autoClose]="'outside'"  [ngbPopover]="popOverData['matSampleId']"></i></label>
                         <input type="text" autocomplete="off" class="form-control" id="MaterialSampleID" name="MaterialSampleID" placeholder="" [(ngModel)]="params.materialSampleID">
                     </div>
                     <div class="form-group">
-                        <label for="exampleFormControlSelect1">Country</label>
+                        <label for="exampleFormControlSelect1">Country <i class="fas fa-circle-question ms-2 text-secondary cursor-pointer" popoverClass="custom-popover" [autoClose]="'outside'"  [ngbPopover]="popOverData['country']"></i></label>
                         <select class="form-control" id="exampleFormControlSelect1" name="country" [(ngModel)]="params.country">
                             @for(country of countries; track country){ <option [value]="country.value">{{country.value}}</option> }
                         </select>
@@ -57,7 +57,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="exampleFormControlSelect1">Phylum</label>
+                        <label for="exampleFormControlSelect1">Phylum <i class="fas fa-circle-question ms-2 text-secondary cursor-pointer" popoverClass="custom-popover" [autoClose]="'outside'"  [ngbPopover]="popOverData['phylum']"></i></label>
                         <select class="form-control" name="Phylum" id="Phylum" [(ngModel)]="params.phylum">
                             @for(item of phylums; track item){ <option [value]="item.value">{{item.value}}</option> }
                         </select>

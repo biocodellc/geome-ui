@@ -3,11 +3,12 @@ import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/cor
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProjectConfig } from '../../../../../helpers/models/projectConfig.model';
 import { UploadComponent } from '../../../../shared/upload/upload.component';
+import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-fasta-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, UploadComponent ],
+  imports: [CommonModule, ReactiveFormsModule, UploadComponent, NgbPopoverModule ],
   templateUrl: './fasta-form.component.html',
   styleUrl: './fasta-form.component.scss'
 })

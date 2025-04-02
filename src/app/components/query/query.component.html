@@ -1,18 +1,20 @@
-<section class="map-section">
+<section class="map-section position-relative">
     <div class="row">
         <div class="col-lg-12">
             <div class="top-tab-sec">
                 <ul class="map-tbl mb-0">
-                    <li class="down-btn" ngbDropdown>
-                        <button type="button" class="btn btn-outline-primary" id="downloadOptions" ngbDropdownToggle>
-                            <i class="fas fa-download"></i>
-                        </button>
-                        <div ngbDropdownMenu aria-labelledby="downloadOptions">
-                            <span ngbDropdownItem (click)="downloadCsv()">CSV Archive</span>
-                            <span ngbDropdownItem (click)="downloadExcel()">Excel Workbook</span>
-                            <span ngbDropdownItem (click)="downloadFasta()">Fasta</span>
-                        </div>
-                    </li>
+                    @if(queryResult.length && entities.length){
+                        <li class="down-btn" ngbDropdown>
+                            <button type="button" class="btn btn-outline-primary" id="downloadOptions" ngbDropdownToggle>
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <div ngbDropdownMenu aria-labelledby="downloadOptions">
+                                <span ngbDropdownItem (click)="downloadCsv()" class="cursor-pointer">CSV Archive</span>
+                                <span ngbDropdownItem (click)="downloadExcel()" class="cursor-pointer">Excel Workbook</span>
+                                <span ngbDropdownItem (click)="downloadFasta()" class="cursor-pointer">Fasta</span>
+                            </div>
+                        </li>
+                    }
                     <li class="map-btn1"><button type="button" (click)="active = 'map'">Map</button></li>
                     <li class="map-btn1"><button type="button" (click)="active = 'table'">Table</button></li>
                 </ul>
@@ -25,7 +27,7 @@
                 <app-query-form (queryResult)="updateQueryResult($event, 'teamQueryForm')"/>
             }
             @else{
-                <app-query-form (queryResult)="updateQueryResult($event, 'queryForm')" [q]="requestedQuery"/>
+                <app-query-form (queryResult)="updateQueryResult($event, 'queryForm')" [q]="requestedQuery" (entitesForDownload)="downloadableEntities($event)"/>
             }
         </div>
         
@@ -80,4 +82,7 @@
 
 
     </div>
+    @if(dummyDataService.loadingState | async){
+        <app-loader />
+    }
 </section>

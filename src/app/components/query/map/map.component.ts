@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, EventEmitter, inject, Input, OnDestroy, Output } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
 import { MapQueryService } from '../../../../helpers/services/map-query.service';
 import { NgbTooltip, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -28,10 +28,9 @@ export class MapComponent implements AfterViewInit, OnDestroy{
   }
 
   ngAfterViewInit(): void {
-    this.mapService.mapInitialized.pipe(takeUntil(this.destroy$)).subscribe(()=> console.log('Map Initialized'))
     setTimeout(() => {
       this.mapService.initMap(this.mapId);
-    }, 100);
+    }, 10);
   }
 
   toggleSidebar(t:NgbTooltip){

@@ -132,7 +132,7 @@ export class QueryBuilder {
   }
 
   setSource(source:any) {
-    this.source = source;
+    if(source) this.source = source;
   }
 
   build() {

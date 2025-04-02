@@ -51,7 +51,7 @@
                             <span class="d-block text-secondary f-12 mt-1">For instance if uploading using RADSeq data this is likely to be “WGS”</span>
                         }
                     </div>
-                    <button class="info-btn"><i class="fa-solid fa-circle-question"></i></button>
+                    <button class="info-btn"><i class="fa-solid fa-circle-question" popoverClass="custom-popover small-size" autoClose="outside" [ngbPopover]="popContent" triggers="manual" #p1="ngbPopover" (click)="tooglePopup(p1, 'Strategy', fastq?.libraryStrategies)"></i></button>
                 </div>
                 <div class="input-section">
                     <label class="input-label fastq-label">Library Source</label>
@@ -66,7 +66,7 @@
                             <span class="d-block warn-text f-12 mt-1">Library Source is required.</span>
                         }
                     </div>
-                    <button class="info-btn"><i class="fa-solid fa-circle-question"></i></button>
+                    <button class="info-btn"><i class="fa-solid fa-circle-question" popoverClass="custom-popover small-size"  autoClose="outside" [ngbPopover]="popContent" triggers="manual" #p2="ngbPopover" (click)="tooglePopup(p2, 'Source', fastq?.librarySources)"></i></button>
                 </div>
                 <div class="input-section">
                     <label class="input-label fastq-label">Library Selection</label>
@@ -84,7 +84,7 @@
                             <span class="d-block text-secondary f-12 mt-1">For instance if uploading using RADSeq data this is likely to be “Reduced Representation”</span>
                         }
                     </div>
-                    <button class="info-btn"><i class="fa-solid fa-circle-question"></i></button>
+                    <button class="info-btn"><i class="fa-solid fa-circle-question" popoverClass="custom-popover small-size"  autoClose="outside" [ngbPopover]="popContent" triggers="manual" #p3="ngbPopover" (click)="tooglePopup(p3, 'Selection', fastq?.librarySelections)"></i></button>
                 </div>
                 <div class="input-section">
                     <label class="input-label fastq-label">Platform</label>
@@ -99,7 +99,6 @@
                             <span class="d-block warn-text f-12 mt-1">Platform is required.</span>
                         }
                     </div>
-                    <button class="info-btn"><i class="fa-solid fa-circle-question"></i></button>
                 </div>
 
                 <div class="input-section">
@@ -115,7 +114,6 @@
                             <span class="d-block warn-text f-12 mt-1">Instrument Model is required.</span>
                         }
                     </div>
-                    <button class="info-btn"><i class="fa-solid fa-circle-question"></i></button>
                 </div>
 
                 <div class="input-section">
@@ -126,7 +124,6 @@
                             <span class="d-block warn-text f-12 mt-1">Field is required.</span>
                         }
                     </div>
-                    <button class="info-btn"><i class="fa-solid fa-circle-question"></i></button>
                 </div>
 
 
@@ -149,3 +146,22 @@
         </div>
     </div>
 </div>
+
+<ng-template #popContent let-header="header" let-data="data">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">{{header}}</th>
+                <th scope="col">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (item of data; track item) {
+                <tr>
+                    <td>{{item?.value}}</td>
+                    <td>{{item?.definition}}</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</ng-template>

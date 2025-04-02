@@ -28,8 +28,10 @@ export class DashboardComponent implements OnDestroy{
   private destroy$ = new Subject<void>();
   currentUser:any;
   searchedProject:string = '';
+  searchedPrivateProject:string = '';
   filterProjectSubject:Subject<any> = new Subject();
   userProjects:Array<any> = [];
+  filterUserProjects:Array<any> = [];
   allPublicProjects:Array<any> = [];
   filteredPublicProjects:Array<any> = [];
 
@@ -38,7 +40,10 @@ export class DashboardComponent implements OnDestroy{
     this.getUserProjects();
     this.getAllPublicProjects();
     this.authService.currentUser.pipe(takeUntil(this.destroy$)).subscribe(x => this.currentUser = x);
-    this.filterProjectSubject.pipe(debounceTime(100), takeUntil(this.destroy$)).subscribe(() => this.filterProject())
+    this.filterProjectSubject.pipe(debounceTime(100), takeUntil(this.destroy$)).subscribe((type:string) =>{
+      if(type === 'private') this.filterPrivateProject();
+      else this.filterProject();
+    })
   }
 
   getUserProjects(){
@@ -50,7 +55,7 @@ export class DashboardComponent implements OnDestroy{
             i.hasSRA = i?.entityStats?.fastqMetadataCount > 0;
             return i;
           })
-          this.userProjects = res;
+          this.userProjects = this.filterUserProjects = res;
         }
       }
     })
@@ -76,6 +81,13 @@ export class DashboardComponent implements OnDestroy{
     if(newVal)
       this.filteredPublicProjects = this.allPublicProjects.filter((proj:any)=> proj.projectTitle.toLowerCase().includes(newVal));
     else this.filteredPublicProjects = this.allPublicProjects;
+  }
+
+  filterPrivateProject(){
+    const newVal = this.searchedPrivateProject.trim().toLowerCase();
+    if(newVal)
+      this.filterUserProjects = this.userProjects.filter((proj:any)=> proj.projectTitle.toLowerCase().includes(newVal));
+    else this.filterUserProjects = this.userProjects;
   }
 
   selectProject(project:any){

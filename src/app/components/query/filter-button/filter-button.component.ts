@@ -3,6 +3,7 @@ import { ProjectConfig } from '../../../../helpers/models/projectConfig.model';
 import { CommonModule } from '@angular/common';
 import { QueryParams } from '../../../../helpers/scripts/queryParam';
 import { FormsModule } from '@angular/forms';
+import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 
 const queryTypes:any = {
   string: ['=', 'like', 'has'],
@@ -18,7 +19,7 @@ const booleanValues:Array<any> = [{ value: 'true' }, { value: 'false' }];
 @Component({
   selector: 'app-filter-button',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NgbPopoverModule],
   templateUrl: './filter-button.component.html',
   styleUrl: './filter-button.component.scss'
 })

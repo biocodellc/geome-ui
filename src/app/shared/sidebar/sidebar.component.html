@@ -29,7 +29,7 @@
     </div>
 </div>
 @if(!isSidebarHidden && device == 'small'){
-    <div class="position-absolute sidebar-overlay"></div>
+    <div class="position-absolute sidebar-overlay" (click)="closeSidebar()"></div>
 }
 
 <ng-template #selectProjectModal let-modal>

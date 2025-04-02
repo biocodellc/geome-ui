@@ -41,7 +41,7 @@
     
                             @for(type of allDataTypes; track type){
                                 @if(checkedTypes.includes(type.name) && !type.name.includes('Fas')){
-                                    <app-upload [sectionData]="{ label: type.name }" (onFileChange)="handleWorksheetDataChange($event)" [validateOnly]="validateOnly"/>
+                                    <app-upload [sectionData]="{ label: type.name }" (onFileChange)="handleWorksheetDataChange($event)" (replaceCheckChange)="replaceCheckChange($event)" [validateOnly]="validateOnly"/>
                                     @for(item of verifiedCoordinateWorksheets; track item){
                                         @if(item.worksheet == type.name && item.scope && !item.isVerified){
                                             <p class="m-0 warn-text">You must verify your sample locations before uploading. Click <span class="text-primary cursor-pointer" (click)="openMapDialog(item)">here</span> to verify.</p>

@@ -27,7 +27,7 @@
                                         <span class="d-block warn-text f-12 mt-1">Marker is required.</span>
                                     }
                                 </div>
-                                <button class="info-btn"><i class="fa-solid fa-circle-question"></i></button>
+                                @if(i == 0){ <button class="info-btn"><i class="fa-solid fa-circle-question" popoverClass="custom-popover small-size"  autoClose="outside" [ngbPopover]="popContent"></i></button> }
                             </div>
                         </div>
                     </div>
@@ -52,3 +52,22 @@
         </div>
     </div>
 </div>
+
+<ng-template #popContent>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Marker</th>
+                <th scope="col">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (item of markers; track item) {
+                <tr>
+                    <td>{{item.value}}</td>
+                    <td>{{item.definition}}</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</ng-template>

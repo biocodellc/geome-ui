@@ -1,15 +1,15 @@
 @if(userProjects.length){
     <section id="dashboard-container" class="p-3 pt-4 mb-3 container-bg shadow">
-        <div class="container">
+        <div class="container custom-table-container">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h4 class="m-0">My Projects</h4>
-                <!-- <div style="min-width: 300px;" class="d-flex align-items-center gap-2">
+                <div class="d-flex align-items-center gap-2 searchBar">
                     <i class="fas fa-search f-15" style="margin-top: 6px;"></i>
                     <div class="form-floating mb-1" style="flex: 1;">
-                        <input type="text" [(ngModel)]="searchedProject" (ngModelChange)="filterProjectSubject.next('')" class="form-control f-15" id="floatingName" placeholder="username">
+                        <input type="text" [(ngModel)]="searchedPrivateProject" (ngModelChange)="filterProjectSubject.next('private')" class="form-control f-15" id="floatingName" placeholder="username">
                         <label for="floatingName" class="ps-0">Filter Project</label>
                     </div>
-                </div> -->
+                </div>
             </div>
             <table class="table table-striped">
                 <thead>
@@ -21,7 +21,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (item of userProjects; track item.projectId) {
+                    @for (item of filterUserProjects; track item.projectId) {
                         <tr>
                             <td>
                                 <div class="d-flex justify-content-between align-items-center">
@@ -50,14 +50,17 @@
                     }
                 </tbody>
             </table>
+            @if(filterUserProjects && !filterUserProjects.length){
+                <span class="text-center w-100 d-block">No Record Found</span>
+            }
         </div>
     </section>
 }
 <section id="dashboard-container" class="p-3 pt-4 mb-3 container-bg shadow">
-    <div class="container">
+    <div class="container custom-table-container">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="m-0">Public Projects</h4>
-            <div style="min-width: 300px;" class="d-flex align-items-center gap-2">
+            <div class="d-flex align-items-center gap-2 searchBar">
                 <i class="fas fa-search f-15" style="margin-top: 6px;"></i>
                 <div class="form-floating mb-1" style="flex: 1;">
                     <input type="text" [(ngModel)]="searchedProject" (ngModelChange)="filterProjectSubject.next('')" class="form-control f-15" id="floatingName" placeholder="username">

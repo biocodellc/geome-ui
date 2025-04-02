@@ -3,11 +3,12 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ProjectConfig } from '../../../../../helpers/models/projectConfig.model';
 import { UploadComponent } from '../../../../shared/upload/upload.component';
+import { NgbPopoverModule, NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-fastq-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, UploadComponent],
+  imports: [CommonModule, ReactiveFormsModule, UploadComponent, NgbPopoverModule],
   templateUrl: './fastq-form.component.html',
   styleUrl: './fastq-form.component.scss'
 })
@@ -50,6 +51,11 @@ export class FastqFormComponent implements OnChanges{
   fileChanged(event:any){
     this.form['file'].setValue(event.file);
     this.form['file'].updateValueAndValidity();
+  }
+
+  tooglePopup(popupRef:NgbPopover, header:string, data:any[] |any){
+    if(!popupRef.isOpen()) popupRef.open({ header, data: data || [] });
+    else popupRef.close();
   }
 
   get form(){ return this.fastqMetadataForm.controls; }

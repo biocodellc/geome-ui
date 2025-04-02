@@ -30,6 +30,23 @@ body{
     background-color: #00000080;
 }
 
+.custom-popover{
+    padding: 10px 15px !important;
+    font-size: 13px;
+    box-shadow: 3px 3px 7px grey;
+    border-radius: 10px;
+    .popover-body{
+        padding: 0px !important;
+    }
+    &.small-size{
+        max-height: 300px;
+        overflow: hidden auto;
+    }
+    &.fastq .popover-body{
+        padding: 0px var(--bs-popover-header-padding-x) !important;
+    }
+}
+
 .container-bg{ background-color: var(--section-background); }
 
 .primary-text{ color: var(--primary-color) !important;}
@@ -73,6 +90,25 @@ a{ text-decoration: none; }
     --bs-btn-focus-shadow-rgb: 49, 132, 253;
     --bs-btn-active-bg: #1a87e6;
     --bs-btn-active-border-color: #1a87e6;
+}
+
+// loader
+.map-section .loader{
+    z-index: 1000;
+} 
+
+// Search Bar
+.searchBar{
+    min-width: 50%;
+    max-width: 300px;
+}
+
+// Table
+.custom-table-container {
+    padding: 20px;
+    overflow-x: auto;
+    margin-right: 25px;
+    padding-bottom: 0px;
 }
 
 // Authentication pages
@@ -772,12 +808,6 @@ section.map-section{
         font-weight: 400 !important;
     }
     
-    .custom-table-container {
-        padding: 20px;
-        overflow-x: auto;
-        margin-right: 25px;
-        padding-bottom: 0px;
-    }
     table.custom-table.table-bordered {
         width: 100%;
     }
@@ -807,4 +837,7 @@ section.map-section{
     }
 }
 
-@media screen and (max-width: 991px) {}
+@media screen and (max-width: 991px) {
+    .validate-data .bottom-form-section{ padding: 1.5rem !important; }
+    .validate-data label.input-label.fastq-label, .SRA-sub label.input-label.fastq-label{ width: auto !important; }
+}

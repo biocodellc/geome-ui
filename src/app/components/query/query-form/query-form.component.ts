@@ -14,6 +14,8 @@ import { MapQueryService } from '../../../../helpers/services/map-query.service'
 import { MapBoundingComponent } from '../../../shared/map-bounding/map-bounding.component';
 import { FilterButtonComponent } from '../filter-button/filter-button.component';
 import { MultiselectDropdownComponent } from '../../../shared/multiselect-dropdown/multiselect-dropdown.component';
+import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
+import { DummyDataService } from '../../../../helpers/services/dummy-data.service';
 
 const SOURCE:Array<any> = [
   'Event.eventID',
@@ -83,7 +85,7 @@ const SELECT_ENTITIES:any = {
 @Component({
   selector: 'app-query-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, MapBoundingComponent, FilterButtonComponent, MultiselectDropdownComponent],
+  imports: [CommonModule, FormsModule, MapBoundingComponent, FilterButtonComponent, MultiselectDropdownComponent, NgbPopoverModule],
   templateUrl: './query-form.component.html',
   styleUrl: './query-form.component.scss'
 })
@@ -91,6 +93,7 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
   // Decorators
   @Input() q:any;
   @Output() queryResult:EventEmitter<any> = new EventEmitter();
+  @Output() entitesForDownload:EventEmitter<any> = new EventEmitter();
 
   // Injectors
   toastr = inject(ToastrService);
@@ -98,15 +101,16 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
   projectService = inject(ProjectService);
   networkService = inject(NetworkService);
   mapQueryService = inject(MapQueryService);
+  dummyDataService = inject(DummyDataService);
   expeditionService = inject(ExpeditionService);
   projectConfigService = inject(ProjectConfigurationService);
 
   // Variables
   destroy$: Subject<any> = new Subject();
   networkConfig:any;
+  currentProj:any;
 
   // Other Variables
-  isLoading:boolean = false;
   moreSearchOptions:boolean = false;
   loadingExpeditions:boolean = false;
   allProjects:Array<any> = [];
@@ -128,7 +132,16 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
   selectedTeam: string = '';
   selectedIndividualProject: string = '';
 
-  // Extra NgModels
+  // Static Data
+  popOverData:any = {
+    "entity": 'Determines which entity to query for.',
+    "teams": 'Teams consist of projects sharing a common set of rules, attributes, and controlled vocabulary terms.',
+    "project": 'Select an individual project to query on. All public projects will appear as available selections in addition to projects that you own, assuming that you logged in. If you do not see your project, please login.',
+    "term": 'Type any word or phrase here to query all collecting event, sample, and tissue fields',
+    "matSampleId": 'The Material Sample Identifier is the unique identifier assigned by the collector in the field.',
+    "country": 'Click the Input line below country to get a list of valid country names to query on. The country name list is derived from NCBI.',
+    "phylum": 'Click the Input line below phylum to get a list of valid phylum names to query on.',
+  }
 
   constructor(){
     this.entity = this.queryEntities[1];
@@ -141,6 +154,10 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
     if(changes['q'] && changes['q'].currentValue){
       this.requestedQuery = changes['q'].currentValue
       this.params.queryString = this.requestedQuery;
+      this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any) =>{
+        this.currentProj = res;
+        if(this.requestedQuery && res) this.queryJson();
+      });
     }
   }
 
@@ -171,10 +188,6 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
 
   identifySpecificEntities() {
     this.entitiesList = this.config.entities.map(e => e.conceptAlias);
-    if(this.requestedQuery){
-      this.requestedQuery = undefined;
-      this.queryJson();
-    }
   }
 
   setTeamNames(){
@@ -302,9 +315,10 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
   }
 
   queryJson() {
+    this.dummyDataService.loadingState.next(true);
     const entity = this.entity === 'Fastq' ? 'fastqMetadata' : this.entity;
-    this.isLoading = true;
-    const entities = this.config.entities
+    const config:ProjectConfig = this.requestedQuery && this.currentProj ? this.currentProj.config : this.config;
+    const entities = config.entities
       .filter(e =>
         [
           'Event',
@@ -316,7 +330,9 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
         ].includes(e.conceptAlias),
       )
       .map(e => e.conceptAlias);
-    // this.entitiesForDownload({ entities });
+    this.entitesForDownload.emit(entities);
+    this.requestedQuery = '';
+    
     const selectEntities = SELECT_ENTITIES[entity];
     this.queryService.queryJson(
       this.params.buildQuery(selectEntities, SOURCE.join()),
@@ -324,11 +340,11 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
       0,
       10000,
     ).subscribe((res:any)=>{
-      console.log(res);
       this.mapQueryService.clearBounds();
       this.mapQueryService.setQueryMarkers(res.data, entity);
       const data = { result: res.data, entities: entities, entity: this.entity };
       this.queryResult.emit(data);
+      this.dummyDataService.loadingState.next(false);
     },
     (err:any) =>{
       const data = { result: [], entities: entities, entity: this.entity };
