@@ -115,5 +115,9 @@ export const routes: Routes = [
     {
         path: 'query',
         loadComponent: ()=> import('./components/query/query.component').then(m => m.QueryComponent)
+    },
+    {
+        path: 'record/ark:/:bcid_1/:bcid_2',
+        loadComponent: () => import('./components/record/record.component').then(m => m.RecordComponent)
     }
 ];

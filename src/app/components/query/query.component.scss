@@ -1,4 +1,10 @@
-.query-table{
+.custom-table-container{
     height: calc(-130px + 100vh);
     overflow: auto;
+    th, td{
+        padding: 0.5rem 0.75rem;
+        color: grey;
+        font-size: 12px;
+    }
+    th{ font-weight: 500; }
 }

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, EventEmitter, inject, Input, OnDestroy, Output } from '@angular/core';
-import { Subject } from 'rxjs';
+import { AfterViewInit, Component, EventEmitter, inject, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import { Subject, take } from 'rxjs';
 import { MapQueryService } from '../../../../helpers/services/map-query.service';
 import { NgbTooltip, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -11,17 +11,19 @@ import { NgbTooltip, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './map.component.html',
   styleUrl: './map.component.scss'
 })
-export class MapComponent implements AfterViewInit, OnDestroy{
+export class MapComponent implements AfterViewInit, OnChanges, OnDestroy{
   // injectors
   mapService = inject(MapQueryService);
 
   // Variable
   @Input() showExtras:boolean = true;
+  @Input() mapData?:{ data:any[], lat:string, lng: string };
   @Output() sidebarToggle:EventEmitter<boolean> = new EventEmitter();
   showSidebar:boolean = true;
   destroy$:Subject<any> = new Subject();
   mapId:string = '';
   currentTile:string = 'map';
+  mapInited:boolean = false;
 
   constructor(){
     this.mapId = `map-${parseInt(String(Math.random() * 100), 10)}`;
@@ -31,6 +33,22 @@ export class MapComponent implements AfterViewInit, OnDestroy{
     setTimeout(() => {
       this.mapService.initMap(this.mapId);
     }, 10);
+    this.mapService.mapInitialized.pipe(take(1)).subscribe(() =>{
+      this.mapInited = true;
+      this.setMarkersOnMap();
+    })
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['mapData'] && changes['mapData'].currentValue){
+      this.setMarkersOnMap();
+    }
+  }
+
+  setMarkersOnMap(){
+    if(!this.mapData || !this.mapInited) return;
+    this.mapService.setMarkers(this.mapData.data, this.mapData.lat, this.mapData.lng);
+    this.mapData = undefined;
   }
 
   toggleSidebar(t:NgbTooltip){

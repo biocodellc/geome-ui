@@ -37,7 +37,7 @@ export class QueryComponent{
   queryResult:Array<any> = [];
   entities:Array<any> = [];
   params:QueryParams = new QueryParams();
-  requestedQuery:string = '';
+  requestedParams:any;
 
   constructor(){
     this.activatedRoutes.queryParams.pipe(take(1), takeUntil(this.destroy$)).subscribe((params:any)=>{
@@ -46,8 +46,8 @@ export class QueryComponent{
         if(this.teamIdNum === 45 ) this.teamQuery = true;
       }
       else if(params.q){
-        this.requestedQuery = params.q;
-        this.params.queryString = this.requestedQuery;
+        this.requestedParams = params;
+        this.params.queryString = this.requestedParams.q;
       }
     })
   }
@@ -93,5 +93,10 @@ export class QueryComponent{
     );
     this.dummyDataService.loadingState.next(false);
     this.toastr.success('Downloading processed!');
+  }
+
+  detailedView(bcid:string){
+    const url = window.location.origin + '/record/' + bcid;
+    window.open(url, '_blank')?.focus();
   }
 }

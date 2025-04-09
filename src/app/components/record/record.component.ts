@@ -1,0 +1,445 @@
+import { CommonModule } from '@angular/common';
+import { Component, inject, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { firstValueFrom, Subject, take, takeUntil } from 'rxjs';
+import { RecordService } from '../../../helpers/services/record.service';
+import { LoaderComponent } from '../../shared/loader/loader.component';
+import { DummyDataService } from '../../../helpers/services/dummy-data.service';
+import { RootRecordComponent } from '../root-record/root-record.component';
+import { ProjectService } from '../../../helpers/services/project.service';
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { MapComponent } from '../query/map/map.component';
+import { mainRecordDetails, parentRecordDetails, childRecordDetails } from '../../../helpers/scripts/recordDetails';
+import { GalleryModule, GalleryItem, ImageItem, VideoItem, YoutubeItem, IframeItem } from 'ng-gallery';
+import { flatten } from '../../../helpers/scripts/flatten';
+import compareValues from '../../../helpers/scripts/compareVal';
+import { ExpeditionService } from '../../../helpers/services/expedition.service';
+import { ProjectConfig } from '../../../helpers/models/projectConfig.model';
+
+@Component({
+  selector: 'app-record',
+  standalone: true,
+  imports: [CommonModule, LoaderComponent, RootRecordComponent, NgbTooltipModule, MapComponent, GalleryModule],
+  templateUrl: './record.component.html',
+  styleUrl: './record.component.scss'
+})
+export class RecordComponent implements OnDestroy{
+  // Injectors
+  private recordService = inject(RecordService);
+  private activatetRoute = inject(ActivatedRoute);
+  private projectService = inject(ProjectService);
+  public dummyDataService = inject(DummyDataService);
+  private expeditionService = inject(ExpeditionService);
+
+  // Variables
+  destroy$:Subject<any> = new Subject();
+  record:any;
+  recordData:any;
+  params:any;
+  currentProject!:any;
+  project!:any;
+  invalidPhoto:boolean = false;
+  localContextsPresent:boolean = false;
+  detailCacheNumCols:number = 0;
+  detailCache:any = {};
+  photos:any[] = [];
+  parentDetail!:{ [key: string]: RecordValue };
+  childDetails!: { [key: string]: { [key: string]: RecordValue }[] };
+  expeditionIdentifier: any;
+  mapData:any;
+
+  constructor(){
+    this.dummyDataService.loadingState.next(true);
+    this.activatetRoute.params.pipe(take(1)).subscribe((params:any) => {
+      console.log(params);
+      if(params.bcid_1 && params.bcid_2){
+        this.params = params;
+      }
+    })
+    this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any) => this.currentProject = res);
+    this.projectService.getAllProjectsValue().pipe(takeUntil(this.destroy$)).subscribe((res:any) => {
+      if(!res) return;
+      if(this.params) this.getRecordData();
+    })
+  }
+
+  getRecordData(){
+    const identifier = `ark:/${this.params.bcid_1}/${this.params.bcid_2}`
+    this.recordService.get(identifier).pipe(take(1)).subscribe(
+      (res:any) => {
+        console.log(res);
+        this.record = res;
+        if(this.record?.expedition || this.record?.entityIdentifier) return;
+        this.setParentDetail(this.record.parent);
+        this.setChildDetails(this.record.children);
+        const {projectId} = this.record;
+        this.recordData = this.record.record;
+        this.fetchProject(projectId);
+        if (this.recordData.entity === 'Event')
+          this.mapData = { data:[this.recordData], lat: 'decimalLatitude', lng: 'decimalLongitude' };
+        if (this.record.expeditionCode) this.getExpeditionId();
+        this.prepareLocalContexts(projectId);
+      })
+  }
+
+  getExpeditionId() {
+    const {expeditionCode, projectId} = this.record;
+    this.expeditionService.getExpeditionByCode(projectId, expeditionCode).pipe(take(1), takeUntil(this.destroy$))
+    .subscribe(
+      (res:any) => {
+        console.warn('=====check here=====',res);
+        this.expeditionIdentifier = res.identifier;
+      },
+    );
+  }
+
+  // Helpers
+  setParentDetail(parent:any) {
+    if (!parent) return;
+    const detailMap = parentRecordDetails[parent.entity];
+    this.parentDetail = Object.keys(detailMap).reduce(
+      (accumulator, key) =>
+        Object.assign(accumulator, {[key]: detailMap[key](parent)}),
+      {},
+    );
+  }
+
+  setChildDetails(children:any) {
+    if (!children) return;
+    const childMap = this.mapChildren(children);
+
+    const childDetails = (c:any) =>
+      c.map((child:any) => {
+        const detailMap = childRecordDetails[child.entity];
+        if (!detailMap) return {};
+        return Object.entries(detailMap).reduce(
+          (accumulator, [key, fn]:any) =>
+            Object.assign(accumulator, {
+              [key]: fn(child),
+            }),
+          {},
+        );
+      });
+
+    this.childDetails = Object.entries(childMap).reduce(
+      (accumulator, [entity, value]) =>
+        Object.assign(accumulator, {
+          [entity]: childDetails(value),
+        }),
+      {},
+    );
+  }
+
+  mapChildren(children:any){
+    return children.reduce((accumulator:any, child:any) => {
+      if (!accumulator[child.entity]) accumulator[child.entity] = [];
+      accumulator[child.entity].push(child);
+      return accumulator;
+    }, {});
+  }
+
+  async fetchProject(projectId:any) {
+    // short-circuit if the project is already loaded
+    if (this.currentProject && this.currentProject.projectId === projectId) {
+      this.project = { ...this.currentProject };
+      this.dummyDataService.loadingState.next(false);
+      return;
+    }
+
+    let projectData = await firstValueFrom(this.projectService.getProject(projectId));
+    if(!projectData) return;
+
+    const projectConfigs = await firstValueFrom(this.projectService.getProjectConfig(projectData.projectId));
+    if(!projectConfigs) return;
+
+    projectData.config = new ProjectConfig(projectConfigs);
+    this.project = projectData;
+    this.setPhotos();
+    this.sortChildren();
+    this.dummyDataService.loadingState.next(false);
+  }
+
+  setPhotos() {
+    const photoEntities = this.project.config.entities
+      .filter((e:any) => e.type === 'Photo')
+      .map((e:any) => e.conceptAlias);
+
+    if (!this.record?.children) return;
+
+    const photos = this.record.children.filter(
+      (e:any) => photoEntities.includes(e.entity) && e.processed === 'true',
+    );
+    const hasQualityScore = photos.some((p:any) => p.qualityScore);
+
+    this.photos = photos
+      .sort((a:any, b:any) =>
+        hasQualityScore
+          ? a.qualityScore > b.qualityScore
+          : a.photoID > b.photoID,
+      )
+      .map((photo:any) => (
+        new ImageItem({
+          src: photo.img1024,
+          alt: `${photo.photoID} image`
+        })
+        // {
+        //   id: photo.photoID,
+        //   title: photo.photoID,
+        //   alt: `${photo.photoID} image`,
+        //   bubbleUrl: photo.img128,
+        //   url: photo.img1024,
+        //   extUrl: photo.originalUrl,
+        // }
+      ));
+  }
+
+  sortChildren() {
+    if (!this.childDetails) return;
+
+    Object.keys(this.childDetails).forEach(conceptAlias => {
+      const e = this.project.config.entities.find(
+        (entity:any) => entity.conceptAlias === conceptAlias,
+      );
+      
+      this.childDetails[conceptAlias] = this.childDetails[conceptAlias]?.sort(
+        compareValues(`${e.uniqueKey}.text`),
+      );
+    });
+  }
+
+  getIdentifier() {
+    const key = this.project
+      ? this.project.config.entityUniqueKey(this.recordData.entity)
+      : undefined;
+    return key ? this.recordData[key] : this.recordData.bcid;
+  }
+
+  mainRecordDetails():{ [key: string]: RecordValue } {
+    if (this.detailCache?.main) {
+      return this.detailCache.main;
+    }
+    const detailMap = mainRecordDetails[this.recordData.entity];
+    if (!detailMap) return {};
+
+    this.detailCache.main = Object.keys(detailMap).reduce(
+      (accumulator, key) =>
+        Object.assign(accumulator, {[key]: detailMap[key](this.recordData)}),
+      {},
+    );
+    return this.detailCache.main;
+  }
+
+  auxiliaryRecordDetails(index:number):{ [key: string]: RecordValue | any } {
+    if (this.dummyDataService.loadingState.value) return {};
+
+    const numCols = 2;//this.$mdMedia('gt-sm') ? 2 : 1;
+
+    if (this.detailCache[index] && this.detailCacheNumCols === numCols) {
+      const allKeys:any[] = Object.keys(this.detailCache[index] || []);
+      return allKeys.length ? this.detailCache[index] : {};
+    }
+
+    if (this.detailCacheNumCols !== numCols) {
+      Object.keys(this.detailCache).forEach(k => {
+        if (k !== 'main') delete this.detailCache[k];
+      });
+      this.detailCacheNumCols = numCols;
+    }
+
+    const e = this.project.config.entities.find(
+      (entity:any) => entity.conceptAlias === this.recordData.entity,
+    );
+    const flatRecord = flatten(this.recordData);
+
+    const recordKeys = Object.keys(flatRecord).filter(
+      k =>
+        (!mainRecordDetails[this.recordData.entity] ||
+          !Object.keys(mainRecordDetails[this.recordData.entity]).includes(k)) &&
+        !['bcid', 'entity', 'bulkLoadFile'].includes(k),
+    );
+
+    const sortedKeys = e.attributes.reduce((accumulator:any, attribute:any) => {
+      if (recordKeys.includes(attribute.column)) {
+        accumulator.push(attribute.column);
+      }
+      return accumulator;
+    }, []);
+
+    // add any missing keys to the sortedKeys list
+    recordKeys
+      .sort()
+      .forEach(k => !sortedKeys.includes(k) && sortedKeys.push(k));
+
+    let view = index === 0 ? sortedKeys : [];
+    if (numCols > 1) {
+      const perCol = Math.ceil(sortedKeys.length / numCols);
+      const start = index * perCol;
+      if (start > sortedKeys.length) view = [];
+      else {
+        const last = start + perCol;
+        view = sortedKeys.slice(
+          start,
+          last > sortedKeys.length ? sortedKeys.length : last,
+        );
+      }
+    }
+    this.detailCache[index] = view.reduce((accumulator:any, key:any) => {
+      const acc = accumulator;
+      if (key === 'projectId') {
+        acc.project = {
+          text: this.project.projectTitle,
+          href: `/workbench/project-overview?projectId=${this.project.projectId
+            }`,
+        };
+      } else if (key === 'expeditionCode') {
+        const identifier = `ark:/${this.params.bcid_1}/${this.params.bcid_2}`
+        acc[key] = {
+          text: flatRecord[key],
+          href: `https://n2t.net/${identifier}`,
+        };
+      } else if (['img128', 'img512', 'img1024'].includes(key)) {
+        acc[key] = {
+          text: `${key.substring(3)} pixel wide image`,
+          href: flatRecord[key],
+        };
+      } else if (key.match(/URI/i)) {
+        acc[key] = {
+          text: flatRecord[key],
+          href: flatRecord[key],
+        };
+      } else if (key === 'wormsID') {
+        acc[key] = {
+          text: flatRecord[key],
+          href: 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=' + flatRecord[key].replace('urn:lsid:marinespecies.org:taxname:', ''),
+        };
+      } else if (key.match(/CatalogNumber/i)) {
+        if (flatRecord[key].match(/http/i)) {
+          acc[key] = {
+            text: flatRecord[key],
+            href: flatRecord[key],
+          };
+        } else {
+          acc[key] = flatRecord[key];
+        }
+      } else {
+        acc[key] = flatRecord[key];
+      }
+
+      //if (key === 'imageProcessingErrors') {
+      //  this.invalidPhoto = true;
+      //}
+
+      return acc;
+    }, {});
+
+    const allKeys:any[] = Object.keys(this.detailCache[index] || [])
+    return  allKeys.length ? this.detailCache[index] : {};
+  }
+
+  /* fetch local contexts details at the construction, only populate data if localcontexts project is set
+  * Note that we delve into jquery calls and here and call directly to DOM since the LC Hub API did not
+  * have proper CORS headers for angular $http calls, which were failing. The jquery XmlHttpRequest
+  * is maybe simpler
+  */
+  prepareLocalContexts(projectId:any) {
+    this.localContextsPresent = false;
+    this.projectService.getProject(projectId).pipe(take(1), takeUntil(this.destroy$))
+      .subscribe((project:any) => {
+        if (project.localcontextsId) {
+          this.localContextsPresent = true;
+          var lcUrl = 'https://localcontextshub.org/api/v1/projects/' + project.localcontextsId + '/?format=json';
+		  // This is a temporary storage directory for localcontexts projects that have been created in GEOME
+		  //var lcUrl = 'https://raw.githubusercontent.com/biocodellc/geome-ui/master/localcontexts/' + project.localcontextsId 
+          var xmlHttp = new XMLHttpRequest();
+          xmlHttp.open("GET", lcUrl, true); // false for synchronous request
+          xmlHttp.onreadystatechange = function (oEvent) {
+            if (xmlHttp.readyState === 4) {
+              if (xmlHttp.status === 200) {
+                var height = 70
+
+                var localContextsJson = JSON.parse(xmlHttp.responseText);
+                // Handle Notices
+                try {
+                  for (var i = 0; i < localContextsJson.notice.length; i++) {
+                    var obj = localContextsJson.notice[i];
+                    var div = document.createElement('div');
+                    div.setAttribute("style", "padding: 5px;")
+
+                    var img = document.createElement('img');
+                    img.src = obj.img_url
+                    img.height = height
+                    img.setAttribute("style", "padding: 2px; max-height: 70px; float: left;")
+
+                    var spanner = document.createElement('div')
+                    spanner.setAttribute("style", "display:block;height:70px;overflow:scroll;")
+                    spanner.innerHTML = "<a target=_blank href='" + localContextsJson.project_page + "'>" + obj.name + "</a>"
+                    spanner.innerHTML += "<p>" + obj.default_text + "<p>";
+
+                    div.appendChild(img);
+                    div.appendChild(spanner);
+                    document.getElementById('localContextsLabels')?.appendChild(div);
+                  }
+                } catch (e) {
+                  console.log(e);
+                }
+                // Handle Labels
+                var allLabels = []
+                try {
+                  for (var i = 0; i < localContextsJson.bc_labels.length; i++) {
+                    allLabels.push(localContextsJson.bc_labels[i]);
+                  }
+                } catch (e) {
+                }
+                try {
+                  for (var i = 0; i < localContextsJson.tk_labels.length; i++) {
+                    allLabels.push(localContextsJson.tk_labels[i]);
+                  }
+                } catch (e) {
+                }
+
+                for (var i = 0; i < allLabels.length; i++) {
+                  var obj = allLabels[i];
+
+                  var div = document.createElement('div');
+                  div.setAttribute("style", "padding: 5px;")
+
+                  var img = document.createElement('img');
+                  img.src = obj.img_url
+                  img.height = height
+                  img.setAttribute("style", "padding: 2px; max-height: 70px; float: left;")
+
+                  var spanner = document.createElement('div')
+                  spanner.setAttribute("style", "display:block;height:70px;overflow:scroll;")
+                  spanner.innerHTML = "<a target=_blank href='" + localContextsJson.project_page + "'>" + obj.name + "</a>"
+                  spanner.innerHTML += "<p>" + obj.label_text + "<p>";
+                  spanner.innerHTML += "<p><i>" + obj.community + "</i>"
+
+                  div.appendChild(img);
+                  div.appendChild(spanner);
+                  document.getElementById('localContextsLabels')?.appendChild(div);
+                }
+                const ref = document.getElementById("localContextsHeader");
+                if(ref) ref.innerHTML = '<b><i>' + localContextsJson.title + "</i></b>";
+              } else {
+                const ref = document.getElementById("localContextsHeader");
+                if(ref) ref.innerHTML = 'Error Loading Local Contexts Data...';
+                console.log("Error", xmlHttp.statusText);
+              }
+            }
+          };
+          xmlHttp.send(null);
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next('');
+    this.destroy$.complete();
+  }
+}
+
+
+interface RecordValue {
+  href?: string;
+  text?: string;
+}

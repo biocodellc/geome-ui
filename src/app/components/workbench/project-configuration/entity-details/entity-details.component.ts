@@ -54,6 +54,7 @@ export class EntityDetailsComponent implements OnDestroy{
   requiredUris:Array<any> = [];
   selectedAttributeMap:any = {};
   orderedAttributes:Array<any> = [];
+  availableAttributes:any[] = [];
 
   // Rules
   rulesForm!:FormGroup;
@@ -92,7 +93,9 @@ export class EntityDetailsComponent implements OnDestroy{
       if(this.paramData.type === 'attributes'){
         const requiredAtt = this.requiredAttributes();
         this.requiredUris = requiredAtt ? requiredAtt.map((a:any) => a.uri) : [];
+        this.availableAttributes = this.getAvailableAttributes();
         this.onAllCheckboxChange(true);
+        this.updateSelectedAttrbutes();
         this.initAttributeForm();
       }
       else{
@@ -104,6 +107,11 @@ export class EntityDetailsComponent implements OnDestroy{
   }
   
   // =========================================== ATTRIBUTES ====Start===========================================
+  updateSelectedAttrbutes(){
+    const filteredAtt = this.availableAttributes.filter(item => !this.selectedAttributes.find(val => val.column === item.column));
+    filteredAtt.forEach(item => this.selectedAttributes.push(item));
+  }
+  
   initAttributeForm(){
     this.attributeForm = this.fb.group({
       group: [''],
@@ -116,7 +124,7 @@ export class EntityDetailsComponent implements OnDestroy{
     this.attributeForm.controls[control].updateValueAndValidity();
   }
 
-  availableAttributes() {
+  getAvailableAttributes() {
     return this.networkConfig.entities.find((e:any) => e.conceptAlias === this.paramData.entity).attributes;
   }
 

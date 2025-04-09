@@ -128,7 +128,7 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
   configNames:Array<any> = [];
   entitiesList: Array<any> = [];
   params:QueryParams = new QueryParams();
-  requestedQuery:string | undefined;
+  requestedParams:any;
   selectedTeam: string = '';
   selectedIndividualProject: string = '';
 
@@ -152,11 +152,12 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['q'] && changes['q'].currentValue){
-      this.requestedQuery = changes['q'].currentValue
-      this.params.queryString = this.requestedQuery;
+      this.requestedParams = changes['q'].currentValue
+      this.params.queryString = this.requestedParams.q;
+      if(this.requestedParams?.entity) this.entity = this.requestedParams.entity;
       this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any) =>{
         this.currentProj = res;
-        if(this.requestedQuery && res) this.queryJson();
+        if(this.requestedParams && res) this.queryJson();
       });
     }
   }
@@ -317,7 +318,7 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
   queryJson() {
     this.dummyDataService.loadingState.next(true);
     const entity = this.entity === 'Fastq' ? 'fastqMetadata' : this.entity;
-    const config:ProjectConfig = this.requestedQuery && this.currentProj ? this.currentProj.config : this.config;
+    const config:ProjectConfig = this.requestedParams && this.currentProj ? this.currentProj.config : this.config;
     const entities = config.entities
       .filter(e =>
         [
@@ -331,7 +332,7 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
       )
       .map(e => e.conceptAlias);
     this.entitesForDownload.emit(entities);
-    this.requestedQuery = '';
+    this.requestedParams = null;
     
     const selectEntities = SELECT_ENTITIES[entity];
     this.queryService.queryJson(

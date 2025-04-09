@@ -6,6 +6,7 @@ import { ProjectService } from '../../../../../helpers/services/project.service'
 import { Subject, take, takeUntil } from 'rxjs';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { DeleteModalComponent } from '../../../../dialogs/delete-modal/delete-modal.component';
+import { DummyDataService } from '../../../../../helpers/services/dummy-data.service';
 
 @Component({
   selector: 'app-project-setting',
@@ -20,20 +21,22 @@ export class ProjectSettingComponent implements OnDestroy {
   toastr = inject(ToastrService);
   modalService = inject(NgbModal);
   projectService = inject(ProjectService);
+  dummyDataService = inject(DummyDataService);
 
   // Variables
   destroy$: Subject<any> = new Subject();
   projectForm!: FormGroup;
   currentProject:any;
-  isLoading:boolean = false;
   modalRef!: NgbModalRef;
 
   constructor() {
+    this.dummyDataService.loadingState.next(true);
     this.initForm();
     this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       this.currentProject = res;
       if(this.currentProject){
         this.setFormValues()
+        this.dummyDataService.loadingState.next(false);
       }
     })
   }
@@ -67,14 +70,16 @@ export class ProjectSettingComponent implements OnDestroy {
   update() {
     this.projectForm.markAllAsTouched();
     if (this.projectForm.invalid) return;
-    this.isLoading = true;
+    this.dummyDataService.loadingState.next(true);
     const updatedData = { ...this.currentProject, ...this.projectForm.value };
     this.projectService.updateProject(updatedData).pipe(take(1), takeUntil(this.destroy$)).subscribe(
       (res: any) => {
         if (!res) return;
-        this.projectService.loadPrivateProjects();
-        this.projectService.loadFromSession();
-        this.toastr.success('Project Updated');
+        this.projectService.loadAllProjects();
+        setTimeout(() => {
+          this.toastr.success('Project Updated');
+          this.dummyDataService.loadingState.next(false);
+        }, 2000);
       }
     )
   }

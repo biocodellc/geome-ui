@@ -1,0 +1,13 @@
+section.records{
+    height: calc(100vh - 62px);
+    overflow:hidden auto;
+}
+.divider{
+    height: 1px;
+    width: 100%;
+    border: 1px solid grey;
+}
+
+.col-12.col-md-6{
+    width: 47% !important;
+}

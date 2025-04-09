@@ -2,9 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable, catchError, map, of, take } from 'rxjs';
-// import { ProjectConfigurationService } from './project-configuration.service';
-// import { ProjectConfige } from '../models/ProjectConfig';
-import { ProjectConfigurationService } from './project-config.service';
 import { ProjectConfig } from '../models/projectConfig.model';
 import { environment } from '../../environments/environment';
 import { AuthenticationService } from './authentication.service';
@@ -84,12 +81,11 @@ export class ProjectService {
   }
 
   getProject(projectId: string, includeConfig = true): Observable<Project | null> {
-    if (!projectId) {
+    if (!projectId || !this.allProjectSubject.value) {
       return of(null);
     }
-
-    return this.getAllProjects(true).pipe(
-      map((projects) => projects.find((p:any) => p.projectId === projectId) || null),
+    return this.allProjectSubject.pipe(
+      map((projects:any) => projects.find((p:any) => p.projectId == projectId) || null),
       catchError(() => of(null))
     );
   }

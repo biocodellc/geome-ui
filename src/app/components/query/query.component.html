@@ -27,7 +27,7 @@
                 <app-query-form (queryResult)="updateQueryResult($event, 'teamQueryForm')"/>
             }
             @else{
-                <app-query-form (queryResult)="updateQueryResult($event, 'queryForm')" [q]="requestedQuery" (entitesForDownload)="downloadableEntities($event)"/>
+                <app-query-form (queryResult)="updateQueryResult($event, 'queryForm')" [q]="requestedParams" (entitesForDownload)="downloadableEntities($event)"/>
             }
         </div>
         
@@ -55,7 +55,7 @@
                         </thead>
                         <tbody>
                             @for (item of queryResult; track item) {
-                                <tr>
+                                <tr (click)="detailedView(item.bcid)">
                                     <td>{{ item.materialSampleID }}</td>
                                     <td>{{ item.eventID }}</td>
                                     <td>{{ item.locality }}</td>
@@ -65,7 +65,7 @@
                                     <td>{{ item.phylum }}</td>
                                     <td>{{ item.scientificName }}</td>
                                     <td>{{ item.expeditionCode }}</td>
-                                    <td>{{ item.eventBcid }}</td>
+                                    <td>{{ item.bcid }}</td>
                                 </tr>
                             }
                         </tbody>

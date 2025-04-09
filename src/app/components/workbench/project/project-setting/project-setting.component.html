@@ -136,7 +136,14 @@
                 <label class="form-label">*Required Elements</label>
             </div>
 
-            <button type="submit" class="btn req-save">Save</button>
+            <button type="submit" class="btn req-save" [disabled]="dummyDataService.loadingState | async">
+                @if(dummyDataService.loadingState | async){
+                    <div class="spinner-border text-light" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                }
+                Save
+            </button>
         </form>
     </div>
 </div>

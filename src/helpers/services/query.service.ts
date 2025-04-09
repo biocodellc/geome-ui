@@ -92,6 +92,7 @@ export class QueryService {
         if (events[s.eventID]) {
           Object.assign(record, events[s.eventID], { eventBcid: events[s.eventID].bcid });
         }
+        record.bcid = s.bcid;
         records.push(record);
       });
     } else if (entity === 'Event') {

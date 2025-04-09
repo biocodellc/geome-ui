@@ -1,0 +1,62 @@
+<h3>{{header}}</h3>
+
+<!--TODO: we need to add a nice way to display the metadata object-->
+<div class="main-details horizontal-description-list p-3">
+    <div>
+        @for(item of (mainRecordDetails || {}) | keyvalue; track item.key){
+            <div>
+                <span>{{ item.key }}:</span>
+                <p class="">
+                    @if(item.value.href){
+                        <span> <a href="{{ item.value.href }}" target="_blank">{{ item.value.href }}</a> </span>
+                    }
+                    @else{ <span>{{ item.value.text || 'N/A' }}</span> }
+                </p>
+            </div>
+        }
+    </div>
+</div>
+
+@if(parentDetail){
+    <div class="my-3 divider"></div>
+    <div class="parent-details horizontal-description-list p-3">
+        <h4>Parent {{ parentEntity }}</h4>
+        <div layout="row">
+            <ul style="list-style-type: none;" class="d-flex flex-wrap gap-3 p-0">
+                @for(item of (parentDetail || {}) | keyvalue; track item.key){
+                <li>
+                    <span>{{ item.key }}:</span>
+                    <p>
+                        @if(item.value.href){
+                        <span> <a href="{{ item.value.href }}" target="_blank">{{ item.value.href }}</a> </span>
+                        }
+                        @else{ <span>{{ item.value.text || 'N/A' }}</span> }
+                    </p>
+                </li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+
+@if(childDetails){
+    <div class="my-3 divider"></div>
+    <div class="child-details horizontal-description-list p-3">
+        <h4>Child Entities</h4>
+        @for(item of (childDetails || {}) | keyvalue; track item.key){
+            <div class="entity-group">
+                <div layout="row">
+                    @if(item.key !== 'query'){ <span class="entity">{{ item.key }}s</span> }
+                    @else{ <span class="entity"> </span> }
+                    <p class="">
+                        @if(!item.value.href && !item.value.queryLink){ <span>{{ item.value.text || 'N/A' }}</span> }
+                        @else if(item.value.href){ <span><a href="{{item.value.href}}">{{ item.value.text || 'N/A' }}</a></span> }
+                        @else if(item.value.queryLink){
+                            <span (click)="query(item.value.queryLink)">{{ item.value.text || 'N/A' }}</span>
+                        }
+                    </p>
+                </div>
+            </div>
+        }
+    </div>
+}

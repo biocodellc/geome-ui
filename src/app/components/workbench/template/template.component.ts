@@ -68,9 +68,9 @@ export class TemplateComponent implements OnDestroy{
       if (!name || this.worksheets.find(d => d === name)) return;
       this.worksheets.push(name);
     });
-    if (this.worksheets.length > 1 && !this.worksheets.includes('Workbook')) {
-      this.worksheets.unshift('Workbook');
-    }
+    // if (this.worksheets.length > 1 && !this.worksheets.includes('Workbook')) {
+    //   this.worksheets.unshift('Workbook');
+    // }
     this.selectedWorksheet = this.worksheets[0];
     this.filteredTemplates = [ ...this.filterTemplates() ];
     console.log('======get worksheet templates====',this.filteredTemplates);
