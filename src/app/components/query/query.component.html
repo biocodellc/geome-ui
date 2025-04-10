@@ -38,38 +38,41 @@
             <div class="custom-table-container" [ngClass]="active != 'map' ? 'query-table' : 'w-0 h-0 overflow-hidden'">
                 @if(queryResult.length){
                     <p class="fw-bold">Total Number of Results: {{queryResult.length}}</p>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col">MaterialSampleID</th>
-                                <th scope="col">EventID</th>
-                                <th scope="col">Locality</th>
-                                <th scope="col">DecimalLatitude</th>
-                                <th scope="col">DecimalLongitude</th>
-                                <th scope="col">YearCollected</th>
-                                <th scope="col">Phylum</th>
-                                <th scope="col">ScientificName</th>
-                                <th scope="col">ExpeditionCode</th>
-                                <th scope="col">Bcid</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @for (item of queryResult; track item) {
-                                <tr (click)="detailedView(item.bcid)">
-                                    <td>{{ item.materialSampleID }}</td>
-                                    <td>{{ item.eventID }}</td>
-                                    <td>{{ item.locality }}</td>
-                                    <td>{{ item.decimalLatitude }}</td>
-                                    <td>{{ item.decimalLongitude }}</td>
-                                    <td>{{ item.yearCollected }}</td>
-                                    <td>{{ item.phylum }}</td>
-                                    <td>{{ item.scientificName }}</td>
-                                    <td>{{ item.expeditionCode }}</td>
-                                    <td>{{ item.bcid }}</td>
+                    <div class="main-table">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">MaterialSampleID</th>
+                                    <th scope="col">EventID</th>
+                                    <th scope="col" class="th-locality">Locality</th>
+                                    <th scope="col">DecimalLatitude</th>
+                                    <th scope="col">DecimalLongitude</th>
+                                    <th scope="col">YearCollected</th>
+                                    <th scope="col">Phylum</th>
+                                    <th scope="col">ScientificName</th>
+                                    <th scope="col">ExpeditionCode</th>
+                                    <th scope="col">Bcid</th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @for (item of formattedQueryResult; track item) {
+                                    <tr (click)="detailedView(item.bcid)">
+                                        <td>{{ item.materialSampleID }}</td>
+                                        <td>{{ item.eventID }}</td>
+                                        <td>{{ item.locality }}</td>
+                                        <td>{{ item.decimalLatitude }}</td>
+                                        <td>{{ item.decimalLongitude }}</td>
+                                        <td>{{ item.yearCollected }}</td>
+                                        <td>{{ item.phylum }}</td>
+                                        <td>{{ item.scientificName }}</td>
+                                        <td>{{ item.expeditionCode }}</td>
+                                        <td>{{ item.bcid }}</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <app-paginator [paginator]="paginatorData" (pageChange)="onPageChange()"/>
                 }
                 @else{
                     <div class="d-flex justify-content-center">

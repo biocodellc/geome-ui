@@ -1,0 +1,64 @@
+@if(results?.showValidationMessages){
+    <div>
+        @for(entityResults of results.validation.messages; track entityResults.entity){
+            <div>
+                @if(entityResults.errors.length > 0){
+                    <div class="tab-content">
+                        <p>
+                            <b>Validation results on {{ entityResults.sheetName }} worksheet, for entity: {{entityResults.entity }}.</b>
+                            <br />
+                            <b>1 or more errors found. Must fix to continue. Click each message for details</b>
+                        </p>
+                    </div>
+                }
+                @if(entityResults.errors.length === 0 && entityResults.warnings.length > 0){
+                    <div class="tab-content">
+                        <p>
+                            <b>Validation results on {{ entityResults.sheetName }} worksheet, for entity: {{entityResults.entity }}.</b>
+                            <br />
+                            <b>1 or more warnings found. Click each message for details</b>
+                        </p>
+                    </div>
+                }
+        
+                @if(entityResults.errors && entityResults.errors.length){
+                    <div ngbAccordion [closeOthers]="true">
+                        @for (group of entityResults.errors; track group; let i=$index) {
+                            <div ngbAccordionItem [collapsed]="i !== 0">
+                                <h2 ngbAccordionHeader>
+                                    <button ngbAccordionButton>'Error': <span [innerHTML]="sanitizeHtml(group.groupMessage)"></span></button>
+                                </h2>
+                                <div ngbAccordionCollapse>
+                                    <div ngbAccordionBody>
+                                        @for(m of group.messages; track m){
+                                            <div class="message">{{ (m?.message) }}</div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+
+                @if(entityResults.warnings && entityResults.warnings.length){
+                    <div ngbAccordion [closeOthers]="true">
+                        @for (group of entityResults.warnings; track group; let i=$index) {
+                            <div ngbAccordionItem [collapsed]="i !== 0">
+                                <h2 ngbAccordionHeader>
+                                    <button ngbAccordionButton>Warning: <span innerHTML="sanitizeHtml(group.groupMessage)"></span></button>
+                                </h2>
+                                <div ngbAccordionCollapse>
+                                    <div ngbAccordionBody>
+                                        @for(m of group.messages; track m;){
+                                            <div class="message">{{ m?.message }}</div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+}

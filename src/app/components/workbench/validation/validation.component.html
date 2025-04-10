@@ -7,7 +7,7 @@
             </div>
         </div>
         <div class="row">
-            <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs">
+            <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs" (navChange)="navChange($event)">
                 <li [ngbNavItem]="'load'">
                     <button ngbNavLink>{{ currentUser ? 'Load': 'Validate'}}</button>
                     <ng-template ngbNavContent>
@@ -31,7 +31,7 @@
                                         <label class="input-label fastq-label"></label>
                                         <div class="input-med-sec d-flex flex-wrap" style="column-gap: 1rem;">
                                             <div class="form-check">
-                                                <input class="form-check-input" name="validate" type="checkbox" id="flexCheckDefault_validate" [(ngModel)]="validateOnly">
+                                                <input class="form-check-input" name="validate" type="checkbox" id="flexCheckDefault_validate" [(ngModel)]="validateOnly" (change)="validateChange($event)">
                                                 <label class="form-check-label fw-bold" for="flexCheckDefault_validate">Only Validate</label>
                                             </div>
                                         </div>
@@ -74,7 +74,9 @@
                                                     }
                                                 </select>
                                             </div>
-                                            <button class="info-btn"><i class="fa-solid fa-plus"></i></button>
+                                            @if(currentProject && currentUser){
+                                                <button class="btn btn-dark rounded-circle btn-sm" placement="top" ngbTooltip="New Expedition" (click)="openCreateExpModal()"><i class="fa-solid fa-plus"></i></button>
+                                            }
                                         </div>
                                     </div>
                                     <div class="col-lg-4"></div>
@@ -89,11 +91,12 @@
                         </form>
                     </ng-template>
                 </li>
-                <li [ngbNavItem]="'results'">
+                <li [ngbNavItem]="'results'" [disabled]="!results?.status">
                     <button ngbNavLink>Results</button>
                     <ng-template ngbNavContent>
                         <div>
-                            {{results?.status || results?.result || ''}}
+                            {{results?.status || results?.successMessage || ''}}
+                            <app-result-validations [results]="results" />
                         </div>
                     </ng-template>
                 </li>

@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnDestroy, TemplateRef } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { ProjectService } from '../../../../helpers/services/project.service';
-import { Router, RouterLink } from '@angular/router';
-import { debounceTime, Subject, take, takeUntil } from 'rxjs';
+import { RouterLink } from '@angular/router';
+import { Subject, take, takeUntil } from 'rxjs';
 import { ExpeditionService } from '../../../../helpers/services/expedition.service';
 import { AuthenticationService } from '../../../../helpers/services/authentication.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CreateExpeditionComponent } from '../../../dialogs/create-expedition/create-expedition.component';
 
 @Component({
   selector: 'app-expeditions',
@@ -18,10 +18,8 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ExpeditionsComponent implements OnDestroy{
   // Injectors
-  private router = inject(Router);
   private fb = inject(FormBuilder);
   private modalService = inject(NgbModal);
-  private toastrService = inject(ToastrService);
   private projectService = inject(ProjectService);
   private authService = inject(AuthenticationService);
   private expeditionService = inject(ExpeditionService);
@@ -59,56 +57,14 @@ export class ExpeditionsComponent implements OnDestroy{
     })
   }
 
-  openCreateModal(content: TemplateRef<any>){
-    this.initForm();
-    this.modalRef = this.modalService.open(content, { animation: true, centered: true, backdrop: false });
-  }
-
-  get form(){
-    return this.expeditionForm.controls;
-  }
-
-  initForm(){
-    this.expeditionForm = this.fb.group({
-      expeditionCode: ['', [Validators.required, Validators.pattern(this.codeRegex)]],
-      expeditionTitle: ['', [Validators.required]],
-      metadata: [{}],
-      public: [true],
-      visibility: ['anyone']
-    })
-    this.form['expeditionCode'].valueChanges.pipe(debounceTime(500), takeUntil(this.destroy$)).subscribe((res:any)=> this.validateCode(res))
-  }
-
-  validateCode(code: string) {
-    const newCode = code.trim();
-    if (newCode && newCode.length >= 4 && !this.form['expeditionCode'].errors) {
-      this.expeditionService.getExpeditionByCode( this.currentProject.projectId, newCode).pipe(takeUntil(this.destroy$)).subscribe({
-        next: (res: any) => {
-          if (res) this.codeExists = true
-          else this.codeExists = false;
-        }
-      })
-    }
-  }
-
-  createNew(){
-    this.expeditionForm.markAllAsTouched();
-    if(this.expeditionForm.invalid || this.codeExists) return;
-    this.isLoading = true;
-    this.expeditionService.createExpedition(this.currentProject.projectId, this.expeditionForm.value)
-    .pipe(take(1), takeUntil(this.destroy$)).subscribe({
-      next: (res:any)=>{
-        if(res){
-          this.toastrService.success('Expedition Created.')
-          this.projectExpeditions.push(res);
-          this.isLoading = false;
-          this.modalRef.close();
-        }
-      },
-      error: (err:any)=> this.isLoading = false
+  openCreateModal(){
+    this.modalRef = this.modalService.open(CreateExpeditionComponent, { animation: true, centered: true, backdrop: false });
+    this.modalRef.componentInstance.currentProject = { ...this.currentProject };
+    this.modalRef.result.then((res:boolean)=>{
+      if(res) this.getProjectExpeditions();
     })
   }
-
+  
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

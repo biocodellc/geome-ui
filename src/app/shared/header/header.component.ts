@@ -53,7 +53,7 @@ export class HeaderComponent implements OnDestroy{
   }
 
   signoutUser(){
-    const isPrivateProj = this.userProjects.find((proj:any) => proj.projectId == this.currentProjectId) ? true : false;
+    const isPrivateProj = this.userProjects?.find((proj:any) => proj.projectId == this.currentProjectId) ? true : false;
     if(isPrivateProj) this.projectService.setCurrentProject(null);
     this.projectService.userProjectSubject.next([]);
     this.authService.logoutUser();

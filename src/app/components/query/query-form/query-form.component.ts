@@ -346,6 +346,8 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
       const data = { result: res.data, entities: entities, entity: this.entity };
       this.queryResult.emit(data);
       this.dummyDataService.loadingState.next(false);
+      if(data.result.length === 10000)
+        this.toastr.info(`Query results are limited to 10000. Either narrow your search or download the results to view everything.`)
     },
     (err:any) =>{
       const data = { result: [], entities: entities, entity: this.entity };

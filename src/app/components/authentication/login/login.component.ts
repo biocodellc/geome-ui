@@ -59,7 +59,7 @@ export class LoginComponent implements OnDestroy{
       next: (res:any)=>{
         this.authService.setCurrentUser(res);
         this.toastrService.success('Login Successful');
-        this.router.navigate(['']);
+        this.router.navigate(['/workbench']);
       },
       error: (err:any)=>{
         this.toastrService.error(err.error?.usrMessage || 'Something went wrong!');

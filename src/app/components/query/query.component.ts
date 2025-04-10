@@ -11,11 +11,12 @@ import { QueryService } from '../../../helpers/services/query.service';
 import { ToastrService } from 'ngx-toastr';
 import { QueryParams } from '../../../helpers/scripts/queryParam';
 import { LoaderComponent } from '../../shared/loader/loader.component';
+import { PaginatorComponent } from '../../shared/paginator/paginator.component';
 
 @Component({
   selector: 'app-query',
   standalone: true,
-  imports: [CommonModule, QueryFormComponent, TeamQueryFormComponent, MapComponent, NgbDropdownModule, LoaderComponent],
+  imports: [CommonModule, QueryFormComponent, TeamQueryFormComponent, MapComponent, NgbDropdownModule, LoaderComponent, PaginatorComponent],
   templateUrl: './query.component.html',
   styleUrl: './query.component.scss'
 })
@@ -35,9 +36,11 @@ export class QueryComponent{
 
   entity:string = '';
   queryResult:Array<any> = [];
+  formattedQueryResult:Array<any> = [];
   entities:Array<any> = [];
   params:QueryParams = new QueryParams();
   requestedParams:any;
+  paginatorData:any = { collectionSize: 0, page: 0, pageSize: 50 };
 
   constructor(){
     this.activatedRoutes.queryParams.pipe(take(1), takeUntil(this.destroy$)).subscribe((params:any)=>{
@@ -55,6 +58,15 @@ export class QueryComponent{
   updateQueryResult(data:any, tab:string){
     this.queryResult = data.result;
     this.entity = data.entity;
+    this.paginatorData = { collectionSize: this.queryResult.length, page: 1, pageSize: 50 };
+    this.onPageChange();
+  }
+
+  onPageChange(){
+    this.formattedQueryResult = this.queryResult.slice(
+			(this.paginatorData.page - 1) * this.paginatorData.pageSize,
+			(this.paginatorData.page - 1) * this.paginatorData.pageSize + this.paginatorData.pageSize,
+		);
   }
 
   onSidebarToggle(event:boolean){

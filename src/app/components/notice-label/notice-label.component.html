@@ -1,0 +1,18 @@
+<div class="tk-labels">
+    <div>
+        <img (click)="showNoticeMessage(notice_modal)" id="TK-notice" class="image figure-img img-fluid cursor-pointer"
+            src="images/TK-notice.png" />
+    </div>
+</div>
+
+<ng-template #notice_modal let-modal>
+	<div class="modal-body p-4 pb-2">
+        <h5 class="fw-semibold mb-3">Traditional Knowledge Notice</h5>
+        <p>The Traditional Knowledge (TK) Notice that appears here serves as a visible notification that there is accompanying cultural rights and responsibilities that need further attention for any future sharing and use of this material.</p>
+        <p>The TK Notice is intended to be a collective notice and an initiative to elevate recognition of the cultural significance, importance and often placed-based nature of TK.</p>
+        <p>The TK Notice may indicate that TK Labels or Biocultural (BC) Labels are in development and their implementation is being negotiated. For more information about TK and BC Labels visit <a href="http://localcontexts.org/tk-labels/" target="_blank"> <i>local contexts</i></a></p>
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-outline-primary border-0" (click)="modal.close()">Close</button>
+        </div>
+    </div>
+</ng-template>

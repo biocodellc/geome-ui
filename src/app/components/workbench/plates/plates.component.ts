@@ -1,7 +1,7 @@
 import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
 import { ProjectService } from '../../../../helpers/services/project.service';
 import { PlatesService } from '../../../../helpers/services/plates.service';
-import { BehaviorSubject, debounceTime, Subject, take, takeUntil } from 'rxjs';
+import { BehaviorSubject, debounceTime, Subject, take, takeUntil, distinctUntilChanged, map, firstValueFrom, switchMap, of, catchError } from 'rxjs';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AuthenticationService } from '../../../../helpers/services/authentication.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -11,10 +11,14 @@ import { DummyDataService } from '../../../../helpers/services/dummy-data.servic
 import { ToastrService } from 'ngx-toastr';
 import { RecordService } from '../../../../helpers/services/record.service';
 
+import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
+import { Observable, OperatorFunction } from 'rxjs';
+import { JsonPipe } from '@angular/common';
+
 @Component({
   selector: 'app-plates',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, NgbTypeaheadModule, JsonPipe],
   templateUrl: './plates.component.html',
   styleUrl: './plates.component.scss'
 })
@@ -33,7 +37,6 @@ export class PlatesComponent {
   // Variables
   @ViewChild('plateDataModal', { static:false }) plateDataModal!:NgbModalRef;
   destroy$:Subject<any> = new Subject();
-  inputChangeSubject:BehaviorSubject<any> = new BehaviorSubject(null);
   currentUser:any;
   currentProject:any;
   plateForm!:FormGroup;
@@ -44,8 +47,32 @@ export class PlatesComponent {
   selectedPlate:string = '';
   userPlates:Array<any> = [];
   activeInput:any;
+  matchingData:any[] = [];
+  selectPlateData:any[] = [];
+
+  search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      switchMap((term) => {
+        if (term.length < 2) return of([]);
+
+        const payload = this.formatPayload(term);
+        if (!payload) return of([]);
+
+        return this.queryService.queryJson(payload.builder, payload.entity, 0, 100, false).pipe(
+          map((response: any) => {
+            this.matchingData = response.data;
+            const sampleIDs = this.matchingData.map((item: any) => item.materialSampleID);
+            return sampleIDs.filter((v: string) => v.toLowerCase().includes(term.toLowerCase()));
+          }),
+          catchError(() => of([]))
+        );
+      })
+    );
 
   constructor(){
+    this.dataService.loadingState.next(true);
     this.initForm();
     this.authService.currentUser.pipe(takeUntil(this.destroy$)).subscribe((res:any)=> this.currentUser = res)
     this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
@@ -53,7 +80,6 @@ export class PlatesComponent {
       this.currentProject = res;
       this.getAllUserPlates();
     })
-    this.inputChangeSubject.pipe(takeUntil(this.destroy$), debounceTime(500)).subscribe((res:any)=> this.checkForValue(res));
   }
 
   initForm(){
@@ -66,36 +92,43 @@ export class PlatesComponent {
 
   getAllUserPlates(){
     this.plateService.getAll(this.currentProject.projectId).pipe(take(1), takeUntil(this.destroy$)).subscribe({
-      next: (res:any)=> this.userPlates = res,
-      error: ()=>{}
+      next: (res:any)=>{
+        this.userPlates = res;
+        this.dataService.loadingState.next(false);
+      }
     })
   }
 
   getPlateData(plateName:string){
     this.plateService.get(this.currentProject.projectId, plateName).pipe(take(1), takeUntil(this.destroy$)).subscribe({
       next: (res:any)=>{
-        const formattedData = Object.keys(res).map(key => ({ key: key, data: res[key] }) );
-        this.setControlVal('plateData', [...formattedData]);
+        this.selectPlateData = Object.keys(res).map(key => ({ key: key, data: res[key] }) );
+        this.setControlVal('plateData', [...this.selectPlateData]);
         this.openModal(this.plateDataModal, true);
       },
       error: ()=>{}
     })
   }
 
-  openModal(content: any, large:boolean = false){
+  openModal(content: any, large:boolean = false, type?:string){
+    if(type == 'new'){
+      this.selectPlateData = [];
+    }
     this.modalRef = this.modalService.open(content, { animation: true, centered: true, windowClass: large ? 'max-width no-backdrop' : 'no-backdrop', backdrop: false });
     this.modalRef.dismissed.pipe(take(1), takeUntil(this.destroy$)).subscribe(()=>{
-      this.setControlVal('plateName', null);
+      if(!this.getControlVal('plateName')) ''
+      else this.setControlVal('plateName', null);
     })
   }
 
   openPlateDataModal(){
-    this.modalRef.close();
-    this.setControlVal('plateData', this.dataService.getBaseData());
+    this.modalRef?.close();
+    this.setControlVal('plateData', this.selectPlateData.length ? this.selectPlateData : this.dataService.getBaseData());
     this.openModal(this.plateDataModal, true);
   }
 
   createNew(){
+    this.dataService.loadingState.next(true);
     const data = this.getControlVal('plateData');
     if(!data || !data.length) return;
     const formattedData = data.reduce((acc:any, item:any) =>{
@@ -105,18 +138,21 @@ export class PlatesComponent {
     this.plateService.create(this.currentProject.projectId, this.getControlVal('plateName'),formattedData)
     .pipe(take(1), takeUntil(this.destroy$)).subscribe({
       next: (res:any)=>{
-        this.toastrService.success('Plate Created!');
-        this.modalRef.close();
-        this.setControlVal('plateName', null);
+        res = res?.plate || res;
+        this.selectPlateData = Object.keys(res).map(key => ({ key: key, data: res[key] }) );
+        this.setControlVal('plateData', [...this.selectPlateData]);
         this.getAllUserPlates();
+        this.dataChanged = false;
+        this.setControlVal('plate', this.getControlVal('plateName'));
+        this.setControlVal('plateName', null);
+        this.form['plateName'].markAsUntouched();
+        this.toastrService.success('Plate Created!');
       },
-      error: (err:any) => ''
     })
   }
 
   onPlateChange(event:any){
     const val = event.target.value;
-    console.log(val);
     this.getPlateData(val);
   }
 
@@ -124,28 +160,35 @@ export class PlatesComponent {
     const val = event.target.value.trim();
     if(val){
       this.activeInput = { col: col, index: index, isValid: false };
-      this.inputChangeSubject.next(val);
       this.dataChanged = true;
     }
-    console.log(val,'<=Val=======Col=>',col,'===index=>',index);
   }
 
-  onInputBlurAfterChanges(col:string, index:number, data?:any){
+  onSampleIdSelect(event:any, col:string, index:number){
+    if(this.activeInput && this.activeInput.index == index && this.activeInput.col == col){
+      this.activeInput.isValid = true;
+      this.activeInput.data = event.item;
+    }
+  }
+
+  onInputBlurAfterChanges(col:string, index:number){
     if(this.activeInput && this.activeInput.col == col && this.activeInput.index == index && !this.activeInput.isValid){
       const bluredInput:any = document.getElementById(`${col}_tissue_data_${index}`) as HTMLInputElement;
       if(bluredInput) bluredInput.value = '';
     }
     else if(this.activeInput && this.activeInput.col == col && this.activeInput.index == index && this.activeInput.isValid){
-      const previousData = this.getControlVal('plateData');
-      console.log(previousData);
+      const previousData = [ ...this.getControlVal('plateData') ];
       const idx = previousData.findIndex((item:any) => item.key === col);
-      previousData[idx].data[index - 1] = this.activeInput?.data || data;
-      this.setControlVal('plateData', [...previousData]);
+      previousData[idx].data[index - 1] = this.matchingData.find((item:any) => item.materialSampleID === this.activeInput.data);
+      setTimeout(() => {
+        this.setControlVal('plateData', [...previousData]);
+      }, 500);
     }
     this.activeInput = null;
+    this.matchingData = [];
   }
 
-  checkForValue(tissueId:string){
+  formatPayload(tissueId:string):any {
     if(!this.currentProject || !tissueId) return;
     this.isProcessing = true;
     const entity = this.currentProject.config.entities.find(
@@ -164,23 +207,11 @@ export class PlatesComponent {
     );
 
     builder.setSource([parentEntity.uniqueKey, 'expeditionCode'].join());
-    this.queryService.queryJson(builder, parentEntity.conceptAlias, 0, 100, false)
-    .pipe(take(1), takeUntil(this.destroy$)).subscribe({
-      next: (res:any)=>{
-        console.log('==res===',res);
-        console.log('==for===',this.activeInput);
-        const matchingData = res.data.find((item:any)=> item.materialSampleID == tissueId);
-        if(matchingData && this.activeInput){
-          this.activeInput.isValid = true;
-          this.activeInput.data = matchingData;
-          this.isProcessing = false;
-        }
-      },
-      error: (err:any)=> ''
-    })
+    return { builder,  entity: parentEntity.conceptAlias };
   }
 
   saveTissueData(){
+    this.dataService.loadingState.next(true);
     const data = this.getControlVal('plateData');
     if(!data || !data.length) return;
     const formattedData = data.reduce((acc:any, item:any) =>{
@@ -190,8 +221,13 @@ export class PlatesComponent {
     this.plateService.save(this.currentProject.projectId, this.getControlVal('plate'),formattedData)
     .pipe(take(1), takeUntil(this.destroy$)).subscribe({
       next: (res:any)=>{
+        res = res?.plate || res;
+        this.selectPlateData = Object.keys(res).map(key => ({ key: key, data: res[key] }) );
+        console.log(this.selectPlateData);
+        this.setControlVal('plateData', [...this.selectPlateData]);
+        this.dataService.loadingState.next(false);
         this.toastrService.success('Plate updated!');
-        this.modalRef.close();
+        this.dataChanged = false;
       },
       error: (err:any) => ''
     })

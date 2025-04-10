@@ -15,11 +15,12 @@ import { flatten } from '../../../helpers/scripts/flatten';
 import compareValues from '../../../helpers/scripts/compareVal';
 import { ExpeditionService } from '../../../helpers/services/expedition.service';
 import { ProjectConfig } from '../../../helpers/models/projectConfig.model';
+import { NoticeLabelComponent } from '../notice-label/notice-label.component';
 
 @Component({
   selector: 'app-record',
   standalone: true,
-  imports: [CommonModule, LoaderComponent, RootRecordComponent, NgbTooltipModule, MapComponent, GalleryModule],
+  imports: [CommonModule, LoaderComponent, RootRecordComponent, NgbTooltipModule, MapComponent, GalleryModule, NoticeLabelComponent],
   templateUrl: './record.component.html',
   styleUrl: './record.component.scss'
 })
@@ -371,7 +372,7 @@ export class RecordComponent implements OnDestroy{
                     img.setAttribute("style", "padding: 2px; max-height: 70px; float: left;")
 
                     var spanner = document.createElement('div')
-                    spanner.setAttribute("style", "display:block;height:70px;overflow:scroll;")
+                    spanner.setAttribute("style", "display:block;height:100%; overflow:auto;")
                     spanner.innerHTML = "<a target=_blank href='" + localContextsJson.project_page + "'>" + obj.name + "</a>"
                     spanner.innerHTML += "<p>" + obj.default_text + "<p>";
 
@@ -409,7 +410,7 @@ export class RecordComponent implements OnDestroy{
                   img.setAttribute("style", "padding: 2px; max-height: 70px; float: left;")
 
                   var spanner = document.createElement('div')
-                  spanner.setAttribute("style", "display:block;height:70px;overflow:scroll;")
+                  spanner.setAttribute("style", "display:block;height:100%;overflow:auto;padding:8px")
                   spanner.innerHTML = "<a target=_blank href='" + localContextsJson.project_page + "'>" + obj.name + "</a>"
                   spanner.innerHTML += "<p>" + obj.label_text + "<p>";
                   spanner.innerHTML += "<p><i>" + obj.community + "</i>"

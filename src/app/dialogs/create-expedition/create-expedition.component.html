@@ -1,0 +1,51 @@
+<div class="modal-header border-0 py-2">
+    <h4 class="modal-title" id="modal-basic-title">New Expedition</h4>
+</div>
+<div class="modal-body p-2 px-4 border-0" id="expedition_modal">
+    <form [formGroup]="expeditionForm">
+        <div class="mb-3">
+            <div class="form-floating mb-1">
+                <input type="text" formControlName="expeditionTitle" class="form-control" id="floatingExpeditionTitle"
+                    placeholder="Enter Expedition Title">
+                <label for="floatingExpeditionTitle" class="ps-0 fw-semibold">Expedition Title *</label>
+            </div>
+            @if(form['expeditionTitle'].touched && form['expeditionTitle'].invalid){
+            <span class="warn-text f-12">{{ form['expeditionTitle'].hasError('required') ? 'Title is required.' : '' }}</span>
+            }
+        </div>
+        <div class="mb-3">
+            <div class="form-floating mb-1">
+                <input type="text" formControlName="expeditionCode" class="form-control" id="floatingExpeditionCode"
+                    placeholder="Enter Expedition Code">
+                <label for="floatingExpeditionCode" class="ps-0 fw-semibold">Expedition Code *</label>
+            </div>
+            @if(form['expeditionCode'].touched && (form['expeditionCode'].invalid || codeExists)){
+            <span class="warn-text f-12">
+                {{ form['expeditionCode'].hasError('required') ? 'Code is required.' :
+                form['expeditionCode'].hasError('pattern') ? 'Expedition Code must contain only numbers, letters, or
+                underscores and be 4 to 50 characters long.' : 'Expedition with that code already exists' }}
+            </span>
+            }
+        </div>
+        <div class="form-floating mb-4">
+            <input type="text" formControlName="Description" class="form-control" id="floatingDescription"
+                placeholder="Enter Description">
+            <label for="floatingDescription" class="ps-0 fw-semibold">Description</label>
+        </div>
+        <div class="form-floating mb-1">
+            <select class="form-select form-control" id="floatingSelect_Auditor" aria-label="ExpedAuditoritions" name="Auditor" formControlName="Auditor">
+                @for(item of auditors; track item){
+                    <option [value]="item"><div class="py-2 px-3">{{item}}</div></option>
+                }
+            </select>
+            <label for="floatingSelect_Auditor">Auditor</label>
+        </div>
+    </form>
+</div>
+<div class="modal-footer border-0 pt-0">
+    <div class="d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-primary custom" [disabled]="expeditionForm.invalid" (click)="createNew()"
+            [disabled]="isLoading">Create</button>
+        <button type="button" class="btn btn-outline-secondary" (click)="activeModal.close()">Cancel</button>
+    </div>
+</div>

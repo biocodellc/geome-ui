@@ -26,9 +26,11 @@
                     </div>
                 }
         
-                <div layout="row">
-                  <h3>{{ recordData.entity }} ({{ getIdentifier() }})</h3>
-                  <!-- <notice-label ng-if="recordData.traditionalKnowledgeNotice === 'TRUE'"></notice-label> -->
+                <div class="d-flex align-items-center gap-3">
+                    <h3>{{ recordData.entity }} ({{ getIdentifier() }})</h3>
+                    @if(recordData.traditionalKnowledgeNotice === 'TRUE'){
+                        <app-notice-label />
+                    }
                 </div>
         
                 <div class="main-details p-3 d-flex flex-wrap justify-content-between" >
@@ -86,7 +88,7 @@
         
                     @if(localContextsPresent){
                         <div class="col-12 col-md-6">
-                            <div id=localContextsLabels style="max-height:300px; overflow:scroll">
+                            <div id=localContextsLabels style="height:100%; overflow:auto; max-height: 300px;">
                                 <div id="localContextsHeader"><i>Loading Local Contexts Data...</i></div>
                             </div>
                         </div>

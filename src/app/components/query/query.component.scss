@@ -1,5 +1,5 @@
-.custom-table-container{
-    height: calc(-130px + 100vh);
+.custom-table-container .main-table{
+    height: calc(-130px + 77vh);
     overflow: auto;
     th, td{
         padding: 0.5rem 0.75rem;
@@ -7,4 +7,6 @@
         font-size: 12px;
     }
     th{ font-weight: 500; }
+    th.th-locality{ min-width: 200px; }
+    tbody tr{ cursor: pointer; }
 }

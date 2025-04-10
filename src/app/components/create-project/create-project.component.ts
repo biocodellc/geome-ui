@@ -6,12 +6,14 @@ import { debounceTime, Subject, take, takeUntil } from 'rxjs';
 import { ProjectConfigurationService } from '../../../helpers/services/project-config.service';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { DummyDataService } from '../../../helpers/services/dummy-data.service';
+import { LoaderComponent } from '../../shared/loader/loader.component';
 
 
 @Component({
   selector: 'app-create-project',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NgbDropdownModule],
+  imports: [CommonModule, ReactiveFormsModule, NgbDropdownModule, LoaderComponent],
   templateUrl: './create-project.component.html',
   styleUrl: './create-project.component.scss'
 })
@@ -20,6 +22,7 @@ export class CreateProjectComponent implements OnDestroy{
   fb = inject(FormBuilder);
   toastr = inject(ToastrService);
   projectService = inject(ProjectService);
+  dummyDataService = inject(DummyDataService);
   projectConfService = inject(ProjectConfigurationService);
 
   // Variables
@@ -28,7 +31,6 @@ export class CreateProjectComponent implements OnDestroy{
   allProjects:any = [];
   filteredTeams:any = [];
   selectedTeam:any;
-  isLoading:boolean = false;
 
   constructor(){
     this.initForm();
@@ -67,7 +69,7 @@ export class CreateProjectComponent implements OnDestroy{
     this.projectForm.markAllAsTouched();
     if(this.projectForm.invalid) return;
 
-    this.isLoading = true;
+    this.dummyDataService.loadingState.next(true);
     const projectData = { ...this.projectForm.value, "projectConfiguration": this.selectedTeam };
     this.projectService.createProject(projectData).pipe(take(1), takeUntil(this.destroy$)).subscribe({
       next: (res:any)=>{
@@ -75,7 +77,7 @@ export class CreateProjectComponent implements OnDestroy{
         this.projectService.setCurrentProject(res);
       },
       error: (err:any)=>{
-        this.isLoading = false;
+        this.dummyDataService.loadingState.next(false);
         this.toastr.error(err.error.usrmessage || 'Something Went Wrong!');
       }
     })

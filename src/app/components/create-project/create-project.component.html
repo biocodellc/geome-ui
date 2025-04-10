@@ -25,7 +25,7 @@
                     </div>
                     <div class="mb-3">
                         <div class="form-floating mb-1" ngbDropdown  container="body" placement="bottom-start">
-                            <input type="text" ngbDropdownToggle formControlName="projectConfiguration" class="form-control" id="floatingProjConf" placeholder="Project Configuration">
+                            <input type="text" ngbDropdownToggle autocomplete="off" formControlName="projectConfiguration" class="form-control" id="floatingProjConf" placeholder="Project Configuration">
                             <label for="floatingProjConf" class="ps-0 fw-semibold">Select Team Workspace to Join *</label>
                             <div ngbDropdownMenu aria-labelledby="floatingProjConf">
                                 @for(team of filteredTeams; track team.id){
@@ -61,3 +61,7 @@
         </div>
     </div>
 </section>
+
+@if(dummyDataService.loadingState | async){
+    <app-loader />
+}

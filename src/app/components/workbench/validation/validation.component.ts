@@ -20,6 +20,9 @@ import { DummyDataService } from '../../../../helpers/services/dummy-data.servic
 import { ResultDialogComponent } from '../../../dialogs/result-dialog/result-dialog.component';
 import { ReplaceDataDialogComponent } from '../../../dialogs/replace-data-dialog/replace-data-dialog.component';
 import { UploadMapDialogComponent } from '../../../dialogs/upload-map-dialog/upload-map-dialog.component';
+import { CreateExpeditionComponent } from '../../../dialogs/create-expedition/create-expedition.component';
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { ResultValidationsComponent } from '../../../shared/result-validations/result-validations.component';
 
 const MULTI_EXPEDITION = 'MULTI_EXPEDITION';
 const EXCEL_MAX_ROWS_TO_PARSE = 10000;
@@ -44,7 +47,7 @@ const defaultResults = {
 @Component({
   selector: 'app-validation',
   standalone: true,
-  imports: [CommonModule, RouterLink, NgbNavModule, UploadComponent, ReactiveFormsModule, FormsModule, FastqFormComponent, FastaFormComponent],
+  imports: [CommonModule, RouterLink, NgbNavModule, UploadComponent, ReactiveFormsModule, FormsModule, FastqFormComponent, FastaFormComponent, NgbTooltipModule, ResultValidationsComponent],
   templateUrl: './validation.component.html',
   styleUrl: './validation.component.scss'
 })
@@ -119,6 +122,10 @@ export class ValidationComponent implements OnDestroy{
     })
   }
 
+  navChange(event:any){
+    if(this.results && event.nextId === "load") this.results = undefined;
+  }
+
   getAvailableDatatypes(){
     const dataTypes:Array<any> = [
       { name: 'Workbook', isWorksheet: false },
@@ -153,6 +160,11 @@ export class ValidationComponent implements OnDestroy{
   }
 
   get selectedTypes(){ return this.checkedTypes; }
+
+  validateChange(event:any){
+    const isChecked = event.target.checked;
+    if(isChecked) this.worksheetData.forEach(item => item.reload = false);
+  }
 
   onCheckboxChange(event:any, type:string){
     const worksheets = ["Samples", "Events", "Tissues", "sample_photos", "event_photos"];
@@ -264,7 +276,7 @@ export class ValidationComponent implements OnDestroy{
     ).then((data:any) => {
       if (!data) return false;
 
-      if (data.hasError || !data.exception) {
+      if (data.hasError || data.exception) {
         this.results.showValidationMessages = true;
       }
 
@@ -321,6 +333,15 @@ export class ValidationComponent implements OnDestroy{
     })
   }
 
+  openCreateExpModal(){
+    this.modalRef?.close();
+    this.modalRef = this.modalService.open( CreateExpeditionComponent, { animation: true, centered: true, windowClass: 'no-backdrop', backdrop: false })
+    this.modalRef.componentInstance.currentProject = { ...this.currentProject };
+    this.modalRef.result.then((res:any) =>{
+      if(res) this.getAllExpeditions();
+    })
+  }
+
   async validateSubmit(data: any): Promise<any> {
     console.log(data);
     // Clear the results
@@ -337,6 +358,7 @@ export class ValidationComponent implements OnDestroy{
         this.dataService.validationStatus(validateRes.id).pipe(takeUntil(this.destroy$)).subscribe({
           next: (event: any) => {
             if (event.result) {
+              this.results.status = '';
               console.log('Validation completed:', event.result);
               resolve(event.result);
             } else {
@@ -352,6 +374,7 @@ export class ValidationComponent implements OnDestroy{
       this.results.validation.isValid = false;
       this.results.validation.exception = err.data.usrMessage || 'Server Error!';
       this.results.showOkButton = true;
+      this.modalRef?.close();
       return Promise.resolve('');
     }
   }

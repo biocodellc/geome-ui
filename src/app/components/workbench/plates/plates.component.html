@@ -23,9 +23,9 @@
                 }
                 <div class="row">
                     <div class="d-flex justify-content-center gap-3">
-                        <button type="button" class="btn btn-primary float-end export-btn" (click)="openModal(newPlateModal)">NEW PLATE</button>
+                        <button type="button" class="btn btn-primary float-end export-btn" (click)="openModal(newPlateModal, false, 'new')">NEW PLATE</button>
                         @if(getControlVal('plate')){
-                            <button type="button" class="btn btn-primary float-end export-btn" (click)="openModal(plateDataModal, true)">View PLATE</button>
+                            <button type="button" class="btn btn-primary float-end export-btn" (click)="openPlateDataModal()">View PLATE</button>
                         }
                     </div>
                 </div>
@@ -45,7 +45,7 @@
             <p>Enter a unique name for the plate.</p>
             <div class="mb-3">
                 <div class="form-floating mb-1">
-                    <input type="text" formControlName="plateName" class="form-control" id="floatingPateName" placeholder="" style="max-width: 70%;">
+                    <input type="text" formControlName="plateName" class="form-control" id="floatingPateName" autocomplete="off" placeholder="" style="max-width: 70%;">
                     <label for="floatingPlateName" class="ps-0 fw-semibold">Plate Name *</label>
                 </div>
                 @if(form['plateName'].touched && form['plateName'].invalid){
@@ -89,7 +89,7 @@
                                     </div>
                                 }
                                 @else{
-                                    <input id={{item.key}}_tissue_data_{{i+1}} type="text" [value]="data?.materialSampleID" placeholder="Create Tissue" (input)="onDialogInputChange($event, item.key, i+1)" (change)="onInputBlurAfterChanges(item.key, i+1)">
+                                    <input id={{item.key}}_tissue_data_{{i+1}} type="text" [value]="data?.materialSampleID" autocomplete="off" placeholder="Create Tissue" (input)="onDialogInputChange($event, item.key, i+1)" (change)="onInputBlurAfterChanges(item.key, i+1)"  [ngbTypeahead]="search" (selectItem)="onSampleIdSelect($event, item.key, i+1)">
                                 }
                             </td>
                         }
@@ -102,7 +102,7 @@
 		<div class="d-flex justify-content-end gap-2">
             <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">Cancel</button>
             @if(dataChanged){
-                <button type="button" class="btn btn-primary custom" (click)="getControlVal('plateName') ? createNew() : saveTissueData()">Save</button>
+                <button type="button" class="btn btn-primary custom" (click)="selectPlateData.length == 0 ? createNew() : saveTissueData()">Save</button>
             }
         </div>
 	</div>
