@@ -6,6 +6,8 @@ import { UserService } from '../../../../helpers/services/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, take, takeUntil } from 'rxjs';
 import { passwordStrengthValidator } from '../../../../helpers/validators/passowrd.validator';
+import { AuthenticationService } from '../../../../helpers/services/authentication.service';
+import { RouteTrackerService } from '../../../../helpers/services/route-track.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -21,6 +23,8 @@ export class ResetPasswordComponent implements OnDestroy{
   userService = inject(UserService);
   toastr = inject(ToastrService);
   router = inject(Router);
+  authService = inject(AuthenticationService);
+  routeTrackService = inject(RouteTrackerService);
 
   // Variables
   private destroy$ = new Subject<void>();
@@ -36,6 +40,9 @@ export class ResetPasswordComponent implements OnDestroy{
         if(res.params && res.params?.resetToken) this.token = res.params?.resetToken;
       }
     )
+    this.authService.currentUser.pipe(takeUntil(this.destroy$)).subscribe((x) => {
+      if(x) this.router.navigateByUrl(this.routeTrackService.getPreviousUrl());
+    })
   }
 
   get form() { return this.resetForm.controls; }

@@ -1,18 +1,18 @@
-<section id="about" class="p-3 mt-3 mb-4 container-bg main-content-container">
+<section id="about" class="p-3 mt-3 container-bg main-content-container">
     <div class="container">
         <div>
             <h2>Quick Start</h2>
             <ol style="padding-left: 5rem;">
                 <li><span class="text-primary cursor-pointer fw-semibold" [routerLink]="['/register']">Create an account</span></li>
-                <li class="mt-2"><span class="text-primary cursor-pointer fw-semibold">Create a project</span></li>
+                <li class="mt-2"><span class="text-primary cursor-pointer fw-semibold" [routerLink]="['/project','new']">Create a project</span></li>
             </ol>
         </div>
 
         <!-- About Body -->
         <div class="mt-4">
             <h2>About GEOME</h2>
-            <div ngbAccordion [closeOthers]="true">
-                <div ngbAccordionItem>
+            <div ngbAccordion [closeOthers]="true" #myAccordion="ngbAccordion">
+                <div ngbAccordionItem="teams">
                     <h2 ngbAccordionHeader>
                         <button ngbAccordionButton>Creating Projects and Expeditions</button>
                     </h2>
@@ -57,7 +57,7 @@
                         </div>
                     </div>
                 </div>
-                <div ngbAccordionItem>
+                <div ngbAccordionItem="network">
                     <h2 ngbAccordionHeader>
                         <button ngbAccordionButton>Minimum Information Requirements</button>
                     </h2>
@@ -187,7 +187,7 @@
                         </div>
                     </div>
                 </div>
-                <div ngbAccordionItem>
+                <div ngbAccordionItem="subscriptions">
                     <h2 ngbAccordionHeader>
                         <button ngbAccordionButton>Enterprise Services</button>
                     </h2>
@@ -261,7 +261,7 @@
                         </div>
                     </div>
                 </div>
-                <div ngbAccordionItem>
+                <div ngbAccordionItem="dataPolicy">
                     <h2 ngbAccordionHeader>
                         <button ngbAccordionButton>Data usage policy</button>
                     </h2>

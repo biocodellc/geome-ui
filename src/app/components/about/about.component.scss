@@ -2,6 +2,11 @@
     box-shadow: none;
 }
 
+.accordion-item{
+    margin-bottom: 0.75rem;
+    box-shadow: 5px 2px 12px #a8a8a8;
+}
+
 @media screen and (max-width: 991px) {
     img{ max-width: 80%; }
 }

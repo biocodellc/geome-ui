@@ -2,7 +2,7 @@
     <div class="d-flex flex-column">
         @for(item of menuItems; track item){
             @if(item.alwaysVisible || (!currentProject?.limitedAccess && !item.checkCondition)){
-                <button type="button" (click)="checkAndNavigate(item.route)" class="btn sidebar-item cursor-pointer border-0 p-3 ps-4 text-start f-15">
+                <button type="button" (click)="checkAndNavigate(item.route, item.name)" class="btn sidebar-item cursor-pointer border-0 p-3 ps-4 text-start f-15">
                     <i class="fas me-2" [ngClass]="item.icon" style="min-width: 30px;"></i>
                     {{ item.route == '/workbench/upload' && !currentUser ? item.otherName : item.name }}
                 </button>
@@ -19,7 +19,7 @@
             <h6 class="m-0 text-secondary f-15 p-3">Admin</h6>
             @for(item of adminTabs; track item){
                 @if(item.alwaysVisible || (currentUser?.userId === currentProject?.user.userId || currentUser?.userId === currentProject?.projectConfiguration.user.userId) || permissionArr[item.name]){
-                    <button type="button" (click)="checkAndNavigate(item.route)" class="btn sidebar-item cursor-pointer border-0 p-3 ps-4 text-start f-15">
+                    <button type="button" (click)="checkAndNavigate(item.route, item.name)" class="btn sidebar-item cursor-pointer border-0 p-3 ps-4 text-start f-15">
                         <i class="fas me-2" [ngClass]="item.icon" style="min-width: 30px;"></i>
                         {{item.name}}
                     </button>
@@ -38,7 +38,7 @@
 	</div>
 	<div class="modal-body p-2 px-4 border-0">
         <div class="d-flex justify-content-center align-items-center" style="min-height: 120px; min-width: 300px">
-            <app-project-selector [currentUser]="currentUser" (updatingProject)="modal.close()"/>
+            <app-project-selector [currentUser]="currentUser" (updatingProject)="modal.close(); closeSidebar()"/>
         </div>        
     </div>
     <div class="modal-footer border-0 pt-0">

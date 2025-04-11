@@ -16,6 +16,7 @@ import { FilterButtonComponent } from '../filter-button/filter-button.component'
 import { MultiselectDropdownComponent } from '../../../shared/multiselect-dropdown/multiselect-dropdown.component';
 import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { DummyDataService } from '../../../../helpers/services/dummy-data.service';
+import { RouterLink } from '@angular/router';
 
 const SOURCE:Array<any> = [
   'Event.eventID',
@@ -85,7 +86,7 @@ const SELECT_ENTITIES:any = {
 @Component({
   selector: 'app-query-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, MapBoundingComponent, FilterButtonComponent, MultiselectDropdownComponent, NgbPopoverModule],
+  imports: [CommonModule, FormsModule, MapBoundingComponent, FilterButtonComponent, MultiselectDropdownComponent, NgbPopoverModule, RouterLink],
   templateUrl: './query-form.component.html',
   styleUrl: './query-form.component.scss'
 })
@@ -244,52 +245,6 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
       }
       else if(p.projectConfiguration.name == event.item && !event.isDeSelected) this.params.projects.push(p);
     })
-  }
-
-  onDropdownChange(event:any, item:string){
-    const val = event.target.value.trim();
-    this.setDataRelatedToVariable(item, val);
-  }
-
-  private setDataRelatedToVariable(variable:string, data:any){
-    switch(variable){
-      case 'teams':
-        if(this.individualProjects.length){
-          this.selectedIndividualProject = '';
-          this.individualProjects = this.params.projects = this.expeditions = [];
-        }
-        this.teams = [data];
-        this.allProjects.forEach((p:any)=>{
-          if(p.projectConfiguration.name == data) this.params.projects.push(p);
-        })
-        if(this.teams.length == 1){
-          const project = this.allProjects.find((p:any)=> p.projectConfiguration.name == this.teams[0]);
-          this.callConfigService(project);
-        }
-        else this.setNetworkConfig();
-        break;
-      case 'individualProj':
-        if(this.teams.length){
-          this.selectedTeam = '';
-          this.teams = this.params.projects = [];
-        }
-        this.params.expeditions = [];
-        const projectData = this.allProjects.find(p => p.projectTitle == data);
-        this.individualProjects = [projectData];
-        this.allProjects.forEach((p:any) => {
-          if (p.projectId === projectData.projectId) this.params.projects.push(p);
-        });
-        if (this.individualProjects.length == 1) {
-          this.getExpeditions();
-          this.identifySpecificConfig();
-        } else {
-          this.expeditions = [];
-          this.setNetworkConfig();
-        }
-        break ;
-      default:
-        break;
-    }
   }
 
   identifySpecificConfig() {

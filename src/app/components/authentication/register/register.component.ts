@@ -8,6 +8,7 @@ import { catchError, debounceTime, map, of, Subject, switchMap, take, takeUntil 
 import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from '../../../../helpers/services/authentication.service';
 import { passwordStrengthValidator } from '../../../../helpers/validators/passowrd.validator';
+import { RouteTrackerService } from '../../../../helpers/services/route-track.service';
 
 @Component({
   selector: 'app-register',
@@ -24,6 +25,7 @@ export class RegisterComponent {
   toastrService = inject(ToastrService);
   authService = inject(AuthenticationService);
   activatedRoute = inject(ActivatedRoute);
+  routeTrackService = inject(RouteTrackerService);
 
   // Variables
   private destroy$ = new Subject<void>();
@@ -36,6 +38,9 @@ export class RegisterComponent {
   constructor() {
     this.initForm();
     this.extractDataFromUrl();
+    this.authService.currentUser.pipe(takeUntil(this.destroy$)).subscribe((x) => {
+      if(x) this.router.navigateByUrl(this.routeTrackService.getPreviousUrl());
+    })
   }
 
   initForm() {

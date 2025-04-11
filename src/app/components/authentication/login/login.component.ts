@@ -6,6 +6,7 @@ import { UserService } from '../../../../helpers/services/user.service';
 import { AuthenticationService } from '../../../../helpers/services/authentication.service';
 import { ToastrService } from 'ngx-toastr';
 import { catchError, of, Subject, switchMap, take, takeUntil, throwError } from 'rxjs';
+import { RouteTrackerService } from '../../../../helpers/services/route-track.service';
 
 @Component({
   selector: 'app-login',
@@ -21,15 +22,21 @@ export class LoginComponent implements OnDestroy{
   fb:FormBuilder = inject(FormBuilder);
   toastrService = inject(ToastrService);
   authService = inject(AuthenticationService);
+  routeTrackService = inject(RouteTrackerService);
   
   // Variables
   private destroy$ = new Subject<void>();
   loginForm!:FormGroup;
   isLoading:boolean = false;
   activePage:string = 'login';
+  previousUrl:string = '';
 
   constructor(){
+    this.previousUrl = this.routeTrackService.getPreviousUrl();
     this.initForm();
+    this.authService.currentUser.pipe(takeUntil(this.destroy$)).subscribe((x) => {
+      if(x) this.router.navigateByUrl(this.previousUrl);
+    })
   }
 
   initForm(){
@@ -59,7 +66,7 @@ export class LoginComponent implements OnDestroy{
       next: (res:any)=>{
         this.authService.setCurrentUser(res);
         this.toastrService.success('Login Successful');
-        this.router.navigate(['/workbench']);
+        this.router.navigateByUrl(this.previousUrl);
       },
       error: (err:any)=>{
         this.toastrService.error(err.error?.usrMessage || 'Something went wrong!');

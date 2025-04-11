@@ -5,6 +5,7 @@ import { AuthenticationService } from '../helpers/services/authentication.servic
 import { ProjectService } from '../helpers/services/project.service';
 import { UserService } from '../helpers/services/user.service';
 import { Subject, take, takeUntil } from 'rxjs';
+import { RouteTrackerService } from '../helpers/services/route-track.service';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +19,7 @@ export class AppComponent implements OnDestroy{
   authService = inject(AuthenticationService);
   projectService = inject(ProjectService);
   userService = inject(UserService);
+  routeTrackService = inject(RouteTrackerService);
 
   // Variables
   private destroy$ = new Subject<void>();

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProjectService } from '../../../helpers/services/project.service';
-import { debounceTime, Subject, take, takeUntil } from 'rxjs';
+import { debounceTime, filter, Subject, take, takeUntil } from 'rxjs';
 import { ProjectConfigurationService } from '../../../helpers/services/project-config.service';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -34,9 +34,12 @@ export class CreateProjectComponent implements OnDestroy{
 
   constructor(){
     this.initForm();
-    this.projectConfService.allProjConfigSubject.pipe(takeUntil(this.destroy$)).subscribe({
+    this.projectConfService.allProjConfigSubject.pipe(
+      takeUntil(this.destroy$),
+      filter((item:any)=> item.networkApproved)
+    ).subscribe({
       next: (res:any)=>{
-        if(res && res?.length > 0) this.allProjects = this.filteredTeams = res.filter((item:any)=> item.networkApproved);
+        this.allProjects = this.filteredTeams = res.filter();
       }
     })
   }

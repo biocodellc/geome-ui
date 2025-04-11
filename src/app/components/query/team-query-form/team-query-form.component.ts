@@ -6,6 +6,7 @@ import { QueryService } from '../../../../helpers/services/query.service';
 import { FormsModule } from '@angular/forms';
 import { Subject, take, takeUntil } from 'rxjs';
 import { MapQueryService } from '../../../../helpers/services/map-query.service';
+import { RouterLink } from '@angular/router';
 
 const SOURCE:any = [
   'Event.eventID',
@@ -32,7 +33,7 @@ const SOURCE:any = [
 @Component({
   selector: 'app-team-query-form',
   standalone: true,
-  imports: [CommonModule, MapBoundingComponent, FormsModule],
+  imports: [CommonModule, MapBoundingComponent, FormsModule, RouterLink],
   templateUrl: './team-query-form.component.html',
   styleUrl: './team-query-form.component.scss'
 })

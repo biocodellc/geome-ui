@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, inject, Input, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
+import { Component, HostListener, inject, Input, OnDestroy, ViewChild } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { ProjectService } from '../../../helpers/services/project.service';
 import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
@@ -27,7 +27,6 @@ export class SidebarComponent implements OnDestroy{
   @Input() currentUser:any;
   currentProject:any;
   device:string = '';
-  isLoading:boolean = false;
   isSidebarHidden:boolean = false;
   menuItems:Array<any> = [
     { name: "View Projects", route: '/workbench/dashboard' , icon: 'fa-list-ul', alwaysVisible: true },
@@ -101,8 +100,8 @@ export class SidebarComponent implements OnDestroy{
     }
   }
 
-  checkAndNavigate(route:string){
-    if(!this.currentProject) this.openProjectSelectModal()
+  checkAndNavigate(route:string, item:string = ''){
+    if(!this.currentProject && !['My Profile', 'View Projects', 'View Teams'].includes(item)) this.openProjectSelectModal()
     else{
       this.router.navigateByUrl(route);
       this.closeSidebar();
