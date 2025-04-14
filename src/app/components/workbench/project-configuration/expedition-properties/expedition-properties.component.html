@@ -1,10 +1,10 @@
 <div class="custom-table-container">
     <div class="d-flex justify-content-end mb-2">
-        @if(changedItems.length){
+        <!-- @if(changedItems.length){
             <button type="button" class="btn btn-primary custom" (click)="saveConfig()">
                 <i class="fas fa-upload"></i> Save Config
             </button>
-        }
+        } -->
     </div>
     <table class="table table-striped">
         <thead>
@@ -20,22 +20,25 @@
         </thead>
         <tbody>
             @for (item of metaDataList; track item) {
-                @if(!item?.isDeleted){
-                    <tr class="f-14">
-                        <td>
-                            <div>
-                                <i class="fas fa-pen me-2 cursor-pointer" (click)="openModal('edit', item, addEditModal)"></i>
-                                <i class="fas fa-trash-can text-danger cursor-pointer" (click)="openModal('delete', item)"></i>
-                            </div>
-                        </td>
-                        <td>{{ item.name }}</td>
-                        <td>{{ item.type }}</td>
-                        <td><input type="checkbox" [checked]="item.required" (change)="onRequireChange($event, item)"></td>
-                    </tr>
-                }
+                <tr class="f-14">
+                    <td>
+                        <div>
+                            <i class="fas fa-pen me-2 cursor-pointer" (click)="openModal('edit', item, addEditModal)"></i>
+                            <i class="fas fa-trash-can text-danger cursor-pointer" (click)="openModal('delete', item)"></i>
+                        </div>
+                    </td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.type }}</td>
+                    <td><input type="checkbox" [checked]="item.required" (change)="onRequireChange($event, item.idx)"></td>
+                </tr>
+                <!-- @if(!item?.isDeleted){
+                } -->
             }
         </tbody>
     </table>
+    @if(metaDataList.length == 0){
+        <div class="p-2 text-center text-secondary"><span>No metdata properties.</span></div>
+    }
 </div>
 
 <ng-template #addEditModal let-modal>
@@ -62,7 +65,7 @@
             </div>
             @if(form['type'].value === 'LIST'){
                 <div class="mb-3">
-                    <span class="text-danger">Should be multi-select</span>
+                    <!-- <span class="text-danger">Should be multi-select</span> -->
                     <div class="form-floating">
                         <input type="text" formControlName="values" class="form-control" id="floatingvalues" placeholder="values" autocomplete="off">
                         <label for="floatingvalues" class="ps-0 fw-semibold">List Values *</label>

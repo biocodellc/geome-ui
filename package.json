@@ -26,7 +26,7 @@
     "@types/papaparse": "^5.3.15",
     "bootstrap": "^5.3.3",
     "lodash": "^4.17.21",
-    "ng-gallery": "^12.0.0",
+    "ng-gallery": "^11.0.0",
     "ng-multiselect-dropdown": "^1.0.0",
     "ngx-toastr": "^19.0.0",
     "papaparse": "^5.5.2",

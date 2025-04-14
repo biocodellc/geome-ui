@@ -10,17 +10,18 @@ import { ProjectService } from '../../../helpers/services/project.service';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { MapComponent } from '../query/map/map.component';
 import { mainRecordDetails, parentRecordDetails, childRecordDetails } from '../../../helpers/scripts/recordDetails';
-import { GalleryModule, GalleryItem, ImageItem, VideoItem, YoutubeItem, IframeItem } from 'ng-gallery';
+import { GalleryModule, GalleryItem, ImageItem } from 'ng-gallery';
 import { flatten } from '../../../helpers/scripts/flatten';
 import compareValues from '../../../helpers/scripts/compareVal';
 import { ExpeditionService } from '../../../helpers/services/expedition.service';
 import { ProjectConfig } from '../../../helpers/models/projectConfig.model';
 import { NoticeLabelComponent } from '../notice-label/notice-label.component';
+import { LightboxModule } from 'ng-gallery/lightbox';
 
 @Component({
   selector: 'app-record',
   standalone: true,
-  imports: [CommonModule, LoaderComponent, RootRecordComponent, NgbTooltipModule, MapComponent, GalleryModule, NoticeLabelComponent],
+  imports: [CommonModule, LoaderComponent, RootRecordComponent, NgbTooltipModule, MapComponent, GalleryModule, NoticeLabelComponent, LightboxModule],
   templateUrl: './record.component.html',
   styleUrl: './record.component.scss'
 })
@@ -43,11 +44,12 @@ export class RecordComponent implements OnDestroy{
   localContextsPresent:boolean = false;
   detailCacheNumCols:number = 0;
   detailCache:any = {};
-  photos:any[] = [];
+  photos:GalleryItem[] = [];
   parentDetail!:{ [key: string]: RecordValue };
   childDetails!: { [key: string]: { [key: string]: RecordValue }[] };
   expeditionIdentifier: any;
   mapData:any;
+  showThumbs:boolean = false;
 
   constructor(){
     this.dummyDataService.loadingState.next(true);
@@ -181,7 +183,7 @@ export class RecordComponent implements OnDestroy{
       .map((photo:any) => (
         new ImageItem({
           src: photo.img1024,
-          alt: `${photo.photoID} image`
+          thumb: photo.img128
         })
         // {
         //   id: photo.photoID,
@@ -192,6 +194,8 @@ export class RecordComponent implements OnDestroy{
         //   extUrl: photo.originalUrl,
         // }
       ));
+    if(this.photos.length >= 2) this.showThumbs = true;
+    else this.showThumbs = false;
   }
 
   sortChildren() {
@@ -431,6 +435,16 @@ export class RecordComponent implements OnDestroy{
           xmlHttp.send(null);
         }
       });
+  }
+
+  getKeysArr(obj:{}):any[]{
+    const prioritizedKey = Object.keys(obj).find(key => key.toLowerCase().includes('id'));
+    const data = Object.keys(obj).sort((a, b) => {
+      if (a === prioritizedKey) return -1;
+      if (b === prioritizedKey) return 1;
+      return 0; // Keep others as-is
+    })
+    return data || [];
   }
 
   ngOnDestroy(): void {

@@ -35,7 +35,7 @@
         
                 <div class="main-details p-3 d-flex flex-wrap justify-content-between" >
                     @if(recordData?.photoID && recordData?.processed !== 'false' && !invalidPhoto){
-                        <div class="card col-12 col-md-6">
+                        <div class="card col-12 col-md-6 col-lg-4">
                             @if(recordData?.img1024){
                                 <a href="{{ recordData?.img1024 }}" class="card-img-top" ><img [src]="recordData?.img512" /></a>
                             }
@@ -43,7 +43,7 @@
                     }
         
                     @if(recordData?.entity){
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-6 col-lg-4">
                             <table class="table">
                                 <tbody>
                                     @if(invalidPhoto && recordData?.originalUrl.includes('base64')){
@@ -57,7 +57,7 @@
                                             <th>{{ item.key }}:</th>
                                             @if(item.value.href && item.value.text){
                                                 <td class="truncate">
-                                                    <a href="{{ item.value.href }}" target="_blank">{{ item.value.href }}</a>
+                                                    <a href="{{ item.value.href }}" target="_blank" class="d-inline-block text-eclipse" style="width: 50%;" placement="top" [ngbTooltip]="item.value.href">{{ item.value.href }}</a>
                                                 </td>
                                             }
                                             @else if(!item.value.href || !item.value.text){
@@ -75,19 +75,19 @@
                     }
         
                     @if(photos.length){
-                        <div class="d-flex col-12 col-md-6">
-                            <gallery [items]="photos"></gallery>
+                        <div class="d-flex col-12 col-md-6 col-lg-4">
+                            <gallery [items]="photos" thumbPosition="bottom" [thumb]="showThumbs" gallerize  class="w-100"></gallery>
                         </div>
                     }
         
                     @if(recordData.entity === 'Event'){
-                        <div class="map-container col-12 col-md-6">
-                            <app-map class="record-map" [showExtras]="false" [mapData]="mapData"></app-map>
+                        <div class="map-container col-12 col-md-6 col-lg-4">
+                            <app-map class="record-map" [showExtras]="false" [mapData]="mapData" [height]="'359px'"></app-map>
                         </div>
                     }
         
                     @if(localContextsPresent){
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-6 col-lg-4">
                             <div id=localContextsLabels style="height:100%; overflow:auto; max-height: 300px;">
                                 <div id="localContextsHeader"><i>Loading Local Contexts Data...</i></div>
                             </div>
@@ -95,7 +95,6 @@
                     }
                 </div>
 
-                
                 @if(auxiliaryRecordDetails(0)){
                     <div class="my-3 divider"></div>
                     <!-- ==================================Divider=================================================== -->
@@ -152,16 +151,16 @@
                     <div class="my-3 divider"></div>
                     <!-- ==================================Divider=================================================== -->
                     <div class="parent-details horizontal-description-list p-3">
-                        <h4>Parent {{ record.parent.entity }}</h4>
+                        <h4 style="margin-bottom: 0.75rem;">Parent {{ record.parent.entity }}</h4>
                         <div layout="row">
-                            <ul style="list-style-type: none;" class="d-flex flex-wrap gap-3 p-0">
-                                @for(item of (parentDetail || {}) | keyvalue; track item.key){
+                            <ul style="list-style-type: none;" class="d-flex flex-wrap gap-3 p-0 mb-2">
+                                @for(key of getKeysArr(parentDetail); track key){
                                     <li>
-                                        <span class="fw-semibold">{{ item.key }}:</span>
+                                        <span class="fw-semibold">{{ key }}:</span>
                                         <p class="d-inline ms-2 text-secondary">
-                                            @if(!item.value.href){ <span>{{ item.value.text || 'N/A' }}</span> }
+                                            @if(!parentDetail[key].href){ <span>{{ parentDetail[key].text || 'N/A' }}</span> }
                                             @else{
-                                                <span><a href="{{ item.value.href }}">{{ item.value.text || 'N/A' }}</a></span>
+                                                <span><a href="{{ parentDetail[key].href }}">{{ parentDetail[key].text || 'N/A' }}</a></span>
                                             }
                                         </p>
                                     </li>
@@ -176,14 +175,29 @@
                     <div class="my-3 divider"></div>
                     <!-- ==================================Divider=================================================== -->
                     <div class="child-details horizontal-description-list p-3">
-                        <h4>Child Entities</h4>
+                        <h4 style="margin-bottom: 0.75rem;">Child Entities</h4>
                         @for(item of childDetails | keyvalue; track item.key) {
                             <div>
                               @for(child of item.value; let i = $index; track i) {
                                 <div class="d-flex flex-wrap">
                                   <span class="entity fw-semibold">{{ item.key }}</span>
-                                  <ul style="list-style-type: none;" class="d-flex flex-wrap gap-3">
-                                    @for(childItem of child | keyvalue; track childItem.key) {
+                                  <ul style="list-style-type: none;" class="d-flex flex-wrap gap-3 mb-2">
+                                    @for(itemKey of getKeysArr(child); track itemKey) {
+                                        <li>
+                                          <span class="fw-semibold">{{ itemKey }}:</span>
+                                          <p class="d-inline text-secondary ms-2">
+                                            @if (!child[itemKey].href) {
+                                              <span>{{ child[itemKey].text || 'N/A' }}</span>
+                                            } @else {
+                                              <span>
+                                                <a href="{{ child[itemKey].href }}">{{ child[itemKey].text || 'N/A' }}</a>
+                                              </span>
+                                            }
+                                          </p>
+                                        </li>
+                                      }
+                                    
+                                    <!-- @for(childItem of child | keyvalue; track childItem.key) {
                                       <li>
                                         <span class="fw-semibold">{{ childItem.key }}:</span>
                                         <p class="d-inline text-secondary ms-2">
@@ -196,7 +210,7 @@
                                           }
                                         </p>
                                       </li>
-                                    }
+                                    } -->
                                   </ul>
                                 </div>
                               }

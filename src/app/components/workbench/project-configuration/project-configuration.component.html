@@ -15,12 +15,18 @@
             <div class="col-lg-12">
                 <div class="proj-config">
 
-                    <div class="d-flex mb-3">
-                        <button class="btn" [routerLink]="['/workbench','config', 'entities']" routerLinkActive="btn-primary custom">Entities</button>
-                        <button class="btn" [routerLink]="['/workbench','config', 'expedition', 'properties']" routerLinkActive="btn-primary custom">Expedition Properties</button>
-                        <button class="btn" [routerLink]="['/workbench','config', 'lists']" routerLinkActive="btn-primary custom">Lists</button>
-                        <button class="btn" [routerLink]="['/workbench','config', 'settings']" routerLinkActive="btn-primary custom">Settings</button>
+                    <div class="d-flex mb-3 justify-content-between">
+                        <div class="d-flex">
+                            <button class="btn" [routerLink]="['/workbench','config', 'entities']" routerLinkActive="btn-primary custom">Entities</button>
+                            <button class="btn" [routerLink]="['/workbench','config', 'expedition', 'properties']" routerLinkActive="btn-primary custom">Expedition Properties</button>
+                            <button class="btn" [routerLink]="['/workbench','config', 'lists']" routerLinkActive="btn-primary custom">Lists</button>
+                            <button class="btn" [routerLink]="['/workbench','config', 'settings']" routerLinkActive="btn-primary custom">Settings</button>
+                        </div>
+                        <button type="button" class="btn btn-primary custom me-3" [ngStyle]="{ 'visibility': changesDetected ? 'visible' : 'hidden' }" (click)="saveConfigs()">
+                            <i class="fas fa-upload me-2"></i> Save Config
+                        </button>
                     </div>
+
                     <router-outlet />
 
                 </div>

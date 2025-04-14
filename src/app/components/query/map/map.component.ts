@@ -16,6 +16,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy{
   mapService = inject(MapQueryService);
 
   // Variable
+  @Input() height:string = '280px';
   @Input() showExtras:boolean = true;
   @Input() mapData?:{ data:any[], lat:string, lng: string };
   @Output() sidebarToggle:EventEmitter<boolean> = new EventEmitter();

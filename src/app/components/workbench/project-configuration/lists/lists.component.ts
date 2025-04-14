@@ -1,14 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, TemplateRef } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Subject, take, takeUntil } from 'rxjs';
+import { firstValueFrom, Subject, take, takeUntil } from 'rxjs';
 import { ProjectConfig } from '../../../../../helpers/models/projectConfig.model';
 import { ProjectConfigurationService } from '../../../../../helpers/services/project-config.service';
 import { ProjectService } from '../../../../../helpers/services/project.service';
 import { NgbModal, NgbModalModule, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DummyDataService } from '../../../../../helpers/services/dummy-data.service';
+import { cloneDeep } from 'lodash';
 
 @Component({
   selector: 'app-lists',
@@ -19,7 +20,8 @@ import { DummyDataService } from '../../../../../helpers/services/dummy-data.ser
 })
 export class ListsComponent {
   // Injectors
-  fb = inject(FormBuilder)
+  router = inject(Router);
+  fb = inject(FormBuilder);
   toastr = inject(ToastrService);
   modalService = inject(NgbModal);
   projectService = inject(ProjectService);
@@ -33,6 +35,8 @@ export class ListsComponent {
   allLists: Array<any> = [];
   modalRef!: NgbModalRef;
   listForm!:FormGroup;
+  userLists:any[] = [];
+  networkLists:any[] = [];
 
   constructor() {
     this.dummyDataService.loadingState.next(true);
@@ -47,18 +51,32 @@ export class ListsComponent {
       alias: ['', Validators.required],
       caseInsensitive: [false],
       fields: [[]],
-      networkList: false,
-      addedByUser: [true]
+      networkList: false
     })
   }
 
   getProjectConfigs(id: number) {
-    this.projectConfService.get(id).pipe(take(1), takeUntil(this.destroy$)).subscribe((res: any) => {
-      this.currentProject = res;
-      this.currentProjectConfig = res.config;
-      this.allLists = this.sortList(this.currentProjectConfig.lists);
-      this.dummyDataService.loadingState.next(false);
+    this.projectConfService.getUpdatedCurrentProj().pipe(take(1), takeUntil(this.destroy$)).subscribe(async(res:any) => {
+      if(res) this.processDataFormatting({ ...res });
+      else{
+        try{
+          const response = await firstValueFrom(this.projectConfService.get(id));
+          this.projectConfService.setInitialProjVal(cloneDeep(response));
+          this.processDataFormatting(response);
+        }
+        catch(e){ console.warn('======error in API====',e) }
+      }
     })
+
+  }
+
+  processDataFormatting(project: any) {
+    this.currentProject = project;
+    this.currentProjectConfig = project.config;
+    this.userLists = this.currentProjectConfig.lists.filter(list => !list.networkList);
+    this.networkLists = this.currentProjectConfig.lists.filter(list => list.networkList);
+    this.formatListsData();
+    this.dummyDataService.loadingState.next(false);
   }
 
   sortList(data:Array<any>):Array<any>{
@@ -75,12 +93,27 @@ export class ListsComponent {
     this.modalRef = this.modalService.open(content, { animation: true, centered: true, windowClass: 'no-backdrop', backdrop: false });
   }
 
+  formatListsData() {
+    const sortedUserLists = this.sortList(this.userLists);
+    const sortedNetworkLists = this.sortList(this.networkLists);
+    this.allLists = [...sortedUserLists, ...sortedNetworkLists];
+  }
+
   saveList(){
-    const newData = [ ...this.allLists, this.listForm.value ];
-    this.allLists = this.sortList(newData);
+    const listData = cloneDeep(this.listForm.value);
+    this.userLists.push(this.listForm.value);
+    this.formatListsData();
     this.setControlVal('alias', '');
-    this.setControlVal('addedByUser', true);
     this.modalRef.close();
+    this.updateConfigs();
+    const payload = JSON.stringify(listData);
+    this.router.navigateByUrl(`/workbench/config/lists/${listData.alias}?new_list=${btoa(payload)}`);
+  }
+
+  updateConfigs(){
+    const projectData = { ...this.currentProject };
+    projectData.config.lists = this.allLists;
+    this.projectConfService.updateCurrentProj(projectData);
   }
 
   saveConfig(){
@@ -88,17 +121,14 @@ export class ListsComponent {
     projectData.config.lists = this.allLists;
     this.projectConfService.save(projectData).pipe(take(1), takeUntil(this.destroy$)).subscribe((res:any)=>{
       this.toastr.success('Configs Updated!');
-      this.allLists = this.allLists.map((item:any)=>{
-        if(item.addedByUser) delete item.addedByUser;
-        return item;
-      })
     })
   }
 
   removeList(list:any){
-    const idx = this.allLists.findIndex((item:any)=> item.alias == list.alias && (item.addedByUser || !item.networkList));
+    const idx = this.allLists.findIndex((item:any)=> item.alias == list.alias && !item.networkList);
     if(idx == -1) return;
     this.allLists = this.allLists.slice(0, idx).concat(this.allLists.slice(idx + 1));
+    this.updateConfigs();
   }
 
   get form(){ return this.listForm.controls; }

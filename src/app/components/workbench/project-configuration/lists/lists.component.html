@@ -1,26 +1,26 @@
 <div class="mt-4">
     <div class="add-btn py-2">
         <button type="button" class="btn btn-primary custom" (click)="openModal(add_modal)">+ ADD LIST</button>
-        @if(changesDone){
+        <!-- @if(projectConfService.isConfigChanges){
             <button type="button" class="btn btn-primary custom ms-3" (click)="saveConfig()">
                 <i class="fas fa-upload"></i> Save Config
             </button>
-        }
+        } -->
     </div>
     @for(item of allLists; track item){
         <ul class="list-group">
             <li class="list-group-box list-section d-flex align-items-center">
-                <i class="fas fa-trash-can text-danger pe-5 cursor-pointer" (click)="removeList(item)" [ngClass]="item?.addedByUser || !item.networkList ? 'visible' : 'invisible'"></i>
-                <div class="work-boxes">
+                <i class="fas fa-trash-can text-danger pe-5 cursor-pointer" (click)="removeList(item)" [ngClass]="!item.networkList ? 'visible' : 'invisible'"></i>
+                <div class="work-boxes cursor-pointer" [routerLink]="['/workbench','config','lists', item.alias]">
                     <span class="event-hed">{{item.alias}}</span>
                     <ul class="work-list mt-2">
                         <li><strong>caseSensitive:</strong> {{!item.caseInsensitive}}</li>
                         <li><strong>isNetworkList: </strong> {{item.networkList}}</li>
                     </ul>
                 </div>
-                <div>
+                <div class="cursor-pointer" [routerLink]="['/workbench','config','lists', item.alias]">
                     <ul class="list-inline mb-0">
-                        <li class="lists-attributes cursor-pointer" [routerLink]="['/workbench','config','lists', item.alias]">
+                        <li class="lists-attributes">
                             <span class="badge bg-primary me-2">{{item.fields?.length || 0}}</span> Fields
                         </li>
                     </ul>

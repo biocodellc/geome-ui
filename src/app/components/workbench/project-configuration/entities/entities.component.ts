@@ -1,7 +1,7 @@
 import { Component, inject, OnDestroy } from '@angular/core';
 import { ProjectService } from '../../../../../helpers/services/project.service';
 import { ToastrService } from 'ngx-toastr';
-import { Subject, take, takeUntil } from 'rxjs';
+import { firstValueFrom, Subject, take, takeUntil } from 'rxjs';
 import { ProjectConfigurationService } from '../../../../../helpers/services/project-config.service';
 import { ProjectConfig } from '../../../../../helpers/models/projectConfig.model';
 import { CommonModule } from '@angular/common';
@@ -9,6 +9,7 @@ import { NgbPopover, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { DummyDataService } from '../../../../../helpers/services/dummy-data.service';
+import { cloneDeep } from 'lodash';
 
 @Component({
   selector: 'app-entities',
@@ -39,7 +40,6 @@ export class EntitiesComponent implements OnDestroy{
     this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       this.currentProject = res;
       if(this.currentProject){
-        console.log(this.currentProject);
         this.getProjectConfigs(this.currentProject.projectConfiguration.id);
       }
     })
@@ -65,8 +65,16 @@ export class EntitiesComponent implements OnDestroy{
   }
 
   getProjectConfigs(id:number){
-    this.projectConfService.get(id).pipe(take(1), takeUntil(this.destroy$)).subscribe((res:any)=>{
-      this.currentProjectConfig = res.config;
+    this.projectConfService.getUpdatedCurrentProj().pipe(takeUntil(this.destroy$)).subscribe(async(res:any) => {
+      let project = res ? { ...res } : undefined;
+      if(!project){
+        try{
+          project = await firstValueFrom(this.projectConfService.get(id));
+          this.projectConfService.setInitialProjVal(cloneDeep(project));
+        }
+        catch(e){ console.warn('========error=====',e); }
+      }
+      this.currentProjectConfig = project.config;
       this.entitiesList = this.currentProjectConfig.entities;
       this.dummyDataService.loadingState.next(false);
     })

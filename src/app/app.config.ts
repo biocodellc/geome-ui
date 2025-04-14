@@ -1,4 +1,4 @@
-import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
 
@@ -6,7 +6,8 @@ import { routes } from './app.routes';
 import { provideToastr } from 'ngx-toastr';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from '../helpers/interceptors/auth.interceptor';
-import { GalleryModule } from 'ng-gallery';
+import { GALLERY_CONFIG, GalleryConfig } from 'ng-gallery';
+import { LIGHTBOX_CONFIG, LightboxConfig } from 'ng-gallery/lightbox';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,6 +16,20 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient( withInterceptors([authInterceptor]) ),
     provideAnimations(),
     provideToastr({ timeOut: 2000, preventDuplicates: true }),
-    importProvidersFrom(GalleryModule)
+    {
+      provide: GALLERY_CONFIG,
+      useValue: {
+        autoHeight: true,
+        imageSize: 'cover',
+        dots: true,
+      } as GalleryConfig
+    },
+    {
+      provide: LIGHTBOX_CONFIG,
+      useValue: {
+        keyboardShortcuts: false,
+        exitAnimationTime: 1000
+      } as LightboxConfig
+    }
   ]
 };

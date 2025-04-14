@@ -5,6 +5,7 @@ import { BehaviorSubject, Observable, catchError, map, of, take } from 'rxjs';
 import { ProjectConfig } from '../models/projectConfig.model';
 import { environment } from '../../environments/environment';
 import { AuthenticationService } from './authentication.service';
+import { ProjectConfigurationService } from './project-config.service';
 
 export const PROJECT_CHANGED_EVENT = 'projectChanged';
 
@@ -18,7 +19,7 @@ export interface Project {
 @Injectable({
   providedIn: 'root',
 })
-export class ProjectService {
+export class ProjectService{
   private apiUrl = environment.restRoot;
   private currentProject: Project | null = null;
   private projectSubject = new BehaviorSubject<Project | null>(null);
@@ -31,6 +32,7 @@ export class ProjectService {
     private http: HttpClient,
     private activatedRoute: ActivatedRoute,
     private authService: AuthenticationService,
+    private projectConfigService : ProjectConfigurationService
   ) {}
 
   currentProject$(): Observable<Project | null> {
@@ -46,16 +48,11 @@ export class ProjectService {
   }
 
   setCurrentProject(project: any, redirect = true): void {
+    this.projectConfigService.clearCurrentProject();
     if (!project?.projectId) {
       this.currentProject = null;
       this.projectSubject.next(null);
       this.router.navigate(['/workbench/dashboard']);
-    }
-    else if(project.config){
-      this.currentProject = project;
-      this.projectSubject.next(project);
-      this.cacheProject(project.projectId);
-      if(redirect) this.router.navigate(['/workbench/project-overview']);
     }
     else{
       const projectData = this.getProjectFromLocal(project.projectId) || project;

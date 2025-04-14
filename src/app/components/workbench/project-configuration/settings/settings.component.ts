@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { RouterLink } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { Subject, take, takeUntil } from 'rxjs';
+import { firstValueFrom, Subject, take, takeUntil } from 'rxjs';
 import { ProjectConfig } from '../../../../../helpers/models/projectConfig.model';
 import { ProjectConfigurationService } from '../../../../../helpers/services/project-config.service';
 import { ProjectService } from '../../../../../helpers/services/project.service';
@@ -55,9 +55,17 @@ export class SettingsComponent implements OnDestroy{
   }
 
   getProjectConfigs(id: number) {
-    this.projectConfService.get(id).pipe(take(1), takeUntil(this.destroy$)).subscribe((res: any) => {
-      this.currentProject = res;
-      this.currentProjectConfig = res.config;
+    this.projectConfService.getUpdatedCurrentProj().pipe(take(1), takeUntil(this.destroy$)).subscribe(async(res:any) => {
+      let project = res ? { ...res } : undefined;
+      if(!project){
+        try{
+          project = await firstValueFrom(this.projectConfService.get(id));
+          this.projectConfService.setInitialProjVal(project);
+        }
+        catch(e){ console.warn('========error=====',e); }
+      }
+      this.currentProject = project;
+      this.currentProjectConfig = project.config;
       this.setFormVal();
     })
   }

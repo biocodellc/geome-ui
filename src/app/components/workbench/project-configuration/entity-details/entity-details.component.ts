@@ -3,7 +3,7 @@ import { Component, inject, OnDestroy, QueryList, TemplateRef, ViewChildren } fr
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProjectService } from '../../../../../helpers/services/project.service';
 import { ProjectConfigurationService } from '../../../../../helpers/services/project-config.service';
-import { Subject, take, takeUntil } from 'rxjs';
+import { firstValueFrom, Subject, take, takeUntil } from 'rxjs';
 import { ProjectConfig } from '../../../../../helpers/models/projectConfig.model';
 import { DummyDataService } from '../../../../../helpers/services/dummy-data.service';
 import { NetworkService } from '../../../../../helpers/services/network.service';
@@ -14,6 +14,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AVAILABLE_RULES, Rule } from '../../../../../helpers/models/rules.model';
 import { AddEditRuleComponent } from '../../../../dialogs/add-edit-rule/add-edit-rule.component';
 import { DeleteModalComponent } from '../../../../dialogs/delete-modal/delete-modal.component';
+import { cloneDeep } from 'lodash';
 
 const compare = (v1: string | number, v2: string | number) => (v1 < v2 ? -1 : v1 > v2 ? 1 : 0);
 
@@ -66,12 +67,21 @@ export class EntityDetailsComponent implements OnDestroy{
     this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if(res) this.getProjectConfigs(res.projectConfiguration.id);
     })
+    this.projectConfService.getInitialProjVal().pipe(takeUntil(this.destroy$)).subscribe((x:any) => console.log(x));
   }
 
-  getProjectConfigs(id:number){
-    this.projectConfService.get(id).pipe(take(1), takeUntil(this.destroy$)).subscribe((res:any)=>{
-      this.currentProject = res;
-      this.config = res.config;
+  getProjectConfigs(id: number) {
+    this.projectConfService.getUpdatedCurrentProj().pipe(take(1), takeUntil(this.destroy$)).subscribe(async (res: any) => {
+      let project = res ? { ...res } : undefined;
+      if (!project) {
+        try {
+          project = await firstValueFrom(this.projectConfService.get(id));
+          this.projectConfService.setInitialProjVal(cloneDeep(project));
+        }
+        catch (e) { console.warn('========error=====', e); }
+      }
+      this.currentProject = project;
+      this.config = project.config;
       this.extractParams();
     })
   }
@@ -88,13 +98,13 @@ export class EntityDetailsComponent implements OnDestroy{
 
   getNetworkConfigs(){
     this.networkService.getConfig().pipe(take(1), takeUntil(this.destroy$)).subscribe((res:any)=>{
-      this.networkConfig = res;
-      this.selectedAttributes = [ ...this.entity[this.paramData.type] ];
+      this.networkConfig = res
+      this.selectedAttributes = [ ...this.entity['attributes'] ];
       if(this.paramData.type === 'attributes'){
         const requiredAtt = this.requiredAttributes();
         this.requiredUris = requiredAtt ? requiredAtt.map((a:any) => a.uri) : [];
         this.availableAttributes = this.getAvailableAttributes();
-        this.onAllCheckboxChange(true);
+        this.onAllCheckboxChange(true, false);
         this.updateSelectedAttrbutes();
         this.initAttributeForm();
       }
@@ -172,7 +182,7 @@ export class EntityDetailsComponent implements OnDestroy{
     return i === -1 ? 'N/A' : i;
   }
 
-  onAllCheckboxChange(event:any){
+  onAllCheckboxChange(event:any, updateConfig:boolean = true){
     const isChecked = event?.target?.checked || event;
     this.selectedAttributes.forEach((item:any)=>{
       this.selectedAttributeMap[item.uri] = isChecked || this.requiredUris.includes(item.uri) ? item : undefined;
@@ -182,15 +192,16 @@ export class EntityDetailsComponent implements OnDestroy{
       else if(isChecked && !this.requiredUris.includes(item.uri))
         this.orderedAttributes.push(item.uri);
     })
-    this.updateOrderedArr();
+    this.updateOrderedArr(updateConfig);
   }
 
-  updateOrderedArr(){
+  updateOrderedArr(updateConfig:boolean = true){
     let checkedAtt:any[] = [];
-     Object.keys(this.selectedAttributeMap).forEach((key:string) =>{
+    Object.keys(this.selectedAttributeMap).forEach((key:string) =>{
       if(this.selectedAttributeMap[key]) checkedAtt.push(key);
     })
     this.orderedAttributes = checkedAtt;
+    if(updateConfig) this.updateConfig();
   }
 
   get selectedAttUris(){ return Object.values(this.selectedAttributeMap).map((att:any) => att?.uri).filter((att:any) => att); }
@@ -229,6 +240,26 @@ export class EntityDetailsComponent implements OnDestroy{
 			});
     }
 	}
+
+  async updateConfig(){
+    const projectData = { ...this.currentProject };
+    const entityIdx = projectData.config.entities.findIndex((item:any) => item.conceptAlias == this.entity.conceptAlias);
+    if(this.paramData.type == 'rules'){
+      const rules = this.rules.map((rule:Rule) =>{
+        delete rule.requiredItems;
+        return rule;
+      })
+      projectData.config.entities[entityIdx].rules = [ ...rules ];
+    }
+    else if(this.paramData.type == 'attributes'){
+      const updatedAttributes = this.orderedAttributes.map(uri => this.selectedAttributeMap[uri]);
+      projectData.config.entities[entityIdx].attributes = updatedAttributes;
+    }
+    console.log('=====updated entity config===',projectData.config.entities[entityIdx]);
+    setTimeout(() => {
+      this.projectConfService.updateCurrentProj(projectData);
+    }, 100);
+  }
 
   saveConfigs(){
     this.dummyDataService.loadingState.next(true);
@@ -281,11 +312,17 @@ export class EntityDetailsComponent implements OnDestroy{
         // Updating value in attributes of selectedAttributes
         const idx_2 = this.selectedAttributes.findIndex((att:any) => att.uri == data.uri );
         this.selectedAttributes[idx_2] = updatedData;
+
+        this.updateConfig();
       }
       else if(res?.idx >= 0 && this.paramData.type == 'rules'){
         this.rules[res.idx] = res.rule;
+        this.updateConfig()
       }
-      else if(!res?.idx && this.paramData.type == 'rules') this.rules.push(res.rule);
+      else if(!res?.idx && this.paramData.type == 'rules'){
+        this.rules.push(res.rule);
+        this.updateConfig();
+      }
     })
   }
 
@@ -299,6 +336,7 @@ export class EntityDetailsComponent implements OnDestroy{
       if(res){
         const idx = this.rules.findIndex((r:Rule) => r.name == rule.name);
         this.rules = this.rules.slice(0, idx).concat( this.rules.slice(idx + 1) );
+        this.updateConfig();
       }
     })
   }
@@ -312,6 +350,10 @@ export class EntityDetailsComponent implements OnDestroy{
     if(!this.paramData?.type) return false;
     const newData = this.paramData.type == 'attributes' ? this.selectedAttributes : this.rules;
     return JSON.stringify(this.entity[this.paramData.type]) !== JSON.stringify(newData);
+  }
+
+  isObjectEmpty(data:{}){
+    return Object.values(data).filter(item => item).length > 0 ? false : true;
   }
 
   ngOnDestroy(): void {

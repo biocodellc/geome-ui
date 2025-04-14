@@ -8,6 +8,12 @@ section.records{
     border: 1px solid grey;
 }
 
-.col-12.col-md-6{
-    width: 47% !important;
+.col-12.col-md-6.col-lg-4{
+    width: 32.5% !important;
+}
+
+::ng-deep{
+    .main-details gallery-core{ background-color: #fff; }
+    
+    gallery-core{ gap: 10px !important; }
 }
