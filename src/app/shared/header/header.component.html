@@ -4,7 +4,8 @@
             @if(isSmallDevice && currentRouteUrl.includes('workbench')){
                 <button type="button" class="btn btn-light me-3" (click)="openSidebar()"><i class="fas fa-bars"></i></button>
             }
-            <img src="logo/geome-logo.png" class="header-logo cursor-pointer" [ngStyle]="{'height': largeDevice ? '48px' : '30px'}" routerLink="">
+            <!-- <img src="logo/geome-logo.png" class="header-logo cursor-pointer" [ngStyle]="{'height': largeDevice ? '48px' : '30px'}" routerLink=""> -->
+            <img src="logo/Geome_Logo.png" class="header-logo cursor-pointer" [ngStyle]="{'height': largeDevice ? '70px' : '53px'}" routerLink="">
         </div>
         @if(largeDevice && currentRouteUrl.includes('workbench')){
             <app-project-selector [currentUser]="currentUser"/>

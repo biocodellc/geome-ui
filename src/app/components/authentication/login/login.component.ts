@@ -35,7 +35,7 @@ export class LoginComponent implements OnDestroy{
     this.previousUrl = this.routeTrackService.getPreviousUrl();
     this.initForm();
     this.authService.currentUser.pipe(takeUntil(this.destroy$)).subscribe((x) => {
-      if(x) this.router.navigateByUrl(this.previousUrl);
+      if(x && !this.isLoading) this.router.navigateByUrl(this.previousUrl !== '/login' ? this.previousUrl : '/');
     })
   }
 

@@ -3,7 +3,7 @@ div#sidebar{
     width: 320px;
     z-index: 999;
     overflow-y:auto;
-    height: calc(100vh - 62px);
+    height: calc(100vh - 80px);
     &.mobile-view{
         position: absolute;
         &.hidden{

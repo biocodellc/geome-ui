@@ -6,6 +6,7 @@ import { ProjectConfig } from '../models/projectConfig.model';
 import { environment } from '../../environments/environment';
 import { AuthenticationService } from './authentication.service';
 import { ProjectConfigurationService } from './project-config.service';
+import { cloneDeep } from 'lodash';
 
 export const PROJECT_CHANGED_EVENT = 'projectChanged';
 
@@ -58,7 +59,7 @@ export class ProjectService{
       const projectData = this.getProjectFromLocal(project.projectId) || project;
       this.getProjectConfig(projectData.projectId).pipe(take(1)).subscribe({
         next: (res:any) => {
-          const updatedProject = { ...projectData ,config : new ProjectConfig(res) };
+          const updatedProject = { ...cloneDeep(projectData) ,config : new ProjectConfig(res) };
           this.currentProject = updatedProject;
           this.projectSubject.next(updatedProject);
           this.cacheProject(updatedProject.projectId);

@@ -67,7 +67,6 @@ export class EntityDetailsComponent implements OnDestroy{
     this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if(res) this.getProjectConfigs(res.projectConfiguration.id);
     })
-    this.projectConfService.getInitialProjVal().pipe(takeUntil(this.destroy$)).subscribe((x:any) => console.log(x));
   }
 
   getProjectConfigs(id: number) {
@@ -255,7 +254,6 @@ export class EntityDetailsComponent implements OnDestroy{
       const updatedAttributes = this.orderedAttributes.map(uri => this.selectedAttributeMap[uri]);
       projectData.config.entities[entityIdx].attributes = updatedAttributes;
     }
-    console.log('=====updated entity config===',projectData.config.entities[entityIdx]);
     setTimeout(() => {
       this.projectConfService.updateCurrentProj(projectData);
     }, 100);

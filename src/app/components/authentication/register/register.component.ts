@@ -32,14 +32,16 @@ export class RegisterComponent {
   registerForm!: FormGroup;
   isLoading: boolean = false;
   isUserNameTaken: boolean = false;
+  previousUrl:string = '';
   emailReg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   passwordReg: string = '(?=\\D*\\d)(?=[^a-z]*[a-z]).{8,30}';
 
   constructor() {
+    this.previousUrl = this.routeTrackService.getPreviousUrl();
     this.initForm();
     this.extractDataFromUrl();
     this.authService.currentUser.pipe(takeUntil(this.destroy$)).subscribe((x) => {
-      if(x) this.router.navigateByUrl(this.routeTrackService.getPreviousUrl());
+      if(x && !this.isLoading) this.router.navigateByUrl(this.previousUrl !== '/register' ? this.previousUrl : '/');
     })
   }
 

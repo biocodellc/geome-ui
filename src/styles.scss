@@ -168,7 +168,7 @@ section#login-container, section#register-container, section#resetPass-container
 // Workbench Page
 .main-content-container{
     flex: 1;
-    max-height: calc( 100vh - 62px );
+    max-height: calc( 100vh - 75px );
     overflow-y: auto;
 }
 
@@ -784,7 +784,7 @@ section.map-section{
     .form-section{
         padding: 20px 30px;
         overflow: auto;
-        height: calc(100vh - 120px);
+        height: calc(100vh - 135px);
         background-color: #fff;
         .form-control{
             border: none;

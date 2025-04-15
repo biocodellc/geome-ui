@@ -208,7 +208,7 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
       this.individualProjects = this.params.projects = this.expeditions = [];
     }
     this.teams = event.value;
-    this.changeParamProjects(event);
+    this.changeParamProjects(event, 'teams');
 
     // Setting Configs
     if(this.teams.length == 1){
@@ -224,7 +224,7 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
       this.teams = this.params.projects = [];
     }
     this.individualProjects = event.value;
-    this.changeParamProjects(event);
+    this.changeParamProjects(event, 'indProjects');
 
     // Setting Configs
     if (this.individualProjects.length == 1) {
@@ -237,13 +237,14 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
   }
 
   // Setting and Removing Teams's Project
-  changeParamProjects(event:{ item:any, value:[], isDeSelected?:boolean }){
-    this.allProjects.findIndex((p:any, i:number)=>{
-      if(p.projectConfiguration.name == event.item && event.isDeSelected){
+  changeParamProjects(event:{ item:any, value:[], isDeSelected?:boolean }, type:string){
+    this.allProjects.forEach((p:any, i:number)=>{
+      const isProjectMatched = type === 'teams' ? (p.projectConfiguration.name == event.item) : (p.projectTitle === event.item);
+      if(isProjectMatched && event.isDeSelected){
         const idx = this.params.projects.findIndex(item => item.projectId == p.projectId);
         this.params.projects.splice(idx, 1);
       }
-      else if(p.projectConfiguration.name == event.item && !event.isDeSelected) this.params.projects.push(p);
+      else if(isProjectMatched && !event.isDeSelected) this.params.projects.push(p);
     })
   }
 

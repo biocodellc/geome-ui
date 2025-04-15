@@ -44,10 +44,10 @@ export class MultiselectDropdownComponent implements OnChanges{
     }
   }
 
-  onItemSelect(item:any){ setTimeout(() => this.valueChange.emit({ item, value: this.value }), 100 )};
-  onItemDeSelect(item:any){ setTimeout(() => this.valueChange.emit({ item, value: this.value, isDeSelected: true }), 100 )};
-  onSelectAll(item:any){ setTimeout(() => this.valueChange.emit({ item, value: this.value }), 100 )};
-  onDeSelectAll(item:any){ setTimeout(() => this.valueChange.emit({ item, value: this.value, isDeSelected: true }), 100 )};
+  onItemSelect(item:any){ setTimeout(() => this.valueChange.emit({ item, value: this.value }), 50 )};
+  onItemDeSelect(item:any){ setTimeout(() => this.valueChange.emit({ item, value: this.value, isDeSelected: true }), 50 )};
+  onSelectAll(item:any){ setTimeout(() => this.valueChange.emit({ item, value: this.value }), 50 )};
+  onDeSelectAll(item:any){ setTimeout(() => this.valueChange.emit({ item, value: this.value, isDeSelected: true }), 50 )};
 
   getFormControl(control:string){ return this.formGroup.get(control) as FormControl; }
 }

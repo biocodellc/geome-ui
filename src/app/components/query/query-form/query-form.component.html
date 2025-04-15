@@ -145,7 +145,7 @@
     
             <div class="form-floating mb-1">
                 <select class="form-select" id="floatingSelect_expeditions" aria-label="Expeditions" name="marker" [(ngModel)]="params.marker">
-                    <option class="fw-secondary" value="" selected disabled>--Select Marker--</option>
+                    <option class="fw-secondary" value="" selected>--Select Marker--</option>
                     @for(marker of markers; track marker){
                         <option [value]="marker.value">{{marker.value}}</option>
                     }
