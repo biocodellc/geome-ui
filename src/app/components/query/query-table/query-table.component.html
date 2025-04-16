@@ -1,0 +1,25 @@
+<p class="fw-bold">Total Number of Results: {{queryResult.length}}</p>
+<div class="main-table">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                @for(col of headers; track col){
+                    <th scope="col">{{ col }}</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @for (item of formattedQueryResult; track item) {
+            <tr (click)="detailedView(item.bcid)">
+                @for(col of headers; track col; let i=$index;){
+                    @if(col !== 'img128'){ <td>{{ item[col] }}</td> }
+                    @else{
+                        <td><img [src]="item[col]" width="125px" alt="img_{{i}}"></td>
+                    }
+                }
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<app-paginator [paginator]="paginatorData" (pageChange)="onPageChange()" />

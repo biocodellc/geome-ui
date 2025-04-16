@@ -5,7 +5,7 @@
                 <ul class="map-tbl mb-0">
                     @if(queryResult.length && entities.length){
                         <li class="down-btn" ngbDropdown>
-                            <button type="button" class="btn btn-outline-primary" id="downloadOptions" ngbDropdownToggle>
+                            <button type="button" class="btn btn-primary-original" id="downloadOptions" ngbDropdownToggle>
                                 <i class="fas fa-download"></i>
                             </button>
                             <div ngbDropdownMenu aria-labelledby="downloadOptions">
@@ -15,8 +15,11 @@
                             </div>
                         </li>
                     }
-                    <li class="map-btn1"><button type="button" (click)="active = 'map'">Map</button></li>
-                    <li class="map-btn1"><button type="button" (click)="active = 'table'">Table</button></li>
+                    <li class="map-btn1"><button type="button" class="btn btn-sm rounded-0" [ngClass]="active === 'map' ? 'btn-primary' : 'btn-light'" (click)="active = 'map'">Map</button></li>
+                    <li class="map-btn1"><button type="button" class="btn btn-sm rounded-0" [ngClass]="active === 'table' ? 'btn-primary' : 'btn-light'" (click)="active = 'table'">Table</button></li>
+                    @if(entity.includes('Photo')){
+                        <li class="map-btn1"><button type="button" class="btn btn-sm rounded-0" [ngClass]="active === 'photos' ? 'btn-primary' : 'btn-light'" (click)="active = 'photos'">Browse Phtots</button></li>
+                    }
                 </ul>
             </div>
         </div>
@@ -32,53 +35,21 @@
         </div>
         
         <div class="p-0 pe-2" [ngClass]="isSidebarVisible ? 'col-md-8' : 'col-md-12'">
-            <div [ngClass]="active == 'map' ? '' : 'w-0 h-0 overflow-hidden'">
+            <div [ngClass]="active === 'map' ? '' : 'w-0 h-0 overflow-hidden'">
                 <app-map (sidebarToggle)="onSidebarToggle($event)"/>
             </div>
-            <div class="custom-table-container" [ngClass]="active != 'map' ? 'query-table' : 'w-0 h-0 overflow-hidden'">
+            <div class="custom-table-container" [ngClass]="active === 'table' ? 'query-table' : 'w-0 h-0 overflow-hidden p-0'">
                 @if(queryResult.length){
-                    <p class="fw-bold">Total Number of Results: {{queryResult.length}}</p>
-                    <div class="main-table">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col">MaterialSampleID</th>
-                                    <th scope="col">EventID</th>
-                                    <th scope="col" class="th-locality">Locality</th>
-                                    <th scope="col">DecimalLatitude</th>
-                                    <th scope="col">DecimalLongitude</th>
-                                    <th scope="col">YearCollected</th>
-                                    <th scope="col">Phylum</th>
-                                    <th scope="col">ScientificName</th>
-                                    <th scope="col">ExpeditionCode</th>
-                                    <th scope="col">Bcid</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @for (item of formattedQueryResult; track item) {
-                                    <tr (click)="detailedView(item.bcid)">
-                                        <td>{{ item.materialSampleID }}</td>
-                                        <td>{{ item.eventID }}</td>
-                                        <td>{{ item.locality }}</td>
-                                        <td>{{ item.decimalLatitude }}</td>
-                                        <td>{{ item.decimalLongitude }}</td>
-                                        <td>{{ item.yearCollected }}</td>
-                                        <td>{{ item.phylum }}</td>
-                                        <td>{{ item.scientificName }}</td>
-                                        <td>{{ item.expeditionCode }}</td>
-                                        <td>{{ item.bcid }}</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                    <app-paginator [paginator]="paginatorData" (pageChange)="onPageChange()"/>
+                    <app-query-table [entity]="entity" [queryResult]="queryResult"/>
                 }
                 @else{
                     <div class="d-flex justify-content-center">
                         <p>Click <span class="fw-semibold">Search</span> on sidebar to display query results</p>
                     </div>
                 }
+            </div>
+            <div class="custom-table-container" [ngClass]="active === 'photos' ? '' : 'w-0 h-0 overflow-hidden p-0'">
+                <app-query-photos [entity]="entity" [queryResult]="queryResult"/>
             </div>
         </div>
 

@@ -14,6 +14,7 @@ import { RecordService } from '../../../../helpers/services/record.service';
 import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, OperatorFunction } from 'rxjs';
 import { JsonPipe } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-plates',
@@ -24,6 +25,7 @@ import { JsonPipe } from '@angular/common';
 })
 export class PlatesComponent {
   // Injectors
+  router = inject(Router);
   fb = inject(FormBuilder);
   modalService =  inject(NgbModal);
   dataService = inject(DummyDataService);
@@ -41,6 +43,7 @@ export class PlatesComponent {
   currentProject:any;
   plateForm!:FormGroup;
   modalRef!:NgbModalRef;
+  tissueModalRef!:NgbModalRef;
   dataChanged:boolean = false;
   isLoading:boolean = false;
   isProcessing:boolean = false;
@@ -49,6 +52,7 @@ export class PlatesComponent {
   activeInput:any;
   matchingData:any[] = [];
   selectPlateData:any[] = [];
+  selectedTissue:any;
 
   search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>
     text$.pipe(
@@ -93,7 +97,7 @@ export class PlatesComponent {
   getAllUserPlates(){
     this.plateService.getAll(this.currentProject.projectId).pipe(take(1), takeUntil(this.destroy$)).subscribe({
       next: (res:any)=>{
-        this.userPlates = res;
+        this.userPlates = res?.filter((item:any) => item).sort() || [];
         this.dataService.loadingState.next(false);
       }
     })
@@ -245,7 +249,28 @@ export class PlatesComponent {
     })
   }
 
+  openTissueDetails(data:any, content:TemplateRef<any>){
+    if(!data?.tissueID) return;
+    this.selectedTissue = data;
+    console.log(this.selectedTissue);
+    this.tissueModalRef = this.modalService.open(content, { animation: true, centered: true, scrollable: true  });
+    this.tissueModalRef.result.then(() => this.selectedTissue = null);
+    this.tissueModalRef.closed.pipe(take(1)).subscribe(() => this.selectedTissue = null);
+    this.tissueModalRef.dismissed.pipe(take(1)).subscribe(() => this.selectedTissue = null);
+  }
+
+  naviagetToRecord(item:any){
+    if(item.key !== 'bcid') return;
+    this.tissueModalRef.close();
+    this.modalRef.close();
+    this.router.navigateByUrl(`/record/${item.value}`)
+  }
+
   // Helpers functions
+  get isProjectAdmin():boolean{
+    return this.currentUser?.userId === this.currentProject?.projectConfiguration.user.userId
+  }
+
   get form(){ return this.plateForm.controls; }
 
   getControlVal(control:string){ return this.form[control].value };

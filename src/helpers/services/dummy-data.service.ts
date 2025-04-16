@@ -44,4 +44,86 @@ export class DummyDataService {
       { key: 'H', data:[ null, null, null, null, null, null, null, null, null, null, null, null ]},
     ]
   }
+
+  getQueryTableCols():any{
+    return {
+      Event: [
+        'eventID',
+        'locality',
+        'decimalLatitude',
+        'decimalLongitude',
+        'yearCollected',
+        'expeditionCode',
+        // 'projectCode',
+        'bcid',
+      ],
+      Sample: [
+        'materialSampleID',
+        'eventID',
+        'locality',
+        'decimalLatitude',
+        'decimalLongitude',
+        'yearCollected',
+        'phylum',
+        'scientificName',
+        'expeditionCode',
+        'bcid',
+      ],
+      Event_Photo: [
+      'img128',
+        'photoID',
+      'eventID',
+      'qualityScore',
+      'photographer',
+        'expeditionCode',
+        'bcid',
+      ],
+      Diagnostics: [
+      'scientificName',
+        'materialSampleID',
+      'measurementType',
+      'measurementValue',
+      'measurementUnit',
+      'diseaseTested',
+      'diseaseDetected',
+        'expeditionCode',
+        'bcid',
+      ],
+      Sample_Photo: [
+      'img128',
+        'photoID',
+        'materialSampleID',
+      'qualityScore',
+      'photographer',
+        'expeditionCode',
+        'bcid',
+      ],
+      Tissue: [
+        'tissueID',
+        'materialSampleID',
+        'yearCollected',
+        'scientificName',
+        'tissueType',
+        'tissuePlate',
+        'tissueWell',
+        'expeditionCode',
+        'bcid',
+      ],
+      fastqMetadata: [
+        {
+          column: 'BioSample Accession #',
+          get: (f:any) => (f.bioSample ? f.bioSample.accession : 'N/A'),
+        },
+        'tissueID',
+        'materialSampleID',
+        'yearCollected',
+        'scientificName',
+        'libraryLayout',
+        'librarySource',
+        'librarySelection',
+        'expeditionCode',
+        'bcid',
+      ],
+    };
+  }
 }

@@ -12,11 +12,13 @@ import { ToastrService } from 'ngx-toastr';
 import { QueryParams } from '../../../helpers/scripts/queryParam';
 import { LoaderComponent } from '../../shared/loader/loader.component';
 import { PaginatorComponent } from '../../shared/paginator/paginator.component';
+import { QueryTableComponent } from './query-table/query-table.component';
+import { QueryPhotosComponent } from './query-photos/query-photos.component';
 
 @Component({
   selector: 'app-query',
   standalone: true,
-  imports: [CommonModule, QueryFormComponent, TeamQueryFormComponent, MapComponent, NgbDropdownModule, LoaderComponent, PaginatorComponent],
+  imports: [CommonModule, QueryFormComponent, TeamQueryFormComponent, MapComponent, NgbDropdownModule, LoaderComponent, PaginatorComponent, QueryTableComponent, QueryPhotosComponent],
   templateUrl: './query.component.html',
   styleUrl: './query.component.scss'
 })

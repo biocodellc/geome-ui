@@ -61,45 +61,80 @@ export class QueryService {
     ).subscribe();
   }
 
-  private transformResults(data: any, entity: string): any[] {
+  transformResults(data: any, entity: string): any[] {
     if (!data || Object.keys(data).length === 0) return [];
-    
+  
+    const buildRecordMap = (alias: string, key: string): Record<string, any> | undefined =>
+      data[alias]?.reduce((map: Record<string, any>, item: any) => {
+        map[item[key]] = item;
+        return map;
+      }, {});
+  
     const records: any[] = [];
-    const getRecords = (alias: string, uniqueKey: string) =>
-      data[alias]?.reduce((acc: any, record: any) => {
-        acc[record[uniqueKey]] = record;
-        return acc;
-      }, {}) || {};
-
-    const events = getRecords('Event', 'eventID');
-    const samples = getRecords('Sample', 'materialSampleID');
-    const tissues = getRecords('Tissue', 'tissueID');
-
-    if (entity === 'Diagnostics') {
-      data.Diagnostics.forEach((d:any) => {
-        const record = { ...d, bcid: d.bcid };
-        if (samples[d.materialSampleID]) {
-          Object.assign(record, samples[d.materialSampleID], { sampleBcid: samples[d.materialSampleID].bcid });
-        }
-        if (events[record.eventID]) {
-          Object.assign(record, events[record.eventID], { eventBcid: events[record.eventID].bcid });
-        }
-        records.push(record);
-      });
-    } else if (entity === 'Sample') {
-      data.Sample.forEach((s:any) => {
-        const record = { ...s, bcid: s.bcid };
-        if (events[s.eventID]) {
-          Object.assign(record, events[s.eventID], { eventBcid: events[s.eventID].bcid });
-        }
-        record.bcid = s.bcid;
-        records.push(record);
-      });
-    } else if (entity === 'Event') {
-      records.push(...data.Event);
+    const events = buildRecordMap('Event', 'eventID');
+    const samples = buildRecordMap('Sample', 'materialSampleID');
+    const tissues = buildRecordMap('Tissue', 'tissueID');
+  
+    const assignCommon = (record: any, sample?: any, event?: any, extra?: any) => {
+      const bcid = record.bcid;
+      const sampleBcid = sample?.bcid;
+      const eventBcid = event?.bcid;
+      Object.assign(record, sample, event, extra, { bcid, sampleBcid, eventBcid });
+      return record;
+    };
+  
+    switch (entity) {
+      case 'Diagnostics':
+        data.Diagnostics?.forEach((d:any) => {
+          const sample = samples?.[d.materialSampleID];
+          const event = events?.[sample?.eventID];
+          records.push(assignCommon(d, sample, event, { sampleBcid: sample?.bcid }));
+        });
+        break;
+  
+      case 'fastqMetadata':
+        data.fastqMetadata?.forEach((f:any) => {
+          const tissue = tissues?.[f.tissueID];
+          const sample = samples?.[tissue?.materialSampleID];
+          const event = events?.[sample?.eventID];
+          records.push(assignCommon(f, sample, event, {
+            tissueBcid: tissue?.bcid,
+            sampleBcid: sample?.bcid,
+          }));
+        });
+        break;
+  
+      case 'Sample_Photo':
+      case 'Tissue':
+        const source = data[entity];
+        source?.forEach((item:any) => {
+          const sample = samples?.[item.materialSampleID];
+          const event = events?.[sample?.eventID];
+          records.push(assignCommon(item, sample, event));
+        });
+        break;
+  
+      case 'Event_Photo':
+        data.Event_Photo?.forEach((s:any) => {
+          const event = events?.[s.eventID];
+          records.push(assignCommon(s, undefined, event));
+        });
+        break;
+  
+      case 'Sample':
+        data.Sample?.forEach((s:any) => {
+          const event = events?.[s.eventID];
+          records.push(assignCommon(s, undefined, event));
+        });
+        break;
+  
+      case 'Event':
+        data.Event?.forEach((e:any) => records.push(e));
+        break;
     }
+  
     return records;
-  }
+  }  
 
   downloadExcel(query:any, entity:string) {
     return this.downloadFile('excel', query, entity);

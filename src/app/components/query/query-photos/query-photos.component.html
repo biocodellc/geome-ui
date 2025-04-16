@@ -1,0 +1,10 @@
+<p class="text-secondary">Only one photo per {{ entity }} is shown. When quality_score is populated, the photo with the best quality_score is used.</p>
+<div class="container images-table">
+    @for(item of formattedPhotoArr; track item){
+        <div class="d-flex flex-column cursor-pointer" (click)="viewDetails(item)">
+            <img [src]="getHighestQualityPhoto(item.group)" [alt]="item.id" style="flex: 1;"/>
+            <span class="text-eclipse f-10 mt-1">{{item.id}} ({{item.group.length}})</span>
+        </div>
+    }
+</div>
+<app-paginator [paginator]="paginatorData" (pageChange)="onPageChange()" />

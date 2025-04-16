@@ -23,9 +23,9 @@
                 }
                 <div class="row">
                     <div class="d-flex justify-content-center gap-3">
-                        <button type="button" class="btn btn-primary float-end export-btn" (click)="openModal(newPlateModal, false, 'new')">NEW PLATE</button>
+                        <button type="button" class="btn btn-primary float-end" (click)="openModal(newPlateModal, false, 'new')">NEW PLATE</button>
                         @if(getControlVal('plate')){
-                            <button type="button" class="btn btn-primary float-end export-btn" (click)="openPlateDataModal()">View PLATE</button>
+                            <button type="button" class="btn btn-primary float-end" (click)="openPlateDataModal()">View PLATE</button>
                         }
                     </div>
                 </div>
@@ -72,7 +72,7 @@
             <thead>
                 <tr>
                     @for(header of ['.',1,2,3,4,5,6,7,8,9,10,11,12]; track header){
-                        <th scope="col" class="fw-semibold">{{header}}</th>
+                        <th scope="col" class="fw-semibold text-center">{{header}}</th>
                     }
                 </tr>
             </thead>
@@ -82,10 +82,12 @@
                         <td class="fw-semibold">{{item.key}}</td>
                         @for(data of item.data; track i; let i=$index){
                             <td>
-                                @if(data?.tissueID){
-                                    <div class="d-flex px-2">
-                                        <span class="d-block" style="flex:1;">{{data?.tissueID}}</span>
-                                        <i class="fas fa-trash ms-2 text-danger f-12 cursor-pointer" (click)="deleteTissue(item.key, i+1, data)"></i>
+                                @if(data?.tissueID || !isProjectAdmin){
+                                    <div class="d-flex p-2">
+                                        <span class="d-block cursor-pointer" style="flex:1;" (click)="openTissueDetails(data, tissueModal)">{{data?.tissueID}}</span>
+                                        @if(isProjectAdmin){
+                                            <i class="fas fa-trash ms-2 text-danger f-12 cursor-pointer" (click)="deleteTissue(item.key, i+1, data)"></i>
+                                        }
                                     </div>
                                 }
                                 @else{
@@ -105,5 +107,22 @@
                 <button type="button" class="btn btn-primary custom" (click)="selectPlateData.length == 0 ? createNew() : saveTissueData()">Save</button>
             }
         </div>
+	</div>
+</ng-template>
+
+<ng-template #tissueModal let-modal>
+	<div class="modal-header bg-primary py-2">
+  <h4 class="modal-title" id="modal-basic-title">Tissue: {{ selectedTissue?.tissueID }}</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.close()"></button>
+	</div>
+	<div class="modal-body p-2 px-2 border-0 custom-fields">
+        <ul class="list-group">
+            @for(item of selectedTissue | keyvalue; track item.key){
+                <li class="list-group-item d-flex">
+                    <span class="d-inline-block" style="width: 180px;">{{item.key}} :</span>
+                    <span class="d-block text-eclipse" [ngClass]="item.key === 'bcid' ? 'text-primary cursor-pointer' : ''" (click)="naviagetToRecord(item)">{{item.value}}</span>
+                </li>
+            }
+        </ul>
 	</div>
 </ng-template>

@@ -44,7 +44,8 @@
         
                     @if(recordData?.entity){
                         <div class="col-12 col-md-6 col-lg-4">
-                            <table class="table">
+
+                            <!-- <table class="table">
                                 <tbody>
                                     @if(invalidPhoto && recordData?.originalUrl.includes('base64')){
                                         <tr>
@@ -70,7 +71,29 @@
                                         </tr>
                                     }
                                 </tbody>
-                            </table>
+                            </table> -->
+
+                            <ul class="list-group">
+                                @if(invalidPhoto && recordData?.originalUrl.includes('base64')){
+                                    <li class="list-group-item d-flex">
+                                        <p class="m-0 entity-data">Error Detail:</p>
+                                        <span class="text-eclipse">GEOME does not support base64 encoded images.</span>
+                                    </li>
+                                }
+                                @for(item of mainRecordDetails() | keyvalue; track item.key){
+                                    <li class="list-group-item d-flex">
+                                        <p class="m-0 entity-data">{{item.key}} :</p>
+                                        @if(item.value.href && item.value.text){
+                                            <span class="text-eclipse">
+                                                <a href="{{ item.value.href }}" target="_blank" class="d-inline-block text-eclipse" placement="top" [ngbTooltip]="item.value.href">{{ item.value.href }}</a>
+                                            </span>
+                                        }
+                                        @else if(!item.value.href || !item.value.text){
+                                            <span class="text-eclipse" placement="top" [ngbTooltip]="item.value.text || ''">{{ item.value.text || 'N/A' }}</span>
+                                        }
+                                    </li>
+                                }
+                            </ul>
                         </div>
                     }
         

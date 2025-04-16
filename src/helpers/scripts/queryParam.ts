@@ -93,7 +93,7 @@ export class QueryParams {
   private addSimpleConditions(builder: QueryBuilder): void {
     const conditions: [string, any][] = [
       ['queryString', this.queryString],
-      ['marker', this.marker],
+      ['marker', `fastaSequence.marker = "${this.marker}"`],
       ['hasSRAAccessions', '_exists_:fastqMetadata.bioSample'],
       ['country', `Event.country = "${this.country}"`],
       ['materialSampleID', `Sample.materialSampleID = "${this.materialSampleID}"`],
@@ -120,12 +120,12 @@ export class QueryParams {
   private addBoundsConditions(builder: QueryBuilder): void {
     if (!this.bounds) return;
     const { northEast: ne, southWest: sw } = this.bounds;
-    builder.add(`Event.decimalLatitude BETWEEN ${sw.lat} AND ${ne.lat}`);
+    builder.add(`Event.decimalLatitude <= ${ne.lat} and Event.decimalLatitude >= ${sw.lat}`);
     if (ne.lng > sw.lng) {
-      builder.add(`Event.decimalLongitude BETWEEN ${sw.lng} AND ${ne.lng}`);
+      builder.add(`Event.decimalLongitude >= ${sw.lng} and Event.decimalLongitude <= ${ne.lng}`);
     } else {
       builder.add(
-        `(Event.decimalLongitude BETWEEN ${sw.lng} AND 180 OR Event.decimalLongitude BETWEEN -180 AND ${ne.lng})`
+        `(Event.decimalLongitude >= ${sw.lng} and Event.decimalLongitude <= 180 or Event.decimalLongitude <=${ne.lng} Event.decimalLongitude >= -180)`
       );
     }
   }
