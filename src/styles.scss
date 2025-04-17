@@ -91,6 +91,8 @@ body{
 .h-0{ height: 0px !important; overflow: hidden !important;}
 .w-0{ width: 0px !important; overflow: hidden !important;}
 
+.w-80{ width: 80px; }
+
 .cursor-pointer{ cursor: pointer; }
 
 .base-text-color{ color: rgba(0, 0, 0, 0.67); }
@@ -230,7 +232,7 @@ span.biocode-btn {
 }
 .table-container-section th, td {
     text-align: left;
-    padding: 10px;
+    padding: 10px !important;
 }
 
 .table-container-section td a {

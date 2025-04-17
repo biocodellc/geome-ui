@@ -81,14 +81,12 @@
                     <tr>
                         <td class="fw-semibold">{{item.key}}</td>
                         @for(data of item.data; track i; let i=$index){
-                            <td>
-                                @if(data?.tissueID || !isProjectAdmin){
-                                    <div class="d-flex p-2">
-                                        <span class="d-block cursor-pointer" style="flex:1;" (click)="openTissueDetails(data, tissueModal)">{{data?.tissueID}}</span>
-                                        @if(isProjectAdmin){
-                                            <i class="fas fa-trash ms-2 text-danger f-12 cursor-pointer" (click)="deleteTissue(item.key, i+1, data)"></i>
-                                        }
-                                    </div>
+                            <td class="text-center">
+                                @if(data?.tissueID || !canEdit){
+                                    <span class="cursor-pointer" (click)="openTissueDetails(data, tissueModal)">{{data?.tissueID}}</span>
+                                    @if(canEdit){
+                                        <i class="fas fa-trash ms-2 text-danger f-12 cursor-pointer" (click)="deleteTissue(item.key, i+1, data)"></i>
+                                    }
                                 }
                                 @else{
                                     <input id={{item.key}}_tissue_data_{{i+1}} type="text" [value]="data?.materialSampleID" autocomplete="off" placeholder="Create Tissue" (input)="onDialogInputChange($event, item.key, i+1)" (change)="onInputBlurAfterChanges(item.key, i+1)"  [ngbTypeahead]="search" (selectItem)="onSampleIdSelect($event, item.key, i+1)">

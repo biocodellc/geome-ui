@@ -59,7 +59,10 @@ export class ProjectService{
       const projectData = this.getProjectFromLocal(project.projectId) || project;
       this.getProjectConfig(projectData.projectId).pipe(take(1)).subscribe({
         next: (res:any) => {
-          const updatedProject = { ...cloneDeep(projectData) ,config : new ProjectConfig(res) };
+          const updatedProject:any = { ...cloneDeep(projectData) ,config : new ProjectConfig(res) };
+          updatedProject['currentUserIsMember'] = this.userProjectSubject.value?.some(
+            (p:any) => p.projectId === updatedProject.projectId,
+          );
           this.currentProject = updatedProject;
           this.projectSubject.next(updatedProject);
           this.cacheProject(updatedProject.projectId);

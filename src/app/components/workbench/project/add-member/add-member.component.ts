@@ -64,7 +64,6 @@ export class AddMemberComponent implements AfterViewInit, OnDestroy{
 
   filterUser(){
     const val = this.searchUser.trim().toLowerCase();
-    console.log(val);
     if(val){
       const filteredUsers = this.userList.filter((user:any)=>
         user.username.toLowerCase().includes(val) ||

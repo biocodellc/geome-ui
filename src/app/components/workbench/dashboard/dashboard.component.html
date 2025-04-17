@@ -15,9 +15,9 @@
                 <thead>
                     <tr>
                         <th scope="col"></th>
-                        <th scope="col">Samples</th>
-                        <th scope="col">Has SRA</th>
-                        <th scope="col">Has Photos</th>
+                        <th scope="col" class="w-80 text-center">Samples</th>
+                        <th scope="col" class="w-80 text-center">Has SRA</th>
+                        <th scope="col" class="w-80 text-center">Has Photos</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,22 +27,24 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
                                         <h6 class="text-primary m-0 mb-1 cursor-pointer"  placement="top" [ngbTooltip]="item.projectTitle" (click)="selectProject(item)">{{item.projectTitle}}</h6>
-                                        <p class="m-0 f-12">Latest Activity: {{ item.latestDataModification | date: 'shortDate' }}</p>
+                                        <p class="m-0 f-12">Latest Activity: {{ item.latestDataModification ? (item.latestDataModification | date: 'shortDate') : 'N/A' }}</p>
                                     </div>
                                     <div class="d-flex flex-column">
                                         @if(item?.user.userId == currentUser?.userId){
                                             <button type="button" class="btn btn-dark btn-sm d-inline f-11 mb-2" style="padding: 5px 8px;">Admin</button>
                                         }
-                                        <button type="button" class="btn btn-primary custom d-inline f-11" style="padding: 5px 8px;">{{item.projectConfiguration.name}} Team</button>
+                                        @if(item?.projectConfiguration.networkApproved){
+                                            <button type="button" class="btn btn-primary custom d-inline f-11" style="padding: 5px 8px;">{{item.projectConfiguration.name}} Team</button>
+                                        }
                                     </div>
                                 </div>
                             </td>
-                            <td>{{ item?.entityStats?.SampleCount || 0 }}</td>
-                            <td>
+                            <td class="text-center">{{ item?.entityStats?.SampleCount || 0 }}</td>
+                            <td class="text-center">
                                 @if(item.hasPhotos){ <i class="fas fa-check text-success f-16"></i> }
                                 @else{ <i class="fas fa-times text-danger f-16"></i> }
                             </td>
-                            <td>
+                            <td class="text-center">
                                 @if(item.hasSRA){ <i class="fas fa-check text-success f-16"></i> }
                                 @else{ <i class="fas fa-times text-danger f-16"></i> }
                             </td>
@@ -72,9 +74,9 @@
             <thead>
                 <tr>
                     <th scope="col"></th>
-                    <th scope="col">Samples</th>
-                    <th scope="col">Has SRA</th>
-                    <th scope="col">Has Photos</th>
+                    <th scope="col" class="w-80 text-center">Samples</th>
+                    <th scope="col" class="w-80 text-center">Has SRA</th>
+                    <th scope="col" class="w-80 text-center">Has Photos</th>
                 </tr>
             </thead>
             <tbody>
@@ -83,16 +85,18 @@
                         <td>
                             <h6 class="text-primary m-0 mb-1 cursor-pointer"  placement="top" [ngbTooltip]="item.projectTitle" (click)="selectProject(item)">{{item.projectTitle}}</h6>
                             <div class="d-flex justify-content-between align-items-center">
-                                <p class="m-0 f-12">Latest Activity: {{ item.latestDataModification | date: 'shortDate' }}</p>
-                                <button type="button" class="btn btn-primary custom d-inline f-11" style="padding: 5px 8px;">{{item.projectConfiguration.name}} Team</button>
+                                <p class="m-0 f-12">Latest Activity: {{ item.latestDataModification ? (item.latestDataModification | date: 'shortDate') : 'N/A' }}</p>
+                                @if(item.projectConfiguration.networkApproved){
+                                    <button type="button" class="btn btn-primary custom d-inline f-11" style="padding: 5px 8px;">{{item.projectConfiguration.name}} Team</button>
+                                }
                             </div>
                         </td>
-                        <td>{{ item.entityStats.SampleCount }}</td>
-                        <td>
+                        <td class="text-center">{{ item.entityStats.SampleCount }}</td>
+                        <td class="text-center">
                             @if(item.hasPhotos){ <i class="fas fa-check text-success f-16"></i> }
                             @else{ <i class="fas fa-times text-danger f-16"></i> }
                         </td>
-                        <td>
+                        <td class="text-center">
                             @if(item.hasSRA){ <i class="fas fa-check text-success f-16"></i> }
                             @else{ <i class="fas fa-times text-danger f-16"></i> }
                         </td>

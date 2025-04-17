@@ -53,6 +53,7 @@ export class PlatesComponent {
   matchingData:any[] = [];
   selectPlateData:any[] = [];
   selectedTissue:any;
+  hashedSample:any;
 
   search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>
     text$.pipe(
@@ -83,6 +84,9 @@ export class PlatesComponent {
       if(!res) return;
       this.currentProject = res;
       this.getAllUserPlates();
+      this.hashedSample = this.currentProject.config.entities.some(
+        (e:any) => e.conceptAlias === 'Sample' && e.hashed,
+      );
     })
   }
 
@@ -252,7 +256,6 @@ export class PlatesComponent {
   openTissueDetails(data:any, content:TemplateRef<any>){
     if(!data?.tissueID) return;
     this.selectedTissue = data;
-    console.log(this.selectedTissue);
     this.tissueModalRef = this.modalService.open(content, { animation: true, centered: true, scrollable: true  });
     this.tissueModalRef.result.then(() => this.selectedTissue = null);
     this.tissueModalRef.closed.pipe(take(1)).subscribe(() => this.selectedTissue = null);
@@ -267,8 +270,12 @@ export class PlatesComponent {
   }
 
   // Helpers functions
-  get isProjectAdmin():boolean{
-    return this.currentUser?.userId === this.currentProject?.projectConfiguration.user.userId
+  // get isProjectAdmin():boolean{
+  //   return this.currentUser?.userId === this.currentProject?.projectConfiguration.user.userId
+  // }
+
+  get canEdit(){
+    return this.currentProject.currentUserIsMember && !this.hashedSample;
   }
 
   get form(){ return this.plateForm.controls; }

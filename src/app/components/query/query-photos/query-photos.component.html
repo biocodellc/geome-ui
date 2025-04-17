@@ -2,7 +2,7 @@
 <div class="container images-table">
     @for(item of formattedPhotoArr; track item){
         <div class="d-flex flex-column cursor-pointer" (click)="viewDetails(item)">
-            <img [src]="getHighestQualityPhoto(item.group)" [alt]="item.id" style="flex: 1;"/>
+            <img [src]="getHighestQualityPhoto(item.group)" [alt]="item.id"/>
             <span class="text-eclipse f-10 mt-1">{{item.id}} ({{item.group.length}})</span>
         </div>
     }
