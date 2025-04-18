@@ -1,12 +1,18 @@
-.accordion-button:focus{
-    box-shadow: none;
-}
+// .accordion-button:focus{
+//     box-shadow: none;
+// }
 
-.accordion-item{
-    margin-bottom: 0.75rem;
-    box-shadow: 5px 2px 12px #a8a8a8;
-}
+// .accordion-item{
+//     margin-bottom: 0.75rem;
+//     box-shadow: 5px 2px 12px #a8a8a8;
+// }
+
+// @media screen and (max-width: 991px) {
+//     img{ max-width: 80%; }
+// }
+
+.doc-iframe{ width: 55vw; }
 
 @media screen and (max-width: 991px) {
-    img{ max-width: 80%; }
+    .doc-iframe{ width: 100%; }
 }

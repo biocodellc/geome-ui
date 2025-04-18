@@ -12,7 +12,7 @@
         }
         <ul class="d-flex m-0 pe-2 align-items-center gap-3" style="list-style: none;">
             @if(largeDevice){
-                <li class="p-2 f-14 cursor-pointer" routerLink="/about" [routerLinkActive]="'active'">GETTING STARTED</li>
+                <li class="p-2 f-14 cursor-pointer" routerLink="/about" [routerLinkActive]="'active'">DOCUMENTATION</li>
                 <li class="p-2 f-14 cursor-pointer" routerLink="/query" [routerLinkActive]="'active'">QUERY</li>
                 <li class="p-2 f-14 cursor-pointer" [routerLink]="['/workbench']">WORKBENCH</li>
             }
@@ -22,7 +22,7 @@
                         <i class="fas fa-house-chimney f-25"></i>
                     </div>
                     <div ngbDropdownMenu class="f-14" aria-labelledby="homeDropdown">
-                        <button ngbDropdownItem [routerLink]="['/about']">Gettign Started</button>
+                        <button ngbDropdownItem [routerLink]="['/about']">Documentation</button>
                         <button ngbDropdownItem routerLink="/query">Query</button>
                         <button ngbDropdownItem [routerLink]="['/workbench']">Workbench</button>
                     </div>
