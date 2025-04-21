@@ -90,16 +90,19 @@ export class MapService {
 
   switchToSatellite() {
     this.map.removeLayer(this.baseLayer);
+    this.map.removeLayer(this.oceanLayer);
     this.map.addLayer(this.satelliteLayer);
   }
 
   switchToMapView() {
     this.map.removeLayer(this.satelliteLayer);
+    this.map.removeLayer(this.oceanLayer);
     this.map.addLayer(this.baseLayer);
   }
 
   switchToOceanView() {
     this.map.removeLayer(this.baseLayer);
+    this.map.removeLayer(this.satelliteLayer);
     this.map.addLayer(this.oceanLayer);
   }
 
@@ -111,9 +114,13 @@ export class MapService {
       this.boundingBox = e.layer;
       this.map.addLayer(this.boundingBox);
 
+      const bounds = this.boundingBox.getBounds();
+      const northEast = bounds.getNorthEast();
+      const southWest = bounds.getSouthWest();
+
       createCallback({
-        northEast: this.map.getBounds().getNorthEast().wrap(),
-        southWest: this.map.getBounds().getSouthWest().wrap(),
+        northEast: this.fixNE(northEast),
+        southWest: this.fixSW(southWest)
       });
     });
   }
@@ -160,5 +167,19 @@ export class MapService {
         marker.setLatLng([latlng.lat, latlng.lng - 360]);
       }
     });
+  }
+
+  fixNE(northEast:any):any{
+    return {
+      lat: northEast.lat,
+      lng: ((northEast.lng + 180) % 360 + 360) % 360 - 180
+    }
+  }
+
+  fixSW(southWest:any):any{
+    return {
+      lat: southWest.lat,
+      lng: ((southWest.lng + 180) % 360 + 360) % 360 - 180
+    }
   }
 }
