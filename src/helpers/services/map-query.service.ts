@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { MapService } from './map.service';
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MapQueryService extends MapService {
-  constructor(private router: Router) {
+  constructor() {
     super();
   }
 
   private generateRecordLink(bcid: string): string {
-    return this.router.createUrlTree(['/record', bcid]).toString();
+    const url = document.location.origin + `/record/${bcid}`
+    return url;
   }
 
   private eventPopup({
