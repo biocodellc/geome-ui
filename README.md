@@ -70,3 +70,12 @@ Using the --configuration Flag
     ```
         ng s --configuration production
     ```
+
+## Updating Help Documentation
+
+Help documentation is created in a Google Document.  From this document we export it as a PDF File and save it to this repository and modify the environment.ts files.
+```
+cp {path_to_documentation_downloaded} {root folder}/public/docs/helpDocumentationv2.pdf
+src/environments/environment.ts:    documentationUrl: '/docs/helpDocumentationv2.pdf'
+src/environments/environment.development.ts:	documentationUrl: '/docs/helpDocumentationv2.pdf'
+```
