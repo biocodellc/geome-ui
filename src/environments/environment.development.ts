@@ -7,5 +7,7 @@ export const environment = {
     fimsClientId: 'Rng726w_hMKnvKSH2fUy',
     authTimeout: 1000 * 60 * 60 * 4, // 4 hrs
     analyticsId: '',
-    documentationUrl: 'https://docs.google.com/document/d/e/2PACX-1vQ8bFcHOyww6i2ZIOGCfEYS8odRxVSoIC-gEf7L7PVwe08zKTlDeb2pe71KA0vOih3dy2JaQT-gL6DA/pub?embedded=true'
+	documentationUrl: '/docs/helpDocumentationv2.pdf'
 };
+    //documentationUrl: 'https://docs.google.com/document/d/e/2PACX-1vQ8bFcHOyww6i2ZIOGCfEYS8odRxVSoIC-gEf7L7PVwe08zKTlDeb2pe71KA0vOih3dy2JaQT-gL6DA/pub?embedded=true'
+

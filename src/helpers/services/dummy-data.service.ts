@@ -11,7 +11,7 @@ export class DummyDataService {
 
   getHomePageItems(): Array<any> {
     return [
-      { img: 'images/about7.png', title: 'Getting Started', disc: 'Getting started and additional information about GEOME', route: '/about' },
+      { img: 'images/about7.png', title: 'Documentation', disc: 'GEOME Documentation', route: '/about' },
       { img: 'images/new_search.png', title: 'Query', disc: 'Search and download sequence files and associated metadata', route: '/query' },
       { img: 'images/workbench.png', title: 'Workbench', disc: 'View and manage project specific data', route: '/workbench' },
     ];

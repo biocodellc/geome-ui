@@ -1,28 +1,34 @@
 <section id="homepage-container" class="p-3 py-4 main-content-container">
     <div class="container">
-        <h3 class="fw-semibold">GEOME: From Collection to Collaboration</h3>
         <div class="base-text-color f-16">
             <p><b>GEOME <i class="fas fa-volume-high text-secondary f-18" (click)="playAudio()"></i> is a Field Information Management System that transforms the way field-collected sample data is captured, organized, and shared.</b> From the moment samples are collected, GEOME supports their journey—linking metadata to sequencing, publication, and collaboration across institutions.</p>
+			<!--
             <p>GEOME helps research communities:</p>
             <ul>
                 <li>Ensure sample metadata is <b>FAIR</b> (Findable, Accessible, Interoperable, Reusable) and aligned with <b>CARE</b> principles (Collective Benefit, Authority to Control, Responsibility, Ethics).</li>
                 <li>Create and adopt <b>collaborative data standards</b> using shared Teams, Projects, and Expeditions.</li>
                 <li>Integrate with <a href="https://cran.r-project.org/web/packages/geomedb/index.html" target="_blank" class="text-decoration-none"><b>R</b></a>, streamline submission to <b>NCBI’s SRA</b>, and connect with existing <a href="https://github.com/biocodellc/biocode-lims/wiki" target="_blank" class="text-decoration-none"><b>LIMS</b></a> infrastructure.</li>
             </ul>
+			-->
         </div>
 
+		<div>&nbsp;</div>
         <div class="mt-3 d-flex flex-wrap">
             @for(item of homeItems; track item){
                 <div class="col-12 col-md-4 p-3">
                     <div class="p-3 d-flex flex-column gap-2 shadow rounded-2 align-items-center h-100 cursor-pointer" [routerLink]="[item.route]">
                         <img [src]="item.img" width="150px" height="150px">
                         <h4>{{item.title}}</h4>
-                        <!-- <p class="text-center base-text-color">{{item.disc}}</p> -->
                     </div>
                 </div>
             }
         </div>
-        <div class="mt-3">
+		<div>&nbsp;</div>
+		<div>&nbsp;</div>
+		<div>&nbsp;</div>
+		
+        <div class="base-text-color f-16"><b>Publications</b></div>
+        <div class="mt-3"><i>
             <p>
                 <a href="https://doi.org/10.1371/journal.pbio.2002925" target="_blank" class="text-decoration-none"> "The Genomic Observatories Metadatabase (GEOME): A new repository for field and sampling event metadata associated with genetic samples"</a>, John Deck , Michelle R. Gaither, Rodney Ewing, Christopher E. Bird, Neil Davies, Christopher Meyer, Cynthia Riginos, Robert J. Toonen,  Eric D. Crandall Published: August 3, 2017 <a href="https://doi.org/10.1371/journal.pbio.2002925" target="_blank" class="text-decoration-none">https://doi.org/10.1371/journal.pbio.2002925</a>
             </p>
@@ -34,6 +40,7 @@
                 ,  Eric D. Crandall, Rachel H. Toczydlowski, Libby Liggins, Ann E. Holmes, Maryam Ghoojaei, Michelle R. Gaither, Briana E. Wham, Andrea L. Pritt, Cory Noble, Tanner J. Anderson, Randi L. Barton, Justin T. Berg, Sofia G. Beskid, Alonso Delgado, Emily Farrell, Nan Himmelsbach, Samantha R. Queeno, Thienthanh Trinh, Courtney Weyand, Andrew Bentley, John Deck, Cynthia Riginos, Gideon S. Bradburd, Robert J. Toonen 
                 <a href="https://doi.org/10.1111/cobi.14061" target="_blank" class="text-decoration-none">https://doi.org/10.1111/cobi.14061</a>
             </p>
+			</i>
             <div class="d-flex justify-content-center mt-3">
                 <button type="button" class="btn btn-outline-primary" placement="top" ngbTooltip="Collaborate" (click)="openCollabModal(collab_modal)">
                     <i class="fas fa-handshake f-25"></i>
