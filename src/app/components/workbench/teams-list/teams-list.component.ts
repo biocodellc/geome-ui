@@ -76,7 +76,9 @@ export class TeamsListComponent implements OnDestroy{
     }
     this.projectService.getAllProjectsValue().pipe(take(1)).subscribe((allProjects:any)=>{
       const projectData = allProjects.find((p:any) => p.projectConfiguration.id === teamId);
-      this.projectService.setCurrentProject(projectData, true, '/workbench/team-overview')
+      if(projectData)
+        this.projectService.setCurrentProject(projectData, true, '/workbench/team-overview');
+      else this.toastr.info("No Information Found.");
     })
   }
 
