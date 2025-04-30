@@ -7,6 +7,8 @@ import { FormsModule } from '@angular/forms';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { LoaderComponent } from '../../../shared/loader/loader.component';
 import { DummyDataService } from '../../../../helpers/services/dummy-data.service';
+import { ProjectService } from "../../../../helpers/services/project.service";
+import { Router } from "@angular/router";
 
 
 @Component({
@@ -18,13 +20,16 @@ import { DummyDataService } from '../../../../helpers/services/dummy-data.servic
 })
 export class TeamsListComponent implements OnDestroy{
   // Injectors
+  router = inject(Router);
   toastr = inject(ToastrService);
   dummyDataService = inject(DummyDataService);
+  projectService = inject(ProjectService);
   projectConfService = inject(ProjectConfigurationService);
 
   // Variables
   private destroy$ = new Subject<void>();
   searchedTeam: string = '';
+  currentProject:any;
   filterTeamSubject: Subject<any> = new Subject();
   allPublicTeams: Array<any> = [];
   filteredPublicTeams: Array<any> = [];
@@ -32,7 +37,8 @@ export class TeamsListComponent implements OnDestroy{
   constructor() {
     this.dummyDataService.loadingState.next(true);
     this.getAllPublicTeams();
-    this.filterTeamSubject.pipe(debounceTime(100), takeUntil(this.destroy$)).subscribe(() => this.filterTeam())
+    this.filterTeamSubject.pipe(debounceTime(100), takeUntil(this.destroy$)).subscribe(() => this.filterTeam());
+    this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe(project => this.currentProject = project)
   }
 
   getAllPublicTeams() {
@@ -61,6 +67,17 @@ export class TeamsListComponent implements OnDestroy{
     if (newVal)
       this.filteredPublicTeams = this.allPublicTeams.filter((proj: any) => proj.name.toLowerCase().includes(newVal));
     else this.filteredPublicTeams = this.allPublicTeams;
+  }
+
+  viewTeamOverview(teamId:any){
+    if(this.currentProject && this.currentProject.projectConfiguration.id === teamId){
+      this.router.navigate(['/workbench/team-overview']);
+      return;
+    }
+    this.projectService.getAllProjectsValue().pipe(take(1)).subscribe((allProjects:any)=>{
+      const projectData = allProjects.find((p:any) => p.projectConfiguration.id === teamId);
+      this.projectService.setCurrentProject(projectData, true, '/workbench/team-overview')
+    })
   }
 
   ngOnDestroy(): void {

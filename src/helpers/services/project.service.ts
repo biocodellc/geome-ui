@@ -48,7 +48,7 @@ export class ProjectService{
     return this.allProjectStatsSubject.asObservable();
   }
 
-  setCurrentProject(project: any, redirect = true): void {
+  setCurrentProject(project: any, redirect = true, route:string = '/workbench/project-overview'): void {
     this.projectConfigService.clearCurrentProject();
     if (!project?.projectId) {
       this.currentProject = null;
@@ -66,7 +66,7 @@ export class ProjectService{
           this.currentProject = updatedProject;
           this.projectSubject.next(updatedProject);
           this.cacheProject(updatedProject.projectId);
-          if(redirect) this.router.navigate(['/workbench/project-overview']);
+          if(redirect) this.router.navigate([route]);
         }
       })
     }

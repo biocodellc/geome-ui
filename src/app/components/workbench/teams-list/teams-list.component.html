@@ -19,7 +19,7 @@
             </thead>
             <tbody>
                 @for (item of filteredPublicTeams; track item) {
-                    <tr>
+                    <tr (click)="viewTeamOverview(item.id)">
                         <td>
                             <h6 class="text-primary m-0 mb-1 cursor-pointer"  placement="top" [ngbTooltip]="item.name">{{item.name}}</h6>
                             <p class="m-0 f-12">Latest Activity: {{ item.modified | date: 'shortDate' }}</p>
