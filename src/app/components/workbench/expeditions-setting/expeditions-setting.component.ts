@@ -57,7 +57,8 @@ export class ExpeditionsSettingComponent implements OnDestroy{
   initForm(){
     this.expeditionForm = this.fb.group({
       expeditionTitle: ['', Validators.required],
-      visibility: ['', Validators.required]
+      visibility: ['', Validators.required],
+      Test: ['', Validators.required],
     })
   }
 
@@ -77,8 +78,9 @@ export class ExpeditionsSettingComponent implements OnDestroy{
           this.currentExpedition = this.projectExpeditions.filter((exp:any)=> exp.expeditionId == this.currentExpeditionId)[0];
           if(this.currentExpedition){
             this.getExpeditionStats();
-            ['expeditionTitle', 'visibility'].forEach(key =>{
-              this.form[key].setValue(this.currentExpedition[key]);
+            ['expeditionTitle', 'visibility', 'Test'].forEach(key =>{
+              const val = key !== 'Test' ? this.currentExpedition[key] : this.currentExpedition.metadata[key];
+              this.form[key].setValue(val);
               this.form[key].updateValueAndValidity();
             })
           }
@@ -103,7 +105,9 @@ export class ExpeditionsSettingComponent implements OnDestroy{
     this.expeditionForm.markAllAsTouched();
     if(this.expeditionForm.invalid) return;
     this.isLoading = true;
-    const updatedData = { ...this.currentExpedition, ...this.expeditionForm.value };
+    const data = { ...this.expeditionForm.value };
+    delete data.Test;
+    const updatedData = { ...this.currentExpedition, ...data, metadata: { Test: this.expeditionForm.value.Test } };
     this.expeditionService.updateExpedition(this.currentProject.projectId, updatedData).pipe(take(1), takeUntil(this.destroy$)).subscribe({
       next: (res:any)=>{
         if(res) this.toastrService.success('Updated Successfully.');

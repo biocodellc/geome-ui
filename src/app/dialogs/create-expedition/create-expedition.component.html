@@ -22,24 +22,34 @@
             @if(form['expeditionCode'].touched && (form['expeditionCode'].invalid || codeExists)){
             <span class="warn-text f-12">
                 {{ form['expeditionCode'].hasError('required') ? 'Code is required.' :
-                form['expeditionCode'].hasError('pattern') ? 'Expedition Code must contain only numbers, letters, or
-                underscores and be 4 to 50 characters long.' : 'Expedition with that code already exists' }}
+                form['expeditionCode'].hasError('pattern') ? 'Expedition Code must contain only numbers, letters, or underscores and be 4 to 50 characters long.' : 'Expedition with that code already exists' }}
             </span>
             }
         </div>
-        <div class="form-floating mb-4">
-            <input type="text" formControlName="Description" class="form-control" id="floatingDescription"
-                placeholder="Enter Description">
-            <label for="floatingDescription" class="ps-0 fw-semibold">Description</label>
+        <div class="mb-3">
+            <div class="form-floating mb-1">
+                <input type="text" formControlName="Test" class="form-control" id="floatingDescription" placeholder="">
+                <label for="floatingDescription" class="ps-0 fw-semibold">Test *</label>
+            </div>
+            @if(form['Test'].touched && (form['Test'].invalid)){
+                <span class="warn-text f-12">
+                    {{ form['Test'].hasError('required') ? 'Code is required.' : '' }}
+                </span>
+            }
         </div>
-        <div class="form-floating mb-1">
-            <select class="form-select form-control" id="floatingSelect_Auditor" aria-label="ExpedAuditoritions" name="Auditor" formControlName="Auditor">
-                @for(item of auditors; track item){
-                    <option [value]="item"><div class="py-2 px-3">{{item}}</div></option>
-                }
-            </select>
-            <label for="floatingSelect_Auditor">Auditor</label>
-        </div>
+<!--        <div class="form-floating mb-4">-->
+<!--            <input type="text" formControlName="Description" class="form-control" id="floatingDescription"-->
+<!--                placeholder="Enter Description">-->
+<!--            <label for="floatingDescription" class="ps-0 fw-semibold">Description</label>-->
+<!--        </div>-->
+<!--        <div class="form-floating mb-1">-->
+<!--            <select class="form-select form-control" id="floatingSelect_Auditor" aria-label="ExpedAuditoritions" name="Auditor" formControlName="Auditor">-->
+<!--                @for(item of auditors; track item){-->
+<!--                    <option [value]="item"><div class="py-2 px-3">{{item}}</div></option>-->
+<!--                }-->
+<!--            </select>-->
+<!--            <label for="floatingSelect_Auditor">Auditor</label>-->
+<!--        </div>-->
     </form>
 </div>
 <div class="modal-footer border-0 pt-0">

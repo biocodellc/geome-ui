@@ -41,8 +41,9 @@ export class CreateExpeditionComponent implements OnDestroy{
     this.expeditionForm = this.fb.group({
       expeditionCode: ['', [Validators.required, Validators.pattern(this.codeRegex)]],
       expeditionTitle: ['', [Validators.required]],
-      Description: [''],
-      Auditor: [''],
+      Test: ['', [Validators.required]],
+      // Description: [''],
+      // Auditor: [''],
       public: [true],
       visibility: ['anyone']
     })
@@ -81,7 +82,7 @@ export class CreateExpeditionComponent implements OnDestroy{
 
   formatData():any{
     const data:any = { ...this.expeditionForm.value, metadata: {} };
-    ['Description', 'Auditor'].forEach(item => {
+    ['Description', 'Auditor', 'Test'].forEach(item => {
       data.metadata[item] = data[item];
       delete data[item];
     })

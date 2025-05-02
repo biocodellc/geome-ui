@@ -35,11 +35,10 @@ export class CreateProjectComponent implements OnDestroy{
   constructor(){
     this.initForm();
     this.projectConfService.allProjConfigSubject.pipe(
-      takeUntil(this.destroy$),
-      filter((item:any)=> item.networkApproved)
+      takeUntil(this.destroy$)
     ).subscribe({
       next: (res:any)=>{
-        this.allProjects = this.filteredTeams = res.filter();
+        this.allProjects = this.filteredTeams = res.filter((project:any) => project.networkApproved);
       }
     })
   }

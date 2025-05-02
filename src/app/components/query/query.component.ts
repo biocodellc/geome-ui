@@ -60,6 +60,7 @@ export class QueryComponent{
   updateQueryResult(data:any, tab:string){
     this.queryResult = data.result;
     this.entity = data.entity;
+    this.active = 'map';
     this.paginatorData = { collectionSize: this.queryResult.length, page: 1, pageSize: 50 };
     this.onPageChange();
   }
