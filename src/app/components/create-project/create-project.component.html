@@ -1,62 +1,70 @@
-<section id="login-container" class="p-3 mt-5 mb-3 container-bg main-content-container">
+<section id="login-container" class="p-3 mb-3 container-bg main-content-container">
     <div class="container">
         <div class="w-100 d-flex justify-content-center align-items-center">
-            <div style="min-width: 92%;" class="shadow p-4 rounded-2">
-                <h2 class="text-center mb-4">New Project</h2>
-                <p class="mt-3 text-center">Welcome the the GEOME project creation wizard</p>
-                <form [formGroup]="projectForm" (ngSubmit)="createProject()">
-                    <div class="mb-3">
-                        <div class="form-floating mb-1">
-                            <input type="text" formControlName="projectTitle" class="form-control" id="floatingTitle" placeholder="projectTitle">
-                            <label for="floatingTitle" class="ps-0 fw-semibold">Title *</label>
-                        </div>
-                        @if(form['projectTitle'].touched &&form['projectTitle'].invalid){
-                            <span class="warn-text f-12">{{ form['projectTitle'].hasError('required') ? 'Title is required.' : '' }}</span>
-                        }
+            <div style="min-width: 92%;" class="p-4 rounded-2">
+                <h2 class="text-center">New Project</h2>
+                <p class="text-center text-secondary">Welcome the the GEOME project creation wizard</p>
+                <div class="d-flex gap-2">
+                    <div class="d-flex flex-column align-items-center">
+                        <button class="btn btn-primary rounded-circle f-11">1</button>
+                        <div style="flex: 1; width: 1px" class="border"></div>
                     </div>
-                    <div class="mb-3">
-                        <div class="form-floating mb-1">
-                            <input type="text" formControlName="description" class="form-control" id="floatingDisc" placeholder="description">
-                            <label for="floatingDisc" class="ps-0 fw-semibold">Description *</label>
+                    <form [formGroup]="projectForm" (ngSubmit)="createProject()" class="text-secondary" style="flex: 1">
+                        <p class="mt-1 mb-2 fw-semibold f-16">Project Details</p>
+                        <div class="mb-2">
+                            <div class="form-floating mb-1">
+                                <input type="text" formControlName="projectTitle" class="form-control" id="floatingTitle" placeholder="projectTitle">
+                                <label for="floatingTitle" class="ps-0 fw-semibold">Project Title *</label>
+                            </div>
+                            @if(form['projectTitle'].touched &&form['projectTitle'].invalid){
+                                <span class="warn-text f-12">{{ form['projectTitle'].hasError('required') ? 'Title is required.' : '' }}</span>
+                            }
                         </div>
-                        @if(form['description'].touched &&form['description'].invalid){
-                            <span class="warn-text f-12">{{ form['description'].hasError('required') ? 'Description is required.' : '' }}</span>
+                        <div class="mb-2">
+                            <div class="form-floating mb-1">
+                                <input type="text" formControlName="description" class="form-control" id="floatingDisc" placeholder="description">
+                                <label for="floatingDisc" class="ps-0 fw-semibold">Project Description *</label>
+                            </div>
+                           <!-- @if(form['description'].touched &&form['description'].invalid){
+                               <span class="warn-text f-12">{{ form['description'].hasError('required') ? 'Description is required.' : '' }}</span>
+                           } -->
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-floating mb-1 position-relative" ngbDropdown container="body" placement="bottom-start">
+                                <input #teamsInput type="text" ngbDropdownToggle autocomplete="off" formControlName="projectConfiguration" class="form-control" id="floatingProjConf" placeholder="Project Configuration">
+                                <label for="floatingProjConf" class="ps-0 fw-semibold">Select Team Workspace to Join *</label>
+                                <div ngbDropdownMenu aria-labelledby="floatingProjConf">
+                                    @for(team of filteredTeams; track team.id){
+                                        <button type="button" ngbDropdownItem class="mb-1" (click)="onTeamSelect(team)">{{team.name}}</button>
+                                    }
+                                </div>
+                                <span class="teams-dropdown-input-after cursor-pointer" (click)="teamsInput.click()"></span>
+                            </div>
+                           <!-- @if(form['projectConfiguration'].touched && form['projectConfiguration'].invalid){
+                               <span class="warn-text f-12">{{ form['projectConfiguration'].hasError('required') ? 'Description is required.' : '' }}</span>
+                           }
+                           @else{
+                           } -->
+                            <span class="f-12 text-secondary">Join a team if you agree to use all of the attributes and rules for that team. For more information visit the Getting Started page.</span>
+                        </div>
+                        @if(form['projectConfiguration'].valid){
+                            <div class="mb-3">
+                                <p class="fw-semibold f-14 mb-1">{{selectedTeam?.name}}</p>
+                                <p class="f-12 mb-0">{{selectedTeam?.description}}</p>
+                            </div>
                         }
-                    </div>
-                    <div class="mb-3">
-                        <div class="form-floating mb-1" ngbDropdown  container="body" placement="bottom-start">
-                            <input type="text" ngbDropdownToggle autocomplete="off" formControlName="projectConfiguration" class="form-control" id="floatingProjConf" placeholder="Project Configuration">
-                            <label for="floatingProjConf" class="ps-0 fw-semibold">Select Team Workspace to Join *</label>
-                            <div ngbDropdownMenu aria-labelledby="floatingProjConf">
-                                @for(team of filteredTeams; track team.id){
-                                    <button type="button" ngbDropdownItem class="mb-1" (click)="onTeamSelect(team)">{{team.name}}</button>
-                                }
+                        <div class="my-3 d-flex">
+                            <input id="publicCheckbox" type="checkbox" formControlName="public" class="mt-2" style="width: 25px; height: 25px">
+                            <div class="ms-2">
+                                <label for="publicCheckbox" class="fw-semibold f-14 mb-1">Public Project?</label>
+                                <p class="f-12 mb-0 text-secondary">If a project is public, non project members will be able to query the data. You may change the public/private status of your project later.</p>
                             </div>
                         </div>
-                        @if(form['projectConfiguration'].touched && form['projectConfiguration'].invalid){
-                            <span class="warn-text f-12">{{ form['projectConfiguration'].hasError('required') ? 'Description is required.' : '' }}</span>
-                        }
-                        @else{
-                            <span class="f-12 text-secondary">Join a team if you agree to use all of the attributes and rules for that team. For more information visit the Getting Started page.</span>
-                        }
-                    </div>
-                    @if(form['projectConfiguration'].valid){
                         <div class="mb-3">
-                            <p class="fw-semibold f-14 mb-1">{{selectedTeam?.name}}</p>
-                            <p class="f-12 mb-0">{{selectedTeam?.description}}</p>
+                            <button type="submit" class="btn btn-primary custom">Create Project</button>
                         </div>
-                    }
-                    <div class="mb-3 d-flex">
-                        <input id="publicCheckbox" type="checkbox" formControlName="public" class="mt-2" style="width: 25px; height: 25px">
-                        <div class="ms-2">
-                            <label for="publicCheckbox" class="fw-semibold f-14 mb-1">Public Project?</label>
-                            <p class="f-12 mb-0 text-secondary">If a project is public, non project members will be able to query the data. You may change the public/private status of your project later.</p>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <button type="submit" class="btn btn-primary custom">Create Project</button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

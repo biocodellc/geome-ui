@@ -195,6 +195,7 @@ section#login-container, section#register-container, section#resetPass-container
 .main-content-container{
     flex: 1;
     max-height: calc( 100vh - 75px );
+    min-height: calc( 100vh - 75px );
     overflow-y: auto;
 }
 

@@ -34,7 +34,7 @@
                                             <button type="button" class="btn btn-dark btn-sm d-inline f-11 mb-2" style="padding: 5px 8px;">Admin</button>
                                         }
                                         @if(item?.projectConfiguration.networkApproved){
-                                            <button type="button" class="btn btn-primary custom d-inline f-11" style="padding: 5px 8px;">{{item.projectConfiguration.name}} Team</button>
+                                            <button type="button" class="btn btn-primary custom d-inline f-11" style="padding: 5px 8px;" (click)="viewTeamOverview(item.projectConfiguration.id)">{{item.projectConfiguration.name}} Team</button>
                                         }
                                     </div>
                                 </div>
@@ -87,7 +87,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <p class="m-0 f-12">Latest Activity: {{ item.latestDataModification ? (item.latestDataModification | date: 'shortDate') : 'N/A' }}</p>
                                 @if(item.projectConfiguration.networkApproved){
-                                    <button type="button" class="btn btn-primary custom d-inline f-11" style="padding: 5px 8px;">{{item.projectConfiguration.name}} Team</button>
+                                    <button type="button" class="btn btn-primary custom d-inline f-11" style="padding: 5px 8px;" (click)="viewTeamOverview(item.projectConfiguration.id)">{{item.projectConfiguration.name}} Team</button>
                                 }
                             </div>
                         </td>

@@ -10,12 +10,12 @@ import { QueryParams } from '../../../../helpers/scripts/queryParam';
 import { DataService } from '../../../../helpers/services/data.service';
 import { FileService } from '../../../../helpers/services/file.service';
 import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-project-overview',
   standalone: true,
-  imports: [CommonModule, NgbPopoverModule, NgbDropdownModule ],
+  imports: [CommonModule, NgbPopoverModule, NgbDropdownModule, RouterLink ],
   templateUrl: './project-overview.component.html',
   styleUrl: './project-overview.component.scss'
 })

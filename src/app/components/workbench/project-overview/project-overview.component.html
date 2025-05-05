@@ -149,7 +149,7 @@
                     </div>
                     <div class="col-lg-10">
                         <p class="proj-2">
-                            <span class="biocode-btn">{{projectDetails?.projectConfiguration.name}} team</span>
+                            <span class="biocode-btn cursor-pointer" [routerLink]="['/workbench','team-overview']">{{projectDetails?.projectConfiguration.name}} team</span>
                             <span class="px-2"><a href="mailto:{{projectDetails?.projectConfiguration.user.email}}">{{projectDetails?.projectConfiguration.user.email}}</a></span>
                             <button class="btn" placement="top" ngbPopover="This team workspace specifies all validation rules and terms for this project. If you have any questions or suggestions, please contact the team owner."><i class="fas fa-circle-question"></i></button>
                         </p>

@@ -29,6 +29,7 @@ export class DashboardComponent implements OnDestroy{
   currentUser:any;
   searchedProject:string = '';
   searchedPrivateProject:string = '';
+  currentProject:any;
   filterProjectSubject:Subject<any> = new Subject();
   userProjects:Array<any> = [];
   filterUserProjects:Array<any> = [];
@@ -44,6 +45,7 @@ export class DashboardComponent implements OnDestroy{
       if(type === 'private') this.filterPrivateProject();
       else this.filterProject();
     })
+    this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((x:any)=> this.currentProject = x);
   }
 
   getUserProjects(){
@@ -92,6 +94,19 @@ export class DashboardComponent implements OnDestroy{
 
   selectProject(project:any){
     this.projectService.setCurrentProject(project);
+  }
+
+  viewTeamOverview(teamId:any){
+    if(this.currentProject && this.currentProject.projectConfiguration.id === teamId){
+      this.router.navigate(['/workbench/team-overview']);
+      return;
+    }
+    this.projectService.getAllProjectsValue().pipe(take(1)).subscribe((allProjects:any)=>{
+      const projectData = allProjects.find((p:any) => p.projectConfiguration.id === teamId);
+      if(projectData)
+        this.projectService.setCurrentProject(projectData, true, '/workbench/team-overview');
+      else this.toastr.info("No Information Found.");
+    })
   }
 
   ngOnDestroy(): void {
