@@ -101,9 +101,7 @@
 	<div class="modal-footer border-0 pt-0">
 		<div class="d-flex justify-content-end gap-2">
             <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">Cancel</button>
-            @if(dataChanged){
-                <button type="button" class="btn btn-primary custom" (click)="selectPlateData.length == 0 ? createNew() : saveTissueData()">Save</button>
-            }
+            <button type="button" class="btn btn-primary custom" (click)="selectPlateData.length == 0 ? createNew() : saveTissueData()" [disabled]="isDataEmpty">Save</button>
         </div>
 	</div>
 </ng-template>

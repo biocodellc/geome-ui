@@ -1,7 +1,7 @@
 import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
 import { ProjectService } from '../../../../helpers/services/project.service';
 import { PlatesService } from '../../../../helpers/services/plates.service';
-import { BehaviorSubject, debounceTime, Subject, take, takeUntil, distinctUntilChanged, map, firstValueFrom, switchMap, of, catchError } from 'rxjs';
+import { debounceTime, Subject, take, takeUntil, distinctUntilChanged, map, switchMap, of, catchError } from 'rxjs';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AuthenticationService } from '../../../../helpers/services/authentication.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -15,6 +15,7 @@ import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, OperatorFunction } from 'rxjs';
 import { JsonPipe } from '@angular/common';
 import { Router } from '@angular/router';
+import { cloneDeep } from 'lodash';
 
 @Component({
   selector: 'app-plates',
@@ -44,7 +45,6 @@ export class PlatesComponent {
   plateForm!:FormGroup;
   modalRef!:NgbModalRef;
   tissueModalRef!:NgbModalRef;
-  dataChanged:boolean = false;
   isLoading:boolean = false;
   isProcessing:boolean = false;
   selectedPlate:string = '';
@@ -111,7 +111,7 @@ export class PlatesComponent {
     this.plateService.get(this.currentProject.projectId, plateName).pipe(take(1), takeUntil(this.destroy$)).subscribe({
       next: (res:any)=>{
         this.selectPlateData = Object.keys(res).map(key => ({ key: key, data: res[key] }) );
-        this.setControlVal('plateData', [...this.selectPlateData]);
+        this.setControlVal('plateData', cloneDeep(this.selectPlateData));
         this.openModal(this.plateDataModal, true);
       },
       error: ()=>{}
@@ -131,7 +131,7 @@ export class PlatesComponent {
 
   openPlateDataModal(){
     this.modalRef?.close();
-    this.setControlVal('plateData', this.selectPlateData.length ? this.selectPlateData : this.dataService.getBaseData());
+    this.setControlVal('plateData', this.selectPlateData.length ? cloneDeep(this.selectPlateData) : this.dataService.getBaseData());
     this.openModal(this.plateDataModal, true);
   }
 
@@ -148,9 +148,8 @@ export class PlatesComponent {
       next: (res:any)=>{
         res = res?.plate || res;
         this.selectPlateData = Object.keys(res).map(key => ({ key: key, data: res[key] }) );
-        this.setControlVal('plateData', [...this.selectPlateData]);
+        this.setControlVal('plateData', cloneDeep(this.selectPlateData));
         this.getAllUserPlates();
-        this.dataChanged = false;
         this.setControlVal('plate', this.getControlVal('plateName'));
         this.setControlVal('plateName', null);
         this.form['plateName'].markAsUntouched();
@@ -166,9 +165,10 @@ export class PlatesComponent {
 
   onDialogInputChange(event:any, col:string, index:number){
     const val = event.target.value.trim();
-    if(val){
-      this.activeInput = { col: col, index: index, isValid: false };
-      this.dataChanged = true;
+    this.activeInput = { col: col, index: index, isValid: false };
+    if(!val){
+      this.activeInput = null;
+      this.updateData(col, index, null);
     }
   }
 
@@ -176,6 +176,7 @@ export class PlatesComponent {
     if(this.activeInput && this.activeInput.index == index && this.activeInput.col == col){
       this.activeInput.isValid = true;
       this.activeInput.data = event.item;
+      this.onInputBlurAfterChanges(col, index);
     }
   }
 
@@ -185,15 +186,19 @@ export class PlatesComponent {
       if(bluredInput) bluredInput.value = '';
     }
     else if(this.activeInput && this.activeInput.col == col && this.activeInput.index == index && this.activeInput.isValid){
-      const previousData = [ ...this.getControlVal('plateData') ];
-      const idx = previousData.findIndex((item:any) => item.key === col);
-      previousData[idx].data[index - 1] = this.matchingData.find((item:any) => item.materialSampleID === this.activeInput.data);
-      setTimeout(() => {
-        this.setControlVal('plateData', [...previousData]);
-      }, 500);
+      this.updateData(col, index, this.activeInput.data);
     }
     this.activeInput = null;
     this.matchingData = [];
+  }
+
+  updateData(col:string, index:number, data:any){
+    const previousData = cloneDeep(this.getControlVal('plateData'));
+    const idx = previousData.findIndex((item:any) => item.key === col);
+    previousData[idx].data[index - 1] = this.matchingData.find((item:any) => item.materialSampleID === data);
+    setTimeout(() => {
+      this.setControlVal('plateData', [...previousData]);
+    }, 500);
   }
 
   formatPayload(tissueId:string):any {
@@ -232,10 +237,9 @@ export class PlatesComponent {
         res = res?.plate || res;
         this.selectPlateData = Object.keys(res).map(key => ({ key: key, data: res[key] }) );
         console.log(this.selectPlateData);
-        this.setControlVal('plateData', [...this.selectPlateData]);
+        this.setControlVal('plateData', cloneDeep(this.selectPlateData));
         this.dataService.loadingState.next(false);
         this.toastrService.success('Plate updated!');
-        this.dataChanged = false;
       },
       error: (err:any) => ''
     })
@@ -244,7 +248,7 @@ export class PlatesComponent {
   deleteTissue(col:string, index:number, data:any){
     this.recordService.delete(data.bcid).pipe(take(1), takeUntil(this.destroy$)).subscribe({
       next: (res:any)=>{
-        const previousData = this.getControlVal('plateData')
+        const previousData = cloneDeep(this.getControlVal('plateData'));
         const idx = previousData.findIndex((item:any) => item.key === col);
         previousData[idx].data[index - 1] = null;
         this.setControlVal('plateData', [...previousData]);
@@ -290,5 +294,12 @@ export class PlatesComponent {
   setReqValidator(control:string, setErr:boolean = true){
     this.form[control].setValidators(setErr ? [Validators.required] : []);
     this.form[control].updateValueAndValidity();
+  }
+
+  get isDataEmpty(){
+    const arr = this.getControlVal('plateData');
+    const isArrEmpty = (arr.map((item:any) => item.data ).filter((data:any) => data.filter((a:any) => a).length > 0 )) == 0;
+    const matches = JSON.stringify(this.selectPlateData) === JSON.stringify(arr);
+    return this.selectPlateData.length == 0 ? isArrEmpty : matches;
   }
 }
