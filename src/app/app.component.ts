@@ -1,4 +1,4 @@
-import { Component, HostListener, inject, OnDestroy } from '@angular/core';
+import { Component, HostListener, inject, OnInit, OnDestroy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './shared/header/header.component';
 import { AuthenticationService } from '../helpers/services/authentication.service';
@@ -14,7 +14,7 @@ import { RouteTrackerService } from '../helpers/services/route-track.service';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnDestroy{
+export class AppComponent implements OnInit, OnDestroy {
   // Injectables
   authService = inject(AuthenticationService);
   projectService = inject(ProjectService);
@@ -24,32 +24,39 @@ export class AppComponent implements OnDestroy{
   // Variables
   private destroy$ = new Subject<void>();
   title = 'geome';
-  isLargeDevice:boolean = false;
-  currentUser:any;
+  isLargeDevice = false;
+  currentUser: any;
 
-  @HostListener('window:resize')
-  onResize(){
-    const windowWidth = window.innerWidth;
-    if(windowWidth > 991) this.isLargeDevice = true
-    else this.isLargeDevice = false;
+  constructor() {
+    this.onResize();
   }
 
-  constructor(){
-    this.onResize();
-    this.authService.currentUser.pipe(takeUntil(this.destroy$))
-    .subscribe((x:any)=>{
-      this.currentUser = x;
-      if(x && !x.accessToken) this.projectService.loadPrivateProjects()
-      else if(x && x.accessToken) this.getUserDetails(x)
-    })
+  ngOnInit(): void {
+    this.authService.currentUser
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((x: any) => {
+        this.currentUser = x;
+        if (x && !x.accessToken) {
+          this.projectService.loadPrivateProjects();
+        } else if (x && x.accessToken) {
+          this.getUserDetails(x);
+        }
+      });
+
     this.projectService.loadAllProjects();
   }
 
-  getUserDetails(user:any){
-    this.userService.getUserData(user.username).pipe(take(1), takeUntil(this.destroy$))
-    .subscribe({
-      next: (res:any) => this.authService.setCurrentUser(res)
-    })
+  getUserDetails(user: any): void {
+    this.userService.getUserData(user.username)
+      .pipe(take(1), takeUntil(this.destroy$))
+      .subscribe({
+        next: (res: any) => this.authService.setCurrentUser(res)
+      });
+  }
+
+  @HostListener('window:resize')
+  onResize(): void {
+    this.isLargeDevice = window.innerWidth > 991;
   }
 
   ngOnDestroy(): void {
@@ -57,3 +64,4 @@ export class AppComponent implements OnDestroy{
     this.destroy$.complete();
   }
 }
+
