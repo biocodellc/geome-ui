@@ -6,6 +6,20 @@ import { ProjectService } from '../helpers/services/project.service';
 import { UserService } from '../helpers/services/user.service';
 import { Subject, take, takeUntil } from 'rxjs';
 import { RouteTrackerService } from '../helpers/services/route-track.service';
+import { Component, OnInit } from '@angular/core';
+import { VersionCheckService } from './version-check.service';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html'
+})
+export class AppComponent implements OnInit {
+  constructor(private versionCheckService: VersionCheckService) {}
+
+  ngOnInit(): void {
+    this.versionCheckService.checkVersion();
+  }
+}
 
 @Component({
   selector: 'app-root',
