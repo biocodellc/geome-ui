@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { childRecordDetails, mainRecordDetails, parentRecordDetails } from '../../../helpers/scripts/recordDetails';
 import { Router } from '@angular/router';
+import { DummyDataService } from '../../../helpers/services/dummy-data.service';
 
 @Component({
   selector: 'app-root-record',
@@ -12,6 +13,7 @@ import { Router } from '@angular/router';
 })
 export class RootRecordComponent implements OnChanges{
   router = inject(Router);
+  dummyDataService = inject(DummyDataService);
 
   // Variables
   @Input() record:any;
@@ -61,6 +63,7 @@ export class RootRecordComponent implements OnChanges{
     this.prepareChildDetails(this.childData);
     this.prepareParentDetails(this.parent);
     this.prepareMainDetails(this.data);
+    this.dummyDataService.loadingState.next(false);
   }
 
   prepareMainDetails(data:any) {
