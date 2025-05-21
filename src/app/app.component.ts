@@ -6,7 +6,6 @@ import { ProjectService } from '../helpers/services/project.service';
 import { UserService } from '../helpers/services/user.service';
 import { Subject, take, takeUntil } from 'rxjs';
 import { RouteTrackerService } from '../helpers/services/route-track.service';
-import { VersionCheckService } from './version.check.service';
 
 @Component({
   selector: 'app-root',
@@ -21,7 +20,6 @@ export class AppComponent implements OnInit, OnDestroy {
   projectService = inject(ProjectService);
   userService = inject(UserService);
   routeTrackService = inject(RouteTrackerService);
-  versionCheckService = inject(VersionCheckService);
 
   // Variables
   private destroy$ = new Subject<void>();
@@ -34,8 +32,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.versionCheckService.checkVersion();
-
     this.authService.currentUser
       .pipe(takeUntil(this.destroy$))
       .subscribe((x: any) => {

@@ -25,13 +25,19 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              },
-              "src/_redirects"
-            ],
+"assets": [
+  {
+    "glob": "**/*",
+    "input": "public",
+    "output": "/"
+  },
+  {
+    "glob": "**/*",
+    "input": "src/assets",
+    "output": "assets"
+  },
+  "src/_redirects"
+],
             "styles": [
               "src/styles.scss",
               "node_modules/ngx-toastr/toastr.css"
