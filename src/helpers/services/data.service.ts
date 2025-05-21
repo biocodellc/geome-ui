@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { EventEmitter, inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
@@ -50,7 +50,9 @@ export class DataService {
   // Uploads
 
   upload(uploadId:number):Observable<any>{
-    return this.http.put(`${this.apiUrl}data/upload/${uploadId}`,'');
+    return this.http.put(`${this.apiUrl}data/upload/${uploadId}`, '', {
+      headers: new HttpHeaders({'Content-Type': 'application/json', 'Accept': 'application/json'})
+    });
   }
 
   exportData(projectId:number, expeditionCode:string):Observable<any> {
@@ -72,6 +74,12 @@ export class DataService {
       if(key === 'workbooks' || key === 'dataSourceFiles'){
         data[key].forEach((file:File) => formData.append(key, file));
       }
+      else if(key === 'dataSourceMetadata' && data.dataSourceMetadata){
+        const val = new Blob([JSON.stringify(data.dataSourceMetadata)], {
+          type: 'application/json'
+        });
+        formData.append(key, val)
+      }
       else if(key !== 'expeditionCode')
         formData.append(key, JSON.stringify(data[key]));
       else formData.append(key, data[key]);
@@ -84,7 +92,7 @@ export class DataService {
 interface uploadData{
   "upload": boolean,
   "reloadWorkbooks": boolean,
-  "dataSourceMetadata": any[],
+  "dataSourceMetadata": any[] | Blob,
   "dataSourceFiles": File[],
   "expeditionCode": string,
   "workbooks": File[],
