@@ -50,9 +50,7 @@ export class DataService {
   // Uploads
 
   upload(uploadId:number):Observable<any>{
-    return this.http.put(`${this.apiUrl}data/upload/${uploadId}`, '', {
-      headers: new HttpHeaders({'Content-Type': 'application/json', 'Accept': 'application/json'})
-    });
+    return this.http.put(`${this.apiUrl}data/upload/${uploadId}`, '');
   }
 
   exportData(projectId:number, expeditionCode:string):Observable<any> {

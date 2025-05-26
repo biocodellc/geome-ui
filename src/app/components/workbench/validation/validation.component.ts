@@ -303,9 +303,9 @@ export class ValidationComponent implements OnDestroy{
         validation: data,
         showValidationMessages: true,
         showStatus: false,
-        showContinueButton: true,
+        showContinueButton: false,
         uploadId: data.id,
-        showCancelButton: true,
+        showCancelButton: false,
       });
 
       return this.modalRef?.result.then(success => {
@@ -383,9 +383,10 @@ export class ValidationComponent implements OnDestroy{
     this.results.showStatus = true;
     this.dataService.upload(uploadId)
       .subscribe({
-        next: ({ data }) => {
+        next: (data:any) => {
           this.results.successMessage = data.message;
           this.modalRef?.close(true);
+          this.activeTab = 'results';
         },
         error: (err:any)=>{
           console.log('failed ->', err);
