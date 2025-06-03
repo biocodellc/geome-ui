@@ -1,72 +1,33 @@
 <div id="landing-page" layout="column" flex>
   <div class="md-headline">
-  </p>  
     <h3>
       GEOME: a Field Information Management System
       <md-icon ng-click="$ctrl.playAudio()" md-font-icon="fa fa-volume-up fa-sm"></md-icon>
     </h3>
   </div>
 
-  
-	<!--
-  <h4>
-    <p style="color:#FF0000";>
-	   GEOME will be unavailable from 7am MST, Wednesday March 26 through 7am, MST, Thursday, March 27th, 2024. The service outage is for database maintenance and upgrades.
-      </p>
-    </h4>
-	-->
-  
-  <p>  
-     GEOME, formerly the Genomic Observatories Meta-Database, is a Field Information Management System that captures the who, what, where, and when
-     of biological samples that are collected in the field, and aids in the connection to downstream data including digital sequencing and derived data.  GEOME helps users with the following goals:
-  <ul>
-     <li>Ensure the metadata from your biological samples is findable, accessible, interoperable, and reusable</li>
-     <li>Improve the quality of your data and comply with global data standards</li>
-     <li>Integrate with <a href="https://cran.r-project.org/web/packages/geomedb/index.html" target="_blank">R</a>, ease publication to NCBI's sequence read archive, and work with an associated <a href="https://github.com/biocodellc/biocode-lims/wiki" target="_blank">LIMS</a></li>
-  </ul>
-  </p>
-
-  <div layout="row" layout-align="center center" flex>
-    <div layout="row" flex layout-wrap>
-      <md-card layout-align="center center" ng-click="$ctrl.$state.go('about')" flex>
-        <img src="img/about7.png" alt="iconabout" />
-        <h3>Getting Started</h3>
-        <p>Getting started and additional information about GEOME</p>
-      </md-card>
-      <md-card layout-align="center center" layout-padding ng-click="$ctrl.$state.go('query')" flex>
-        <img src="img/search.png" alt="world" />
-        <h3>Query</h3>
-        <p>Search and download sequence files and associated metadata</p>
-      </md-card>
-      <md-card
-        layout-align="center center"
-        layout-padding
-        ng-click="$ctrl.$state.go('dashboard')"
-        flex
-      >
-        <img src="img/workbench.png" alt="workbench icon" />
-        <h3>Workbench</h3>
-        <p>View and manage project specific data</p>
-      </md-card>
-    </div>
-  </div>
-
-
-  <div>
-  <p></p>
   <p>
-    <i>
-      <a href="https://doi.org/10.1371/journal.pbio.2002925">
-        "The Genomic Observatories Metadatabase (GEOME): A new repository for field and sampling
-        event metadata associated with genetic samples"</a
-      >, John Deck , Michelle R. Gaither, Rodney Ewing, Christopher E. Bird, Neil Davies,
-      Christopher Meyer, Cynthia Riginos, Robert J. Toonen, Eric D. Crandall Published: August 3,
-      2017 <a href="https://doi.org/10.1371/journal.pbio.2002925">https://doi.org/10.1371/journal.pbio.2002925</a>
-    </i>
+    This site is the legacy version of GEOME and is maintained temporarily for reference purposes only. We are actively transitioning to the new GEOME platform and encourage all users to begin using the updated system for current workflows.
   </p>
-  </div>
+
+  <p>
+    The legacy site will remain accessible for a limited period to support:
+    <ul>
+      <li>Reference to prior projects and data</li>
+      <li>Completion of critical tasks not yet supported on the new site</li>
+      <li>Fallback access in case of issues with the new system</li>
+    </ul>
+  </p>
+
+  <p>
+    Please restrict your use of this legacy site to essential functions that are not yet available on the new platform.
+    If you experience a problem on the new site that requires reverting here, contact us at 
+    <a href="mailto:geome.help@gmail.com">geome.help@gmail.com</a>.
+  </p>
+
 
   <div layout="row" layout-align="center center">
     <collaboration-label></collaboration-label>
   </div>
 </div>
+
