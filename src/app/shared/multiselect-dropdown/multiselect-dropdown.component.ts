@@ -1,19 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 @Component({
-  selector: 'app-multiselect-dropdown',
-  standalone: true,
+  selector: 'app-multiselect-dropdown',  standalone: true,
   imports: [CommonModule, NgMultiSelectDropDownModule, FormsModule, ReactiveFormsModule],
   templateUrl: './multiselect-dropdown.component.html',
   styleUrl: './multiselect-dropdown.component.scss'
 })
-export class MultiselectDropdownComponent implements OnChanges{
+export class MultiselectDropdownComponent implements OnChanges, AfterViewInit{
   fb = inject(FormBuilder)
   @ViewChild('multiSelect') multiSelectRef:any;
   @Output() valueChange:EventEmitter<any> = new EventEmitter();
+  @Output() refUpdate:EventEmitter<any> = new EventEmitter();
   @Input() dropDownData:any;
   @Input() value:any;
   @Input() formType:string = '';
@@ -21,7 +21,8 @@ export class MultiselectDropdownComponent implements OnChanges{
   
   // setting and support i18n
   data:any[] = [];
-  settings = {
+  settings!:IDropdownSettings;
+  staticSettings:IDropdownSettings = {
     singleSelection: false,
     enableCheckAll: true,
     selectAllText: 'Select All',
@@ -41,7 +42,13 @@ export class MultiselectDropdownComponent implements OnChanges{
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['dropDownData'] && changes['dropDownData'].currentValue){
       this.data = [ ...changes['dropDownData'].currentValue ];
+      if(this.data.length && this.data[0] && typeof this.data[0] == 'object') this.settings = { ...this.staticSettings, idField: 'expeditionCode', textField: 'expeditionTitle' }
+      else this.settings = this.staticSettings;
     }
+  }
+
+  ngAfterViewInit(): void {
+    this.refUpdate.emit(this.multiSelectRef);
   }
 
   onItemSelect(item:any){ setTimeout(() => this.valueChange.emit({ item, value: this.value }), 50 )};

@@ -9,19 +9,20 @@
             </div>
             <div class="form-group">
                 <label for="Team">Team <i class="fas fa-circle-question ms-2 text-secondary cursor-pointer" popoverClass="custom-popover" [autoClose]="'outside'"  [ngbPopover]="popOverData['teams']"></i></label>
-                <app-multiselect-dropdown [dropDownData]="configNames" [value]="teams" (valueChange)="onTeamSelect($event)"/>
+                <app-multiselect-dropdown [dropDownData]="configNames" (valueChange)="onTeamSelect($event)" (refUpdate)="updateDropdownRef($event,'teams_multiselect')"/>
             </div>
             <div class="form-group">
                 <label for="Projects">Individual Projects <i class="fas fa-circle-question ms-2 text-secondary cursor-pointer" popoverClass="custom-popover" [autoClose]="'outside'"  [ngbPopover]="popOverData['project']"></i></label>
-                <app-multiselect-dropdown [dropDownData]="allProjectsName" [value]="individualProjects" (valueChange)="onProjChange($event)"/>
+                <app-multiselect-dropdown [dropDownData]="allProjectsName" (valueChange)="onProjChange($event)" (refUpdate)="updateDropdownRef($event,'proj_multiselect')"/>
             </div>
 
             @if(individualProjects.length == 1 && !loadingExpeditions && expeditions.length > 0){
                 <div class="form-group">
                     <label for="expedition">Expeditions</label>
-                    <select class="form-control" id="expedition" name="expedition" [(ngModel)]="params.expeditions">
+                    <app-multiselect-dropdown [dropDownData]="expeditions" (valueChange)="onExpeditionChange($event)" (refUpdate)="updateDropdownRef($event,'exp_multiselect')"/>
+                    <!-- <select class="form-control" id="expedition" name="expedition" [(ngModel)]="params.expeditions">
                         @for(exp of expeditions; track exp){ <option [value]="exp">{{exp.expeditionTitle}}</option> }
-                    </select>
+                    </select> -->
                 </div>
             }
             @else if(individualProjects.length == 1 && loadingExpeditions){

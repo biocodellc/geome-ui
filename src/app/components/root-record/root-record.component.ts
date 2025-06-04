@@ -30,7 +30,6 @@ export class RootRecordComponent implements OnChanges{
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['record'] && changes['record']?.currentValue){
-      console.log(changes['record']);
       this.assignValues();
     }
   }
@@ -63,7 +62,9 @@ export class RootRecordComponent implements OnChanges{
     this.prepareChildDetails(this.childData);
     this.prepareParentDetails(this.parent);
     this.prepareMainDetails(this.data);
-    this.dummyDataService.loadingState.next(false);
+    setTimeout(() => {
+      this.dummyDataService.loadingState.next(false);
+    }, 100);
   }
 
   prepareMainDetails(data:any) {
