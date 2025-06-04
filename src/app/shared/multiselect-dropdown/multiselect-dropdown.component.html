@@ -1,8 +1,8 @@
 @if(data && formType !== 'Reactive Form'){
     <ng-multiselect-dropdown #multiSelect
-        [data]="data" 
         [(ngModel)]="value"
         [settings]="settings"
+        [data]="data" 
         [disabled]="false"
         (onSelect)="onItemSelect($event)" 
         (onDeSelect)="onItemDeSelect($event)"

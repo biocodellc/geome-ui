@@ -123,6 +123,7 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
   phylums: Array<any> = [];
   countries: Array<any> = [];
   markers: Array<any> = [];
+  dropdownRefs: any = {};
 
   config!: ProjectConfig;
   entity:string = '';
@@ -206,6 +207,8 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
     // Clearing Project's related Data and Update ParamProjects
     if(this.individualProjects.length){
       this.individualProjects = this.params.projects = this.expeditions = [];
+      this.dropdownRefs['proj_multiselect'].selectedItems = [];
+      this.dropdownRefs['proj_multiselect'].cdr.detectChanges();
     }
     this.teams = event.value;
     this.changeParamProjects(event, 'teams');
@@ -222,6 +225,8 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
     // Clearing Teams's related Data and Update ParamProjects
     if (this.teams.length) {
       this.teams = this.params.projects = [];
+      this.dropdownRefs['teams_multiselect'].selectedItems = [];
+      this.dropdownRefs['teams_multiselect'].cdr.detectChanges();
     }
     this.individualProjects = event.value;
     this.changeParamProjects(event, 'indProjects');
@@ -231,9 +236,17 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
       this.getExpeditions();
       this.identifySpecificConfig();
     } else {
-      this.expeditions = [];
+      this.expeditions = this.params.expeditions = [];
       this.setNetworkConfig();
     }
+  }
+
+  onExpeditionChange(event:{ item:any, value:[], isDeSelected?:boolean }){
+    this.params.expeditions = event.value;
+  }
+
+  updateDropdownRef(ref:any, key:string){
+    this.dropdownRefs[key] = ref;
   }
 
   // Setting and Removing Teams's Project
