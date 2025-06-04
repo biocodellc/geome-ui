@@ -1,6 +1,7 @@
 # GEOME UI
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/e165aa0a-4c9f-4cf8-9990-ad5c16939812/deploy-status)](https://app.netlify.com/projects/geome-db/deploys)
+
 This document provides comprehensive instructions on how to configure and manage the GEOME UI. 
 
 ## Project Setup
