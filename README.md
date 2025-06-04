@@ -1,15 +1,8 @@
 # geome-db UI
 
-Develop Branch Status Badges:
-[![Netlify Status](https://api.netlify.com/api/v1/badges/16ceb81c-9b4d-4342-8e20-d3c35eb15b7a/deploy-status)](https://app.netlify.com/sites/geome-develop/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/07905dcf-c6b5-488d-9a93-b062b0ca13a3/deploy-status)](https://app.netlify.com/projects/geome-old/deploys)
 
-Master Branch Status Badges:
-[![Netlify Status](https://api.netlify.com/api/v1/badges/07905dcf-c6b5-488d-9a93-b062b0ca13a3/deploy-status)](https://app.netlify.com/sites/geome-db/deploys)
-
-Frontend code for [https://geome-db.org](https://geome-db.org).
-
-
->Warning: Make sure you're using a recent version of Node.js and NPM
+Warning: The oldsite branch needs to use Node 16.x which has been deprecated. 
 
 ### Quick start
 
