@@ -33,7 +33,7 @@
                                 <form [formGroup]="expeditionForm" (ngSubmit)="updateExpedition()">
                                     <div class="form-group-div">
                                         <label for="title" class="form-group-label">Title</label>
-                                        <input id="title" type="text" class="input-cus d-block" style="width: 280px" placeholder="Enter first name" formControlName="expeditionTitle">
+                                        <input id="title" type="text" class="input-cus d-block" style="width: 280px" placeholder="Enter title" formControlName="expeditionTitle">
                                         @if(form['expeditionTitle'].touched && form['expeditionTitle'].invalid){
                                             <span class="warn-text f-12">{{ form['expeditionTitle'].hasError('required') ? 'Title is required.' : '' }}</span>
                                         }
@@ -45,13 +45,34 @@
                                             <option value="project members">Project Members</option>
                                         </select>
                                     </div>
-                                    <div class="form-group-div">
-                                        <label for="title" class="form-group-label">Test</label>
-                                        <input id="title" type="text" class="input-cus d-block" style="width: 280px" placeholder="" formControlName="Test">
-                                        @if(form['Test'].touched && form['Test'].invalid){
-                                            <span class="warn-text f-12">{{ form['Test'].hasError('required') ? 'Test is required.' : '' }}</span>
-                                        }
-                                    </div>
+                                    @for(item of metaDataList; track item){
+                                        <div class="form-group-div">
+                                            @switch(item.type){
+                                                @case ('BOOLEAN'){
+                                                    <input id="checkbox-{{item.name}}" type="checkbox" class="form-check-input" [formControlName]="item.name">
+                                                    <label for="checkbox-{{item.name}}" class="form-group-label" class="ms-2">{{item.name}}</label>
+                                                }
+                                                @case ('LIST'){
+                                                    <label [for]="item.name" class="form-group-label">{{item.name}}</label>
+                                                    <select [id]="item.name" [formControlName]="item.name" class="d-block rounded bg-white border border-dark-subtle" style="width: 280px; padding: 8px 12px;">
+                                                        <option value="">--Select--</option>
+                                                        @for(val of item.values; track val){
+                                                            <option [value]="val">{{val}}</option>
+                                                        }
+                                                    </select>
+                                                }
+                                                @default {
+                                                    <label [for]="item.name" class="form-group-label">{{item.name}}</label>
+                                                    <input [id]="item.name" type="text" class="input-cus d-block" style="width: 280px" placeholder="Enter meta data" [formControlName]="item.name">
+                                                }
+                                            }
+                                            @if(item.required && form[item.name].touched && (form[item.name].invalid)){
+                                                <span class="warn-text f-12">
+                                                    {{ form[item.name].hasError('required') ? item.name +' is required.' : '' }}
+                                                </span>
+                                            }
+                                        </div>
+                                    }
                                     <div class="form-group-div">
                                         <button type="submit" class="pro-save">Save</button>
                                     </div>

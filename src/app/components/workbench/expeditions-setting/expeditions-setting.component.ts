@@ -10,6 +10,7 @@ import { ExpeditionService } from '../../../../helpers/services/expedition.servi
 import { ProjectService } from '../../../../helpers/services/project.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { DummyDataService } from '../../../../helpers/services/dummy-data.service';
 
 @Component({
   selector: 'app-expeditions-setting',
@@ -28,10 +29,10 @@ export class ExpeditionsSettingComponent implements OnDestroy{
   private activatedRoute = inject(ActivatedRoute);
   private authService = inject(AuthenticationService);
   private expeditionService = inject(ExpeditionService);
+  private dummyDataService = inject(DummyDataService);
 
   // Variables
   private destroy$ = new Subject<void>();
-  isLoading:boolean = true;
   activeTab:string = 'settings';
   currentUser:any;
   currentProject:any;
@@ -41,14 +42,18 @@ export class ExpeditionsSettingComponent implements OnDestroy{
   projectExpeditions:Array<any> = [];
   expeditionForm!:FormGroup;
   modalRef!:NgbModalRef;
+  metaDataList:any[] = [];
 
   constructor() {
+    this.dummyDataService.loadingState.next(true);
     this.initForm();
     this.activatedRoute.params.pipe(take(1)).subscribe((res:any)=> this.currentExpeditionId = res?.id);
     this.authService.currentUser.pipe(takeUntil(this.destroy$)).subscribe((res: any) => this.currentUser = res);
     this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
       if (res) {
         this.currentProject = res;
+        this.metaDataList = this.currentProject.config.expeditionMetadataProperties;
+        this.metaDataList.forEach((item:any) => this.addControl(item.name, item.required));
         this.getProjectExpeditions();
       }
     })
@@ -57,8 +62,7 @@ export class ExpeditionsSettingComponent implements OnDestroy{
   initForm(){
     this.expeditionForm = this.fb.group({
       expeditionTitle: ['', Validators.required],
-      visibility: ['', Validators.required],
-      Test: ['', Validators.required],
+      visibility: ['', Validators.required]
     })
   }
 
@@ -78,15 +82,17 @@ export class ExpeditionsSettingComponent implements OnDestroy{
           this.currentExpedition = this.projectExpeditions.filter((exp:any)=> exp.expeditionId == this.currentExpeditionId)[0];
           if(this.currentExpedition){
             this.getExpeditionStats();
-            ['expeditionTitle', 'visibility', 'Test'].forEach(key =>{
-              const val = key !== 'Test' ? this.currentExpedition[key] : this.currentExpedition.metadata[key];
+            const allMetaDataControls = this.metaDataList.map(item => item.name);
+            ['expeditionTitle', 'visibility', ...allMetaDataControls].forEach(key =>{
+              const val = !allMetaDataControls.includes(key) ? this.currentExpedition[key] : this.currentExpedition.metadata[key];
               this.form[key].setValue(val);
               this.form[key].updateValueAndValidity();
             })
+            this.dummyDataService.loadingState.next(false);
           }
         }
       },
-      error: (err: any) => this.isLoading = false
+      error: (err: any) => this.dummyDataService.loadingState.next(false)
     })
   }
 
@@ -95,25 +101,27 @@ export class ExpeditionsSettingComponent implements OnDestroy{
     .pipe(take(1), takeUntil(this.destroy$)).subscribe({
       next: (res:any)=>{
         if(res) this.expeditionStats = res;
-        this.isLoading = false
-      },
-      error: (err:any)=> this.isLoading = false
+      }
     })
   }
 
   updateExpedition(){
     this.expeditionForm.markAllAsTouched();
     if(this.expeditionForm.invalid) return;
-    this.isLoading = true;
+    this.dummyDataService.loadingState.next(true)
     const data = { ...this.expeditionForm.value };
-    delete data.Test;
-    const updatedData = { ...this.currentExpedition, ...data, metadata: { Test: this.expeditionForm.value.Test } };
+    const metadata:any = {};
+    this.metaDataList.forEach((item:any) =>{
+      if(data[item.name] || data[item.name] == false) metadata[item.name] = data[item.name];
+      delete data[item.name];
+    })
+    const updatedData = { ...this.currentExpedition, ...data, metadata };
     this.expeditionService.updateExpedition(this.currentProject.projectId, updatedData).pipe(take(1), takeUntil(this.destroy$)).subscribe({
       next: (res:any)=>{
         if(res) this.toastrService.success('Updated Successfully.');
-        this.isLoading = false;
+        this.dummyDataService.loadingState.next(false)
       },
-      error: (err:any)=> this.isLoading = false
+      error: (err:any)=> this.dummyDataService.loadingState.next(false)
     })
   }
 
@@ -128,6 +136,10 @@ export class ExpeditionsSettingComponent implements OnDestroy{
         }
       }
     })
+  }
+
+  addControl(control:string, required:boolean){
+    this.expeditionForm.addControl(control, this.fb.control('', required ? Validators.required : []));
   }
 
   ngOnDestroy(): void {

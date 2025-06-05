@@ -27,10 +27,14 @@ export class CreateExpeditionComponent implements OnDestroy{
   codeRegex: any = /^[a-zA-Z0-9_]{4,50}$/;
   isLoading: boolean = false;
   codeExists: boolean = true;
-  auditors:string[] = [ 'Gump South Pacific Research Station', 'Tetiaroa Society' ]
+  metaDataList: any[] = [];
 
   constructor() {
-    this.initForm();
+    this.initForm()
+    setTimeout(() => {
+      this.metaDataList = this.currentProject.config.expeditionMetadataProperties;
+      this.metaDataList.forEach((item:any) => this.addControl(item.name, item.required));
+    }, 100);
   }
 
   get form() {
@@ -41,9 +45,6 @@ export class CreateExpeditionComponent implements OnDestroy{
     this.expeditionForm = this.fb.group({
       expeditionCode: ['', [Validators.required, Validators.pattern(this.codeRegex)]],
       expeditionTitle: ['', [Validators.required]],
-      Test: ['', [Validators.required]],
-      // Description: [''],
-      // Auditor: [''],
       public: [true],
       visibility: ['anyone']
     })
@@ -82,11 +83,15 @@ export class CreateExpeditionComponent implements OnDestroy{
 
   formatData():any{
     const data:any = { ...this.expeditionForm.value, metadata: {} };
-    ['Description', 'Auditor', 'Test'].forEach(item => {
-      data.metadata[item] = data[item];
-      delete data[item];
+    this.metaDataList.forEach(item => {
+      if(data[item.name]) data.metadata[item.name] = data[item.name];
+      delete data[item.name];
     })
     return data;
+  }
+
+  addControl(control:string, required:boolean){
+    this.expeditionForm.addControl(control, this.fb.control('', required ? Validators.required : []));
   }
 
   ngOnDestroy(): void {

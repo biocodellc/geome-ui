@@ -135,7 +135,7 @@ export class ExpeditionPropertiesComponent implements OnDestroy{
       name: [value?.name, Validators.required],
       type: [value?.type || 'STRING', Validators.required],
       required: [ value?.required ],
-      values: [ value?.values ],
+      values: Array.isArray(value?.values) ? value.values.join(',') : '',
     });
     this.form['type'].valueChanges.pipe(takeUntil(this.destroy$)).subscribe((val:string) => {
       if(val === 'STRING') this.setControlVal('values', null);
@@ -147,7 +147,7 @@ export class ExpeditionPropertiesComponent implements OnDestroy{
     this.expForm.markAllAsTouched();
     if(this.expForm.invalid) return;
     const data = { ...this.expForm.value };
-    if(data.values) data.values = [ data.values ];
+    if(data.values) data.values = data.values.split(',');
     this.modalRef.dismiss(data);
     this.expForm.reset();
   }
