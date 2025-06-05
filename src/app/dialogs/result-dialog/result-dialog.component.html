@@ -20,7 +20,7 @@
 @if(!isLoading){
     <div class="modal-footer border-0 pt-0">
         <div class="d-flex justify-content-end gap-2">
-            @if(results?.showOkButton || results?.validation.hasError){
+            @if(results?.showOkButton || results?.showValidationMessages){
                 <button type="button" class="btn btn-primary custom" (click)="activeModal.close()">OK</button>
             }
             @if(results?.showContinueButton){

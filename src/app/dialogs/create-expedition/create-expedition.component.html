@@ -26,30 +26,35 @@
             </span>
             }
         </div>
-        <div class="mb-3">
-            <div class="form-floating mb-1">
-                <input type="text" formControlName="Test" class="form-control" id="floatingDescription" placeholder="">
-                <label for="floatingDescription" class="ps-0 fw-semibold">Test *</label>
+        @for(item of metaDataList; track item){
+            <div class="mb-3">
+                <div class="mb-1" [class.form-floating]="item.type == 'STRING'" [class.form-group-div]="item.type == 'LIST'">
+                    @switch(item.type){
+                        @case ('BOOLEAN'){
+                            <input id="checkbox-{{item.name}}" type="checkbox" class="form-check-input" [formControlName]="item.name">
+                            <label for="checkbox-{{item.name}}" class="form-check-label cursor-pointer" class="ms-2">{{item.name}}</label>
+                        }
+                        @case ('LIST'){
+                            <label [for]="item.name" class="form-group-label">{{item.name}}</label>
+                            <select [id]="item.name" [formControlName]="item.name" class="d-block rounded bg-white border border-dark-subtle" style="width: 280px; padding: 8px 12px;">
+                                @for(val of item.values; track val){
+                                    <option [value]="val">{{val}}</option>
+                                }
+                            </select>
+                        }
+                        @default {
+                            <input type="text" [formControlName]="item.name" class="form-control" id="floatingDescription_{{item.name}}" placeholder="">
+                            <label for="floatingDescription_{{item.name}}" class="ps-0 fw-semibold">{{item.name}} {{ item.required ? '*' : ''}}</label>
+                        }
+                    }
+                </div>
+                @if(item.required && form[item.name].touched && (form[item.name].invalid)){
+                    <span class="warn-text f-12">
+                        {{ form[item.name].hasError('required') ? item.name +' is required.' : '' }}
+                    </span>
+                }
             </div>
-            @if(form['Test'].touched && (form['Test'].invalid)){
-                <span class="warn-text f-12">
-                    {{ form['Test'].hasError('required') ? 'Code is required.' : '' }}
-                </span>
-            }
-        </div>
-<!--        <div class="form-floating mb-4">-->
-<!--            <input type="text" formControlName="Description" class="form-control" id="floatingDescription"-->
-<!--                placeholder="Enter Description">-->
-<!--            <label for="floatingDescription" class="ps-0 fw-semibold">Description</label>-->
-<!--        </div>-->
-<!--        <div class="form-floating mb-1">-->
-<!--            <select class="form-select form-control" id="floatingSelect_Auditor" aria-label="ExpedAuditoritions" name="Auditor" formControlName="Auditor">-->
-<!--                @for(item of auditors; track item){-->
-<!--                    <option [value]="item"><div class="py-2 px-3">{{item}}</div></option>-->
-<!--                }-->
-<!--            </select>-->
-<!--            <label for="floatingSelect_Auditor">Auditor</label>-->
-<!--        </div>-->
+        }
     </form>
 </div>
 <div class="modal-footer border-0 pt-0">
