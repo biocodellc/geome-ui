@@ -124,13 +124,13 @@ export class PlatesComponent {
     }
     this.modalRef = this.modalService.open(content, { animation: true, centered: true, windowClass: large ? 'max-width no-backdrop' : 'no-backdrop', backdrop: false });
     this.modalRef.dismissed.pipe(take(1), takeUntil(this.destroy$)).subscribe(()=>{
-      if(!this.getControlVal('plateName')) ''
-      else this.setControlVal('plateName', null);
+      if(this.getControlVal('plateName')) this.setControlVal('plateName', null);
     })
   }
 
   openPlateDataModal(){
     this.modalRef?.close();
+    this.setControlVal('plate', this.getControlVal('plateName'));
     this.setControlVal('plateData', this.selectPlateData.length ? cloneDeep(this.selectPlateData) : this.dataService.getBaseData());
     this.openModal(this.plateDataModal, true);
   }

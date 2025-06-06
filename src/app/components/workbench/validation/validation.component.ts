@@ -477,7 +477,7 @@ export class ValidationComponent implements OnDestroy{
     if (this.checkedTypes.includes('Fastq')) {
       data.dataSourceMetadata.push({
         dataType: 'FASTQ',
-        filename: this.fastqMetadataForm.controls['fileName'].value,
+        filename: this.fastqMetadataForm.controls['file'].value.name,
         reload: false,
         metadata: {
           conceptAlias: this.currentProject.config.entities.find(
