@@ -22,76 +22,209 @@
                                     <div ngbAccordionCollapse>
                                         <div ngbAccordionBody>
                                             <ng-template>
-                                                <div style="padding-left: 35px;" class="position-relative" formGroupName="bioProjectForm">
-                                                    
-                                                    <div class="mb-3">
-                                                        <div class="form-floating mb-1">
-                                                            <select class="form-select" id="floatingSelect_expeditions" aria-label="Expeditions" formControlName="expedition">
-                                                                @for(exp of expeditions; track exp){
-                                                                <option [value]="exp.expeditionTitle">{{exp.expeditionTitle}}</option>
+                                                <div style="padding-left: 35px;" class="position-relative" [formGroupName]="item.formName">
+                                                    @switch(i){
+                                                        @case(0){
+                                                            <div class="mb-3">
+                                                                <div class="form-floating mb-1">
+                                                                    <select class="form-select" id="floatingSelect_expeditions" aria-label="Expeditions" formControlName="expedition">
+                                                                        @for(exp of expeditions; track exp){
+                                                                            <option [value]="exp.expeditionCode">{{exp.expeditionTitle}}</option>
+                                                                        }
+                                                                    </select>
+                                                                    <label for="floatingSelect_expeditions">Expeditons <span>*</span></label>
+                                                                </div>
+                                                                @if(bioProjectForm['expedition'].touched && bioProjectForm['expedition'].errors){
+                                                                    <span class="text-danger f-12">Expedition is Required</span>
                                                                 }
-                                                            </select>
-                                                            <label for="floatingSelect_expeditions">Expeditons <span>*</span></label>
-                                                        </div>
-                                                        @if(bioProjForm['expedition'].touched && bioProjForm['expedition'].errors){
-                                                            <span class="text-danger f-12">Expedition is Required</span>
-                                                        }
-                                                        @else{
-                                                            <span class="text-secondary f-12">Only expeditions with existing FastqMetadata will appear</span>
-                                                        }
-                                                    </div>
+                                                                @else{
+                                                                    <span class="text-secondary f-12">Only expeditions with existing FastqMetadata will appear</span>
+                                                                }
+                                                            </div>
 
-                                                    @if(bioProjForm['expedition'].valid){
-                                                        <div class="auto-gen mb-3 align-items-start">
-                                                            <div class="form-check form-switch">
-                                                                <input class="form-check-input" type="checkbox" role="switch" id="newBioProj" formControlName="createBioProject">
-                                                                <div class="auto-gen1" style="padding-left: 30px;">
-                                                                    <label class="form-check-label" for="newBioProj">Create new BioProject?</label>
-                                                                    <p class="no-file">Did you already register a BioProject for this research? (for the submission of the reads to SRA and/or of the genome to GenBank)</p>
+                                                            @if(bioProjectForm['expedition'].valid){
+                                                                <div class="auto-gen mb-3 align-items-start">
+                                                                    <div class="form-check form-switch">
+                                                                        <input class="form-check-input" type="checkbox" role="switch" id="newBioProj" formControlName="createBioProject">
+                                                                        <div class="auto-gen1" style="padding-left: 30px;">
+                                                                            <label class="form-check-label" for="newBioProj">Create new BioProject?</label>
+                                                                            <p class="no-file">Did you already register a BioProject for this research? (for the submission of the reads to SRA and/or of the genome to GenBank)</p>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </div>
 
-                                                        @if(bioProjForm['createBioProject'].value){
-                                                            <div class="mb-3">
-                                                                <div class="form-floating mb-1">
-                                                                    <input type="text" formControlName="title" class="form-control" id="floatingTitle" placeholder="">
-                                                                    <label for="floatingTitle" class="ps-0 fw-semibold">Title *</label>
-                                                                </div>
-                                                                @if(bioProjForm['title'].touched && bioProjForm['title'].invalid){
-                                                                    <span class="warn-text f-12">{{ bioProjForm['title'].hasError('required') ? 'Title is required.' : '' }}</span>
+                                                                @if(bioProjectForm['createBioProject'].value){
+                                                                    <div class="mb-3">
+                                                                        <div class="form-floating mb-1">
+                                                                            <input type="text" formControlName="title" class="form-control" id="floatingTitle" placeholder="">
+                                                                            <label for="floatingTitle" class="ps-0 fw-semibold">Title *</label>
+                                                                        </div>
+                                                                        @if(bioProjectForm['title'].touched && bioProjectForm['title'].invalid){
+                                                                            <span class="warn-text f-12">{{ bioProjectForm['title'].hasError('required') ? 'Title is required.' : '' }}</span>
+                                                                        }
+                                                                    </div>
+            
+                                                                    <div class="mb-3">
+                                                                        <div class="form-floating mb-1">
+                                                                            <input type="text" formControlName="discription" class="form-control" id="floatingDisc" placeholder="What are the study goals and relavence">
+                                                                            <label for="floatingDisc" class="ps-0 fw-semibold">Description *</label>
+                                                                        </div>
+                                                                        @if(bioProjectForm['discription'].touched && bioProjectForm['discription'].invalid){
+                                                                            <span class="warn-text f-12">{{ bioProjectForm['discription'].hasError('required') ? 'Discription is required.' : '' }}</span>
+                                                                        }
+                                                                    </div>
                                                                 }
+                                                                @else{
+                                                                    <div class="mb-3">
+                                                                        <div class="form-floating mb-1">
+                                                                            <input type="text" formControlName="projAccession" class="form-control" id="floatingAccession" placeholder="PRJNA371471">
+                                                                            <label for="floatingAccession" class="ps-0 fw-semibold">Project Accession *</label>
+                                                                        </div>
+                                                                        @if(bioProjectForm['projAccession'].touched && bioProjectForm['projAccession'].invalid){
+                                                                            <span class="warn-text f-12">{{ bioProjectForm['projAccession'].hasError('required') ? 'Project Accession is required.' : '' }}</span>
+                                                                        }
+                                                                    </div>
+                                                                }
+                                                            }
+                                                        }
+                                                        @case(1){
+                                                            <div class="mb-3">
+                                                                The following information is used to make an SRA submission on your behalf. The username, first name, last name, and email <b>must</b> match your account with the SRA in order to access the submission after GEOME has submitted your data. <a href="https://submit.ncbi.nlm.nih.gov/accounts/profile/" target="_blank" >View my SRA account.</a >
                                                             </div>
-    
-                                                            <div class="mb-3">
-                                                                <div class="form-floating mb-1">
-                                                                    <input type="text" formControlName="discription" class="form-control" id="floatingDisc" placeholder="What are the study goals and relavence">
-                                                                    <label for="floatingDisc" class="ps-0 fw-semibold">Discription *</label>
+                                                            <div class="d-flex flex-wrap">
+                                                                <!--SRA Account Username -->
+                                                                <div class="form-group-div col-6 px-3">
+                                                                    <label for="sraUsername" class="form-group-label">SRA Account Username</label>
+                                                                    <input id="sraUsername" type="text" class="input-cus d-block" placeholder="Enter Username" formControlName="sraUsername">
+                                                                    @if(subInfoForm['sraUsername'].touched && subInfoForm['sraUsername'].invalid){
+                                                                        <span class="warn-text f-12">
+                                                                            {{ subInfoForm['sraUsername'].hasError('required') ?'Username is required.' : '' }}
+                                                                        </span>
+                                                                    }
                                                                 </div>
-                                                                @if(bioProjForm['discription'].touched && bioProjForm['discription'].invalid){
-                                                                    <span class="warn-text f-12">{{ bioProjForm['discription'].hasError('required') ? 'Discription is required.' : '' }}</span>
-                                                                }
+                                                                <!-- SRA Account Email -->
+                                                                <div class="form-group-div col-6 px-3">
+                                                                    <label for="sraEmail" class="form-group-label">SRA Account Email</label>
+                                                                    <input id="sraEmail" type="text" class="input-cus d-block" placeholder="Enter sraEmail" formControlName="sraEmail">
+                                                                    @if(subInfoForm['sraEmail'].touched && subInfoForm['sraEmail'].invalid){
+                                                                        <span class="warn-text f-12">
+                                                                            {{ subInfoForm['sraEmail'].hasError('required') ?'SRA Email is required.' : '' }}
+                                                                        </span>
+                                                                    }
+                                                                </div>
+                                                                <!-- SRA Account First Name -->
+                                                                <div class="form-group-div col-6 px-3">
+                                                                    <label for="sraFirstName" class="form-group-label">SRA Account First Name</label>
+                                                                    <input id="sraFirstName" type="text" class="input-cus d-block" placeholder="Enter sraFirstName" formControlName="sraFirstName">
+                                                                    @if(subInfoForm['sraFirstName'].touched && subInfoForm['sraFirstName'].invalid){
+                                                                        <span class="warn-text f-12">
+                                                                            {{ subInfoForm['sraFirstName'].hasError('required') ?'SRA FirstName is required.' : '' }}
+                                                                        </span>
+                                                                    }
+                                                                </div>
+                                                                <!-- SRA Account Last Name -->
+                                                                <div class="form-group-div col-6 px-3">
+                                                                    <label for="sraLastName" class="form-group-label">SRA Account Last Name</label>
+                                                                    <input id="sraLastName" type="text" class="input-cus d-block" placeholder="Enter sraLastName" formControlName="sraLastName">
+                                                                    @if(subInfoForm['sraLastName'].touched && subInfoForm['sraLastName'].invalid){
+                                                                        <span class="warn-text f-12">
+                                                                            {{ subInfoForm['sraLastName'].hasError('required') ?'SRA LastName is required.' : '' }}
+                                                                        </span>
+                                                                    }
+                                                                </div>
+                                                                <!-- Release Date -->
+                                                                <div class="form-group-div col-6 px-3">
+                                                                    <div class="d-flex">
+                                                                        <input class="input-cus" placeholder="yyyy-mm-dd" name="dp" formControlName="releaseDate" ngbDatepicker #d="ngbDatepicker" autocomplete="off"/>
+                                                                        <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button"><i class="fas fa-calendar-days"></i></button>
+                                                                    </div>
+                                                                    @if(subInfoForm['releaseDate'].touched && subInfoForm['releaseDate'].invalid){
+                                                                        <span class="warn-text f-12">
+                                                                            {{ subInfoForm['releaseDate'].hasError('required') ?'Release Date is required.' : '' }}
+                                                                        </span>
+                                                                    }
+                                                                    @else{
+                                                                        <span class="text-secondary">The date you would like your SRA submission to be released.</span>
+                                                                    }
+                                                                </div>
                                                             </div>
                                                         }
-                                                        @else{
-                                                            <div class="mb-3">
-                                                                <div class="form-floating mb-1">
-                                                                    <input type="text" formControlName="projAccession" class="form-control" id="floatingAccession" placeholder="PRJNA371471">
-                                                                    <label for="floatingAccession" class="ps-0 fw-semibold">Project Accession *</label>
+                                                        @case(2){
+                                                            @for(item of sampleTypes; track $index){
+                                                                <div class="form-check mb-3">
+                                                                    <input class="form-check-input" type="radio" [value]="item.value" formControlName="bioSampleType" id="radio_{{$index}}">
+                                                                    <label class="form-check-label ms-2" for="radio_{{$index}}">
+                                                                        <span class="fw-semibold">{{ item.title }}-</span>
+                                                                        <span class="f-15 ms-1">{{ item.disc }}</span>
+                                                                    </label>
                                                                 </div>
-                                                                @if(bioProjForm['projAccession'].touched && bioProjForm['projAccession'].invalid){
-                                                                    <span class="warn-text f-12">{{ bioProjForm['projAccession'].hasError('required') ? 'Project Accession is required.' : '' }}</span>
-                                                                }
+                                                            }
+                                                        }
+                                                        @case(3){
+                                                            <div class="py-0 mb-2 custom-table-container">
+                                                                <table class="table table-striped">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th scope="col"><input type="checkbox" name="all_attributes" (change)="onAllCheckboxChange($event)" [checked]="allSamplesChecked"></th>
+                                                                            @for(header of getHeaders(allBioSamples); track header){ <th scope="col" class="text-center f-14" [style.min-width]="header == 'lat_lon' ? '120px' : 'auto'">{{ header }}</th> }
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @for (sample of allBioSamples; track sample; let idx = $index) {
+                                                                            <tr>
+                                                                                <td><input type="checkbox" name="attributes_{{idx}}" (change)="onCheckChange($event, sample)" [checked]="sample.checked"></td>
+                                                                                @for(pair of sample | keyvalue: originalOrder; track pair){
+                                                                                    @if(pair.key != 'checked'){ <td class="text-center f-13">{{ pair.value ? pair.value : '-' }}</td> }
+                                                                                }
+                                                                            </tr>
+                                                                        }
+                                                                    </tbody>
+                                                                </table>
                                                             </div>
+                                                        }
+                                                        @case(4){
+                                                            <p>Please verify the metadata below. If something is not correct, you will need to <a [routerLink]="['/workbench','upload']">update</a> your data before proceeding.</p>
+                                                            <div class="py-0 mb-2 custom-table-container">
+                                                                <table class="table table-striped">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            @for(header of getHeaders(sraMetadata); track header){ <th scope="col" class="text-center f-14" style="min-width: 120px;">{{ header }}</th> }
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @for (sample of metaDataForm['metaData'].value; track sample; let idx = $index) {
+                                                                            <tr>
+                                                                                @for(pair of sample | keyvalue: originalOrder; track pair){
+                                                                                    @if(pair.key != 'checked'){ <td class="text-center f-13">{{ pair.value ? pair.value : '-' }}</td> }
+                                                                                }
+                                                                            </tr>
+                                                                        }
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        }
+                                                        @default{
+                                                            <div class="d-flex gap-2 align-items-center">
+                                                                <label for="img" class="btn btn-primary custom">CHOOSE FILE</label>
+                                                                <input type="file" name="img" id="img" class="form-control fastq-control" placeholder="" hidden (change)="onFileSelect($event)" accept=".zip"/>
+                                                                <div class="auto-gen1" style="flex: 1;">
+                                                                    <input type="text" formControlName="fileName" name="photo" class="form-control fastq-control rounded-start-0 ps-2  upload-input border border-white" style="width:50% ; box-shadow:none" placeholder="No File Selected" readonly/>
+                                                                    <p class="no-file">A zipped directory of Fastq data to upload. Ensure that your archive places filenames at the archive root.</p>
+                                                                </div>
+                                                            </div>
+                                                            @if(!fileForm['file'].value && fileForm['fileName'].touched && fileForm['fileName'].errors){
+                                                                <span class="text-danger mt-2">File is Required</span>
+                                                            }
                                                         }
                                                     }
-    
                                                     <div class="d-flex flex-column align-items-center position-absolute item-pointer">
                                                         <span class="rounded-circle d-flex justify-content-center align-items-center" [ngClass]="currentTab != i ? 'bg-secondary' : 'bg-primary text-white'" style="width: 22px; height: 22px">{{i + 1}}</span>
                                                         <div class="border" style="width: 1px; flex: 1;"></div>
                                                     </div>
-                                                    <button class="btn btn-secondary" (click)="next(i)" [ngClass]="i == 5 ? 'd-none' : ''" [disabled]="bioProjForm['expedition'].invalid">Next</button>
-                                                    <button class="btn btn-outline-secondary" (click)="back(i)" [ngClass]="i == 0 ? 'd-none' : ''">Back</button>
+                                                    <div class="d-flex">
+                                                        <button class="btn btn-primary" (click)="next(i)">Next</button>
+                                                        <!-- <button class="btn btn-outline-secondary" (click)="back(i)" [ngClass]="i == 0 ? 'd-none' : ''">Back</button> -->
+                                                    </div>
                                                 </div>
                                             </ng-template>
                                         </div>
@@ -106,3 +239,66 @@
 
     </div>
 </section>
+
+
+<!-- All Dialogs -->
+
+<ng-template #upload_warning_modal let-modal>
+    <div class="modal-header border-0 py-2 bg-warning justify-content-center">
+		<h4 class="modal-title fw-semibold">Upload Warning!</h4>
+	</div>
+	<div class="modal-body p-2 px-4 border-0">
+        <p>We were not able to verify that you included the necessary fastq files as we could not read the provided zip file.</p>
+        <p>Before uploading, please ensure <strong>that your zip file contains an entry for each sra metadata entry you are submitting.</strong> If not, the upload will fail validation and you will have to try again.</p>
+        <p><strong>Would you like to continue?</strong></p>
+    </div>
+    <div class="modal-footer border-0 pt-0">
+		<div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">Cancel</button>
+            <button type="button" class="btn btn-warning" (click)="modal.close(true)">Continue</button>
+        </div>
+	</div>
+</ng-template>
+
+<ng-template #missing_files_modal let-modal>
+    <div class="modal-header border-0 py-2 bg-danger justify-content-center">
+		<h4 class="modal-title fw-semibold text-light">Missing Fastq Files!</h4>
+	</div>
+	<div class="modal-body p-2 px-4 border-0">
+        <p><strong>The following files were not found in the zip file:</strong></p>
+        <ul>
+            @for(file of missingFiles; track file){ <li>{{ file }}</li> }
+        </ul>
+    </div>
+    <div class="modal-footer border-0 pt-0">
+		<div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">OK</button>
+        </div>
+	</div>
+</ng-template>
+
+<ng-template #result_modal let-modal>
+    <div class="modal-header border-0 py-2 bg-danger justify-content-center">
+		<h4 class="modal-title fw-semibold" id="modal-basic-title">Warning!</h4>
+	</div>
+	<div class="modal-body p-2 px-4 border-0" id="expedition_modal">
+        @if(resultData?.success){
+            <p class="m-0">It may take up to 24 hrs for GEOME to upload your submission to SRA. You will receive an email with the results of this submission upon completion.</p>
+        }
+        @else{
+            <p>The following error occurred:</p>
+            <p>{{ resultData?.msg || '' }}</p>
+            @if(canResume){ <p>Your connection may have been interrupted... Press "Resume" to continue your upload.</p>}
+        }
+    </div>
+    <div class="modal-footer border-0 pt-0">
+		<div class="d-flex justify-content-end gap-2">
+            @if(canResume){
+                <button type="button" class="btn btn-outline-secondary" (click)="upload()">Resume</button>
+            }
+            @else{
+                <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">OK</button>
+            }
+        </div>
+	</div>
+</ng-template>

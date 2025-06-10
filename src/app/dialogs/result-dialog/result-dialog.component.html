@@ -20,14 +20,14 @@
 @if(!isLoading){
     <div class="modal-footer border-0 pt-0">
         <div class="d-flex justify-content-end gap-2">
-            @if(results?.showOkButton || results?.showValidationMessages){
+            @if(results?.showOkButton || results?.validation.hasError){
                 <button type="button" class="btn btn-primary custom" (click)="activeModal.close()">OK</button>
             }
             @if(results?.showContinueButton){
-                <button type="button" class="btn btn-primary custom" (click)="activeModal.close('continue')">Continue</button>
+                <button type="button" class="btn btn-primary custom" (click)="activeModal.close(true)">Continue</button>
             }
             @if(results.showCancelButton){
-                <button type="button" class="btn btn-primary custom" (click)="activeModal.dismiss()">Cancel</button>
+                <button type="button" class="btn btn-primary custom" (click)="activeModal.close()">Cancel</button>
             }
         </div>
     </div>

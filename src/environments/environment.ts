@@ -8,5 +8,5 @@ export const environment = {
     authTimeout: 1000 * 60 * 60 * 4, // 4 hrs
     analyticsId: '',
     documentationUrl: '/docs/helpDocumentationv3.pdf'
+    sraPageUrl: '/docs/sra-step-by-step-instructions.pdf'
 };
-    //documentationUrl: 'https://docs.google.com/document/d/e/2PACX-1vQ8bFcHOyww6i2ZIOGCfEYS8odRxVSoIC-gEf7L7PVwe08zKTlDeb2pe71KA0vOih3dy2JaQT-gL6DA/pub?embedded=true'

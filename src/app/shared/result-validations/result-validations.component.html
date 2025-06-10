@@ -45,7 +45,7 @@
                         @for (group of entityResults.warnings; track group; let i=$index) {
                             <div ngbAccordionItem [collapsed]="i !== 0">
                                 <h2 ngbAccordionHeader>
-                                    <button ngbAccordionButton>Warning: <span innerHTML="sanitizeHtml(group.groupMessage)"></span></button>
+                                    <button ngbAccordionButton>Warning: <span [innerHTML]="sanitizeHtml(group.groupMessage)"></span></button>
                                 </h2>
                                 <div ngbAccordionCollapse>
                                     <div ngbAccordionBody>

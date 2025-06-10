@@ -303,13 +303,14 @@ export class ValidationComponent implements OnDestroy{
         validation: data,
         showValidationMessages: true,
         showStatus: false,
-        showContinueButton: false,
+        showContinueButton: true,
         uploadId: data.id,
-        showCancelButton: false,
+        showCancelButton: true,
       });
 
       return this.modalRef?.result.then(success => {
         if (success) {
+          this.continueUpload(data.id);
           this.latestExpeditionCode = uploadData.expeditionCode;
           this.showGenbankDownload = !!uploadData.dataSourceMetadata.find(
             (m:any) => m.dataType === 'FASTQ',

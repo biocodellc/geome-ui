@@ -116,6 +116,11 @@ export class RootRecordComponent implements OnChanges{
       this.router.navigateByUrl(`/query?q=_expeditions_:[${q}]&entity=${entity}`);
     } else this.router.navigateByUrl(href);
   }
+
+  getValue(data:string|object|undefined){
+    if(typeof data == 'object' && !Array.isArray(data)) return JSON.stringify(data);
+    else return data;
+  }
 }
 
 interface RecordValue {

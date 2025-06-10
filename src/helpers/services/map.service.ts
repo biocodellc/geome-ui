@@ -49,7 +49,7 @@ export class MapService {
 
     // Ocean Basemap
     this.oceanLayer = L.tileLayer(
-      'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}',
+      'https://server.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}',
       { maxZoom: 10, minZoom: 1 }
     );
 
