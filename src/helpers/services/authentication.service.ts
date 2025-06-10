@@ -1,7 +1,10 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { UserIdleService } from 'angular-user-idle';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { UserTimeOutComponent } from '../../app/dialogs/user-time-out/user-time-out.component';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +12,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class AuthenticationService {
   private storageKey:string = 'biscicol';
   private currentUserSubject!: BehaviorSubject<any>;
+  private userIdle = inject(UserIdleService);
+  private modalService = inject(NgbModal);
   currentUser!: Observable<any>;
   isLoggedIn:boolean = false;
 
@@ -25,6 +30,7 @@ export class AuthenticationService {
       this.isLoggedIn = true;
       this.currentUserSubject = new BehaviorSubject<any>(user);
       this.currentUser = this.currentUserSubject.asObservable();
+      this.startWatchingIdel();
     }
     else{
       this.isLoggedIn = false;
@@ -49,6 +55,7 @@ export class AuthenticationService {
         ...this.getUserFromStorage()
       }
       localStorage.setItem( this.storageKey, btoa(JSON.stringify(user)) );
+      this.startWatchingIdel();
     }
   }
 
@@ -65,10 +72,12 @@ export class AuthenticationService {
     this.isLoggedIn = user ? true : false;
   }
 
-  logoutUser(){
+  logoutUser(showToastr:boolean = true, route:string = '/'){
+    this.userIdle.stopTimer();
+    this.userIdle.stopWatching();
     this.resetUser();
-    this.router.navigate(['/']);
-    this.toastr.success('User Logged Out!');
+    this.router.navigate([route]);
+    if(showToastr) this.toastr.success('User Logged Out!');
   }
 
   resetUser(){
@@ -93,5 +102,15 @@ export class AuthenticationService {
     const parsedData = storedUser ? atob(storedUser) : null;
     if(parsedData) return JSON.parse(parsedData);
     else return null
+  }
+
+  startWatchingIdel(){
+    this.userIdle.startWatching();
+    this.userIdle.onTimeout().subscribe((res:any) => {
+      if(res){
+        this.logoutUser(false, '/login');
+        this.modalService.open(UserTimeOutComponent, { animation: true, centered: true, windowClass: 'no-backdrop', backdrop: false });
+      }
+    })
   }
 }

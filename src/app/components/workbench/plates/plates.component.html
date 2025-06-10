@@ -6,13 +6,17 @@
                 @if(userPlates.length){
                     <form [formGroup]="plateForm">
                         <div class="mb-3">
-                            <div class="form-floating mb-1">
+                            <!-- <div class="form-floating mb-1">
                                 <select class="form-select form-select-lg" id="floatingSelect_plates" aria-label="Plates" formControlName="plate" (change)="onPlateChange($event)">
                                     @for(plate of userPlates; track plate){
                                     <option [value]="plate" style="padding:8px;">{{plate}}</option>
                                     }
                                 </select>
                                 <label for="floatingSelect_plates">Tissue Plate <span>*</span></label>
+                            </div> -->
+                            <div class="mb-1">
+                                <label for="typeahead-basic">Search for a state:</label>
+                                <input id="typeahead-basic" type="text" class="form-control" formControlName="plate" [ngbTypeahead]="searchPlate"(focus)="focus$.next($any($event).target.value)" (click)="click$.next($any($event).target.value)" #instance="ngbTypeahead" popupClass="plate-dropdown" (selectItem)="onPlateChange($event)"/>
                             </div>
                             <span class="text-secondary f-12">Choose a plate to view data.</span>
                         </div>
@@ -68,6 +72,9 @@
 		<button type="button" class="btn-close" aria-label="Close" (click)="modal.close()"></button>
 	</div>
 	<div class="modal-body p-2 px-4 border-0 custom-fields custom-table-container">
+        <div class="mb-3">
+            <input id="typeahead-basic" type="text" class="form-control" placeholder="Select Column" [(ngModel)]="displayColumn" [ngbTypeahead]="searchColumn" (focus)="focus2$.next($any($event).target.value)" (click)="click2$.next($any($event).target.value)" #instance2="ngbTypeahead" popupClass="plate-dropdown" style="min-width:83%"/>
+        </div>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -83,7 +90,12 @@
                         @for(data of item.data; track i; let i=$index){
                             <td class="text-center">
                                 @if(data?.tissueID || !canEdit){
-                                    <span class="cursor-pointer" (click)="openTissueDetails(data, tissueModal)">{{data?.tissueID}}</span>
+                                    <p class="d-inline-flex flex-column mb-0">
+                                        <span class="cursor-pointerm mb-1" (click)="openTissueDetails(data, tissueModal)">{{data?.tissueID}}</span>
+                                        @if(displayColumn){
+                                            <span class="text-secondary f-12" (click)="openTissueDetails(data, tissueModal)">{{ data[displayColumn] || 'N/A' }}</span>
+                                        }
+                                    </p>
                                     @if(canEdit){
                                         <i class="fas fa-trash ms-2 text-danger f-12 cursor-pointer" (click)="deleteTissue(item.key, i+1, data)"></i>
                                     }

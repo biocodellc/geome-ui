@@ -8,3 +8,12 @@
     overflow-x: auto;
     input{ max-width: 120px; }
 }
+
+::ng-deep .plate-dropdown{
+    max-height: 50vh;
+    overflow: auto;
+    min-width: 80%;
+    button{
+        padding: 0.5rem 1rem;
+    }
+}

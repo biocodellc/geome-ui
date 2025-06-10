@@ -78,7 +78,8 @@ export const routes: Routes = [
             },
             {
                 path: 'upload/sra',
-                loadComponent: ()=>import('./components/workbench/upload-sra/upload-sra.component').then(m => m.UploadSraComponent)
+                loadComponent: ()=>import('./components/workbench/sra-instruction/sra-instruction.component').then(m => m.SraInstructionComponent)
+                // loadComponent: ()=>import('./components/workbench/upload-sra/upload-sra.component').then(m => m.UploadSraComponent)
             },
             {
                 path: 'plates',

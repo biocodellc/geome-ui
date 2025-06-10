@@ -4,13 +4,13 @@
 <div class="main-details horizontal-description-list p-3">
     <div>
         @for(item of (mainRecordDetails || {}) | keyvalue; track item.key){
-            <div>
-                <span>{{ item.key }}:</span>
-                <p class="">
+            <div class="mb-2">
+                <span class="fw-semibold">{{ item.key }}:</span>
+                <p class="d-inline ms-2">
                     @if(item.value.href){
                         <span> <a href="{{ item.value.href }}" target="_blank">{{ item.value.href }}</a> </span>
                     }
-                    @else{ <span>{{ item.value.text || 'N/A' }}</span> }
+                    @else{ <span>{{ getValue(item.value.text) || 'N/A' }}</span> }
                 </p>
             </div>
         }

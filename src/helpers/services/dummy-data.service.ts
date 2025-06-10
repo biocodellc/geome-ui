@@ -45,6 +45,30 @@ export class DummyDataService {
     ]
   }
 
+  getSraUploadFields():Array<any>{
+    return [
+      { name: 'Bio Project', formName: 'bioProjectForm' },
+      { name: 'Submission Info', formName: 'subInfoForm' },
+      { name: 'BioSample Type', formName: 'sampleTypeForm' },
+      { name: 'BioSamples', formName: 'bioSamplesForm' },
+      { name: 'SRA Metadata', formName: 'metaDataForm' },
+      { name: 'FIle Upload', formName: 'fileForm' },
+    ];
+  }
+
+  getSraSampleTypes():Array<any>{
+    return [
+      { title: 'Model organism or animal sample', disc: 'Use for multicellular samples or cell lines derived from common laboratory model organisms, e.g., mouse, rat, Drosophila, worm, fish, frog, or large mammals including zoo and farm animals.', value: 'animal' },
+      { title: 'Invertebrate', disc: 'Use for any invertebrate sample.', value: 'invertebrate' },
+      { title: 'Plant', disc: 'Use for any plant sample or cell line.', value: 'plant' },
+      { title: 'Metagenome or environmental sample', disc: 'Use for metagenomic and environmental samples when it is not appropriate or advantageous to use MIxS packages.', value: 'environmental' },
+      { title: 'Virus', disc: 'Use for all virus samples not directly associated with disease. Viral pathogens should be submitted using the Pathogen: Clinical or host-associated pathogen package.', value: 'virus' },
+      { title: 'Microbe', disc: 'Use for bacteria or other unicellular microbes when it is not appropriate or advantageous to use MIxS, Pathogen or Virus packages.', value: 'microbe' },
+      { title: 'Human', disc: "WARNING: Only use for human samples or cell lines that have no privacy concerns. For all studies involving human subjects, it is the submitter's responsibility to ensure that the information supplied protects participant privacy in accordance with all applicable laws, regulations and institutional policies. Make sure to remove any direct personal identifiers from your submission. If there are patient privacy concerns regarding making data fully public, please submit samples and data to NCBI's dbGaP database. dbGaP has controlled access mechanisms and is an appropriate resource for hosting sensitive patient data. For samples isolated from humans use the Pathogen, Microbe or appropriate MIxS package.", value: 'human' },
+      // { title: '', disc: '', value: '' },
+    ];
+  }
+
   getQueryTableCols():any{
     return {
       Event: [

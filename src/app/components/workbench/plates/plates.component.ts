@@ -1,10 +1,10 @@
 import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
 import { ProjectService } from '../../../../helpers/services/project.service';
 import { PlatesService } from '../../../../helpers/services/plates.service';
-import { debounceTime, Subject, take, takeUntil, distinctUntilChanged, map, switchMap, of, catchError } from 'rxjs';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { debounceTime, Subject, take, takeUntil, distinctUntilChanged, map, switchMap, of, catchError, Observable, OperatorFunction, merge, filter } from 'rxjs';
+import { NgbModal, NgbModalRef, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 import { AuthenticationService } from '../../../../helpers/services/authentication.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { QueryService, QueryBuilder } from '../../../../helpers/services/query.service';
 import { DummyDataService } from '../../../../helpers/services/dummy-data.service';
@@ -12,7 +12,6 @@ import { ToastrService } from 'ngx-toastr';
 import { RecordService } from '../../../../helpers/services/record.service';
 
 import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, OperatorFunction } from 'rxjs';
 import { JsonPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { cloneDeep } from 'lodash';
@@ -20,7 +19,7 @@ import { cloneDeep } from 'lodash';
 @Component({
   selector: 'app-plates',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NgbTypeaheadModule, JsonPipe],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgbTypeaheadModule, JsonPipe],
   templateUrl: './plates.component.html',
   styleUrl: './plates.component.scss'
 })
@@ -49,11 +48,46 @@ export class PlatesComponent {
   isProcessing:boolean = false;
   selectedPlate:string = '';
   userPlates:Array<any> = [];
+  metadataColumns:string[] = [];
   activeInput:any;
   matchingData:any[] = [];
   selectPlateData:any[] = [];
   selectedTissue:any;
   hashedSample:any;
+  displayColumn:string = '';
+
+
+  @ViewChild('instance', { static: true }) instance!: NgbTypeahead;
+  @ViewChild('instance2', { static: true }) instance2!: NgbTypeahead;
+
+	focus$ = new Subject<string>();
+	click$ = new Subject<string>();
+  focus2$ = new Subject<string>();
+	click2$ = new Subject<string>();
+
+	searchPlate: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) => {
+		const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
+		const clicksWithClosedPopup$ = this.click$.pipe(filter(() => !this.instance?.isPopupOpen()));
+		const inputFocus$ = this.focus$;
+
+		return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
+			map((term:string) =>
+				(term === '' ? this.userPlates : this.userPlates.filter((v) => v.toLowerCase().indexOf(term.toLowerCase()) > -1)),
+			),
+		);
+	};
+
+  searchColumn: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) => {
+		const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
+		const clicksWithClosedPopup$ = this.click2$.pipe(filter(() => !this.instance2?.isPopupOpen()));
+		const inputFocus$ = this.focus2$;
+
+		return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
+			map((term:string) =>
+				(term === '' ? this.metadataColumns : this.metadataColumns.filter((v) => v.toLowerCase().indexOf(term.toLowerCase()) > -1)),
+			),
+		);
+	};
 
   search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>
     text$.pipe(
@@ -87,7 +121,27 @@ export class PlatesComponent {
       this.hashedSample = this.currentProject.config.entities.some(
         (e:any) => e.conceptAlias === 'Sample' && e.hashed,
       );
+      this.getColumnMetaData();
     })
+  }
+
+  getColumnMetaData(){
+    const tissueEntity = this.currentProject.config.entities.find((e:any) => e.conceptAlias === 'Tissue');
+      const sampleEntity = this.currentProject.config.entities.find((e:any) => e.conceptAlias === 'Sample');
+      this.metadataColumns = Array.from(
+        new Set(
+          tissueEntity.attributes
+            .map((a:any) => a.column)
+            .concat(sampleEntity.attributes.map((a:any) => a.column)),
+        ),
+      );
+      // this.nonBaseTissueAttributes = tissueEntity.attributes.filter(
+      //   a =>
+      //     !['tissueID', 'tissueWell', 'tissuePlate', 'materialSampleID'].includes(
+      //       a.column,
+      //     ),
+      // );
+      this.metadataColumns.sort();
   }
 
   initForm(){
@@ -130,7 +184,7 @@ export class PlatesComponent {
 
   openPlateDataModal(){
     this.modalRef?.close();
-    this.setControlVal('plate', this.getControlVal('plateName'));
+    if(!this.getControlVal('plate')) this.setControlVal('plate', this.getControlVal('plateName'));
     this.setControlVal('plateData', this.selectPlateData.length ? cloneDeep(this.selectPlateData) : this.dataService.getBaseData());
     this.openModal(this.plateDataModal, true);
   }
@@ -159,7 +213,7 @@ export class PlatesComponent {
   }
 
   onPlateChange(event:any){
-    const val = event.target.value;
+    const val = event.item;
     this.getPlateData(val);
   }
 
@@ -236,7 +290,6 @@ export class PlatesComponent {
       next: (res:any)=>{
         res = res?.plate || res;
         this.selectPlateData = Object.keys(res).map(key => ({ key: key, data: res[key] }) );
-        console.log(this.selectPlateData);
         this.setControlVal('plateData', cloneDeep(this.selectPlateData));
         this.dataService.loadingState.next(false);
         this.toastrService.success('Plate updated!');
