@@ -15,7 +15,7 @@
                                 <label for="floatingSelect_plates">Tissue Plate <span>*</span></label>
                             </div> -->
                             <div class="mb-1">
-                                <label for="typeahead-basic">Search for a state:</label>
+                                <label for="typeahead-basic">Search for a plate:</label>
                                 <input id="typeahead-basic" type="text" class="form-control" formControlName="plate" [ngbTypeahead]="searchPlate"(focus)="focus$.next($any($event).target.value)" (click)="click$.next($any($event).target.value)" #instance="ngbTypeahead" popupClass="plate-dropdown" (selectItem)="onPlateChange($event)"/>
                             </div>
                             <span class="text-secondary f-12">Choose a plate to view data.</span>
