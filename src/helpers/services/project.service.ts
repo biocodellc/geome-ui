@@ -160,19 +160,12 @@ export class ProjectService{
 
   loadFromSession(){
     const userVal = this.authService.getUserFromStorage();
-    const projectId = userVal?.projectId || null;
-    if(projectId){
+    let projectId = userVal?.projectId || null;
+    this.activatedRoute.queryParams.pipe(take(1)).subscribe((res:any)=>{
+      if(res && res.projectId) projectId = res.projectId;
       const projectData = this.allProjectSubject.value?.find((item:any) => item.projectId == projectId);
       if(projectData) this.setCurrentProject(projectData, false);
-    }
-    else{
-      this.activatedRoute.queryParams.pipe(take(1)).subscribe((res:any)=>{
-        if(res && res.projectId){
-          const projectData = this.allProjectSubject.value?.filter((item:any) => item.projectId == res.projectId)[0];
-          this.setCurrentProject(projectData, false);
-        }
-      });
-    }
+    })
   }
 
 

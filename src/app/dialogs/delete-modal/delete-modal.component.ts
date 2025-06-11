@@ -12,4 +12,5 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 export class DeleteModalComponent {
   activeModal = inject(NgbActiveModal);
   @Input() public modalFor:string = '';
+  @Input() public modalMsg:string = '';
 }

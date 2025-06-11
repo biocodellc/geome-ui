@@ -51,7 +51,7 @@ export class AuthenticationService {
         accessToken: userData.access_token,
         refreshToken: userData.refresh_token,
         oAuthTimestamp: new Date().getTime(),
-        oAuthExpTimestamp: new Date().getTime() + (4 * 60 * 60 * 1000),
+        oAuthExpTimestamp: new Date().getTime() + (12 * 60 * 60 * 1000),
         ...this.getUserFromStorage()
       }
       localStorage.setItem( this.storageKey, btoa(JSON.stringify(user)) );
