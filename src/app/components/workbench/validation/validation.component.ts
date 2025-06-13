@@ -240,7 +240,6 @@ export class ValidationComponent implements OnDestroy{
       (data.reloadWorkbooks || data.dataSourceMetadata.some((d:any) => d.reload));
 
     if (hasReload) {
-      console.log('=====goes in if=====');
       const reloadSheets:any[] = [];
 
       if (data.reloadWorkbooks) {
@@ -271,7 +270,7 @@ export class ValidationComponent implements OnDestroy{
   handleUpload(uploadData:any) {
     const { projectId } = this.currentProject;
 
-    return this.validateSubmit(
+    this.validateSubmit(
       Object.assign({}, uploadData, { projectId }),
     ).then((data:any) => {
       if (!data) return false;
@@ -307,17 +306,20 @@ export class ValidationComponent implements OnDestroy{
         uploadId: data.id,
         showCancelButton: true,
       });
+      return;
 
-      return this.modalRef?.result.then(success => {
-        if (success) {
-          this.continueUpload(data.id);
-          this.latestExpeditionCode = uploadData.expeditionCode;
-          this.showGenbankDownload = !!uploadData.dataSourceMetadata.find(
-            (m:any) => m.dataType === 'FASTQ',
-          );
-        }
-        return success;
-      });
+      // return this.modalRef?.result.then(success => {
+      //   if (success == 'continue') {
+      //     this.continueUpload(data.id);
+      //   }
+      //   else if(success){
+      //     this.latestExpeditionCode = uploadData.expeditionCode;
+      //     this.showGenbankDownload = !!uploadData.dataSourceMetadata.find(
+      //       (m:any) => m.dataType === 'FASTQ',
+      //     );
+      //   }
+      //   return success;
+      // });
     });
   }
 
@@ -326,10 +328,7 @@ export class ValidationComponent implements OnDestroy{
     this.modalRef.componentInstance.results = this.results;
     this.modalRef.result.then((res:any) =>{
       if(res == 'continue'){
-        this.continuePromise = this.continueUpload(this.results.uploadId);
-        this.results.showContinueButton = false;
-        this.results.showCancelButton = false;
-        this.results.showValidationMessages = false;
+        this.continueUpload(this.results.uploadId);
       }
     })
   }
@@ -344,7 +343,6 @@ export class ValidationComponent implements OnDestroy{
   }
 
   async validateSubmit(data: any): Promise<any> {
-    console.log(data);
     // Clear the results
     this.results = Object.assign({}, defaultResults, {
       showStatus: true,
@@ -360,12 +358,10 @@ export class ValidationComponent implements OnDestroy{
           next: (event: any) => {
             if (event.result) {
               this.results.status = '';
-              console.log('Validation completed:', event.result);
               resolve(event.result);
             } else {
               this.results.status = `Uploading...<br/>${event.status}`;
               this.results.validation.exception = null;
-              console.log('Validation status:', event.status);
             }
           }
         })
@@ -382,16 +378,15 @@ export class ValidationComponent implements OnDestroy{
 
   continueUpload(uploadId:number) {
     this.results.showStatus = true;
-    this.dataService.upload(uploadId)
+    this.dataService.upload(uploadId).pipe(take(1))
       .subscribe({
         next: (data:any) => {
           this.results.successMessage = data.message;
-          this.modalRef?.close(true);
+          this.modalRef?.close();
           this.activeTab = 'results';
         },
         error: (err:any)=>{
-          console.log('failed ->', err);
-          this.modalRef?.close(false);
+          this.modalRef?.close();
           this.results.validation.isValid = false;
           this.results.validation.exception =
           err.error?.message ||
@@ -539,7 +534,6 @@ export class ValidationComponent implements OnDestroy{
             }
           )
           } else {
-            console.log('Going in else condition')
             this.handleNewWorksheet(data);
           }
         });

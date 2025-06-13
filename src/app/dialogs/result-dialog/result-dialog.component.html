@@ -24,7 +24,7 @@
                 <button type="button" class="btn btn-primary custom" (click)="activeModal.close()">OK</button>
             }
             @if(results?.showContinueButton){
-                <button type="button" class="btn btn-primary custom" (click)="activeModal.close(true)">Continue</button>
+                <button type="button" class="btn btn-primary custom" (click)="activeModal.close('continue')">Continue</button>
             }
             @if(results.showCancelButton){
                 <button type="button" class="btn btn-primary custom" (click)="activeModal.close()">Cancel</button>

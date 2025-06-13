@@ -142,14 +142,21 @@ export class ProjectOverviewComponent implements OnDestroy{
   downloadFastq(expeditionCode:string) {
     if(this.downloadingFile) return;
     this.downloadingFile = true;
-    this.dataService.generateSraData(this.projectDetails.projectId, expeditionCode).pipe(take(1)).subscribe((res:any)=>{
-      if (!res || res.status === 204) this.toastr.warning('No resources found')
-      else if(res.url){
-        this.fileService.download(res.url);
-        this.toastr.success('Downloading Data!');
-      }
-      this.downloadingFile = false;
-    })
+    const fileUrl = this.dataService.generateSraData(this.projectDetails.projectId, expeditionCode);
+    if(fileUrl){
+      this.fileService.download(fileUrl);
+      this.toastr.success('Downloading Data!');
+    }
+    this.downloadingFile = false;
+    // this.dataService.generateSraData(this.projectDetails.projectId, expeditionCode)
+    // .pipe(take(1)).subscribe((res:any)=>{
+    //   if (!res || res.status === 204) this.toastr.warning('No resources found')
+    //   else if(res.url){
+    //     this.fileService.download(res.url);
+    //     this.toastr.success('Downloading Data!');
+    //   }
+    //   this.downloadingFile = false;
+    // })
   }
 
   downloadExcel(expeditionCode:string) {

@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { EventEmitter, inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
@@ -57,8 +57,8 @@ export class DataService {
     return this.http.get(`${this.apiUrl}data/export/${projectId}/${expeditionCode}`);
   }
 
-  generateSraData(projectId:number, expeditionCode:string):Observable<any> {
-    return this.http.get(`${this.apiUrl}sra/submissionData?projectId=${projectId}&expeditionCode=${expeditionCode}&format=file`);
+  generateSraData(projectId:number, expeditionCode:string):string {
+    return `${this.apiUrl}sra/submissionData?projectId=${projectId}&expeditionCode=${expeditionCode}&format=file`;
   }
 
   fetchSraData(projectId:number, expeditionCode:string):Observable<any> {
