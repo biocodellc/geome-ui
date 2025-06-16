@@ -6,12 +6,12 @@ import { FormsModule } from '@angular/forms';
 import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 
 const queryTypes:any = {
-  string: ['=', 'like', 'has'],
-  float: ['=', '<', '<=', '>', '>=', 'has'],
-  datetime: ['=', '<', '<=', '>', '>=', 'has'],
-  date: ['=', '<', '<=', '>', '>=', 'has'],
-  integer: ['=', '<', '<=', '>', '>=', 'has'],
-  list: ['=', 'has'],
+  string: ['=', 'like', 'is not empty'],
+  float: ['=', '<', '<=', '>', '>=', 'is not empty'],
+  datetime: ['=', '<', '<=', '>', '>=', 'is not empty'],
+  date: ['=', '<', '<=', '>', '>=', 'is not empty'],
+  integer: ['=', '<', '<=', '>', '>=', 'is not empty'],
+  list: ['=', 'is not empty'],
 };
 
 const booleanValues:Array<any> = [{ value: 'true' }, { value: 'false' }];
@@ -67,20 +67,16 @@ export class FilterButtonComponent implements OnChanges{
     const filter:any = { type: '=', value: '', $$hashKey: this.getUniqueHashId() };
     if (this.conceptAlias === 'Event') {
       filter.column = 'Event.eventID';
-      this.filter.push(filter);
     } else if (this.conceptAlias === 'Sample') {
       filter.column = 'Sample.materialSampleID';
-      this.filter.push(filter);
     } else if (this.conceptAlias === 'Tissue') {
       filter.column = 'Tissue.tissueID';
-      this.filter.push(filter);
     } else if (this.conceptAlias === 'Sample_Photo') {
       filter.column = 'Sample_Photo.photoID';
-      this.filter.push(filter);
     } else if (this.conceptAlias === 'Event_Photo') {
       filter.column = 'Event_Photo.photoID';
-      this.filter.push(filter);
     }
+    this.filter.push(filter);
     this.filterToggle(filter);
   }
 
@@ -90,7 +86,7 @@ export class FilterButtonComponent implements OnChanges{
 
   onTypeChange(chip:any){
     const idx = this.getColumnIdx(chip);
-    if(this.params.filters[idx].type == 'has'){
+    if(this.params.filters[idx].type == 'is not empty'){
       this.params.filters[idx].value = '';
     }
   }

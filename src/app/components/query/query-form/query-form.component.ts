@@ -312,7 +312,7 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
     ).subscribe((res:any)=>{
       this.mapQueryService.clearBounds();
       this.mapQueryService.setQueryMarkers(res.data, entity);
-      const data = { result: res.data, entities: entities, entity: this.entity };
+      const data = { result: res.data, entities: entities, entity: entity };
       this.queryResult.emit(data);
       this.dummyDataService.loadingState.next(false);
       if(data.result.length === 10000)
