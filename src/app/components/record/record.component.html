@@ -85,11 +85,13 @@
                                         <p class="m-0 entity-data">{{item.key}} :</p>
                                         @if(item.value.href && item.value.text){
                                             <span class="text-eclipse">
-                                                <a href="{{ item.value.href }}" target="_blank" class="d-inline-block text-eclipse" placement="top" [ngbTooltip]="item.value.href">{{ item.value.href }}</a>
+                                                <a href="{{ item.value.href }}" target="_blank" class="d-inline-block text-eclipse">{{ item.value.href }}</a>
+                                                <!--  placement="top" [ngbTooltip]="item.value.href" -->
                                             </span>
                                         }
                                         @else if(!item.value.href || !item.value.text){
-                                            <span class="text-eclipse" placement="top" [ngbTooltip]="item.value.text || ''">{{ item.value.text || 'N/A' }}</span>
+                                            <span class="text-eclipse">{{ item.value.text || 'N/A' }}</span>
+                                            <!--  placement="top" [ngbTooltip]="item.value.text || ''" -->
                                         }
                                     </li>
                                 }
@@ -128,7 +130,8 @@
                                     @for(item of auxiliaryRecordDetails(0) | keyvalue; track item.key){
                                         <tr>
                                             <th [ngClass]="{'text-danger': item.key === 'imageProcessingErrors'}">{{ item.key }}:</th>
-                                            <td [ngClass]="{'sequence': item.key === 'sequence'}" placement="top" [ngbTooltip]="item.value?.text || item.value">
+                                            <td [ngClass]="{'sequence': item.key === 'sequence'}">
+                                                 <!-- placement="top" [ngbTooltip]="item.value?.text || item.value" -->
                                                 @if(!item.value?.href){ <span>{{ item.value }} </span> }
                                                 @else if(item.value?.href){
                                                     <span>
@@ -153,7 +156,8 @@
                                     @for(item of auxiliaryRecordDetails(1) | keyvalue; track item.key){
                                         <tr>
                                             <th>{{ item.key }}:</th>
-                                            <td [ngClass]="{'sequence': item.key === 'sequence'}" placement="top" [ngbTooltip]="item.value?.text || item.value">
+                                            <td [ngClass]="{'sequence': item.key === 'sequence'}">
+                                                <!--  placement="top" [ngbTooltip]="item.value?.text || item.value" -->
                                                 @if(!item.value?.href){ <span>{{ item.value }} </span> }
                                                 @else if(item.value?.href){
                                                     <span>
@@ -202,9 +206,9 @@
                         @for(item of childDetails | keyvalue; track item.key) {
                             <div>
                               @for(child of item.value; let i = $index; track i) {
-                                <div class="d-flex flex-wrap">
+                                <div class="d-flex">
                                   <span class="entity fw-semibold">{{ item.key }}</span>
-                                  <ul style="list-style-type: none;" class="d-flex flex-wrap gap-3 mb-2">
+                                  <ul style="list-style-type: none;" class="d-flex flex-wrap column-gap-3 row-gap-1 mb-2">
                                     @for(itemKey of getKeysArr(child); track itemKey) {
                                         <li>
                                           <span class="fw-semibold">{{ itemKey }}:</span>

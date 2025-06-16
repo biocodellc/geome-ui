@@ -187,7 +187,12 @@
                     <tbody>
                         @for (item of displayExpedition; track item) {
                             <tr>
-                                <td>{{item.expeditionTitle}}</td>
+                                <td>
+                                    <div class="d-flex flex-column gap-1">
+                                        <span>{{item.expeditionTitle}}</span>
+                                        <span class="f-12 text-secondary"><b>Owner:</b> {{item.ownerFirstName}} {{item.ownerLastName}}</span>
+                                    </div>
+                                </td>
                                 <td>{{ item.EventCount }}</td>
                                 <td>{{ item.SampleCount }}</td>
                                 <td>{{ item.TissueCount }}</td>

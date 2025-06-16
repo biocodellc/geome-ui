@@ -168,6 +168,29 @@ export class ProjectService{
     })
   }
 
+  sortWithKey(arr:any[], key:string, type:string){
+    let itemsWithKey:any[] = [],
+    itemsWithoutKey:any[] = [];
+    arr.forEach((item:any)=> item[key] ? itemsWithKey.push(item) : itemsWithoutKey.push(item));
+    const sortedArr = itemsWithKey.sort((a:any,b:any) =>{
+      if(type == 'date') return this.sortForDate(a, b);
+      a = a[key];
+      b = b[key];
+      if(a > b) return 1
+      else if( a < b) return -1
+      return 0
+    });
+    return [ ...sortedArr, ...itemsWithoutKey ]
+  }
+
+  sortForDate(a:any, b:any, key:string = 'latestDataModification'): number{
+    a = new Date(a[key]).getTime();
+    b = new Date(b[key]).getTime();
+    if(a < b) return 1
+    else if( a > b) return -1
+    return 0
+  }
+
 
   // Members APIs
 
