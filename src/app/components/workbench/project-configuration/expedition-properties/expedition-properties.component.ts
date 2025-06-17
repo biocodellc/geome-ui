@@ -59,7 +59,6 @@ export class ExpeditionPropertiesComponent implements OnDestroy{
   }
 
   onRequireChange(event: any, idx: number) {
-    console.log([ ...this.metaDataList ], idx);
     const val = event.target.checked;
     this.metaDataList[idx].required = val;
     this.updateConfig();

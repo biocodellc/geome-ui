@@ -154,7 +154,6 @@ export class UploadPhotosComponent implements OnDestroy{
       // })
     .subscribe({
       next: (res:any) => {
-        console.log('====res===',res);
         // this.showResultDialog(res);
       },
       complete: () => {
@@ -167,7 +166,6 @@ export class UploadPhotosComponent implements OnDestroy{
   }
 
   onFileSelect(event:any){
-    console.log('=====event====',event.target.files);
     this.file = event.target.files[0];
     this.setControlVal('fileName', this.file.name);
   }

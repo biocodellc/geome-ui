@@ -21,7 +21,7 @@ import { LightboxModule } from 'ng-gallery/lightbox';
 @Component({
   selector: 'app-record',
   standalone: true,
-  imports: [CommonModule, LoaderComponent, RootRecordComponent, NgbTooltipModule, MapComponent, GalleryModule, NoticeLabelComponent, LightboxModule],
+  imports: [CommonModule, GalleryModule, LightboxModule, LoaderComponent, RootRecordComponent, NgbTooltipModule, MapComponent, NoticeLabelComponent ],
   templateUrl: './record.component.html',
   styleUrl: './record.component.scss'
 })
@@ -54,7 +54,6 @@ export class RecordComponent implements OnDestroy{
   constructor(){
     this.dummyDataService.loadingState.next(true);
     this.activatetRoute.params.pipe(take(1)).subscribe((params:any) => {
-      console.log(params);
       if(params.bcid_1 && params.bcid_2){
         this.params = params;
       }
@@ -70,7 +69,6 @@ export class RecordComponent implements OnDestroy{
     const identifier = `ark:/${this.params.bcid_1}/${this.params.bcid_2}`
     this.recordService.get(identifier).pipe(take(1)).subscribe(
       (res:any) => {
-        console.log(res);
         this.record = res;
         if(this.record?.expedition || this.record?.entityIdentifier) return;
         this.setParentDetail(this.record.parent);
@@ -80,17 +78,16 @@ export class RecordComponent implements OnDestroy{
         this.fetchProject(projectId);
         if (this.recordData.entity === 'Event')
           this.mapData = { data:[this.recordData], lat: 'decimalLatitude', lng: 'decimalLongitude' };
-        if (this.record.expeditionCode) this.getExpeditionId();
+        if (this.recordData.expeditionCode) this.getExpeditionId();
         this.prepareLocalContexts(projectId);
       })
   }
 
   getExpeditionId() {
-    const {expeditionCode, projectId} = this.record;
+    const {expeditionCode, projectId} = this.recordData;
     this.expeditionService.getExpeditionByCode(projectId, expeditionCode).pipe(take(1), takeUntil(this.destroy$))
     .subscribe(
       (res:any) => {
-        console.warn('=====check here=====',res);
         this.expeditionIdentifier = res.identifier;
       },
     );
@@ -145,6 +142,8 @@ export class RecordComponent implements OnDestroy{
     // short-circuit if the project is already loaded
     if (this.currentProject && this.currentProject.projectId === projectId) {
       this.project = { ...this.currentProject };
+      this.setPhotos();
+      this.sortChildren();
       this.dummyDataService.loadingState.next(false);
       return;
     }
@@ -163,39 +162,45 @@ export class RecordComponent implements OnDestroy{
   }
 
   setPhotos() {
-    const photoEntities = this.project.config.entities
-      .filter((e:any) => e.type === 'Photo')
-      .map((e:any) => e.conceptAlias);
-
-    if (!this.record?.children) return;
-
-    const photos = this.record.children.filter(
-      (e:any) => photoEntities.includes(e.entity) && e.processed === 'true',
-    );
-    const hasQualityScore = photos.some((p:any) => p.qualityScore);
-
-    this.photos = photos
-      .sort((a:any, b:any) =>
-        hasQualityScore
-          ? a.qualityScore > b.qualityScore
-          : a.photoID > b.photoID,
-      )
-      .map((photo:any) => (
-        new ImageItem({
-          src: photo.img1024,
-          thumb: photo.img128
-        })
-        // {
-        //   id: photo.photoID,
-        //   title: photo.photoID,
-        //   alt: `${photo.photoID} image`,
-        //   bubbleUrl: photo.img128,
-        //   url: photo.img1024,
-        //   extUrl: photo.originalUrl,
-        // }
-      ));
-    if(this.photos.length >= 2) this.showThumbs = true;
-    else this.showThumbs = false;
+    try{
+      const photoEntities = this.project.config.entities
+        .filter((e:any) => e.type === 'Photo')
+        .map((e:any) => e.conceptAlias);
+  
+      if (!this.record?.children) return;
+  
+      const photos = this.record.children.filter(
+        (e:any) => photoEntities.includes(e.entity) && e.processed === 'true',
+      );
+      const hasQualityScore = photos.some((p:any) => p.qualityScore);
+  
+      this.photos = photos
+        .sort((a:any, b:any) =>
+          hasQualityScore
+            ? a.qualityScore > b.qualityScore
+            : a.photoID > b.photoID,
+        )
+        .map((photo:any) => (
+          new ImageItem({
+            src: photo.img1024,
+            thumb: photo.img128
+          })
+          // {
+          //   id: photo.photoID,
+          //   title: photo.photoID,
+          //   alt: `${photo.photoID} image`,
+          //   bubbleUrl: photo.img128,
+          //   url: photo.img1024,
+          //   extUrl: photo.originalUrl,
+          // }
+        ));
+      if(this.photos.length >= 2) this.showThumbs = true;
+      else this.showThumbs = false;
+      console.warn('====Photos Length====',this.photos.length);
+    }
+    catch(e){
+      console.warn('====Photos Error===',e);
+    }
   }
 
   sortChildren() {
@@ -297,10 +302,9 @@ export class RecordComponent implements OnDestroy{
             }`,
         };
       } else if (key === 'expeditionCode') {
-        const identifier = `ark:/${this.params.bcid_1}/${this.params.bcid_2}`
         acc[key] = {
           text: flatRecord[key],
-          href: `https://n2t.net/${identifier}`,
+          href: `https://n2t.net/${this.expeditionIdentifier}`,
         };
       } else if (['img128', 'img512', 'img1024'].includes(key)) {
         acc[key] = {

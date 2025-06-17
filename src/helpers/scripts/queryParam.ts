@@ -62,7 +62,7 @@ export class QueryParams {
     }
 
     this.filters.forEach(({ column, value, type }) => {
-      if (value || type === 'has') {
+      if (value || type === 'is not empty') {
         builder.add(this.getFilterQuery(column, value, type));
       }
     });
@@ -80,7 +80,7 @@ export class QueryParams {
 
   private getFilterQuery(column: string, value: string | undefined, type: string): string {
     switch (type) {
-      case 'has': return `_exists_:${column}`;
+      case 'is not empty': return `_exists_:${column}`;
       case 'fuzzy': return `${column}:${value}`;
       case 'like': return `${column}::"%${value}%"`;
       case '<': case '<=': case '>': case '>=':

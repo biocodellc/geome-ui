@@ -29,7 +29,6 @@ export class AddEditRuleComponent {
     this.initForm();
     setTimeout(() => {
       if(this.modalData.rule) this.setCurrentRule(this.modalData.rule, true);
-      console.log(this.modalData);
     }, 100);
   }
 
@@ -42,7 +41,6 @@ export class AddEditRuleComponent {
   setCurrentRule(rule:Rule, updateValues?:boolean){
     this.currentRule = new Rule(rule);
     this.ruleMetaDataKeys = this.currentRule?.requiredItems || [];
-    console.log(this.currentRule,'=======',this.ruleMetaDataKeys);
     this.ruleMetaDataKeys.forEach(control => this.addControl(control, ['uniqueAcrossProject', 'caseInsensitive'].includes(control) ? false: ''));
     this.formLoaded = true;
     if(updateValues){
