@@ -168,7 +168,6 @@ export class UploadSraComponent implements AfterViewInit, OnDestroy{
   }
 
   onFileSelect(event:any){
-    console.log('=====event====',event.target.files);
     const file:File | undefined = event.target.files[0];
     this.setControlVal('','file',file);
     this.setControlVal('','fileName',file?.name || '');
@@ -186,14 +185,11 @@ export class UploadSraComponent implements AfterViewInit, OnDestroy{
     }
 
     const payload = this.constructPayload();
-    console.log('====Payload====',payload);
-    return;
 
     this.sraService.upload(payload, this.fileForm['file'].value, false, (progress:any) => {
-      console.log('Progress:', progress);
     }).subscribe({
       next: res => {
-        console.log('Upload complete:', res);
+        // console.log('Upload complete:', res);
       },
       error: err => {
         console.error('Upload failed:', err);
@@ -202,7 +198,6 @@ export class UploadSraComponent implements AfterViewInit, OnDestroy{
   }
 
   async verifyFileNames(){
-    return true
     const fileNamesToVerify = this.metaDataForm['metaData'].value.reduce((names:any[], m:any) => {
       const n = names.concat([m.filename]);
       if (m.filename2) n.push(m.filename2);
@@ -213,7 +208,6 @@ export class UploadSraComponent implements AfterViewInit, OnDestroy{
     try {
       const invalidFilenames = await loadAsync(this.fileForm['file'].value).then((zip:any) => {
         const dateAfter = new Date().getTime();
-        console.log('loaded in ', dateAfter - dateBefore, ' ms');
 
         return fileNamesToVerify.filter((name:string) => !(name in zip.files));
       });

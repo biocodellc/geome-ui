@@ -93,6 +93,7 @@ const SELECT_ENTITIES:any = {
 export class QueryFormComponent implements OnChanges,OnDestroy{
   // Decorators
   @Input() q:any;
+  @Input() params:QueryParams = new QueryParams();
   @Output() queryResult:EventEmitter<any> = new EventEmitter();
   @Output() entitesForDownload:EventEmitter<any> = new EventEmitter();
 
@@ -129,7 +130,6 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
   entity:string = '';
   configNames:Array<any> = [];
   entitiesList: Array<any> = [];
-  params:QueryParams = new QueryParams();
   requestedParams:any;
   selectedTeam: string = '';
   selectedIndividualProject: string = '';
@@ -154,8 +154,7 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['q'] && changes['q'].currentValue){
-      this.requestedParams = changes['q'].currentValue
-      this.params.queryString = this.requestedParams.q;
+      this.requestedParams = changes['q'].currentValue.q
       if(this.requestedParams?.entity) this.entity = this.requestedParams.entity;
       this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any) =>{
         this.currentProj = res;

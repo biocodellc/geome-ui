@@ -60,7 +60,6 @@ export class ProjectSettingsComponent implements OnDestroy{
     this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if(!res) return;
       this.currentProject = res;
-      console.log(this.currentProject);
       this.setFormValues();
       this.getExpeditions();
       this.getMembers();

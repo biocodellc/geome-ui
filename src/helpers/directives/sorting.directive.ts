@@ -19,13 +19,12 @@ export interface SortEvent {
 })
 
 export class SortingDirective {
-  @Input() sortable: string = '';
+	@Input() sortable: string = '';
 	@Input() direction: SortDirection = '';
 	@Output() sort = new EventEmitter<SortEvent>();
 
 	rotate() {
-    this.direction = rotate[this.direction] == '' ? 'asc' : rotate[this.direction];
-    console.log(this.direction, this.sortable);
+		this.direction = rotate[this.direction] == '' ? 'asc' : rotate[this.direction];
 		this.sort.emit({ column: this.sortable, direction: this.direction });
 	}
 

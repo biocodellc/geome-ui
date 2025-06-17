@@ -90,7 +90,6 @@ export class ListDetailsComponent implements OnDestroy{
         }
         else this.extractFromQueryParams();
       }
-      console.log('==========all fields========',this.allFields);
     })
   }
 
@@ -104,7 +103,6 @@ export class ListDetailsComponent implements OnDestroy{
           this.allFields = this.currentList.fields || [];
         }
       }
-      console.log('==========all fields========',this.allFields);
     })
   }
 

@@ -51,7 +51,6 @@ export class TemplateComponent implements OnDestroy{
     this.authService.currentUser.pipe(takeUntil(this.destroy$)).subscribe((res: any) => this.currentUser = res);
     this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
       if (res) {
-        console.log('====current project=====', res);
         this.currentProject = res;
         this.projectConfig = this.currentProject.config;
         this.getWorksheets();
@@ -73,7 +72,6 @@ export class TemplateComponent implements OnDestroy{
     }
     this.selectedWorksheet = this.worksheets[0];
     this.filteredTemplates = [ ...this.filterTemplates() ];
-    console.log('======get worksheet templates====',this.filteredTemplates);
   }
 
   getTemplates(){
@@ -98,17 +96,13 @@ export class TemplateComponent implements OnDestroy{
 
   onTemplateChange(){
     const val = this.selectedTemplate;
-    console.log('=====selected val====',val);
-    console.log('=====all templates====',this.allTemplates);
     let columnData = [];
     const selectedTemplate = this.allTemplates.find((item:any)=> item.name = val );
     if(!selectedTemplate) return;
-    console.log('======selected=temp data====',selectedTemplate);
     this.populateAttributesCache();
     const attributeData = this.currentProject.config.entities.filter((data:any)=> data.worksheet == selectedTemplate.worksheet);
     columnData = attributeData[0].attributes.filter((att:any)=> selectedTemplate.columns.includes(att.column));
     this.selected[selectedTemplate.worksheet] = [ ...columnData ];
-    console.log('=======selected data====', this.selected[selectedTemplate.worksheet]);
   }
 
   populateAttributesCache(){
@@ -209,8 +203,6 @@ export class TemplateComponent implements OnDestroy{
     const val = event.target.value;
     this.selectedWorksheet = val;
     this.filteredTemplates = [ ...this.filterTemplates() ];
-    console.log('=======filtered temp=====',this.filteredTemplates);
-    console.log('=======all temp=====',this.allTemplates);
   }
 
   openSaveModal(content: TemplateRef<any>){
@@ -220,12 +212,10 @@ export class TemplateComponent implements OnDestroy{
 
   saveTemplate(){
     this.isLoading = true;
-    console.log('=======selected vals=====',this.selected[this.selectedWorksheet]);
     const columnNames:any = [];
     const selectedData = this.selected[this.selectedWorksheet];
     if(selectedData && selectedData.length == 0) return;
     selectedData.forEach((item:any)=> columnNames.push(item.column));
-    console.log('=====selected column=====', columnNames);
 
     // Format Data
     const data = new FormData();
@@ -256,7 +246,6 @@ export class TemplateComponent implements OnDestroy{
         break;
       }
     }
-    console.log(payLoad);
     this.templateService.generateTempate(this.currentProject.projectId, payLoad)
     .pipe(take(1), takeUntil(this.destroy$)).subscribe({
       next: (res:any)=>{
