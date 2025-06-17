@@ -57,7 +57,7 @@ export class DashboardComponent implements OnDestroy{
             i.hasSRA = i?.entityStats?.fastqMetadataCount > 0;
             return i;
           })
-          this.userProjects = this.filterUserProjects = res;
+          this.userProjects = this.filterUserProjects = this.projectService.sortWithKey(res, 'latestDataModification', 'date');
         }
       }
     })
