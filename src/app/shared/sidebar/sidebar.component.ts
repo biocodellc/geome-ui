@@ -34,7 +34,6 @@ export class SidebarComponent implements OnDestroy{
     { name: "Generate Template", route: '/workbench/template' , icon: 'fa-file-excel', alwaysVisible: false },
     { name: "Load Data", otherName: 'Validate Data', route: '/workbench/upload' , icon: 'fa-upload', alwaysVisible: false },
     { name: "Upload Photos", route: '/workbench/upload/photos' , icon: 'fa-image', alwaysVisible: false, checkCondition: true },
-    { name: "Fastq SRA Upload", route: '/workbench/upload/sra' , icon: 'fa-image', alwaysVisible: false, checkCondition: true },
     { name: "Plate Viewer", route: '/workbench/plates' , icon: 'fa-table-cells', alwaysVisible: false, checkCondition: true },
     { name: "Team Overview", route: '/workbench/team-overview' , icon: 'fa-clipboard-user' , alwaysVisible: false, checkCondition: true },
     { name: "Project Overview", route: '/workbench/project-overview' , icon: 'fa-laptop' , alwaysVisible: true},
@@ -49,7 +48,6 @@ export class SidebarComponent implements OnDestroy{
 
   permissionArr:any = {
     "Upload Photos" : false,
-    "Fastq SRA Upload" : false ,
     "Plate Viewer" : false ,
     "Team Overview" : false
   };
@@ -85,10 +83,6 @@ export class SidebarComponent implements OnDestroy{
         return  this.currentUser &&
                 this.currentProject &&
                 this.currentProject.config.entities.some((e:any) => e.type === 'Photo')
-      case 'Fastq SRA Upload':
-        return  this.currentUser &&
-                this.currentProject &&
-                this.currentProject.config.entities.some((e:any) => e.type === 'Fastq')
       case 'Plate Viewer':
         return  this.currentProject &&
                 this.currentProject.config.entities.some((e:any) => e.conceptAlias === 'Tissue' && e.uniqueKey === 'tissueID')
