@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, inject, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { firstValueFrom, Subject, take, takeUntil } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Subject, take, takeUntil } from 'rxjs';
 import { RecordService } from '../../../helpers/services/record.service';
 import { LoaderComponent } from '../../shared/loader/loader.component';
 import { DummyDataService } from '../../../helpers/services/dummy-data.service';
@@ -10,7 +10,7 @@ import { ProjectService } from '../../../helpers/services/project.service';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { MapComponent } from '../query/map/map.component';
 import { mainRecordDetails, parentRecordDetails, childRecordDetails } from '../../../helpers/scripts/recordDetails';
-import { GalleryModule, GalleryItem, ImageItem } from 'ng-gallery';
+import { GalleryModule, GalleryItem, ImageItem, Gallery, GalleryRef } from 'ng-gallery';
 import { flatten } from '../../../helpers/scripts/flatten';
 import compareValues from '../../../helpers/scripts/compareVal';
 import { ExpeditionService } from '../../../helpers/services/expedition.service';
@@ -25,8 +25,9 @@ import { LightboxModule } from 'ng-gallery/lightbox';
   templateUrl: './record.component.html',
   styleUrl: './record.component.scss'
 })
-export class RecordComponent implements OnDestroy{
+export class RecordComponent implements AfterViewInit, OnDestroy{
   // Injectors
+  private gallery = inject(Gallery);
   private recordService = inject(RecordService);
   private activatetRoute = inject(ActivatedRoute);
   private projectService = inject(ProjectService);
@@ -44,7 +45,8 @@ export class RecordComponent implements OnDestroy{
   localContextsPresent:boolean = false;
   detailCacheNumCols:number = 0;
   detailCache:any = {};
-  photos:GalleryItem[] = [];
+  galleryRef!:GalleryRef;
+  photos$:BehaviorSubject<GalleryItem[]> = new BehaviorSubject<GalleryItem[]>([]);
   parentDetail!:{ [key: string]: RecordValue };
   childDetails!: { [key: string]: { [key: string]: RecordValue }[] };
   expeditionIdentifier: any;
@@ -62,6 +64,17 @@ export class RecordComponent implements OnDestroy{
     this.projectService.getAllProjectsValue().pipe(takeUntil(this.destroy$)).subscribe((res:any) => {
       if(!res) return;
       if(this.params) this.getRecordData();
+    })
+  }
+
+  ngAfterViewInit(): void {
+    this.photos$.pipe(take(2), takeUntil(this.destroy$)).subscribe((photos:GalleryItem[]) => {
+      if(!photos.length) return;
+      setTimeout(() => {
+        this.galleryRef = this.gallery.ref('entityGallery');
+        this.galleryRef.setConfig({ loadingStrategy: 'lazy' });
+        this.galleryRef.load(photos);
+      }, 500);
     })
   }
 
@@ -174,7 +187,7 @@ export class RecordComponent implements OnDestroy{
       );
       const hasQualityScore = photos.some((p:any) => p.qualityScore);
   
-      this.photos = photos
+      const photosArr = photos
         .sort((a:any, b:any) =>
           hasQualityScore
             ? a.qualityScore > b.qualityScore
@@ -185,18 +198,12 @@ export class RecordComponent implements OnDestroy{
             src: photo.img1024,
             thumb: photo.img128
           })
-          // {
-          //   id: photo.photoID,
-          //   title: photo.photoID,
-          //   alt: `${photo.photoID} image`,
-          //   bubbleUrl: photo.img128,
-          //   url: photo.img1024,
-          //   extUrl: photo.originalUrl,
-          // }
         ));
-      if(this.photos.length >= 2) this.showThumbs = true;
+      
+        this.photos$.next(photosArr);
+      if(this.photos$.value.length >= 2) this.showThumbs = true;
       else this.showThumbs = false;
-      console.warn('====Photos Length====',this.photos.length);
+      console.warn('====Photos Length====',this.photos$.value.length);
     }
     catch(e){
       console.warn('====Photos Error===',e);
