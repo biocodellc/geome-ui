@@ -7,6 +7,6 @@ export const environment = {
     fimsClientId: 'Rng726w_hMKnvKSH2fUy',
     authTimeout: 1000 * 60 * 60 * 4, // 4 hrs
     analyticsId: '',
-    documentationUrl: '/docs/helpDocumentationv3.pdf',
+    documentationUrl: '/docs/helpDocumentationv4.pdf',
     sraPageUrl: '/docs/sra-step-by-step-instructions.pdf'
 };
