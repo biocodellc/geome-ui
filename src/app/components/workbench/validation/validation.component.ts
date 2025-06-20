@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component, inject, OnDestroy, ViewChild } from '@ang
 import { RouterLink } from '@angular/router';
 import { AuthenticationService } from '../../../../helpers/services/authentication.service';
 import { ProjectService } from '../../../../helpers/services/project.service';
-import { firstValueFrom, map, Observable, Subject, take, takeUntil } from 'rxjs';
+import { firstValueFrom, lastValueFrom, map, Observable, Subject, take, takeUntil } from 'rxjs';
 import { ExpeditionService } from '../../../../helpers/services/expedition.service';
 import { NgbModal, NgbModalRef, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { UploadComponent } from '../../../shared/upload/upload.component';
@@ -112,14 +112,21 @@ export class ValidationComponent implements OnDestroy{
     })
   }
 
-  getAllExpeditions(){
-    this.expeditionService.getAllExpeditions(this.currentProject.projectId)
-    .pipe(take(1), takeUntil(this.destroy$)).subscribe({
-      next: (res:any)=>{
-        if(res) this.allExpeditions = res;
+  async getAllExpeditions(){
+    if(this.currentUser){
+      this.projectService.userProjectSubject.pipe(takeUntil(this.destroy$))
+      .subscribe(async(userProjects:any) => {
+        const isUserMember = userProjects?.find((item:any) => item.projectId == this.currentProject.projectId);
+        const response = await lastValueFrom(this.expeditionService.getExpeditionsForUser(this.currentProject.projectId, isUserMember ? true : false));
+        if(response) this.allExpeditions = response;
         this.dummyDataService.loadingState.next(false);
-      }
-    })
+      })
+    }
+    else{
+      const response = await lastValueFrom(this.expeditionService.getAllExpeditions(this.currentProject.projectId));
+      if(response) this.allExpeditions = response;
+      this.dummyDataService.loadingState.next(false);
+    }
   }
 
   navChange(event:any){
