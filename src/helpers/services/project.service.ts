@@ -168,14 +168,14 @@ export class ProjectService{
     })
   }
 
-  sortWithKey(arr:any[], key:string, type:string){
+  sortWithKey(arr:any[], key:string, type?:string){
     let itemsWithKey:any[] = [],
     itemsWithoutKey:any[] = [];
     arr.forEach((item:any)=> item[key] ? itemsWithKey.push(item) : itemsWithoutKey.push(item));
     const sortedArr = itemsWithKey.sort((a:any,b:any) =>{
       if(type == 'date') return this.sortForDate(a, b);
-      a = a[key];
-      b = b[key];
+      a = typeof a[key] == 'string' ? a[key].toLowerCase() : a[key];
+      b = typeof b[key] == 'string' ? b[key].toLowerCase() : b[key];
       if(a > b) return 1
       else if( a < b) return -1
       return 0

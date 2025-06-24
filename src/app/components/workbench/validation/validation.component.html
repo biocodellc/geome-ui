@@ -64,10 +64,10 @@
                                         <div class="input-section">
                                             <label class="input-label fastq-label">Expedition Name</label>
                                             <div class="input-med-sec">
-                                                <select class="form-select" (change)="onExpeditionChange($event)">
+                                                <select class="form-select" [(ngModel)]="expeditionCode" name="expeditionCode">
                                                     <option value="" selected>-- Select an Expedition --</option>
                                                     @if(multiExpeditionAllowed){
-                                                        <option value="MULTI_EXPEDITION" selected>-- Multiple Expeditions --</option>
+                                                        <option value="MULTI_EXPEDITION">-- Multiple Expeditions --</option>
                                                     }
                                                     @for(expedition of allExpeditions; track expedition){
                                                         <option [value]="expedition.expeditionCode">{{expedition.expeditionTitle}}</option>
@@ -95,7 +95,7 @@
                     <button ngbNavLink>Results</button>
                     <ng-template ngbNavContent>
                         <div class="p-3">
-                            <p>{{results?.status || results?.successMessage || ''}}</p>
+                            <p>{{results?.status || results?.successMessage || results?.validation?.exception}}</p>
                             <app-result-validations [results]="results" />
                         </div>
                     </ng-template>
