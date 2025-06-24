@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, inject, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, inject, OnDestroy, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthenticationService } from '../../../../helpers/services/authentication.service';
 import { ProjectService } from '../../../../helpers/services/project.service';
@@ -51,7 +51,7 @@ const defaultResults = {
   templateUrl: './validation.component.html',
   styleUrl: './validation.component.scss'
 })
-export class ValidationComponent implements OnDestroy{
+export class ValidationComponent implements AfterViewInit, OnDestroy{
   // Injectors
   fb = inject(FormBuilder);
   toastr = inject(ToastrService);
@@ -74,7 +74,7 @@ export class ValidationComponent implements OnDestroy{
   activeTab:string = 'load';
   fastqMetadataForm!:FormGroup;
   allDataTypes:Array<any> = [];
-  worksheetData:Array<any> = [{ worksheet:'Workbook', file: undefined, reload: false }];
+  worksheetData:Array<any> = [];
   fastaData:FormGroup = this.fb.group({ fastaArr: this.fb.array([]) });
   allExpeditions:Array<any> = [];
   userExpeditions:Array<any> = [];
@@ -99,6 +99,10 @@ export class ValidationComponent implements OnDestroy{
     })
   }
 
+  ngAfterViewInit(): void {
+    this.onCheckboxChange({ target: { checked : true }}, 'Workbook', false);
+  }
+
   initFastqForm(){
     this.fastqMetadataForm = this.fb.group({
       file: ['', Validators.required],
@@ -118,13 +122,13 @@ export class ValidationComponent implements OnDestroy{
       .subscribe(async(userProjects:any) => {
         const isUserMember = userProjects?.find((item:any) => item.projectId == this.currentProject.projectId);
         const response = await lastValueFrom(this.expeditionService.getExpeditionsForUser(this.currentProject.projectId, isUserMember ? true : false));
-        if(response) this.allExpeditions = response;
+        if(response) this.allExpeditions = this.projectService.sortWithKey(response, 'expeditionTitle');
         this.dummyDataService.loadingState.next(false);
       })
     }
     else{
       const response = await lastValueFrom(this.expeditionService.getAllExpeditions(this.currentProject.projectId));
-      if(response) this.allExpeditions = response;
+      if(response) this.allExpeditions = this.projectService.sortWithKey(response, 'expeditionTitle');
       this.dummyDataService.loadingState.next(false);
     }
   }
@@ -173,7 +177,7 @@ export class ValidationComponent implements OnDestroy{
     if(isChecked) this.worksheetData.forEach(item => item.reload = false);
   }
 
-  onCheckboxChange(event:any, type:string){
+  onCheckboxChange(event:any, type:string, addType:boolean = true){
     const worksheets = ["Samples", "Events", "Tissues", "sample_photos", "event_photos"];
     const isChecked = event.target.checked;
     if(!isChecked){
@@ -183,7 +187,7 @@ export class ValidationComponent implements OnDestroy{
     }
     else if(type == 'Workbook'){
       this.checkedTypes = this.checkedTypes.filter((data:any)=> !worksheets.includes(data));
-      this.checkedTypes.push(type);
+      if(addType)this.checkedTypes.push(type);
       worksheets.forEach(worksheet => this.removeWorkSheetData(worksheet));
       this.worksheetData.push({ worksheet:'Workbook', file: undefined, reload: false });
     }
@@ -194,6 +198,16 @@ export class ValidationComponent implements OnDestroy{
       this.worksheetData.push({ worksheet:type, file: undefined, reload: false });
     }
     else this.checkedTypes.push(type);
+
+    const isFastq = this.checkedTypes.includes('Fastq');
+    const isFasta = this.checkedTypes.includes('Fasta');
+    this.multiExpeditionAllowed = !(isFastq || isFasta);
+
+    if (!this.showExpeditions && (isFastq || isFasta)) this.showExpeditions = true;
+    if (!this.multiExpeditionAllowed && this.expeditionCode === MULTI_EXPEDITION) {
+      this.expeditionCode = '';
+      this.toastr.error('Multi expedition uploads are not supported for Fasta or Fastq dataTypes');
+    }
   }
 
   removeWorkSheetData(worksheet:string){
@@ -202,10 +216,10 @@ export class ValidationComponent implements OnDestroy{
       this.worksheetData = this.worksheetData.slice(0, idx).concat(this.worksheetData.slice(idx + 1));
   }
 
-  onExpeditionChange(event:any){
-    const val = event.target.value;
-    this.expeditionCode = val;
-  }
+  // onExpeditionChange(event:any){
+  //   const val = event.target.value;
+  //   this.expeditionCode = val;
+  // }
 
   async dataFormattingAndErrorCheck() {
     // Show validation errors
@@ -424,8 +438,8 @@ export class ValidationComponent implements OnDestroy{
   parsing:boolean = false;
   coordinateWorksheets:Array<any>= []
   expeditionCodes:Set<any> = new Set();
-  expeditionCode:any;
-  multiExpeditionAllowed:boolean = false;
+  expeditionCode:any = '';
+  multiExpeditionAllowed:boolean = true;
   showExpeditions:boolean = false;
   uploading:boolean = false;
   latestExpeditionCode:string = ''
@@ -615,25 +629,26 @@ export class ValidationComponent implements OnDestroy{
         let parsedEntireBook = true;
         if (worksheets.length > 0) {
           const hasExpeditionCodeSheet = worksheets.some(sheet => wb.Sheets[sheet]?.headers.includes('expeditionCode'));
-  
           if (hasExpeditionCodeSheet) {
             parsedEntireBook = rowCount <= EXCEL_MAX_ROWS_TO_PARSE;
             const opts = parsedEntireBook ? {} : { sheetRows: Math.floor(EXCEL_MAX_ROWS_TO_PARSE / worksheets.length) };
-            fullWorkbookPromise = fullWorkbookPromise || this.excelService.workbookToJson(file, opts);
+            fullWorkbookPromise = this.excelService.workbookToJson(file, opts);
   
-            const fullWorkbook:any = await fullWorkbookPromise;
+            const fullWorkbook:any = await lastValueFrom(fullWorkbookPromise);
             if (!timedOut && (!this.uploading || this.allDataTypes.every(d => d.file))) {
               for (const sheet of worksheets) {
                 const records = fullWorkbook[sheet] || [];
                 records.forEach((record:any) => record.expeditionCode && expeditionCodes.add(record.expeditionCode));
               }
             }
+            return Promise.resolve(parsedEntireBook);
           }
         } else {
           showError(`Failed to find one of the following worksheets: ${this.currentProject.config.worksheets().join(', ')}`);
+          return Promise.resolve(false);
         }
   
-        return Promise.resolve(parsedEntireBook);
+        return Promise.resolve(false);
       };
   
       const timeout = setTimeout(() => {
