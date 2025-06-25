@@ -14,7 +14,7 @@
                     <p class="proj-1">Project owner</p>
                 </div>
                 <div class="col-lg-10">
-                    <p class="proj-2"> {{projectDetails?.user.firstName}} {{projectDetails?.user.lastName}} [ {{projectDetails?.user.sraUsername}} ]</p>
+                    <p class="proj-2"><a [href]="'mailto:' + projectDetails?.user.email" target="_blank">{{projectDetails?.user.firstName}} {{projectDetails?.user.lastName}}</a>  {{projectDetails?.user.sraUsername ? '[' + projectDetails?.user.sraUsername + ']' : '' }}</p>
                 </div>
             </div>
 
@@ -150,7 +150,7 @@
                     <div class="col-lg-10">
                         <p class="proj-2">
                             <span class="biocode-btn cursor-pointer" [routerLink]="['/workbench','team-overview']">{{projectDetails?.projectConfiguration.name}} team</span>
-                            <span class="px-2"><a href="mailto:{{projectDetails?.projectConfiguration.user.email}}">{{projectDetails?.projectConfiguration.user.email}}</a></span>
+                            <span class="px-2"><a [href]="'mailto:' + projectDetails?.projectConfiguration.user.email" target="_blank">{{projectDetails?.projectConfiguration.user.email}}</a></span>
                             <button class="btn" placement="top" ngbPopover="This team workspace specifies all validation rules and terms for this project. If you have any questions or suggestions, please contact the team owner."><i class="fas fa-circle-question"></i></button>
                         </p>
                     </div>
@@ -190,7 +190,7 @@
                                 <td>
                                     <div class="d-flex flex-column gap-1">
                                         <span>{{item.expeditionTitle}}</span>
-                                        <span class="f-12 text-secondary"><b>Owner:</b> {{item.ownerFirstName}} {{item.ownerLastName}} {{item.ownerUsername ? '[' + item.ownerUsername + ']' : '' }}</span>
+                                        <span class="f-12 text-secondary"><b>Owner:</b><a [href]="'mailto:' + projectDetails?.user.email" target="_blank"> {{item.ownerFirstName}} {{item.ownerLastName}}</a> {{item.ownerUsername ? '[' + item.ownerUsername + ']' : '' }}</span>
                                     </div>
                                 </td>
                                 <td>{{ item.EventCount }}</td>

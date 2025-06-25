@@ -52,6 +52,7 @@ export class ExpeditionsComponent implements OnDestroy{
       next: (res:any)=>{
         this.isLoading = false;
         if(res) this.projectExpeditions = res.filter((exp:any) => exp.user.username == this.currentUser.username)
+          console.log(this.projectExpeditions,)
       },
       error: (err:any)=> this.isLoading = false
     })

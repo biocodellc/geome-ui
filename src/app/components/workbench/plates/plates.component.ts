@@ -166,6 +166,7 @@ export class PlatesComponent {
       next: (res:any)=>{
         this.selectPlateData = Object.keys(res).map(key => ({ key: key, data: res[key] }) );
         this.setControlVal('plateData', cloneDeep(this.selectPlateData));
+        console.log(this.selectPlateData,'data===============')
         this.openModal(this.plateDataModal, true);
       },
       error: ()=>{}
