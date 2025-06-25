@@ -361,7 +361,8 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
     this.localContextsPresent = false;
     this.projectService.getProject(projectId).pipe(take(1), takeUntil(this.destroy$))
       .subscribe((project:any) => {
-        if (project.localcontextsId) {
+        console.log(project,'new prject')
+        // if (project.localcontextsId) {
           this.localContextsPresent = true;
           var lcUrl = 'https://localcontextshub.org/api/v1/projects/' + project.localcontextsId + '/?format=json';
 		  // This is a temporary storage directory for localcontexts projects that have been created in GEOME
@@ -444,7 +445,7 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
             }
           };
           xmlHttp.send(null);
-        }
+        // }
       });
   }
 

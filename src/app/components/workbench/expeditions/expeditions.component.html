@@ -38,7 +38,7 @@
                         <div class="col-12 col-md-6">
                             <p class="m-0"><span class="fw-semibold">Identifier:</span> http://n2t.net/{{item.identifier}}</p>
                             <p class="mt-2 mb-0"><span class="fw-semibold">Visibility:</span> {{item.visibility}}</p>
-                            <p class="mt-2 mb-0"><span class="fw-semibold">Owner:</span> {{item.user.username}} ({{item.user.email}})</p>
+                            <p class="mt-2 mb-0"><span class="fw-semibold">Owner:</span> {{item?.user?.username}} (<a [href]="'mailto:' + item?.user?.email" target="_blank">{{item.user.email}}</a>)</p>
                         </div>
                     </div>
                 }

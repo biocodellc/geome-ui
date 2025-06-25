@@ -35,7 +35,7 @@
         
                 <div class="main-details p-3 d-flex flex-wrap justify-content-between" >
                     @if(recordData?.photoID && recordData?.processed !== 'false' && !invalidPhoto){
-                        <div class="card col-12 col-md-6 col-lg-4">
+                        <div class="card col-12 col-md-6 col-lg-6 pl-10">
                             @if(recordData?.img1024){
                                 <a href="{{ recordData?.img1024 }}" class="card-img-top" ><img [src]="recordData?.img512" /></a>
                             }
@@ -43,7 +43,7 @@
                     }
         
                     @if(recordData?.entity){
-                        <div class="col-12 col-md-6 col-lg-4">
+                        <div class="col-12 col-md-6 col-lg-6 pl-10">
 
                             <!-- <table class="table">
                                 <tbody>
@@ -100,24 +100,24 @@
                     }
         
                     @if((photos$ | async)?.length){
-                        <div class="d-flex col-12 col-md-6 col-lg-4">
+                        <div class="d-flex col-12 col-md-6 col-lg-6 pl-10">
                             <gallery id="entityGallery" thumbPosition="bottom" [thumb]="showThumbs" gallerize  class="w-100"></gallery>
                         </div>
                     }
         
-                    @if(recordData.entity === 'Event'){
-                        <div class="map-container col-12 col-md-6 col-lg-4">
+                    <!-- @if(recordData.entity === 'Event'){ -->
+                        <div class="map-container col-12 col-md-6 col-lg-6 pl-10">
                             <app-map class="record-map" [showExtras]="false" [mapData]="mapData" [height]="'359px'"></app-map>
                         </div>
-                    }
+                    <!-- } -->
         
-                    @if(localContextsPresent){
-                        <div class="col-12 col-md-6 col-lg-4">
+                    <!-- @if(localContextsPresent){ -->
+                        <div class="col-12 col-md-6 col-lg-6 pl-10">
                             <div id=localContextsLabels style="height:100%; overflow:auto; max-height: 300px;">
                                 <div id="localContextsHeader"><i>Loading Local Contexts Data...</i></div>
                             </div>
                         </div>
-                    }
+                    <!-- } -->
                 </div>
 
                 @if(auxiliaryRecordDetails(0)){
