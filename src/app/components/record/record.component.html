@@ -34,13 +34,13 @@
                 </div>
         
                 <div class="main-details p-3 d-flex flex-wrap justify-content-between" >
-                    <!-- @if(recordData?.photoID && recordData?.processed !== 'false' && !invalidPhoto){ -->
+                    @if(recordData?.photoID && recordData?.processed !== 'false' && !invalidPhoto){
                         <div class="card col-12 col-md-6 col-lg-6 pl-10">
-                            <!-- @if(recordData?.img1024){ -->
+                            @if(recordData?.img1024){
                                 <a href="{{ recordData?.img1024 }}" class="card-img-top" ><img [src]="recordData?.img512" /></a>
-                            <!-- } -->
+                            }
                         </div>
-                    <!-- } -->
+                    }
         
                     @if(recordData?.entity){
                         <div class="col-12 col-md-6 col-lg-6 pl-10">
