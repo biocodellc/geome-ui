@@ -5,7 +5,7 @@
                 <div class="flower-section">
                     <h3 class="flow-hed">{{currentProject?.projectTitle}}</h3>
                     <p>{{currentProject?.description}}</p>
-                    <p><strong>Project Owner:</strong> {{currentProject?.user.username}}</p>
+                    <p><strong>Project Owner:</strong><a [href]="'mailto:' + currentProject?.user.email" target="_blank"> {{currentProject?.user.username}}</a></p>
                 </div>
             </div>
         </div>
@@ -267,8 +267,8 @@
                                                         <div ngbDropdownItem class="border-bottom cursor-pointer" (click)="onUserSelect(user)">
                                                             <span class="f-14">{{user.username}}</span>
                                                             <div class="d-flex gap-2 f-14">
-                                                                <p><span class="fw-semibold">email: </span> {{user.email}}</p>
-                                                                <p><span class="fw-semibold">name: </span> {{user.sraFirstName}}  {{user.sraLastName}}</p>
+                                                                <p><span class="fw-semibold">email: </span><a [href]="'mailto:' + user.email" target="_blank"> {{user.email}}</a></p>
+                                                                <p><span class="fw-semibold">name: </span> <a [href]="'mailto:' + user.email" target="_blank">{{user.sraFirstName}}  {{user.sraLastName}}</a></p>
                                                                 <p><span class="fw-semibold">institution: </span> {{user.institution}}</p>
                                                             </div>
                                                         </div>

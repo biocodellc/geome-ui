@@ -1,51 +1,51 @@
 @if(dummyDataService.loadingState | async){
-    <app-loader />
+<app-loader />
 }
 <section class="records py-4">
     <div class="container p-3 pt-4 mb-3 container-bg shadow">
         @if(record?.expedition || record?.entityIdentifier){
             <app-root-record [record]="record"/>
         }
-        
+
         @if(recordData?.entity && !(dummyDataService.loadingState | async)){
-            <div class="record-detail">
-                @if(recordData?.photoID){
-                    <div class="photo-error-labels">
-                        @if(invalidPhoto){
-                            <div class="alert alert-danger text-center text-large" role="alert">
-                                <i class="fa fa-exclamation-circle"></i>
-                                An error occurred while processing this image.
-                            </div>
-                        }
-                        @if(recordData?.processed == false){
-                            <div class="alert alert-warning text-center text-large" role="alert">
-                                <i class="fa fa-exclamation-circle"></i>
-                                Image is processing.
-                            </div>
-                        }
-                    </div>
+        <div class="record-detail">
+            @if(recordData?.photoID){
+            <div class="photo-error-labels">
+                @if(invalidPhoto){
+                <div class="alert alert-danger text-center text-large" role="alert">
+                    <i class="fa fa-exclamation-circle"></i>
+                    An error occurred while processing this image.
+                </div>
                 }
-        
-                <div class="d-flex align-items-center gap-3">
-                    <h3>{{ recordData.entity }} ({{ getIdentifier() }})</h3>
-                    @if(recordData.traditionalKnowledgeNotice === 'TRUE'){
-                        <app-notice-label />
+                @if(recordData?.processed == false){
+                <div class="alert alert-warning text-center text-large" role="alert">
+                    <i class="fa fa-exclamation-circle"></i>
+                    Image is processing.
+                </div>
+                }
+            </div>
+            }
+
+            <div class="d-flex align-items-center gap-3">
+                <h3>{{ recordData.entity }} ({{ getIdentifier() }})</h3>
+                @if(recordData.traditionalKnowledgeNotice === 'TRUE'){
+                <app-notice-label />
+                }
+            </div>
+
+            <div class="main-details p-3 d-flex flex-wrap justify-content-between">
+                @if(recordData?.photoID && recordData?.processed !== 'false' && !invalidPhoto){
+                <div class="card col-12 col-md-6 col-lg-6 pl-10">
+                    @if(recordData?.img1024){
+                    <a href="{{ recordData?.img1024 }}" class="card-img-top" ><img [src]="recordData?.img512" /></a>
                     }
                 </div>
-        
-                <div class="main-details p-3 d-flex flex-wrap justify-content-between" >
-                    @if(recordData?.photoID && recordData?.processed !== 'false' && !invalidPhoto){
-                        <div class="card col-12 col-md-6 col-lg-6 pl-10">
-                            @if(recordData?.img1024){
-                                <a href="{{ recordData?.img1024 }}" class="card-img-top" ><img [src]="recordData?.img512" /></a>
-                            }
-                        </div>
-                    }
-        
-                    @if(recordData?.entity){
-                        <div class="col-12 col-md-6 col-lg-6 pl-10">
+                }
 
-                            <!-- <table class="table">
+                @if(recordData?.entity){
+                <div class="col-12 col-md-6 pl-10" [ngClass]="localContextsPresent ? 'col-lg-5' : 'col-lg-6'">
+
+                    <!-- <table class="table">
                                 <tbody>
                                     @if(invalidPhoto && recordData?.originalUrl.includes('base64')){
                                         <tr>
@@ -73,158 +73,181 @@
                                 </tbody>
                             </table> -->
 
-                            <ul class="list-group">
-                                @if(invalidPhoto && recordData?.originalUrl.includes('base64')){
-                                    <li class="list-group-item d-flex">
-                                        <p class="m-0 entity-data">Error Detail:</p>
-                                        <span class="text-eclipse">GEOME does not support base64 encoded images.</span>
-                                    </li>
-                                }
-                                @for(item of mainRecordDetails() | keyvalue; track item.key){
-                                    <li class="list-group-item d-flex">
-                                        <p class="m-0 entity-data">{{item.key}} :</p>
-                                        @if(item.value.href && item.value.text){
-                                            <span class="text-eclipse">
+                    <ul class="list-group">
+                        @if(invalidPhoto && recordData?.originalUrl.includes('base64')){
+                        <li class="list-group-item d-flex">
+                            <p class="m-0 entity-data">Error Detail:</p>
+                            <span class="text-eclipse">GEOME does not support base64 encoded images.</span>
+                        </li>
+                        }
+                        @for(item of mainRecordDetails() | keyvalue; track item.key){
+                        <li class="list-group-item d-flex">
+                            <p class="m-0 entity-data">{{item.key}} :</p>
+                            @if(item.value.href && item.value.text){
+                            <span class="text-eclipse">
                                                 <a href="{{ item.value.href }}" target="_blank" class="d-inline-block text-eclipse">{{ item.value.href }}</a>
-                                                <!--  placement="top" [ngbTooltip]="item.value.href" -->
-                                            </span>
-                                        }
-                                        @else if(!item.value.href || !item.value.text){
-                                            <span class="text-eclipse">{{ item.value.text || 'N/A' }}</span>
-                                            <!--  placement="top" [ngbTooltip]="item.value.text || ''" -->
-                                        }
-                                    </li>
-                                }
-                            </ul>
-                        </div>
-                    }
-        
-                    @if((photos$ | async)?.length){
-                        <div class="d-flex col-12 col-md-6 col-lg-6 pl-10">
-                            <gallery id="entityGallery" thumbPosition="bottom" [thumb]="showThumbs" gallerize  class="w-100"></gallery>
-                        </div>
-                    }
-        
-                    <!-- @if(recordData.entity === 'Event'){ -->
-                        <div class="map-container col-12 col-md-6 col-lg-6 pl-10">
-                            <app-map class="record-map" [showExtras]="false" [mapData]="mapData" [height]="'359px'"></app-map>
-                        </div>
-                    <!-- } -->
-        
-                    <!-- @if(localContextsPresent){ -->
+                                <!--  placement="top" [ngbTooltip]="item.value.href" -->
+                            </span>
+                            }
+                            @else if(!item.value.href || !item.value.text){
+                            <span class="text-eclipse">{{ item.value.text || 'N/A' }}</span>
+                            <!--  placement="top" [ngbTooltip]="item.value.text || ''" -->
+                            }
+                        </li>
+                        }
+                    </ul>
+                </div>
+                }
+
+                @if((photos$ | async)?.length){
+                <div class="d-flex col-12 col-md-6 pl-10" [ngClass]="localContextsPresent ? 'col-lg-5' : 'col-lg-6'">
+                    <gallery id="entityGallery" thumbPosition="bottom" [thumb]="showThumbs" gallerize class="w-100">
+                    </gallery>
+                </div>
+                }
+
+                @if(recordData.entity === 'Event'){
+                <div class="map-container col-12 col-md-6 col-lg-6 pl-10">
+                    <app-map class="record-map" [showExtras]="false" [mapData]="mapData" [height]="'359px'"></app-map>
+                </div>
+                }
+
+                <!-- @if(localContextsPresent){
                         <div class="col-12 col-md-6 col-lg-6 pl-10">
                             <div id=localContextsLabels style="height:100%; overflow:auto; max-height: 300px;">
                                 <div id="localContextsHeader"><i>Loading Local Contexts Data...</i></div>
                             </div>
                         </div>
-                    <!-- } -->
+                    } -->
+                        
+                @if(localContextsPresent){
+                <div class="col-12 col-md-6 col-lg-2 pl-10 cursor-pointer">
+                    <div id="localContextsThumbnails" class="d-flex flex-wrap gap-2 p-2"
+                        style="max-height: 100px;" (click)="Hidetext()">
+                    </div>
+
                 </div>
+                }
 
-                @if(auxiliaryRecordDetails(0)){
-                    <div class="my-3 divider"></div>
-                    <!-- ==================================Divider=================================================== -->
-                    <div class="auxiliary-details p-3 d-flex justify-content-between">
-                        <div class="col-12 col-md-6 mb-3">
-                            <table class="table">
-                                <tbody>
-                                    @for(item of auxiliaryRecordDetails(0) | keyvalue; track item.key){
-                                        <tr>
+            </div>
+
+            @if(localContextsPresent ){
+            <div class="local-contexts p-3" *ngIf="hideText">
+                <h4 class="mb-2">Local Context Labels</h4>
+                <ul id="localContextsLabels" class="list-unstyled"
+                    style="max-height: 250px; overflow-y: auto; padding-left: 0;">
+                    <li id="localContextsHeader">
+                        <i>Loading Local Contexts Data…</i>
+                    </li>
+                </ul>
+            </div>
+            }
+
+            @if(auxiliaryRecordDetails(0)){
+            <div class="my-3 divider"></div>
+            <!-- ==================================Divider=================================================== -->
+            <div class="auxiliary-details p-3 d-flex justify-content-between">
+                <div class="col-12 col-md-6 mb-3">
+                    <table class="table">
+                        <tbody>
+                            @for(item of auxiliaryRecordDetails(0) | keyvalue; track item.key){
+                            <tr>
                                             <th [ngClass]="{'text-danger': item.key === 'imageProcessingErrors'}">{{ item.key }}:</th>
-                                            <td [ngClass]="{'sequence': item.key === 'sequence'}">
-                                                 <!-- placement="top" [ngbTooltip]="item.value?.text || item.value" -->
-                                                @if(!item.value?.href){ <span>{{ item.value }} </span> }
-                                                @else if(item.value?.href){
-                                                    <span>
-                                                        <a href="{{ item.value.href }}" target="_blank">{{ item.value.text }}</a>
-                                                    </span>
-                                                }
-                                            </td>
-                                        </tr>
+                                <td [ngClass]="{'sequence': item.key === 'sequence'}">
+                                    <!-- placement="top" [ngbTooltip]="item.value?.text || item.value" -->
+                                    @if(!item.value?.href){ <span>{{ item.value }} </span> }
+                                    @else if(item.value?.href){
+                                    <span>
+                                        <a href="{{ item.value.href }}" target="_blank">{{ item.value.text }}</a>
+                                    </span>
                                     }
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="col-12 col-md-6 mb-3">
-                            <table class="table d-none d-md-table" flex>
-                                <tbody>
-                                    @if(recordData?.genus && recordData?.specificEpithet && !recordData?.scientificName){
-                                        <tr>
-                                            <th>scientificName:</th>
-                                            <td>{{recordData.genus}} {{recordData.specificEpithet}}</td>
-                                        </tr>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-12 col-md-6 mb-3">
+                    <table class="table d-none d-md-table" flex>
+                        <tbody>
+                            @if(recordData?.genus && recordData?.specificEpithet && !recordData?.scientificName){
+                            <tr>
+                                <th>scientificName:</th>
+                                <td>{{recordData.genus}} {{recordData.specificEpithet}}</td>
+                            </tr>
+                            }
+                            @for(item of auxiliaryRecordDetails(1) | keyvalue; track item.key){
+                            <tr>
+                                <th>{{ item.key }}:</th>
+                                <td [ngClass]="{'sequence': item.key === 'sequence'}">
+                                    <!--  placement="top" [ngbTooltip]="item.value?.text || item.value" -->
+                                    @if(!item.value?.href){ <span>{{ item.value }} </span> }
+                                    @else if(item.value?.href){
+                                    <span>
+                                        <a href="{{ item.value.href }}" target="_blank">{{ item.value.text }}</a>
+                                    </span>
                                     }
-                                    @for(item of auxiliaryRecordDetails(1) | keyvalue; track item.key){
-                                        <tr>
-                                            <th>{{ item.key }}:</th>
-                                            <td [ngClass]="{'sequence': item.key === 'sequence'}">
-                                                <!--  placement="top" [ngbTooltip]="item.value?.text || item.value" -->
-                                                @if(!item.value?.href){ <span>{{ item.value }} </span> }
-                                                @else if(item.value?.href){
-                                                    <span>
-                                                        <a href="{{ item.value.href }}" target="_blank">{{ item.value.text }}</a>
-                                                    </span>
-                                                }
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                }
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            }
 
-                
-                @if(record?.parent && parentDetail){
-                    <div class="my-3 divider"></div>
-                    <!-- ==================================Divider=================================================== -->
-                    <div class="parent-details horizontal-description-list p-3">
-                        <h4 style="margin-bottom: 0.75rem;">Parent {{ record.parent.entity }}</h4>
-                        <div layout="row">
-                            <ul style="list-style-type: none;" class="d-flex flex-wrap gap-3 p-0 mb-2">
-                                @for(key of getKeysArr(parentDetail); track key){
-                                    <li>
-                                        <span class="fw-semibold">{{ key }}:</span>
-                                        <p class="d-inline ms-2 text-secondary">
-                                            @if(!parentDetail[key].href){ <span>{{ parentDetail[key].text || 'N/A' }}</span> }
-                                            @else{
+
+            @if(record?.parent && parentDetail){
+            <div class="my-3 divider"></div>
+            <!-- ==================================Divider=================================================== -->
+            <div class="parent-details horizontal-description-list p-3">
+                <h4 style="margin-bottom: 0.75rem;">Parent {{ record.parent.entity }}</h4>
+                <div layout="row">
+                    <ul style="list-style-type: none;" class="d-flex flex-wrap gap-3 p-0 mb-2">
+                        @for(key of getKeysArr(parentDetail); track key){
+                        <li>
+                            <span class="fw-semibold">{{ key }}:</span>
+                            <p class="d-inline ms-2 text-secondary">
+                                @if(!parentDetail[key].href){ <span>{{ parentDetail[key].text || 'N/A' }}</span> }
+                                @else{
                                                 <span><a href="{{ parentDetail[key].href }}">{{ parentDetail[key].text || 'N/A' }}</a></span>
-                                            }
-                                        </p>
-                                    </li>
                                 }
-                            </ul>
-                        </div>
-                    </div>
-                }
-        
-                
-                @if(record?.children && childDetails){
-                    <div class="my-3 divider"></div>
-                    <!-- ==================================Divider=================================================== -->
-                    <div class="child-details horizontal-description-list p-3">
-                        <h4 style="margin-bottom: 0.75rem;">Child Entities</h4>
-                        @for(item of childDetails | keyvalue; track item.key) {
-                            <div>
-                              @for(child of item.value; let i = $index; track i) {
-                                <div class="d-flex">
-                                  <span class="entity fw-semibold">{{ item.key }}</span>
-                                  <ul style="list-style-type: none;" class="d-flex flex-wrap column-gap-3 row-gap-1 mb-2">
-                                    @for(itemKey of getKeysArr(child); track itemKey) {
-                                        <li>
-                                          <span class="fw-semibold">{{ itemKey }}:</span>
-                                          <p class="d-inline text-secondary ms-2">
-                                            @if (!child[itemKey].href) {
-                                              <span>{{ child[itemKey].text || 'N/A' }}</span>
-                                            } @else {
-                                              <span>
-                                                <a href="{{ child[itemKey].href }}">{{ child[itemKey].text || 'N/A' }}</a>
-                                              </span>
-                                            }
-                                          </p>
-                                        </li>
-                                      }
-                                    
-                                    <!-- @for(childItem of child | keyvalue; track childItem.key) {
+                            </p>
+                        </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            }
+
+
+            @if(record?.children && childDetails){
+            <div class="my-3 divider"></div>
+            <!-- ==================================Divider=================================================== -->
+            <div class="child-details horizontal-description-list p-3">
+                <h4 style="margin-bottom: 0.75rem;">Child Entities</h4>
+                @for(item of childDetails | keyvalue; track item.key) {
+                <div>
+                    @for(child of item.value; let i = $index; track i) {
+                    <div class="d-flex">
+                        <span class="entity fw-semibold">{{ item.key }}</span>
+                        <ul style="list-style-type: none;" class="d-flex flex-wrap column-gap-3 row-gap-1 mb-2">
+                            @for(itemKey of getKeysArr(child); track itemKey) {
+                            <li>
+                                <span class="fw-semibold">{{ itemKey }}:</span>
+                                <p class="d-inline text-secondary ms-2">
+                                    @if (!child[itemKey].href) {
+                                    <span>{{ child[itemKey].text || 'N/A' }}</span>
+                                    } @else {
+                                    <span>
+                                        <a href="{{ child[itemKey].href }}">{{ child[itemKey].text || 'N/A' }}</a>
+                                    </span>
+                                    }
+                                </p>
+                            </li>
+                            }
+
+                            <!-- @for(childItem of child | keyvalue; track childItem.key) {
                                       <li>
                                         <span class="fw-semibold">{{ childItem.key }}:</span>
                                         <p class="d-inline text-secondary ms-2">
@@ -238,15 +261,15 @@
                                         </p>
                                       </li>
                                     } -->
-                                  </ul>
-                                </div>
-                              }
-                            </div>
-                          }
+                        </ul>
                     </div>
+                    }
+                </div>
                 }
-        
             </div>
+            }
+
+        </div>
         }
     </div>
 </section>
