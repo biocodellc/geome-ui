@@ -10,13 +10,13 @@
         <div class="col-lg-2">
             <p class="proj-1">Administrator</p>
         </div>
-        <div class="col-lg-10"><p class="proj-2">{{currentProject?.user?.firstName || '-'}} {{currentProject?.user?.lastName}} [ {{currentProject?.user?.sraUsername}} ]</p></div>
+        <div class="col-lg-10"><p class="proj-2"><a [href]="'mailto:' + currentProject?.user.email" target="_blank">{{currentProject?.user?.firstName || '-'}} {{currentProject?.user?.lastName}}</a> [ {{currentProject?.user?.sraUsername}} ]</p></div>
     </div>
     <div class="row">
         <div class="col-lg-2">
             <p class="proj-1">Contact</p>
         </div>
-        <div class="col-lg-10"><p class="proj-2">{{currentProject?.projectConfiguration.user.email}}</p></div>
+        <div class="col-lg-10"><p class="proj-2"><a href="mailto:{{currentProject?.projectConfiguration.user.email}}" target="_blank">{{currentProject?.projectConfiguration.user.email}}</a></p></div>
     </div>
     <div class="row">
         <div class="col-lg-12">
@@ -37,7 +37,7 @@
                                 <tr class="cursor-pointer" (click)="selectProject(project)">
                                     <td class="text-primary text-eclipse" style="max-width: 300px;">{{project.projectTitle}}</td>
                                     <td class="text-center">{{project.entityStats.SampleCount}}</td>
-                                    <td class="text-center">{{project.user.firstName}} {{project.user.lastName}} [ {{project.user.username}} ]</td>
+                                    <td class="text-center"><a href="mailto:{{project?.user.email}}" target="_blank">{{project.user.firstName}} {{project.user.lastName}}</a> [ {{project.user.username}} ]</td>
                                     <td class="text-center">{{project.latestDataModification ? (project.latestDataModification | date:'shortDate') : 'N/A'}}</td>
                                 </tr>
                             }

@@ -190,7 +190,7 @@
                                 <td>
                                     <div class="d-flex flex-column gap-1">
                                         <span>{{item.expeditionTitle}}</span>
-                                        <span class="f-12 text-secondary"><b>Owner:</b><a [href]="'mailto:' + projectDetails?.user.email" target="_blank"> {{item.ownerFirstName}} {{item.ownerLastName}}</a> {{item.ownerUsername ? '[' + item.ownerUsername + ']' : '' }}</span>
+                                        <span class="f-12 text-secondary"><b>Owner:</b><a [href]="'mailto:' + item?.ownerEmail" target="_blank"> {{item.ownerFirstName}} {{item.ownerLastName}}</a> {{item.ownerUsername ? '[' + item.ownerUsername + ']' : '' }}</span>
                                     </div>
                                 </td>
                                 <td>{{ item.EventCount }}</td>

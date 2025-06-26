@@ -52,6 +52,7 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
   expeditionIdentifier: any;
   mapData:any;
   showThumbs:boolean = false;
+  hideText: boolean = false;
 
   constructor(){
     this.dummyDataService.loadingState.next(true);
@@ -99,11 +100,11 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
   getExpeditionId() {
     const {expeditionCode, projectId} = this.recordData;
     this.expeditionService.getExpeditionByCode(projectId, expeditionCode).pipe(take(1), takeUntil(this.destroy$))
-    .subscribe(
+      .subscribe(
       (res:any) => {
-        this.expeditionIdentifier = res.identifier;
-      },
-    );
+          this.expeditionIdentifier = res.identifier;
+        },
+      );
   }
 
   // Helpers
@@ -179,14 +180,14 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
       const photoEntities = this.project.config.entities
         .filter((e:any) => e.type === 'Photo')
         .map((e:any) => e.conceptAlias);
-  
+
       if (!this.record?.children) return;
-  
+
       const photos = this.record.children.filter(
         (e:any) => photoEntities.includes(e.entity) && e.processed === 'true',
       );
       const hasQualityScore = photos.some((p:any) => p.qualityScore);
-  
+
       const photosArr = photos
         .sort((a:any, b:any) =>
           hasQualityScore
@@ -199,8 +200,8 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
             thumb: photo.img128
           })
         ));
-      
-        this.photos$.next(photosArr);
+
+      this.photos$.next(photosArr);
       if(this.photos$.value.length >= 2) this.showThumbs = true;
       else this.showThumbs = false;
       console.warn('====Photos Length====',this.photos$.value.length);
@@ -217,7 +218,7 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
       const e = this.project.config.entities.find(
         (entity:any) => entity.conceptAlias === conceptAlias,
       );
-      
+
       this.childDetails[conceptAlias] = this.childDetails[conceptAlias]?.sort(
         compareValues(`${e.uniqueKey}.text`),
       );
@@ -275,7 +276,7 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
         !['bcid', 'entity', 'bulkLoadFile'].includes(k),
     );
 
-    const sortedKeys = e.attributes.reduce((accumulator:any, attribute:any) => {
+    const sortedKeys = e.attributes.reduce((accumulator: any, attribute: any) => {
       if (recordKeys.includes(attribute.column)) {
         accumulator.push(attribute.column);
       }
@@ -362,90 +363,100 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
     this.projectService.getProject(projectId).pipe(take(1), takeUntil(this.destroy$))
       .subscribe((project:any) => {
         console.log(project,'new prject')
-        // if (project.localcontextsId) {
-          this.localContextsPresent = true;
+        if (project.localcontextsId) {
+        this.localContextsPresent = true;
           var lcUrl = 'https://localcontextshub.org/api/v1/projects/' + project.localcontextsId + '/?format=json';
 		  // This is a temporary storage directory for localcontexts projects that have been created in GEOME
 		  //var lcUrl = 'https://raw.githubusercontent.com/biocodellc/geome-ui/master/localcontexts/' + project.localcontextsId 
           var xmlHttp = new XMLHttpRequest();
           xmlHttp.open("GET", lcUrl, true); // false for synchronous request
-          xmlHttp.onreadystatechange = function (oEvent) {
-            if (xmlHttp.readyState === 4) {
-              if (xmlHttp.status === 200) {
-                var height = 70
+        xmlHttp.onreadystatechange = function (oEvent) {
+          if (xmlHttp.readyState === 4) {
+            if (xmlHttp.status === 200) {
+              const height = 70
+              const localContextsJson = JSON.parse(xmlHttp.responseText);
 
-                var localContextsJson = JSON.parse(xmlHttp.responseText);
-                // Handle Notices
-                try {
-                  for (var i = 0; i < localContextsJson.notice.length; i++) {
-                    var obj = localContextsJson.notice[i];
-                    var div = document.createElement('div');
-                    div.setAttribute("style", "padding: 5px;")
+              // Clear containers
+              const labelContainer = document.getElementById('localContextsLabels');
+              const thumbContainer = document.getElementById('localContextsThumbnails');
+              if (labelContainer) labelContainer.innerHTML = '';
+              if (thumbContainer) thumbContainer.innerHTML = '';
 
-                    var img = document.createElement('img');
-                    img.src = obj.img_url
-                    img.height = height
-                    img.setAttribute("style", "padding: 2px; max-height: 70px; float: left;")
+              // Notices
+              try {
+                for (let i = 0; i < localContextsJson.notice.length; i++) {
+                  const obj = localContextsJson.notice[i];
 
-                    var spanner = document.createElement('div')
-                    spanner.setAttribute("style", "display:block;height:100%; overflow:auto;")
-                    spanner.innerHTML = "<a target=_blank href='" + localContextsJson.project_page + "'>" + obj.name + "</a>"
-                    spanner.innerHTML += "<p>" + obj.default_text + "<p>";
-
-                    div.appendChild(img);
-                    div.appendChild(spanner);
-                    document.getElementById('localContextsLabels')?.appendChild(div);
+                  // Add image to thumbnails
+                  if (thumbContainer) {
+                    const thumbImg = document.createElement('img');
+                    thumbImg.src = obj.img_url;
+                    thumbImg.height = height;
+                    thumbImg.setAttribute("style", "margin: 4px; object-fit: contain;");
+                    thumbContainer.appendChild(thumbImg);
                   }
-                } catch (e) {
-                  console.log(e);
-                }
-                // Handle Labels
-                var allLabels = []
-                try {
-                  for (var i = 0; i < localContextsJson.bc_labels.length; i++) {
-                    allLabels.push(localContextsJson.bc_labels[i]);
+
+                  // Add text to label list
+                  if (labelContainer) {
+                    const div = document.createElement('div');
+                    div.setAttribute("style", "padding: 5px;");
+                    const textHTML = `
+                    <a target="_blank" href="${localContextsJson.project_page}">${obj.name}</a>
+                    <p>${obj.default_text || ''}</p>
+                  `;
+                    div.innerHTML = textHTML;
+                    labelContainer.appendChild(div);
                   }
-                } catch (e) {
                 }
-                try {
-                  for (var i = 0; i < localContextsJson.tk_labels.length; i++) {
-                    allLabels.push(localContextsJson.tk_labels[i]);
-                  }
-                } catch (e) {
-                }
-
-                for (var i = 0; i < allLabels.length; i++) {
-                  var obj = allLabels[i];
-
-                  var div = document.createElement('div');
-                  div.setAttribute("style", "padding: 5px;")
-
-                  var img = document.createElement('img');
-                  img.src = obj.img_url
-                  img.height = height
-                  img.setAttribute("style", "padding: 2px; max-height: 70px; float: left;")
-
-                  var spanner = document.createElement('div')
-                  spanner.setAttribute("style", "display:block;height:100%;overflow:auto;padding:8px")
-                  spanner.innerHTML = "<a target=_blank href='" + localContextsJson.project_page + "'>" + obj.name + "</a>"
-                  spanner.innerHTML += "<p>" + obj.label_text + "<p>";
-                  spanner.innerHTML += "<p><i>" + obj.community + "</i>"
-
-                  div.appendChild(img);
-                  div.appendChild(spanner);
-                  document.getElementById('localContextsLabels')?.appendChild(div);
-                }
-                const ref = document.getElementById("localContextsHeader");
-                if(ref) ref.innerHTML = '<b><i>' + localContextsJson.title + "</i></b>";
-              } else {
-                const ref = document.getElementById("localContextsHeader");
-                if(ref) ref.innerHTML = 'Error Loading Local Contexts Data...';
-                console.log("Error", xmlHttp.statusText);
+              } catch (e) {
+                console.log(e);
               }
+
+              // Labels (BC and TK)
+              const allLabels = [];
+              try {
+                allLabels.push(...(localContextsJson.bc_labels || []));
+                allLabels.push(...(localContextsJson.tk_labels || []));
+              } catch (e) { }
+
+              for (let i = 0; i < allLabels.length; i++) {
+                const obj = allLabels[i];
+
+                // Add image to thumbnails
+                if (thumbContainer) {
+                  const thumbImg = document.createElement('img');
+                  thumbImg.src = obj.img_url;
+                  thumbImg.height = height;
+                  thumbImg.setAttribute("style", "margin: 4px; object-fit: contain;");
+                  thumbContainer.appendChild(thumbImg);
+                }
+
+                // Add text to label list
+                if (labelContainer) {
+                  const div = document.createElement('div');
+                  div.setAttribute("style", "padding: 5px;");
+                  const textHTML = `
+                  <a target="_blank" href="${localContextsJson.project_page}">${obj.name}</a>
+                  <p>${obj.label_text || ''}</p>
+                  ${obj.community ? `<p><i>${obj.community}</i></p>` : ''}
+                `;
+                  div.innerHTML = textHTML;
+                  labelContainer.appendChild(div);
+                }
+              }
+
+              // Set header
+              const ref = document.getElementById("localContextsHeader");
+              if (ref) ref.innerHTML = '<b><i>' + localContextsJson.title + "</i></b>";
+            } else {
+              const ref = document.getElementById("localContextsHeader");
+              if (ref) ref.innerHTML = 'Error Loading Local Contexts Data...';
+              console.log("Error", xmlHttp.statusText);
             }
-          };
-          xmlHttp.send(null);
-        // }
+          }
+        };
+        xmlHttp.send(null);
+        }
       });
   }
 
@@ -457,6 +468,11 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
       return 0; // Keep others as-is
     })
     return data || [];
+  }
+
+
+  Hidetext() {
+    this.hideText = !this.hideText
   }
 
   ngOnDestroy(): void {
