@@ -52,7 +52,7 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
   expeditionIdentifier: any;
   mapData:any;
   showThumbs:boolean = false;
-  hideText: boolean = false;
+  // hideText: boolean = false;
 
   constructor(){
     this.dummyDataService.loadingState.next(true);
@@ -93,7 +93,6 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
         if (this.recordData.entity === 'Event')
           this.mapData = { data:[this.recordData], lat: 'decimalLatitude', lng: 'decimalLongitude' };
         if (this.recordData.expeditionCode) this.getExpeditionId();
-        this.prepareLocalContexts(projectId);
       })
   }
 
@@ -158,6 +157,7 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
       this.project = { ...this.currentProject };
       this.setPhotos();
       this.sortChildren();
+      this.prepareLocalContexts(projectId);
       this.dummyDataService.loadingState.next(false);
       return;
     }
@@ -172,6 +172,7 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
     this.project = projectData;
     this.setPhotos();
     this.sortChildren();
+    this.prepareLocalContexts(projectId);
     this.dummyDataService.loadingState.next(false);
   }
 
@@ -362,30 +363,71 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
     this.localContextsPresent = false;
     this.projectService.getProject(projectId).pipe(take(1), takeUntil(this.destroy$))
       .subscribe((project:any) => {
-        console.log(project,'new prject')
         if (project.localcontextsId) {
-        this.localContextsPresent = true;
+          this.localContextsPresent = true;
           var lcUrl = 'https://localcontextshub.org/api/v1/projects/' + project.localcontextsId + '/?format=json';
-		  // This is a temporary storage directory for localcontexts projects that have been created in GEOME
-		  //var lcUrl = 'https://raw.githubusercontent.com/biocodellc/geome-ui/master/localcontexts/' + project.localcontextsId 
+          // This is a temporary storage directory for localcontexts projects that have been created in GEOME
+          //var lcUrl = 'https://raw.githubusercontent.com/biocodellc/geome-ui/master/localcontexts/' + project.localcontextsId 
           var xmlHttp = new XMLHttpRequest();
           xmlHttp.open("GET", lcUrl, true); // false for synchronous request
-        xmlHttp.onreadystatechange = function (oEvent) {
-          if (xmlHttp.readyState === 4) {
-            if (xmlHttp.status === 200) {
-              const height = 70
-              const localContextsJson = JSON.parse(xmlHttp.responseText);
+          xmlHttp.onreadystatechange = function (oEvent) {
+            if (xmlHttp.readyState === 4) {
+              if (xmlHttp.status === 200) {
+                const height = 70
+                const localContextsJson = JSON.parse(xmlHttp.responseText);
 
-              // Clear containers
-              const labelContainer = document.getElementById('localContextsLabels');
-              const thumbContainer = document.getElementById('localContextsThumbnails');
-              if (labelContainer) labelContainer.innerHTML = '';
-              if (thumbContainer) thumbContainer.innerHTML = '';
+                // Clear containers
+                // const labelContainer = document.getElementById('localContextsLabels');
+                const thumbContainer = document.getElementById('localContextsThumbnails');
+                // if (labelContainer) labelContainer.innerHTML = '';
+                if (thumbContainer) thumbContainer.innerHTML = '';
 
-              // Notices
-              try {
-                for (let i = 0; i < localContextsJson.notice.length; i++) {
-                  const obj = localContextsJson.notice[i];
+                // Notices
+                try {
+                  for (let i = 0; i < localContextsJson.notice?.length || 0; i++) {
+                    const obj = localContextsJson.notice[i];
+
+                    // Add image to thumbnails
+                    if (thumbContainer) {
+                      const thumbImg = document.createElement('img');
+                      thumbImg.src = obj.img_url;
+                      thumbImg.height = height;
+                      thumbImg.setAttribute("style", "margin: 4px; object-fit: contain;");
+                      const anchorTag = document.createElement('a');
+                      anchorTag.href = localContextsJson.project_page;
+                      anchorTag.target = '_blank';
+
+                      anchorTag.appendChild(thumbImg);
+                      thumbContainer.appendChild(anchorTag);
+                    }
+
+                    // Add text to label list
+                  //   if (labelContainer) {
+                  //     const div = document.createElement('div');
+                  //     div.setAttribute("style", "padding: 5px;");
+                  //     const textHTML = `
+                  //   <a target="_blank" href="${localContextsJson.project_page}">${obj.name}</a>
+                  //   <p>${obj.default_text || ''}</p>
+                  // `;
+                  //     div.innerHTML = textHTML;
+                  //     labelContainer.appendChild(div);
+                  //   }
+                  }
+                } catch (e) {
+                  console.warn(e);
+                }
+
+                // Labels (BC and TK)
+                const allLabels = [];
+                try {
+                  allLabels.push(...(localContextsJson.bc_labels || []));
+                  allLabels.push(...(localContextsJson.tk_labels || []));
+                } catch (e) {
+                  console.warn(e);
+                }
+
+                for (let i = 0; i < allLabels.length; i++) {
+                  const obj = allLabels[i];
 
                   // Add image to thumbnails
                   if (thumbContainer) {
@@ -393,69 +435,40 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
                     thumbImg.src = obj.img_url;
                     thumbImg.height = height;
                     thumbImg.setAttribute("style", "margin: 4px; object-fit: contain;");
-                    thumbContainer.appendChild(thumbImg);
+
+                    const anchorTag = document.createElement('a');
+                    anchorTag.href = localContextsJson.project_page;
+                    anchorTag.target = '_blank';
+
+                    anchorTag.appendChild(thumbImg);
+                    thumbContainer.appendChild(anchorTag);
                   }
 
                   // Add text to label list
-                  if (labelContainer) {
-                    const div = document.createElement('div');
-                    div.setAttribute("style", "padding: 5px;");
-                    const textHTML = `
-                    <a target="_blank" href="${localContextsJson.project_page}">${obj.name}</a>
-                    <p>${obj.default_text || ''}</p>
-                  `;
-                    div.innerHTML = textHTML;
-                    labelContainer.appendChild(div);
-                  }
+                  // if (labelContainer) {
+                  //   const div = document.createElement('div');
+                  //   div.setAttribute("style", "padding: 5px;");
+                  //   const textHTML = `
+                  //     <a target="_blank" href="${localContextsJson.project_page}">${obj.name}</a>
+                  //     <p>${obj.label_text || ''}</p>
+                  //     ${obj.community ? `<p><i>${obj.community}</i></p>` : ''}
+                  //   `;
+                  //   div.innerHTML = textHTML;
+                  //   labelContainer.appendChild(div);
+                  // }
                 }
-              } catch (e) {
-                console.log(e);
+
+                // Set header
+                const ref = document.getElementById("localContextsHeader");
+                if (ref) ref.innerHTML = '<b><i>' + localContextsJson.title + "</i></b>";
+              } else {
+                const ref = document.getElementById("localContextsHeader");
+                if (ref) ref.innerHTML = 'Error Loading Local Contexts Data...';
+                console.log("Error", xmlHttp.statusText);
               }
-
-              // Labels (BC and TK)
-              const allLabels = [];
-              try {
-                allLabels.push(...(localContextsJson.bc_labels || []));
-                allLabels.push(...(localContextsJson.tk_labels || []));
-              } catch (e) { }
-
-              for (let i = 0; i < allLabels.length; i++) {
-                const obj = allLabels[i];
-
-                // Add image to thumbnails
-                if (thumbContainer) {
-                  const thumbImg = document.createElement('img');
-                  thumbImg.src = obj.img_url;
-                  thumbImg.height = height;
-                  thumbImg.setAttribute("style", "margin: 4px; object-fit: contain;");
-                  thumbContainer.appendChild(thumbImg);
-                }
-
-                // Add text to label list
-                if (labelContainer) {
-                  const div = document.createElement('div');
-                  div.setAttribute("style", "padding: 5px;");
-                  const textHTML = `
-                  <a target="_blank" href="${localContextsJson.project_page}">${obj.name}</a>
-                  <p>${obj.label_text || ''}</p>
-                  ${obj.community ? `<p><i>${obj.community}</i></p>` : ''}
-                `;
-                  div.innerHTML = textHTML;
-                  labelContainer.appendChild(div);
-                }
-              }
-
-              // Set header
-              const ref = document.getElementById("localContextsHeader");
-              if (ref) ref.innerHTML = '<b><i>' + localContextsJson.title + "</i></b>";
-            } else {
-              const ref = document.getElementById("localContextsHeader");
-              if (ref) ref.innerHTML = 'Error Loading Local Contexts Data...';
-              console.log("Error", xmlHttp.statusText);
             }
-          }
-        };
-        xmlHttp.send(null);
+          };
+          xmlHttp.send(null);
         }
       });
   }
@@ -471,9 +484,9 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
   }
 
 
-  Hidetext() {
-    this.hideText = !this.hideText
-  }
+  // Hidetext() {
+  //   this.hideText = !this.hideText
+  // }
 
   ngOnDestroy(): void {
     this.destroy$.next('');
