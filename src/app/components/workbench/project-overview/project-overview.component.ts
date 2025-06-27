@@ -48,7 +48,6 @@ export class ProjectOverviewComponent implements OnDestroy{
     .pipe(takeUntil(this.destroy$))
     .subscribe((res:any)=>{
       this.projectDetails = res;
-      console.log(this.projectDetails,'p----------------------')
       if(res){
         this.getExpeditionStats();
         this.templateUrl = currentUrl.replace('project-overview', 'template') + `?projectId=${res.projectId}`;

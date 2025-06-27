@@ -21,12 +21,17 @@ section.records{
 }
 
 ::ng-deep{
+    gallery{ width: 80%; margin: auto; }
     .main-details gallery-core{ background-color: #fff; }
-    
     gallery-core{ gap: 10px !important; }
 }
 
 .pl-10{
     padding-left: 10px !important;
     margin-top: 10px !important;
+}
+
+
+@media screen and (max-width: 991px){
+    ::ng-deep gallery{ width: 95%; }
 }
