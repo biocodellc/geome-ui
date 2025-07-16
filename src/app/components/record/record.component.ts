@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, inject, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, firstValueFrom, Subject, take, takeUntil } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, lastValueFrom, Subject, take, takeUntil } from 'rxjs';
 import { RecordService } from '../../../helpers/services/record.service';
 import { LoaderComponent } from '../../shared/loader/loader.component';
 import { DummyDataService } from '../../../helpers/services/dummy-data.service';
@@ -82,28 +82,24 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
   getRecordData(){
     const identifier = `ark:/${this.params.bcid_1}/${this.params.bcid_2}`
     this.recordService.get(identifier).pipe(take(1)).subscribe(
-      (res:any) => {
+      async (res:any) => {
         this.record = res;
         if(this.record?.expedition || this.record?.entityIdentifier) return;
+        this.recordData = this.record.record;
+        if (this.recordData.expeditionCode) await this.getExpeditionId();
         this.setParentDetail(this.record.parent);
         this.setChildDetails(this.record.children);
         const {projectId} = this.record;
-        this.recordData = this.record.record;
         this.fetchProject(projectId);
         if (this.recordData.entity === 'Event')
           this.mapData = { data:[this.recordData], lat: 'decimalLatitude', lng: 'decimalLongitude' };
-        if (this.recordData.expeditionCode) this.getExpeditionId();
       })
   }
 
-  getExpeditionId() {
+  async getExpeditionId() {
     const {expeditionCode, projectId} = this.recordData;
-    this.expeditionService.getExpeditionByCode(projectId, expeditionCode).pipe(take(1), takeUntil(this.destroy$))
-      .subscribe(
-      (res:any) => {
-          this.expeditionIdentifier = res.identifier;
-        },
-      );
+    const res = await lastValueFrom(this.expeditionService.getExpeditionByCode(projectId, expeditionCode));
+    this.expeditionIdentifier = res.identifier;
   }
 
   // Helpers
