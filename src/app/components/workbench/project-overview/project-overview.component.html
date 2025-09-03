@@ -14,7 +14,7 @@
                     <p class="proj-1">Project owner</p>
                 </div>
                 <div class="col-lg-10">
-                    <p class="proj-2"><a [href]="'mailto:' + projectDetails?.user.email" target="_blank">{{projectDetails?.user.firstName}} {{projectDetails?.user.lastName}}</a>  {{projectDetails?.user.sraUsername ? '[' + projectDetails?.user.sraUsername + ']' : '' }}</p>
+                    <p class="proj-2"><a [href]="'mailto:' + projectDetails?.user.email" target="_blank">{{projectDetails?.user.firstName}} {{projectDetails?.user.lastName}}</a>  {{projectDetails?.user.username? '[' + projectDetails?.user.username+ ']' : '' }}</p>
                 </div>
             </div>
 
