@@ -874,6 +874,9 @@ section.map-section{
     }
 }
 
+.lightboxPanelClass gallery-item{
+    max-height: 70vh !important;
+}
 
 @media (min-width: 1400px) {
     .container-xxl, .container-xl, .container-lg, .container-md, .container-sm, .container {
@@ -884,4 +887,5 @@ section.map-section{
 @media screen and (max-width: 991px) {
     .validate-data .bottom-form-section{ padding: 1.5rem !important; }
     .validate-data label.input-label.fastq-label, .SRA-sub label.input-label.fastq-label{ width: auto !important; }
+    .lightboxPanelClass gallery-item{ max-height: 80vh !important; }
 }

@@ -22,15 +22,17 @@ export const appConfig: ApplicationConfig = {
       provide: GALLERY_CONFIG,
       useValue: {
         autoHeight: true,
-        imageSize: 'cover',
         dots: true,
+        imageSize: 'contain',
+        thumbImageSize: 'contain'
       } as GalleryConfig
     },
     {
       provide: LIGHTBOX_CONFIG,
       useValue: {
         keyboardShortcuts: false,
-        exitAnimationTime: 1000
+        exitAnimationTime: 1000,
+        panelClass: 'lightboxPanelClass'
       } as LightboxConfig
     }
   ]
