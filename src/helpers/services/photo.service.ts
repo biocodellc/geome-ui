@@ -8,10 +8,9 @@ import { environment } from '../../environments/environment';
 export class PhotoService {
   private restRoot = environment.restRoot;
 
-  private headers = new HttpHeaders({
-      'Accept': "*/*",
-      'Content-Type': 'application/x-zip-compressed'
-    });
+  private defaultHeaders = new HttpHeaders({
+    Accept: '*/*',
+  });
 
   constructor(private http: HttpClient) {}
 
@@ -21,11 +20,9 @@ export class PhotoService {
     entity: string,
     file: File,
     isResume = false,
-    ignoreId:any
+    ignoreId:any,
+    onProgress?: (progress: { loaded: number; total: number; percent: number }) => void
   ): Observable<{ success: boolean; errors: string[]; warnings: string[] }> {
-    const formData = new FormData();
-    formData.append('file', file);
-
     const url = `${this.restRoot}photos/${entity}/upload`;
     const params:any = {
       projectId,
@@ -34,15 +31,33 @@ export class PhotoService {
     };
     if(expeditionCode) params.expeditionCode = expeditionCode;
 
-    return this.http.put<{ success: boolean; messages: { errors?: string[]; warnings?: string[] } }>(url, formData, { params, headers: this.headers })
-      .pipe(
-        map(res => ({
-          success: res.success,
-          errors: res.messages.errors || [],
-          warnings: res.messages.warnings || [],
-        })),
-        catchError(this.handleError)
-      );
+    return new Observable<{ success: boolean; errors: string[]; warnings: string[] }>(observer => {
+      this.http.put<HttpEvent<any>>(url, file, {
+        params,
+        headers: this.getZipHeaders(file),
+        reportProgress: true,
+        observe: 'events'
+      }).subscribe({
+        next: (event: HttpEvent<any>) => {
+          if (event.type === HttpEventType.UploadProgress && event.total) {
+            const percent = Math.round((100 * event.loaded) / event.total);
+            onProgress?.({ loaded: event.loaded, total: event.total, percent });
+            return;
+          }
+
+          if (event.type === HttpEventType.Response) {
+            const res = event.body || {};
+            observer.next({
+              success: !!res.success,
+              errors: res?.messages?.errors || [],
+              warnings: res?.messages?.warnings || [],
+            });
+            observer.complete();
+          }
+        },
+        error: (error) => observer.error(error)
+      });
+    }).pipe(catchError(this.handleError));
   }
 
   getResumeSize(projectId: string, expeditionCode: string, entity: string): Observable<number> {
@@ -67,13 +82,10 @@ export class PhotoService {
     entity: string,
     file: File
   ): Observable<number> {
-    const formData = new FormData();
-    formData.append('file', file);
-
     const url = `${this.restRoot}photos/${entity}/upload`;
     const params = { projectId, expeditionCode };
 
-    return this.http.put<HttpEvent<any>>(url, formData, { params, reportProgress: true, observe: 'events' })
+    return this.http.put<HttpEvent<any>>(url, file, { params, headers: this.getZipHeaders(file), reportProgress: true, observe: 'events' })
       .pipe(
         map(event => {
           if (event.type === HttpEventType.UploadProgress && event.total) {
@@ -87,6 +99,11 @@ export class PhotoService {
 
   private handleError(error: HttpErrorResponse): Observable<never> {
     console.error('Photo upload failed', error);
-    return throwError(() => new Error('Photo upload failed'));
+    return throwError(() => error);
+  }
+
+  private getZipHeaders(file?: File): HttpHeaders {
+    const contentType = file?.type || 'application/zip';
+    return this.defaultHeaders.set('Content-Type', contentType);
   }
 }

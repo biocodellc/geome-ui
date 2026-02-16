@@ -2,7 +2,7 @@ import { Component, inject, OnDestroy, TemplateRef, ViewChild } from '@angular/c
 import { ProjectService } from '../../../../helpers/services/project.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { distinctUntilChanged, Subject, take, takeUntil } from 'rxjs';
+import { distinctUntilChanged, finalize, Subject, take, takeUntil } from 'rxjs';
 import { ExpeditionService } from '../../../../helpers/services/expedition.service';
 import { AuthenticationService } from '../../../../helpers/services/authentication.service';
 import { PhotoService } from '../../../../helpers/services/photo.service';
@@ -38,8 +38,12 @@ export class UploadPhotosComponent implements OnDestroy{
   photoForm!:FormGroup;
   file!:File;
   selectedEntity:any;
-  uploadProgress: any;
+  uploadProgress:number = 0;
   canResume: boolean = false;
+  uploadState:'idle' | 'uploading' | 'success' | 'error' = 'idle';
+  uploadStatusMessage:string = '';
+  uploadErrors:string[] = [];
+  uploadWarnings:string[] = [];
 
   constructor(){
     this.initForm();
@@ -63,9 +67,12 @@ export class UploadPhotosComponent implements OnDestroy{
       if(val) this.setReqValidator('ignoreId');
       else this.setReqValidator('ignoreId', false);
     })
-    this.form['entity'].valueChanges.pipe(takeUntil(this.destroy$)).subscribe((val:string)=>
-      this.selectedEntity = this.photoEntities.find((entity:any)=> entity.conceptAlias == val)
-    )
+    this.form['entity'].valueChanges.pipe(takeUntil(this.destroy$)).subscribe((val:string)=>{
+      this.selectedEntity = this.photoEntities.find((entity:any)=> entity.conceptAlias == val);
+      this.setReqValidator('expedition', !!this.selectedEntity?.requiresExpedition);
+      if (!this.selectedEntity?.requiresExpedition) this.setControlVal('expedition', '');
+      this.resetUploadState();
+    })
   }
 
   setPhotoEntities() {
@@ -105,6 +112,8 @@ export class UploadPhotosComponent implements OnDestroy{
   }
 
   async verifyValidations() {
+    if (this.loading) return;
+
     // Checking Forms Validations
     this.photoForm.markAllAsTouched();
     if(this.photoForm.invalid) return;
@@ -137,6 +146,10 @@ export class UploadPhotosComponent implements OnDestroy{
 
     this.uploadProgress = 0;
     this.loading = true;
+    this.uploadState = 'uploading';
+    this.uploadStatusMessage = `Uploading ${this.getEntityLabel()} photos...`;
+    this.uploadErrors = [];
+    this.uploadWarnings = [];
 
     const resume = !!this.canResume;
     this.canResume = false;
@@ -147,27 +160,43 @@ export class UploadPhotosComponent implements OnDestroy{
       this.selectedEntity.conceptAlias,
       this.file,
       resume,
-      this.getControlVal('ignoreId')
+      this.getControlVal('ignoreId'),
+      progress => {
+        this.uploadProgress = progress.percent;
+        this.uploadStatusMessage = `Uploading ${this.getEntityLabel()} photos... ${progress.percent}%`;
+      }
     )
-    // .progress((event:any) => {
-      //   this.uploadProgress = parseInt(String((100.0 * event.loaded) / event.total));
-      // })
+    .pipe(finalize(() => this.loading = false))
     .subscribe({
       next: (res:any) => {
-        // this.showResultDialog(res);
-      },
-      complete: () => {
-        if (!this.canResume) {
-          this.uploadProgress = undefined;
+        this.uploadWarnings = res?.warnings || [];
+        if (res?.success && !(res?.errors || []).length) {
+          this.uploadProgress = 100;
+          this.uploadState = 'success';
+          this.uploadStatusMessage = `${this.getEntityLabel()} photo upload completed successfully.`;
+        } else {
+          this.uploadState = 'error';
+          this.uploadProgress = 0;
+          this.uploadErrors = (res?.errors || []).length
+            ? res.errors
+            : [`${this.getEntityLabel()} photo upload failed. Please review your file and try again.`];
+          this.uploadStatusMessage = `${this.getEntityLabel()} photo upload failed.`;
         }
-        this.loading = false;
+      },
+      error: (err:any) => {
+        this.uploadState = 'error';
+        this.uploadProgress = 0;
+        this.uploadWarnings = [];
+        this.uploadErrors = this.getUploadErrorMessages(err);
+        this.uploadStatusMessage = `${this.getEntityLabel()} photo upload failed.`;
       }
     })
   }
 
   onFileSelect(event:any){
     this.file = event.target.files[0];
-    this.setControlVal('fileName', this.file.name);
+    this.setControlVal('fileName', this.file?.name || '');
+    this.resetUploadState();
   }
 
   ngOnDestroy(): void {
@@ -189,5 +218,66 @@ export class UploadPhotosComponent implements OnDestroy{
   setReqValidator(control:string, setErr:boolean = true){
     this.form[control].setValidators(setErr ? [Validators.required] : []);
     this.form[control].updateValueAndValidity();
+  }
+
+  private getEntityLabel():string {
+    return (this.getControlVal('entity') || this.selectedEntity?.conceptAlias || 'Selected')
+      .toString()
+      .replace('_Photo', '')
+      .replace('_', ' ');
+  }
+
+  private resetUploadState():void {
+    this.uploadState = 'idle';
+    this.uploadStatusMessage = '';
+    this.uploadErrors = [];
+    this.uploadWarnings = [];
+    this.uploadProgress = 0;
+  }
+
+  private getUploadErrorMessages(err:any): string[] {
+    const payload = err?.error || {};
+    const status = Number(payload?.httpStatusCode ?? err?.status ?? 0);
+    const userMessage = payload?.usrMessage || payload?.message || err?.message;
+    const developerMessage = payload?.developerMessage;
+    const messages:string[] = [];
+
+    if (userMessage) messages.push(userMessage);
+
+    if (status) {
+      const interpreted = this.getHttpStatusMessage(status);
+      if (interpreted) messages.push(`HTTP ${status}: ${interpreted}`);
+      else messages.push(`HTTP ${status}: Upload request failed.`);
+    }
+
+    if (typeof developerMessage === 'string' && developerMessage.trim()) {
+      messages.push(`Details: ${developerMessage.trim()}`);
+    }
+
+    if (!messages.length) {
+      messages.push('Photo upload failed due to a server or network error.');
+    }
+
+    return [...new Set(messages)];
+  }
+
+  private getHttpStatusMessage(status:number): string {
+    const statusMessages:Record<number, string> = {
+      400: 'The upload request was invalid. Check required fields and file contents.',
+      401: 'You are not authenticated. Please sign in again and retry.',
+      403: 'You do not have permission to upload photos for this project or expedition.',
+      404: 'The upload endpoint or related project resource was not found.',
+      408: 'The upload timed out before completion. Please retry.',
+      413: 'The file is too large for the server limit. Upload a smaller zip.',
+      415: 'Unsupported media type. Upload a valid .zip file and verify the archive format.',
+      422: 'The server could not process the upload content. Check file naming and metadata.',
+      429: 'Too many requests. Wait briefly and try again.',
+      500: 'Server error while processing the upload. Please retry shortly.',
+      502: 'Bad gateway from an upstream service. Please retry shortly.',
+      503: 'Upload service is temporarily unavailable. Please retry shortly.',
+      504: 'Gateway timeout while processing upload. Please retry.',
+    };
+
+    return statusMessages[status] || '';
   }
 }

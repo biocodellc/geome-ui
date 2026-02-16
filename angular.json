@@ -36,7 +36,8 @@
     "input": "src/assets",
     "output": "assets"
   },
-  "src/_redirects"
+  "src/_redirects",
+  "src/_headers"
 ],
             "styles": [
               "src/styles.scss",

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, Observable, catchError, map, of, take } from 'rxjs';
+import { BehaviorSubject, forkJoin, Observable, catchError, map, of, take } from 'rxjs';
 import { ProjectConfig } from '../models/projectConfig.model';
 import { environment } from '../../environments/environment';
 import { AuthenticationService } from './authentication.service';
@@ -114,9 +114,30 @@ export class ProjectService{
   }
 
   loadPrivateProjects(){
-    this.getAllProjects(false).pipe(take(1)).subscribe((res:any) =>{
-      this.userProjectSubject.next(res);
-    })
+    forkJoin({
+      projects: this.getAllProjects(false).pipe(take(1), catchError(() => of([]))),
+      stats: this.getProjectStats(true).pipe(take(1), catchError(() => of([]))),
+    }).subscribe(({ projects, stats }: any) => {
+      const statsByProjectId = new Map<string, any>();
+      (Array.isArray(stats) ? stats : []).forEach((item: any) => {
+        if (item?.projectId !== undefined && item?.projectId !== null) {
+          statsByProjectId.set(String(item.projectId), item);
+        }
+      });
+
+      const mergedProjects = (Array.isArray(projects) ? projects : []).map((project: any) => {
+        const statsProject = statsByProjectId.get(String(project?.projectId));
+        if (!statsProject) return project;
+        return {
+          ...statsProject,
+          ...project,
+          entityStats: statsProject?.entityStats || project?.entityStats,
+          latestDataModification: statsProject?.latestDataModification || project?.latestDataModification,
+        };
+      });
+
+      this.userProjectSubject.next(mergedProjects);
+    });
   }
 
   findProject(includePublic: boolean, projectTitle: string): Observable<Project[]> {

@@ -41,11 +41,11 @@
                             </td>
                             <td class="text-center">{{ item?.entityStats?.SampleCount || 0 }}</td>
                             <td class="text-center">
-                                @if(item.hasPhotos){ <i class="fas fa-check text-success f-16"></i> }
+                                @if(item.hasSRA){ <i class="fas fa-check text-success f-16"></i> }
                                 @else{ <i class="fas fa-times text-danger f-16"></i> }
                             </td>
                             <td class="text-center">
-                                @if(item.hasSRA){ <i class="fas fa-check text-success f-16"></i> }
+                                @if(item.hasPhotos){ <i class="fas fa-check text-success f-16"></i> }
                                 @else{ <i class="fas fa-times text-danger f-16"></i> }
                             </td>
                         </tr>
@@ -93,11 +93,11 @@
                         </td>
                         <td class="text-center">{{ item.entityStats.SampleCount }}</td>
                         <td class="text-center">
-                            @if(item.hasPhotos){ <i class="fas fa-check text-success f-16"></i> }
+                            @if(item.hasSRA){ <i class="fas fa-check text-success f-16"></i> }
                             @else{ <i class="fas fa-times text-danger f-16"></i> }
                         </td>
                         <td class="text-center">
-                            @if(item.hasSRA){ <i class="fas fa-check text-success f-16"></i> }
+                            @if(item.hasPhotos){ <i class="fas fa-check text-success f-16"></i> }
                             @else{ <i class="fas fa-times text-danger f-16"></i> }
                         </td>
                     </tr>
