@@ -55,6 +55,21 @@ export class TeamOverviewComponent implements OnDestroy{
     this.projectService.setCurrentProject(project);
   }
 
+  get teamAdmin(){
+    return this.currentProject?.projectConfiguration?.user || {};
+  }
+
+  get teamAdminName():string{
+    const firstName = this.teamAdmin?.firstName || '';
+    const lastName = this.teamAdmin?.lastName || '';
+    const fullName = `${firstName} ${lastName}`.trim();
+    return fullName || this.teamAdmin?.name || this.teamAdmin?.username || this.teamAdmin?.email || '-';
+  }
+
+  get teamAdminEmail():string{
+    return this.teamAdmin?.email || '';
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

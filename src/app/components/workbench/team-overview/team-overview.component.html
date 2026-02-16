@@ -10,7 +10,16 @@
         <div class="col-lg-2">
             <p class="proj-1">Administrator</p>
         </div>
-        <div class="col-lg-10"><p class="proj-2"><a [href]="'mailto:' + currentProject?.user.email" target="_blank">{{currentProject?.user?.firstName || '-'}} {{currentProject?.user?.lastName}}</a> [ {{currentProject?.user?.username}} ]</p></div>
+        <div class="col-lg-10">
+            <p class="proj-2">
+                @if(teamAdminEmail){
+                    <a [href]="'mailto:' + teamAdminEmail" target="_blank">{{teamAdminName}}</a>
+                }
+                @else{
+                    <span>{{teamAdminName}}</span>
+                }
+            </p>
+        </div>
     </div>
     <div class="row">
         <div class="col-lg-2">

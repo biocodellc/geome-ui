@@ -57,7 +57,8 @@ export class TeamsListComponent implements OnDestroy{
     this.projectConfService.get(id).pipe(take(1), takeUntil(this.destroy$)).subscribe({
       next: (res:any)=>{
         this.allPublicTeams.push(res);
-        this.filteredPublicTeams = this.allPublicTeams;
+        this.allPublicTeams = this.sortTeamsByLatestActivity(this.allPublicTeams);
+        this.filterTeam();
       }
     })
   }
@@ -65,8 +66,22 @@ export class TeamsListComponent implements OnDestroy{
   filterTeam() {
     const newVal = this.searchedTeam.trim().toLowerCase();
     if (newVal)
-      this.filteredPublicTeams = this.allPublicTeams.filter((proj: any) => proj.name.toLowerCase().includes(newVal));
-    else this.filteredPublicTeams = this.allPublicTeams;
+      this.filteredPublicTeams = this.sortTeamsByLatestActivity(
+        this.allPublicTeams.filter((proj: any) => proj.name.toLowerCase().includes(newVal))
+      );
+    else this.filteredPublicTeams = this.sortTeamsByLatestActivity(this.allPublicTeams);
+  }
+
+  private sortTeamsByLatestActivity(teams:any[]):any[] {
+    const parsed = [...teams];
+    parsed.sort((a:any, b:any) => {
+      const aRaw = a?.modified ? new Date(a.modified).getTime() : 0;
+      const bRaw = b?.modified ? new Date(b.modified).getTime() : 0;
+      const aDate = Number.isNaN(aRaw) ? 0 : aRaw;
+      const bDate = Number.isNaN(bRaw) ? 0 : bRaw;
+      return bDate - aDate;
+    });
+    return parsed;
   }
 
   viewTeamOverview(teamId:any){

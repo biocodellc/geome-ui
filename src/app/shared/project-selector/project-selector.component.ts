@@ -35,7 +35,7 @@ export class ProjectSelectorComponent {
   currentRouteUrl:string = '';
   currentProject:any;
   isFilterActive: boolean = false;
-  includePublicProj:boolean = false;
+  includePublicProj:boolean = true;
 
   setCurrentProj:boolean = false;
 
@@ -49,7 +49,7 @@ export class ProjectSelectorComponent {
     this.projectService.userProjectSubject.pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
       if (!res) return
       this.allPrivateProjects = res;
-      this.projectList = this.allFilteredProjects = [...this.allPrivateProjects];
+      this.setInitialProjects();
       if (this.setCurrentProj) {
         this.setCurrentProj = false;
         this.onProjectChange(this.allPrivateProjects[0]);
@@ -94,14 +94,24 @@ export class ProjectSelectorComponent {
   onProjectPrefChange(event:any){
     this.searchedProject = '';
     const isChecked = event.target.checked;
-    if(isChecked) this.projectList = [ ...this.allPrivateProjects, ...this.allPublicProjects];
+    if(isChecked) this.projectList = this.getMergedProjects();
     else this.projectList = [ ...this.allPrivateProjects ];
     this.allFilteredProjects = [ ...this.projectList ];
   }
 
+  private getMergedProjects():Array<any>{
+    const merged = [...this.allPrivateProjects, ...this.allPublicProjects];
+    const byProjectId = new Map<any, any>();
+    merged.forEach((project:any) => {
+      const key = project?.projectId;
+      if (key === undefined || key === null) return;
+      if (!byProjectId.has(key)) byProjectId.set(key, project);
+    });
+    return Array.from(byProjectId.values());
+  }
+
   setInitialProjects(){
-    this.includePublicProj = false;
-    if(this.currentUser && this.includePublicProj) this.projectList = [ ...this.allPrivateProjects, ...this.allPublicProjects];
+    if(this.currentUser && this.includePublicProj) this.projectList = this.getMergedProjects();
     else if(this.currentUser && !this.includePublicProj) this.projectList = [ ...this.allPrivateProjects];
     else{
       this.allPrivateProjects = [];
