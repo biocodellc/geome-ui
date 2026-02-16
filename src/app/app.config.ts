@@ -17,7 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient( withInterceptors([authInterceptor]) ),
     provideAnimations(),
     provideToastr({ timeOut: 2000, preventDuplicates: true }),
-    provideUserIdleConfig({ idle: 60, timeout: 60, ping: 60 }),
+    provideUserIdleConfig({ idle: 43200, timeout: 1, ping: 600 }),
     {
       provide: GALLERY_CONFIG,
       useValue: {
