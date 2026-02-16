@@ -46,3 +46,5 @@ localhost.crt
 localhost.key
 .firebase
 .angular
+src/environments/environment.development.ts
+src/environments/environment.ts
