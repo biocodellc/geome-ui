@@ -19,13 +19,13 @@
                     <th scope="col" sortable="order" (sort)="onSort($event)">SheetOrder</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody cdkDropList [cdkDropListData]="selectedAttributes" (cdkDropListDropped)="dropSelectedAttributes($event)">
                 @for (item of selectedAttributes; track item) {
-                    <tr>
+                    <tr cdkDrag [cdkDragDisabled]="!selectedAttUris.includes(item.uri)">
                         <td><input type="checkbox" name="attributes_{{item.column}}" (change)="onSelectChange($event, item)" [checked]="selectedAttUris.includes(item.uri)" [disabled]="requiredUris.includes(item.uri)"></td>
                         <td class="text-secondary">
                             @if(selectedAttUris.includes(item.uri)){
-                                <i class="fas fa-arrows-up-down-left-right me-2"></i>
+                                <i class="fas fa-arrows-up-down-left-right me-2 cursor-move" cdkDragHandle></i>
                                 <i class="fas fa-pen-fancy cursor-pointer" (click)="openModal(attEditModal, item)"></i>
                             }
                         </td>

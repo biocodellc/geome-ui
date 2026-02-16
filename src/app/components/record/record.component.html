@@ -232,7 +232,7 @@
                 <div>
                     @for(child of item.value; let i = $index; track i) {
                     <div class="d-flex">
-                        <span class="entity fw-semibold">{{ item.key }}</span>
+                        <span class="entity fw-semibold">{{ getChildEntityLabel(item.key) }}</span>
                         <ul style="list-style-type: none;" class="d-flex flex-wrap column-gap-3 row-gap-1 mb-2">
                             @for(itemKey of getKeysArr(child); track itemKey) {
                             <li>

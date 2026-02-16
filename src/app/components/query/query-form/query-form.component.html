@@ -79,19 +79,22 @@
                 <div>
                     <ul class="form-btns">
                         @if(entitiesList.includes('Event')){
-                            <li><app-filter-button [conceptAlias]="'Event'" [params]="params" [currentConfig]="networkConfig"/></li>
+                            <li><app-filter-button [conceptAlias]="'Event'" [params]="params" [currentConfig]="config"/></li>
                         }
                         @if(entitiesList.includes('Sample')){
-                            <li><app-filter-button [conceptAlias]="'Sample'" [params]="params" [currentConfig]="networkConfig"/></li>
+                            <li><app-filter-button [conceptAlias]="'Sample'" [params]="params" [currentConfig]="config"/></li>
                         }
                         @if(entitiesList.includes('Tissue')){
-                            <li><app-filter-button [conceptAlias]="'Tissue'" [params]="params" [currentConfig]="networkConfig"/></li>
+                            <li><app-filter-button [conceptAlias]="'Tissue'" [params]="params" [currentConfig]="config"/></li>
+                        }
+                        @if(getExtractionAlias()){
+                            <li><app-filter-button [conceptAlias]="getExtractionAlias() || ''" [params]="params" [currentConfig]="config"/></li>
                         }
                         @if(entitiesList.includes('Sample_Photo')){
-                            <li><app-filter-button [conceptAlias]="'Sample_Photo'" [params]="params" [currentConfig]="networkConfig"/></li>
+                            <li><app-filter-button [conceptAlias]="'Sample_Photo'" [params]="params" [currentConfig]="config"/></li>
                         }
                         @if(entitiesList.includes('Event_Photo')){
-                            <li><app-filter-button [conceptAlias]="'Event_Photo'" [params]="params" [currentConfig]="networkConfig"/></li>
+                            <li><app-filter-button [conceptAlias]="'Event_Photo'" [params]="params" [currentConfig]="config"/></li>
                         }
                     </ul>
                 </div>

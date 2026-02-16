@@ -1,4 +1,32 @@
 const getKey = (key:any) => (event:any) => ({ text: event[key] });
+const hasValue = (value:any) =>
+  value !== undefined && value !== null && value !== '';
+const getFirstPresentKey = (keys:string[]) => (record:any) => ({
+  text: keys.map(key => record?.[key]).find(hasValue),
+});
+const extractionRecordLink = (record:any) => ({
+  text: record.extractionID || record.extractionId || record.dnaExtractionID,
+  href: record.bcid ? `/record/${record.bcid}` : undefined,
+});
+const extractionSummaryDetails = {
+  extractionID: extractionRecordLink,
+  extractionMethod: getFirstPresentKey([
+    'extractionMethod',
+    'dnaExtractionMethod',
+    'method',
+  ]),
+  extractionProtocol: getFirstPresentKey([
+    'extractionProtocol',
+    'extractionKit',
+    'protocol',
+  ]),
+  extractionDate: getFirstPresentKey([
+    'extractionDate',
+    'dateExtracted',
+    'dateExtraction',
+  ]),
+  extractor: getFirstPresentKey(['extractor', 'extractedBy', 'performedBy']),
+};
 
 export const parentRecordDetails:any = {
   Event: {
@@ -81,6 +109,12 @@ export const childRecordDetails:any = {
     fromTissue: getKey('fromTissue'),
     tissueInstitution: getKey('tissueInstitution'),
     tissueType: getKey('tissueType'),
+  },
+  Extraction: {
+    ...extractionSummaryDetails,
+  },
+  Extraction_Details: {
+    ...extractionSummaryDetails,
   },
   fastaSequence: {
     marker: (sq:any) => ({
@@ -187,6 +221,60 @@ export const mainRecordDetails:any = {
     biosampleAccession: (m:any) => ({
       text: m.biosampleAccession? '$m.biosampleAccession' : undefined,
       href: `https://www.ncbi.nlm.nih.gov/biosample/?term=${m.biosampleAccession}/`,
+    }),
+  },
+  Extraction: {
+    extractionID: getFirstPresentKey([
+      'extractionID',
+      'extractionId',
+      'dnaExtractionID',
+    ]),
+    extractionMethod: getFirstPresentKey([
+      'extractionMethod',
+      'dnaExtractionMethod',
+      'method',
+    ]),
+    extractionProtocol: getFirstPresentKey([
+      'extractionProtocol',
+      'extractionKit',
+      'protocol',
+    ]),
+    extractionDate: getFirstPresentKey([
+      'extractionDate',
+      'dateExtracted',
+      'dateExtraction',
+    ]),
+    extractor: getFirstPresentKey(['extractor', 'extractedBy', 'performedBy']),
+    bcid: (e:any) => ({
+      text: e.bcid,
+      href: `https://n2t.net/${e.bcid}`,
+    }),
+  },
+  Extraction_Details: {
+    extractionID: getFirstPresentKey([
+      'extractionID',
+      'extractionId',
+      'dnaExtractionID',
+    ]),
+    extractionMethod: getFirstPresentKey([
+      'extractionMethod',
+      'dnaExtractionMethod',
+      'method',
+    ]),
+    extractionProtocol: getFirstPresentKey([
+      'extractionProtocol',
+      'extractionKit',
+      'protocol',
+    ]),
+    extractionDate: getFirstPresentKey([
+      'extractionDate',
+      'dateExtracted',
+      'dateExtraction',
+    ]),
+    extractor: getFirstPresentKey(['extractor', 'extractedBy', 'performedBy']),
+    bcid: (e:any) => ({
+      text: e.bcid,
+      href: `https://n2t.net/${e.bcid}`,
     }),
   },
   fastaSequence: {

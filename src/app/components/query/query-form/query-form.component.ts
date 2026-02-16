@@ -46,6 +46,38 @@ const SOURCE:Array<any> = [
   'Tissue.tissueType',
   'Tissue.tissuePlate',
   'Tissue.tissueWell',
+  'Extraction.extractionID',
+  'Extraction.extractionId',
+  'Extraction.dnaExtractionID',
+  'Extraction.tissueID',
+  'Extraction.fromTissue',
+  'Extraction.extractionMethod',
+  'Extraction.dnaExtractionMethod',
+  'Extraction.extractionProtocol',
+  'Extraction.extractionKit',
+  'Extraction.extractionDate',
+  'Extraction.dateExtracted',
+  'Extraction.dateExtraction',
+  'Extraction.extractor',
+  'Extraction.extractedBy',
+  'Extraction.performedBy',
+  'Extraction.bcid',
+  'Extraction_Details.extractionID',
+  'Extraction_Details.extractionId',
+  'Extraction_Details.dnaExtractionID',
+  'Extraction_Details.tissueID',
+  'Extraction_Details.fromTissue',
+  'Extraction_Details.extractionMethod',
+  'Extraction_Details.dnaExtractionMethod',
+  'Extraction_Details.extractionProtocol',
+  'Extraction_Details.extractionKit',
+  'Extraction_Details.extractionDate',
+  'Extraction_Details.dateExtracted',
+  'Extraction_Details.dateExtraction',
+  'Extraction_Details.extractor',
+  'Extraction_Details.extractedBy',
+  'Extraction_Details.performedBy',
+  'Extraction_Details.bcid',
   'Sample_Photo.bcid',
   'Sample_Photo.photoID',
   'Sample_Photo.materialSampleID',
@@ -77,6 +109,8 @@ const SELECT_ENTITIES:any = {
   Event: [],
   Sample: ['Event'],
   Tissue: ['Event', 'Sample'],
+  Extraction: ['Event', 'Sample', 'Tissue'],
+  Extraction_Details: ['Event', 'Sample', 'Tissue'],
   fastqMetadata: ['Event', 'Sample', 'Tissue'],
   Sample_Photo : ['Event', 'Sample'],
   Event_Photo : ['Event'],
@@ -120,7 +154,7 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
   teams: Array<any> = [];
   individualProjects: Array<any> = [];
   expeditions:Array<any> = [];
-  queryEntities: Array<string> = ['Event', 'Sample', 'Tissue', 'Fastq', 'Sample_Photo', 'Event_Photo', 'Diagnostics'];
+  queryEntities: Array<string> = ['Event', 'Sample', 'Tissue', 'Extraction', 'Fastq', 'Sample_Photo', 'Event_Photo', 'Diagnostics'];
   phylums: Array<any> = [];
   countries: Array<any> = [];
   markers: Array<any> = [];
@@ -285,14 +319,16 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
 
   queryJson() {
     this.dummyDataService.loadingState.next(true);
-    const entity = this.entity === 'Fastq' ? 'fastqMetadata' : this.entity;
     const config:ProjectConfig = this.requestedParams && this.currentProj ? this.currentProj.config : this.config;
+    const entity = this.resolveQueryEntity(this.entity, config);
     const entities = config.entities
       .filter(e =>
         [
           'Event',
           'Sample',
           'Tissue',
+          'Extraction',
+          'Extraction_Details',
           'Sample_Photo',
           'Event_Photo',
           'Diagnostics',
@@ -302,7 +338,7 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
     this.entitesForDownload.emit(entities);
     this.requestedParams = null;
     
-    const selectEntities = SELECT_ENTITIES[entity];
+    const selectEntities = SELECT_ENTITIES[entity] || [];
     this.queryService.queryJson(
       this.params.buildQuery(selectEntities, SOURCE.join()),
       entity,
@@ -321,6 +357,22 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
       const data = { result: [], entities: entities, entity: this.entity };
       this.queryResult.emit(data);
     })
+  }
+
+  getExtractionAlias():string | undefined {
+    if (this.entitiesList.includes('Extraction')) return 'Extraction';
+    if (this.entitiesList.includes('Extraction_Details')) return 'Extraction_Details';
+    return undefined;
+  }
+
+  resolveQueryEntity(entity:string, config:ProjectConfig):string {
+    if (entity === 'Fastq') return 'fastqMetadata';
+    if (entity === 'Extraction') {
+      const configEntityAliases = config?.entities?.map(e => e.conceptAlias) || [];
+      if (configEntityAliases.includes('Extraction')) return 'Extraction';
+      if (configEntityAliases.includes('Extraction_Details')) return 'Extraction_Details';
+    }
+    return entity;
   }
 
   ngOnDestroy(): void {

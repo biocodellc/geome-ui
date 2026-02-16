@@ -479,6 +479,11 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
     return data || [];
   }
 
+  getChildEntityLabel(entity:string):string {
+    if (entity.toLowerCase().includes('extraction')) return 'Extraction Details';
+    return entity;
+  }
+
 
   // Hidetext() {
   //   this.hideText = !this.hideText

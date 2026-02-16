@@ -10,11 +10,12 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 import { RouterLink } from '@angular/router';
 import { DummyDataService } from '../../../../../helpers/services/dummy-data.service';
 import { cloneDeep } from 'lodash';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-entities',
   standalone: true,
-  imports: [CommonModule, NgbPopoverModule, ReactiveFormsModule, FormsModule, RouterLink],
+  imports: [CommonModule, NgbPopoverModule, ReactiveFormsModule, FormsModule, RouterLink, DragDropModule],
   templateUrl: './entities.component.html',
   styleUrl: './entities.component.scss'
 })
@@ -93,6 +94,17 @@ export class EntitiesComponent implements OnDestroy{
   ngOnDestroy(): void {
     this.destroy$.next('');
     this.destroy$.complete();
+  }
+
+  dropEntities(event:CdkDragDrop<any[]>){
+    if (event.previousIndex === event.currentIndex) return;
+    const projectData = cloneDeep(this.projectConfService.getUpdatedCurrentProjVal() || this.currentProject);
+    if (!projectData?.config?.entities?.length) return;
+
+    const updatedEntities = [...projectData.config.entities];
+    moveItemInArray(updatedEntities, event.previousIndex, event.currentIndex);
+    projectData.config.entities = updatedEntities;
+    this.projectConfService.updateCurrentProj(projectData);
   }
 
   // Helpers functions

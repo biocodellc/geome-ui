@@ -71,6 +71,10 @@ export class FilterButtonComponent implements OnChanges{
       filter.column = 'Sample.materialSampleID';
     } else if (this.conceptAlias === 'Tissue') {
       filter.column = 'Tissue.tissueID';
+    } else if (this.conceptAlias === 'Extraction') {
+      filter.column = 'Extraction.extractionID';
+    } else if (this.conceptAlias === 'Extraction_Details') {
+      filter.column = 'Extraction_Details.extractionID';
     } else if (this.conceptAlias === 'Sample_Photo') {
       filter.column = 'Sample_Photo.photoID';
     } else if (this.conceptAlias === 'Event_Photo') {

@@ -119,6 +119,38 @@ export class MapQueryService extends MapService {
     `;
   }
 
+  private extractionPopup({
+    bcid,
+    extractionID,
+    extractionId,
+    dnaExtractionID,
+    extractionMethod,
+    dnaExtractionMethod,
+    extractionProtocol,
+    extractionKit,
+    extractionDate,
+    dateExtracted,
+    dateExtraction,
+    extractor,
+    extractedBy,
+    performedBy,
+    tissueBcid,
+    sampleBcid,
+    eventBcid,
+  }: any): string {
+    return `
+      <strong>Extraction ID</strong>: ${extractionID || extractionId || dnaExtractionID || 'N/A'}<br>
+      <strong>Extraction Method</strong>: ${extractionMethod || dnaExtractionMethod || 'N/A'}<br>
+      <strong>Extraction Protocol</strong>: ${extractionProtocol || extractionKit || 'N/A'}<br>
+      <strong>Extraction Date</strong>: ${extractionDate || dateExtracted || dateExtraction || 'N/A'}<br>
+      <strong>Extractor</strong>: ${extractor || extractedBy || performedBy || 'N/A'}<br>
+      <a href='${this.generateRecordLink(bcid)}' target='_blank'>Extraction details</a><br>
+      <a href='${this.generateRecordLink(tissueBcid)}' target='_blank'>Tissue details</a><br>
+      <a href='${this.generateRecordLink(sampleBcid)}' target='_blank'>Sample details</a><br>
+      <a href='${this.generateRecordLink(eventBcid)}' target='_blank'>Event details</a>
+    `;
+  }
+
   private fastqPopup({
     bcid,
     libraryLayout,
@@ -160,6 +192,8 @@ export class MapQueryService extends MapService {
     Event: this.eventPopup.bind(this),
     Sample: this.samplePopup.bind(this),
     Tissue: this.tissuePopup.bind(this),
+    Extraction: this.extractionPopup.bind(this),
+    Extraction_Details: this.extractionPopup.bind(this),
     fastqMetadata: this.fastqPopup.bind(this),
     Sample_Photo: this.photoPopup.bind(this),
     Event_Photo: this.photoPopup.bind(this),

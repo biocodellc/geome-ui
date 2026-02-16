@@ -133,6 +133,68 @@ export class DummyDataService {
         'expeditionCode',
         'bcid',
       ],
+      Extraction: [
+        {
+          column: 'Extraction ID',
+          get: (e:any) => e.extractionID || e.extractionId || e.dnaExtractionID || 'N/A',
+        },
+        {
+          column: 'Tissue ID',
+          get: (e:any) => e.tissueID || e.fromTissue || 'N/A',
+        },
+        'materialSampleID',
+        'yearCollected',
+        'scientificName',
+        {
+          column: 'Extraction Method',
+          get: (e:any) => e.extractionMethod || e.dnaExtractionMethod || 'N/A',
+        },
+        {
+          column: 'Extraction Protocol',
+          get: (e:any) => e.extractionProtocol || e.extractionKit || 'N/A',
+        },
+        {
+          column: 'Extraction Date',
+          get: (e:any) => e.extractionDate || e.dateExtracted || e.dateExtraction || 'N/A',
+        },
+        {
+          column: 'Extractor',
+          get: (e:any) => e.extractor || e.extractedBy || e.performedBy || 'N/A',
+        },
+        'expeditionCode',
+        'bcid',
+      ],
+      Extraction_Details: [
+        {
+          column: 'Extraction ID',
+          get: (e:any) => e.extractionID || e.extractionId || e.dnaExtractionID || 'N/A',
+        },
+        {
+          column: 'Tissue ID',
+          get: (e:any) => e.tissueID || e.fromTissue || 'N/A',
+        },
+        'materialSampleID',
+        'yearCollected',
+        'scientificName',
+        {
+          column: 'Extraction Method',
+          get: (e:any) => e.extractionMethod || e.dnaExtractionMethod || 'N/A',
+        },
+        {
+          column: 'Extraction Protocol',
+          get: (e:any) => e.extractionProtocol || e.extractionKit || 'N/A',
+        },
+        {
+          column: 'Extraction Date',
+          get: (e:any) => e.extractionDate || e.dateExtracted || e.dateExtraction || 'N/A',
+        },
+        {
+          column: 'Extractor',
+          get: (e:any) => e.extractor || e.extractedBy || e.performedBy || 'N/A',
+        },
+        'expeditionCode',
+        'bcid',
+      ],
       fastqMetadata: [
         {
           column: 'BioSample Accession #',

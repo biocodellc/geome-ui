@@ -103,6 +103,20 @@ export class QueryService {
           }));
         });
         break;
+
+      case 'Extraction':
+      case 'Extraction_Details':
+        (data[entity] || data.Extraction || data.Extraction_Details)?.forEach((extraction:any) => {
+          const tissueID = extraction.tissueID || extraction.fromTissue;
+          const tissue = tissues?.[tissueID];
+          const sample = samples?.[tissue?.materialSampleID || extraction.materialSampleID];
+          const event = events?.[sample?.eventID];
+          records.push(assignCommon(extraction, sample, event, {
+            tissueBcid: tissue?.bcid,
+            sampleBcid: sample?.bcid,
+          }));
+        });
+        break;
   
       case 'Sample_Photo':
       case 'Tissue':

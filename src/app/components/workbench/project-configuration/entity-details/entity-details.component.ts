@@ -15,13 +15,14 @@ import { AVAILABLE_RULES, Rule } from '../../../../../helpers/models/rules.model
 import { AddEditRuleComponent } from '../../../../dialogs/add-edit-rule/add-edit-rule.component';
 import { DeleteModalComponent } from '../../../../dialogs/delete-modal/delete-modal.component';
 import { cloneDeep } from 'lodash';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 
 const compare = (v1: string | number, v2: string | number) => (v1 < v2 ? -1 : v1 > v2 ? 1 : 0);
 
 @Component({
   selector: 'app-entity-details',
   standalone: true,
-  imports: [CommonModule, RouterLink, SortingDirective, ReactiveFormsModule],
+  imports: [CommonModule, RouterLink, SortingDirective, ReactiveFormsModule, DragDropModule],
   templateUrl: './entity-details.component.html',
   styleUrl: './entity-details.component.scss'
 })
@@ -119,6 +120,7 @@ export class EntityDetailsComponent implements OnDestroy{
   updateSelectedAttrbutes(){
     const filteredAtt = this.availableAttributes.filter(item => !this.selectedAttributes.find(val => val.column === item.column));
     filteredAtt.forEach(item => this.selectedAttributes.push(item));
+    this.sortSelectedAttributesByOrder();
   }
   
   initAttributeForm(){
@@ -182,24 +184,20 @@ export class EntityDetailsComponent implements OnDestroy{
   }
 
   onAllCheckboxChange(event:any, updateConfig:boolean = true){
-    const isChecked = event?.target?.checked || event;
+    const isChecked = event?.target ? !!event.target.checked : !!event;
     this.selectedAttributes.forEach((item:any)=>{
-      this.selectedAttributeMap[item.uri] = isChecked || this.requiredUris.includes(item.uri) ? item : undefined;
-      const idx = this.orderedAttributes.findIndex((att:any) => att == item.uri);
-      if(!isChecked && idx && !this.requiredUris.includes(item.uri))
-        this.orderedAttributes = this.orderedAttributes.slice(0, idx).concat( this.orderedAttributes.slice(idx + 1) )
-      else if(isChecked && !this.requiredUris.includes(item.uri))
-        this.orderedAttributes.push(item.uri);
+      this.selectedAttributeMap[item.uri] =
+        isChecked || this.requiredUris.includes(item.uri) ? item : undefined;
     })
     this.updateOrderedArr(updateConfig);
   }
 
   updateOrderedArr(updateConfig:boolean = true){
-    let checkedAtt:any[] = [];
-    Object.keys(this.selectedAttributeMap).forEach((key:string) =>{
-      if(this.selectedAttributeMap[key]) checkedAtt.push(key);
-    })
-    this.orderedAttributes = checkedAtt;
+    const checkedAtt = Object.keys(this.selectedAttributeMap).filter((key:string) => this.selectedAttributeMap[key]);
+    const preservedOrder = this.orderedAttributes.filter(uri => checkedAtt.includes(uri));
+    const newChecked = checkedAtt.filter(uri => !preservedOrder.includes(uri));
+    this.orderedAttributes = [...preservedOrder, ...newChecked];
+    this.sortSelectedAttributesByOrder();
     if(updateConfig) this.updateConfig();
   }
 
@@ -212,6 +210,32 @@ export class EntityDetailsComponent implements OnDestroy{
     const isChecked = event.target.checked;
     this.selectedAttributeMap[attribute.uri] = isChecked ? attribute : undefined;
     this.updateOrderedArr();
+  }
+
+  dropSelectedAttributes(event:CdkDragDrop<any[]>){
+    if (event.previousIndex === event.currentIndex) return;
+    const selectedCount = this.orderedAttributes.length;
+    if (event.previousIndex >= selectedCount) return;
+
+    const toIndex = Math.max(0, Math.min(event.currentIndex, selectedCount - 1));
+    if (toIndex === event.previousIndex) return;
+
+    const updatedOrder = [...this.orderedAttributes];
+    moveItemInArray(updatedOrder, event.previousIndex, toIndex);
+    this.orderedAttributes = updatedOrder;
+    this.sortSelectedAttributesByOrder();
+    this.updateConfig();
+  }
+
+  private sortSelectedAttributesByOrder(){
+    if (!this.selectedAttributes?.length) return;
+    const selectedSet = new Set(this.orderedAttributes);
+    const attributesByUri = new Map(this.selectedAttributes.map((att:any) => [att.uri, att]));
+    const orderedSelected = this.orderedAttributes
+      .map((uri:string) => attributesByUri.get(uri))
+      .filter((att:any) => att);
+    const unselected = this.selectedAttributes.filter((att:any) => !selectedSet.has(att.uri));
+    this.selectedAttributes = [...orderedSelected, ...unselected];
   }
 
   onSort({ column, direction }: SortEvent | any) {

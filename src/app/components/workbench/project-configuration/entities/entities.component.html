@@ -1,9 +1,9 @@
-<div class="mt-4">
-    @for(entity of entitiesList; track entity; let i=$index;){
-        <ul class="list-group">
+<div class="mt-4" cdkDropList [cdkDropListData]="entitiesList" (cdkDropListDropped)="dropEntities($event)">
+    @for(entity of entitiesList; track entity;){
+        <ul class="list-group" cdkDrag>
             <li class="list-group-box d-flex align-items-center">
                 <div class="d-flex align-items-center events-first">
-                    <i class="fa fa-arrows cursor-pointer text-secondary"></i>
+                    <i class="fa fa-arrows-up-down-left-right cursor-move text-secondary" cdkDragHandle></i>
                     <i class="fa fa-pencil ms-3 cursor-pointer text-secondary" (click)="openEditPopup(p, entity)"></i>
                 </div>
                 <div class="third-list cursor-ointer" [ngbPopover]="popContent" [autoClose]="false" triggers="manual" #p="ngbPopover">
