@@ -28,6 +28,8 @@ export class UploadPhotosComponent implements OnDestroy{
   destroy$:Subject<any> = new Subject();
   photoEntities:Array<any> = [];
   expeditions:Array<any> = [];
+  permittedExpeditionCodes:Set<string> = new Set<string>();
+  permissionCheckReady:boolean = false;
   loading: boolean = false;
   currentUser:any;
   currentProject:any;
@@ -47,7 +49,10 @@ export class UploadPhotosComponent implements OnDestroy{
 
   constructor(){
     this.initForm();
-    this.authService.currentUser.pipe(takeUntil(this.destroy$)).subscribe((res:any)=> this.currentUser = res);
+    this.authService.currentUser.pipe(takeUntil(this.destroy$)).subscribe((res:any)=> {
+      this.currentUser = res;
+      if (this.currentProject?.projectId) this.getUserExpeditions();
+    });
     this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if(!res) return;
       this.currentProject = res;
@@ -101,13 +106,33 @@ export class UploadPhotosComponent implements OnDestroy{
   }
 
   getUserExpeditions(){
-    this.expeditionService.getAllExpeditions(this.currentProject.projectId).pipe(take(1), takeUntil(this.destroy$)).subscribe({
+    if (!this.currentProject?.projectId) return;
+
+    const projectOwnerId = this.currentProject?.user?.userId;
+    const isProjectOwner = projectOwnerId && this.currentUser?.userId === projectOwnerId;
+    const enforceAccess = !!this.currentProject?.enforceExpeditionAccess && !isProjectOwner;
+    const expeditionReq$ = enforceAccess
+      ? this.expeditionService.getExpeditionsForUser(this.currentProject.projectId, true)
+      : this.expeditionService.getAllExpeditions(this.currentProject.projectId);
+
+    expeditionReq$.pipe(take(1), takeUntil(this.destroy$)).subscribe({
       next:(res:any)=>{
-        if(res){
-          this.expeditions = res;//.filter((item:any)=> this.currentUser.email == item.user.email);
-        }
+        this.expeditions = res || [];
+        this.permittedExpeditionCodes = new Set(
+          this.expeditions
+            .map((item:any) => item?.expeditionCode)
+            .filter((code:any) => !!code),
+        );
+        this.permissionCheckReady = true;
+
+        const selectedExpedition = this.expeditions.find((item:any)=> item.expeditionTitle == this.getControlVal('expedition'));
+        if (this.getControlVal('expedition') && !selectedExpedition) this.setControlVal('expedition', '');
       },
-      error:(err:any)=>{}
+      error:()=>{
+        this.expeditions = [];
+        this.permittedExpeditionCodes.clear();
+        this.permissionCheckReady = false;
+      }
     })
   }
 
@@ -128,13 +153,18 @@ export class UploadPhotosComponent implements OnDestroy{
     )
       return;
 
-    if (
-      (this.currentProject.enforceExpeditionAccess &&
-      this.currentProject.user.userId !== this.currentUser.userId)
-    ) {
-      this.openModal(this.userWarningModalRef);
+    if (!this.hasExpeditionPermission(expedition)) {
+      this.uploadState = 'error';
+      this.uploadProgress = 0;
+      this.uploadStatusMessage = 'Permission check failed.';
+      this.uploadWarnings = [];
+      this.uploadErrors = [
+        'You do not have permission to upload photos for the selected expedition. Choose an expedition you own or contact the project owner.',
+      ];
+      return;
     }
-    else this.upload();
+
+    this.upload();
   }
 
   openModal(content: TemplateRef<any>){
@@ -279,5 +309,18 @@ export class UploadPhotosComponent implements OnDestroy{
     };
 
     return statusMessages[status] || '';
+  }
+
+  private hasExpeditionPermission(expedition:any): boolean {
+    if (!this.currentProject?.enforceExpeditionAccess) return true;
+    if (!this.selectedEntity?.requiresExpedition) return true;
+
+    const projectOwnerId = this.currentProject?.user?.userId;
+    const isProjectOwner = projectOwnerId && this.currentUser?.userId === projectOwnerId;
+    if (isProjectOwner) return true;
+
+    if (!this.permissionCheckReady) return false;
+    if (!expedition?.expeditionCode) return false;
+    return this.permittedExpeditionCodes.has(expedition.expeditionCode);
   }
 }
