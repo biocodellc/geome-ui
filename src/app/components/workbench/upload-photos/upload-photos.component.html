@@ -69,6 +69,16 @@
                             @if(form['entity'].touched && form['entity'].errors){
                                 <span class="text-danger">Entity is Required</span>
                             }
+                            @if(form['entity'].value && selectedEntity?.uniqueAcrossProject){
+                                <div class="small text-secondary mt-1">
+                                    Index key is set to be unique across the project so choosing an expedition is not required for this entity.
+                                </div>
+                            }
+                            @if(form['entity'].value && selectedEntity && !selectedEntity?.uniqueAcrossProject){
+                                <div class="small text-secondary mt-1">
+                                    Index key is not unique across the project so choosing an expedition is required for this entity.
+                                </div>
+                            }
                         </div>
                           
                         @if(form['entity'].value && selectedEntity?.requiresExpedition){
@@ -145,10 +155,20 @@
                                     </div>
                                 }
 
-                                @if(uploadState === 'error' && uploadErrors.length){
+                                @if(uploadState === 'error'){
                                     <div class="alert alert-danger mt-2 mb-0 py-2 px-3" role="alert">
-                                        @for(error of uploadErrors; track error){
-                                            <div>{{ error }}</div>
+                                        <div class="fw-semibold">{{ uploadErrorInfo?.title || 'Upload Failed' }}</div>
+                                        <div>{{ uploadErrorInfo?.body || 'An unexpected error occurred during upload.' }}</div>
+                                        @if(uploadErrorInfo?.retryable){
+                                            <div class="small mt-1">You can retry this upload.</div>
+                                        }
+                                        @if(uploadErrors.length){
+                                            <details class="mt-2">
+                                                <summary>Details</summary>
+                                                @for(error of uploadErrors; track error){
+                                                    <div class="small mt-1">{{ error }}</div>
+                                                }
+                                            </details>
                                         }
                                     </div>
                                 }

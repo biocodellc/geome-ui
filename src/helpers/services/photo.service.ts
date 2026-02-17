@@ -7,6 +7,12 @@ import { environment } from '../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class PhotoService {
   private restRoot = environment.restRoot;
+  private acceptedZipContentTypes:string[] = [
+    'application/zip',
+    'application/octet-stream',
+    'application/x-zip-compressed',
+    'application/x-zip',
+  ];
 
   private defaultHeaders = new HttpHeaders({
     Accept: '*/*',
@@ -60,6 +66,13 @@ export class PhotoService {
     }).pipe(catchError(this.handleError));
   }
 
+  precheck(projectId: string, expeditionCode: string, entity: string): Observable<any> {
+    const url = `${this.restRoot}photos/${entity}/upload/precheck`;
+    const params:any = { projectId };
+    if (expeditionCode) params.expeditionCode = expeditionCode;
+    return this.http.get(url, { params, headers: this.defaultHeaders }).pipe(catchError(this.handleError));
+  }
+
   getResumeSize(projectId: string, expeditionCode: string, entity: string): Observable<number> {
     const url = `${this.restRoot}photos/${entity}/upload/progress`;
     const params = { projectId, expeditionCode };
@@ -103,7 +116,10 @@ export class PhotoService {
   }
 
   private getZipHeaders(file?: File): HttpHeaders {
-    const contentType = file?.type || 'application/zip';
+    const fileType = (file?.type || '').toLowerCase();
+    const contentType = this.acceptedZipContentTypes.includes(fileType)
+      ? fileType
+      : 'application/zip';
     return this.defaultHeaders.set('Content-Type', contentType);
   }
 }

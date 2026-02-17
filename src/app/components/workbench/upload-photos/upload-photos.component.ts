@@ -2,11 +2,19 @@ import { Component, inject, OnDestroy, TemplateRef, ViewChild } from '@angular/c
 import { ProjectService } from '../../../../helpers/services/project.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { distinctUntilChanged, finalize, Subject, take, takeUntil } from 'rxjs';
+import { distinctUntilChanged, finalize, Subject, switchMap, take, takeUntil, throwError } from 'rxjs';
 import { ExpeditionService } from '../../../../helpers/services/expedition.service';
 import { AuthenticationService } from '../../../../helpers/services/authentication.service';
 import { PhotoService } from '../../../../helpers/services/photo.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
+type UploadUiError = {
+  status: number;
+  title: string;
+  body: string;
+  details: string[];
+  retryable: boolean;
+};
 
 @Component({
   selector: 'app-upload-photos',
@@ -46,6 +54,7 @@ export class UploadPhotosComponent implements OnDestroy{
   uploadStatusMessage:string = '';
   uploadErrors:string[] = [];
   uploadWarnings:string[] = [];
+  uploadErrorInfo:UploadUiError | null = null;
 
   constructor(){
     this.initForm();
@@ -95,6 +104,7 @@ export class UploadPhotosComponent implements OnDestroy{
           conceptAlias: e.conceptAlias,
           parentEntity: e.parentEntity,
           generateID: e.generateID,
+          uniqueAcrossProject: !!parentEntity.uniqueAcrossProject,
           additionalMetadata: e.attributes.filter(
             (a:any) => !a.internal && !excludeCols.includes(a.column),
           ),
@@ -153,17 +163,6 @@ export class UploadPhotosComponent implements OnDestroy{
     )
       return;
 
-    if (!this.hasExpeditionPermission(expedition)) {
-      this.uploadState = 'error';
-      this.uploadProgress = 0;
-      this.uploadStatusMessage = 'Permission check failed.';
-      this.uploadWarnings = [];
-      this.uploadErrors = [
-        'You do not have permission to upload photos for the selected expedition. Choose an expedition you own or contact the project owner.',
-      ];
-      return;
-    }
-
     this.upload();
   }
 
@@ -180,36 +179,67 @@ export class UploadPhotosComponent implements OnDestroy{
     this.uploadStatusMessage = `Uploading ${this.getEntityLabel()} photos...`;
     this.uploadErrors = [];
     this.uploadWarnings = [];
+    this.uploadErrorInfo = null;
 
     const resume = !!this.canResume;
     this.canResume = false;
 
-    this.photoService.upload(
+    this.uploadStatusMessage = 'Checking upload permission...';
+
+    this.photoService.precheck(
       this.currentProject.projectId,
       expedition?.expeditionCode,
       this.selectedEntity.conceptAlias,
-      this.file,
-      resume,
-      this.getControlVal('ignoreId'),
-      progress => {
-        this.uploadProgress = progress.percent;
-        this.uploadStatusMessage = `Uploading ${this.getEntityLabel()} photos... ${progress.percent}%`;
-      }
+    ).pipe(
+      switchMap((precheck:any) => {
+        if (precheck?.allowed === false) {
+          return throwError(() => ({
+            error: {
+              usrMessage: precheck?.message || 'Upload permission check failed.',
+              developerMessage: '',
+              httpStatusCode: 403,
+            },
+            status: 403
+          }));
+        }
+
+        this.uploadStatusMessage = `Uploading ${this.getEntityLabel()} photos...`;
+        return this.photoService.upload(
+          this.currentProject.projectId,
+          expedition?.expeditionCode,
+          this.selectedEntity.conceptAlias,
+          this.file,
+          resume,
+          this.getControlVal('ignoreId'),
+          progress => {
+            this.uploadProgress = progress.percent;
+            this.uploadStatusMessage = `Uploading ${this.getEntityLabel()} photos... ${progress.percent}%`;
+          }
+        );
+      }),
     )
     .pipe(finalize(() => this.loading = false))
     .subscribe({
       next: (res:any) => {
-        this.uploadWarnings = res?.warnings || [];
-        if (res?.success && !(res?.errors || []).length) {
+        this.uploadWarnings = this.normalizeMessages(res?.warnings);
+        const normalizedErrors = this.normalizeMessages(res?.errors);
+        if (res?.success && !normalizedErrors.length) {
           this.uploadProgress = 100;
           this.uploadState = 'success';
           this.uploadStatusMessage = `${this.getEntityLabel()} photo upload completed successfully.`;
         } else {
           this.uploadState = 'error';
           this.uploadProgress = 0;
-          this.uploadErrors = (res?.errors || []).length
-            ? res.errors
-            : [`${this.getEntityLabel()} photo upload failed. Please review your file and try again.`];
+          this.uploadErrorInfo = {
+            status: 422,
+            title: 'Invalid Photo Package',
+            body: 'Archive accepted, but validation failed for one or more files.',
+            details: normalizedErrors.length
+              ? normalizedErrors
+              : ['Photo upload failed. Please review your file and try again.'],
+            retryable: false,
+          };
+          this.uploadErrors = this.uploadErrorInfo.details;
           this.uploadStatusMessage = `${this.getEntityLabel()} photo upload failed.`;
         }
       },
@@ -217,8 +247,9 @@ export class UploadPhotosComponent implements OnDestroy{
         this.uploadState = 'error';
         this.uploadProgress = 0;
         this.uploadWarnings = [];
-        this.uploadErrors = this.getUploadErrorMessages(err);
-        this.uploadStatusMessage = `${this.getEntityLabel()} photo upload failed.`;
+        this.uploadErrorInfo = this.mapUploadError(err, { hasExpeditionCode: !!expedition?.expeditionCode });
+        this.uploadErrors = this.uploadErrorInfo.details;
+        this.uploadStatusMessage = `${this.uploadErrorInfo.title}: ${this.uploadErrorInfo.body}`;
       }
     })
   }
@@ -263,64 +294,192 @@ export class UploadPhotosComponent implements OnDestroy{
     this.uploadErrors = [];
     this.uploadWarnings = [];
     this.uploadProgress = 0;
+    this.uploadErrorInfo = null;
   }
 
-  private getUploadErrorMessages(err:any): string[] {
+  private mapUploadError(err:any, opts:{ hasExpeditionCode?: boolean } = {}): UploadUiError {
     const payload = err?.error || {};
     const status = Number(payload?.httpStatusCode ?? err?.status ?? 0);
-    const userMessage = payload?.usrMessage || payload?.message || err?.message;
-    const developerMessage = payload?.developerMessage;
-    const messages:string[] = [];
+    const usrMessages = [
+      ...this.normalizeMessages(payload?.usrMessage),
+      ...this.normalizeMessages(payload?.message),
+      ...this.normalizeMessages(payload?.errors),
+    ];
+    const devMessages = this.normalizeMessages(payload?.developerMessage);
 
-    if (userMessage) messages.push(userMessage);
-
-    if (status) {
-      const interpreted = this.getHttpStatusMessage(status);
-      if (interpreted) messages.push(`HTTP ${status}: ${interpreted}`);
-      else messages.push(`HTTP ${status}: Upload request failed.`);
-    }
-
-    if (typeof developerMessage === 'string' && developerMessage.trim()) {
-      messages.push(`Details: ${developerMessage.trim()}`);
-    }
-
-    if (!messages.length) {
-      messages.push('Photo upload failed due to a server or network error.');
-    }
-
-    return [...new Set(messages)];
-  }
-
-  private getHttpStatusMessage(status:number): string {
-    const statusMessages:Record<number, string> = {
-      400: 'The upload request was invalid. Check required fields and file contents.',
-      401: 'You are not authenticated. Please sign in again and retry.',
-      403: 'You do not have permission to upload photos for this project or expedition.',
-      404: 'The upload endpoint or related project resource was not found.',
-      408: 'The upload timed out before completion. Please retry.',
-      413: 'The file is too large for the server limit. Upload a smaller zip.',
-      415: 'Unsupported media type. Upload a valid .zip file and verify the archive format.',
-      422: 'The server could not process the upload content. Check file naming and metadata.',
-      429: 'Too many requests. Wait briefly and try again.',
-      500: 'Server error while processing the upload. Please retry shortly.',
-      502: 'Bad gateway from an upstream service. Please retry shortly.',
-      503: 'Upload service is temporarily unavailable. Please retry shortly.',
-      504: 'Gateway timeout while processing upload. Please retry.',
+    const withDetail = (base: Omit<UploadUiError, 'details'>, includeUsr = false, includeDev = false): UploadUiError => {
+      const details:string[] = [];
+      if (includeUsr) details.push(...usrMessages);
+      if (includeDev) details.push(...devMessages.map(msg => `Developer: ${msg}`));
+      return {
+        ...base,
+        body: this.getPreferredUserBody(base.body, usrMessages),
+        details: [...new Set(details)],
+      };
     };
 
-    return statusMessages[status] || '';
+    if (status === 400) {
+      return withDetail({
+        status,
+        title: 'Upload Request Invalid',
+        body: 'The upload request is missing required parameters or contains invalid values.',
+        retryable: false,
+      }, false, true);
+    }
+
+    if (status === 401) {
+      return withDetail({
+        status,
+        title: 'Sign In Required',
+        body: 'Your session expired or access token is invalid. Please sign in again.',
+        retryable: true,
+      }, false, true);
+    }
+
+    if (status === 403) {
+      const expeditionDetail = opts.hasExpeditionCode
+        ? ['With expeditionCode set, you must be expedition owner or project owner.']
+        : [];
+      const result = withDetail({
+        status,
+        title: 'Permission Denied',
+        body: 'You do not have permission to upload this photo package.',
+        retryable: false,
+      }, true, true);
+      result.details = [...new Set([...expeditionDetail, ...result.details])];
+      return result;
+    }
+
+    if (status === 404) {
+      return withDetail({
+        status,
+        title: 'Endpoint Not Found',
+        body: 'Upload endpoint was not found. Check API base URL and route.',
+        retryable: false,
+      });
+    }
+
+    if (status === 413) {
+      return withDetail({
+        status,
+        title: 'File Too Large',
+        body: 'The archive is too large for server/proxy limits. Reduce zip size and retry.',
+        retryable: true,
+      }, false, true);
+    }
+
+    if (status === 415) {
+      const result = withDetail({
+        status,
+        title: 'Unsupported File Type',
+        body: 'Upload must be a raw ZIP stream, not multipart/form-data.',
+        retryable: false,
+      }, false, true);
+      result.details = [
+        'Expected Content-Type: application/zip, application/octet-stream, application/x-zip-compressed, or application/x-zip.',
+        ...result.details,
+      ];
+      return result;
+    }
+
+    if (status === 422) {
+      return withDetail({
+        status,
+        title: 'Invalid Photo Package',
+        body: 'Archive accepted, but validation failed for one or more files.',
+        retryable: false,
+      }, true, true);
+    }
+
+    if (status === 429) {
+      return withDetail({
+        status,
+        title: 'Too Many Requests',
+        body: 'Upload rate limit reached. Please wait and retry.',
+        retryable: true,
+      }, false, true);
+    }
+
+    if ([500, 502, 503, 504].includes(status)) {
+      return withDetail({
+        status,
+        title: 'Server Error',
+        body: 'The server could not complete the upload. Please retry in a moment.',
+        retryable: true,
+      }, false, true);
+    }
+
+    const fallbackDetails = [
+      ...usrMessages,
+      ...devMessages.map(msg => `Developer: ${msg}`),
+    ];
+    if (!fallbackDetails.length && status) fallbackDetails.push(`HTTP status: ${status}`);
+    if (!fallbackDetails.length) fallbackDetails.push(...this.normalizeMessages(err?.message));
+
+    return {
+      status,
+      title: 'Upload Failed',
+      body: this.getPreferredUserBody('An unexpected error occurred during upload.', usrMessages),
+      details: [...new Set(fallbackDetails)],
+      retryable: status === 0 || status >= 500,
+    };
   }
 
-  private hasExpeditionPermission(expedition:any): boolean {
-    if (!this.currentProject?.enforceExpeditionAccess) return true;
-    if (!this.selectedEntity?.requiresExpedition) return true;
+  private getPreferredUserBody(defaultBody:string, usrMessages:string[]): string {
+    const messages = (usrMessages || []).filter(Boolean);
+    const genericMessages = new Set([
+      'server error',
+      'bad request',
+      'forbidden',
+      'unauthorized',
+      'internal server error',
+      'an error occurred',
+    ]);
+    const nonGeneric = messages.find((msg:string) => !genericMessages.has(msg.trim().toLowerCase()));
+    return nonGeneric || messages[0] || defaultBody;
+  }
 
-    const projectOwnerId = this.currentProject?.user?.userId;
-    const isProjectOwner = projectOwnerId && this.currentUser?.userId === projectOwnerId;
-    if (isProjectOwner) return true;
+  private normalizeMessages(value:any): string[] {
+    const out:string[] = [];
+    const push = (msg:string) => {
+      const cleaned = msg?.trim();
+      if (cleaned && !out.includes(cleaned)) out.push(cleaned);
+    };
 
-    if (!this.permissionCheckReady) return false;
-    if (!expedition?.expeditionCode) return false;
-    return this.permittedExpeditionCodes.has(expedition.expeditionCode);
+    const walk = (entry:any) => {
+      if (entry === null || entry === undefined) return;
+
+      if (typeof entry === 'string' || typeof entry === 'number' || typeof entry === 'boolean') {
+        push(String(entry));
+        return;
+      }
+
+      if (Array.isArray(entry)) {
+        entry.forEach(item => walk(item));
+        return;
+      }
+
+      if (typeof entry === 'object') {
+        const preferred = ['usrMessage', 'message', 'developerMessage', 'error', 'detail'];
+        preferred.forEach((key:string) => {
+          if (entry[key] !== undefined && entry[key] !== null) walk(entry[key]);
+        });
+
+        const remainingEntries = Object.entries(entry).filter(([key]) => !preferred.includes(key));
+        if (remainingEntries.length) {
+          remainingEntries.forEach(([key, val]) => {
+            if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') {
+              push(`${key}: ${val}`);
+            } else if (Array.isArray(val)) {
+              const vals = this.normalizeMessages(val).join(', ');
+              if (vals) push(`${key}: ${vals}`);
+            }
+          });
+        }
+      }
+    };
+
+    walk(value);
+    return out;
   }
 }
