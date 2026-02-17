@@ -65,7 +65,7 @@ export class UploadPhotosComponent implements OnDestroy{
     this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if(!res) return;
       this.currentProject = res;
-      this.setPhotoEntities();
+      this.ensurePhotoEntitiesLoaded();
       this.getUserExpeditions();
     });
   }
@@ -90,7 +90,12 @@ export class UploadPhotosComponent implements OnDestroy{
   }
 
   setPhotoEntities() {
-    const { entities } = this.currentProject.config;
+    const entities = this.currentProject?.config?.entities || [];
+    if (!entities.length) {
+      this.photoEntities = [];
+      return;
+    }
+
     this.photoEntities = entities
       .filter((e:any) => e.type === 'Photo')
       .map((e:any) => {
@@ -113,6 +118,31 @@ export class UploadPhotosComponent implements OnDestroy{
       });
     if (this.photoEntities.length)
       this.setControlVal('entity', this.photoEntities[0].conceptAlias);
+  }
+
+  private ensurePhotoEntitiesLoaded(): void {
+    if (this.currentProject?.config?.entities?.length) {
+      this.setPhotoEntities();
+      return;
+    }
+
+    this.projectService.getAllProjects(true).pipe(take(1), takeUntil(this.destroy$)).subscribe({
+      next: (projects:any) => {
+        const projectFromList = (projects || []).find((item:any) => item?.projectId == this.currentProject?.projectId) || this.currentProject;
+        this.projectService.getProjectConfig(projectFromList).pipe(take(1), takeUntil(this.destroy$)).subscribe({
+          next: (config:any) => {
+            this.currentProject = { ...projectFromList, config };
+            this.setPhotoEntities();
+          },
+          error: () => {
+            this.setPhotoEntities();
+          }
+        });
+      },
+      error: () => {
+        this.setPhotoEntities();
+      }
+    });
   }
 
   getUserExpeditions(){
@@ -186,11 +216,14 @@ export class UploadPhotosComponent implements OnDestroy{
 
     this.uploadStatusMessage = 'Checking upload permission...';
 
-    this.photoService.precheck(
-      this.currentProject.projectId,
-      expedition?.expeditionCode,
-      this.selectedEntity.conceptAlias,
-    ).pipe(
+    this.authService.ensureActiveSession().pipe(
+      switchMap(() =>
+        this.photoService.precheck(
+          this.currentProject.projectId,
+          expedition?.expeditionCode,
+          this.selectedEntity.conceptAlias,
+        )
+      ),
       switchMap((precheck:any) => {
         if (precheck?.allowed === false) {
           return throwError(() => ({

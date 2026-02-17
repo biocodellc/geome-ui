@@ -1,10 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, Subscription, switchMap, throwError } from 'rxjs';
 import { UserIdleService } from 'angular-user-idle';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserTimeOutComponent } from '../../app/dialogs/user-time-out/user-time-out.component';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,12 +15,14 @@ export class AuthenticationService {
   private currentUserSubject!: BehaviorSubject<any>;
   private userIdle = inject(UserIdleService);
   private modalService = inject(NgbModal);
+  private idleTimeoutSub?: Subscription;
   currentUser!: Observable<any>;
   isLoggedIn:boolean = false;
 
   constructor(
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private userService: UserService,
   ) {
     this.checkUser();
   }
@@ -46,13 +49,17 @@ export class AuthenticationService {
 
   saveUser(userData:any, username:string){
     if(userData.access_token){
+      const existingUser = this.getUserFromStorage() || {};
+      const now = new Date().getTime();
+      const expiresAt = this.resolveExpiresAt(userData, now, existingUser);
       let user:any = {
+        ...existingUser,
         username,
         accessToken: userData.access_token,
-        refreshToken: userData.refresh_token,
-        oAuthTimestamp: new Date().getTime(),
-        oAuthExpTimestamp: new Date().getTime() + (12 * 60 * 60 * 1000),
-        ...this.getUserFromStorage()
+        refreshToken: userData.refresh_token || existingUser.refreshToken,
+        oAuthTimestamp: now,
+        oAuthExpTimestamp: expiresAt,
+        expires_at: expiresAt,
       }
       localStorage.setItem( this.storageKey, btoa(JSON.stringify(user)) );
       this.startWatchingIdel();
@@ -90,9 +97,10 @@ export class AuthenticationService {
   }
 
   isTokenTimeExpired(user:any):boolean{
-    if(!user || !user.accessToken || !user.oAuthTimestamp || !user.oAuthExpTimestamp) return true
+    if(!user || !user.accessToken) return true
     const currentTime = new Date().getTime();
-    const expTime = user.oAuthExpTimestamp;
+    const expTime = Number(user.expires_at || user.oAuthExpTimestamp || 0);
+    if (!expTime) return true;
     if(expTime > currentTime - 2000) return false
     else return true;
   }
@@ -106,11 +114,67 @@ export class AuthenticationService {
 
   startWatchingIdel(){
     this.userIdle.startWatching();
-    this.userIdle.onTimeout().subscribe((res:any) => {
+    this.idleTimeoutSub?.unsubscribe();
+    this.idleTimeoutSub = this.userIdle.onTimeout().subscribe((res:any) => {
       if(res){
         this.logoutUser(false, '/login');
         this.modalService.open(UserTimeOutComponent, { animation: true, centered: true, windowClass: 'no-backdrop', backdrop: false });
       }
     })
+  }
+
+  ensureActiveSession(): Observable<boolean> {
+    const user = this.getUserFromStorage();
+    if (!user?.accessToken) {
+      return this.forceRelogin();
+    }
+
+    return this.userService.introspectToken().pipe(
+      map((res:any) => !!res?.active),
+      catchError(() => of(false)),
+      switchMap((active:boolean) => active ? of(true) : this.refreshAndRetryIntrospect(user))
+    );
+  }
+
+  private refreshAndRetryIntrospect(user:any): Observable<boolean> {
+    if (!user?.refreshToken) return this.forceRelogin();
+
+    return this.userService.refreshUserToken(user.refreshToken).pipe(
+      switchMap((res:any) => {
+        if (!res?.access_token || !res?.refresh_token) return this.forceRelogin();
+        this.saveUser(res, user?.username);
+        return this.userService.introspectToken().pipe(
+          map((introspect:any) => !!introspect?.active),
+          catchError(() => of(false)),
+          switchMap((active:boolean) => active ? of(true) : this.forceRelogin())
+        );
+      }),
+      catchError(() => this.forceRelogin())
+    );
+  }
+
+  private forceRelogin(): Observable<never> {
+    this.logoutUser(false, '/login');
+    return throwError(() => ({
+      status: 401,
+      error: {
+        usrMessage: 'Session expired. Please log in again.',
+        developerMessage: '',
+        httpStatusCode: 401,
+      }
+    }));
+  }
+
+  private resolveExpiresAt(userData:any, now:number, existingUser:any): number {
+    const explicitExpiresAt = Number(userData?.expires_at);
+    if (Number.isFinite(explicitExpiresAt) && explicitExpiresAt > now) return explicitExpiresAt;
+
+    const expiresIn = Number(userData?.expires_in);
+    if (Number.isFinite(expiresIn) && expiresIn > 0) return now + (expiresIn * 1000);
+
+    const existingExpiresAt = Number(existingUser?.expires_at || existingUser?.oAuthExpTimestamp || 0);
+    if (Number.isFinite(existingExpiresAt) && existingExpiresAt > now) return existingExpiresAt;
+
+    return now + (12 * 60 * 60 * 1000);
   }
 }

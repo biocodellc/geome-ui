@@ -16,13 +16,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const dataService = inject(DummyDataService);
   let currentUser = authService.getUserFromStorage();
 
-  if (currentUser && currentUser?.accessToken && !req.params.keys().includes('accessToken')) {
+  if (currentUser && currentUser?.accessToken && !req.params.keys().includes('access_token')) {
     req = addToken(req, currentUser.accessToken);
   }
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401) {
+      if (error.status === 401 && shouldAttemptTokenRefresh(error, req)) {
         return handle401Error(req, next, authService, userService);
       }
       toastr.error(error.error?.usrMessage || error.error?.message || 'Server Error');
@@ -36,6 +36,16 @@ function addToken(request: HttpRequest<any>, token: string): HttpRequest<any> {
   return request.clone({
     setParams: { "access_token": token }
   });
+}
+
+function shouldAttemptTokenRefresh(error: HttpErrorResponse, request: HttpRequest<any>): boolean {
+  const url = (request?.url || '').toLowerCase();
+  if (url.includes('/oauth/refresh') || url.includes('/oauth/introspect')) return false;
+
+  const devMessage = `${error?.error?.developerMessage || ''}`.toLowerCase();
+  const hasAccessTokenPhrase = /access[_\s-]?token/.test(devMessage);
+  const hasExpiredOrInvalid = /(invalid|expired)/.test(devMessage);
+  return hasAccessTokenPhrase && hasExpiredOrInvalid;
 }
 
 function handle401Error(request: HttpRequest<any>, next: HttpHandlerFn, authService: AuthenticationService, UserService: UserService): Observable<HttpEvent<any>> {
@@ -54,8 +64,7 @@ function handle401Error(request: HttpRequest<any>, next: HttpHandlerFn, authServ
         if (!res.error) {
           const newToken = res.access_token;
           refreshTokenSubject.next(newToken);
-          const body = { access_token: res.access_token, refresh_token: res.refresh_token };
-          updateUserVal(authService.getUserFromStorage(), body, authService);
+          updateUserVal(authService.getUserFromStorage(), res, authService);
           isRefreshing = false;
           return next(addToken(request, newToken));
         } else {
@@ -84,8 +93,6 @@ function handle401Error(request: HttpRequest<any>, next: HttpHandlerFn, authServ
 }
 
 function updateUserVal(user:any, new_data:any, authS:AuthenticationService){
-  const new_user_data = { ...user };
-  new_user_data['access_token'] = new_data.access_token;
-  new_user_data['refresh_token'] = new_data.refresh_token;
-  authS.saveUser(new_user_data, user.username);
+  if (!user?.username) return;
+  authS.saveUser(new_data, user.username);
 }

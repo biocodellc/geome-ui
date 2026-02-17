@@ -64,6 +64,10 @@ export class UserService {
     return this.http.post(`${this.apiURL}oauth/refresh`, this.formattedReqBody(data), { headers: this.headers });
   }
 
+  introspectToken():Observable<any> {
+    return this.http.get(`${this.apiURL}oauth/introspect`);
+  }
+
   invite(data:any):Observable<any> {
     return this.http.post(`${this.apiURL}users/invite`, this.formattedReqBody(data), { headers: this.headers });
   }
