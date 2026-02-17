@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, forkJoin, Observable, catchError, map, of, take } from 'rxjs';
+import { BehaviorSubject, forkJoin, Observable, catchError, map, of, switchMap, take } from 'rxjs';
 import { ProjectConfig } from '../models/projectConfig.model';
 import { environment } from '../../environments/environment';
 import { AuthenticationService } from './authentication.service';
@@ -57,9 +57,9 @@ export class ProjectService{
     }
     else{
       const projectData = this.getProjectFromLocal(project.projectId) || project;
-      this.getProjectConfig(projectData.projectId).pipe(take(1)).subscribe({
+      this.getProjectConfig(projectData).pipe(take(1)).subscribe({
         next: (res:any) => {
-          const updatedProject:any = { ...cloneDeep(projectData) ,config : new ProjectConfig(res) };
+          const updatedProject:any = { ...cloneDeep(projectData) ,config : new ProjectConfig(res || projectData?.config) };
           updatedProject['currentUserIsMember'] = this.userProjectSubject.value?.some(
             (p:any) => p.projectId === updatedProject.projectId,
           );
@@ -91,13 +91,29 @@ export class ProjectService{
     );
   }
 
-  getProjectConfig(projectId: string): Observable<any | null> {
+  getProjectConfig(projectOrProjectId: any): Observable<any | null> {
+    const projectId = typeof projectOrProjectId === 'object'
+      ? projectOrProjectId?.projectId
+      : projectOrProjectId;
+    const configId = typeof projectOrProjectId === 'object'
+      ? projectOrProjectId?.projectConfiguration?.id
+      : undefined;
+
     if (!projectId) {
       return of(null);
-     }
-    return this.http
-      .get<any>(`${this.apiUrl}projects/${projectId}/config`)
-      .pipe(catchError(() => of(null)));
+    }
+
+    const includePublicParams:any = { includePublic: 'true' };
+    return this.http.get<any>(`${this.apiUrl}projects/${projectId}/config`, { params: includePublicParams }).pipe(
+      catchError(() => of(null)),
+      switchMap((res:any) => {
+        if (res?.entities?.length) return of(res);
+        if (!configId) return of(res || null);
+        return this.http
+          .get<any>(`${this.apiUrl}projects/configs/${configId}`, { params: includePublicParams })
+          .pipe(catchError(() => of(res || null)));
+      })
+    );
   }
 
   getAllProjects(includePublic: boolean): Observable<any> {
