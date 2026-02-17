@@ -76,24 +76,11 @@
                                                         @for(entity of item.data.attributes[attribute]; track entity){
                                                             <div class="checkbox-sec">
                                                                 <label>
-                                                                    @switch(item.worksheet){
-                                                                        @case('Samples'){
-                                                                            <input type="checkbox" (change)="inputChange($event, entity, item.worksheet)" [disabled]="attribute == 'Minimum Information Standard Items'" [checked]="attribute == 'Minimum Information Standard Items' || sampleChecks.includes(entity.column)">
-                                                                        }
-                                                                        @case('Events'){
-                                                                            <input type="checkbox" (change)="inputChange($event, entity, item.worksheet)" [disabled]="attribute == 'Minimum Information Standard Items'" [checked]="attribute == 'Minimum Information Standard Items' || eventChecks.includes(entity.column)">
-                                                                        }
-                                                                        @case('Tissues'){
-                                                                            <input type="checkbox" (change)="inputChange($event, entity, item.worksheet)" [disabled]="attribute == 'Minimum Information Standard Items'" [checked]="attribute == 'Minimum Information Standard Items' || tissueChecks.includes(entity.column)">
-                                                                        }
-                                                                        @case('event_photos'){
-                                                                            <input type="checkbox" (change)="inputChange($event, entity, item.worksheet)" [disabled]="attribute == 'Minimum Information Standard Items'" [checked]="attribute == 'Minimum Information Standard Items' || eventPhotoChecks.includes(entity.column)">
-                                                                        }
-                                                                        @case('sample_photos'){
-                                                                            <input type="checkbox" (change)="inputChange($event, entity, item.worksheet)" [disabled]="attribute == 'Minimum Information Standard Items'" [checked]="attribute == 'Minimum Information Standard Items' || samplePhotoChecks.includes(entity.column)">
-                                                                        }
-                                                                        @default {}
-                                                                    }
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        (change)="inputChange($event, entity, item.worksheet)"
+                                                                        [disabled]="attribute == 'Minimum Information Standard Items'"
+                                                                        [checked]="attribute == 'Minimum Information Standard Items' || selectedColumns(item.worksheet).includes(entity.column)">
                                                                     {{entity.column}}
                                                                 </label>
                                                                 <a class="popover-button ms-2 cursor-pointer" (click)="openDef(entity, item.worksheet)">DEF</a>
@@ -132,31 +119,33 @@
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    <div class="save-right">
-                        <h3 class="defin">Definition</h3>
-                        <p class="click-def">Click on "DEF" next to any of the headings to see the definition of the
-                            term.</p>
-                    </div>
-                    @if(currentStats){
-                        <div class="mt-3">
-                            <p class="mb-2"><span class="fw-semibold me-2">Column Name:</span>{{currentStats.column}}</p>
-                            <p class="mb-2"><span class="fw-semibold me-2">Defined By:</span><a href="{{currentStats.definedBy}}" target="_blank">{{currentStats.definedBy}}</a></p>
-                            <p class="mb-2"><span class="fw-semibold me-2">Data Type:</span>{{currentStats.dataType}}</p>
-                            <p class="mb-2"><span class="fw-semibold me-2">Definition</span><br>{{currentStats.definition}}</p>
+                    <div class="def-panel-sticky">
+                        <div class="save-right">
+                            <h3 class="defin">Definition</h3>
+                            <p class="click-def">Click on "DEF" next to any of the headings to see the definition of the
+                                term.</p>
                         </div>
-                        @if(currentStats.errors.length > 0){ <h5 class="mt-3">Validation Rules</h5> }
-                        @for(error of currentStats.errors; track error){
+                        @if(currentStats){
                             <div class="mt-3">
-                                <p class="mb-2"><span class="fw-semibold me-2">Type:</span>{{error.name}}</p>
-                                <p class="mb-2"><span class="fw-semibold me-2">Level:</span>{{error.level}}</p>
-                                <p class="mb-2"><span class="fw-semibold me-2">Entity:</span>{{currentStats.entity}}</p>
+                                <p class="mb-2"><span class="fw-semibold me-2">Column Name:</span>{{currentStats.column}}</p>
+                                <p class="mb-2"><span class="fw-semibold me-2">Defined By:</span><a href="{{currentStats.definedBy}}" target="_blank">{{currentStats.definedBy}}</a></p>
+                                <p class="mb-2"><span class="fw-semibold me-2">Data Type:</span>{{currentStats.dataType}}</p>
+                                <p class="mb-2"><span class="fw-semibold me-2">Definition</span><br>{{currentStats.definition}}</p>
                             </div>
+                            @if(currentStats.errors.length > 0){ <h5 class="mt-3">Validation Rules</h5> }
+                            @for(error of currentStats.errors; track error){
+                                <div class="mt-3">
+                                    <p class="mb-2"><span class="fw-semibold me-2">Type:</span>{{error.name}}</p>
+                                    <p class="mb-2"><span class="fw-semibold me-2">Level:</span>{{error.level}}</p>
+                                    <p class="mb-2"><span class="fw-semibold me-2">Entity:</span>{{currentStats.entity}}</p>
+                                </div>
+                            }
+                            @if(currentStats.list.length > 0){ <p class="fw-semibold mb-2">list:</p> }
+                            <ul>
+                                @for(item of currentStats.list; track item){ <li>{{item.value}}</li> }
+                            </ul>
                         }
-                        @if(currentStats.list.length > 0){ <p class="fw-semibold mb-2">list:</p> }
-                        <ul>
-                            @for(item of currentStats.list; track item){ <li>{{item.value}}</li> }
-                        </ul>
-                    }
+                    </div>
                 </div>
             </div>
         </div>

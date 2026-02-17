@@ -157,7 +157,7 @@ export class TemplateComponent implements OnDestroy{
     if(checked && savedIdx == -1)
       this.selected[type].push(entity);
     else if(savedIdx != -1 && !checked)
-      this.selected[type] = this.selected[type].slice(0, savedIdx).concat(this.selected['Samples'].slice(savedIdx +1));
+      this.selected[type] = this.selected[type].slice(0, savedIdx).concat(this.selected[type].slice(savedIdx +1));
   }
 
   getAttributeErrors(type:string, column:string){
@@ -257,6 +257,10 @@ export class TemplateComponent implements OnDestroy{
   }
 
   get form(){ return this.templateForm.controls; }
+
+  selectedColumns(worksheet: string){
+    return (this.selected?.[worksheet] || []).map((data:any) => data.column);
+  }
 
   get sampleChecks(){ return this.selected['Samples'].map((data:any) => data.column)};
   get eventChecks(){ return this.selected['Events'].map((data:any) => data.column)};
