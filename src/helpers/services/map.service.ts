@@ -21,11 +21,20 @@ export class MapService {
   private satelliteLayer!: any;// L.TileLayer;
   private oceanLayer!: any;// L.TileLayer;
   private boundingBox!: any;// L.Layer;
-  private mapboxToken = environment.mapboxToken;
+  private mapboxToken = this.resolveMapboxToken();
 
   public mapInitialized = new EventEmitter<void>();
 
   constructor() {}
+
+  private resolveMapboxToken(): string {
+    const configuredToken = `${environment.mapboxToken || ''}`.trim();
+    if (configuredToken) return configuredToken;
+
+    const runtimeToken = `${(window as any)?.__env?.MAPBOX_TOKEN || ''}`.trim()
+      || `${(window as any)?.MAPBOX_TOKEN || ''}`.trim();
+    return runtimeToken;
+  }
 
   initMap(mapId: string, lat = 0, lng = 0, zoom = 2) {
     this.map = L.map(mapId, {
