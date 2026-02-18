@@ -81,3 +81,26 @@ cp {path_to_documentation_downloaded} {root folder}/public/docs/helpDocumentatio
 src/environments/environment.ts:    documentationUrl: '/docs/helpDocumentationv2.pdf'
 src/environments/environment.development.ts:	documentationUrl: '/docs/helpDocumentationv2.pdf'
 ```
+
+## Netlify Mapbox Token Setup
+
+The UI map layer reads Mapbox token in this order:
+1. `environment.mapboxToken`
+2. Runtime variable from `/env.js` as `window.__env.MAPBOX_TOKEN`
+
+If `environment.mapboxToken` is empty, configure Netlify to inject `MAPBOX_TOKEN` at build time.
+
+1. In Netlify Site settings, add environment variable:
+   - Name: `MAPBOX_TOKEN`
+   - Value: your Mapbox public token (`pk...`)
+   - `Contains secret values`: **unchecked** (this is a public browser token)
+
+2. Use this build command in Netlify:
+
+```bash
+printf "window.__env = window.__env || {};\nwindow.__env.MAPBOX_TOKEN = '%s';\n" "$MAPBOX_TOKEN" > public/env.js && npm install && npm run build -- --configuration=production
+```
+
+Notes:
+- `public/env.js` is loaded by `src/index.html`.
+- Production builds currently use `src/environments/environment.ts`.
