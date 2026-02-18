@@ -6,37 +6,47 @@
                 <h3 class="mek-hed1">{{ currentProject?.projectTitle }}</h3>
                 <p class="mek-hed1">{{ currentProject?.description }}</p>
                 <form class="form-horizontal">
-                    <div class="mb-3 row">
-                        <label class="col-sm-3 col-form-label">Worksheet:</label>
-                        <div class="col-sm-4">
-                            <select class="form-control temp-dropdown" name="worksheet" [disabled]="worksheets.length == 1" [(ngModel)]="selectedWorksheet" (change)="onWorksheetChange($event)">
-                                <option value="" disabled>Select Worksheet</option>
-                                @for(sheet of worksheets; track sheet){
-                                    <option [value]="sheet">{{sheet}}</option>
-                                }
-                            </select>
+                    <div class="row mb-3">
+                        <div class="col-sm-6">
+                            <button type="button" class="btn btn-primary float-end" (click)="generate()"><i class="fas fa-file-excel me-1"></i>Export Excel</button>
                         </div>
                     </div>
 
-                    @if(selectedWorksheet != 'Workbook'){
-                        <div class="mb-3 row">
-                            <label class="col-sm-3 col-form-label">Template Config:</label>
-                            <div class="col-sm-4 d-flex gap-2">
-                                <select class="form-control temp-dropdown" name="templates" [(ngModel)]="selectedTemplate" (change)="onTemplateChange()">
-                                    <option value="">DEFAULT</option>
-                                    @for(template of filteredTemplates; track template){
-                                        <option [value]="template">{{template}}</option>
-                                    }
-                                </select>
-                                <button type="button" class="btn btn-outline-secondary btn-sm" [disabled]="!selectedTemplate" (click)="openRenameModal(save_template_modal)">Rename</button>
-                                <button type="button" class="btn btn-outline-danger btn-sm" [disabled]="!selectedTemplate" (click)="deleteSelectedTemplate()">Delete</button>
-                            </div>
+                    <div class="mb-3 row">
+                        <div class="col-12 d-flex justify-content-center align-items-center template-toolbar">
+                            <label class="template-toolbar-label">Template:</label>
+                            <div class="d-flex gap-2 align-items-center template-config-actions">
+                            <select class="form-control temp-dropdown" name="templates" [(ngModel)]="selectedTemplate" (change)="onTemplateChange()">
+                                <option value="">DEFAULT</option>
+                                @for(template of filteredTemplates; track template){
+                                    <option [value]="template">{{template}}</option>
+                                }
+                            </select>
+                            @if(selectedTemplate){
+                                <button
+                                    type="button"
+                                    class="template-info-icon"
+                                    aria-label="Template owner details"
+                                    [ngbPopover]="selectedTemplateInfoText"
+                                    popoverTitle="Template Details"
+                                    placement="right"
+                                    triggers="click"
+                                    autoClose="outside">
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                            }
+                            @if(selectedTemplate){
+                                <button type="button" class="btn btn-outline-success btn-sm template-action-btn" [class.login-required-btn]="!isLoggedIn || !canManageSelectedTemplate" (click)="updateSelectedTemplate()"><i class="fas fa-save"></i><span>Save</span></button>
+                            }
+                            <button type="button" class="btn btn-outline-secondary btn-sm template-action-btn" [class.login-required-btn]="!isLoggedIn || (selectedTemplate && !canManageSelectedTemplate)" [disabled]="!selectedTemplate" (click)="openRenameModal(save_template_modal)"><i class="fas fa-pen"></i><span>Rename</span></button>
+                            <button type="button" class="btn btn-outline-danger btn-sm template-action-btn" [class.login-required-btn]="!isLoggedIn || (selectedTemplate && !canManageSelectedTemplate)" [disabled]="!selectedTemplate" (click)="deleteSelectedTemplate()"><i class="fas fa-trash"></i><span>Delete</span></button>
+                            <button type="button" class="btn btn-outline-primary btn-sm template-action-btn" [class.login-required-btn]="!isLoggedIn" (click)="openCreateModal(save_template_modal)"><i class="fas fa-plus"></i><span>Create New</span></button>
                         </div>
-                    }
-
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <button type="button" class="btn btn-primary float-end" (click)="generate()">Export Excel</button>
+                    </div>
+                    </div>
+                    <div class="mb-2 row justify-content-center">
+                        <div class="col-12 d-flex justify-content-center">
+                            <p class="mb-0 text-muted">{{selectedPropertyCount}} data properties selected in this template</p>
                         </div>
                     </div>
                 </form>
@@ -45,7 +55,7 @@
         <div class="save-temp">
             <div class="row">
                 <div class="col-lg-6">
-                    <div class="accordion-section" ngbAccordion>
+                    <div class="accordion-section" ngbAccordion [closeOthers]="false">
                         @if(selectedWorksheet == 'Workbook'){
                             <div class="form-check form-switch mt-3">
                                 <input class="form-check-input" type="checkbox" role="switch" (change)="toggleSelectAll($event)">
@@ -54,47 +64,57 @@
                         }
                         @for(item of attributeArray; track item){
                             @if( selectedWorksheet == 'Workbook' || selectedWorksheet == item.worksheet){
-                                <div class="form-check form-switch mt-3">
-                                    <input class="form-check-input" type="checkbox" role="switch" (change)="toggleSelect($event, item.worksheet)">
-                                    <p class="include-prop">Include properties for all {{item.worksheet}}</p>
-                                </div>
-                                @if(selectedWorksheet == item.worksheet){
-                                    <div class="save-btn-row mt-3">
-                                        <button class="save-btn me-3" [disabled]="!selectedTemplate" (click)="updateSelectedTemplate()">Update selected template</button>
-                                        <button class="save-btn" (click)="openSaveModal(save_template_modal)">Save template</button>
-                                    </div>
-                                }
-                                @else{
-                                    <h3 class="my-3">{{item.worksheet}}</h3>
-                                }
-                                @for(attribute of Object.keys(item.data.attributes); track attribute){
-                                    <div ngbAccordionItem [collapsed]="false">
-                                        <h2 ngbAccordionHeader>
-                                            <button ngbAccordionButton>{{attribute}}</button>
-                                        </h2>
-                                        <div ngbAccordionCollapse>
-                                            <div ngbAccordionBody>
-                                                <ng-template>
-                                                    <div class="panel-body">
-                                                        @for(entity of item.data.attributes[attribute]; track entity){
-                                                            <div class="checkbox-sec">
-                                                                <label>
-                                                                    <input
-                                                                        type="checkbox"
-                                                                        (change)="inputChange($event, entity, item.worksheet)"
-                                                                        [disabled]="attribute == 'Minimum Information Standard Items'"
-                                                                        [checked]="attribute == 'Minimum Information Standard Items' || selectedColumns(item.worksheet).includes(entity.column)">
-                                                                    {{entity.column}}
-                                                                </label>
-                                                                <a class="popover-button ms-2 cursor-pointer" (click)="openDef(entity, item.worksheet)">DEF</a>
+                                <div ngbAccordionItem [collapsed]="true" #entitySection="ngbAccordionItem">
+                                    <h2 ngbAccordionHeader>
+                                        <button ngbAccordionButton class="entity-accordion-btn">
+                                            <span>{{item.worksheet}}</span>
+                                            <i class="fas" [ngClass]="entitySection.collapsed ? 'fa-chevron-right' : 'fa-chevron-down'"></i>
+                                        </button>
+                                    </h2>
+                                    <div ngbAccordionCollapse>
+                                        <div ngbAccordionBody>
+                                            <ng-template>
+                                                <div class="form-check form-switch mt-3">
+                                                    <input class="form-check-input" type="checkbox" role="switch" (change)="toggleSelect($event, item.worksheet)">
+                                                    <p class="include-prop">Include properties for all {{item.worksheet}}</p>
+                                                </div>
+                                                <div ngbAccordion [closeOthers]="false">
+                                                    @for(attribute of Object.keys(item.data.attributes); track attribute){
+                                                        <div ngbAccordionItem [collapsed]="false" #attributeSection="ngbAccordionItem">
+                                                            <h2 ngbAccordionHeader>
+                                                                <button ngbAccordionButton class="attribute-accordion-btn">
+                                                                    <span>{{attribute}}</span>
+                                                                    <i class="fas" [ngClass]="attributeSection.collapsed ? 'fa-chevron-right' : 'fa-chevron-down'"></i>
+                                                                </button>
+                                                            </h2>
+                                                            <div ngbAccordionCollapse>
+                                                                <div ngbAccordionBody>
+                                                                    <ng-template>
+                                                                        <div class="panel-body">
+                                                                            @for(entity of item.data.attributes[attribute]; track entity){
+                                                                                <div class="checkbox-sec">
+                                                                                    <label>
+                                                                                        <input
+                                                                                            type="checkbox"
+                                                                                            (change)="inputChange($event, entity, item.worksheet)"
+                                                                                            [disabled]="attribute == 'Minimum Information Standard Items'"
+                                                                                            [checked]="attribute == 'Minimum Information Standard Items' || selectedColumns(item.worksheet).includes(entity.column)">
+                                                                                        {{entity.column}}
+                                                                                    </label>
+                                                                                    <a class="popover-button ms-2 cursor-pointer" (click)="openDef(entity, item.worksheet)">DEF</a>
+                                                                                </div>
+                                                                            }
+                                                                        </div>
+                                                                    </ng-template>
+                                                                </div>
                                                             </div>
-                                                        }
-                                                    </div>
-                                                </ng-template>
-                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </ng-template>
                                         </div>
                                     </div>
-                                }
+                                </div>
                             }
                         }
                         <!-- <div ngbAccordionItem>
@@ -175,7 +195,7 @@
     <div class="modal-footer border-0 pt-0">
 		<div class="d-flex justify-content-end gap-2">
             <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">Cancel</button>
-            <button type="button" class="btn btn-primary" (click)="templateModalMode === 'rename' ? renameTemplate() : saveTemplate()" [disabled]="templateForm.invalid">{{templateModalMode === 'rename' ? 'Rename' : 'Save'}}</button>
+            <button type="button" class="btn btn-primary" (click)="templateModalMode === 'rename' ? renameTemplate() : saveTemplate()" [disabled]="templateForm.invalid || (templateModalMode === 'rename' ? !canManageSelectedTemplate : !canCreateTemplate)">{{templateModalMode === 'rename' ? 'Rename' : 'Save'}}</button>
         </div>
 	</div>
 </ng-template>
