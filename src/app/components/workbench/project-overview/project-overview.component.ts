@@ -200,6 +200,19 @@ export class ProjectOverviewComponent implements OnDestroy{
     this.router.navigateByUrl(`/query?q=_projects_:${this.projectDetails.projectId} and _expeditions_:[${expeditionCode}]`);
   }
 
+  get publicationGuidLink(): string {
+    const raw = `${this.projectDetails?.publicationGuid || ''}`.trim();
+    if (!raw) return '';
+
+    if (/^https?:\/\//i.test(raw)) return raw;
+    if (/^doi:\s*/i.test(raw)) return `https://doi.org/${raw.replace(/^doi:\s*/i, '')}`;
+    if (/^doi\.org\//i.test(raw)) return `https://${raw}`;
+    if (/^10\.\S+/i.test(raw)) return `https://doi.org/${raw}`;
+    if (/^ark:\//i.test(raw)) return `https://n2t.net/${raw}`;
+
+    return raw;
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

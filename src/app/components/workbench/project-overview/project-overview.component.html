@@ -82,7 +82,9 @@
                         <p class="proj-1">Publication DOI</p>
                     </div>
                     <div class="col-lg-10">
-                        <p class="proj-2"> {{ projectDetails?.publicationGuid}}</p>
+                        <p class="proj-2">
+                            <a class="doi-link" [href]="publicationGuidLink" target="_blank" rel="noopener noreferrer">{{ projectDetails?.publicationGuid}}</a>
+                        </p>
                     </div>
                 </div>
             }
