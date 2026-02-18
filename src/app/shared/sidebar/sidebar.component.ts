@@ -102,6 +102,18 @@ export class SidebarComponent implements OnDestroy{
     }
   }
 
+  canAccessAdminTab(item:any): boolean {
+    if (item?.alwaysVisible) return true;
+    if (Number(this.currentUser?.userId) === 1) return true;
+
+    const currentUserId = Number(this.currentUser?.userId);
+    const projectOwnerId = Number(this.currentProject?.user?.userId);
+    const teamOwnerId = Number(this.currentProject?.projectConfiguration?.user?.userId);
+    const hasOwnerAccess = !!currentUserId && (currentUserId === projectOwnerId || currentUserId === teamOwnerId);
+
+    return hasOwnerAccess || !!this.permissionArr[item?.name];
+  }
+
   openProjectSelectModal(){
     this.modalService.open( this.selectProjectModal, { animation: true, backdrop: false, windowClass: 'no-backdrop' });
   }

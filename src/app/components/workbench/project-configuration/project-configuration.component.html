@@ -4,33 +4,39 @@
             <div class="col-lg12">
                 <div class="proj-config">
                     <h3 class="mek-hed1">Project configuration</h3>
-                    <p class="mek-hed1">Here you can view and edit the configuration for your project. Any changes will
-                        only be enforced for new data loads.</p>
+                    @if(canEditConfiguration){
+                        <p class="mek-hed1">Here you can view and edit the configuration for your project. Any changes will
+                            only be enforced for new data loads.</p>
+                    }
+                    @else{
+                        <p class="mek-hed1">This section is restricted. Configuration changes can be made only by the team owner (meyerc) or the system administration account. Please contact the team owner if updates are needed.</p>
+                    }
                 </div>
             </div>
         </div>
 
+        @if(canEditConfiguration){
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="proj-config">
 
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="proj-config">
-
-                    <div class="d-flex mb-3 justify-content-between">
-                        <div class="d-flex">
-                            <button class="btn" [routerLink]="['/workbench','config', 'entities']" routerLinkActive="btn-primary custom">Entities</button>
-                            <button class="btn" [routerLink]="['/workbench','config', 'expedition', 'properties']" routerLinkActive="btn-primary custom">Expedition Properties</button>
-                            <button class="btn" [routerLink]="['/workbench','config', 'lists']" routerLinkActive="btn-primary custom">Lists</button>
-                            <button class="btn" [routerLink]="['/workbench','config', 'settings']" routerLinkActive="btn-primary custom">Settings</button>
+                        <div class="d-flex mb-3 justify-content-between">
+                            <div class="d-flex">
+                                <button class="btn" [routerLink]="['/workbench','config', 'entities']" routerLinkActive="btn-primary custom">Entities</button>
+                                <button class="btn" [routerLink]="['/workbench','config', 'expedition', 'properties']" routerLinkActive="btn-primary custom">Expedition Properties</button>
+                                <button class="btn" [routerLink]="['/workbench','config', 'lists']" routerLinkActive="btn-primary custom">Lists</button>
+                                <button class="btn" [routerLink]="['/workbench','config', 'settings']" routerLinkActive="btn-primary custom">Settings</button>
+                            </div>
+                            <button type="button" class="btn btn-primary custom me-3" [ngStyle]="{ 'visibility': changesDetected ? 'visible' : 'hidden' }" (click)="saveConfigs()">
+                                <i class="fas fa-upload me-2"></i> Save Config
+                            </button>
                         </div>
-                        <button type="button" class="btn btn-primary custom me-3" [ngStyle]="{ 'visibility': changesDetected ? 'visible' : 'hidden' }" (click)="saveConfigs()">
-                            <i class="fas fa-upload me-2"></i> Save Config
-                        </button>
+
+                        <router-outlet />
+
                     </div>
-
-                    <router-outlet />
-
                 </div>
             </div>
-        </div>
+        }
     </div>
 </section>

@@ -26,6 +26,7 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'geome';
   isLargeDevice = false;
   currentUser: any;
+  private loadedPrivateProjects = false;
 
   constructor() {
     this.onResize();
@@ -36,10 +37,15 @@ export class AppComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((x: any) => {
         this.currentUser = x;
-        if (x && !x.accessToken) {
+        const hasStoredToken = !!this.authService.getUserFromStorage()?.accessToken;
+        if (x && hasStoredToken && !this.loadedPrivateProjects) {
           this.projectService.loadPrivateProjects();
-        } else if (x && x.accessToken) {
+          this.loadedPrivateProjects = true;
+        }
+        if (x && x.accessToken) {
           this.getUserDetails(x);
+        } else if (!x) {
+          this.loadedPrivateProjects = false;
         }
       });
 
@@ -64,4 +70,3 @@ export class AppComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 }
-

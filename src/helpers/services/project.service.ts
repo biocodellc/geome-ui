@@ -117,9 +117,17 @@ export class ProjectService{
   }
 
   getAllProjects(includePublic: boolean): Observable<any> {
-    return this.http
-      .get(`${this.apiUrl}projects?includePublic=${includePublic}`)
-      .pipe(catchError((err:any) => of([])));
+    const paramsBase:any = { includePublic: String(includePublic) };
+    const paramsWithPresentFalse:any = { ...paramsBase, present: 'false' };
+
+    // Some backends may default to only "present" projects; merge both variants
+    // so private/zero-record projects are still included in selectors.
+    return forkJoin({
+      base: this.http.get(`${this.apiUrl}projects`, { params: paramsBase }).pipe(catchError(() => of([]))),
+      withPresentFalse: this.http.get(`${this.apiUrl}projects`, { params: paramsWithPresentFalse }).pipe(catchError(() => of([]))),
+    }).pipe(
+      map(({ base, withPresentFalse }: any) => this.mergeUniqueProjectsById([...(base || []), ...(withPresentFalse || [])]))
+    );
   }
 
   loadAllProjects(){
@@ -226,6 +234,18 @@ export class ProjectService{
     if(a < b) return 1
     else if( a > b) return -1
     return 0
+  }
+
+  private mergeUniqueProjectsById(projects:any[]):any[] {
+    const projectMap = new Map<string, any>();
+    (projects || []).forEach((project:any) => {
+      const projectId = project?.projectId;
+      if (projectId === undefined || projectId === null) return;
+      projectMap.set(String(projectId), projectMap.has(String(projectId))
+        ? { ...projectMap.get(String(projectId)), ...project }
+        : project);
+    });
+    return Array.from(projectMap.values());
   }
 
 

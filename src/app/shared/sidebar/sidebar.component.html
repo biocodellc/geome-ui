@@ -18,7 +18,7 @@
         @if(currentUser){
             <h6 class="m-0 text-secondary f-15 p-3">Admin</h6>
             @for(item of adminTabs; track item){
-                @if(item.alwaysVisible || (currentUser?.userId === currentProject?.user.userId || currentUser?.userId === currentProject?.projectConfiguration.user.userId) || permissionArr[item.name]){
+                @if(canAccessAdminTab(item)){
                     <button type="button" (click)="checkAndNavigate(item.route, item.name)" class="btn sidebar-item cursor-pointer border-0 p-3 ps-4 text-start f-15">
                         <i class="fas me-2" [ngClass]="item.icon" style="min-width: 30px;"></i>
                         {{item.name}}
