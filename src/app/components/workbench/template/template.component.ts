@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { NgbAccordionModule, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ProjectService } from '../../../../helpers/services/project.service';
 import { AuthenticationService } from '../../../../helpers/services/authentication.service';
-import { Subject, take, takeUntil } from 'rxjs';
+import { Subject, catchError, of, switchMap, take, takeUntil } from 'rxjs';
 import { TemplateService } from '../../../../helpers/services/template.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FileService } from '../../../../helpers/services/file.service';
@@ -38,7 +38,7 @@ export class TemplateComponent implements OnDestroy{
   currentStats:any;
   selectedWorksheet:string = '';
   selectedTemplate:string = '';
-  selected: any = [];
+  selected: any = {};
   attributeArray: Array<any> = [];
   currentEntityErrors:Array<any> = [];
   Object = Object;
@@ -46,6 +46,7 @@ export class TemplateComponent implements OnDestroy{
   // Modal
   templateForm!: FormGroup;
   modalRef!:NgbModalRef;
+  templateModalMode: 'save' | 'rename' = 'save';
 
   constructor() {
     this.authService.currentUser.pipe(takeUntil(this.destroy$)).subscribe((res: any) => this.currentUser = res);
@@ -70,7 +71,12 @@ export class TemplateComponent implements OnDestroy{
     if (this.worksheets.length > 1 && !this.worksheets.includes('Workbook')) {
       this.worksheets.unshift('Workbook');
     }
-    this.selectedWorksheet = this.worksheets[0];
+    const keepCurrentWorksheet =
+      this.selectedWorksheet && this.worksheets.includes(this.selectedWorksheet);
+    const defaultWorksheet =
+      this.worksheets.find((sheet:string) => sheet !== 'Workbook') || this.worksheets[0] || '';
+    this.selectedWorksheet = keepCurrentWorksheet ? this.selectedWorksheet : defaultWorksheet;
+    if (this.selectedWorksheet === 'Workbook') this.selectedTemplate = '';
     this.filteredTemplates = [ ...this.filterTemplates() ];
   }
 
@@ -78,9 +84,11 @@ export class TemplateComponent implements OnDestroy{
     this.templateService.getAllTempates(this.currentProject.projectId)
     .pipe(take(1), takeUntil(this.destroy$)).subscribe({
       next: (res:any)=>{
-        if(res){
-          this.isLoading = false;
-          this.allTemplates = res;
+        this.isLoading = false;
+        this.allTemplates = this.normalizeTemplates(res);
+        this.filteredTemplates = [ ...this.filterTemplates() ];
+        if (this.selectedTemplate && !this.filteredTemplates.includes(this.selectedTemplate)) {
+          this.selectedTemplate = '';
         }
       },
       error: ()=> this.isLoading = false
@@ -88,24 +96,36 @@ export class TemplateComponent implements OnDestroy{
   }
 
   filterTemplates(){
-    const templates:any = [];
-    const filteredData = this.allTemplates.filter((item:any)=> item.worksheet == this.selectedWorksheet);
-    filteredData.forEach((item:any)=> templates.push(item.name));
-    return templates;
+    const names = this.allTemplates
+      .filter((item:any)=> item?.worksheet == this.selectedWorksheet)
+      .map((item:any) => item?.name)
+      .filter((name:any) => !!name);
+    return Array.from(new Set(names));
   }
 
   onTemplateChange(){
-    const val = this.selectedTemplate;
-    let columnData = [];
-    const selectedTemplate = this.allTemplates.find((item:any)=> item.name = val );
-    if(!selectedTemplate) return;
+    const val = (this.selectedTemplate || '').trim();
+    if (!val) {
+      this.populateAttributesCache();
+      return;
+    }
+    const selectedTemplate = this.findTemplateByNameAndWorksheet(val, this.selectedWorksheet);
+    if(!selectedTemplate){
+      this.populateAttributesCache();
+      return;
+    }
     this.populateAttributesCache();
-    const attributeData = this.currentProject.config.entities.filter((data:any)=> data.worksheet == selectedTemplate.worksheet);
-    columnData = attributeData[0].attributes.filter((att:any)=> selectedTemplate.columns.includes(att.column));
-    this.selected[selectedTemplate.worksheet] = [ ...columnData ];
+    const worksheet = selectedTemplate.worksheet || this.selectedWorksheet;
+    const attributeData = this.currentProject.config.entities.find((data:any)=> data.worksheet == worksheet);
+    if(!attributeData) return;
+    const selectedColumns = new Set(this.resolveTemplateColumns(selectedTemplate, worksheet));
+    const columnData = attributeData.attributes.filter((att:any)=> selectedColumns.has(att.column));
+    const minInfoStandardItems = this.projectConfig.requiredAttributes(worksheet);
+    this.selected[worksheet] = this.mergeUniqueByColumn([ ...minInfoStandardItems, ...columnData ]);
   }
 
   populateAttributesCache(){
+    this.selected = {};
     this.attributes = this.projectConfig.entities.reduce((accumulator:any, entity:any) => {
       const { worksheet, type } = entity;
     
@@ -124,7 +144,11 @@ export class TemplateComponent implements OnDestroy{
         },
       };
     
-      this.selected[worksheet].push(...minInfoStandardItems, ...suggestedAttributes);
+      this.selected[worksheet] = this.mergeUniqueByColumn([
+        ...this.selected[worksheet],
+        ...minInfoStandardItems,
+        ...suggestedAttributes
+      ]);
     
       if (type === 'Photo') {
         accumulator[worksheet].attributes = Object.fromEntries(
@@ -175,7 +199,7 @@ export class TemplateComponent implements OnDestroy{
 
   toggleSelectAll(event:any){
     const isChecked = event.target.checked;
-    let allData:any = [];
+    let allData:any = {};
     if(isChecked){
       this.attributeArray.forEach((item:any)=>{
         const parentGroup = Object.values(item.data.attributes);
@@ -184,7 +208,7 @@ export class TemplateComponent implements OnDestroy{
       this.selected = allData;
     }
     else{
-      this.selected = [];
+      this.selected = {};
       this.populateAttributesCache();
     }
   }
@@ -202,35 +226,92 @@ export class TemplateComponent implements OnDestroy{
   onWorksheetChange(event:any){
     const val = event.target.value;
     this.selectedWorksheet = val;
+    this.selectedTemplate = '';
     this.filteredTemplates = [ ...this.filterTemplates() ];
   }
 
   openSaveModal(content: TemplateRef<any>){
-    this.templateForm = this.fb.group({ templateName: ['', Validators.required] });
+    this.templateModalMode = 'save';
+    this.templateForm = this.fb.group({ templateName: [this.selectedTemplate || '', Validators.required] });
+    this.modalRef = this.modalService.open(content, { animation: true, centered: true, backdrop: false });
+  }
+
+  openRenameModal(content: TemplateRef<any>){
+    if (!this.selectedTemplate) return;
+    this.templateModalMode = 'rename';
+    this.templateForm = this.fb.group({ templateName: [this.selectedTemplate, Validators.required] });
     this.modalRef = this.modalService.open(content, { animation: true, centered: true, backdrop: false });
   }
 
   saveTemplate(){
+    const templateName = (this.form['templateName'].value || '').trim();
+    if(!templateName) return;
+    const shouldOverwrite = this.allTemplates.some((t:any) => t?.name === templateName);
+    this.persistTemplate(templateName, shouldOverwrite, true);
+  }
+
+  updateSelectedTemplate(){
+    const templateName = (this.selectedTemplate || '').trim();
+    if(!templateName) return;
+    this.persistTemplate(templateName, true, false);
+  }
+
+  renameTemplate(){
+    const oldTemplateName = (this.selectedTemplate || '').trim();
+    const newTemplateName = (this.form['templateName'].value || '').trim();
+    const selectedData = this.selected[this.selectedWorksheet] || [];
+    if (!oldTemplateName || !newTemplateName || selectedData.length === 0) return;
+    if (oldTemplateName === newTemplateName) {
+      this.modalRef?.close();
+      return;
+    }
+
     this.isLoading = true;
-    const columnNames:any = [];
-    const selectedData = this.selected[this.selectedWorksheet];
-    if(selectedData && selectedData.length == 0) return;
-    selectedData.forEach((item:any)=> columnNames.push(item.column));
+    const data = this.buildTemplateFormData(this.selectedWorksheet, selectedData);
+    const shouldOverwriteTarget = this.allTemplates.some((t:any) => t?.name === newTemplateName && newTemplateName !== oldTemplateName);
 
-    // Format Data
-    const data = new FormData();
-    data.append('worksheet', this.form['templateName'].value);
-    columnNames.forEach((item:any) => data.append('worksheet', item));
+    const saveRenamed$ = () => this.templateService.saveTempates(this.currentProject.projectId, newTemplateName, data);
+    const overwriteTarget$ = shouldOverwriteTarget
+      ? this.templateService.deleteTempates(this.currentProject.projectId, newTemplateName).pipe(catchError(() => of(null)), switchMap(() => saveRenamed$()))
+      : saveRenamed$();
 
-    this.templateService.saveTempates(this.currentProject.projectId, this.templateForm.value, data)
-    .pipe(take(1), takeUntil(this.destroy$)).subscribe({
-      next: (res:any)=>{
-        if(res){
-          this.isLoading = false;
-        }
+    overwriteTarget$
+    .pipe(
+      take(1),
+      switchMap(() =>
+        this.templateService.deleteTempates(this.currentProject.projectId, oldTemplateName).pipe(
+          catchError(() => of(null))
+        )
+      ),
+      takeUntil(this.destroy$)
+    )
+    .subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.modalRef?.close();
+        this.selectedTemplate = newTemplateName;
+        this.getTemplates();
       },
-      error: (err:any)=> this.isLoading = false
-    })
+      error: () => this.isLoading = false
+    });
+  }
+
+  deleteSelectedTemplate(){
+    const templateName = (this.selectedTemplate || '').trim();
+    if (!templateName) return;
+    if (!window.confirm(`Delete template "${templateName}"?`)) return;
+
+    this.isLoading = true;
+    this.templateService.deleteTempates(this.currentProject.projectId, templateName)
+    .pipe(take(1), takeUntil(this.destroy$)).subscribe({
+      next: ()=>{
+        this.isLoading = false;
+        this.selectedTemplate = '';
+        this.populateAttributesCache();
+        this.getTemplates();
+      },
+      error: ()=> this.isLoading = false
+    });
   }
 
   // Generate File
@@ -262,11 +343,117 @@ export class TemplateComponent implements OnDestroy{
     return (this.selected?.[worksheet] || []).map((data:any) => data.column);
   }
 
-  get sampleChecks(){ return this.selected['Samples'].map((data:any) => data.column)};
-  get eventChecks(){ return this.selected['Events'].map((data:any) => data.column)};
-  get tissueChecks(){ return this.selected['Tissues'].map((data:any) => data.column)};
-  get eventPhotoChecks(){ return this.selected['event_photos'].map((data:any) => data.column)};
-  get samplePhotoChecks(){ return this.selected['sample_photos'].map((data:any) => data.column)};
+  private mergeUniqueByColumn(attributes:any[]):any[] {
+    const columnMap = new Map<string, any>();
+    (attributes || []).forEach((attribute:any) => {
+      const col = attribute?.column;
+      if (!col) return;
+      if (!columnMap.has(col)) columnMap.set(col, attribute);
+    });
+    return Array.from(columnMap.values());
+  }
+
+  private normalizeTemplates(response:any):any[] {
+    if (Array.isArray(response)) {
+      return response
+        .map((template:any) => this.normalizeTemplateRecord(template))
+        .filter((template:any) => !!template?.name);
+    }
+    if (Array.isArray(response?.templates)) {
+      return response.templates
+        .map((template:any) => this.normalizeTemplateRecord(template))
+        .filter((template:any) => !!template?.name);
+    }
+    if (response && typeof response === 'object') {
+      return Object.entries(response).map(([name, template]: any) => {
+        return this.normalizeTemplateRecord(template, name);
+      }).filter((template:any) => !!template?.name);
+    }
+    return [];
+  }
+
+  private normalizeTemplateRecord(template:any, fallbackName:string = ''):any {
+    if (!template || typeof template !== 'object') return { name: fallbackName, worksheet: '', columns: [] };
+    const worksheet = template?.worksheet || '';
+    return {
+      ...template,
+      name: template?.name || fallbackName,
+      worksheet,
+      columns: this.resolveTemplateColumns(template, worksheet),
+    };
+  }
+
+  private findTemplateByNameAndWorksheet(name:string, worksheet:string):any {
+    return this.allTemplates.find((item:any)=> item?.name === name && item?.worksheet === worksheet)
+      || this.allTemplates.find((item:any)=> item?.name === name);
+  }
+
+  private resolveTemplateColumns(template:any, worksheet:string):string[] {
+    if (Array.isArray(template?.columns)) {
+      return template.columns.map((col:any) => `${col}`.trim()).filter((col:string) => !!col);
+    }
+    if (typeof template?.columns === 'string') {
+      return template.columns.split(',').map((col:string) => col.trim()).filter((col:string) => !!col);
+    }
+
+    // Legacy shape: repeated "worksheet" form values where first item is sheet name.
+    if (Array.isArray(template?.worksheet)) {
+      const values = template.worksheet.map((item:any) => `${item}`.trim()).filter((item:string) => !!item);
+      if (!values.length) return [];
+      if (worksheet && values[0] === worksheet) return values.slice(1);
+      if (this.worksheets.includes(values[0])) return values.slice(1);
+      return values;
+    }
+
+    return [];
+  }
+
+  private buildTemplateFormData(worksheet:string, selectedData:any[]):FormData {
+    const data = new FormData();
+    data.append('worksheet', worksheet);
+    selectedData.forEach((item:any) => {
+      const column = item?.column;
+      if (!column) return;
+      // Canonical payload
+      data.append('columns', column);
+      // Backward compatibility with older server parsing
+      data.append('worksheet', column);
+    });
+    return data;
+  }
+
+  private persistTemplate(templateName:string, overwrite:boolean, closeModal:boolean){
+    this.isLoading = true;
+    const selectedData = this.selected[this.selectedWorksheet] || [];
+    if(!templateName || selectedData.length === 0){
+      this.isLoading = false;
+      return;
+    }
+
+    const data = this.buildTemplateFormData(this.selectedWorksheet, selectedData);
+    const save$ = () => this.templateService.saveTempates(this.currentProject.projectId, templateName, data);
+    const request$ = overwrite
+      ? this.templateService.deleteTempates(this.currentProject.projectId, templateName).pipe(catchError(() => of(null)), switchMap(() => save$()))
+      : save$();
+
+    request$
+    .pipe(take(1), takeUntil(this.destroy$))
+    .subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.selectedTemplate = templateName;
+        if(closeModal) this.modalRef?.close();
+        this.getTemplates();
+      },
+      error: () => this.isLoading = false
+    });
+  }
+
+  get sampleChecks(){ return (this.selected['Samples'] || []).map((data:any) => data.column)};
+  get eventChecks(){ return (this.selected['Events'] || []).map((data:any) => data.column)};
+  get tissueChecks(){ return (this.selected['Tissues'] || []).map((data:any) => data.column)};
+  get eventPhotoChecks(){ return (this.selected['event_photos'] || []).map((data:any) => data.column)};
+  get samplePhotoChecks(){ return (this.selected['sample_photos'] || []).map((data:any) => data.column)};
 
   ngOnDestroy(): void {
     this.destroy$.next();

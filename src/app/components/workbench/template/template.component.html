@@ -18,19 +18,21 @@
                         </div>
                     </div>
 
-                    <!-- @if(selectedWorksheet != 'Workbook'){
+                    @if(selectedWorksheet != 'Workbook'){
                         <div class="mb-3 row">
                             <label class="col-sm-3 col-form-label">Template Config:</label>
-                            <div class="col-sm-4">
+                            <div class="col-sm-4 d-flex gap-2">
                                 <select class="form-control temp-dropdown" name="templates" [(ngModel)]="selectedTemplate" (change)="onTemplateChange()">
                                     <option value="">DEFAULT</option>
                                     @for(template of filteredTemplates; track template){
                                         <option [value]="template">{{template}}</option>
                                     }
                                 </select>
+                                <button type="button" class="btn btn-outline-secondary btn-sm" [disabled]="!selectedTemplate" (click)="openRenameModal(save_template_modal)">Rename</button>
+                                <button type="button" class="btn btn-outline-danger btn-sm" [disabled]="!selectedTemplate" (click)="deleteSelectedTemplate()">Delete</button>
                             </div>
                         </div>
-                    } -->
+                    }
 
                     <div class="row">
                         <div class="col-sm-6">
@@ -56,14 +58,15 @@
                                     <input class="form-check-input" type="checkbox" role="switch" (change)="toggleSelect($event, item.worksheet)">
                                     <p class="include-prop">Include properties for all {{item.worksheet}}</p>
                                 </div>
-                                <!-- @if(selectedWorksheet == item.worksheet){
+                                @if(selectedWorksheet == item.worksheet){
                                     <div class="save-btn-row mt-3">
+                                        <button class="save-btn me-3" [disabled]="!selectedTemplate" (click)="updateSelectedTemplate()">Update selected template</button>
                                         <button class="save-btn" (click)="openSaveModal(save_template_modal)">Save template</button>
                                     </div>
                                 }
                                 @else{
                                     <h3 class="my-3">{{item.worksheet}}</h3>
-                                } -->
+                                }
                                 @for(attribute of Object.keys(item.data.attributes); track attribute){
                                     <div ngbAccordionItem [collapsed]="false">
                                         <h2 ngbAccordionHeader>
@@ -154,14 +157,14 @@
 
 <ng-template #save_template_modal let-modal>
     <div class="modal-header border-0 justify-content-center">
-		<h5 class="modal-title fw-semibold" id="modal-basic-title">What would you like to name your template?</h5>
+		<h5 class="modal-title fw-semibold" id="modal-basic-title">{{templateModalMode === 'rename' ? 'Rename template' : 'What would you like to name your template?'}}</h5>
 	</div>
 	<div class="modal-body p-2 px-4 border-0" id="expedition_modal">
         <form [formGroup]="templateForm">
             <div class="mb-3">
                 <div class="form-floating mb-1">
                     <input type="text" formControlName="templateName" class="form-control" id="floatingtemplateName" placeholder="templateName">
-                    <label for="floatingtemplateName" class="ps-0 fw-semibold">Template Name *</label>
+                    <label for="floatingtemplateName" class="ps-0 fw-semibold">{{templateModalMode === 'rename' ? 'New Template Name *' : 'Template Name *'}}</label>
                 </div>
                 @if(form['templateName'].touched && form['templateName'].invalid){
                     <span class="warn-text f-12">{{ form['templateName'].hasError('required') ? 'templateName is required.' : '' }}</span>
@@ -172,7 +175,7 @@
     <div class="modal-footer border-0 pt-0">
 		<div class="d-flex justify-content-end gap-2">
             <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">Cancel</button>
-            <button type="button" class="btn btn-primary" (click)="saveTemplate()" [disabled]="templateForm.invalid">Save</button>
+            <button type="button" class="btn btn-primary" (click)="templateModalMode === 'rename' ? renameTemplate() : saveTemplate()" [disabled]="templateForm.invalid">{{templateModalMode === 'rename' ? 'Rename' : 'Save'}}</button>
         </div>
 	</div>
 </ng-template>

@@ -26,11 +26,13 @@ export class TemplateService {
   }
 
   saveTempates(projectId:number, templateName:string, data:any):Observable<any>{
-    return this.http.post(`${this.apiURL}projects/${projectId}/templates/${templateName}`, this.formatFormData(data), { headers: this.headers });
+    const encodedTemplateName = encodeURIComponent(templateName);
+    return this.http.post(`${this.apiURL}projects/${projectId}/templates/${encodedTemplateName}`, this.formatFormData(data), { headers: this.headers });
   }
 
   deleteTempates(projectId:number, templateName:string):Observable<any>{
-    return this.http.delete(`${this.apiURL}projects/${projectId}/templates/${templateName}`);
+    const encodedTemplateName = encodeURIComponent(templateName);
+    return this.http.delete(`${this.apiURL}projects/${projectId}/templates/${encodedTemplateName}`);
   }
 
   // Helper
