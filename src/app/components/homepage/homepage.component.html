@@ -1,55 +1,130 @@
-<section id="homepage-container" class="p-3 py-4 main-content-container">
-  <div class="container">
-
-	<!--
-    <div class="alert alert-danger text-center fw-bold" role="alert">
-      GEOME functions are currently unavailable due to an issue with the hosting environment service center that supports GEOME.
-      <br>
-      <small>As of Monday, August 4th at 11:00 AM Pacific Time. We will notify you when service is restored.</small>
-    </div>
-	-->
-
-    <div class="base-text-color f-25">
-      <p>
-        <b>
-          GEOME <i class="fas fa-volume-high text-secondary f-25" (click)="playAudio()"></i> is a Field Information Management System that transforms the way field-collected sample data is captured, organized, and shared.
-        </b>
-        From the moment samples are collected, GEOME supports their journey—linking metadata to sequencing, publication, and collaboration across institutions.
-      </p>
+<section id="homepage-container" class="main-content-container homepage-root">
+  <div class="homepage-backdrop"></div>
+  <div class="container py-4">
+    <div class="prototype-toggle animate-in">
+      <div class="toggle-intro">
+        <p class="toggle-label">Homepage Prototypes</p>
+        <p class="toggle-subtext">Bold visual concepts with quote-led messaging for field confidence and lab continuity.</p>
+      </div>
+      <div class="toggle-actions">
+        <button type="button" class="toggle-btn" [class.active]="activePrototype === 'field'" (click)="setPrototype('field')">Prototype A</button>
+        <button type="button" class="toggle-btn" [class.active]="activePrototype === 'ops'" (click)="setPrototype('ops')">Prototype B</button>
+      </div>
     </div>
 
-    <div class="mt-3 d-flex flex-wrap">
-      @for(item of homeItems; track item){
-        <div class="col-12 col-md-4 p-3">
-          <a class="p-3 d-flex flex-column gap-2 shadow rounded-2 align-items-center h-100 cursor-pointer text-decoration-none text-reset" [routerLink]="item.route">
-            <img [src]="item.img" width="150px" height="150px">
-            <h4>{{item.title}}</h4>
-          </a>
+    @if(activePrototype === 'field'){
+      <section class="hero-shell hero-field animate-in">
+        <div class="hero-orb hero-orb-a"></div>
+        <div class="hero-copy">
+          <p class="eyebrow">Prototype A | Immersive Field Signal</p>
+          <h1>Capture once in the field. Trust it in the lab.</h1>
+          <p class="hero-text">
+            Built for teams where collecting events, samples, tissues, and sequences must stay connected as one narrative.
+            <i class="fas fa-volume-high audio-icon" (click)="playAudio()"></i>
+          </p>
+          <div class="hero-quote-callout">
+            <p>"Field data becomes scientific capital only when context survives the trip to analysis."</p>
+          </div>
+          <div class="hero-badges">
+            <span>Full metadata provenance</span>
+            <span>Persistent record identity</span>
+            <span>Query-ready from day one</span>
+          </div>
         </div>
+        <div class="hero-art hero-art-field">
+          <img src="images/geomeWorkflow.png" alt="GEOME workflow artwork">
+          <div class="art-chip">Field campaign confidence</div>
+        </div>
+      </section>
+    }
+    @else{
+      <section class="hero-shell hero-ops animate-in">
+        <div class="hero-orb hero-orb-b"></div>
+        <div class="ops-left">
+          <p class="eyebrow">Prototype B | Studio Operations Mode</p>
+          <h1>High-visibility operations for collection teams and lab pipelines.</h1>
+          <p class="hero-text">
+            A vivid command-surface style concept focused on velocity, clarity, and controlled handoffs.
+          </p>
+          <div class="hero-quote-callout">
+            <p>"Better metadata is not slower science. It is faster trustworthy science."</p>
+          </div>
+          <div class="hero-badges">
+            <span>Expedition ownership visibility</span>
+            <span>Validation before publication</span>
+            <span>Reusable query intelligence</span>
+          </div>
+        </div>
+        <div class="ops-right">
+          <h4>Signal Strip</h4>
+          <p class="ops-strip">COLLECT <span>-></span> VALIDATE <span>-></span> LINK <span>-></span> QUERY <span>-></span> PUBLISH</p>
+          <img src="images/geomeRequired.png" alt="GEOME required fields artwork" class="ops-image">
+        </div>
+      </section>
+    }
+
+    <section class="feature-photos animate-in">
+      <article class="feature-photo-card">
+        <img [src]="featurePhotoOne" alt="Moorea coastline landscape">
+      </article>
+      <article class="feature-photo-card">
+        <img [src]="featurePhotoTwo" alt="Moorea field crate">
+      </article>
+      <article class="feature-photo-card">
+        <img [src]="featurePhotoThree" alt="Moorea fish reef">
+      </article>
+    </section>
+
+    <section class="quote-ribbon animate-in">
+      @for(item of activeQuotes; track item.quote){
+        <article class="quote-card">
+          <p class="quote-text">"{{item.quote}}"</p>
+          <p class="quote-by">{{item.byline}}</p>
+        </article>
       }
+    </section>
+
+    <section class="link-cards animate-in">
+      @for(item of homeItems; track item){
+        <a class="link-card" [ngClass]="'tone-' + item.tone" [routerLink]="item.route">
+          <div class="icon-wrap"><i [ngClass]="['fas', item.icon]"></i></div>
+          <img [src]="item.img" [alt]="item.title">
+          <h4>{{item.title}}</h4>
+          <p>{{item.subtitle}}</p>
+        </a>
+      }
+    </section>
+
+    <section class="highlight-band animate-in">
+      <article class="collab-highlight">
+        <div class="collab-head">
+          <h3>Open to Collaborate</h3>
+          <span>Indigenous partnership and stewardship commitments</span>
+        </div>
+        <p>
+          GEOME maintains this notice prominently to support new collaboration pathways and responsible data stewardship practices.
+        </p>
+        <button type="button" class="btn btn-light collab-btn" placement="top" ngbTooltip="Collaborate" (click)="openCollabModal(collab_modal)">
+          <img src="images/Open_To_Collaborate.png" alt="Open to Collaborate" class="open-collab-icon" />
+          <span>Review Collaboration Notice</span>
+        </button>
+      </article>
+
+      <article class="publication-highlight">
+        <h3>Foundational Publication</h3>
+        <p>
+          The Genomic Observatories Metadatabase (GEOME): A new repository for field and sampling event metadata associated with genetic samples.
+        </p>
+        <p class="authors">Deck J, Gaither MR, Ewing R, Bird CE, Davies N, Meyer C, Riginos C, Toonen RJ, Crandall ED.</p>
+        <a href="https://doi.org/10.1371/journal.pbio.2002925" target="_blank" rel="noopener noreferrer">
+          https://doi.org/10.1371/journal.pbio.2002925
+        </a>
+      </article>
+    </section>
+
+    <div class="legacy-link animate-in">
+      <a href="https://geome-old.netlify.app/" target="_blank" rel="noopener noreferrer">Visit the Legacy GEOME Site</a>
     </div>
-
-    <div style="display: flex; flex-direction: column; align-items: center; margin-top: 50px;">
-      <a href='https://geome-old.netlify.app/'>Visit the Legacy GEOME Site</a>
-    </div>
-
-    <p>
-      <a href="https://doi.org/10.1371/journal.pbio.2002925" target="_blank" class="text-decoration-none">
-        "The Genomic Observatories Metadatabase (GEOME): A new repository for field and sampling event metadata associated with genetic samples"
-      </a>,
-      John Deck , Michelle R. Gaither, Rodney Ewing, Christopher E. Bird, Neil Davies, Christopher Meyer, Cynthia Riginos, Robert J. Toonen, Eric D. Crandall
-      Published: August 3, 2017
-      <a href="https://doi.org/10.1371/journal.pbio.2002925" target="_blank" class="text-decoration-none">
-        https://doi.org/10.1371/journal.pbio.2002925
-      </a>
-    </p>
-
-    <div class="d-flex justify-content-center mt-3">
-      <button type="button" class="btn btn-link p-0 border-0 shadow-none" placement="top" ngbTooltip="Collaborate" (click)="openCollabModal(collab_modal)">
-        <img src="images/Open_To_Collaborate.png" alt="Open to Collaborate" class="open-collab-icon" />
-      </button>
-    </div>
-
   </div>
 </section>
 
