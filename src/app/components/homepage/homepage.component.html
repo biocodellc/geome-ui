@@ -1,4 +1,6 @@
-<section id="homepage-container" class="main-content-container homepage-root">
+<section id="homepage-container" class="main-content-container homepage-root" [ngClass]="{
+  'prototype-story': activePrototype === 'story'
+}">
   <div class="homepage-backdrop"></div>
   <div class="container py-4">
     <div class="prototype-toggle animate-in">
@@ -9,6 +11,7 @@
       <div class="toggle-actions">
         <button type="button" class="toggle-btn" [class.active]="activePrototype === 'field'" (click)="setPrototype('field')">Prototype A</button>
         <button type="button" class="toggle-btn" [class.active]="activePrototype === 'ops'" (click)="setPrototype('ops')">Prototype B</button>
+        <button type="button" class="toggle-btn" [class.active]="activePrototype === 'story'" (click)="setPrototype('story')">Prototype C</button>
       </div>
     </div>
 
@@ -37,7 +40,7 @@
         </div>
       </section>
     }
-    @else{
+    @else if(activePrototype === 'ops'){
       <section class="hero-shell hero-ops animate-in">
         <div class="hero-orb hero-orb-b"></div>
         <div class="ops-left">
@@ -62,7 +65,86 @@
         </div>
       </section>
     }
+    @else{
+      <section class="hero-shell hero-story animate-in">
+        <article class="story-intro">
+          <p class="story-kicker">Prototype C | White Story Theme</p>
+          <h1 class="story-title">A field-to-lab story told in records, maps, and evidence-rich metadata.</h1>
+          <p>
+            GEOME supports expedition-scale organizing and lets teams move from collection narratives to searchable, reusable datasets.
+            This concept uses a clean white editorial style inspired by long-form story pages, with stronger explanatory text and visual breaks.
+          </p>
+          <p>
+            Researchers can establish context early, preserve interpretation of where and how samples were acquired, and trace connected entities through analysis pipelines.
+            The goal is confidence: every downstream interpretation remains tethered to a clear field origin.
+          </p>
+        </article>
 
+        <article class="story-flow flow-right">
+          <figure class="story-float-media">
+            <img [src]="geomeFigureTwo" alt="Figure 2 from Deck et al. 2017 showing GEOME query distribution map">
+            <figcaption class="story-caption">Figure 2 (Deck et al. 2017): GEOME query map with distributed samples and locality context.</figcaption>
+          </figure>
+          <h3>Query Views That Keep Context Intact</h3>
+          <p>
+            Figure-driven map views help teams audit whether coverage and metadata quality match collection goals. This is critical when projects span
+            sites, expeditions, and preservation protocols that can bias downstream interpretation if context is weak.
+          </p>
+          <p>
+            In this prototype, the text wraps around the visual so users can read the story while still seeing the map evidence in view. The format is
+            intended to communicate scientific confidence to both field teams and lab collaborators.
+          </p>
+        </article>
+
+        <article class="story-flow flow-left">
+          <figure class="story-float-media">
+            <img [src]="featurePhotoOne" alt="Moorea coastline landscape">
+          </figure>
+          <h3>Field Reality, Not Just Metadata Tables</h3>
+          <p>
+            Collection environments are dynamic. A polished, readable homepage should communicate that GEOME is designed for real field constraints,
+            while still producing records that are structured enough for rigorous lab and informatics workflows.
+          </p>
+          <p>
+            Editorial layouts with image breaks improve scanability and present workflows as a continuous narrative instead of disconnected screens.
+          </p>
+        </article>
+
+        <article class="story-flow story-research-intro">
+          <h3>Research Stories Using GEOME</h3>
+          <p>
+            These literature examples cite the GEOME reference paper and show how scientists are using GEOME in biodiversity workflows,
+            from observatory design and data stewardship to disease surveillance and FAIR metadata brokering.
+          </p>
+        </article>
+
+        @for(story of geomeResearchStories; track story.title){
+          <article class="story-flow story-research" [class.flow-left]="story.photoSide === 'left'" [class.flow-right]="story.photoSide !== 'left'">
+            <figure class="story-float-media story-research-media">
+              <img [src]="story.imageUrl" [alt]="story.imageAlt">
+            </figure>
+            <p class="story-citation-source">{{story.source}}</p>
+            <h3>{{story.title}}</h3>
+            <p>{{story.context}}</p>
+            <p class="story-citation-ref">{{story.geomeCitation}}</p>
+            <div class="story-citation-links">
+              <a [href]="story.articleUrl" target="_blank" rel="noopener noreferrer">View article</a>
+              <a [href]="story.doi" target="_blank" rel="noopener noreferrer">DOI</a>
+            </div>
+          </article>
+        }
+
+        <article class="story-photo-grid">
+          <figure>
+            <img [src]="featurePhotoTwo" alt="Field sample crate">
+          </figure>
+          <figure>
+            <img [src]="featurePhotoThree" alt="Fish biodiversity photo">
+          </figure>
+        </article>
+      </section>
+    }
+    @if(activePrototype === 'field' || activePrototype === 'ops'){
     <section class="feature-photos animate-in">
       <article class="feature-photo-card">
         <img [src]="featurePhotoOne" alt="Moorea coastline landscape">
@@ -83,6 +165,7 @@
         </article>
       }
     </section>
+    }
 
     <section class="link-cards animate-in">
       @for(item of homeItems; track item){
