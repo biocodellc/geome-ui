@@ -106,7 +106,14 @@
                         <p class="proj-1">Permit GUID</p>
                     </div>
                     <div class="col-lg-10">
-                        <p class="proj-2"> {{ projectDetails?.permitGuid}}</p>
+                        <p class="proj-2">
+                            @if(permitGuidLink){
+                                <a class="doi-link" [href]="permitGuidLink" target="_blank" rel="noopener noreferrer">{{ projectDetails?.permitGuid}}</a>
+                            }
+                            @else{
+                                {{ projectDetails?.permitGuid}}
+                            }
+                        </p>
                     </div>
                 </div>
             }

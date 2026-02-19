@@ -3,6 +3,19 @@
 <!--TODO: we need to add a nice way to display the metadata object-->
 <div class="main-details horizontal-description-list p-3">
     <div>
+        @if(permitGuid){
+            <div class="mb-2">
+                <span class="fw-semibold">Permit GUID:</span>
+                <p class="d-inline ms-2">
+                    @if(permitGuidLink){
+                        <span><a [href]="permitGuidLink" target="_blank" rel="noopener noreferrer">{{ permitGuid }}</a></span>
+                    }
+                    @else{
+                        <span>{{ permitGuid }}</span>
+                    }
+                </p>
+            </div>
+        }
         @for(item of (mainRecordDetails || {}) | keyvalue; track item.key){
             <div class="mb-2">
                 <span class="fw-semibold">{{ item.key }}:</span>

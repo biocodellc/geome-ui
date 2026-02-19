@@ -80,6 +80,19 @@
                             <span class="text-eclipse">GEOME does not support base64 encoded images.</span>
                         </li>
                         }
+                        @if(project?.permitGuid){
+                        <li class="list-group-item d-flex">
+                            <p class="m-0 entity-data">Permit GUID :</p>
+                            @if(permitGuidLink){
+                            <span class="text-eclipse">
+                                <a [href]="permitGuidLink" target="_blank" rel="noopener noreferrer">{{ project?.permitGuid }}</a>
+                            </span>
+                            }
+                            @else{
+                            <span class="text-eclipse">{{ project?.permitGuid }}</span>
+                            }
+                        </li>
+                        }
                         @for(item of mainRecordDetails() | keyvalue; track item.key){
                         <li class="list-group-item d-flex">
                             <p class="m-0 entity-data">{{item.key}} :</p>

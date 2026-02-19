@@ -229,6 +229,23 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
     return key ? this.recordData[key] : this.recordData.bcid;
   }
 
+  private resolveGuidLink(value:any): string {
+    const raw = `${value || ''}`.trim();
+    if (!raw) return '';
+
+    if (/^https?:\/\//i.test(raw)) return raw;
+    if (/^doi:\s*/i.test(raw)) return `https://doi.org/${raw.replace(/^doi:\s*/i, '')}`;
+    if (/^doi\.org\//i.test(raw)) return `https://${raw}`;
+    if (/^10\.\S+/i.test(raw)) return `https://doi.org/${raw}`;
+    if (/^ark:\//i.test(raw)) return `https://n2t.net/${raw}`;
+
+    return '';
+  }
+
+  get permitGuidLink(): string {
+    return this.resolveGuidLink(this.project?.permitGuid);
+  }
+
   mainRecordDetails():{ [key: string]: RecordValue } {
     if (this.detailCache?.main) {
       return this.detailCache.main;
