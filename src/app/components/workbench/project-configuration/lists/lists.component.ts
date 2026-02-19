@@ -7,14 +7,14 @@ import { ProjectConfig } from '../../../../../helpers/models/projectConfig.model
 import { ProjectConfigurationService } from '../../../../../helpers/services/project-config.service';
 import { ProjectService } from '../../../../../helpers/services/project.service';
 import { NgbModal, NgbModalModule, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DummyDataService } from '../../../../../helpers/services/dummy-data.service';
 import { cloneDeep } from 'lodash';
 
 @Component({
   selector: 'app-lists',
   standalone: true,
-  imports: [CommonModule, RouterLink, NgbModalModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterLink, NgbModalModule, FormsModule, ReactiveFormsModule],
   templateUrl: './lists.component.html',
   styleUrl: './lists.component.scss'
 })
@@ -37,6 +37,7 @@ export class ListsComponent {
   listForm!:FormGroup;
   userLists:any[] = [];
   networkLists:any[] = [];
+  filterText:string = '';
 
   constructor() {
     this.dummyDataService.loadingState.next(true);
@@ -125,7 +126,7 @@ export class ListsComponent {
   }
 
   removeList(list:any){
-    const idx = this.allLists.findIndex((item:any)=> item.alias == list.alias && !item.networkList);
+    const idx = this.allLists.findIndex((item:any)=> item.alias == list.alias);
     if(idx == -1) return;
     this.allLists = this.allLists.slice(0, idx).concat(this.allLists.slice(idx + 1));
     this.updateConfigs();
@@ -136,6 +137,32 @@ export class ListsComponent {
   setControlVal(control:string, val:any){
     this.form[control].setValue(val);
     this.form[control].updateValueAndValidity();
+  }
+
+  get filteredLists(): Array<any> {
+    const query = this.normalizeText(this.filterText);
+    if(!query) return this.allLists;
+
+    return this.allLists.filter((list:any) => {
+      const alias = this.normalizeText(list?.alias);
+      if(alias.includes(query)) return true;
+
+      const fields = Array.isArray(list?.fields) ? list.fields : [];
+      return fields.some((field:any) => {
+        if(typeof field === 'string'){
+          return this.normalizeText(field).includes(query);
+        }
+        return [
+          field?.value,
+          field?.definition,
+          field?.definedBy
+        ].some((part:any) => this.normalizeText(part).includes(query));
+      });
+    });
+  }
+
+  private normalizeText(value:any): string {
+    return `${value || ''}`.toLowerCase().trim();
   }
 
   get changesDone(){ return this.allLists.find((item:any)=> item && item?.addedByUser) };

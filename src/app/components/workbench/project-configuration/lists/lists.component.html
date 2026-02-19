@@ -1,16 +1,24 @@
 <div class="mt-4">
-    <div class="add-btn py-2">
-        <button type="button" class="btn btn-primary custom" (click)="openModal(add_modal)">+ ADD LIST</button>
-        <!-- @if(projectConfService.isConfigChanges){
-            <button type="button" class="btn btn-primary custom ms-3" (click)="saveConfig()">
-                <i class="fas fa-upload"></i> Save Config
-            </button>
-        } -->
+    <div class="add-btn py-2 d-flex flex-wrap gap-2 align-items-center justify-content-between">
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+            <button type="button" class="btn btn-primary custom" (click)="openModal(add_modal)">+ ADD LIST</button>
+            @if(projectConfService.isConfigChanges){
+                <button type="button" class="btn btn-primary custom" (click)="saveConfig()">
+                    <i class="fas fa-upload me-2"></i> Save Config
+                </button>
+            }
+        </div>
+        <div class="custom-fields" style="min-width: 280px; width: min(420px, 100%);">
+            <div class="form-floating">
+                <input type="text" class="form-control" id="listFilter" [ngModelOptions]="{standalone: true}" [(ngModel)]="filterText" placeholder="Filter by capability or list name">
+                <label for="listFilter" class="ps-0 fw-semibold">Filter By Capability</label>
+            </div>
+        </div>
     </div>
-    @for(item of allLists; track item){
+    @for(item of filteredLists; track item.alias + '-' + item.networkList){
         <ul class="list-group">
             <li class="list-group-box list-section d-flex align-items-center">
-                <i class="fas fa-trash-can text-danger pe-5 cursor-pointer" (click)="removeList(item)" [ngClass]="!item.networkList ? 'visible' : 'invisible'"></i>
+                <i class="fas fa-trash-can text-danger pe-5 cursor-pointer" (click)="removeList(item)"></i>
                 <div class="work-boxes cursor-pointer" [routerLink]="['/workbench','config','lists', item.alias]">
                     <span class="event-hed">{{item.alias}}</span>
                     <ul class="work-list mt-2">
@@ -27,6 +35,9 @@
                 </div>
             </li>
         </ul>
+    }
+    @if(filteredLists.length === 0){
+        <p class="text-secondary mt-3 mb-0">No lists match this filter.</p>
     }
 </div>
 
