@@ -17,6 +17,7 @@ import { ExpeditionService } from '../../../helpers/services/expedition.service'
 import { ProjectConfig } from '../../../helpers/models/projectConfig.model';
 import { NoticeLabelComponent } from '../notice-label/notice-label.component';
 import { LightboxModule } from 'ng-gallery/lightbox';
+import { LocalContextsDisplayItem, LocalContextsService } from '../../../helpers/services/local-contexts.service';
 
 @Component({
   selector: 'app-record',
@@ -33,6 +34,7 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
   private projectService = inject(ProjectService);
   public dummyDataService = inject(DummyDataService);
   private expeditionService = inject(ExpeditionService);
+  private localContextsService = inject(LocalContextsService);
 
   // Variables
   destroy$:Subject<any> = new Subject();
@@ -43,6 +45,9 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
   project!:any;
   invalidPhoto:boolean = false;
   localContextsPresent:boolean = false;
+  localContextsItems: LocalContextsDisplayItem[] = [];
+  localContextsError = '';
+  localContextsProjectUrl = '';
   detailCacheNumCols:number = 0;
   detailCache:any = {};
   galleryRef!:GalleryRef;
@@ -370,107 +375,27 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
   /* fetch local contexts details for the configured Local Contexts Hub project */
   prepareLocalContexts(projectId:any) {
     this.localContextsPresent = false;
+    this.localContextsItems = [];
+    this.localContextsError = '';
+    this.localContextsProjectUrl = '';
     this.projectService.getProject(projectId).pipe(take(1), takeUntil(this.destroy$))
       .subscribe(async (project:any) => {
         if (project.localcontextsId) {
           this.localContextsPresent = true;
+          this.localContextsProjectUrl = this.localContextsService.getProjectPageUrl(project.localcontextsId);
           try {
-            const localContextsJson = await this.fetchLocalContextsProject(project.localcontextsId);
-            this.renderLocalContextsData(localContextsJson);
+            const localContextsProject = await this.localContextsService.fetchProject(project.localcontextsId);
+            this.localContextsItems = localContextsProject.items;
+            this.localContextsProjectUrl = localContextsProject.projectPage;
+            if (!this.localContextsItems.length) {
+              this.localContextsError = 'No Local Contexts notices or labels were returned for this project.';
+            }
           } catch (error:any) {
             console.warn('Failed to load Local Contexts data:', error?.message || error);
-            this.renderLocalContextsError(project.localcontextsId);
+            this.localContextsError = 'Unable to load Local Contexts labels here.';
           }
         }
       });
-  }
-
-  private resolveLocalContextsUrls(localcontextsId:string): string[] {
-    const id = encodeURIComponent(localcontextsId);
-    return [
-      `/localcontexts-api/projects/${id}/?format=json`,
-      `https://localcontextshub.org/api/v1/projects/${id}/?format=json`,
-    ];
-  }
-
-  private async fetchLocalContextsProject(localcontextsId:string): Promise<any> {
-    const urls = this.resolveLocalContextsUrls(localcontextsId);
-    let lastError:any = null;
-
-    for (const url of urls) {
-      try {
-        const response = await fetch(url, { headers: { Accept: 'application/json' } });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-        const contentType = response.headers.get('content-type') || '';
-        if (contentType.includes('application/json')) {
-          return await response.json();
-        }
-
-        const raw = await response.text();
-        return JSON.parse(raw);
-      } catch (error:any) {
-        lastError = error;
-      }
-    }
-
-    throw lastError || new Error('Unable to fetch Local Contexts project');
-  }
-
-  private appendLocalContextsImage(container:HTMLElement, imgUrl:string, pageUrl:string, height:number) {
-    if (!imgUrl) return;
-    const thumbImg = document.createElement('img');
-    thumbImg.src = imgUrl;
-    thumbImg.height = height;
-    thumbImg.setAttribute('style', 'margin: 4px; object-fit: contain;');
-
-    const anchorTag = document.createElement('a');
-    anchorTag.href = pageUrl;
-    anchorTag.target = '_blank';
-    anchorTag.rel = 'noopener noreferrer';
-    anchorTag.appendChild(thumbImg);
-
-    container.appendChild(anchorTag);
-  }
-
-  private renderLocalContextsData(localContextsJson:any) {
-    const height = 70;
-    const thumbContainer = document.getElementById('localContextsThumbnails');
-    if (!thumbContainer) return;
-    thumbContainer.innerHTML = '';
-
-    const projectPage = localContextsJson?.project_page || '#';
-    const notices = localContextsJson?.notice || [];
-    notices.forEach((notice:any) => {
-      this.appendLocalContextsImage(thumbContainer, notice?.img_url, projectPage, height);
-    });
-
-    const labels = [
-      ...(localContextsJson?.bc_labels || []),
-      ...(localContextsJson?.tk_labels || []),
-    ];
-    labels.forEach((label:any) => {
-      this.appendLocalContextsImage(thumbContainer, label?.img_url, projectPage, height);
-    });
-  }
-
-  private renderLocalContextsError(localcontextsId:string) {
-    const thumbContainer = document.getElementById('localContextsThumbnails');
-    if (!thumbContainer) return;
-    thumbContainer.innerHTML = '';
-
-    const msg = document.createElement('div');
-    msg.className = 'text-muted small';
-    msg.textContent = 'Unable to load Local Contexts labels here.';
-
-    const link = document.createElement('a');
-    link.href = `https://localcontextshub.org/projects/${encodeURIComponent(localcontextsId)}`;
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
-    link.textContent = 'Open Local Contexts project';
-
-    thumbContainer.appendChild(msg);
-    thumbContainer.appendChild(link);
   }
 
   getKeysArr(obj:{}):any[]{

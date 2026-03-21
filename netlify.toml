@@ -1,0 +1,10 @@
+[build]
+  command = "printf \"window.__env = window.__env || {};\\nwindow.__env.MAPBOX_TOKEN = '%s';\\nwindow.__env.LOCAL_CONTEXTS_API_BASE_URL = '%s';\\nwindow.__env.LOCAL_CONTEXTS_PROXY_BASE = '%s';\\nwindow.__env.LOCAL_CONTEXTS_PROJECT_PAGE_BASE_URL = '%s';\\n\" \"${MAPBOX_TOKEN:-}\" \"${LOCAL_CONTEXTS_API_BASE_URL:-https://localcontextshub.org/api}\" \"${LOCAL_CONTEXTS_PROXY_BASE:-/localcontexts-api}\" \"${LOCAL_CONTEXTS_PROJECT_PAGE_BASE_URL:-https://localcontextshub.org/projects}\" > public/env.js && npm install && npm run build -- --configuration=production"
+  publish = "dist/geome/browser"
+  functions = "netlify/functions"
+
+[functions]
+  directory = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "20"

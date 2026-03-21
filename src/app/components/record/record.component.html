@@ -120,12 +120,43 @@
                 }
 
                 @if(localContextsPresent){
-                    <div class="col-6 pl-10">
-                        <h5 class="m-0">Local Contexts:</h5>
-                        <div id="localContextsThumbnails" class="d-flex flex-wrap gap-2 p-2"></div>
-                        <!-- <div id=localContextsLabels style="height:100%; overflow:auto; max-height: 300px;">
-                            <div id="localContextsHeader"><i>Loading Local Contexts Data...</i></div>
-                        </div> -->
+                    <div class="col-12 pl-10">
+                        <div class="local-contexts-panel p-3">
+                            <div class="d-flex flex-wrap justify-content-between align-items-start gap-2">
+                                <div>
+                                    <h5 class="m-0">Local Contexts</h5>
+                                    <p class="text-muted small m-0">Labels and notices linked to this GEOME project.</p>
+                                </div>
+                                @if(localContextsProjectUrl){
+                                    <a [href]="localContextsProjectUrl" target="_blank" rel="noopener noreferrer" class="small text-decoration-none">
+                                        Open Local Contexts project
+                                    </a>
+                                }
+                            </div>
+
+                            @if(localContextsItems.length){
+                                <div class="local-contexts-grid mt-3">
+                                    @for(item of localContextsItems; track item.trackId){
+                                        <a class="local-context-card text-reset text-decoration-none" [href]="item.externalUrl" target="_blank" rel="noopener noreferrer">
+                                            @if(item.imageUrl){
+                                                <img class="local-context-card__image" [src]="item.imageUrl" [alt]="item.title">
+                                            }
+                                            <div class="local-context-card__content">
+                                                <p class="local-context-card__eyebrow">{{ item.kind === 'notice' ? 'Notice' : 'Label' }}</p>
+                                                <h6 class="local-context-card__title">{{ item.title }}</h6>
+                                                @if(item.communityName){
+                                                    <p class="local-context-card__community">{{ item.communityName }}</p>
+                                                }
+                                                <p class="local-context-card__text">{{ item.text }}</p>
+                                            </div>
+                                        </a>
+                                    }
+                                </div>
+                            }
+                            @else{
+                                <p class="text-muted small mt-3 mb-0">{{ localContextsError || 'No Local Contexts notices or labels are currently available for this project.' }}</p>
+                            }
+                        </div>
                     </div>
                 }
 
