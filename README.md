@@ -134,7 +134,7 @@ Use the Netlify function proxy added at `netlify/functions/local-contexts.js` so
 
 5. Optional environment variables:
    - Name: `LOCAL_CONTEXTS_API_BASE_URL`
-   - Value: `https://localcontextshub.org/api`
+   - Value: `https://localcontextshub.org/api/v2`
    - Name: `LOCAL_CONTEXTS_PROJECT_PAGE_BASE_URL`
    - Value: `https://localcontextshub.org/projects`
 
@@ -155,7 +155,7 @@ For local-only testing, set these values in an untracked `public/env.local.js` f
 ```js
 window.__env = window.__env || {};
 window.__env.LOCAL_CONTEXTS_API_KEY = 'your-local-contexts-key';
-window.__env.LOCAL_CONTEXTS_API_BASE_URL = 'https://localcontextshub.org/api';
+window.__env.LOCAL_CONTEXTS_API_BASE_URL = 'https://localcontextshub.org/api/v2';
 ```
 
 Notes:

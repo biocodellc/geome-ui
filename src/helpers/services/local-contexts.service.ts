@@ -33,7 +33,7 @@ export class LocalContextsService {
     this.runtimeEnv.LOCAL_CONTEXTS_PROXY_BASE || '/localcontexts-api'
   );
   private readonly directApiBase = this.normalizeBaseUrl(
-    this.runtimeEnv.LOCAL_CONTEXTS_API_BASE_URL || 'https://localcontextshub.org/api'
+    this.runtimeEnv.LOCAL_CONTEXTS_API_BASE_URL || 'https://localcontextshub.org/api/v2'
   );
   private readonly browserApiKey = `${this.runtimeEnv.LOCAL_CONTEXTS_API_KEY || ''}`.trim();
   private readonly projectPageBaseUrl = this.normalizeBaseUrl(
@@ -41,9 +41,9 @@ export class LocalContextsService {
   );
 
   private readonly authHeaderStrategies: Array<(apiKey: string) => HeadersInit> = [
-    (apiKey: string) => ({ Authorization: `Bearer ${apiKey}` }),
-    (apiKey: string) => ({ 'X-API-Key': apiKey }),
     (apiKey: string) => ({ 'X-Api-Key': apiKey }),
+    (apiKey: string) => ({ 'X-API-Key': apiKey }),
+    (apiKey: string) => ({ Authorization: `Bearer ${apiKey}` }),
     (apiKey: string) => ({ 'Api-Key': apiKey }),
   ];
 
@@ -88,13 +88,12 @@ export class LocalContextsService {
   }
 
   private buildProjectRequests(encodedId: string): LocalContextsRequest[] {
-    const query = 'format=json&version=2.0';
     const requests: LocalContextsRequest[] = [];
 
     if (this.proxyBase) {
       requests.push({
         source: 'proxy',
-        url: `${this.proxyBase}/projects/${encodedId}/?${query}`,
+        url: `${this.proxyBase}/projects/${encodedId}/`,
       });
     }
 
@@ -103,7 +102,7 @@ export class LocalContextsService {
         requests.push({
           headers: buildHeaders(this.browserApiKey),
           source: 'direct',
-          url: `${this.directApiBase}/projects/${encodedId}/?${query}`,
+          url: `${this.directApiBase}/projects/${encodedId}/`,
         });
       });
     }

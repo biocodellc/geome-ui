@@ -1,9 +1,9 @@
-const DEFAULT_API_BASE_URL = 'https://localcontextshub.org/api';
+const DEFAULT_API_BASE_URL = 'https://localcontextshub.org/api/v2';
 
 const authHeaderStrategies = [
-  (apiKey) => ({ Authorization: `Bearer ${apiKey}` }),
-  (apiKey) => ({ 'X-API-Key': apiKey }),
   (apiKey) => ({ 'X-Api-Key': apiKey }),
+  (apiKey) => ({ 'X-API-Key': apiKey }),
+  (apiKey) => ({ Authorization: `Bearer ${apiKey}` }),
   (apiKey) => ({ 'Api-Key': apiKey }),
 ];
 
@@ -31,8 +31,8 @@ exports.handler = async (event) => {
     };
   }
 
-  const targetUrl = buildTargetUrl(event);
-  if (!targetUrl) {
+  const targetRequests = buildTargetRequests(event, apiKey);
+  if (!targetRequests.length) {
     return {
       body: JSON.stringify({ message: 'Missing Local Contexts API path.' }),
       headers: jsonHeaders,
@@ -41,38 +41,59 @@ exports.handler = async (event) => {
   }
 
   let lastResponse;
+  let lastAttempt = '';
 
-  for (const buildHeaders of authHeaderStrategies) {
-    const response = await fetch(targetUrl, {
-      headers: {
-        Accept: 'application/json',
-        ...buildHeaders(apiKey),
-      }
-    });
-
+  for (const request of targetRequests) {
+    const response = await fetch(request.url, { headers: request.headers });
     lastResponse = response;
-    if (response.status === 401 || response.status === 403) continue;
-    return proxyResponse(response);
+    lastAttempt = request.label;
+    if (response.ok) return proxyResponse(response, request.label);
+    if ([401, 403, 404].includes(response.status)) continue;
+    return proxyResponse(response, request.label);
   }
 
-  return proxyResponse(lastResponse);
+  return proxyResponse(lastResponse, lastAttempt);
 };
 
-function buildTargetUrl(event) {
+function buildTargetRequests(event, apiKey) {
   const query = new URLSearchParams(event.queryStringParameters || {});
   const requestedPath = resolveRequestedPath(event, query);
-  if (!requestedPath) return '';
+  if (!requestedPath) return [];
 
   query.delete('path');
-  if (!query.has('format')) query.set('format', 'json');
-  if (!query.has('version')) query.set('version', '2.0');
 
-  const apiBaseUrl = `${process.env.LOCAL_CONTEXTS_API_BASE_URL || DEFAULT_API_BASE_URL}`
-    .trim()
-    .replace(/\/+$/, '');
-  const queryString = query.toString();
+  const apiBaseUrl = normalizeBaseUrl(process.env.LOCAL_CONTEXTS_API_BASE_URL || DEFAULT_API_BASE_URL);
+  const candidateUrls = buildCandidateUrls(apiBaseUrl, requestedPath, query);
+  const requests = [];
 
-  return `${apiBaseUrl}/${requestedPath}${queryString ? `?${queryString}` : ''}`;
+  for (const candidate of candidateUrls) {
+    for (const buildHeaders of authHeaderStrategies) {
+      requests.push({
+        headers: {
+          Accept: 'application/json',
+          ...buildHeaders(apiKey),
+        },
+        label: `${candidate.mode}:${headerStrategyName(buildHeaders(apiKey))}`,
+        url: candidate.url,
+      });
+    }
+
+    // Some integrations expose public and partner-readable data without auth
+    // or use query-based API key auth.
+    requests.push({
+      headers: { Accept: 'application/json' },
+      label: `${candidate.mode}:no-auth`,
+      url: candidate.url,
+    });
+
+    requests.push({
+      headers: { Accept: 'application/json' },
+      label: `${candidate.mode}:query-api-key`,
+      url: appendQueryParam(candidate.url, 'api_key', apiKey),
+    });
+  }
+
+  return dedupeRequests(requests);
 }
 
 function resolveRequestedPath(event, query) {
@@ -125,7 +146,74 @@ function extractRequestedPath(value) {
   return '';
 }
 
-async function proxyResponse(response) {
+function buildCandidateUrls(apiBaseUrl, requestedPath, query) {
+  const trimmedPath = requestedPath.replace(/^\/+|\/+$/g, '');
+  const passthroughQuery = new URLSearchParams(query);
+  passthroughQuery.delete('format');
+  passthroughQuery.delete('version');
+  const queryString = passthroughQuery.toString();
+  const urls = [];
+
+  urls.push({
+    mode: 'documented-v2-root',
+    url: `${apiBaseUrl}/${trimmedPath}/${queryString ? `?${queryString}` : ''}`,
+  });
+
+  urls.push({
+    mode: 'documented-v2-root-no-trailing-slash',
+    url: `${apiBaseUrl}/${trimmedPath}${queryString ? `?${queryString}` : ''}`,
+  });
+
+  if (!/\/v[12]$/i.test(apiBaseUrl)) {
+    const versionedModes = [
+      { key: 'v2-root', root: `${apiBaseUrl}/v2` },
+      { key: 'v1-root', root: `${apiBaseUrl}/v1` },
+    ];
+
+    versionedModes.forEach((mode) => {
+      urls.push({
+        mode: mode.key,
+        url: `${mode.root}/${trimmedPath}/${queryString ? `?${queryString}` : ''}`,
+      });
+      urls.push({
+        mode: `${mode.key}-no-trailing-slash`,
+        url: `${mode.root}/${trimmedPath}${queryString ? `?${queryString}` : ''}`,
+      });
+    });
+  }
+
+  return dedupeByUrl(urls);
+}
+
+function appendQueryParam(url, key, value) {
+  if (!value) return url;
+  const parsedUrl = new URL(url);
+  parsedUrl.searchParams.set(key, value);
+  return parsedUrl.toString();
+}
+
+function dedupeByUrl(items) {
+  return items.filter((item, index, list) => list.findIndex((candidate) => candidate.url === item.url) === index);
+}
+
+function dedupeRequests(requests) {
+  return requests.filter(
+    (request, index, list) =>
+      list.findIndex((candidate) => candidate.url === request.url && JSON.stringify(candidate.headers) === JSON.stringify(request.headers)) === index
+  );
+}
+
+function headerStrategyName(headers) {
+  const keys = Object.keys(headers);
+  if (!keys.length) return 'none';
+  return keys[0];
+}
+
+function normalizeBaseUrl(value) {
+  return `${value || ''}`.trim().replace(/\/+$/, '');
+}
+
+async function proxyResponse(response, attempt) {
   const body = await response.text();
   const contentType = response.headers.get('content-type') || 'application/json';
 
@@ -135,6 +223,7 @@ async function proxyResponse(response) {
       'access-control-allow-origin': '*',
       'cache-control': response.ok ? 'public, max-age=300' : 'no-store',
       'content-type': contentType,
+      'x-local-contexts-attempt': attempt || '',
     },
     statusCode: response.status,
   };
