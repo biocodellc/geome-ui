@@ -60,7 +60,7 @@ exports.handler = async (event) => {
 
 function buildTargetUrl(event) {
   const query = new URLSearchParams(event.queryStringParameters || {});
-  const requestedPath = `${query.get('path') || ''}`.trim().replace(/^\/+/, '');
+  const requestedPath = resolveRequestedPath(event, query);
   if (!requestedPath) return '';
 
   query.delete('path');
@@ -73,6 +73,56 @@ function buildTargetUrl(event) {
   const queryString = query.toString();
 
   return `${apiBaseUrl}/${requestedPath}${queryString ? `?${queryString}` : ''}`;
+}
+
+function resolveRequestedPath(event, query) {
+  const queryPath = `${query.get('path') || ''}`.trim().replace(/^\/+/, '');
+  if (queryPath) return queryPath;
+
+  const candidatePaths = [
+    event?.path,
+    event?.rawUrl,
+    event?.headers?.['x-original-uri'],
+    event?.headers?.['x-nf-original-path'],
+    event?.headers?.['x-forwarded-uri'],
+    event?.headers?.['x-forwarded-path'],
+  ].filter(Boolean);
+
+  for (const candidate of candidatePaths) {
+    const resolvedPath = extractRequestedPath(candidate);
+    if (resolvedPath) return resolvedPath;
+  }
+
+  return '';
+}
+
+function extractRequestedPath(value) {
+  const normalizedValue = `${value || ''}`.trim();
+  if (!normalizedValue) return '';
+
+  let pathname = normalizedValue;
+  try {
+    if (/^https?:\/\//i.test(normalizedValue)) {
+      pathname = new URL(normalizedValue).pathname;
+    }
+  } catch (error) {
+    pathname = normalizedValue;
+  }
+
+  const markers = [
+    '/.netlify/functions/local-contexts/',
+    '/localcontexts-api/',
+  ];
+
+  for (const marker of markers) {
+    const index = pathname.indexOf(marker);
+    if (index === -1) continue;
+
+    const requestedPath = pathname.slice(index + marker.length).replace(/^\/+/, '');
+    if (requestedPath) return requestedPath;
+  }
+
+  return '';
 }
 
 async function proxyResponse(response) {

@@ -144,6 +144,7 @@ Use the Netlify function proxy added at `netlify/functions/local-contexts.js` so
    - Open any GEOME record that belongs to a project with `localcontextsId` set.
    - In browser devtools, confirm the request goes to `/localcontexts-api/projects/<uuid>/?format=json&version=2.0`
    - Confirm the response is `200` and the record page shows Local Contexts cards instead of the fallback message.
+   - If you need to test the function directly, use `/.netlify/functions/local-contexts/projects/<uuid>/?format=json&version=2.0`
 
 No Angular code changes are needed after that. Requests to `/localcontexts-api/*` are rewritten through the Netlify function and then forwarded to the Local Contexts API.
 
