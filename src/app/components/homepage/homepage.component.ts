@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { NgbTooltipModule, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { DummyDataService } from '../../../helpers/services/dummy-data.service';
 
-type HomepagePrototype = 'field' | 'ops' | 'story';
+type HomepagePrototype = 'story' | 'guide';
 
 @Component({
   selector: 'app-homepage',
@@ -19,41 +19,13 @@ export class HomepageComponent {
   private dataService = inject(DummyDataService);
 
   // Variables
-  activePrototype: HomepagePrototype = 'story';
+  activePrototype: HomepagePrototype = 'guide';
   homeItems:Array<any> = this.dataService.getHomePageItems().map((item:any) => ({
     ...item,
     icon: this.getCardIcon(item.title),
     subtitle: this.getCardSubtitle(item.title),
     tone: this.getCardTone(item.title),
   }));
-  quoteCardsField:Array<any> = [
-    {
-      quote: 'From tide pool to sequencer, context is the science.',
-      byline: 'Metadata-first field operations'
-    },
-    {
-      quote: 'A sample without provenance is just an object.',
-      byline: 'Project-level traceability'
-    },
-    {
-      quote: 'Confidence grows when collection and analysis stay linked.',
-      byline: 'Field-lab continuity'
-    }
-  ];
-  quoteCardsOps:Array<any> = [
-    {
-      quote: 'Fast teams trust structured data.',
-      byline: 'Operational mode'
-    },
-    {
-      quote: 'Validation is not a hurdle. It is quality assurance.',
-      byline: 'Load-time feedback'
-    },
-    {
-      quote: 'Query once. Reuse forever.',
-      byline: 'Reusable expedition records'
-    }
-  ];
   featurePhotoOne:string = 'https://www.moorea.com/wp-content/uploads/2023/09/landscpae.jpg';
   featurePhotoTwo:string = 'https://www.moorea.com/wp-content/uploads/2023/09/crate.jpg';
   featurePhotoThree:string = 'https://www.moorea.com/wp-content/uploads/2023/09/fish.jpg';
@@ -104,6 +76,43 @@ export class HomepageComponent {
       photoSide: 'left'
     }
   ];
+  prototypeDHighlights:Array<any> = [
+    {
+      title: 'Capture once at the source',
+      text: 'Start with born-digital field records.'
+    },
+    {
+      title: 'Validate early',
+      text: 'Check location and standards at input.'
+    },
+    {
+      title: 'Persist your own identifiers',
+      text: 'Mint IDs that support attribution.'
+    },
+    {
+      title: 'Keep workflows connected',
+      text: 'Link events, samples, traits, and sequences.'
+    },
+    {
+      title: 'Publish or protect',
+      text: 'Share compliant data or keep it private, with support for <a href="https://datascience.codata.org/articles/dsj-2020-043" target="_blank" rel="noopener noreferrer">CARE</a> and <a href="https://www.nature.com/articles/sdata201618" target="_blank" rel="noopener noreferrer">FAIR</a> principles.'
+    }
+  ];
+  prototypeDCaseStudy:any = {
+    title: 'Tracking, Synthesizing, and Sharing Global Batrachochytrium Data at AmphibianDisease.org',
+    source: 'Frontiers in Veterinary Science (2021)',
+    articleUrl: 'https://www.frontiersin.org/articles/10.3389/fvets.2021.728232/full',
+    doi: 'https://doi.org/10.3389/fvets.2021.728232',
+    summary: 'The Amphibian Disease Portal uses GEOME to archive, aggregate, and share global Bd and Bsal data, preserving legacy records while supporting sample-level datasets, reproducible metadata, and research-ready disease surveillance.',
+    outcomes: [
+      'Supports distributed contributors using a shared template and common data model.',
+      'Improves surveillance quality by validating records before they become downstream reporting problems.',
+      'Keeps field observations, pathogen testing, and public-data pathways connected in one operational workflow.',
+      'Demonstrates how GEOME can scaffold a disease-monitoring program from collection through synthesis and publication.'
+    ],
+    imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Leopard_Frog_Closeup_(12779535195).jpg',
+    imageAlt: 'Leopard frog close-up'
+  };
   modalRef!:NgbModalRef;
   audioRef:any;
 
@@ -126,10 +135,6 @@ export class HomepageComponent {
     if (title === 'Query') return 'query';
     if (title === 'Workbench') return 'bench';
     return '';
-  }
-
-  get activeQuotes(): Array<any> {
-    return this.activePrototype === 'field' ? this.quoteCardsField : this.quoteCardsOps;
   }
 
   setPrototype(prototype: HomepagePrototype): void {

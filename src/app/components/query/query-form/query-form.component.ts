@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { Subject, take, takeUntil } from 'rxjs';
+import { Subject, forkJoin, take, takeUntil } from 'rxjs';
 import { NetworkService } from '../../../../helpers/services/network.service';
 import { ProjectService } from '../../../../helpers/services/project.service';
 import { ProjectConfig } from '../../../../helpers/models/projectConfig.model';
@@ -167,6 +167,7 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
   requestedParams:any;
   selectedTeam: string = '';
   selectedIndividualProject: string = '';
+  structuredRouteApplied:boolean = false;
 
   // Static Data
   popOverData:any = {
@@ -188,12 +189,18 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['q'] && changes['q'].currentValue){
-      this.requestedParams = changes['q'].currentValue.q
+      const incomingParams = changes['q'].currentValue;
+      this.requestedParams = incomingParams;
       if(this.requestedParams?.entity) this.entity = this.requestedParams.entity;
-      this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any) =>{
-        this.currentProj = res;
-        if(this.requestedParams && res) this.queryJson();
-      });
+
+      if (this.requestedParams?.q) {
+        this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any) =>{
+          this.currentProj = res;
+          if(this.requestedParams?.q && res) this.queryJson();
+        });
+      } else if (this.allProjects.length) {
+        this.applyStructuredRouteParams();
+      }
     }
   }
 
@@ -203,6 +210,7 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
         this.allProjects = res;
         this.allProjectsName = this.allProjects.map(proj => proj.projectTitle);
         this.setTeamNames();
+        this.applyStructuredRouteParams();
       }
     })
   }
@@ -315,6 +323,49 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
       this.expeditions = data;
       this.loadingExpeditions = false;
     })
+  }
+
+  applyStructuredRouteParams() {
+    if (
+      this.structuredRouteApplied ||
+      !this.requestedParams ||
+      this.requestedParams.q ||
+      !this.allProjects.length
+    ) {
+      return;
+    }
+
+    const { projectId, expeditionCode, entity } = this.requestedParams;
+    if (!projectId) return;
+
+    const project = this.allProjects.find((item:any) => String(item.projectId) === String(projectId));
+    if (!project) return;
+
+    this.structuredRouteApplied = true;
+    this.entity = entity || this.entity;
+    this.teams = [];
+    this.params.projects = [project];
+    this.individualProjects = [project.projectTitle];
+    this.loadingExpeditions = true;
+
+    forkJoin({
+      configResponse: this.projectConfigService.get(project.projectConfiguration.id).pipe(take(1)),
+      expeditions: this.expeditionService.getAllExpeditions(project.projectId).pipe(take(1)),
+    }).subscribe({
+      next: ({ configResponse, expeditions }: any) => {
+        this.config = configResponse.config;
+        this.identifySpecificEntities();
+        this.expeditions = expeditions || [];
+        this.loadingExpeditions = false;
+        this.params.expeditions = expeditionCode
+          ? this.expeditions.filter((item:any) => item.expeditionCode === expeditionCode)
+          : [];
+        this.queryJson();
+      },
+      error: () => {
+        this.loadingExpeditions = false;
+      },
+    });
   }
 
   queryJson() {

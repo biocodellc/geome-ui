@@ -229,6 +229,52 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
     return key ? this.recordData[key] : this.recordData.bcid;
   }
 
+  formatDetailLabel(key:string): string {
+    if (!key) return '';
+    return key
+      .split('.')
+      .map((segment:string) =>
+        segment
+          .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+          .replace(/[_-]/g, ' ')
+          .replace(/\b\w/g, char => char.toUpperCase())
+      )
+      .join(': ');
+  }
+
+  formatDetailValue(value:any): string {
+    if (value === undefined || value === null || value === '') return 'N/A';
+    if (typeof value === 'boolean') return value ? 'Yes' : 'No';
+    if (Array.isArray(value)) {
+      const values = value
+        .map(item => this.formatDetailValue(item))
+        .filter(item => item && item !== 'N/A');
+      return values.length ? values.join(', ') : 'N/A';
+    }
+    if (typeof value === 'object') {
+      const flattenedValue = flatten(value);
+      const entries = Object.entries(flattenedValue).filter(
+        ([, entryValue]) => entryValue !== undefined && entryValue !== null && entryValue !== '',
+      );
+      if (!entries.length) return 'N/A';
+      return entries
+        .map(([entryKey, entryValue]) => `${this.formatDetailLabel(entryKey)}: ${entryValue}`)
+        .join('; ');
+    }
+    return `${value}`;
+  }
+
+  getLinkedText(value:RecordValue | any): string {
+    return this.formatDetailValue(value?.text ?? value?.href);
+  }
+
+  normalizeEntityLabel(entity:string): string {
+    if (!entity) return '';
+    if (/^diagnosticss?$/i.test(entity)) return 'Diagnostics';
+    if (entity.toLowerCase().includes('extraction')) return 'Extraction Details';
+    return entity;
+  }
+
   mainRecordDetails():{ [key: string]: RecordValue } {
     if (this.detailCache?.main) {
       return this.detailCache.main;
@@ -480,8 +526,7 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
   }
 
   getChildEntityLabel(entity:string):string {
-    if (entity.toLowerCase().includes('extraction')) return 'Extraction Details';
-    return entity;
+    return this.normalizeEntityLabel(entity);
   }
 
 

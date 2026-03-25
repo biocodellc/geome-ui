@@ -2,13 +2,13 @@
 <app-loader />
 }
 <section class="records py-4">
-    <div class="container p-3 pt-4 mb-3 container-bg shadow">
+    <div class="container p-3 pt-4 mb-3 container-bg shadow record-shell">
         @if(record?.expedition || record?.entityIdentifier){
             <app-root-record [record]="record"/>
         }
 
         @if(recordData?.entity && !(dummyDataService.loadingState | async)){
-        <div class="record-detail">
+        <div class="record-detail record-detail-page">
             @if(recordData?.photoID){
             <div class="photo-error-labels">
                 @if(invalidPhoto){
@@ -26,16 +26,16 @@
             </div>
             }
 
-            <div class="d-flex align-items-center gap-3">
-                <h3>{{ recordData.entity }} ({{ getIdentifier() }})</h3>
+            <div class="d-flex align-items-center gap-3 record-header">
+                <h3 class="record-title">{{ normalizeEntityLabel(recordData.entity) }} <span class="record-identifier">({{ getIdentifier() }})</span></h3>
                 @if(recordData.traditionalKnowledgeNotice === 'TRUE'){
                 <app-notice-label />
                 }
             </div>
 
-            <div class="main-details p-3 d-flex flex-wrap justify-content-between">
+            <div class="main-details section-card p-3 d-flex flex-wrap justify-content-between">
                 @if(recordData?.photoID && recordData?.processed !== 'false' && !invalidPhoto){
-                <div class="card col-12 col-md-6 col-lg-6 pl-10">
+                <div class="card col-12 col-md-6 col-lg-6 pl-10 record-visual-card">
                     @if(recordData?.img1024){
                     <a href="{{ recordData?.img1024 }}" class="card-img-top" ><img [src]="recordData?.img512" /></a>
                     }
@@ -43,7 +43,7 @@
                 }
 
                 @if(recordData?.entity){
-                <div class="col-12 col-md-6 pl-10">
+                <div class="col-12 col-md-6 pl-10 record-summary-card">
 
                     <!-- <table class="table">
                                 <tbody>
@@ -73,24 +73,24 @@
                                 </tbody>
                             </table> -->
 
-                    <ul class="list-group">
+                    <ul class="list-group record-list">
                         @if(invalidPhoto && recordData?.originalUrl.includes('base64')){
-                        <li class="list-group-item d-flex">
-                            <p class="m-0 entity-data">Error Detail:</p>
+                        <li class="list-group-item d-flex record-list-item">
+                            <p class="m-0 entity-data">{{ formatDetailLabel('errorDetail') }}:</p>
                             <span class="text-eclipse">GEOME does not support base64 encoded images.</span>
                         </li>
                         }
                         @for(item of mainRecordDetails() | keyvalue; track item.key){
-                        <li class="list-group-item d-flex">
-                            <p class="m-0 entity-data">{{item.key}} :</p>
+                        <li class="list-group-item d-flex record-list-item">
+                            <p class="m-0 entity-data">{{ formatDetailLabel(item.key) }}:</p>
                             @if(item.value.href && item.value.text){
                             <span class="text-eclipse">
-                                                <a href="{{ item.value.href }}" target="_blank" class="d-inline-block text-eclipse">{{ item.value.href }}</a>
+                                                <a href="{{ item.value.href }}" target="_blank" class="d-inline-block text-eclipse">{{ getLinkedText(item.value) }}</a>
                                 <!--  placement="top" [ngbTooltip]="item.value.href" -->
                             </span>
                             }
                             @else if(!item.value.href || !item.value.text){
-                            <span class="text-eclipse">{{ item.value.text || 'N/A' }}</span>
+                            <span class="text-eclipse">{{ formatDetailValue(item.value.text || item.value) }}</span>
                             <!--  placement="top" [ngbTooltip]="item.value.text || ''" -->
                             }
                         </li>
@@ -107,8 +107,8 @@
                 }
 
                 @if(localContextsPresent){
-                    <div class="col-6 pl-10">
-                        <h5 class="m-0">Local Contexts:</h5>
+                    <div class="col-6 pl-10 section-card local-contexts-card">
+                        <h5 class="m-0 section-heading">Local Contexts</h5>
                         <div id="localContextsThumbnails" class="d-flex flex-wrap gap-2 p-2"></div>
                         <!-- <div id=localContextsLabels style="height:100%; overflow:auto; max-height: 300px;">
                             <div id="localContextsHeader"><i>Loading Local Contexts Data...</i></div>
@@ -117,7 +117,7 @@
                 }
 
                 @if(recordData.entity === 'Event'){
-                <div class="map-container col-12 col-md-6 col-lg-6 pl-10">
+                <div class="map-container col-12 col-md-6 col-lg-6 pl-10 record-visual-card">
                     <app-map class="record-map" [showExtras]="false" [mapData]="mapData" [height]="'359px'"></app-map>
                 </div>
                 }
@@ -148,19 +148,19 @@
             @if(auxiliaryRecordDetails(0)){
             <div class="my-3 divider"></div>
             <!-- ==================================Divider=================================================== -->
-            <div class="auxiliary-details p-3 d-flex justify-content-between">
+            <div class="auxiliary-details section-card p-3 d-flex justify-content-between">
                 <div class="col-12 col-md-6 mb-3">
-                    <table class="table">
+                    <table class="table record-table">
                         <tbody>
                             @for(item of auxiliaryRecordDetails(0) | keyvalue; track item.key){
                             <tr>
-                                            <th [ngClass]="{'text-danger': item.key === 'imageProcessingErrors'}">{{ item.key }}:</th>
+                                            <th [ngClass]="{'text-danger': item.key === 'imageProcessingErrors'}">{{ formatDetailLabel(item.key) }}:</th>
                                 <td [ngClass]="{'sequence': item.key === 'sequence'}">
                                     <!-- placement="top" [ngbTooltip]="item.value?.text || item.value" -->
-                                    @if(!item.value?.href){ <span>{{ item.value }} </span> }
+                                    @if(!item.value?.href){ <span>{{ formatDetailValue(item.value) }} </span> }
                                     @else if(item.value?.href){
                                     <span>
-                                        <a href="{{ item.value.href }}" target="_blank">{{ item.value.text }}</a>
+                                        <a href="{{ item.value.href }}" target="_blank">{{ getLinkedText(item.value) }}</a>
                                     </span>
                                     }
                                 </td>
@@ -170,7 +170,7 @@
                     </table>
                 </div>
                 <div class="col-12 col-md-6 mb-3">
-                    <table class="table d-none d-md-table" flex>
+                    <table class="table d-none d-md-table record-table" flex>
                         <tbody>
                             @if(recordData?.genus && recordData?.specificEpithet && !recordData?.scientificName){
                             <tr>
@@ -180,13 +180,13 @@
                             }
                             @for(item of auxiliaryRecordDetails(1) | keyvalue; track item.key){
                             <tr>
-                                <th>{{ item.key }}:</th>
+                                <th>{{ formatDetailLabel(item.key) }}:</th>
                                 <td [ngClass]="{'sequence': item.key === 'sequence'}">
                                     <!--  placement="top" [ngbTooltip]="item.value?.text || item.value" -->
-                                    @if(!item.value?.href){ <span>{{ item.value }} </span> }
+                                    @if(!item.value?.href){ <span>{{ formatDetailValue(item.value) }} </span> }
                                     @else if(item.value?.href){
                                     <span>
-                                        <a href="{{ item.value.href }}" target="_blank">{{ item.value.text }}</a>
+                                        <a href="{{ item.value.href }}" target="_blank">{{ getLinkedText(item.value) }}</a>
                                     </span>
                                     }
                                 </td>
@@ -202,17 +202,17 @@
             @if(record?.parent && parentDetail){
             <div class="my-3 divider"></div>
             <!-- ==================================Divider=================================================== -->
-            <div class="parent-details horizontal-description-list p-3">
-                <h4 style="margin-bottom: 0.75rem;">Parent {{ record.parent.entity }}</h4>
+            <div class="parent-details horizontal-description-list section-card p-3">
+                <h4 class="section-heading">Parent {{ normalizeEntityLabel(record.parent.entity) }}</h4>
                 <div layout="row">
                     <ul style="list-style-type: none;" class="d-flex flex-wrap gap-3 p-0 mb-2">
                         @for(key of getKeysArr(parentDetail); track key){
                         <li>
-                            <span class="fw-semibold">{{ key }}:</span>
+                            <span class="fw-semibold">{{ formatDetailLabel(key) }}:</span>
                             <p class="d-inline ms-2 text-secondary">
-                                @if(!parentDetail[key].href){ <span>{{ parentDetail[key].text || 'N/A' }}</span> }
+                                @if(!parentDetail[key].href){ <span>{{ formatDetailValue(parentDetail[key].text || parentDetail[key]) }}</span> }
                                 @else{
-                                                <span><a href="{{ parentDetail[key].href }}">{{ parentDetail[key].text || 'N/A' }}</a></span>
+                                                <span><a href="{{ parentDetail[key].href }}">{{ getLinkedText(parentDetail[key]) }}</a></span>
                                 }
                             </p>
                         </li>
@@ -226,8 +226,8 @@
             @if(record?.children && childDetails){
             <div class="my-3 divider"></div>
             <!-- ==================================Divider=================================================== -->
-            <div class="child-details horizontal-description-list p-3">
-                <h4 style="margin-bottom: 0.75rem;">Child Entities</h4>
+            <div class="child-details horizontal-description-list section-card p-3">
+                <h4 class="section-heading">Child Entities</h4>
                 @for(item of childDetails | keyvalue; track item.key) {
                 <div>
                     @for(child of item.value; let i = $index; track i) {
@@ -236,13 +236,13 @@
                         <ul style="list-style-type: none;" class="d-flex flex-wrap column-gap-3 row-gap-1 mb-2">
                             @for(itemKey of getKeysArr(child); track itemKey) {
                             <li>
-                                <span class="fw-semibold">{{ itemKey }}:</span>
+                                <span class="fw-semibold">{{ formatDetailLabel(itemKey) }}:</span>
                                 <p class="d-inline text-secondary ms-2">
                                     @if (!child[itemKey].href) {
-                                    <span>{{ child[itemKey].text || 'N/A' }}</span>
+                                    <span>{{ formatDetailValue(child[itemKey].text || child[itemKey]) }}</span>
                                     } @else {
                                     <span>
-                                        <a href="{{ child[itemKey].href }}">{{ child[itemKey].text || 'N/A' }}</a>
+                                        <a href="{{ child[itemKey].href }}">{{ getLinkedText(child[itemKey]) }}</a>
                                     </span>
                                     }
                                 </p>

@@ -3,6 +3,9 @@ import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/cor
 import { childRecordDetails, mainRecordDetails, parentRecordDetails } from '../../../helpers/scripts/recordDetails';
 import { Router } from '@angular/router';
 import { DummyDataService } from '../../../helpers/services/dummy-data.service';
+import { flatten } from '../../../helpers/scripts/flatten';
+import { ProjectService } from '../../../helpers/services/project.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-root-record',
@@ -14,10 +17,12 @@ import { DummyDataService } from '../../../helpers/services/dummy-data.service';
 export class RootRecordComponent implements OnChanges{
   router = inject(Router);
   dummyDataService = inject(DummyDataService);
+  projectService = inject(ProjectService);
 
   // Variables
   @Input() record:any;
   header:string = '';
+  headerMeta:string = '';
   parentEntity:string = '';
   parentDetail!:{ [key: string]: RecordValue };
   childDetails!:{ [key: string]: RecordValue };
@@ -27,6 +32,8 @@ export class RootRecordComponent implements OnChanges{
   parent:any;
   childData:any;
   entity:string = '';
+  entityMapRoots: EntityMapNode[] = [];
+  entityMapLoaded:boolean = false;
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['record'] && changes['record']?.currentValue){
@@ -35,17 +42,18 @@ export class RootRecordComponent implements OnChanges{
   }
 
   assignValues(){
+    this.entityMapRoots = [];
+    this.entityMapLoaded = false;
+    this.headerMeta = '';
+
     if (this.record.expedition) {
       this.entity = 'expedition';
       this.parentEntity = 'Project';
       this.data = this.record.expedition;
       this.parent = this.data.project;
       this.childData = this.data.entityIdentifiers;
-      this.header = this.data.expeditionTitle.concat(
-        ' (',
-        this.data.expeditionCode,
-        ')',
-      );
+      this.header = this.data.expeditionTitle;
+      this.headerMeta = `Expedition code=${this.data.expeditionCode}`;
     } else if (this.record.entityIdentifier) {
       this.entity = 'entityIdentifier';
       this.parentEntity = 'Expedition';
@@ -62,6 +70,7 @@ export class RootRecordComponent implements OnChanges{
     this.prepareChildDetails(this.childData);
     this.prepareParentDetails(this.parent);
     this.prepareMainDetails(this.data);
+    this.prepareEntityMap();
     setTimeout(() => {
       this.dummyDataService.loadingState.next(false);
     }, 100);
@@ -69,7 +78,33 @@ export class RootRecordComponent implements OnChanges{
 
   prepareMainDetails(data:any) {
     const detailMap = mainRecordDetails[this.entity];
-    this.mainRecordDetails = this.makeDetailObject(data, detailMap);
+    const details = this.makeDetailObject(data, detailMap);
+    const parentProject = this.getParentProjectInfo();
+
+    if (!parentProject) {
+      this.mainRecordDetails = details;
+      return;
+    }
+
+    const orderedDetails:any = {};
+    Object.entries(details).forEach(([key, value]) => {
+      orderedDetails[key] = value;
+      if (key === 'modified') {
+        orderedDetails.parentProject = {
+          text: `${parentProject.title} (id=${parentProject.id})`,
+          href: parentProject.href,
+        };
+      }
+    });
+
+    if (!orderedDetails.parentProject) {
+      orderedDetails.parentProject = {
+        text: `${parentProject.title} (id=${parentProject.id})`,
+        href: parentProject.href,
+      };
+    }
+
+    this.mainRecordDetails = orderedDetails;
   }
 
   prepareParentDetails(parent:any) {
@@ -78,6 +113,7 @@ export class RootRecordComponent implements OnChanges{
   }
 
   prepareChildDetails(children:any) {
+    this.childDetails = {};
     const detailMap = childRecordDetails[this.entity];
 
     if (Array.isArray(children)) {
@@ -95,6 +131,152 @@ export class RootRecordComponent implements OnChanges{
     } else {
       this.childDetails = this.makeDetailObject(children, detailMap);
     }
+  }
+
+  prepareEntityMap() {
+    if (this.entity !== 'expedition') return;
+
+    const project =
+      this.record?.expedition?.project ||
+      this.record?.entityIdentifier?.expedition?.project;
+
+    const projectId = project?.projectId;
+    if (!projectId) return;
+
+    this.projectService
+      .getProjectConfig(project)
+      .pipe(take(1))
+      .subscribe({
+        next: (config:any) => {
+          const entities = Array.isArray(config?.entities) ? config.entities : [];
+          const identifiers = Array.isArray(this.childData) ? this.childData : [];
+          this.entityMapRoots = this.buildEntityMap(entities, identifiers);
+          this.entityMapLoaded = true;
+        },
+        error: () => {
+          this.entityMapRoots = [];
+          this.entityMapLoaded = true;
+        },
+      });
+  }
+
+  buildEntityMap(entities:any[], identifiers:any[]): EntityMapNode[] {
+    if (!entities.length) return [];
+
+    const entityByAlias = new Map(
+      entities
+        .filter(entity => entity?.conceptAlias)
+        .map(entity => [entity.conceptAlias, entity]),
+    );
+
+    const childrenByParent = new Map<string, string[]>();
+    entities.forEach(entity => {
+      const parentAlias = entity?.parentEntity;
+      const alias = entity?.conceptAlias;
+      if (!parentAlias || !alias) return;
+      if (!childrenByParent.has(parentAlias)) childrenByParent.set(parentAlias, []);
+      childrenByParent.get(parentAlias)?.push(alias);
+    });
+
+    const availableByAlias = new Map<string, string>();
+    identifiers.forEach((identifier:any) => {
+      if (!identifier?.conceptAlias || !identifier?.identifier) return;
+      if (!availableByAlias.has(identifier.conceptAlias)) {
+        availableByAlias.set(identifier.conceptAlias, identifier.identifier);
+      }
+    });
+
+    const aliasesToShow = this.collectRelevantAliases(entityByAlias, availableByAlias);
+    const roots = entities
+      .filter(entity => {
+        const alias = entity?.conceptAlias;
+        return (
+          alias &&
+          aliasesToShow.has(alias) &&
+          (!entity.parentEntity || !entityByAlias.has(entity.parentEntity))
+        );
+      })
+      .sort((a, b) => this.sortAliases(a?.conceptAlias, b?.conceptAlias))
+      .map(entity => this.buildEntityMapNode(entity.conceptAlias, childrenByParent, availableByAlias, aliasesToShow));
+
+    return roots.filter(Boolean);
+  }
+
+  collectRelevantAliases(entityByAlias:Map<string, any>, availableByAlias:Map<string, string>): Set<string> {
+    const aliases = new Set<string>();
+    const availableAliases = Array.from(availableByAlias.keys());
+
+    if (!availableAliases.length) {
+      entityByAlias.forEach((_, alias) => aliases.add(alias));
+      return aliases;
+    }
+
+    availableAliases.forEach(alias => {
+      let current:string | undefined = alias;
+      while (current && !aliases.has(current)) {
+        aliases.add(current);
+        current = entityByAlias.get(current)?.parentEntity;
+      }
+    });
+
+    return aliases;
+  }
+
+  buildEntityMapNode(
+    alias:string,
+    childrenByParent:Map<string, string[]>,
+    availableByAlias:Map<string, string>,
+    aliasesToShow:Set<string>,
+  ): EntityMapNode {
+    const childAliases = (childrenByParent.get(alias) || [])
+      .filter(childAlias => aliasesToShow.has(childAlias))
+      .sort((a, b) => this.sortAliases(a, b));
+
+    return {
+      alias,
+      label: this.normalizeEntityLabel(alias),
+      identifier: availableByAlias.get(alias),
+      available: availableByAlias.has(alias),
+      children: childAliases.map(childAlias =>
+        this.buildEntityMapNode(childAlias, childrenByParent, availableByAlias, aliasesToShow),
+      ),
+    };
+  }
+
+  sortAliases(a:string, b:string): number {
+    const preferredOrder = ['Event', 'Sample', 'Tissue'];
+    const indexA = preferredOrder.indexOf(a);
+    const indexB = preferredOrder.indexOf(b);
+    const normalizedA = this.normalizeEntityLabel(a).toLowerCase();
+    const normalizedB = this.normalizeEntityLabel(b).toLowerCase();
+
+    if (indexA !== -1 || indexB !== -1) {
+      if (indexA === -1) return 1;
+      if (indexB === -1) return -1;
+      return indexA - indexB;
+    }
+
+    return normalizedA.localeCompare(normalizedB);
+  }
+
+  openEntityMapNode(node:EntityMapNode) {
+    if (!node?.available) return;
+    const expeditionCode = this.record?.expedition?.expeditionCode;
+    const projectId = this.record?.expedition?.project?.projectId;
+    if (!expeditionCode) return;
+    this.router.navigate(['/query'], {
+      queryParams: {
+        projectId,
+        expeditionCode,
+        entity: this.getQueryEntityForAlias(node.alias),
+      },
+    });
+  }
+
+  getQueryEntityForAlias(alias:string): string {
+    if (alias === 'fastqMetadata') return 'Fastq';
+    if (alias === 'Extraction' || alias === 'Extraction_Details') return 'Extraction';
+    return alias;
   }
 
   makeDetailObject(data:any, detailMap:any) {
@@ -117,9 +299,67 @@ export class RootRecordComponent implements OnChanges{
     } else this.router.navigateByUrl(href);
   }
 
-  getValue(data:string|object|undefined){
-    if(typeof data == 'object' && !Array.isArray(data)) return JSON.stringify(data);
-    else return data;
+  formatLabel(key:string): string {
+    if (!key) return '';
+    if (key === 'modified') return 'Last Modified';
+    return key
+      .split('.')
+      .map((segment:string) =>
+        segment
+          .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+          .replace(/[_-]/g, ' ')
+          .replace(/\b\w/g, char => char.toUpperCase())
+      )
+      .join(': ');
+  }
+
+  formatValue(data:any): string {
+    if (data === undefined || data === null || data === '') return 'N/A';
+    if (typeof data === 'boolean') return data ? 'Yes' : 'No';
+    if (Array.isArray(data)) {
+      const values = data
+        .map(item => this.formatValue(item))
+        .filter(item => item && item !== 'N/A');
+      return values.length ? values.join(', ') : 'N/A';
+    }
+    if (typeof data === 'object') {
+      const flattenedValue = flatten(data);
+      const entries = Object.entries(flattenedValue).filter(
+        ([, value]) => value !== undefined && value !== null && value !== '',
+      );
+      if (!entries.length) return 'N/A';
+      return entries
+        .map(([key, value]) => `${this.formatLabel(key)}: ${value}`)
+        .join('; ');
+    }
+    return `${data}`;
+  }
+
+  getLinkedText(value:RecordValue | any): string {
+    return this.formatValue(value?.text ?? value?.href);
+  }
+
+  getParentProjectInfo():
+    | { title: string; id: string | number; href: string }
+    | undefined {
+    const project =
+      this.record?.expedition?.project ||
+      this.record?.entityIdentifier?.expedition?.project;
+
+    if (!project?.projectTitle || !project?.projectId) return undefined;
+
+    return {
+      title: project.projectTitle,
+      id: project.projectId,
+      href: `/workbench/project-overview?projectId=${project.projectId}`,
+    };
+  }
+
+  normalizeEntityLabel(entity:string): string {
+    if (!entity) return '';
+    if (/^diagnosticss?$/i.test(entity)) return 'Diagnostics';
+    if (entity.toLowerCase().includes('extraction')) return 'Extraction Details';
+    return entity;
   }
 }
 
@@ -127,4 +367,12 @@ interface RecordValue {
   href?: string;
   text?: string;
   queryLink?:string
+}
+
+interface EntityMapNode {
+  alias: string;
+  label: string;
+  identifier?: string;
+  available: boolean;
+  children: EntityMapNode[];
 }

@@ -1,11 +1,18 @@
 section.records{
-    height: calc(100vh - 80px);
-    overflow:hidden auto;
+    height: calc(100vh - 75px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 2rem;
+    background:
+        radial-gradient(circle at top right, rgba(118, 188, 210, 0.14), transparent 28%),
+        radial-gradient(circle at left top, rgba(92, 152, 66, 0.1), transparent 24%),
+        linear-gradient(180deg, #f5fafb 0%, #edf5f7 100%);
 }
 .divider{
     height: 1px;
     width: 100%;
-    border: 1px solid grey;
+    border: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(77, 157, 184, 0.35) 18%, rgba(77, 157, 184, 0.35) 82%, transparent 100%);
 }
 
 .entity-data{
@@ -18,6 +25,154 @@ section.records{
 
 .col-12.col-md-6.col-lg-4{
     width: 32.5% !important;
+}
+
+.record-shell{
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid rgba(77, 157, 184, 0.14);
+    border-radius: 24px;
+    box-shadow: 0 20px 48px rgba(7, 60, 92, 0.08);
+    backdrop-filter: blur(6px);
+}
+
+.record-detail-page{
+    color: #19455b;
+}
+
+.record-header{
+    margin-bottom: 1.25rem;
+    padding: 0 0.25rem;
+}
+
+.record-title{
+    margin: 0;
+    font-size: clamp(1.55rem, 1.3rem + 1vw, 2.2rem);
+    line-height: 1.15;
+    font-weight: 700;
+    color: #073c5c;
+}
+
+.record-identifier{
+    color: #356b81;
+    font-weight: 500;
+}
+
+.section-card{
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(244, 250, 252, 0.96) 100%);
+    border: 1px solid rgba(77, 157, 184, 0.18);
+    border-radius: 18px;
+    box-shadow: 0 14px 28px rgba(10, 52, 73, 0.08);
+}
+
+.main-details{
+    gap: 0.75rem 0;
+}
+
+.record-visual-card,
+.record-summary-card,
+.local-contexts-card{
+    background: transparent;
+}
+
+.record-visual-card{
+    border-radius: 16px;
+}
+
+.record-visual-card.card{
+    border: 1px solid rgba(77, 157, 184, 0.16);
+    box-shadow: 0 12px 22px rgba(10, 52, 73, 0.08);
+    overflow: hidden;
+}
+
+.record-visual-card img{
+    display: block;
+    width: 100%;
+    object-fit: cover;
+}
+
+.record-list{
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(77, 157, 184, 0.16);
+}
+
+.record-list-item{
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.9rem 1rem;
+    border: 0;
+    border-bottom: 1px solid rgba(77, 157, 184, 0.12);
+    background: rgba(255, 255, 255, 0.82);
+}
+
+.record-list-item:last-child{
+    border-bottom: 0;
+}
+
+.record-list-item a,
+.record-table a,
+.parent-details a,
+.child-details a{
+    color: #156086;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.record-list-item a:hover,
+.record-table a:hover,
+.parent-details a:hover,
+.child-details a:hover{
+    text-decoration: underline;
+}
+
+.text-eclipse{
+    color: #24536a;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+.section-heading{
+    margin: 0 0 0.9rem;
+    font-size: 1.15rem;
+    color: #073c5c;
+    font-weight: 700;
+}
+
+.local-contexts-card{
+    padding: 1rem !important;
+}
+
+.record-table{
+    margin-bottom: 0;
+    --bs-table-bg: transparent;
+}
+
+.record-table th{
+    width: 38%;
+    color: #073c5c;
+    font-weight: 700;
+    border-bottom-color: rgba(77, 157, 184, 0.16);
+}
+
+.record-table td{
+    color: #24536a;
+    border-bottom-color: rgba(77, 157, 184, 0.16);
+}
+
+.parent-details ul,
+.child-details ul{
+    margin-bottom: 0;
+}
+
+.parent-details li,
+.child-details li{
+    color: #24536a;
+    line-height: 1.5;
+}
+
+.child-details .entity{
+    min-width: 122px;
+    color: #073c5c;
 }
 
 ::ng-deep{
@@ -33,5 +188,41 @@ section.records{
 
 
 @media screen and (max-width: 991px){
+    .record-shell{
+        border-radius: 18px;
+    }
+
+    .record-header{
+        align-items: flex-start !important;
+    }
+
+    .record-title{
+        font-size: 1.5rem;
+    }
+
+    .record-table th,
+    .record-table td{
+        display: block;
+        width: 100%;
+    }
+
+    .record-table th{
+        padding-bottom: 0.2rem;
+        border-bottom: 0;
+    }
+
+    .record-table td{
+        padding-top: 0;
+    }
+
+    .child-details .d-flex{
+        flex-direction: column;
+    }
+
+    .child-details .entity{
+        min-width: auto;
+        margin-bottom: 0.35rem;
+    }
+
     ::ng-deep gallery{ width: 95%; }
 }

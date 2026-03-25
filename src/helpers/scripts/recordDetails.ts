@@ -308,8 +308,6 @@ export const mainRecordDetails:any = {
     }),
   },
   expedition: {
-    expeditionTitle: getKey('expeditionTitle'),
-    expeditionCode: getKey('expeditionCode'),
     expeditionId: getKey('expeditionId'),
     created: getKey('created'),
     modified: getKey('modified'),

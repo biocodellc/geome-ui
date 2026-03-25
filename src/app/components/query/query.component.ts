@@ -50,9 +50,9 @@ export class QueryComponent{
         this.teamIdNum = parseInt(params.team, 10);
         if(this.teamIdNum === 45 ) this.teamQuery = true;
       }
-      else if(params.q){
+      else if(params.q || params.projectId || params.expeditionCode || params.entity){
         this.requestedParams = params;
-        this.params.queryString = this.requestedParams.q;
+        if (this.requestedParams.q) this.params.queryString = this.requestedParams.q;
       }
     })
   }
@@ -60,7 +60,7 @@ export class QueryComponent{
   updateQueryResult(data:any, tab:string){
     this.queryResult = data.result;
     this.entity = data.entity;
-    this.active = 'map';
+    this.active = this.entity.includes('Photo') ? 'photos' : 'table';
     this.paginatorData = { collectionSize: this.queryResult.length, page: 1, pageSize: 50 };
     this.onPageChange();
   }

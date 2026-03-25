@@ -1,5 +1,6 @@
 <section id="homepage-container" class="main-content-container homepage-root" [ngClass]="{
-  'prototype-story': activePrototype === 'story'
+  'prototype-story': activePrototype === 'story',
+  'prototype-guide': activePrototype === 'guide'
 }">
   <div class="homepage-backdrop"></div>
   <div class="container py-4">
@@ -9,60 +10,66 @@
         <p class="toggle-subtext">Bold visual concepts with quote-led messaging for field confidence and lab continuity.</p>
       </div>
       <div class="toggle-actions">
-        <button type="button" class="toggle-btn" [class.active]="activePrototype === 'field'" (click)="setPrototype('field')">Prototype A</button>
-        <button type="button" class="toggle-btn" [class.active]="activePrototype === 'ops'" (click)="setPrototype('ops')">Prototype B</button>
         <button type="button" class="toggle-btn" [class.active]="activePrototype === 'story'" (click)="setPrototype('story')">Prototype C</button>
+        <button type="button" class="toggle-btn" [class.active]="activePrototype === 'guide'" (click)="setPrototype('guide')">Prototype D</button>
       </div>
     </div>
 
-    @if(activePrototype === 'field'){
-      <section class="hero-shell hero-field animate-in">
-        <div class="hero-orb hero-orb-a"></div>
-        <div class="hero-copy">
-          <p class="eyebrow">Prototype A | Immersive Field Signal</p>
-          <h1>Capture once in the field. Trust it in the lab.</h1>
-          <p class="hero-text">
-            Built for teams where collecting events, samples, tissues, and sequences must stay connected as one narrative.
-            <i class="fas fa-volume-high audio-icon" (click)="playAudio()"></i>
-          </p>
-          <div class="hero-quote-callout">
-            <p>"Field data becomes scientific capital only when context survives the trip to analysis."</p>
+    @if(activePrototype === 'guide'){
+      <section class="hero-shell hero-guide animate-in">
+        <div class="hero-orb hero-orb-b"></div>
+        <div class="guide-diagram-panel">
+          <div class="guide-diagram-head">
+            <h1>Resources for genomic observations from collection to analysis and publication</h1>
           </div>
-          <div class="hero-badges">
-            <span>Full metadata provenance</span>
-            <span>Persistent record identity</span>
-            <span>Query-ready from day one</span>
+          <div class="guide-diagram-caption guide-diagram-lead">
+            <img src="images/geomeWorkflow.png" alt="GEOME workflow diagram">
+            <span>
+              GEOME <i class="fas fa-volume-high audio-icon" (click)="playAudio()" aria-label="Play GEOME audio"></i> is a Field Information Management System that transforms the way field-collected sample data is captured, organized, and shared. From the moment samples are collected, GEOME supports their journey, linking metadata to sequencing, publication, and collaboration across institutions.
+            </span>
           </div>
-        </div>
-        <div class="hero-art hero-art-field">
-          <img src="images/geomeWorkflow.png" alt="GEOME workflow artwork">
-          <div class="art-chip">Field campaign confidence</div>
         </div>
       </section>
-    }
-    @else if(activePrototype === 'ops'){
-      <section class="hero-shell hero-ops animate-in">
-        <div class="hero-orb hero-orb-b"></div>
-        <div class="ops-left">
-          <p class="eyebrow">Prototype B | Studio Operations Mode</p>
-          <h1>High-visibility operations for collection teams and lab pipelines.</h1>
-          <p class="hero-text">
-            A vivid command-surface style concept focused on velocity, clarity, and controlled handoffs.
+
+      <section class="guide-value-section animate-in">
+        <article class="guide-value-intro">
+          <h3>What GEOME can do for you</h3>
+          <p>Best-practice data management, made practical.</p>
+        </article>
+
+        <div class="guide-grid">
+          @for(item of prototypeDHighlights; track item.title){
+            <article class="guide-highlight-card">
+              <h4>{{item.title}}</h4>
+              <p [innerHTML]="item.text"></p>
+            </article>
+          }
+        </div>
+      </section>
+
+      <section class="guide-case-study animate-in">
+        <div class="case-study-copy">
+          <p class="story-kicker">{{prototypeDCaseStudy.source}}</p>
+          <h3>{{prototypeDCaseStudy.title}}</h3>
+          <p>
+            {{prototypeDCaseStudy.summary}}
           </p>
-          <div class="hero-quote-callout">
-            <p>"Better metadata is not slower science. It is faster trustworthy science."</p>
+          <div class="case-study-points">
+            @for(point of prototypeDCaseStudy.outcomes; track point){
+              <div class="case-study-point">
+                <span class="point-dot"></span>
+                <p>{{point}}</p>
+              </div>
+            }
           </div>
-          <div class="hero-badges">
-            <span>Expedition ownership visibility</span>
-            <span>Validation before publication</span>
-            <span>Reusable query intelligence</span>
+          <div class="story-citation-links">
+            <a [href]="prototypeDCaseStudy.articleUrl" target="_blank" rel="noopener noreferrer">View article</a>
+            <a [href]="prototypeDCaseStudy.doi" target="_blank" rel="noopener noreferrer">DOI</a>
           </div>
         </div>
-        <div class="ops-right">
-          <h4>Signal Strip</h4>
-          <p class="ops-strip">COLLECT <span>-></span> VALIDATE <span>-></span> LINK <span>-></span> QUERY <span>-></span> PUBLISH</p>
-          <img src="images/geomeRequired.png" alt="GEOME required fields artwork" class="ops-image">
-        </div>
+        <figure class="case-study-media">
+          <img [src]="prototypeDCaseStudy.imageUrl" [alt]="prototypeDCaseStudy.imageAlt">
+        </figure>
       </section>
     }
     @else{
@@ -144,40 +151,6 @@
         </article>
       </section>
     }
-    @if(activePrototype === 'field' || activePrototype === 'ops'){
-    <section class="feature-photos animate-in">
-      <article class="feature-photo-card">
-        <img [src]="featurePhotoOne" alt="Moorea coastline landscape">
-      </article>
-      <article class="feature-photo-card">
-        <img [src]="featurePhotoTwo" alt="Moorea field crate">
-      </article>
-      <article class="feature-photo-card">
-        <img [src]="featurePhotoThree" alt="Moorea fish reef">
-      </article>
-    </section>
-
-    <section class="quote-ribbon animate-in">
-      @for(item of activeQuotes; track item.quote){
-        <article class="quote-card">
-          <p class="quote-text">"{{item.quote}}"</p>
-          <p class="quote-by">{{item.byline}}</p>
-        </article>
-      }
-    </section>
-    }
-
-    <section class="link-cards animate-in">
-      @for(item of homeItems; track item){
-        <a class="link-card" [ngClass]="'tone-' + item.tone" [routerLink]="item.route">
-          <div class="icon-wrap"><i [ngClass]="['fas', item.icon]"></i></div>
-          <img [src]="item.img" [alt]="item.title">
-          <h4>{{item.title}}</h4>
-          <p>{{item.subtitle}}</p>
-        </a>
-      }
-    </section>
-
     <section class="highlight-band animate-in">
       <article class="collab-highlight">
         <div class="collab-head">
@@ -194,13 +167,14 @@
       </article>
 
       <article class="publication-highlight">
-        <h3>Foundational Publication</h3>
-        <p>
-          The Genomic Observatories Metadatabase (GEOME): A new repository for field and sampling event metadata associated with genetic samples.
+        <h3>Reference Paper</h3>
+        <p class="citation-title">
+          <em>The Genomic Observatories Metadatabase (GEOME): A new repository for field and sampling event metadata associated with genetic samples.</em>
         </p>
-        <p class="authors">Deck J, Gaither MR, Ewing R, Bird CE, Davies N, Meyer C, Riginos C, Toonen RJ, Crandall ED.</p>
-        <a href="https://doi.org/10.1371/journal.pbio.2002925" target="_blank" rel="noopener noreferrer">
-          https://doi.org/10.1371/journal.pbio.2002925
+        <p class="authors">Deck J, Gaither MR, Ewing R, Bird CE, Davies N, Meyer C, Riginos C, Toonen RJ, Crandall ED. 2017.</p>
+        <p class="citation-journal">PLOS Biology</p>
+        <a class="citation-doi" href="https://doi.org/10.1371/journal.pbio.2002925" target="_blank" rel="noopener noreferrer">
+          doi:10.1371/journal.pbio.2002925
         </a>
       </article>
     </section>
