@@ -104,3 +104,74 @@ printf "window.__env = window.__env || {};\nwindow.__env.MAPBOX_TOKEN = '%s';\n"
 Notes:
 - `public/env.js` is loaded by `src/index.html`.
 - Production builds currently use `src/environments/environment.ts`.
+
+## Local Contexts Integration Setup
+
+GEOME stores the Local Contexts Project identifier in the `localcontextsId` project field and renders the linked Local Contexts notices/labels on record detail pages.
+
+### Recommended deployment setup
+
+Use the Netlify function proxy added at `netlify/functions/local-contexts.js` so the Local Contexts API key stays server-side.
+
+1. Make sure Netlify is using the repo root as the base directory.
+
+2. In Netlify Site settings, confirm these build settings:
+   - Build command: use the repo `netlify.toml` value, or keep an equivalent custom command that writes `public/env.js` before the Angular build
+   - Publish directory: `dist/geome/browser`
+   - Functions directory: `netlify/functions`
+
+   These are also captured in `netlify.toml`. The included build command preserves the existing runtime Mapbox token injection and adds the Local Contexts runtime defaults.
+
+3. In Netlify Site settings, keep or add environment variable:
+   - Name: `MAPBOX_TOKEN`
+   - Value: your public Mapbox browser token
+   - `Contains secret values`: **unchecked**
+
+4. In Netlify Site settings, add environment variable:
+   - Name: `LOCAL_CONTEXTS_API_KEY`
+   - Value: your Local Contexts integration partner API key
+   - `Contains secret values`: **checked**
+
+5. Optional environment variables:
+   - Name: `LOCAL_CONTEXTS_API_BASE_URL`
+   - Value: `https://localcontextshub.org/api/v2`
+   - Name: `LOCAL_CONTEXTS_PROJECT_PAGE_BASE_URL`
+   - Value: `https://localcontextshub.org/projects`
+
+6. Trigger a new deploy after saving the environment variables.
+
+7. Verify the deployed site:
+   - Open any GEOME record that belongs to a project with `localcontextsId` set.
+   - In browser devtools, confirm the request goes to `/localcontexts-api/projects/<uuid>/?format=json&version=2.0`
+   - Confirm the response is `200` and the record page shows Local Contexts cards instead of the fallback message.
+   - If you need to test the function directly, use `/.netlify/functions/local-contexts/projects/<uuid>/?format=json&version=2.0`
+
+No Angular code changes are needed after that. Requests to `/localcontexts-api/*` are rewritten through the Netlify function and then forwarded to the Local Contexts API.
+
+### Local development
+
+For local-only testing, set these values in an untracked `public/env.local.js` file:
+
+```js
+window.__env = window.__env || {};
+window.__env.LOCAL_CONTEXTS_API_KEY = 'your-local-contexts-key';
+window.__env.LOCAL_CONTEXTS_API_BASE_URL = 'https://localcontextshub.org/api/v2';
+```
+
+Notes:
+- `public/env.local.js` is ignored by Git.
+- This browser-side key fallback is for local development only. Do not use it for production deployments.
+- The UI will first try the same-origin proxy at `/localcontexts-api`; if that is unavailable, it falls back to the browser key from `public/env.local.js`.
+
+### Netlify dashboard mods summary
+
+If this site was already deploying successfully before this change, the only required Netlify dashboard modification is:
+
+- Add `LOCAL_CONTEXTS_API_KEY` as a secret environment variable.
+
+These are only needed if the site is not already configured from the repo defaults:
+
+- Keep `MAPBOX_TOKEN` configured for the build-generated `env.js`
+- Set publish directory to `dist/geome/browser`
+- Set functions directory to `netlify/functions`
+- Keep the base directory at the repository root

@@ -7,6 +7,19 @@
 
 <!--TODO: we need to add a nice way to display the metadata object-->
 <div class="main-details horizontal-description-list p-3">
+    @if(permitGuid){
+        <div class="mb-3">
+            <span class="fw-semibold">Permit GUID:</span>
+            <p class="d-inline ms-2">
+                @if(permitGuidLink){
+                    <span><a [href]="permitGuidLink" target="_blank" rel="noopener noreferrer">{{ permitGuid }}</a></span>
+                }
+                @else{
+                    <span>{{ permitGuid }}</span>
+                }
+            </p>
+        </div>
+    }
     <ul class="list-group record-root-list">
         @for(item of (mainRecordDetails || {}) | keyvalue; track item.key){
             <li class="list-group-item d-flex record-root-list-item">
@@ -85,5 +98,27 @@
                 }
             </ul>
         </div>
+    </div>
+}
+
+@if(childDetails){
+    <div class="my-3 divider"></div>
+    <div class="child-details horizontal-description-list p-3">
+        <h4>Child Entities</h4>
+        @for(item of (childDetails || {}) | keyvalue; track item.key){
+            <div class="entity-group">
+                <div layout="row">
+                    @if(item.key !== 'query'){ <span class="entity">{{ item.key }}s</span> }
+                    @else{ <span class="entity"> </span> }
+                    <p class="">
+                        @if(!item.value.href && !item.value.queryLink){ <span>{{ item.value.text || 'N/A' }}</span> }
+                        @else if(item.value.href){ <span><a href="{{item.value.href}}">{{ item.value.text || 'N/A' }}</a></span> }
+                        @else if(item.value.queryLink){
+                            <span (click)="query(item.value.queryLink)">{{ item.value.text || 'N/A' }}</span>
+                        }
+                    </p>
+                </div>
+            </div>
+        }
     </div>
 }

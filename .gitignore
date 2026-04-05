@@ -46,4 +46,4 @@ localhost.crt
 localhost.key
 .firebase
 .angular
-public/env.local.js
+/public/env.local.js

@@ -34,6 +34,7 @@ export class RootRecordComponent implements OnChanges{
   entity:string = '';
   entityMapRoots: EntityMapNode[] = [];
   entityMapLoaded:boolean = false;
+  permitGuid:string = '';
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['record'] && changes['record']?.currentValue){
@@ -71,9 +72,36 @@ export class RootRecordComponent implements OnChanges{
     this.prepareParentDetails(this.parent);
     this.prepareMainDetails(this.data);
     this.prepareEntityMap();
+    this.permitGuid = this.getProjectPermitGuid();
     setTimeout(() => {
       this.dummyDataService.loadingState.next(false);
     }, 100);
+  }
+
+  private getProjectPermitGuid(): string {
+    return (
+      this.record?.expedition?.project?.permitGuid ||
+      this.record?.entityIdentifier?.expedition?.project?.permitGuid ||
+      this.parent?.project?.permitGuid ||
+      ''
+    );
+  }
+
+  private resolveGuidLink(value:any): string {
+    const raw = `${value || ''}`.trim();
+    if (!raw) return '';
+
+    if (/^https?:\/\//i.test(raw)) return raw;
+    if (/^doi:\s*/i.test(raw)) return `https://doi.org/${raw.replace(/^doi:\s*/i, '')}`;
+    if (/^doi\.org\//i.test(raw)) return `https://${raw}`;
+    if (/^10\.\S+/i.test(raw)) return `https://doi.org/${raw}`;
+    if (/^ark:\//i.test(raw)) return `https://n2t.net/${raw}`;
+
+    return '';
+  }
+
+  get permitGuidLink(): string {
+    return this.resolveGuidLink(this.permitGuid);
   }
 
   prepareMainDetails(data:any) {

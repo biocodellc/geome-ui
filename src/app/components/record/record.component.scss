@@ -186,6 +186,77 @@ section.records{
     margin-top: 10px !important;
 }
 
+.local-contexts-panel{
+    background: #f7f8fa;
+    border: 1px solid #dde3eb;
+    border-radius: 12px;
+}
+
+.local-contexts-grid{
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.local-context-card{
+    align-items: flex-start;
+    background: #fff;
+    border: 1px solid #d8dee8;
+    border-radius: 12px;
+    display: flex;
+    gap: 12px;
+    min-height: 100%;
+    padding: 14px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.local-context-card:hover{
+    border-color: #8aa8c7;
+    box-shadow: 0 10px 24px rgba(15, 35, 55, 0.08);
+    transform: translateY(-1px);
+}
+
+.local-context-card__image{
+    flex-shrink: 0;
+    height: 72px;
+    object-fit: contain;
+    width: 72px;
+}
+
+.local-context-card__content{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.local-context-card__eyebrow{
+    color: #5b6b7d;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.local-context-card__title{
+    margin: 0;
+}
+
+.local-context-card__community{
+    color: #3d4d5f;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.local-context-card__text{
+    color: #4a5563;
+    font-size: 0.92rem;
+    line-height: 1.4;
+    margin: 0;
+}
+
 
 @media screen and (max-width: 991px){
     .record-shell{
@@ -225,4 +296,14 @@ section.records{
     }
 
     ::ng-deep gallery{ width: 95%; }
+}
+@media screen and (max-width: 576px){
+    .local-context-card{
+        flex-direction: column;
+    }
+
+    .local-context-card__image{
+        height: 60px;
+        width: 60px;
+    }
 }

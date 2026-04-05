@@ -1,3 +1,3 @@
 /assets/*  /assets/:splat  200
+/localcontexts-api/*  /.netlify/functions/local-contexts/:splat  200
 /*         /index.html     200
-

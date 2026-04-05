@@ -200,8 +200,8 @@ export class ProjectOverviewComponent implements OnDestroy{
     this.router.navigateByUrl(`/query?q=_projects_:${this.projectDetails.projectId} and _expeditions_:[${expeditionCode}]`);
   }
 
-  get publicationGuidLink(): string {
-    const raw = `${this.projectDetails?.publicationGuid || ''}`.trim();
+  private resolveGuidLink(value: any): string {
+    const raw = `${value || ''}`.trim();
     if (!raw) return '';
 
     if (/^https?:\/\//i.test(raw)) return raw;
@@ -210,7 +210,15 @@ export class ProjectOverviewComponent implements OnDestroy{
     if (/^10\.\S+/i.test(raw)) return `https://doi.org/${raw}`;
     if (/^ark:\//i.test(raw)) return `https://n2t.net/${raw}`;
 
-    return raw;
+    return '';
+  }
+
+  get publicationGuidLink(): string {
+    return this.resolveGuidLink(this.projectDetails?.publicationGuid);
+  }
+
+  get permitGuidLink(): string {
+    return this.resolveGuidLink(this.projectDetails?.permitGuid);
   }
 
   ngOnDestroy(): void {

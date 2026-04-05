@@ -17,6 +17,7 @@ import { ExpeditionService } from '../../../helpers/services/expedition.service'
 import { ProjectConfig } from '../../../helpers/models/projectConfig.model';
 import { NoticeLabelComponent } from '../notice-label/notice-label.component';
 import { LightboxModule } from 'ng-gallery/lightbox';
+import { LocalContextsDisplayItem, LocalContextsService } from '../../../helpers/services/local-contexts.service';
 
 @Component({
   selector: 'app-record',
@@ -33,6 +34,7 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
   private projectService = inject(ProjectService);
   public dummyDataService = inject(DummyDataService);
   private expeditionService = inject(ExpeditionService);
+  private localContextsService = inject(LocalContextsService);
 
   // Variables
   destroy$:Subject<any> = new Subject();
@@ -43,6 +45,9 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
   project!:any;
   invalidPhoto:boolean = false;
   localContextsPresent:boolean = false;
+  localContextsItems: LocalContextsDisplayItem[] = [];
+  localContextsError = '';
+  localContextsProjectUrl = '';
   detailCacheNumCols:number = 0;
   detailCache:any = {};
   galleryRef!:GalleryRef;
@@ -275,6 +280,23 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
     return entity;
   }
 
+  private resolveGuidLink(value:any): string {
+    const raw = `${value || ''}`.trim();
+    if (!raw) return '';
+
+    if (/^https?:\/\//i.test(raw)) return raw;
+    if (/^doi:\s*/i.test(raw)) return `https://doi.org/${raw.replace(/^doi:\s*/i, '')}`;
+    if (/^doi\.org\//i.test(raw)) return `https://${raw}`;
+    if (/^10\.\S+/i.test(raw)) return `https://doi.org/${raw}`;
+    if (/^ark:\//i.test(raw)) return `https://n2t.net/${raw}`;
+
+    return '';
+  }
+
+  get permitGuidLink(): string {
+    return this.resolveGuidLink(this.project?.permitGuid);
+  }
+
   mainRecordDetails():{ [key: string]: RecordValue } {
     if (this.detailCache?.main) {
       return this.detailCache.main;
@@ -396,121 +418,28 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
     return  allKeys.length ? this.detailCache[index] : {};
   }
 
-  /* fetch local contexts details at the construction, only populate data if localcontexts project is set
-  * Note that we delve into jquery calls and here and call directly to DOM since the LC Hub API did not
-  * have proper CORS headers for angular $http calls, which were failing. The jquery XmlHttpRequest
-  * is maybe simpler
-  */
+  /* fetch local contexts details for the configured Local Contexts Hub project */
   prepareLocalContexts(projectId:any) {
     this.localContextsPresent = false;
+    this.localContextsItems = [];
+    this.localContextsError = '';
+    this.localContextsProjectUrl = '';
     this.projectService.getProject(projectId).pipe(take(1), takeUntil(this.destroy$))
-      .subscribe((project:any) => {
+      .subscribe(async (project:any) => {
         if (project.localcontextsId) {
           this.localContextsPresent = true;
-          var lcUrl = 'https://localcontextshub.org/api/v1/projects/' + project.localcontextsId + '/?format=json';
-          // This is a temporary storage directory for localcontexts projects that have been created in GEOME
-          //var lcUrl = 'https://raw.githubusercontent.com/biocodellc/geome-ui/master/localcontexts/' + project.localcontextsId 
-          var xmlHttp = new XMLHttpRequest();
-          xmlHttp.open("GET", lcUrl, true); // false for synchronous request
-          xmlHttp.onreadystatechange = function (oEvent) {
-            if (xmlHttp.readyState === 4) {
-              if (xmlHttp.status === 200) {
-                const height = 70
-                const localContextsJson = JSON.parse(xmlHttp.responseText);
-
-                // Clear containers
-                // const labelContainer = document.getElementById('localContextsLabels');
-                const thumbContainer = document.getElementById('localContextsThumbnails');
-                // if (labelContainer) labelContainer.innerHTML = '';
-                if (thumbContainer) thumbContainer.innerHTML = '';
-
-                // Notices
-                try {
-                  for (let i = 0; i < localContextsJson.notice?.length || 0; i++) {
-                    const obj = localContextsJson.notice[i];
-
-                    // Add image to thumbnails
-                    if (thumbContainer) {
-                      const thumbImg = document.createElement('img');
-                      thumbImg.src = obj.img_url;
-                      thumbImg.height = height;
-                      thumbImg.setAttribute("style", "margin: 4px; object-fit: contain;");
-                      const anchorTag = document.createElement('a');
-                      anchorTag.href = localContextsJson.project_page;
-                      anchorTag.target = '_blank';
-
-                      anchorTag.appendChild(thumbImg);
-                      thumbContainer.appendChild(anchorTag);
-                    }
-
-                    // Add text to label list
-                  //   if (labelContainer) {
-                  //     const div = document.createElement('div');
-                  //     div.setAttribute("style", "padding: 5px;");
-                  //     const textHTML = `
-                  //   <a target="_blank" href="${localContextsJson.project_page}">${obj.name}</a>
-                  //   <p>${obj.default_text || ''}</p>
-                  // `;
-                  //     div.innerHTML = textHTML;
-                  //     labelContainer.appendChild(div);
-                  //   }
-                  }
-                } catch (e) {
-                  console.warn(e);
-                }
-
-                // Labels (BC and TK)
-                const allLabels = [];
-                try {
-                  allLabels.push(...(localContextsJson.bc_labels || []));
-                  allLabels.push(...(localContextsJson.tk_labels || []));
-                } catch (e) {
-                  console.warn(e);
-                }
-
-                for (let i = 0; i < allLabels.length; i++) {
-                  const obj = allLabels[i];
-
-                  // Add image to thumbnails
-                  if (thumbContainer) {
-                    const thumbImg = document.createElement('img');
-                    thumbImg.src = obj.img_url;
-                    thumbImg.height = height;
-                    thumbImg.setAttribute("style", "margin: 4px; object-fit: contain;");
-
-                    const anchorTag = document.createElement('a');
-                    anchorTag.href = localContextsJson.project_page;
-                    anchorTag.target = '_blank';
-
-                    anchorTag.appendChild(thumbImg);
-                    thumbContainer.appendChild(anchorTag);
-                  }
-
-                  // Add text to label list
-                  // if (labelContainer) {
-                  //   const div = document.createElement('div');
-                  //   div.setAttribute("style", "padding: 5px;");
-                  //   const textHTML = `
-                  //     <a target="_blank" href="${localContextsJson.project_page}">${obj.name}</a>
-                  //     <p>${obj.label_text || ''}</p>
-                  //     ${obj.community ? `<p><i>${obj.community}</i></p>` : ''}
-                  //   `;
-                  //   div.innerHTML = textHTML;
-                  //   labelContainer.appendChild(div);
-                  // }
-                }
-
-                // Set header
-                const ref = document.getElementById("localContextsHeader");
-                if (ref) ref.innerHTML = '<b><i>' + localContextsJson.title + "</i></b>";
-              } else {
-                const ref = document.getElementById("localContextsHeader");
-                if (ref) ref.innerHTML = 'Error Loading Local Contexts Data...';
-                console.log("Error", xmlHttp.statusText);
-              }
+          this.localContextsProjectUrl = this.localContextsService.getProjectPageUrl(project.localcontextsId);
+          try {
+            const localContextsProject = await this.localContextsService.fetchProject(project.localcontextsId);
+            this.localContextsItems = localContextsProject.items;
+            this.localContextsProjectUrl = localContextsProject.projectPage;
+            if (!this.localContextsItems.length) {
+              this.localContextsError = 'No Local Contexts notices or labels were returned for this project.';
             }
-          };
-          xmlHttp.send(null);
+          } catch (error:any) {
+            console.warn('Failed to load Local Contexts data:', error?.message || error);
+            this.localContextsError = 'Unable to load Local Contexts labels here.';
+          }
         }
       });
   }
