@@ -6,9 +6,9 @@
 </div>
 
 <!--TODO: we need to add a nice way to display the metadata object-->
-<div class="main-details horizontal-description-list p-3">
+<div class="main-details horizontal-description-list p-2">
     @if(permitGuid){
-        <div class="mb-3">
+        <div class="mb-2">
             <span class="fw-semibold">Permit GUID:</span>
             <p class="d-inline ms-2">
                 @if(permitGuidLink){
@@ -36,11 +36,10 @@
 </div>
 
 @if(entity === 'expedition' && entityMapRoots.length){
-    <div class="my-3 divider"></div>
-    <div class="entity-map-section p-3">
+    <div class="entity-map-section p-2">
         <div class="entity-map-header">
             <h4>Entity Map</h4>
-            <p>Select an available entity to query records in this expedition.</p>
+            <p>{{ entityMapSummary }}</p>
         </div>
         <div class="entity-map-surface">
             <ul class="entity-map-tree">
@@ -55,7 +54,10 @@
         <li class="entity-map-item">
             @if(node.available){
                 <button type="button" class="entity-map-node is-available" (click)="openEntityMapNode(node)">
-                    <span class="entity-map-name">{{ node.label }}</span>
+                    <div class="entity-map-topline">
+                        <span class="entity-map-name">{{ node.label }}</span>
+                        <span class="entity-map-count">{{ node.count === null ? '...' : node.count }}</span>
+                    </div>
                     @if(node.identifier){
                         <span class="entity-map-identifier">{{ node.identifier }}</span>
                     }
@@ -63,7 +65,10 @@
             }
             @else{
                 <div class="entity-map-node is-muted">
-                    <span class="entity-map-name">{{ node.label }}</span>
+                    <div class="entity-map-topline">
+                        <span class="entity-map-name">{{ node.label }}</span>
+                        <span class="entity-map-count">{{ node.count === null ? '...' : node.count }}</span>
+                    </div>
                     <span class="entity-map-status">Configured for this project</span>
                 </div>
             }
@@ -80,8 +85,7 @@
 }
 
 @if(parentDetail && parentEntity !== 'Project'){
-    <div class="my-3 divider"></div>
-    <div class="parent-details horizontal-description-list p-3">
+    <div class="parent-details horizontal-description-list p-2">
         <h4>Parent {{ parentEntity }}</h4>
         <div layout="row">
             <ul style="list-style-type: none;" class="d-flex flex-wrap gap-3 p-0">
@@ -98,27 +102,5 @@
                 }
             </ul>
         </div>
-    </div>
-}
-
-@if(childDetails){
-    <div class="my-3 divider"></div>
-    <div class="child-details horizontal-description-list p-3">
-        <h4>Child Entities</h4>
-        @for(item of (childDetails || {}) | keyvalue; track item.key){
-            <div class="entity-group">
-                <div layout="row">
-                    @if(item.key !== 'query'){ <span class="entity">{{ item.key }}s</span> }
-                    @else{ <span class="entity"> </span> }
-                    <p class="">
-                        @if(!item.value.href && !item.value.queryLink){ <span>{{ item.value.text || 'N/A' }}</span> }
-                        @else if(item.value.href){ <span><a href="{{item.value.href}}">{{ item.value.text || 'N/A' }}</a></span> }
-                        @else if(item.value.queryLink){
-                            <span (click)="query(item.value.queryLink)">{{ item.value.text || 'N/A' }}</span>
-                        }
-                    </p>
-                </div>
-            </div>
-        }
     </div>
 }

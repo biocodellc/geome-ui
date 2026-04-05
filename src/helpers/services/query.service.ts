@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, from, firstValueFrom } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { FileService } from './file.service';
 import { ToastrService } from 'ngx-toastr';
@@ -16,10 +16,13 @@ export class QueryService {
   private fileService = inject(FileService);
   private toastr = inject(ToastrService);
 
-  queryJson(query: any, entity: string, page: number, limit: number, warnOnLimit = true): Observable<any> {
+  private queryJsonRaw(query: any, entity: string, page: number, limit: number): Observable<any> {
     const params = new HttpParams({ fromObject: { ...query, page, limit } });
+    return this.http.get<{ content: any, page: number }>(`${this.restRoot}records/${entity}/json`, { params });
+  }
 
-    return this.http.get<{ content: any[], page: number }>(`${this.restRoot}records/${entity}/json`, { params }).pipe(
+  queryJson(query: any, entity: string, page: number, limit: number, warnOnLimit = true): Observable<any> {
+    return this.queryJsonRaw(query, entity, page, limit).pipe(
       map(response => {
         const results = {
           page: response.page || 0,
@@ -59,6 +62,52 @@ export class QueryService {
         throw error;
       })
     ).subscribe();
+  }
+
+  countJson(query:any, entity:string, pageSize:number = 1000, maxPages:number = 100): Observable<number> {
+    return from(this.countJsonInternal(query, entity, pageSize, maxPages));
+  }
+
+  private async countJsonInternal(query:any, entity:string, pageSize:number, maxPages:number): Promise<number> {
+    let total = 0;
+
+    for (let page = 0; page < maxPages; page += 1) {
+      const response = await firstValueFrom(this.queryJsonRaw(query, entity, page, pageSize));
+      const pageItems = this.getEntityContent(response?.content, entity);
+      total += pageItems.length;
+
+      if (pageItems.length < pageSize) {
+        break;
+      }
+    }
+
+    return total;
+  }
+
+  private getEntityContent(data:any, entity:string): any[] {
+    if (!data || typeof data !== 'object') return [];
+
+    switch (entity) {
+      case 'Diagnostics':
+        return data.Diagnostics || [];
+
+      case 'fastqMetadata':
+        return data.fastqMetadata || [];
+
+      case 'Extraction':
+      case 'Extraction_Details':
+        return data[entity] || data.Extraction || data.Extraction_Details || [];
+
+      case 'Sample_Photo':
+      case 'Tissue':
+      case 'Event_Photo':
+      case 'Sample':
+      case 'Event':
+        return data[entity] || [];
+
+      default:
+        return data[entity] || [];
+    }
   }
 
   transformResults(data: any, entity: string): any[] {

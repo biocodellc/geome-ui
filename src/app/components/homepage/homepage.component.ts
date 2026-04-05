@@ -78,24 +78,24 @@ export class HomepageComponent {
   ];
   prototypeDHighlights:Array<any> = [
     {
-      title: 'Capture once at the source',
-      text: 'Start with born-digital field records.'
-    },
-    {
       title: 'Validate early',
-      text: 'Check location and standards at input.'
+      text: 'Check locations, required fields, and standards compliance at the point of input.'
     },
     {
       title: 'Persist your own identifiers',
-      text: 'Mint IDs that support attribution.'
+      text: 'Mint and retain identifiers that support attribution, tracking, and long-term reuse.'
     },
     {
       title: 'Keep workflows connected',
-      text: 'Link events, samples, traits, and sequences.'
+      text: 'Link events, samples, traits, and sequences across field, lab, and research workflows.'
     },
     {
       title: 'Publish or protect',
-      text: 'Share compliant data or keep it private, with support for <a href="https://datascience.codata.org/articles/dsj-2020-043" target="_blank" rel="noopener noreferrer">CARE</a> and <a href="https://www.nature.com/articles/sdata201618" target="_blank" rel="noopener noreferrer">FAIR</a> principles.'
+      text: 'Share compliant data or keep it private, with support for <a href="https://datascience.codata.org/articles/dsj-2020-043" target="_blank" rel="noopener noreferrer">CARE</a> and <a href="https://www.nature.com/articles/sdata201618" target="_blank" rel="noopener noreferrer">FAIR</a> principles throughout the workflow.'
+    },
+    {
+      title: 'Enforce place-based rules',
+      text: 'Keep collection data aligned with local laws, permit requirements, and restricted zones.'
     }
   ];
   prototypeDCaseStudy:any = {

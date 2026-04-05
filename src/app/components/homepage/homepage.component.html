@@ -4,17 +4,6 @@
 }">
   <div class="homepage-backdrop"></div>
   <div class="container py-4">
-    <div class="prototype-toggle animate-in">
-      <div class="toggle-intro">
-        <p class="toggle-label">Homepage Prototypes</p>
-        <p class="toggle-subtext">Bold visual concepts with quote-led messaging for field confidence and lab continuity.</p>
-      </div>
-      <div class="toggle-actions">
-        <button type="button" class="toggle-btn" [class.active]="activePrototype === 'story'" (click)="setPrototype('story')">Prototype C</button>
-        <button type="button" class="toggle-btn" [class.active]="activePrototype === 'guide'" (click)="setPrototype('guide')">Prototype D</button>
-      </div>
-    </div>
-
     @if(activePrototype === 'guide'){
       <section class="hero-shell hero-guide animate-in">
         <div class="hero-orb hero-orb-b"></div>
@@ -25,7 +14,7 @@
           <div class="guide-diagram-caption guide-diagram-lead">
             <img src="images/geomeWorkflow.png" alt="GEOME workflow diagram">
             <span>
-              GEOME <i class="fas fa-volume-high audio-icon" (click)="playAudio()" aria-label="Play GEOME audio"></i> is a Field Information Management System that transforms the way field-collected sample data is captured, organized, and shared. From the moment samples are collected, GEOME supports their journey, linking metadata to sequencing, publication, and collaboration across institutions.
+              GEOME <i class="fas fa-volume-high audio-icon" (click)="playAudio()" aria-label="Play GEOME audio"></i> is a Field Information Management System that transforms the way field-collected sample data is captured, organized, and shared. From the moment samples are collected, GEOME supports their journey, linking metadata to sequencing, publication, and collaboritive work across institutions.
             </span>
           </div>
         </div>
@@ -34,7 +23,6 @@
       <section class="guide-value-section animate-in">
         <article class="guide-value-intro">
           <h3>What GEOME can do for you</h3>
-          <p>Best-practice data management, made practical.</p>
         </article>
 
         <div class="guide-grid">
@@ -49,7 +37,7 @@
 
       <section class="guide-case-study animate-in">
         <div class="case-study-copy">
-          <p class="story-kicker">{{prototypeDCaseStudy.source}}</p>
+          <p class="story-kicker">Case Study | {{prototypeDCaseStudy.source}}</p>
           <h3>{{prototypeDCaseStudy.title}}</h3>
           <p>
             {{prototypeDCaseStudy.summary}}
@@ -158,11 +146,11 @@
           <span>Indigenous partnership and stewardship commitments</span>
         </div>
         <p>
-          GEOME maintains this notice prominently to support new collaboration pathways and responsible data stewardship practices.
+          GEOME maintains this notice prominently to support new collaboritive pathways and responsible data stewardship practices.
         </p>
         <button type="button" class="btn btn-light collab-btn" placement="top" ngbTooltip="Collaborate" (click)="openCollabModal(collab_modal)">
           <img src="images/Open_To_Collaborate.png" alt="Open to Collaborate" class="open-collab-icon" />
-          <span>Review Collaboration Notice</span>
+          <span>Review Open to Collaborate Notice</span>
         </button>
       </article>
 
@@ -189,7 +177,7 @@
   <div class="modal-body p-4 pb-2">
     <h5 class="fw-semibold">Open to Collaborate</h5>
     <p>
-      GEOME is committed to the development of new modes of collaboration, engagement, and partnership with Indigenous peoples for the care and stewardship of past and future heritage collections.
+      GEOME is committed to the development of new modes of collaboritive engagement and partnership with Indigenous peoples for the care and stewardship of past and future heritage collections.
       See <a href="https://localcontexts.org/notice/open-to-collaborate/" target="_blank" class="text-decoration-none">Local Contexts</a> for more information
     </p>
     <div class="d-flex justify-content-end">
