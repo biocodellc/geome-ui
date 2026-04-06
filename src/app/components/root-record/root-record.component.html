@@ -21,14 +21,14 @@
         </div>
     }
     <ul class="list-group record-root-list">
-        @for(item of (mainRecordDetails || {}) | keyvalue; track item.key){
+        @for(item of (mainRecordDetails || {}) | keyvalue: compareMainDetails; track item.key){
             <li class="list-group-item d-flex record-root-list-item">
                 <p class="m-0 record-root-label">{{ formatLabel(item.key) }}:</p>
                 <div class="record-root-value">
                     @if(item.value.href){
                         <span><a href="{{ item.value.href }}" target="_blank">{{ getLinkedText(item.value) }}</a></span>
                     }
-                    @else{ <span>{{ formatValue(item.value.text) || 'N/A' }}</span> }
+                    @else{ <span>{{ formatMainDetailValue(item.key, item.value.text) }}</span> }
                 </div>
             </li>
         }
@@ -38,8 +38,11 @@
 @if(entity === 'expedition' && entityMapRoots.length){
     <div class="entity-map-section p-2">
         <div class="entity-map-header">
-            <h4>Entity Map</h4>
-            <p>{{ entityMapSummary }}</p>
+            <div>
+                <h4>Entity Map</h4>
+                <p>{{ entityMapSummary }}</p>
+            </div>
+            <p class="entity-map-instruction">Click any highlighted entity to query its expedition records.</p>
         </div>
         <div class="entity-map-surface">
             <ul class="entity-map-tree">
@@ -61,6 +64,7 @@
                     @if(node.identifier){
                         <span class="entity-map-identifier">{{ node.identifier }}</span>
                     }
+                    <span class="entity-map-cta">Click to query</span>
                 </button>
             }
             @else{

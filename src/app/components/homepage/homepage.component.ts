@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, TemplateRef } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { NgbTooltipModule, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { DummyDataService } from '../../../helpers/services/dummy-data.service';
 
 type HomepagePrototype = 'story' | 'guide';
@@ -15,7 +15,6 @@ type HomepagePrototype = 'story' | 'guide';
 })
 export class HomepageComponent {
   // Injectables
-  private modalService = inject(NgbModal);
   private dataService = inject(DummyDataService);
 
   // Variables
@@ -113,7 +112,6 @@ export class HomepageComponent {
     imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Leopard_Frog_Closeup_(12779535195).jpg',
     imageAlt: 'Leopard frog close-up'
   };
-  modalRef!:NgbModalRef;
   audioRef:any;
 
   private getCardIcon(title:string): string {
@@ -145,9 +143,5 @@ export class HomepageComponent {
     if(!this.audioRef) this.audioRef = new Audio('audio/geome.mp3');
     this.audioRef.load();
     this.audioRef.play();
-  }
-
-  openCollabModal(content: TemplateRef<any>){
-    this.modalRef = this.modalService.open(content, { animation: true, centered: true });
   }
 }

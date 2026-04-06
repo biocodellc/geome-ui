@@ -306,10 +306,10 @@ export const mainRecordDetails:any = {
     }),
   },
   expedition: {
-    expeditionId: getKey('expeditionId'),
-    created: getKey('created'),
     modified: getKey('modified'),
+    created: getKey('created'),
     identifier: expeditionIdentifierLink,
+    expeditionId: getKey('expeditionId'),
     metadata: getKey('metadata'),
   },
   entityIdentifier: {

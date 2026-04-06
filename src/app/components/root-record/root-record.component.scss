@@ -118,6 +118,17 @@ h4 {
     line-height: 1.1;
 }
 
+.entity-map-instruction {
+    align-self: center;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    background: rgba(21, 96, 134, 0.08);
+    color: #156086 !important;
+    font-size: 0.8rem !important;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
 .entity-map-surface {
     overflow-x: auto;
     padding-bottom: 0.25rem;
@@ -185,8 +196,14 @@ button.entity-map-node:hover {
     box-shadow: 0 14px 24px rgba(10, 52, 73, 0.09);
 }
 
+button.entity-map-node:focus-visible {
+    outline: 2px solid rgba(21, 96, 134, 0.55);
+    outline-offset: 2px;
+}
+
 .entity-map-node.is-available {
     border-color: rgba(77, 157, 184, 0.28);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(238, 248, 252, 0.98) 100%);
 }
 
 .entity-map-node.is-muted {
@@ -227,6 +244,18 @@ button.entity-map-node:hover {
     font-family: ui-monospace, SFMono-Regular, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
+.entity-map-cta {
+    margin-top: 0.1rem;
+    color: #156086;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+.entity-map-node.is-available .entity-map-name {
+    color: #0b4e6d;
+}
+
 .entity-map-node.is-muted .entity-map-count {
     background: rgba(95, 119, 135, 0.12);
     color: #5f7787;
@@ -240,6 +269,11 @@ button.entity-map-node:hover {
     .entity-map-header {
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    .entity-map-instruction {
+        align-self: flex-start;
+        white-space: normal;
     }
 
     .entity-map-branch {

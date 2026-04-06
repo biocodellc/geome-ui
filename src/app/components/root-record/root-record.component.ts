@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { KeyValue } from '@angular/common';
 import { childRecordDetails, mainRecordDetails, parentRecordDetails } from '../../../helpers/scripts/recordDetails';
 import { Router } from '@angular/router';
 import { DummyDataService } from '../../../helpers/services/dummy-data.service';
@@ -17,6 +18,15 @@ import { QueryParams } from '../../../helpers/scripts/queryParam';
   styleUrl: './root-record.component.scss'
 })
 export class RootRecordComponent implements OnChanges{
+  private readonly expeditionMainDetailOrder = [
+    'parentProject',
+    'modified',
+    'created',
+    'identifier',
+    'expeditionId',
+    'metadata',
+  ];
+
   router = inject(Router);
   dummyDataService = inject(DummyDataService);
   projectService = inject(ProjectService);
@@ -113,33 +123,53 @@ export class RootRecordComponent implements OnChanges{
 
   prepareMainDetails(data:any) {
     const detailMap = mainRecordDetails[this.entity];
-    const details = this.makeDetailObject(data, detailMap);
+    const details:any = this.makeDetailObject(data, detailMap);
     const parentProject = this.getParentProjectInfo();
+
+    if (this.entity !== 'expedition') {
+      if (!parentProject) {
+        this.mainRecordDetails = details;
+        return;
+      }
+
+      const orderedDetails:any = {};
+      Object.entries(details).forEach(([key, value]) => {
+        orderedDetails[key] = value;
+        if (key === 'modified') {
+          orderedDetails.parentProject = {
+            text: `${parentProject.title} (id=${parentProject.id})`,
+            href: parentProject.href,
+          };
+        }
+      });
+
+      if (!orderedDetails.parentProject) {
+        orderedDetails.parentProject = {
+          text: `${parentProject.title} (id=${parentProject.id})`,
+          href: parentProject.href,
+        };
+      }
+
+      this.mainRecordDetails = orderedDetails;
+      return;
+    }
 
     if (!parentProject) {
       this.mainRecordDetails = details;
       return;
     }
 
-    const orderedDetails:any = {};
-    Object.entries(details).forEach(([key, value]) => {
-      orderedDetails[key] = value;
-      if (key === 'modified') {
-        orderedDetails.parentProject = {
-          text: `${parentProject.title} (id=${parentProject.id})`,
-          href: parentProject.href,
-        };
-      }
-    });
-
-    if (!orderedDetails.parentProject) {
-      orderedDetails.parentProject = {
+    this.mainRecordDetails = {
+      parentProject: {
         text: `${parentProject.title} (id=${parentProject.id})`,
         href: parentProject.href,
-      };
-    }
-
-    this.mainRecordDetails = orderedDetails;
+      },
+      modified: details.modified,
+      created: details.created,
+      identifier: details.identifier,
+      expeditionId: details.expeditionId,
+      metadata: details.metadata,
+    };
   }
 
   prepareParentDetails(parent:any) {
@@ -422,6 +452,8 @@ export class RootRecordComponent implements OnChanges{
   formatLabel(key:string): string {
     if (!key) return '';
     if (key === 'modified') return 'Last Modified';
+    if (key === 'created' && this.entity === 'expedition') return 'Created Date';
+    if (key === 'identifier' && this.entity === 'expedition') return 'Expedition GUID';
     return key
       .split('.')
       .map((segment:string) =>
@@ -454,6 +486,44 @@ export class RootRecordComponent implements OnChanges{
     }
     return `${data}`;
   }
+
+  formatMainDetailValue(key:string, data:any): string {
+    if (
+      this.entity === 'expedition' &&
+      key === 'metadata' &&
+      (
+        data === undefined ||
+        data === null ||
+        data === '' ||
+        data === 'N/A' ||
+        (Array.isArray(data) && data.length === 0) ||
+        (typeof data === 'object' && !Array.isArray(data) && Object.keys(data).length === 0)
+      )
+    ) {
+      return 'No expedition metadata defined';
+    }
+    if (this.entity === 'expedition' && key === 'created' && typeof data === 'string' && data.length >= 10) {
+      return data.slice(0, 10);
+    }
+    return this.formatValue(data);
+  }
+
+  compareMainDetails = (a: KeyValue<string, any>, b: KeyValue<string, any>): number => {
+    if (this.entity !== 'expedition') {
+      return a.key.localeCompare(b.key);
+    }
+
+    const indexA = this.expeditionMainDetailOrder.indexOf(a.key);
+    const indexB = this.expeditionMainDetailOrder.indexOf(b.key);
+    const normalizedA = indexA === -1 ? Number.MAX_SAFE_INTEGER : indexA;
+    const normalizedB = indexB === -1 ? Number.MAX_SAFE_INTEGER : indexB;
+
+    if (normalizedA !== normalizedB) {
+      return normalizedA - normalizedB;
+    }
+
+    return a.key.localeCompare(b.key);
+  };
 
   getLinkedText(value:RecordValue | any): string {
     return this.formatValue(value?.text ?? value?.href);

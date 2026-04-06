@@ -141,17 +141,19 @@
     }
     <section class="highlight-band animate-in">
       <article class="collab-highlight">
-        <div class="collab-head">
-          <h3>Open to Collaborate</h3>
-          <span>Indigenous partnership and stewardship commitments</span>
-        </div>
-        <p>
-          GEOME maintains this notice prominently to support new collaboritive pathways and responsible data stewardship practices.
-        </p>
-        <button type="button" class="btn btn-light collab-btn" placement="top" ngbTooltip="Collaborate" (click)="openCollabModal(collab_modal)">
+        <div class="collab-head collab-notice-head">
           <img src="images/Open_To_Collaborate.png" alt="Open to Collaborate" class="open-collab-icon" />
-          <span>Review Open to Collaborate Notice</span>
-        </button>
+          <div>
+            <h3>Open to Collaborate</h3>
+            <span>Local Contexts Engagement Notice</span>
+          </div>
+        </div>
+        <p class="collab-notice-text">
+          GEOME is committed to the development of new modes of collaboration, engagement, and partnership with Indigenous Peoples for the care and stewardship of past and future heritage collections.
+        </p>
+        <a href="https://localcontexts.org/notice/open-to-collaborate/" target="_blank" rel="noopener noreferrer" class="collab-link">
+          Learn more at Local Contexts
+        </a>
       </article>
 
       <article class="publication-highlight">
@@ -172,16 +174,3 @@
     </div>
   </div>
 </section>
-
-<ng-template #collab_modal let-modal>
-  <div class="modal-body p-4 pb-2">
-    <h5 class="fw-semibold">Open to Collaborate</h5>
-    <p>
-      GEOME is committed to the development of new modes of collaboritive engagement and partnership with Indigenous peoples for the care and stewardship of past and future heritage collections.
-      See <a href="https://localcontexts.org/notice/open-to-collaborate/" target="_blank" class="text-decoration-none">Local Contexts</a> for more information
-    </p>
-    <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-outline-primary border-0" (click)="modal.close()">Close</button>
-    </div>
-  </div>
-</ng-template>

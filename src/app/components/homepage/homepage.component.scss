@@ -551,6 +551,12 @@ h1 {
   color: #073c5c;
 }
 
+.collab-notice-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
 .collab-head span {
   display: inline-block;
   margin-top: 6px;
@@ -565,23 +571,25 @@ h1 {
   line-height: 1.55;
 }
 
-.collab-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  border-radius: 999px;
-  padding: 9px 14px;
+.collab-notice-text {
+  margin: 14px 0 10px;
+}
+
+.collab-link {
+  color: #156086;
   font-weight: 700;
-  color: #fff;
-  background: linear-gradient(135deg, #073c5c 0%, #2b6d86 100%);
-  border: 1px solid rgba(77, 157, 184, 0.48);
-  box-shadow: 0 10px 18px rgba(7, 60, 92, 0.18);
+  text-decoration: none;
+}
+
+.collab-link:hover {
+  text-decoration: underline;
 }
 
 .open-collab-icon {
-  width: 42px;
-  height: 42px;
+  width: 48px;
+  height: 48px;
   object-fit: contain;
+  flex-shrink: 0;
 }
 
 .publication-highlight {
