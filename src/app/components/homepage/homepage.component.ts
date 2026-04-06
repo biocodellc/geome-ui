@@ -112,6 +112,43 @@ export class HomepageComponent {
     imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Leopard_Frog_Closeup_(12779535195).jpg',
     imageAlt: 'Leopard frog close-up'
   };
+  supportOrganizations:Array<any> = [
+    {
+      name: 'Gordon and Betty Moore Foundation',
+      href: 'https://www.moore.org/',
+      logoUrl: 'images/support/moore-foundation.png',
+      logoAlt: 'Gordon and Betty Moore Foundation logo',
+      logoClass: 'support-logo-moore'
+    },
+    {
+      name: 'U.S. National Science Foundation',
+      href: 'https://www.nsf.gov/policies/brand',
+      logoUrl: 'images/support/nsf.png',
+      logoAlt: 'U.S. National Science Foundation logo',
+      logoClass: 'support-logo-nsf'
+    },
+    {
+      name: 'Smithsonian Institution National Museum of Natural History',
+      href: 'https://naturalhistory.si.edu/',
+      logoUrl: 'images/support/smithsonian-seal.svg',
+      logoAlt: 'Smithsonian Institution seal',
+      logoClass: 'support-logo-smithsonian'
+    },
+    {
+      name: 'Berkeley Natural History Museums',
+      href: 'https://bnhm.berkeley.edu/',
+      logoUrl: 'images/support/bnhm.gif',
+      logoAlt: 'Berkeley Natural History Museums logo',
+      logoClass: 'support-logo-berkeley'
+    },
+    {
+      name: 'Richard B. Gump South Pacific Research Station',
+      href: 'https://www.moorea.berkeley.edu/',
+      logoUrl: 'images/support/gump.png',
+      logoAlt: 'Richard B. Gump South Pacific Research Station logo',
+      logoClass: 'support-logo-gump'
+    }
+  ];
   audioRef:any;
 
   private getCardIcon(title:string): string {

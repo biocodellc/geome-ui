@@ -885,3 +885,130 @@ section.map-section{
     .validate-data .bottom-form-section{ padding: 1.5rem !important; }
     .validate-data label.input-label.fastq-label, .SRA-sub label.input-label.fastq-label{ width: auto !important; }
 }
+
+#homepage-container .support-section {
+    margin-top: 22px;
+    padding: 20px;
+    border-radius: 20px;
+    background: #f7fbfc;
+    border: 1px solid rgba(77, 157, 184, 0.2);
+}
+
+#homepage-container .support-kicker {
+    margin: 0 0 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 12px;
+    font-weight: 700;
+    color: #4d9db8;
+}
+
+#homepage-container .support-section-head h3 {
+    margin: 0 0 8px;
+    color: #073c5c;
+}
+
+#homepage-container .support-section-head p {
+    margin: 0;
+    color: #356b81;
+}
+
+#homepage-container .support-grid {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+}
+
+#homepage-container .support-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 160px;
+    padding: 14px;
+    border-radius: 16px;
+    border: 1px solid rgba(77, 157, 184, 0.16);
+    background: #fff;
+    color: #174a61;
+    text-decoration: none;
+}
+
+#homepage-container .support-card:hover,
+#homepage-container .support-card:focus-visible {
+    border-color: rgba(28, 108, 134, 0.34);
+}
+
+#homepage-container .support-logo-wrap {
+    height: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: #f2f8fa;
+    padding: 10px;
+}
+
+#homepage-container .support-logo-image {
+    width: 100%;
+    max-width: 160px;
+    max-height: 64px;
+    object-fit: contain;
+    display: block;
+}
+
+#homepage-container .support-logo-image.support-logo-smithsonian,
+#homepage-container .support-logo-image.support-logo-gump {
+    max-height: 72px;
+}
+
+#homepage-container .support-logo-wrap.support-logo-smithsonian {
+    padding: 6px;
+}
+
+#homepage-container .support-logo-image.support-logo-smithsonian {
+    max-width: 190px;
+    max-height: 84px;
+}
+
+#homepage-container .support-logo-wrap.support-logo-gump {
+    background: linear-gradient(180deg, #1b4a60 0%, #0d3344 100%);
+}
+
+#homepage-container .support-card span {
+    display: block;
+    line-height: 1.35;
+    font-weight: 700;
+}
+
+#homepage-container .footer-note {
+    margin: 12px 0 6px;
+    text-align: center;
+    font-size: 12px;
+    color: #5d7786;
+}
+
+@media (max-width: 1199.98px) {
+    #homepage-container .support-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 991.98px) {
+    #homepage-container .support-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 767.98px) {
+    #homepage-container .support-section {
+        padding: 18px;
+    }
+
+    #homepage-container .support-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #homepage-container .support-card {
+        min-height: auto;
+    }
+}

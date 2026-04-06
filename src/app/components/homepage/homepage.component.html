@@ -169,8 +169,43 @@
       </article>
     </section>
 
+    <section class="support-section animate-in" aria-labelledby="support-section-title">
+      <div class="support-section-head">
+        <p>
+          GEOME has been developed with support from these funding and institutional partners.
+        </p>
+      </div>
+
+      <div class="support-grid">
+        @for(organization of supportOrganizations; track organization.name){
+          <a
+            class="support-card"
+            [href]="organization.href"
+            target="_blank"
+            rel="noopener noreferrer"
+            [attr.aria-label]="organization.name"
+          >
+            <div class="support-logo-wrap" [ngClass]="organization.logoClass">
+              <img
+                [src]="organization.logoUrl"
+                [alt]="organization.logoAlt"
+                class="support-logo-image"
+                [ngClass]="organization.logoClass"
+                loading="lazy"
+              >
+            </div>
+            <span>{{organization.name}}</span>
+          </a>
+        }
+      </div>
+    </section>
+
     <div class="legacy-link animate-in">
       <a href="https://geome-old.netlify.app/" target="_blank" rel="noopener noreferrer">Visit the Legacy GEOME Site</a>
+    </div>
+
+    <div class="footer-note animate-in">
+      © GEOME and contributing partner institutions. All rights reserved.
     </div>
   </div>
 </section>
