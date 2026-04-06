@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { Subject, forkJoin, take, takeUntil } from 'rxjs';
+import { Subject, catchError, forkJoin, take, takeUntil } from 'rxjs';
 import { NetworkService } from '../../../../helpers/services/network.service';
 import { ProjectService } from '../../../../helpers/services/project.service';
 import { ProjectConfig } from '../../../../helpers/models/projectConfig.model';
@@ -10,6 +10,7 @@ import { QueryService } from '../../../../helpers/services/query.service';
 import { QueryParams } from '../../../../helpers/scripts/queryParam';
 import { ProjectConfigurationService } from '../../../../helpers/services/project-config.service';
 import { ExpeditionService } from '../../../../helpers/services/expedition.service';
+import { AuthenticationService } from '../../../../helpers/services/authentication.service';
 import { MapQueryService } from '../../../../helpers/services/map-query.service';
 import { MapBoundingComponent } from '../../../shared/map-bounding/map-bounding.component';
 import { FilterButtonComponent } from '../filter-button/filter-button.component';
@@ -140,6 +141,7 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
   dummyDataService = inject(DummyDataService);
   expeditionService = inject(ExpeditionService);
   projectConfigService = inject(ProjectConfigurationService);
+  authService = inject(AuthenticationService);
 
   // Variables
   destroy$: Subject<any> = new Subject();
@@ -319,7 +321,7 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
   getExpeditions() {
     this.loadingExpeditions = true;
     const projData = this.allProjects.find(proj => proj.projectTitle == this.individualProjects[0]);
-    this.expeditionService.getAllExpeditions(projData.projectId).subscribe((data:any) => {
+    this.getAccessibleExpeditions(projData.projectId).subscribe((data:any) => {
       this.expeditions = data;
       this.loadingExpeditions = false;
     })
@@ -350,7 +352,7 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
 
     forkJoin({
       configResponse: this.projectConfigService.get(project.projectConfiguration.id).pipe(take(1)),
-      expeditions: this.expeditionService.getAllExpeditions(project.projectId).pipe(take(1)),
+      expeditions: this.getAccessibleExpeditions(project.projectId).pipe(take(1)),
     }).subscribe({
       next: ({ configResponse, expeditions }: any) => {
         this.config = configResponse.config;
@@ -366,6 +368,17 @@ export class QueryFormComponent implements OnChanges,OnDestroy{
         this.loadingExpeditions = false;
       },
     });
+  }
+
+  private getAccessibleExpeditions(projectId:number) {
+    const hasStoredToken = !!this.authService.getUserFromStorage()?.accessToken;
+    if (!hasStoredToken) {
+      return this.expeditionService.getAllExpeditions(projectId);
+    }
+
+    return this.expeditionService.getExpeditionsForUser(projectId, true).pipe(
+      catchError(() => this.expeditionService.getAllExpeditions(projectId)),
+    );
   }
 
   queryJson() {
