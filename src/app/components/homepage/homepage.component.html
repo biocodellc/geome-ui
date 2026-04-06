@@ -1,67 +1,176 @@
-<section id="homepage-container" class="p-3 py-4 main-content-container">
-  <div class="container">
-
-	<!--
-    <div class="alert alert-danger text-center fw-bold" role="alert">
-      GEOME functions are currently unavailable due to an issue with the hosting environment service center that supports GEOME.
-      <br>
-      <small>As of Monday, August 4th at 11:00 AM Pacific Time. We will notify you when service is restored.</small>
-    </div>
-	-->
-
-    <div class="base-text-color f-25">
-      <p>
-        <b>
-          GEOME <i class="fas fa-volume-high text-secondary f-25" (click)="playAudio()"></i> is a Field Information Management System that transforms the way field-collected sample data is captured, organized, and shared.
-        </b>
-        From the moment samples are collected, GEOME supports their journey—linking metadata to sequencing, publication, and collaboration across institutions.
-      </p>
-    </div>
-
-    <div class="mt-3 d-flex flex-wrap">
-      @for(item of homeItems; track item){
-        <div class="col-12 col-md-4 p-3">
-          <a class="p-3 d-flex flex-column gap-2 shadow rounded-2 align-items-center h-100 cursor-pointer text-decoration-none text-reset" [routerLink]="item.route">
-            <img [src]="item.img" width="150px" height="150px">
-            <h4>{{item.title}}</h4>
-          </a>
+<section id="homepage-container" class="main-content-container homepage-root" [ngClass]="{
+  'prototype-story': activePrototype === 'story',
+  'prototype-guide': activePrototype === 'guide'
+}">
+  <div class="homepage-backdrop"></div>
+  <div class="container py-4">
+    @if(activePrototype === 'guide'){
+      <section class="hero-shell hero-guide animate-in">
+        <div class="hero-orb hero-orb-b"></div>
+        <div class="guide-diagram-panel">
+          <div class="guide-diagram-head">
+            <h1>Resources for genomic observations from collection to analysis and publication</h1>
+          </div>
+          <div class="guide-diagram-caption guide-diagram-lead">
+            <img src="images/geomeWorkflow.png" alt="GEOME workflow diagram">
+            <span>
+              GEOME <i class="fas fa-volume-high audio-icon" (click)="playAudio()" aria-label="Play GEOME audio"></i> is a Field Information Management System that transforms the way field-collected sample data is captured, organized, and shared. From the moment samples are collected, GEOME supports their journey, linking metadata to sequencing, publication, and collaboritive work across institutions.
+            </span>
+          </div>
         </div>
-      }
+      </section>
+
+      <section class="guide-value-section animate-in">
+        <article class="guide-value-intro">
+          <h3>What GEOME can do for you</h3>
+        </article>
+
+        <div class="guide-grid">
+          @for(item of prototypeDHighlights; track item.title){
+            <article class="guide-highlight-card">
+              <h4>{{item.title}}</h4>
+              <p [innerHTML]="item.text"></p>
+            </article>
+          }
+        </div>
+      </section>
+
+      <section class="guide-case-study animate-in">
+        <div class="case-study-copy">
+          <p class="story-kicker">Case Study | {{prototypeDCaseStudy.source}}</p>
+          <h3>{{prototypeDCaseStudy.title}}</h3>
+          <p>
+            {{prototypeDCaseStudy.summary}}
+          </p>
+          <div class="case-study-points">
+            @for(point of prototypeDCaseStudy.outcomes; track point){
+              <div class="case-study-point">
+                <span class="point-dot"></span>
+                <p>{{point}}</p>
+              </div>
+            }
+          </div>
+          <div class="story-citation-links">
+            <a [href]="prototypeDCaseStudy.articleUrl" target="_blank" rel="noopener noreferrer">View article</a>
+            <a [href]="prototypeDCaseStudy.doi" target="_blank" rel="noopener noreferrer">DOI</a>
+          </div>
+        </div>
+        <figure class="case-study-media">
+          <img [src]="prototypeDCaseStudy.imageUrl" [alt]="prototypeDCaseStudy.imageAlt">
+        </figure>
+      </section>
+    }
+    @else{
+      <section class="hero-shell hero-story animate-in">
+        <article class="story-intro">
+          <p class="story-kicker">Prototype C | White Story Theme</p>
+          <h1 class="story-title">A field-to-lab story told in records, maps, and evidence-rich metadata.</h1>
+          <p>
+            GEOME supports expedition-scale organizing and lets teams move from collection narratives to searchable, reusable datasets.
+            This concept uses a clean white editorial style inspired by long-form story pages, with stronger explanatory text and visual breaks.
+          </p>
+          <p>
+            Researchers can establish context early, preserve interpretation of where and how samples were acquired, and trace connected entities through analysis pipelines.
+            The goal is confidence: every downstream interpretation remains tethered to a clear field origin.
+          </p>
+        </article>
+
+        <article class="story-flow flow-right">
+          <figure class="story-float-media">
+            <img [src]="geomeFigureTwo" alt="Figure 2 from Deck et al. 2017 showing GEOME query distribution map">
+            <figcaption class="story-caption">Figure 2 (Deck et al. 2017): GEOME query map with distributed samples and locality context.</figcaption>
+          </figure>
+          <h3>Query Views That Keep Context Intact</h3>
+          <p>
+            Figure-driven map views help teams audit whether coverage and metadata quality match collection goals. This is critical when projects span
+            sites, expeditions, and preservation protocols that can bias downstream interpretation if context is weak.
+          </p>
+          <p>
+            In this prototype, the text wraps around the visual so users can read the story while still seeing the map evidence in view. The format is
+            intended to communicate scientific confidence to both field teams and lab collaborators.
+          </p>
+        </article>
+
+        <article class="story-flow flow-left">
+          <figure class="story-float-media">
+            <img [src]="featurePhotoOne" alt="Moorea coastline landscape">
+          </figure>
+          <h3>Field Reality, Not Just Metadata Tables</h3>
+          <p>
+            Collection environments are dynamic. A polished, readable homepage should communicate that GEOME is designed for real field constraints,
+            while still producing records that are structured enough for rigorous lab and informatics workflows.
+          </p>
+          <p>
+            Editorial layouts with image breaks improve scanability and present workflows as a continuous narrative instead of disconnected screens.
+          </p>
+        </article>
+
+        <article class="story-flow story-research-intro">
+          <h3>Research Stories Using GEOME</h3>
+          <p>
+            These literature examples cite the GEOME reference paper and show how scientists are using GEOME in biodiversity workflows,
+            from observatory design and data stewardship to disease surveillance and FAIR metadata brokering.
+          </p>
+        </article>
+
+        @for(story of geomeResearchStories; track story.title){
+          <article class="story-flow story-research" [class.flow-left]="story.photoSide === 'left'" [class.flow-right]="story.photoSide !== 'left'">
+            <figure class="story-float-media story-research-media">
+              <img [src]="story.imageUrl" [alt]="story.imageAlt">
+            </figure>
+            <p class="story-citation-source">{{story.source}}</p>
+            <h3>{{story.title}}</h3>
+            <p>{{story.context}}</p>
+            <p class="story-citation-ref">{{story.geomeCitation}}</p>
+            <div class="story-citation-links">
+              <a [href]="story.articleUrl" target="_blank" rel="noopener noreferrer">View article</a>
+              <a [href]="story.doi" target="_blank" rel="noopener noreferrer">DOI</a>
+            </div>
+          </article>
+        }
+
+        <article class="story-photo-grid">
+          <figure>
+            <img [src]="featurePhotoTwo" alt="Field sample crate">
+          </figure>
+          <figure>
+            <img [src]="featurePhotoThree" alt="Fish biodiversity photo">
+          </figure>
+        </article>
+      </section>
+    }
+    <section class="highlight-band animate-in">
+      <article class="collab-highlight">
+        <div class="collab-head collab-notice-head">
+          <img src="images/Open_To_Collaborate.png" alt="Open to Collaborate" class="open-collab-icon" />
+          <div>
+            <h3>Open to Collaborate</h3>
+            <span>Local Contexts Engagement Notice</span>
+          </div>
+        </div>
+        <p class="collab-notice-text">
+          GEOME is committed to the development of new modes of collaboration, engagement, and partnership with Indigenous Peoples for the care and stewardship of past and future heritage collections.
+        </p>
+        <a href="https://localcontexts.org/notice/open-to-collaborate/" target="_blank" rel="noopener noreferrer" class="collab-link">
+          Learn more at Local Contexts
+        </a>
+      </article>
+
+      <article class="publication-highlight">
+        <h3>Reference Paper</h3>
+        <p class="citation-title">
+          <em>The Genomic Observatories Metadatabase (GEOME): A new repository for field and sampling event metadata associated with genetic samples.</em>
+        </p>
+        <p class="authors">Deck J, Gaither MR, Ewing R, Bird CE, Davies N, Meyer C, Riginos C, Toonen RJ, Crandall ED. 2017.</p>
+        <p class="citation-journal">PLOS Biology</p>
+        <a class="citation-doi" href="https://doi.org/10.1371/journal.pbio.2002925" target="_blank" rel="noopener noreferrer">
+          doi:10.1371/journal.pbio.2002925
+        </a>
+      </article>
+    </section>
+
+    <div class="legacy-link animate-in">
+      <a href="https://geome-old.netlify.app/" target="_blank" rel="noopener noreferrer">Visit the Legacy GEOME Site</a>
     </div>
-
-    <div style="display: flex; flex-direction: column; align-items: center; margin-top: 50px;">
-      <a href='https://geome-old.netlify.app/'>Visit the Legacy GEOME Site</a>
-    </div>
-
-    <p>
-      <a href="https://doi.org/10.1371/journal.pbio.2002925" target="_blank" class="text-decoration-none">
-        "The Genomic Observatories Metadatabase (GEOME): A new repository for field and sampling event metadata associated with genetic samples"
-      </a>,
-      John Deck , Michelle R. Gaither, Rodney Ewing, Christopher E. Bird, Neil Davies, Christopher Meyer, Cynthia Riginos, Robert J. Toonen, Eric D. Crandall
-      Published: August 3, 2017
-      <a href="https://doi.org/10.1371/journal.pbio.2002925" target="_blank" class="text-decoration-none">
-        https://doi.org/10.1371/journal.pbio.2002925
-      </a>
-    </p>
-
-    <div class="d-flex justify-content-center mt-3">
-      <button type="button" class="btn btn-link p-0 border-0 shadow-none" placement="top" ngbTooltip="Collaborate" (click)="openCollabModal(collab_modal)">
-        <img src="images/Open_To_Collaborate.png" alt="Open to Collaborate" class="open-collab-icon" />
-      </button>
-    </div>
-
   </div>
 </section>
-
-<ng-template #collab_modal let-modal>
-  <div class="modal-body p-4 pb-2">
-    <h5 class="fw-semibold">Open to Collaborate</h5>
-    <p>
-      GEOME is committed to the development of new modes of collaboration, engagement, and partnership with Indigenous peoples for the care and stewardship of past and future heritage collections.
-      See <a href="https://localcontexts.org/notice/open-to-collaborate/" target="_blank" class="text-decoration-none">Local Contexts</a> for more information
-    </p>
-    <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-outline-primary border-0" (click)="modal.close()">Close</button>
-    </div>
-  </div>
-</ng-template>

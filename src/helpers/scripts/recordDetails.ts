@@ -8,6 +8,10 @@ const extractionRecordLink = (record:any) => ({
   text: record.extractionID || record.extractionId || record.dnaExtractionID,
   href: record.bcid ? `/record/${record.bcid}` : undefined,
 });
+const expeditionIdentifierLink = (record:any) => ({
+  text: record?.identifier ? `https://n2t.net/${record.identifier}` : undefined,
+  href: record?.identifier ? `/record/${record.identifier}` : undefined,
+});
 const extractionSummaryDetails = {
   extractionID: extractionRecordLink,
   extractionMethod: getFirstPresentKey([
@@ -70,10 +74,7 @@ export const parentRecordDetails:any = {
     expeditionId: getKey('expeditionId'),
     expeditionCode: getKey('expeditionCode'),
     expeditionTitle: getKey('expeditionTitle'),
-    identifier: (e:any) => ({
-      text: `https://n2t.net/${e.identifier}`,
-      href: `https://n2t.net/${e.identifier}`,
-    }),
+    identifier: expeditionIdentifierLink,
   },
 };
 
@@ -145,10 +146,7 @@ export const childRecordDetails:any = {
     hasScale: getKey('hasScale'),
   },
   expedition: {
-    identifier: (e:any) => ({
-      text: `https://n2t.net/${e.identifier}`,
-      href: `https://n2t.net/${e.identifier}`,
-    }),
+    identifier: expeditionIdentifierLink,
   },
   entityIdentifier: {
     query: (e:any) => ({
@@ -308,22 +306,14 @@ export const mainRecordDetails:any = {
     }),
   },
   expedition: {
-    expeditionTitle: getKey('expeditionTitle'),
-    expeditionCode: getKey('expeditionCode'),
-    expeditionId: getKey('expeditionId'),
-    created: getKey('created'),
     modified: getKey('modified'),
-    identifier: (e:any) => ({
-      text: e.identifier,
-      href: `https://n2t.net/${e.identifier}`,
-    }),
+    created: getKey('created'),
+    identifier: expeditionIdentifierLink,
+    expeditionId: getKey('expeditionId'),
     metadata: getKey('metadata'),
   },
   entityIdentifier: {
     conceptAlias: getKey('conceptAlias'),
-    identifier: (e:any) => ({
-      text: e.identifier,
-      href: `https://n2t.net/${e.identifier}`,
-    }),
+    identifier: expeditionIdentifierLink,
   },
 };

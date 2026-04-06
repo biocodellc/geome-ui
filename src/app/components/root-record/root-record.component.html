@@ -1,75 +1,110 @@
-<h3>{{header}}</h3>
-
-<!--TODO: we need to add a nice way to display the metadata object-->
-<div class="main-details horizontal-description-list p-3">
-    <div>
-        @if(permitGuid){
-            <div class="mb-2">
-                <span class="fw-semibold">Permit GUID:</span>
-                <p class="d-inline ms-2">
-                    @if(permitGuidLink){
-                        <span><a [href]="permitGuidLink" target="_blank" rel="noopener noreferrer">{{ permitGuid }}</a></span>
-                    }
-                    @else{
-                        <span>{{ permitGuid }}</span>
-                    }
-                </p>
-            </div>
-        }
-        @for(item of (mainRecordDetails || {}) | keyvalue; track item.key){
-            <div class="mb-2">
-                <span class="fw-semibold">{{ item.key }}:</span>
-                <p class="d-inline ms-2">
-                    @if(item.value.href){
-                        <span> <a href="{{ item.value.href }}" target="_blank">{{ item.value.href }}</a> </span>
-                    }
-                    @else{ <span>{{ getValue(item.value.text) || 'N/A' }}</span> }
-                </p>
-            </div>
-        }
-    </div>
+<div class="record-root-header">
+    <h3>{{header}}</h3>
+    @if(headerMeta){
+        <p class="record-root-meta">{{ headerMeta }}</p>
+    }
 </div>
 
-@if(parentDetail){
-    <div class="my-3 divider"></div>
-    <div class="parent-details horizontal-description-list p-3">
+<!--TODO: we need to add a nice way to display the metadata object-->
+<div class="main-details horizontal-description-list p-2">
+    @if(permitGuid){
+        <div class="mb-2">
+            <span class="fw-semibold">Permit GUID:</span>
+            <p class="d-inline ms-2">
+                @if(permitGuidLink){
+                    <span><a [href]="permitGuidLink" target="_blank" rel="noopener noreferrer">{{ permitGuid }}</a></span>
+                }
+                @else{
+                    <span>{{ permitGuid }}</span>
+                }
+            </p>
+        </div>
+    }
+    <ul class="list-group record-root-list">
+        @for(item of (mainRecordDetails || {}) | keyvalue: compareMainDetails; track item.key){
+            <li class="list-group-item d-flex record-root-list-item">
+                <p class="m-0 record-root-label">{{ formatLabel(item.key) }}:</p>
+                <div class="record-root-value">
+                    @if(item.value.href){
+                        <span><a href="{{ item.value.href }}" target="_blank">{{ getLinkedText(item.value) }}</a></span>
+                    }
+                    @else{ <span>{{ formatMainDetailValue(item.key, item.value.text) }}</span> }
+                </div>
+            </li>
+        }
+    </ul>
+</div>
+
+@if(entity === 'expedition' && entityMapRoots.length){
+    <div class="entity-map-section p-2">
+        <div class="entity-map-header">
+            <div>
+                <h4>Entity Map</h4>
+                <p>{{ entityMapSummary }}</p>
+            </div>
+            <p class="entity-map-instruction">Click any highlighted entity to query its expedition records.</p>
+        </div>
+        <div class="entity-map-surface">
+            <ul class="entity-map-tree">
+                @for(node of entityMapRoots; track node.alias){
+                    <ng-container *ngTemplateOutlet="entityMapNode; context: { $implicit: node }"></ng-container>
+                }
+            </ul>
+        </div>
+    </div>
+
+    <ng-template #entityMapNode let-node>
+        <li class="entity-map-item">
+            @if(node.available){
+                <button type="button" class="entity-map-node is-available" (click)="openEntityMapNode(node)">
+                    <div class="entity-map-topline">
+                        <span class="entity-map-name">{{ node.label }}</span>
+                        <span class="entity-map-count">{{ node.count === null ? '...' : node.count }}</span>
+                    </div>
+                    @if(node.identifier){
+                        <span class="entity-map-identifier">{{ node.identifier }}</span>
+                    }
+                    <span class="entity-map-cta">Click to query</span>
+                </button>
+            }
+            @else{
+                <div class="entity-map-node is-muted">
+                    <div class="entity-map-topline">
+                        <span class="entity-map-name">{{ node.label }}</span>
+                        <span class="entity-map-count">{{ node.count === null ? '...' : node.count }}</span>
+                    </div>
+                    <span class="entity-map-status">Configured for this project</span>
+                </div>
+            }
+
+            @if(node.children.length){
+                <ul class="entity-map-tree entity-map-branch">
+                    @for(child of node.children; track child.alias){
+                        <ng-container *ngTemplateOutlet="entityMapNode; context: { $implicit: child }"></ng-container>
+                    }
+                </ul>
+            }
+        </li>
+    </ng-template>
+}
+
+@if(parentDetail && parentEntity !== 'Project'){
+    <div class="parent-details horizontal-description-list p-2">
         <h4>Parent {{ parentEntity }}</h4>
         <div layout="row">
             <ul style="list-style-type: none;" class="d-flex flex-wrap gap-3 p-0">
                 @for(item of (parentDetail || {}) | keyvalue; track item.key){
                 <li>
-                    <span>{{ item.key }}:</span>
+                    <span>{{ formatLabel(item.key) }}:</span>
                     <p>
                         @if(item.value.href){
-                        <span> <a href="{{ item.value.href }}" target="_blank">{{ item.value.href }}</a> </span>
+                        <span> <a href="{{ item.value.href }}" target="_blank">{{ getLinkedText(item.value) }}</a> </span>
                         }
-                        @else{ <span>{{ item.value.text || 'N/A' }}</span> }
+                        @else{ <span>{{ formatValue(item.value.text) || 'N/A' }}</span> }
                     </p>
                 </li>
                 }
             </ul>
         </div>
-    </div>
-}
-
-@if(childDetails){
-    <div class="my-3 divider"></div>
-    <div class="child-details horizontal-description-list p-3">
-        <h4>Child Entities</h4>
-        @for(item of (childDetails || {}) | keyvalue; track item.key){
-            <div class="entity-group">
-                <div layout="row">
-                    @if(item.key !== 'query'){ <span class="entity">{{ item.key }}s</span> }
-                    @else{ <span class="entity"> </span> }
-                    <p class="">
-                        @if(!item.value.href && !item.value.queryLink){ <span>{{ item.value.text || 'N/A' }}</span> }
-                        @else if(item.value.href){ <span><a href="{{item.value.href}}">{{ item.value.text || 'N/A' }}</a></span> }
-                        @else if(item.value.queryLink){
-                            <span (click)="query(item.value.queryLink)">{{ item.value.text || 'N/A' }}</span>
-                        }
-                    </p>
-                </div>
-            </div>
-        }
     </div>
 }

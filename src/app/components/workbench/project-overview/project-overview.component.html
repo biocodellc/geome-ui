@@ -207,7 +207,11 @@
                                 <td>{{ item.TissueCount }}</td>
                                 <td>{{ item.fastaSequenceCount }}</td>
                                 <td>{{ item.fastqMetadataCount }}</td>
-                                <td><a href="https://n2t.net/{{item.expeditionIdentifier}}">https://n2t.net/{{item.expeditionIdentifier}}</a></td>
+                                <td>
+                                    <a [href]="expeditionRecordUrl(item.expeditionIdentifier)">
+                                        https://n2t.net/{{item.expeditionIdentifier}}
+                                    </a>
+                                </td>
                                 <td><i class="fas fa-search text-secondary f-16 cursor-pointer" (click)="viewData(item.expeditionCode)"></i></td>
                                 <td>
                                     @if(menuOptions(item) && menuOptions(item)?.length){

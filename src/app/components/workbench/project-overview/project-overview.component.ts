@@ -221,6 +221,12 @@ export class ProjectOverviewComponent implements OnDestroy{
     return this.resolveGuidLink(this.projectDetails?.permitGuid);
   }
 
+  expeditionRecordUrl(identifier:string): string {
+    const raw = `${identifier || ''}`.trim();
+    if (!raw) return '';
+    return `${window.location.origin}/record/${raw}`;
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
