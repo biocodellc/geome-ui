@@ -112,6 +112,12 @@
                 </div>
                 }
 
+                @if(recordData.entity === 'Event'){
+                <div class="map-container col-12 col-md-6 col-lg-6 pl-10 record-visual-card">
+                    <app-map class="record-map" [showExtras]="false" [mapData]="mapData" [height]="'359px'"></app-map>
+                </div>
+                }
+
                 @if((photos$ | async)?.length){
                 <div class="d-flex col-12 col-md-6 pl-10">
                     <gallery id="entityGallery" thumbPosition="bottom" [thumb]="showThumbs" gallerize>
@@ -158,12 +164,6 @@
                             }
                         </div>
                     </div>
-                }
-
-                @if(recordData.entity === 'Event'){
-                <div class="map-container col-12 col-md-6 col-lg-6 pl-10 record-visual-card">
-                    <app-map class="record-map" [showExtras]="false" [mapData]="mapData" [height]="'359px'"></app-map>
-                </div>
                 }
                         
                 <!-- @if(localContextsPresent){
