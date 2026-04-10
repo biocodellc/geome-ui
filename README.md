@@ -19,6 +19,34 @@ This document provides comprehensive instructions on how to configure and manage
     npm install
     ```
 
+## Local Startup
+
+Use these commands from the repository root:
+
+```bash
+cd /Users/jdeck/IdeaProjects/geome-ui
+```
+
+For local development against a local `geome-db` instance:
+
+```bash
+npm run dev
+```
+
+- Runs the app at `http://127.0.0.1:4200/`
+- Uses `src/environments/environment.development.ts`
+- Tests against a local `geome-db` instance via that file's `restRoot`
+
+For a production-style preview against the production `geome-db` instance:
+
+```bash
+npm run prod
+```
+
+- Builds the production bundle and serves it locally on `http://127.0.0.1:4200/`
+- Uses `src/environments/environment.ts`
+- Tests against the production `geome-db` instance via that file's `restRoot`
+
 ## Configuration - Environment Files
 
 Angular projects utilize environment-specific configuration files to manage settings that vary between deployments.  These files are located in the `src/environments/` directory.
