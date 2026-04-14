@@ -104,6 +104,10 @@ Using the --configuration Flag
 ## Updating Help Documentation
 
 Help documentation is created in a Google Document.  From this document we export it as a PDF File and save it to this repository and modify the environment.ts files.
+
+Source document:
+https://docs.google.com/document/d/1cLWwNK2i6uEDkSRboraIJQrbHm9A7u4dP2sGZd_3_rU/edit?tab=t.0
+
 ```
 cp {path_to_documentation_downloaded} {root folder}/public/docs/helpDocumentationv2.pdf
 src/environments/environment.ts:    documentationUrl: '/docs/helpDocumentationv2.pdf'
