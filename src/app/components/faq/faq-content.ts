@@ -338,7 +338,7 @@ export const FAQ_SECTIONS: FaqSection[] = [
       {
         id: 'photo-original-url-and-deletion',
         question:
-          'If photos were uploaded with the photo uploader and I later add `originalUrl` values in the exported spreadsheet, will GEOME avoid generating a new set of processed images? How can I delete bad photos?',
+          'If photos were uploaded with the photo uploader and I later add `originalUrl` values in the exported spreadsheet, will GEOME avoid generating a new set of processed images?',
         blocks: [
           {
             type: 'paragraph',
@@ -348,6 +348,12 @@ export const FAQ_SECTIONS: FaqSection[] = [
             type: 'paragraph',
             text: 'GEOME only reuses existing processed image URLs when the incoming row has the same stored `originalUrl` as an already-processed photo record.',
           },
+        ],
+      },
+      {
+        id: 'delete-bad-photos',
+        question: 'How can I delete bad photos?',
+        blocks: [
           {
             type: 'paragraph',
             text: 'There is currently no photo-specific delete control exposed in the UI. To remove bad photos, reload the photo worksheet or photo CSV (`sample_photos` / `event_photos`) with `Replace expedition data` checked and leave out the photo rows you want removed.',
