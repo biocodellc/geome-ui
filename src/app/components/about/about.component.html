@@ -1,3 +1,17 @@
-<div class="doc-frame-wrapper">
-    <iframe [src]="docUrl" height="100%" class="doc-iframe" title="GEOME documentation"></iframe>
+<div class="doc-page">
+    <section class="doc-callout">
+        <div>
+            <p class="doc-callout__eyebrow">Documentation</p>
+            <h1 class="doc-callout__title">User Help</h1>
+            <p class="doc-callout__text">
+                The full GEOME help document is embedded below. Frequently asked questions are now available in-app for faster browsing.
+                You can open them from the gear menu or go directly to the <a routerLink="/faq">FAQ page</a>.
+            </p>
+        </div>
+        <a class="btn btn-outline-primary" routerLink="/faq">Open FAQ</a>
+    </section>
+
+    <div class="doc-frame-wrapper">
+        <iframe [src]="docUrl" height="100%" class="doc-iframe" title="GEOME documentation"></iframe>
+    </div>
 </div>

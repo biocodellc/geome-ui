@@ -1,0 +1,88 @@
+<section class="faq-page p-3 mb-3 main-content-container">
+  <div class="container">
+    <div class="faq-hero container-bg shadow-sm">
+      <div>
+        <p class="faq-kicker">Help & Support</p>
+        <h1 class="faq-title">Frequently Asked Questions</h1>
+        <p class="faq-intro">
+          These FAQs are available in-app for faster browsing and are based on Part 4 of the current GEOME help documentation.
+          The full guide is still available on the <a routerLink="/about">Documentation</a> page.
+        </p>
+      </div>
+      <a class="btn btn-outline-primary" routerLink="/about">Open Full Documentation</a>
+    </div>
+
+    <nav class="faq-nav container-bg shadow-sm" aria-label="FAQ sections">
+      @for (section of sections; track section.id) {
+        <button type="button" class="faq-nav-link" (click)="scrollToSection(section.id)">{{ section.title }}</button>
+      }
+    </nav>
+
+    @for (section of sections; track section.id) {
+      <section class="faq-section container-bg shadow-sm" [attr.id]="section.id">
+        <div class="faq-section-header">
+          <h2>{{ section.title }}</h2>
+          <p>{{ section.description }}</p>
+        </div>
+
+        <div class="faq-items">
+          @for (item of section.items; track item.id) {
+            <article class="faq-item" [attr.id]="item.id">
+              <div class="faq-item-header" [class.is-expanded]="isExpanded(item.id)">
+                <button
+                  type="button"
+                  class="faq-item-toggle"
+                  [attr.aria-expanded]="isExpanded(item.id)"
+                  (click)="toggleItem(item.id)">
+                  <span>{{ item.question }}</span>
+                  <span class="faq-item-icon">{{ isExpanded(item.id) ? '−' : '+' }}</span>
+                </button>
+
+                <div class="faq-item-actions">
+                  <button type="button" class="faq-item-link" (click)="openItemLink(item.id)">Link</button>
+                  <button type="button" class="faq-item-link" (click)="copyItemLink(item.id)">
+                    {{ copiedItemId === item.id ? 'Copied' : 'Copy link' }}
+                  </button>
+                </div>
+              </div>
+
+              @if (isExpanded(item.id)) {
+                <div class="faq-answer">
+                @for (block of item.blocks; track $index) {
+                  @if (block.type === 'paragraph') {
+                    <p>{{ block.text }}</p>
+                  }
+
+                  @if (block.type === 'note') {
+                    <p class="faq-note">{{ block.text }}</p>
+                  }
+
+                  @if (block.type === 'example') {
+                    <p class="faq-example">{{ block.text }}</p>
+                  }
+
+                  @if (block.type === 'bullets') {
+                    <ul>
+                      @for (entry of block.items; track $index) {
+                        <li>{{ entry }}</li>
+                      }
+                    </ul>
+                  }
+
+                  @if (block.type === 'steps') {
+                    <ol>
+                      @for (entry of block.items; track $index) {
+                        <li>{{ entry }}</li>
+                      }
+                    </ol>
+                  }
+                }
+                </div>
+              }
+            </article>
+          }
+        </div>
+      </section>
+    }
+  </div>
+</section>
