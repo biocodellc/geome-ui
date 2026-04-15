@@ -348,6 +348,10 @@ export const FAQ_SECTIONS: FaqSection[] = [
             type: 'paragraph',
             text: 'GEOME only reuses existing processed image URLs when the incoming row has the same stored `originalUrl` as an already-processed photo record.',
           },
+          {
+            type: 'paragraph',
+            text: 'If you reload the photo row with the same `photoID`, GEOME updates that existing photo record and reprocesses it rather than attaching a second photo to the event or sample. If you change the `photoID`, GEOME treats it as a new photo and you can end up with two photo records.',
+          },
         ],
       },
       {
