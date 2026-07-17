@@ -15,14 +15,13 @@ import { flatten } from '../../../helpers/scripts/flatten';
 import compareValues from '../../../helpers/scripts/compareVal';
 import { ExpeditionService } from '../../../helpers/services/expedition.service';
 import { ProjectConfig } from '../../../helpers/models/projectConfig.model';
-import { NoticeLabelComponent } from '../notice-label/notice-label.component';
 import { LightboxModule } from 'ng-gallery/lightbox';
 import { LocalContextsDisplayItem, LocalContextsService } from '../../../helpers/services/local-contexts.service';
 
 @Component({
   selector: 'app-record',
   standalone: true,
-  imports: [CommonModule, GalleryModule, LightboxModule, LoaderComponent, RootRecordComponent, NgbTooltipModule, MapComponent, NoticeLabelComponent ],
+  imports: [CommonModule, GalleryModule, LightboxModule, LoaderComponent, RootRecordComponent, NgbTooltipModule, MapComponent ],
   templateUrl: './record.component.html',
   styleUrl: './record.component.scss'
 })
@@ -52,6 +51,15 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
   detailCache:any = {};
   galleryRef!:GalleryRef;
   photos$:BehaviorSubject<GalleryItem[]> = new BehaviorSubject<GalleryItem[]>([]);
+  readonly traditionalKnowledgeNoticeItem: LocalContextsDisplayItem = {
+    communityName: '',
+    externalUrl: 'https://localcontexts.org/notice/tk-notice/',
+    imageUrl: 'images/TK-notice.png',
+    kind: 'notice',
+    text: 'The TK Notice is a visible notification that there are accompanying cultural rights and responsibilities that need further attention for any future sharing and use of this material. The TK Notice may indicate that TK Labels are in development and their implementation is being negotiated.',
+    title: 'Traditional Knowledge (TK) Notice',
+    trackId: 'notice-traditional-knowledge',
+  };
   parentDetail!:{ [key: string]: RecordValue };
   childDetails!: { [key: string]: { [key: string]: RecordValue }[] };
   expeditionIdentifier: any;
@@ -280,6 +288,25 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
     return entity;
   }
 
+  get hasTraditionalKnowledgeNotice(): boolean {
+    return `${this.recordData?.traditionalKnowledgeNotice || ''}`.toUpperCase() === 'TRUE';
+  }
+
+  get displayLocalContextsPanel(): boolean {
+    return this.localContextsPresent || this.hasTraditionalKnowledgeNotice;
+  }
+
+  get localContextsPanelSubtitle(): string {
+    return this.localContextsPresent
+      ? 'Labels and Notices linked to this Local Contexts Project.'
+      : 'Notices associated with this record.';
+  }
+
+  get localContextsDisplayItems(): LocalContextsDisplayItem[] {
+    if (!this.hasTraditionalKnowledgeNotice || this.hasTkNoticeFromProject()) return this.localContextsItems;
+    return [this.traditionalKnowledgeNoticeItem, ...this.localContextsItems];
+  }
+
   private resolveGuidLink(value:any): string {
     const raw = `${value || ''}`.trim();
     if (!raw) return '';
@@ -418,7 +445,7 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
     return  allKeys.length ? this.detailCache[index] : {};
   }
 
-  /* fetch local contexts details for the configured Local Contexts Hub project */
+  /* fetch Local Contexts details for the configured Local Contexts Hub Project */
   prepareLocalContexts(projectId:any) {
     this.localContextsPresent = false;
     this.localContextsItems = [];
@@ -434,14 +461,21 @@ export class RecordComponent implements AfterViewInit, OnDestroy{
             this.localContextsItems = localContextsProject.items;
             this.localContextsProjectUrl = localContextsProject.projectPage;
             if (!this.localContextsItems.length) {
-              this.localContextsError = 'No Local Contexts notices or labels were returned for this project.';
+              this.localContextsError = 'No Local Contexts Notices or Labels were returned for this Local Contexts Project.';
             }
           } catch (error:any) {
             console.warn('Failed to load Local Contexts data:', error?.message || error);
-            this.localContextsError = 'Unable to load Local Contexts labels here.';
+            const errorCode = error?.message ? ` (${error.message})` : '';
+            this.localContextsError = `Unable to load Local Contexts Labels and Notices here${errorCode}.`;
           }
         }
       });
+  }
+
+  private hasTkNoticeFromProject(): boolean {
+    return this.localContextsItems.some((item: LocalContextsDisplayItem) =>
+      item.kind === 'notice' && /(^|\b)(tk|traditional knowledge)(\b|$)/i.test(`${item.title} ${item.trackId}`)
+    );
   }
 
   getKeysArr(obj:{}):any[]{

@@ -1,4 +1,7 @@
 const DEFAULT_API_BASE_URL = 'https://localcontextshub.org/api/v2';
+const CACHE_TTL_SECONDS = positiveNumber(process.env.LOCAL_CONTEXTS_CACHE_TTL_SECONDS, 300);
+const STALE_TTL_SECONDS = positiveNumber(process.env.LOCAL_CONTEXTS_STALE_TTL_SECONDS, 86400);
+const responseCache = new Map();
 
 const authHeaderStrategies = [
   (apiKey) => ({ 'X-Api-Key': apiKey }),
@@ -40,19 +43,56 @@ exports.handler = async (event) => {
     };
   }
 
+  const cacheKey = buildCacheKey(event);
+  const freshCachedResponse = getCachedResponse(cacheKey, false);
+  if (freshCachedResponse) return cachedProxyResponse(freshCachedResponse, 'hit');
+
   let lastResponse;
+  let lastError;
   let lastAttempt = '';
 
   for (const request of targetRequests) {
-    const response = await fetch(request.url, { headers: request.headers });
+    let response;
+    try {
+      response = await fetch(request.url, { headers: request.headers });
+    } catch (error) {
+      lastError = error;
+      lastAttempt = request.label;
+      continue;
+    }
+
     lastResponse = response;
     lastAttempt = request.label;
-    if (response.ok) return proxyResponse(response, request.label);
+    if (response.ok) {
+      const proxiedResponse = await proxyResponse(response, request.label, 'miss');
+      cacheResponse(cacheKey, proxiedResponse);
+      return proxiedResponse;
+    }
     if ([401, 403, 404].includes(response.status)) continue;
-    return proxyResponse(response, request.label);
+    break;
   }
 
-  return proxyResponse(lastResponse, lastAttempt);
+  const staleCachedResponse = getCachedResponse(cacheKey, true);
+  if (staleCachedResponse) {
+    return cachedProxyResponse(
+      staleCachedResponse,
+      'stale',
+      lastResponse?.status || errorMessage(lastError)
+    );
+  }
+
+  if (lastResponse) return proxyResponse(lastResponse, lastAttempt, 'bypass');
+
+  return {
+    body: JSON.stringify({ message: 'Unable to reach the Local Contexts API.', error: errorMessage(lastError) }),
+    headers: {
+      ...jsonHeaders,
+      'cache-control': 'no-store',
+      'x-local-contexts-attempt': lastAttempt,
+      'x-local-contexts-cache': 'error',
+    },
+    statusCode: 502,
+  };
 };
 
 function buildTargetRequests(event, apiKey) {
@@ -94,6 +134,15 @@ function buildTargetRequests(event, apiKey) {
   }
 
   return dedupeRequests(requests);
+}
+
+function buildCacheKey(event) {
+  const query = new URLSearchParams(event.queryStringParameters || {});
+  const requestedPath = resolveRequestedPath(event, query).replace(/^\/+|\/+$/g, '');
+  query.delete('path');
+  query.delete('api_key');
+
+  return `${requestedPath}?${query.toString()}`;
 }
 
 function resolveRequestedPath(event, query) {
@@ -213,18 +262,79 @@ function normalizeBaseUrl(value) {
   return `${value || ''}`.trim().replace(/\/+$/, '');
 }
 
-async function proxyResponse(response, attempt) {
+async function proxyResponse(response, attempt, cacheStatus) {
   const body = await response.text();
   const contentType = response.headers.get('content-type') || 'application/json';
+  const cacheable = response.ok;
 
   return {
     body,
     headers: {
       'access-control-allow-origin': '*',
-      'cache-control': response.ok ? 'public, max-age=300' : 'no-store',
+      ...cacheHeaders(cacheable),
       'content-type': contentType,
       'x-local-contexts-attempt': attempt || '',
+      'x-local-contexts-cache': cacheStatus || 'bypass',
+      'x-local-contexts-upstream-status': `${response.status}`,
     },
     statusCode: response.status,
   };
+}
+
+function cacheHeaders(cacheable) {
+  if (!cacheable) return { 'cache-control': 'no-store' };
+
+  const browserCache = `public, max-age=${CACHE_TTL_SECONDS}, stale-while-revalidate=${STALE_TTL_SECONDS}`;
+  const cdnCache = `public, s-maxage=${CACHE_TTL_SECONDS}, stale-while-revalidate=${STALE_TTL_SECONDS}`;
+  return {
+    'cache-control': browserCache,
+    'netlify-cdn-cache-control': cdnCache,
+  };
+}
+
+function cacheResponse(cacheKey, response) {
+  const cachedAt = Date.now();
+  responseCache.set(cacheKey, {
+    body: response.body,
+    cachedAt,
+    expiresAt: cachedAt + CACHE_TTL_SECONDS * 1000,
+    headers: { ...response.headers },
+    staleExpiresAt: cachedAt + STALE_TTL_SECONDS * 1000,
+    statusCode: response.statusCode,
+  });
+}
+
+function getCachedResponse(cacheKey, allowStale) {
+  const cachedResponse = responseCache.get(cacheKey);
+  if (!cachedResponse) return null;
+
+  const now = Date.now();
+  if (cachedResponse.expiresAt > now) return cachedResponse;
+  if (allowStale && cachedResponse.staleExpiresAt > now) return cachedResponse;
+
+  responseCache.delete(cacheKey);
+  return null;
+}
+
+function cachedProxyResponse(cachedResponse, cacheStatus, upstreamStatus) {
+  return {
+    body: cachedResponse.body,
+    headers: {
+      ...cachedResponse.headers,
+      age: `${Math.max(0, Math.floor((Date.now() - cachedResponse.cachedAt) / 1000))}`,
+      'x-local-contexts-cache': cacheStatus,
+      ...(upstreamStatus ? { 'x-local-contexts-upstream-status': `${upstreamStatus}` } : {}),
+    },
+    statusCode: cachedResponse.statusCode,
+  };
+}
+
+function errorMessage(error) {
+  if (!error) return '';
+  return error.message || `${error}`;
+}
+
+function positiveNumber(value, fallback) {
+  const parsedValue = Number(value);
+  return Number.isFinite(parsedValue) && parsedValue > 0 ? parsedValue : fallback;
 }

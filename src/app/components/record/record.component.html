@@ -28,9 +28,6 @@
 
             <div class="d-flex align-items-center gap-3 record-header">
                 <h3 class="record-title">{{ normalizeEntityLabel(recordData.entity) }} <span class="record-identifier">({{ getIdentifier() }})</span></h3>
-                @if(recordData.traditionalKnowledgeNotice === 'TRUE'){
-                <app-notice-label />
-                }
             </div>
 
             <div class="main-details section-card p-3 d-flex flex-wrap justify-content-between">
@@ -125,24 +122,24 @@
                 </div>
                 }
 
-                @if(localContextsPresent){
+                @if(displayLocalContextsPanel){
                     <div class="col-12 pl-10">
                         <div class="local-contexts-panel p-3">
                             <div class="d-flex flex-wrap justify-content-between align-items-start gap-2">
                                 <div>
                                     <h5 class="m-0">Local Contexts</h5>
-                                    <p class="text-muted small m-0">Labels and notices linked to this GEOME project.</p>
+                                    <p class="text-muted small m-0">{{ localContextsPanelSubtitle }}</p>
                                 </div>
                                 @if(localContextsProjectUrl){
                                     <a [href]="localContextsProjectUrl" target="_blank" rel="noopener noreferrer" class="small text-decoration-none">
-                                        Open Local Contexts project
+                                        Open Local Contexts Project
                                     </a>
                                 }
                             </div>
 
-                            @if(localContextsItems.length){
+                            @if(localContextsDisplayItems.length){
                                 <div class="local-contexts-grid mt-3">
-                                    @for(item of localContextsItems; track item.trackId){
+                                    @for(item of localContextsDisplayItems; track item.trackId){
                                         <a class="local-context-card text-reset text-decoration-none" [href]="item.externalUrl" target="_blank" rel="noopener noreferrer">
                                             @if(item.imageUrl){
                                                 <img class="local-context-card__image" [src]="item.imageUrl" [alt]="item.title">
@@ -160,7 +157,7 @@
                                 </div>
                             }
                             @else{
-                                <p class="text-muted small mt-3 mb-0">{{ localContextsError || 'No Local Contexts notices or labels are currently available for this project.' }}</p>
+                                <p class="text-muted small mt-3 mb-0">{{ localContextsError || 'No Local Contexts Notices or Labels are currently available for this Local Contexts Project.' }}</p>
                             }
                         </div>
                     </div>

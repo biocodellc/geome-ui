@@ -139,7 +139,7 @@ Notes:
 
 ## Local Contexts Integration Setup
 
-GEOME stores the Local Contexts Project identifier in the `localcontextsId` project field and renders the linked Local Contexts notices/labels on record detail pages.
+GEOME stores the Local Contexts Project identifier in the `localcontextsId` project field and renders the linked Local Contexts Notices and Labels on record detail pages.
 
 ### Recommended deployment setup
 
@@ -192,6 +192,7 @@ window.__env.LOCAL_CONTEXTS_API_BASE_URL = 'https://localcontextshub.org/api/v2'
 
 Notes:
 - `public/env.local.js` is ignored by Git.
+- Production builds write an empty `public/env.local.js` so the optional script tag does not fall through to `index.html`.
 - This browser-side key fallback is for local development only. Do not use it for production deployments.
 - The UI will first try the same-origin proxy at `/localcontexts-api`; if that is unavailable, it falls back to the browser key from `public/env.local.js`.
 
