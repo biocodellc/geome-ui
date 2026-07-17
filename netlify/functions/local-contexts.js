@@ -2,6 +2,10 @@ const DEFAULT_API_BASE_URL = 'https://localcontextshub.org/api/v2';
 const CACHE_TTL_SECONDS = positiveNumber(process.env.LOCAL_CONTEXTS_CACHE_TTL_SECONDS, 300);
 const STALE_TTL_SECONDS = positiveNumber(process.env.LOCAL_CONTEXTS_STALE_TTL_SECONDS, 86400);
 const responseCache = new Map();
+const upstreamBaseHeaders = {
+  Accept: 'application/json',
+  'User-Agent': 'GEOME Local Contexts Proxy (https://geome-db.org)',
+};
 
 const authHeaderStrategies = [
   (apiKey) => ({ 'X-Api-Key': apiKey }),
@@ -25,7 +29,7 @@ exports.handler = async (event) => {
     };
   }
 
-  const apiKey = `${process.env.LOCAL_CONTEXTS_API_KEY || ''}`.trim();
+  const apiKey = normalizeApiKey(process.env.LOCAL_CONTEXTS_API_KEY);
   if (!apiKey) {
     return {
       body: JSON.stringify({ message: 'LOCAL_CONTEXTS_API_KEY is not configured.' }),
@@ -50,6 +54,7 @@ exports.handler = async (event) => {
   let lastResponse;
   let lastError;
   let lastAttempt = '';
+  const attemptResults = [];
 
   for (const request of targetRequests) {
     let response;
@@ -63,8 +68,9 @@ exports.handler = async (event) => {
 
     lastResponse = response;
     lastAttempt = request.label;
+    attemptResults.push(`${request.label}:${response.status}:${response.headers.get('content-type') || 'unknown'}`);
     if (response.ok) {
-      const proxiedResponse = await proxyResponse(response, request.label, 'miss');
+      const proxiedResponse = await proxyResponse(response, request.label, 'miss', attemptResults);
       cacheResponse(cacheKey, proxiedResponse);
       return proxiedResponse;
     }
@@ -77,11 +83,12 @@ exports.handler = async (event) => {
     return cachedProxyResponse(
       staleCachedResponse,
       'stale',
-      lastResponse?.status || errorMessage(lastError)
+      lastResponse?.status || errorMessage(lastError),
+      attemptResults
     );
   }
 
-  if (lastResponse) return proxyResponse(lastResponse, lastAttempt, 'bypass');
+  if (lastResponse) return proxyResponse(lastResponse, lastAttempt, 'bypass', attemptResults);
 
   return {
     body: JSON.stringify({ message: 'Unable to reach the Local Contexts API.', error: errorMessage(lastError) }),
@@ -89,6 +96,7 @@ exports.handler = async (event) => {
       ...jsonHeaders,
       'cache-control': 'no-store',
       'x-local-contexts-attempt': lastAttempt,
+      'x-local-contexts-attempts': attemptResults.join(' | '),
       'x-local-contexts-cache': 'error',
     },
     statusCode: 502,
@@ -110,7 +118,7 @@ function buildTargetRequests(event, apiKey) {
     for (const buildHeaders of authHeaderStrategies) {
       requests.push({
         headers: {
-          Accept: 'application/json',
+          ...upstreamBaseHeaders,
           ...buildHeaders(apiKey),
         },
         label: `${candidate.mode}:${headerStrategyName(buildHeaders(apiKey))}`,
@@ -121,13 +129,13 @@ function buildTargetRequests(event, apiKey) {
     // Some integrations expose public and partner-readable data without auth
     // or use query-based API key auth.
     requests.push({
-      headers: { Accept: 'application/json' },
+      headers: upstreamBaseHeaders,
       label: `${candidate.mode}:no-auth`,
       url: candidate.url,
     });
 
     requests.push({
-      headers: { Accept: 'application/json' },
+      headers: upstreamBaseHeaders,
       label: `${candidate.mode}:query-api-key`,
       url: appendQueryParam(candidate.url, 'api_key', apiKey),
     });
@@ -262,7 +270,11 @@ function normalizeBaseUrl(value) {
   return `${value || ''}`.trim().replace(/\/+$/, '');
 }
 
-async function proxyResponse(response, attempt, cacheStatus) {
+function normalizeApiKey(value) {
+  return `${value || ''}`.trim().replace(/^['"]|['"]$/g, '');
+}
+
+async function proxyResponse(response, attempt, cacheStatus, attemptResults) {
   const body = await response.text();
   const contentType = response.headers.get('content-type') || 'application/json';
   const cacheable = response.ok;
@@ -274,6 +286,7 @@ async function proxyResponse(response, attempt, cacheStatus) {
       ...cacheHeaders(cacheable),
       'content-type': contentType,
       'x-local-contexts-attempt': attempt || '',
+      'x-local-contexts-attempts': (attemptResults || []).join(' | '),
       'x-local-contexts-cache': cacheStatus || 'bypass',
       'x-local-contexts-upstream-status': `${response.status}`,
     },
@@ -316,13 +329,14 @@ function getCachedResponse(cacheKey, allowStale) {
   return null;
 }
 
-function cachedProxyResponse(cachedResponse, cacheStatus, upstreamStatus) {
+function cachedProxyResponse(cachedResponse, cacheStatus, upstreamStatus, attemptResults) {
   return {
     body: cachedResponse.body,
     headers: {
       ...cachedResponse.headers,
       age: `${Math.max(0, Math.floor((Date.now() - cachedResponse.cachedAt) / 1000))}`,
       'x-local-contexts-cache': cacheStatus,
+      ...(attemptResults?.length ? { 'x-local-contexts-attempts': attemptResults.join(' | ') } : {}),
       ...(upstreamStatus ? { 'x-local-contexts-upstream-status': `${upstreamStatus}` } : {}),
     },
     statusCode: cachedResponse.statusCode,
