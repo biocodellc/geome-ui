@@ -6,17 +6,43 @@
   <div class="container py-4">
     @if(activePrototype === 'guide'){
       <section class="hero-shell hero-guide animate-in">
-        <div class="hero-orb hero-orb-b"></div>
-        <div class="guide-diagram-panel">
-          <div class="guide-diagram-head">
-            <h1>Resources for genomic observations from collection to analysis and publication</h1>
+        <div class="guide-hero-panel">
+          <div class="guide-hero-copy">
+            <p class="story-kicker">Genomic Observatories Metadatabase</p>
+            <h1>Genomic observations from collection to publication</h1>
+            <p class="guide-hero-lead">
+              GEOME
+              <button type="button" class="audio-button" (click)="playAudio()" aria-label="Play pronunciation of GEOME">
+                <i class="fas fa-volume-high"></i>
+              </button>
+              helps research teams capture, validate, organize, and share field-collected sample data with the context needed for downstream sequencing, analysis, and reuse.
+            </p>
+
+            <div class="guide-hero-actions" aria-label="GEOME primary actions">
+              @for(item of homeItems; track item.title){
+                <a class="guide-action-card" [ngClass]="item.tone" [routerLink]="item.route">
+                  <span class="guide-action-icon">
+                    <i class="fas" [ngClass]="item.icon" aria-hidden="true"></i>
+                  </span>
+                  <span class="guide-action-copy">
+                    <strong>{{item.title}}</strong>
+                    <span>{{item.subtitle}}</span>
+                  </span>
+                  <i class="fas fa-arrow-right guide-action-arrow" aria-hidden="true"></i>
+                </a>
+              }
+            </div>
           </div>
-          <div class="guide-diagram-caption guide-diagram-lead">
-            <img src="images/geomeWorkflow.png" alt="GEOME workflow diagram">
-            <span>
-              GEOME <i class="fas fa-volume-high audio-icon" (click)="playAudio()" aria-label="Play GEOME audio"></i> is a Field Information Management System that transforms the way field-collected sample data is captured, organized, and shared. From the moment samples are collected, GEOME supports their journey, linking metadata to sequencing, publication, and collaboritive work across institutions.
-            </span>
-          </div>
+
+          <aside class="guide-quick-panel" aria-label="What GEOME supports">
+            <h2>Use GEOME to</h2>
+            <ul>
+              <li><i class="fas fa-check" aria-hidden="true"></i><span>Prepare project templates for field and lab teams.</span></li>
+              <li><i class="fas fa-check" aria-hidden="true"></i><span>Validate required metadata before publication.</span></li>
+              <li><i class="fas fa-check" aria-hidden="true"></i><span>Search, download, and share reusable biodiversity records.</span></li>
+            </ul>
+            <a routerLink="/faq" class="guide-help-link">Browse FAQ</a>
+          </aside>
         </div>
       </section>
 

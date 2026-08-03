@@ -1,14 +1,16 @@
 .faq-page {
-  background: linear-gradient(180deg, #f4f7fb 0%, #eef3f8 100%);
+  background: var(--fg-background);
   overflow-y: auto;
 }
 
 .faq-hero,
 .faq-nav,
 .faq-section {
-  border-radius: 18px;
+  border-radius: 6px;
   padding: 1.5rem;
   margin-bottom: 1.25rem;
+  background: var(--fg-surface);
+  border: 1px solid var(--fg-border);
 }
 
 .faq-hero {
@@ -19,7 +21,7 @@
 }
 
 .faq-kicker {
-  color: #0b6b6f;
+  color: var(--fg-primary);
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -43,10 +45,10 @@
 }
 
 .faq-nav-link {
-  background: #e9f4f4;
-  border: 0;
-  border-radius: 999px;
-  color: #0b6b6f;
+  background: var(--fg-surface);
+  border: 1px solid var(--fg-border);
+  border-radius: 4px;
+  color: var(--fg-primary);
   cursor: pointer;
   font-size: 0.95rem;
   font-weight: 600;
@@ -63,7 +65,7 @@
 }
 
 .faq-section-header p {
-  color: #617080;
+  color: var(--fg-text-secondary);
   margin: 0;
 }
 
@@ -73,9 +75,9 @@
 }
 
 .faq-item {
-  background: #f9fbfd;
-  border: 1px solid #d8e2ec;
-  border-radius: 14px;
+  background: var(--fg-surface);
+  border: 1px solid var(--fg-border);
+  border-radius: 6px;
   overflow: hidden;
 }
 
@@ -101,11 +103,11 @@
 }
 
 .faq-item-header.is-expanded {
-  border-bottom: 1px solid #d8e2ec;
+  border-bottom: 1px solid var(--fg-divider);
 }
 
 .faq-item-icon {
-  color: #0b6b6f;
+  color: var(--fg-primary);
   flex: 0 0 auto;
   font-size: 1.35rem;
   line-height: 1;
@@ -120,10 +122,10 @@
 }
 
 .faq-item-link {
-  background: #e9f4f4;
-  border: 0;
-  border-radius: 999px;
-  color: #0b6b6f;
+  background: var(--fg-primary-soft);
+  border: 1px solid var(--fg-border);
+  border-radius: 4px;
+  color: var(--fg-primary);
   cursor: pointer;
   font-size: 0.82rem;
   font-weight: 600;
@@ -143,13 +145,13 @@
 
 .faq-note,
 .faq-example {
-  border-left: 4px solid #0b6b6f;
+  border-left: 3px solid var(--fg-primary);
   margin: 1rem 0;
   padding-left: 0.9rem;
 }
 
 .faq-example {
-  color: #314252;
+  color: var(--fg-text);
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-size: 0.95rem;
 }

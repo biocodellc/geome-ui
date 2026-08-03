@@ -1,11 +1,11 @@
 .btn-check:checked + .btn{
     --bs-btn-bg: var(--primary-color);
     --bs-btn-border-color: var(--primary-color);
-    --bs-btn-hover-bg: #063d5e;
-    --bs-btn-hover-border-color: #063d5e;
-    --bs-btn-focus-shadow-rgb: 49, 132, 253;
-    --bs-btn-active-bg: #063d5e;
-    --bs-btn-active-border-color: #063d5e;
+    --bs-btn-hover-bg: var(--fg-primary-hover);
+    --bs-btn-hover-border-color: var(--fg-primary-hover);
+    --bs-btn-focus-shadow-rgb: 36, 95, 143;
+    --bs-btn-active-bg: var(--fg-primary-hover);
+    --bs-btn-active-border-color: var(--fg-primary-hover);
     --bs-btn-active-color: #fff;
 }
 

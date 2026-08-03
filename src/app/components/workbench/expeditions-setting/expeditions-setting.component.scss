@@ -5,26 +5,26 @@ button.view-data {
     width: 100%;
     padding: 10px 25px;
     background: transparent;
-    border-bottom: 1px solid #ddd;
-    border-top: 1px solid #ddd;
+    border-bottom: 1px solid var(--fg-divider);
+    border-top: 1px solid var(--fg-divider);
     border-left: 0;
     border-right: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin: 0 0 10px 0;
-    color: #000;
+    color: var(--fg-text);
     font-weight: 600;
 }
 ul.view-list li {
     list-style: none;
 }
 .view-data i{
-    color: #444;
+    color: var(--fg-text-secondary);
 }
 ul.view-list {
     padding: 0px;
 }
 button.view-data:hover{
-    background-color: #ececec;
+    background-color: var(--fg-surface-hover);
 }

@@ -3,16 +3,13 @@ section.records{
     overflow-y: auto;
     overflow-x: hidden;
     padding-bottom: 2rem;
-    background:
-        radial-gradient(circle at top right, rgba(118, 188, 210, 0.14), transparent 28%),
-        radial-gradient(circle at left top, rgba(92, 152, 66, 0.1), transparent 24%),
-        linear-gradient(180deg, #f5fafb 0%, #edf5f7 100%);
+    background: var(--fg-background);
 }
 .divider{
     height: 1px;
     width: 100%;
     border: 0;
-    background: linear-gradient(90deg, transparent 0%, rgba(77, 157, 184, 0.35) 18%, rgba(77, 157, 184, 0.35) 82%, transparent 100%);
+    background: var(--fg-divider);
 }
 
 .entity-data{
@@ -28,15 +25,14 @@ section.records{
 }
 
 .record-shell{
-    background: rgba(255, 255, 255, 0.88);
-    border: 1px solid rgba(77, 157, 184, 0.14);
-    border-radius: 24px;
-    box-shadow: 0 20px 48px rgba(7, 60, 92, 0.08);
-    backdrop-filter: blur(6px);
+    background: var(--fg-surface);
+    border: 1px solid var(--fg-border);
+    border-radius: 6px;
+    box-shadow: none;
 }
 
 .record-detail-page{
-    color: #19455b;
+    color: var(--fg-text);
 }
 
 .record-header{
@@ -49,19 +45,19 @@ section.records{
     font-size: clamp(1.55rem, 1.3rem + 1vw, 2.2rem);
     line-height: 1.15;
     font-weight: 700;
-    color: #073c5c;
+    color: var(--fg-primary-hover);
 }
 
 .record-identifier{
-    color: #356b81;
+    color: var(--fg-text-secondary);
     font-weight: 500;
 }
 
 .section-card{
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(244, 250, 252, 0.96) 100%);
-    border: 1px solid rgba(77, 157, 184, 0.18);
-    border-radius: 18px;
-    box-shadow: 0 14px 28px rgba(10, 52, 73, 0.08);
+    background: var(--fg-surface);
+    border: 1px solid var(--fg-border);
+    border-radius: 6px;
+    box-shadow: none;
 }
 
 .main-details{
@@ -75,12 +71,12 @@ section.records{
 }
 
 .record-visual-card{
-    border-radius: 16px;
+    border-radius: 6px;
 }
 
 .record-visual-card.card{
-    border: 1px solid rgba(77, 157, 184, 0.16);
-    box-shadow: 0 12px 22px rgba(10, 52, 73, 0.08);
+    border: 1px solid var(--fg-border);
+    box-shadow: none;
     overflow: hidden;
 }
 
@@ -91,9 +87,9 @@ section.records{
 }
 
 .record-list{
-    border-radius: 16px;
+    border-radius: 6px;
     overflow: hidden;
-    border: 1px solid rgba(77, 157, 184, 0.16);
+    border: 1px solid var(--fg-border);
 }
 
 .record-list-item{
@@ -101,8 +97,8 @@ section.records{
     gap: 0.75rem;
     padding: 0.9rem 1rem;
     border: 0;
-    border-bottom: 1px solid rgba(77, 157, 184, 0.12);
-    background: rgba(255, 255, 255, 0.82);
+    border-bottom: 1px solid var(--fg-divider);
+    background: var(--fg-surface);
 }
 
 .record-list-item:last-child{
@@ -113,7 +109,7 @@ section.records{
 .record-table a,
 .parent-details a,
 .child-details a{
-    color: #156086;
+    color: var(--fg-primary);
     text-decoration: none;
     font-weight: 600;
 }
@@ -126,7 +122,7 @@ section.records{
 }
 
 .text-eclipse{
-    color: #24536a;
+    color: var(--fg-text-secondary);
     line-height: 1.5;
     word-break: break-word;
 }
@@ -134,7 +130,7 @@ section.records{
 .section-heading{
     margin: 0 0 0.9rem;
     font-size: 1.15rem;
-    color: #073c5c;
+    color: var(--fg-primary-hover);
     font-weight: 700;
 }
 
@@ -149,14 +145,14 @@ section.records{
 
 .record-table th{
     width: 38%;
-    color: #073c5c;
+    color: var(--fg-primary-hover);
     font-weight: 700;
-    border-bottom-color: rgba(77, 157, 184, 0.16);
+    border-bottom-color: var(--fg-divider);
 }
 
 .record-table td{
-    color: #24536a;
-    border-bottom-color: rgba(77, 157, 184, 0.16);
+    color: var(--fg-text-secondary);
+    border-bottom-color: var(--fg-divider);
 }
 
 .parent-details ul,
@@ -166,18 +162,18 @@ section.records{
 
 .parent-details li,
 .child-details li{
-    color: #24536a;
+    color: var(--fg-text-secondary);
     line-height: 1.5;
 }
 
 .child-details .entity{
     min-width: 122px;
-    color: #073c5c;
+    color: var(--fg-primary-hover);
 }
 
 ::ng-deep{
     gallery{ width: 80%; margin: auto; }
-    .main-details gallery-core{ background-color: #fff; }
+    .main-details gallery-core{ background-color: var(--fg-surface); }
     gallery-core{ gap: 10px !important; }
 }
 
@@ -187,9 +183,9 @@ section.records{
 }
 
 .local-contexts-panel{
-    background: #f7f8fa;
-    border: 1px solid #dde3eb;
-    border-radius: 12px;
+    background: var(--fg-surface-hover);
+    border: 1px solid var(--fg-border);
+    border-radius: 6px;
 }
 
 .local-contexts-grid{
@@ -200,9 +196,9 @@ section.records{
 
 .local-context-card{
     align-items: flex-start;
-    background: #fff;
-    border: 1px solid #d8dee8;
-    border-radius: 12px;
+    background: var(--fg-surface);
+    border: 1px solid var(--fg-border);
+    border-radius: 6px;
     display: flex;
     gap: 12px;
     min-height: 100%;
@@ -211,9 +207,8 @@ section.records{
 }
 
 .local-context-card:hover{
-    border-color: #8aa8c7;
-    box-shadow: 0 10px 24px rgba(15, 35, 55, 0.08);
-    transform: translateY(-1px);
+    border-color: var(--fg-secondary);
+    box-shadow: none;
 }
 
 .local-context-card__image{
@@ -231,7 +226,7 @@ section.records{
 }
 
 .local-context-card__eyebrow{
-    color: #5b6b7d;
+    color: var(--fg-text-secondary);
     font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.04em;
@@ -244,14 +239,14 @@ section.records{
 }
 
 .local-context-card__community{
-    color: #3d4d5f;
+    color: var(--fg-text);
     font-size: 0.85rem;
     font-weight: 600;
     margin: 0;
 }
 
 .local-context-card__text{
-    color: #4a5563;
+    color: var(--fg-text-secondary);
     font-size: 0.92rem;
     line-height: 1.4;
     margin: 0;

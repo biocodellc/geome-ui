@@ -4,6 +4,9 @@ div#sidebar{
     z-index: 999;
     overflow-y:auto;
     height: calc(100vh - 80px);
+    background-color: var(--fg-sidebar) !important;
+    border-right: 1px solid var(--fg-border);
+    box-shadow: none !important;
     &.mobile-view{
         position: absolute;
         &.hidden{
@@ -11,14 +14,25 @@ div#sidebar{
         }
     }
     button.sidebar-item{
-        color: #2f2f2f;
-        &:hover{ background-color: #f0f0f0; }
+        color: var(--fg-text);
+        border-left: 3px solid transparent !important;
+        border-radius: 0;
+        &:hover{
+            background-color: var(--fg-surface-hover);
+            color: var(--fg-primary-hover);
+        }
+        &.active{
+            background-color: var(--fg-surface);
+            border-left-color: var(--fg-primary) !important;
+            color: var(--fg-primary-hover);
+            font-weight: 600;
+        }
     }
 }
 
 .sidebar-overlay{
     height: 100vh;
-    background-color: #9f9f9f85;
+    background-color: rgba(38, 50, 56, 0.45);
     z-index: 9;
     top: 0px;
     left: 0px;

@@ -2,12 +2,11 @@ ul.first-list {
     list-style: auto;
 }
 .form-select.color-change {
-    color: #ff6d00;
+    color: var(--fg-warning);
 }
 select#expedition {
-    border: none;
-    border-bottom: 1px solid #ff6d00;
-    border-radius: 0px;
+    border: 1px solid var(--fg-border);
+    border-radius: 4px;
 }
 .footer-top-section {
     width: 100%;
@@ -23,7 +22,7 @@ select#expedition {
 .auto-gen1 p {
     margin-bottom: 0px;
     padding-left: 20px;
-    color: #777;
+    color: var(--fg-text-secondary);
 }
 
 ::ng-deep ngb-modal-window.d-block.modal.fade.show{

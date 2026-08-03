@@ -8,10 +8,10 @@
     text-align: end;
 }
 .mek-hed1{
-    color: #444;
+    color: var(--fg-text);
 }
 .accordion-section .accordion-button:not(.collapsed){
-    background-color: #fff !important;
+    background-color: var(--fg-surface) !important;
     border: none !important;
 }
 .template-config-actions {
@@ -23,7 +23,7 @@
 }
 .template-toolbar-label {
     margin: 0;
-    color: #444;
+    color: var(--fg-text);
     font-weight: 600;
     white-space: nowrap;
 }
@@ -59,7 +59,7 @@
     border: none;
     background: transparent;
     padding: 0;
-    color: #6c757d;
+    color: var(--fg-text-secondary);
     cursor: pointer;
 }
 .template-info-icon i {
@@ -73,7 +73,7 @@
 }
 .entity-accordion-btn i,
 .attribute-accordion-btn i {
-    color: #666;
+    color: var(--fg-text-secondary);
     font-size: 12px;
 }
 select.form-control.temp-dropdown {
@@ -97,7 +97,7 @@ select.form-control.temp-dropdown {
     padding: 0 0 0 10px;
 }
 .defin {
-    color: #444;
+    color: var(--fg-text);
     margin: 30px 0px 10px 0px;
 }
 .accordion-section {
@@ -106,7 +106,7 @@ select.form-control.temp-dropdown {
 button.save-btn {
     border: none;
     background: none;
-    color: #1e88e5;
+    color: var(--fg-primary);
 }
 .checkbox-sec {
     margin: 0 0 4px 0;
@@ -145,16 +145,16 @@ button.save-btn {
 
 .valid-hed {
     text-align: center;
-    color: #444;
+    color: var(--fg-text);
     margin-bottom: 30px;
 }
 .valid-hed1 {
     margin: 0 0 10px 0;
-    color: #000000de;
+    color: var(--fg-text);
 }
 .valid-hed2 {
     margin: 20px 0 10px 0;
-    color: #000000de;
+    color: var(--fg-text);
 }
 
 
@@ -162,10 +162,11 @@ button.save-btn {
 // =======================SRA Submission====================
 .form-container.SRA {
     position: relative;
-    background: #fff;
+    background: var(--fg-surface);
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--fg-border);
+    border-radius: 6px;
+    box-shadow: none;
     margin: 40px auto;
 }
 .step-list {
@@ -180,25 +181,24 @@ button.save-btn {
     margin-bottom: 5px;
 }
 .error-text {
-    color: #ff6d00;
+    color: var(--fg-warning);
     font-size: 12px;
 }
 .step-list {
     position: relative;
 }
 select#expedition {
-    border: none;
-    border-bottom: 1px solid #ff6d00;
-    border-radius: 0px;
+    border: 1px solid var(--fg-border);
+    border-radius: 4px;
 }
 .form-select.color-change{
-    color: #ff6d00;
+    color: var(--fg-warning);
 }
 
 .bio-next{
-    background: #00000061;
-    border: none;
-    color: #ddd;
+    background: var(--fg-secondary-soft);
+    border: 1px solid var(--fg-border);
+    color: var(--fg-text-secondary);
     width: 100%;
     max-width: 120px;
     padding: 8px 0px;
@@ -210,7 +210,7 @@ select#expedition {
     bottom: 22px;
     width: 2px;
     content: "";
-    background: rgb(0, 130, 199);
+    background: var(--fg-secondary);
     height: 190px;
 }
 .step-line {
@@ -225,7 +225,7 @@ select#expedition {
     position: absolute;
     left: -4px;
     top: 17px;
-    background: rgba(0, 130, 199, 1);
+    background: var(--fg-primary);
     width: 10px;
     height: 10px;
     content: "";

@@ -1,15 +1,15 @@
 .flower-section {
-    background-color: #fff;
-    border: 1px solid #d6dbdb;
+    background-color: var(--fg-surface);
+    border: 1px solid var(--fg-border);
     padding: 15px;
     margin: 0 0 20px 0;
 }
 .flow-hed{
-    color: #444;
+    color: var(--fg-text);
 }
 .flower-section ul.nav.nav-tabs{
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
+    border-top: 1px solid var(--fg-divider);
+    border-bottom: 1px solid var(--fg-divider);
 }
 .flower-section ul.nav.nav-tabs .nav-link{
     border: none;
@@ -18,35 +18,35 @@
 }
 .flower-section .nav-tabs .nav-link.active, 
 .nav-tabs .nav-link.active {
-    background-color: #ddd !important;
+    background-color: var(--fg-surface-selected) !important;
 }
 .req-save{
-    background-color: #42516a;
+    background-color: var(--fg-primary);
     color: #fff;
 }
 .card-sec.border-danger {
-    border: 1px solid #dc3545;
+    border: 1px solid var(--fg-error);
     margin: 20px 0 0 40px;
     padding: 10px 30px;
     border-radius: 5px;
-    background-color: #fbddda;
+    background-color: var(--fg-error-soft);
 }
 .span-text{
-    color: #b94a48;
+    color: var(--fg-error);
 }
 .grant-user{
-    background: #cbe6c2;
+    background: var(--fg-primary-soft);
 }
 .setting-bar{
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
+    border-top: 1px solid var(--fg-divider);
+    border-bottom: 1px solid var(--fg-divider);
 }
 button.btn-ban {
     border: none;
     background: transparent;
 }
 button.btn-ban i{
-    color: #dc3545;
+    color: var(--fg-error);
 
 }
 .ban-cont{
@@ -58,8 +58,8 @@ button.btn-ban i{
     border: none;
 }
 .list-group{
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
+    border-top: 1px solid var(--fg-divider);
+    border-bottom: 1px solid var(--fg-divider);
 }
 .box-container{
     padding: 0 0 0 40px;

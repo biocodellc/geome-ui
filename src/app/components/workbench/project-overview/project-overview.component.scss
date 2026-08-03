@@ -3,6 +3,6 @@ span.dropdown-toggle::after{
 }
 
 .doi-link {
-    color: #0d6efd;
+    color: var(--fg-primary);
     text-decoration: underline;
 }
