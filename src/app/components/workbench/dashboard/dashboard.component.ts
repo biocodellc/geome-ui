@@ -40,7 +40,10 @@ export class DashboardComponent implements OnDestroy{
     this.dummyDataService.loadingState.next(true);
     this.getUserProjects();
     this.getAllPublicProjects();
-    this.authService.currentUser.pipe(takeUntil(this.destroy$)).subscribe(x => this.currentUser = x);
+    this.authService.currentUser.pipe(takeUntil(this.destroy$)).subscribe(x => {
+      this.currentUser = x;
+      this.filterProject();
+    });
     this.filterProjectSubject.pipe(debounceTime(100), takeUntil(this.destroy$)).subscribe((type:string) =>{
       if(type === 'private') this.filterPrivateProject();
       else this.filterProject();
@@ -66,12 +69,16 @@ export class DashboardComponent implements OnDestroy{
   getAllPublicProjects(){
     this.projectService.getProjectStats(true).pipe(take(1), takeUntil(this.destroy$)).subscribe({
       next: (res:any)=>{
-        res = res.map((i:any)=>{
-          i.hasPhotos = i.entityStats.Sample_PhotoCount > 0 || i.entityStats.Event_PhotoCount > 0;
-          i.hasSRA = i.entityStats.fastqMetadataCount > 0;
-          return i;
+        const projects = Array.isArray(res) ? res : [];
+        const projectsWithFlags = projects.map((i:any)=>{
+          return {
+            ...i,
+            hasPhotos: i?.entityStats?.Sample_PhotoCount > 0 || i?.entityStats?.Event_PhotoCount > 0,
+            hasSRA: i?.entityStats?.fastqMetadataCount > 0,
+          };
         })
-        this.allPublicProjects = this.filteredPublicProjects = this.projectService.sortWithKey(res, 'latestDataModification', 'date');
+        this.allPublicProjects = this.projectService.sortWithKey(projectsWithFlags, 'latestDataModification', 'date');
+        this.filterProject();
         this.dummyDataService.loadingState.next(false);
       },
       error: ()=> this.dummyDataService.loadingState.next(false)
@@ -80,9 +87,10 @@ export class DashboardComponent implements OnDestroy{
 
   filterProject(){
     const newVal = this.searchedProject.trim().toLowerCase();
+    const visibleProjects = this.getVisiblePublicProjects();
     if(newVal)
-      this.filteredPublicProjects = this.allPublicProjects.filter((proj:any)=> proj.projectTitle.toLowerCase().includes(newVal));
-    else this.filteredPublicProjects = this.allPublicProjects;
+      this.filteredPublicProjects = visibleProjects.filter((proj:any)=> (proj.projectTitle || '').toLowerCase().includes(newVal));
+    else this.filteredPublicProjects = visibleProjects;
   }
 
   filterPrivateProject(){
@@ -94,6 +102,36 @@ export class DashboardComponent implements OnDestroy{
 
   selectProject(project:any){
     this.projectService.setCurrentProject(project);
+  }
+
+  private getVisiblePublicProjects(): Array<any> {
+    return this.allPublicProjects.filter((project:any) =>
+      this.getSampleCount(project) > 0 || this.isProjectOwnedByCurrentUser(project)
+    );
+  }
+
+  private getSampleCount(project:any): number {
+    const sampleCount = Number(
+      project?.entityStats?.SampleCount ??
+      project?.entityStats?.sampleCount ??
+      project?.SampleCount ??
+      project?.sampleCount ??
+      0
+    );
+    return Number.isFinite(sampleCount) ? sampleCount : 0;
+  }
+
+  private isProjectOwnedByCurrentUser(project:any): boolean {
+    const currentUserId = Number(this.currentUser?.userId);
+    if (!currentUserId) return false;
+
+    const ownerIds = [
+      project?.user?.userId,
+      project?.projectConfiguration?.user?.userId,
+      project?.userId,
+    ];
+
+    return ownerIds.some((ownerId:any) => Number(ownerId) === currentUserId);
   }
 
   viewTeamOverview(teamId:any){
