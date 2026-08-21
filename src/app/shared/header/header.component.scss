@@ -1,13 +1,40 @@
 .header-container {
-    min-height: 56px;
-    background-color: var(--fg-primary) !important;
+    --header-logo-solid-width: 170px;
+    --header-logo-fade-start: 16vw;
+    --header-logo-fade-end: 33.333vw;
+    background:
+        linear-gradient(
+            90deg,
+            #fff 0,
+            #fff var(--header-logo-solid-width),
+            var(--fg-primary-soft) var(--header-logo-fade-start),
+            var(--fg-primary) var(--header-logo-fade-end),
+            var(--fg-primary) 100%
+        ) !important;
     color: #fff;
     z-index: 4000 !important;
+}
+
+.header-inner {
+    min-height: 64px;
+    align-items: stretch;
+}
+
+.header-brand-area {
+    min-width: 0;
+}
+
+.header-logo-panel {
+    min-height: 64px;
+    padding: 0 40px 0 16px;
+    display: flex;
+    align-items: center;
 }
 
 .header-logo {
     max-height: 44px;
     width: auto;
+    display: block;
 }
 
 .header-container .primary-text,
@@ -59,5 +86,17 @@ ul li.cursor-pointer{
 
 @media screen and (max-width: 991px) {
     .dropdown-toggle::after{ display: none; }
+    .header-container {
+        --header-logo-solid-width: 142px;
+        --header-logo-fade-start: 38vw;
+        --header-logo-fade-end: 58vw;
+    }
     .header-container ul{ gap: 0.5rem !important; }
+    .header-inner,
+    .header-logo-panel {
+        min-height: 58px;
+    }
+    .header-logo-panel {
+        padding: 0 28px 0 12px;
+    }
 }

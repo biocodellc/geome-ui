@@ -34,15 +34,136 @@
             </div>
           </div>
 
-          <aside class="guide-quick-panel" aria-label="What GEOME supports">
-            <h2>Use GEOME to</h2>
-            <ul>
-              <li><i class="fas fa-check" aria-hidden="true"></i><span>Prepare project templates for field and lab teams.</span></li>
-              <li><i class="fas fa-check" aria-hidden="true"></i><span>Validate required metadata before publication.</span></li>
-              <li><i class="fas fa-check" aria-hidden="true"></i><span>Search, download, and share reusable biodiversity records.</span></li>
+          <aside class="guide-quick-panel" aria-label="Research todo list supported by GEOME">
+            <h2>Get Your Data Publication-Ready</h2>
+            <ul class="research-todo-list">
+              <li>
+                <div class="todo-check-row">
+                  <span class="todo-check-box" aria-hidden="true"><span class="handwritten-check">✓</span></span>
+                  <span>Plan, coordinate, and prepare project</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-check-row">
+                  <span class="todo-check-box" aria-hidden="true"><span class="handwritten-check">✓</span></span>
+                  <span>Check and clean up data</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-check-row">
+                  <span class="todo-check-box" aria-hidden="true"><span class="handwritten-check">✓</span></span>
+                  <span>Make sure data meets the right standards</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-check-row">
+                  <span class="todo-check-box" aria-hidden="true"><span class="handwritten-check">✓</span></span>
+                  <span>Make data available for sharing and publication</span>
+                </div>
+              </li>
             </ul>
             <a routerLink="/faq" class="guide-help-link">Browse FAQ</a>
           </aside>
+        </div>
+      </section>
+
+      <section
+        class="case-study-carousel animate-in"
+        aria-labelledby="case-study-carousel-title"
+        (mouseenter)="pauseCaseStudyHover()"
+        (mouseleave)="resumeCaseStudyHover()"
+        (focusin)="pauseCaseStudyFocus()"
+        (focusout)="resumeCaseStudyFocus($event)"
+      >
+        <div class="case-study-carousel-head">
+          <div>
+            <p class="story-kicker">Case Studies</p>
+            <h3 id="case-study-carousel-title">Research stories using GEOME</h3>
+          </div>
+          <div class="case-study-controls" aria-label="Case study controls">
+            <button type="button" class="case-study-icon-button" (click)="previousCaseStudy()" aria-label="Previous case study">
+              <i class="fas fa-chevron-left" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="case-study-icon-button" (click)="nextCaseStudy()" aria-label="Next case study">
+              <i class="fas fa-chevron-right" aria-hidden="true"></i>
+            </button>
+            <button
+              type="button"
+              class="case-study-pause-button"
+              (click)="toggleCaseStudyRotation()"
+              [attr.aria-pressed]="caseStudyUserPaused"
+              [attr.aria-label]="caseStudyUserPaused ? 'Resume case study rotation' : 'Pause case study rotation'"
+            >
+              <i class="fas" [ngClass]="caseStudyUserPaused ? 'fa-play' : 'fa-pause'" aria-hidden="true"></i>
+              <span>{{caseStudyUserPaused ? 'Resume' : 'Pause'}}</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="case-study-slides">
+          @for(caseStudy of caseStudies; track caseStudy.id; let index = $index){
+            <article
+              class="guide-case-study case-study-slide"
+              [class.active]="index === activeCaseStudyIndex"
+              [class.before]="getCaseStudySlidePosition(index) === 'before'"
+              [class.after]="getCaseStudySlidePosition(index) === 'after'"
+              [attr.aria-label]="caseStudy.title"
+              [attr.aria-hidden]="index === activeCaseStudyIndex ? null : 'true'"
+            >
+              <div class="case-study-copy">
+                <p class="story-kicker">Case Study | {{caseStudy.source}}</p>
+                <h3>{{caseStudy.title}}</h3>
+                <p>
+                  {{caseStudy.summary}}
+                </p>
+                <div class="case-study-points">
+                  @for(point of caseStudy.outcomes; track point){
+                    <div class="case-study-point">
+                      <span class="point-dot"></span>
+                      <p>{{point}}</p>
+                    </div>
+                  }
+                </div>
+                <div class="story-citation-links case-study-links">
+                  @for(link of caseStudy.primaryLinks; track link.href){
+                    <a [href]="link.href" target="_blank" rel="noopener noreferrer" [attr.tabindex]="index === activeCaseStudyIndex ? null : '-1'">{{link.label}}</a>
+                  }
+                </div>
+                @if(caseStudy.publications.length){
+                  <div class="case-study-publications" aria-label="Publications to date">
+                    <span>Publications</span>
+                    <div class="case-study-doi-links">
+                      @for(publication of caseStudy.publications; track publication.href){
+                        <a class="case-study-doi-chip" [href]="publication.href" target="_blank" rel="noopener noreferrer" [attr.tabindex]="index === activeCaseStudyIndex ? null : '-1'">
+                          {{publication.label}}
+                        </a>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+              <figure class="case-study-media">
+                <img [src]="caseStudy.imageUrl" [alt]="caseStudy.imageAlt" [style.object-position]="caseStudy.imagePosition">
+                @if(caseStudy.imageCaption){
+                  <figcaption>{{caseStudy.imageCaption}}</figcaption>
+                }
+              </figure>
+            </article>
+          }
+        </div>
+
+        <div class="case-study-indicators" role="tablist" aria-label="Case studies">
+          @for(caseStudy of caseStudies; track caseStudy.id; let index = $index){
+            <button
+              type="button"
+              [class.active]="index === activeCaseStudyIndex"
+              [attr.aria-label]="'Show case study: ' + caseStudy.title"
+              [attr.aria-current]="index === activeCaseStudyIndex ? 'true' : null"
+              (click)="setActiveCaseStudy(index)"
+            >
+              <span></span>
+            </button>
+          }
         </div>
       </section>
 
@@ -59,31 +180,6 @@
             </article>
           }
         </div>
-      </section>
-
-      <section class="guide-case-study animate-in">
-        <div class="case-study-copy">
-          <p class="story-kicker">Case Study | {{prototypeDCaseStudy.source}}</p>
-          <h3>{{prototypeDCaseStudy.title}}</h3>
-          <p>
-            {{prototypeDCaseStudy.summary}}
-          </p>
-          <div class="case-study-points">
-            @for(point of prototypeDCaseStudy.outcomes; track point){
-              <div class="case-study-point">
-                <span class="point-dot"></span>
-                <p>{{point}}</p>
-              </div>
-            }
-          </div>
-          <div class="story-citation-links">
-            <a [href]="prototypeDCaseStudy.articleUrl" target="_blank" rel="noopener noreferrer">View article</a>
-            <a [href]="prototypeDCaseStudy.doi" target="_blank" rel="noopener noreferrer">DOI</a>
-          </div>
-        </div>
-        <figure class="case-study-media">
-          <img [src]="prototypeDCaseStudy.imageUrl" [alt]="prototypeDCaseStudy.imageAlt">
-        </figure>
       </section>
     }
     @else{
