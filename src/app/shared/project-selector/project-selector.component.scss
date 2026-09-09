@@ -1,0 +1,23 @@
+:host .project-selector-toggle {
+    max-width: 300px;
+}
+
+:host-context(.header-container) .project-selector-toggle {
+    color: var(--fg-primary-hover) !important;
+    background-color: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 2px 8px rgba(23, 68, 103, 0.18);
+    font-weight: 600;
+}
+
+:host-context(.header-container) .project-selector-toggle:hover,
+:host-context(.header-container) .project-selector-toggle:focus,
+:host-context(.header-container) .project-selector-toggle.show {
+    color: var(--fg-primary-hover) !important;
+    background-color: #fff;
+    border-color: #fff;
+}
+
+:host-context(.header-container) .project-selector-toggle:focus-visible {
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.4);
+}

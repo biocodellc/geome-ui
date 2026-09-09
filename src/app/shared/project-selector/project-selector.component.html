@@ -1,7 +1,7 @@
 <div class="d-flex align-items-center gap-2 projectsDropdownMenu">
     @if(!['/'].includes(currentRouteUrl)){
         <div ngbDropdown class="d-inline-block p-2">
-            <button id="projectsDropdown" class="btn primary-text text-eclipse" style="max-width: 300px;" ngbDropdownToggle>{{currentProject?.projectTitle || 'CHOOSE A PROJECT'}}</button>
+            <button id="projectsDropdown" class="btn primary-text project-selector-toggle text-eclipse" ngbDropdownToggle>{{currentProject?.projectTitle || 'CHOOSE A PROJECT'}}</button>
             <div ngbDropdownMenu class="f-14 pt-0" aria-labelledby="projectsDropdown">
                 <div class="w-100 d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom" style="padding: 0.75rem;">
                     <span>Switch Project</span>
