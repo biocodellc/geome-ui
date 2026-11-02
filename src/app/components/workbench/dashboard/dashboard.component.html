@@ -11,6 +11,7 @@
                     </div>
                 </div>
             </div>
+            <app-list-sort [items]="userProjects" preferenceKey="projects.mine" [preference]="mineSort" (preferenceChange)="changeMineSort($event)" />
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -27,13 +28,14 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
                                         <h6 class="text-primary m-0 mb-1 cursor-pointer"  placement="top" [ngbTooltip]="item.projectTitle" (click)="selectProject(item)">{{item.projectTitle}}</h6>
-                                        <p class="m-0 f-12">Latest Activity: {{ item.latestDataModification ? (item.latestDataModification | date: 'shortDate') : 'N/A' }}</p>
+                                        <app-latest-activity [timestamp]="item.latestDataModification" [showUser]="false" />
+                                        <span class="d-block small text-secondary">Owner: {{formatOwner(item.user)}}</span>
                                     </div>
                                     <div class="d-flex flex-column">
-                                        @if(item?.user.userId == currentUser?.userId){
+                                        @if(item?.user?.userId == currentUser?.userId){
                                             <button type="button" class="btn btn-dark btn-sm d-inline f-11 mb-2" style="padding: 5px 8px;">Admin</button>
                                         }
-                                        @if(item?.projectConfiguration.networkApproved){
+                                        @if(item?.projectConfiguration?.networkApproved){
                                             <button type="button" class="btn btn-primary custom d-inline f-11" style="padding: 5px 8px;" (click)="viewTeamOverview(item.projectConfiguration.id)">{{item.projectConfiguration.name}} Team</button>
                                         }
                                     </div>
@@ -70,6 +72,7 @@
                 </div>
             </div>
         </div>
+        <app-list-sort [items]="allPublicProjects" preferenceKey="projects.public" [preference]="publicSort" (preferenceChange)="changePublicSort($event)" />
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -85,8 +88,11 @@
                         <td>
                             <h6 class="text-primary m-0 mb-1 cursor-pointer"  placement="top" [ngbTooltip]="item.projectTitle" (click)="selectProject(item)">{{item.projectTitle}}</h6>
                             <div class="d-flex justify-content-between align-items-center">
-                                <p class="m-0 f-12">Latest Activity: {{ item.latestDataModification ? (item.latestDataModification | date: 'shortDate') : 'N/A' }}</p>
-                                @if(item.projectConfiguration.networkApproved){
+                                <div>
+                                    <app-latest-activity [timestamp]="item.latestDataModification" [showUser]="false" />
+                                    <span class="d-block small text-secondary">Owner: {{formatOwner(item.user)}}</span>
+                                </div>
+                                @if(item.projectConfiguration?.networkApproved){
                                     <button type="button" class="btn btn-primary custom d-inline f-11" style="padding: 5px 8px;" (click)="viewTeamOverview(item.projectConfiguration.id)">{{item.projectConfiguration.name}} Team</button>
                                 }
                             </div>

@@ -1,3 +1,6 @@
+import { readSortPreference, sortRows, SortPreference } from '../../../../../helpers/scripts/list-sorting';
+import { ListSortComponent } from '../../../../shared/list-sort/list-sort.component';
+import { LatestActivityComponent } from '../../../../shared/latest-activity/latest-activity.component';
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnDestroy } from '@angular/core';
 import { RouterLink } from '@angular/router';
@@ -13,7 +16,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-project-expedition',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [ListSortComponent, LatestActivityComponent, CommonModule, RouterLink],
   templateUrl: './project-expedition.component.html',
   styleUrl: './project-expedition.component.scss'
 })
@@ -28,6 +31,9 @@ export class ProjectExpeditionComponent implements OnDestroy {
 
   // Variables
   destroy$:Subject<any> = new Subject();
+  sort = readSortPreference('expeditions');
+  statisticsError = '';
+  get sortedExpeditions(): any[] { return sortRows(this.allExpeditions, this.sort); }
   currentProject:any;
   allExpeditions:Array<any> = [];
   modalRef!: NgbModalRef;
@@ -38,10 +44,11 @@ export class ProjectExpeditionComponent implements OnDestroy {
   constructor(){
     this.accessService.context$.pipe(
       switchMap(access => {
+        this.statisticsError = '';
         this.currentProject = access.project;
         if (access.loading || access.error) return of({ items: [], loading: access.loading, error: access.error });
-        return this.expService.getAccessibleExpeditions(access).pipe(
-          map(items => ({ items, loading: false, error: '' })),
+        return this.expService.getAccessibleExpeditionOverview(access).pipe(
+          map(result => { this.statisticsError = result.statisticsError; return { items: result.items, loading: false, error: '' }; }),
           catchError(error => of({ items: [], loading: false, error: error.status === 403
             ? 'Your account does not have permission to view these expeditions. Please contact the project owner.'
             : 'Unable to load expeditions. Please retry.' })),

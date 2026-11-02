@@ -179,7 +179,10 @@
                 </div>
             }
 
-            @if(displayExpedition.length == 0){
+            <app-list-sort [items]="displayExpedition" [preference]="sort" (preferenceChange)="sort = $event" />
+            @if(statisticsLoading){ <p role="status">Loading expedition statistics…</p> }
+            @if(statisticsError){ <div class="alert alert-warning" role="alert">{{statisticsError}} <button type="button" class="btn btn-link" (click)="getExpeditionStats()">Retry</button></div> }
+            @if(!statisticsLoading && !statisticsError && displayExpedition.length == 0){
                 <div class="row">
                     <div class="col-lg-12">
                         <p class="mt-2 mb-4 text-center">There are no expeditions associated with this project.</p>
@@ -207,11 +210,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @for (item of displayExpedition; track item) {
+                        @for (item of sortedExpeditions; track item) {
                             <tr>
                                 <td>
                                     <div class="d-flex flex-column gap-1">
                                         <span>{{item.expeditionTitle}}</span>
+                                        <app-latest-activity [timestamp]="item.latestDataModification" [username]="item.latestDataModificationUsername" />
                                         <span class="f-12 text-secondary"><b>Owner:</b><a [href]="'mailto:' + item?.ownerEmail" target="_blank"> {{item.ownerFirstName}} {{item.ownerLastName}}</a> {{item.ownerUsername ? '[' + item.ownerUsername + ']' : '' }}</span>
                                     </div>
                                 </td>

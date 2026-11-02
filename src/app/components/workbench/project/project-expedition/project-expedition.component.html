@@ -1,4 +1,6 @@
 <div class="p-3">
+    <app-list-sort [items]="allExpeditions" [preference]="sort" (preferenceChange)="sort = $event" />
+    @if(statisticsError){ <div class="alert alert-warning" role="alert">{{statisticsError}} <button type="button" class="btn btn-link" (click)="accessService.retry()">Retry</button></div> }
     @if(isLoading){
         <p role="status">Loading expeditions…</p>
     } @else if(loadError){
@@ -10,7 +12,7 @@
     }
     @if(actionError){ <div class="alert alert-danger" role="alert">{{actionError}}</div> }
     <ul style="list-style-type: none;" class="p-0">
-        @for(item of allExpeditions; track item){
+        @for(item of sortedExpeditions; track item){
             <li class="border-top border-bottom">
                 <div class="d-flex gap-4 align-items-center p-2">
                     <div class="d-flex gap-2">
@@ -21,7 +23,8 @@
                         }
                     </div>
                     <div class="d-flex flex-column">
-                        <p class="fw-semibold">{{item?.expeditionTitle}}</p>
+                        <p class="fw-semibold mb-1">{{item?.expeditionTitle}}</p>
+                        <app-latest-activity [timestamp]="item.latestDataModification" [username]="item.latestDataModificationUsername" />
                         <div class="d-flex gap-2">
                             <p class="m-0"><span class="fw-semibold">Code:</span> {{item?.expeditionCode}}</p>
                             <p class="m-0"><span class="fw-semibold">Owner:</span> {{item?.user?.username}}</p>

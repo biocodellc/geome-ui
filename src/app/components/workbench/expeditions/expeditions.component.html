@@ -32,6 +32,8 @@
                     <input id="my-expeditions" type="checkbox" class="form-check-input" [checked]="myExpeditionsOnly" (change)="myExpeditionsOnly = !myExpeditionsOnly">
                     <label for="my-expeditions" class="form-check-label">My Expeditions</label>
                 </div>
+                <app-list-sort [items]="projectExpeditions" [preference]="sort" (preferenceChange)="sort = $event" />
+                @if(statisticsError){ <div class="alert alert-warning" role="alert">{{statisticsError}} <button type="button" class="btn btn-link" (click)="accessService.retry()">Retry</button></div> }
                 @if(isLoading){
                     <p role="status">Loading expeditions…</p>
                 } @else if(loadError){
@@ -45,7 +47,8 @@
                 @for(item of visibleExpeditions; track item.expeditionId){
                     <div class="d-flex flex-wrap p-3 mb-3 shadow cursor-pointer" [routerLink]="[item.expeditionId, 'settings']">
                         <div class="col-12 col-md-6">
-                            <h4 class="m-0 mb-3">{{item.expeditionTitle}}</h4>
+                            <h4 class="m-0 mb-2">{{item.expeditionTitle}}</h4>
+                            <app-latest-activity [timestamp]="item.latestDataModification" [username]="item.latestDataModificationUsername" />
                             <p class="m-0"><span class="fw-semibold">Code:</span> {{item.expeditionCode}}</p>
                         </div>
                         <div class="col-12 col-md-6">

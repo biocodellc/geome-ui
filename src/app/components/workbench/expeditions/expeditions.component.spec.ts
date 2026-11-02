@@ -12,8 +12,8 @@ describe('ExpeditionsComponent member browsing', () => {
   let expeditions: jasmine.SpyObj<ExpeditionService>;
   beforeEach(async () => {
     access = new ProjectAccessStub();
-    expeditions = jasmine.createSpyObj('ExpeditionService', ['getAccessibleExpeditions']);
-    expeditions.getAccessibleExpeditions.and.returnValue(of(Array.from({ length: 38 }, (_, i) => ({ ...expedition, expeditionId: i + 1 }))));
+    expeditions = jasmine.createSpyObj('ExpeditionService', ['getAccessibleExpeditionOverview']);
+    expeditions.getAccessibleExpeditionOverview.and.returnValue(of({ items: Array.from({ length: 38 }, (_, i) => ({ ...expedition, expeditionId: i + 1 })), statisticsLoading: false, statisticsError: '' }));
     await TestBed.configureTestingModule({ imports: [ExpeditionsComponent], providers: [
       provideRouter([]), { provide: ProjectAccessService, useValue: access },
       { provide: ExpeditionService, useValue: expeditions }, { provide: NgbModal, useValue: {} }
@@ -32,7 +32,7 @@ describe('ExpeditionsComponent member browsing', () => {
   });
 
   it('renders an explanation and retry action when loading fails', () => {
-    expeditions.getAccessibleExpeditions.and.returnValue(throwError(() => ({ status: 500 })));
+    expeditions.getAccessibleExpeditionOverview.and.returnValue(throwError(() => ({ status: 500 })));
     const fixture = TestBed.createComponent(ExpeditionsComponent);
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('[role=alert]').textContent).toContain('Unable to load expeditions');

@@ -1,3 +1,6 @@
+import { readSortPreference, sortRows, SortPreference } from '../../../../helpers/scripts/list-sorting';
+import { ListSortComponent } from '../../../shared/list-sort/list-sort.component';
+import { LatestActivityComponent } from '../../../shared/latest-activity/latest-activity.component';
 import { Component, inject, OnDestroy } from '@angular/core';
 import { ProjectService } from '../../../../helpers/services/project.service';
 import { debounceTime, Subject, take, takeUntil } from 'rxjs';
@@ -12,7 +15,7 @@ import { AuthenticationService } from '../../../../helpers/services/authenticati
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgbTooltipModule],
+  imports: [ListSortComponent, LatestActivityComponent, CommonModule, FormsModule, NgbTooltipModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -26,6 +29,8 @@ export class DashboardComponent implements OnDestroy{
 
   // Variables
   private destroy$ = new Subject<void>();
+  mineSort = readSortPreference('projects.mine');
+  publicSort = readSortPreference('projects.public');
   currentUser:any;
   searchedProject:string = '';
   searchedPrivateProject:string = '';
@@ -60,7 +65,8 @@ export class DashboardComponent implements OnDestroy{
             i.hasSRA = i?.entityStats?.fastqMetadataCount > 0;
             return i;
           })
-          this.userProjects = this.filterUserProjects = this.projectService.sortWithKey(res, 'latestDataModification', 'date');
+          this.userProjects = res;
+          this.filterPrivateProject();
         }
       }
     })
@@ -77,7 +83,7 @@ export class DashboardComponent implements OnDestroy{
             hasSRA: i?.entityStats?.fastqMetadataCount > 0,
           };
         })
-        this.allPublicProjects = this.projectService.sortWithKey(projectsWithFlags, 'latestDataModification', 'date');
+        this.allPublicProjects = projectsWithFlags;
         this.filterProject();
         this.dummyDataService.loadingState.next(false);
       },
@@ -91,6 +97,7 @@ export class DashboardComponent implements OnDestroy{
     if(newVal)
       this.filteredPublicProjects = visibleProjects.filter((proj:any)=> (proj.projectTitle || '').toLowerCase().includes(newVal));
     else this.filteredPublicProjects = visibleProjects;
+    this.filteredPublicProjects = sortRows(this.filteredPublicProjects, this.publicSort);
   }
 
   filterPrivateProject(){
@@ -98,6 +105,16 @@ export class DashboardComponent implements OnDestroy{
     if(newVal)
       this.filterUserProjects = this.userProjects.filter((proj:any)=> proj.projectTitle.toLowerCase().includes(newVal));
     else this.filterUserProjects = this.userProjects;
+    this.filterUserProjects = sortRows(this.filterUserProjects, this.mineSort);
+  }
+
+  changeMineSort(preference: SortPreference): void { this.mineSort = preference; this.filterPrivateProject(); }
+  changePublicSort(preference: SortPreference): void { this.publicSort = preference; this.filterProject(); }
+
+  formatOwner(owner: any): string {
+    const name = [owner?.firstName, owner?.lastName].map(part => String(part || '').trim()).filter(Boolean).join(' ');
+    const username = owner?.username ? `[${owner.username}]` : '';
+    return [name, username].filter(Boolean).join(' ') || 'Not available';
   }
 
   selectProject(project:any){

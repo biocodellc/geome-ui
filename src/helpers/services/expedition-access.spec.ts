@@ -72,3 +72,45 @@ describe('Expedition endpoint selection', () => {
     request.flush([]);
   });
 });
+
+describe('Expedition batch statistics', () => {
+  let service: ExpeditionService;
+  let http: HttpTestingController;
+  beforeEach(() => {
+    TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
+    service = TestBed.inject(ExpeditionService);
+    http = TestBed.inject(HttpTestingController);
+  });
+  afterEach(() => http.verify());
+  it('shows permitted rows before statistics arrive and ignores statistics for inaccessible rows', () => {
+    const access = accessFor();
+    let state: any;
+    service.getAccessibleExpeditionOverview(access).subscribe(result => state = result);
+    http.expectOne(req => req.url.includes('/expeditions?user')).flush([{ expeditionCode: 'VISIBLE', user: { userId: 7 } }]);
+    expect(state.items.length).toBe(1);
+    expect(state.statisticsLoading).toBeTrue();
+    http.expectOne(req => req.url.endsWith('/expeditions/stats')).flush([
+      { expeditionCode: 'VISIBLE', SampleCount: 9, user: { userId: 99 }, latestDataModificationUsername: 'editor', ownerFirstName: 'Amanda', ownerLastName: 'Ackiss', ownerUsername: 'aackiss' },
+      { expeditionCode: 'HIDDEN', SampleCount: 200 }
+    ]);
+    expect(state.items.length).toBe(1);
+    expect(state.items[0].SampleCount).toBe(9);
+    expect(state.items[0].user.userId).toBe(7);
+    expect(state.items[0].ownerFirstName).toBe('Amanda');
+    expect(state.items[0].ownerLastName).toBe('Ackiss');
+    expect(state.items[0].latestDataModificationUsername).toBe('editor');
+    service.getAccessibleExpeditionOverview(access).subscribe();
+    http.expectNone(req => req.url.includes('/expeditions'));
+  });
+  it('keeps accessible rows on statistics failure and retries the failed request', () => {
+    const access = accessFor();
+    let state: any;
+    service.getAccessibleExpeditionOverview(access).subscribe(result => state = result);
+    http.expectOne(req => req.url.includes('/expeditions?user')).flush([{ expeditionCode: 'VISIBLE' }]);
+    http.expectOne(req => req.url.endsWith('/expeditions/stats')).flush({}, { status: 500, statusText: 'Error' });
+    expect(state.items[0].expeditionCode).toBe('VISIBLE');
+    expect(state.statisticsError).toContain('Unable to load');
+    service.getAccessibleExpeditionOverview(access).subscribe();
+    http.expectOne(req => req.url.endsWith('/expeditions/stats')).flush([]);
+  });
+});

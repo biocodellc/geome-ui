@@ -192,6 +192,7 @@ export class ProjectService{
           ...project,
           entityStats: statsProject?.entityStats || project?.entityStats,
           latestDataModification: statsProject?.latestDataModification || project?.latestDataModification,
+          latestDataModificationUsername: statsProject?.latestDataModificationUsername ?? project?.latestDataModificationUsername,
         };
       });
 

@@ -1,3 +1,6 @@
+import { readSortPreference, sortRows, SortPreference } from '../../../../helpers/scripts/list-sorting';
+import { ListSortComponent } from '../../../shared/list-sort/list-sort.component';
+import { LatestActivityComponent } from '../../../shared/latest-activity/latest-activity.component';
 import { Component, inject, OnDestroy } from '@angular/core';
 import { ProjectService } from '../../../../helpers/services/project.service';
 import { CommonModule } from '@angular/common';
@@ -15,7 +18,7 @@ import {Router, RouterLink} from '@angular/router';
 @Component({
   selector: 'app-project-overview',
   standalone: true,
-  imports: [CommonModule, NgbPopoverModule, NgbDropdownModule, RouterLink ],
+  imports: [ListSortComponent, LatestActivityComponent, CommonModule, NgbPopoverModule, NgbDropdownModule, RouterLink ],
   templateUrl: './project-overview.component.html',
   styleUrl: './project-overview.component.scss'
 })
@@ -32,6 +35,11 @@ export class ProjectOverviewComponent implements OnDestroy{
 
   // Variables
   private destroy$ = new Subject<void>();
+  sort = readSortPreference('expeditions');
+  statisticsError = '';
+  statisticsLoading = false;
+  private statsCancel$ = new Subject<void>();
+  get sortedExpeditions(): any[] { return sortRows(this.displayExpedition, this.sort); }
   projectDetails:any;
   templateUrl:string = '';
   teamUrl:string = '';
@@ -47,6 +55,10 @@ export class ProjectOverviewComponent implements OnDestroy{
     this.projectService.currentProject$()
     .pipe(takeUntil(this.destroy$))
     .subscribe((res:any)=>{
+      this.statsCancel$.next();
+      this.displayExpedition = this.allExpedition = [];
+      this.headers = [];
+      this.menuCache = {};
       this.projectDetails = res;
       if(res){
         this.getExpeditionStats();
@@ -57,7 +69,9 @@ export class ProjectOverviewComponent implements OnDestroy{
   }
 
   getExpeditionStats(){
-    this.expeditionService.stats(this.projectDetails.projectId).pipe(take(1), takeUntil(this.destroy$)).subscribe({
+    this.statisticsLoading = true;
+    this.statisticsError = '';
+    this.expeditionService.stats(this.projectDetails.projectId).pipe(take(1), takeUntil(this.statsCancel$), takeUntil(this.destroy$)).subscribe({
       next: (res:any)=>{
         if(res){
           this.allExpedition = this.displayExpedition = res;
@@ -65,8 +79,14 @@ export class ProjectOverviewComponent implements OnDestroy{
             k.endsWith('Count'),
           );
         }
+        this.statisticsLoading = false;
         this.dummyDataService.loadingState.next(false);
       },
+      error: () => {
+        this.statisticsLoading = false;
+        this.statisticsError = 'Unable to load expedition statistics and activity. Please retry.';
+        this.dummyDataService.loadingState.next(false);
+      }
     })
   }
 
@@ -228,6 +248,8 @@ export class ProjectOverviewComponent implements OnDestroy{
   }
 
   ngOnDestroy(): void {
+    this.statsCancel$.next();
+    this.statsCancel$.complete();
     this.destroy$.next();
     this.destroy$.complete();
   }
