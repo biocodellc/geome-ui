@@ -57,6 +57,32 @@
             <div class="col-lg-12">
                 <form [formGroup]="photoForm" (ngSubmit)="verifyValidations()">
                     <div class="footer-top-section">
+                        @if(expeditionsLoading){
+                            <p role="status">Loading photo upload options…</p>
+                        }
+                        @if(expeditionLoadError){
+                            <div class="alert alert-danger" role="alert">{{expeditionLoadError}}
+                                <button type="button" class="btn btn-outline-danger ms-2" (click)="getUserExpeditions()">Retry</button>
+                            </div>
+                        }
+                        @if(uploadPermissionExplanation){
+                            <div class="alert alert-info" role="note">{{uploadPermissionExplanation}}
+                                @if(!permissionCheckReady){
+                                    <button type="button" class="btn btn-outline-primary ms-2" (click)="getUserExpeditions()">Retry</button>
+                                }
+                            </div>
+                        }
+                        @if(permissionCheckReady && !accessibleExpeditionCount){
+                            <p role="status">No expeditions are available to your account in this project.</p>
+                        } @else if(permissionCheckReady && !expeditions.length){
+                            <div class="alert alert-warning" role="note">You can view this project’s expeditions, but none is available for photo upload under the current access rules. Contact the project owner if you need access.</div>
+                        }
+                        @if(selectionPermissionError){
+                            <div class="alert alert-danger" role="alert">{{selectionPermissionError}}</div>
+                        }
+                        @if(permissionCheckReady && !photoEntities.length){
+                            <p role="status">No photo entities are configured for this project.</p>
+                        }
                         <div class="mb-3">
                             <div class="form-floating mb-1">
                                 <select class="form-select" id="floatingSelect_entities" aria-label="Photo Entity" formControlName="entity">
@@ -71,7 +97,7 @@
                             }
                             @if(form['entity'].value && selectedEntity?.uniqueAcrossProject){
                                 <div class="small text-secondary mt-1">
-                                    Index key is set to be unique across the project so choosing an expedition is not required for this entity.
+                                    Index keys are unique across the project. You may upload across expeditions when the photo upload access rules allow it.
                                 </div>
                             }
                             @if(form['entity'].value && selectedEntity && !selectedEntity?.uniqueAcrossProject){
@@ -81,15 +107,16 @@
                             }
                         </div>
                           
-                        @if(form['entity'].value && selectedEntity?.requiresExpedition){
+                        @if(form['entity'].value && selectedEntity){
                             <div class="mb-3">
                                 <div class="form-floating mb-1">
                                     <select class="form-select" id="floatingSelect_expeditions" aria-label="Expeditions" formControlName="expedition">
-                                        @for(exp of expeditions; track exp){
-                                        <option [value]="exp.expeditionTitle">{{exp.expeditionTitle}}</option>
+                                        <option value="">{{canUploadAcrossExpeditions ? 'Multiple expeditions' : 'Select an expedition'}}</option>
+                                        @for(exp of expeditions; track exp.expeditionCode){
+                                        <option [value]="exp.expeditionCode">{{exp.expeditionTitle}} ({{exp.expeditionCode}})</option>
                                         }
                                     </select>
-                                    <label for="floatingSelect_expeditions">Expeditons <span>*</span></label>
+                                    <label for="floatingSelect_expeditions">Expeditions @if(requiresExpeditionSelection){<span>*</span>}</label>
                                 </div>
                                 @if(form['expedition'].touched && form['expedition'].errors){
                                     <span class="text-danger">Expedition is Required</span>
@@ -175,7 +202,7 @@
                             </div>
                         }
 
-                        <button type="submit" class="btn btn-primary float-end export-btn-1" [disabled]="loading">
+                        <button type="submit" class="btn btn-primary float-end export-btn-1" [disabled]="loading || uploadUnavailable">
                             @if(!loading){UPLOAD}
                             @else{UPLOADING...}
                         </button>
@@ -191,8 +218,8 @@
 		<h4 class="modal-title fw-semibold" id="modal-basic-title">Upload Warning!</h4>
 	</div>
 	<div class="modal-body p-2 px-4 border-0" id="expedition_modal">
-        <p><strong>Do you own the expeditions you are uploading photos for?</strong></p>
-        <p>You can only only upload photos for data in expeditions that you own. If you do not own the expedition(s) that contain the {{''}} you are uploading photos for, the upload will fail only after the file is completely uploaded.</p>
+        <p><strong>Photo upload access</strong></p>
+        <p>Photo uploads follow project membership and expedition access control rules. The server checks your upload permission before the archive is sent.</p>
         <p class="mb-0"><strong>Would you like to continue?</strong></p>
     </div>
     <div class="modal-footer border-0 pt-0">

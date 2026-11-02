@@ -2,9 +2,10 @@ import { Component, inject, OnDestroy, TemplateRef, ViewChild } from '@angular/c
 import { ProjectService } from '../../../../helpers/services/project.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { distinctUntilChanged, finalize, Subject, switchMap, take, takeUntil, throwError } from 'rxjs';
+import { catchError, distinctUntilChanged, finalize, forkJoin, map, of, Subject, switchMap, take, takeUntil, throwError } from 'rxjs';
 import { ExpeditionService } from '../../../../helpers/services/expedition.service';
 import { AuthenticationService } from '../../../../helpers/services/authentication.service';
+import { ProjectAccess, ProjectAccessService, sameUserId } from '../../../../helpers/services/project-access.service';
 import { PhotoService } from '../../../../helpers/services/photo.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -31,6 +32,7 @@ export class UploadPhotosComponent implements OnDestroy{
   projectService = inject(ProjectService);
   authService = inject(AuthenticationService);
   expeditionService = inject(ExpeditionService);
+  accessService = inject(ProjectAccessService);
 
   // Variables
   destroy$:Subject<any> = new Subject();
@@ -38,6 +40,12 @@ export class UploadPhotosComponent implements OnDestroy{
   expeditions:Array<any> = [];
   permittedExpeditionCodes:Set<string> = new Set<string>();
   permissionCheckReady:boolean = false;
+  expeditionsLoading = true;
+  expeditionLoadError = '';
+  uploadPermissionExplanation = '';
+  selectionPermissionError = '';
+  accessibleExpeditionCount = 0;
+  private loadedAccessKey = '';
   loading: boolean = false;
   currentUser:any;
   currentProject:any;
@@ -58,15 +66,66 @@ export class UploadPhotosComponent implements OnDestroy{
 
   constructor(){
     this.initForm();
-    this.authService.currentUser.pipe(takeUntil(this.destroy$)).subscribe((res:any)=> {
-      this.currentUser = res;
-      if (this.currentProject?.projectId) this.getUserExpeditions();
-    });
-    this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-      if(!res) return;
-      this.currentProject = res;
-      this.ensurePhotoEntitiesLoaded();
-      this.getUserExpeditions();
+    this.accessService.context$.pipe(
+      switchMap(access => {
+        const key = this.accessKey(access);
+        if (key !== this.loadedAccessKey) {
+          this.photoEntities = [];
+          this.selectedEntity = undefined;
+          this.photoForm.patchValue({ entity: '', expedition: '' });
+        }
+        this.currentUser = access.user;
+        this.currentProject = access.project;
+        this.permissionCheckReady = false;
+        this.expeditions = [];
+        this.permittedExpeditionCodes.clear();
+        this.accessibleExpeditionCount = 0;
+        this.expeditionLoadError = '';
+        this.uploadPermissionExplanation = '';
+        this.selectionPermissionError = '';
+        this.expeditionsLoading = access.loading;
+        if (access.loading) return of(null);
+        if (access.error || !access.isMember) {
+          this.uploadPermissionExplanation = access.error || 'Only verified project members or the project owner can upload photos.';
+          return of(null);
+        }
+        this.expeditionsLoading = true;
+        const config$ = access.project.config?.entities?.length
+          ? of(access.project.config)
+          : this.projectService.getProjectConfig(access.project);
+        return forkJoin({ items: this.expeditionService.getAccessibleExpeditions(access), config: config$.pipe(take(1)) }).pipe(
+          map(result => ({ ...result, access })),
+          catchError(error => {
+            this.expeditionsLoading = false;
+            if (error.status === 403) this.uploadPermissionExplanation = 'The server denied access to this project’s expeditions. Contact the project owner for access.';
+            else this.expeditionLoadError = 'Unable to load photo upload options. Please retry.';
+            return of(null);
+          })
+        );
+      }), takeUntil(this.destroy$)
+    ).subscribe(result => {
+      if (!result) return;
+      this.expeditionsLoading = false;
+      if (!result.config?.entities) {
+        this.expeditionLoadError = 'Unable to load the project’s photo configuration. Please retry.';
+        return;
+      }
+      this.currentProject = { ...result.access.project, config: result.config };
+      this.loadedAccessKey = this.accessKey(result.access);
+      this.accessibleExpeditionCount = result.items.length;
+      this.expeditions = result.items.filter(item => item.expeditionCode && this.canUploadToExpedition(result.access, item));
+      this.permittedExpeditionCodes = new Set(this.expeditions.map(item => item.expeditionCode));
+      this.permissionCheckReady = true;
+      this.setPhotoEntities();
+      this.updateExpeditionRequirement();
+      if (this.getControlVal('expedition') && !this.permittedExpeditionCodes.has(this.getControlVal('expedition'))) {
+        this.setControlVal('expedition', '');
+      }
+      if (!this.accessControlKnown(result.access) && !sameUserId(result.access.user, result.access.project.user)) {
+        this.uploadPermissionExplanation = 'The project’s photo upload access rules are unavailable. Please retry or contact the project owner.';
+      } else if (this.accessEnforced(result.access)) {
+        this.uploadPermissionExplanation = 'Expedition access control is on. Photo uploads to an expedition require expedition ownership or project ownership. Uploads spanning multiple expeditions require project ownership.';
+      }
     });
   }
 
@@ -83,8 +142,8 @@ export class UploadPhotosComponent implements OnDestroy{
     })
     this.form['entity'].valueChanges.pipe(takeUntil(this.destroy$)).subscribe((val:string)=>{
       this.selectedEntity = this.photoEntities.find((entity:any)=> entity.conceptAlias == val);
-      this.setReqValidator('expedition', !!this.selectedEntity?.requiresExpedition);
-      if (!this.selectedEntity?.requiresExpedition) this.setControlVal('expedition', '');
+      this.updateExpeditionRequirement();
+      this.setControlVal('expedition', '');
       this.resetUploadState();
     })
   }
@@ -103,6 +162,7 @@ export class UploadPhotosComponent implements OnDestroy{
           (p:any) => p.conceptAlias === e.parentEntity,
         );
 
+        if (!parentEntity) return null;
         const excludeCols = ['originalUrl', 'photoID', parentEntity.uniqueKey];
 
         return {
@@ -115,81 +175,86 @@ export class UploadPhotosComponent implements OnDestroy{
           ),
           requiresExpedition: !parentEntity.uniqueAcrossProject,
         };
-      });
-    if (this.photoEntities.length)
+      }).filter(Boolean);
+    if (this.photoEntities.length && !this.photoEntities.some(entity => entity.conceptAlias === this.getControlVal('entity')))
       this.setControlVal('entity', this.photoEntities[0].conceptAlias);
+    else this.selectedEntity = this.photoEntities.find(entity => entity.conceptAlias === this.getControlVal('entity'));
   }
 
-  private ensurePhotoEntitiesLoaded(): void {
-    if (this.currentProject?.config?.entities?.length) {
-      this.setPhotoEntities();
-      return;
+  getUserExpeditions(): void { this.accessService.retry(); }
+
+  private accessKey(access: ProjectAccess): string {
+    return `${access.user?.userId}/${access.project?.projectId}`;
+  }
+
+  private accessEnforced(access: ProjectAccess): boolean {
+    return access.project?.enforceExpeditionAccess === true || access.project?.enforceExpeditionAccess === 'true';
+  }
+
+  private accessControlKnown(access: ProjectAccess): boolean {
+    return [true, false, 'true', 'false'].includes(access.project?.enforceExpeditionAccess);
+  }
+
+  private verifiedAccess(access: ProjectAccess): boolean {
+    return !access.loading && !access.error && access.isMember && sameUserId(access.user, access.user);
+  }
+
+  private canUploadToExpedition(access: ProjectAccess, expedition: any): boolean {
+    if (!this.verifiedAccess(access)) return false;
+    return sameUserId(access.user, access.project?.user) ||
+      (this.accessControlKnown(access) && (!this.accessEnforced(access) || sameUserId(access.user, expedition.user)));
+  }
+
+  get canUploadAcrossExpeditions(): boolean {
+    const access = this.accessService.current;
+    return this.permissionCheckReady && this.verifiedAccess(access) && this.accessKey(access) === this.loadedAccessKey &&
+      !!this.selectedEntity?.uniqueAcrossProject &&
+      (sameUserId(access.user, access.project?.user) || (this.accessControlKnown(access) && !this.accessEnforced(access)));
+  }
+
+  get requiresExpeditionSelection(): boolean {
+    return !!this.selectedEntity && (!this.selectedEntity.uniqueAcrossProject || !this.canUploadAcrossExpeditions);
+  }
+
+  get uploadUnavailable(): boolean {
+    return !this.permissionCheckReady || this.expeditionsLoading || !!this.expeditionLoadError ||
+      (!this.canUploadAcrossExpeditions && !this.expeditions.length);
+  }
+
+  private updateExpeditionRequirement(): void {
+    this.setReqValidator('expedition', this.requiresExpeditionSelection);
+  }
+
+  private validateUploadAccess(): boolean {
+    const access = this.accessService.current;
+    const code = this.getControlVal('expedition');
+    const expedition = this.expeditions.find(item => item.expeditionCode === code);
+    const ready = this.permissionCheckReady && !this.expeditionsLoading && !this.expeditionLoadError &&
+      this.verifiedAccess(access) && this.accessKey(access) === this.loadedAccessKey;
+    if (!ready || (code ? !expedition || !this.canUploadToExpedition(access, expedition) : !this.canUploadAcrossExpeditions)) {
+      this.selectionPermissionError = !ready
+        ? 'Photo upload permissions are not ready. Please wait for loading to finish or retry.'
+        : 'Select an expedition permitted by the photo upload rules. With access control on, you must own the expedition or project. Contact the project owner if you need access.';
+      return false;
     }
-
-    this.projectService.getAllProjects(true).pipe(take(1), takeUntil(this.destroy$)).subscribe({
-      next: (projects:any) => {
-        const projectFromList = (projects || []).find((item:any) => item?.projectId == this.currentProject?.projectId) || this.currentProject;
-        this.projectService.getProjectConfig(projectFromList).pipe(take(1), takeUntil(this.destroy$)).subscribe({
-          next: (config:any) => {
-            this.currentProject = { ...projectFromList, config };
-            this.setPhotoEntities();
-          },
-          error: () => {
-            this.setPhotoEntities();
-          }
-        });
-      },
-      error: () => {
-        this.setPhotoEntities();
-      }
-    });
-  }
-
-  getUserExpeditions(){
-    if (!this.currentProject?.projectId) return;
-
-    const projectOwnerId = this.currentProject?.user?.userId;
-    const isProjectOwner = projectOwnerId && this.currentUser?.userId === projectOwnerId;
-    const enforceAccess = !!this.currentProject?.enforceExpeditionAccess && !isProjectOwner;
-    const expeditionReq$ = enforceAccess
-      ? this.expeditionService.getExpeditionsForUser(this.currentProject.projectId, true)
-      : this.expeditionService.getAllExpeditions(this.currentProject.projectId);
-
-    expeditionReq$.pipe(take(1), takeUntil(this.destroy$)).subscribe({
-      next:(res:any)=>{
-        this.expeditions = res || [];
-        this.permittedExpeditionCodes = new Set(
-          this.expeditions
-            .map((item:any) => item?.expeditionCode)
-            .filter((code:any) => !!code),
-        );
-        this.permissionCheckReady = true;
-
-        const selectedExpedition = this.expeditions.find((item:any)=> item.expeditionTitle == this.getControlVal('expedition'));
-        if (this.getControlVal('expedition') && !selectedExpedition) this.setControlVal('expedition', '');
-      },
-      error:()=>{
-        this.expeditions = [];
-        this.permittedExpeditionCodes.clear();
-        this.permissionCheckReady = false;
-      }
-    })
+    this.selectionPermissionError = '';
+    return true;
   }
 
   async verifyValidations() {
-    if (this.loading) return;
+    if (this.loading || !this.validateUploadAccess()) return;
 
     // Checking Forms Validations
     this.photoForm.markAllAsTouched();
     if(this.photoForm.invalid) return;
 
     // Checking other Validations
-    const expedition = this.expeditions.find((item:any)=> item.expeditionTitle == this.getControlVal('expedition'));
+    const expedition = this.expeditions.find((item:any)=> item.expeditionCode === this.getControlVal('expedition'));
     if (
       !this.file ||
       !this.selectedEntity ||
       !this.getControlVal('entity') ||
-      (this.selectedEntity?.requiresExpedition && !expedition?.expeditionCode)
+      (this.requiresExpeditionSelection && !expedition?.expeditionCode)
     )
       return;
 
@@ -201,7 +266,10 @@ export class UploadPhotosComponent implements OnDestroy{
   }
 
   async upload(){
-    const expedition = this.expeditions.find((item:any)=> item.expeditionTitle == this.getControlVal('expedition'));
+    if (this.loading || !this.validateUploadAccess() || this.photoForm.invalid || !this.file || !this.selectedEntity) return;
+    const projectId = this.currentProject.projectId;
+    const entityAlias = this.selectedEntity.conceptAlias;
+    const expedition = this.expeditions.find((item:any)=> item.expeditionCode === this.getControlVal('expedition'));
 
     this.uploadProgress = 0;
     this.loading = true;
@@ -219,9 +287,9 @@ export class UploadPhotosComponent implements OnDestroy{
     this.authService.ensureActiveSession().pipe(
       switchMap(() =>
         this.photoService.precheck(
-          this.currentProject.projectId,
+          projectId,
           expedition?.expeditionCode,
-          this.selectedEntity.conceptAlias,
+          entityAlias,
         )
       ),
       switchMap((precheck:any) => {
@@ -238,9 +306,9 @@ export class UploadPhotosComponent implements OnDestroy{
 
         this.uploadStatusMessage = `Uploading ${this.getEntityLabel()} photos...`;
         return this.photoService.upload(
-          this.currentProject.projectId,
+          projectId,
           expedition?.expeditionCode,
-          this.selectedEntity.conceptAlias,
+          entityAlias,
           this.file,
           resume,
           this.getControlVal('ignoreId'),
@@ -251,7 +319,7 @@ export class UploadPhotosComponent implements OnDestroy{
         );
       }),
     )
-    .pipe(finalize(() => this.loading = false))
+    .pipe(takeUntil(this.destroy$), finalize(() => this.loading = false))
     .subscribe({
       next: (res:any) => {
         this.uploadWarnings = this.normalizeMessages(res?.warnings);
@@ -371,7 +439,7 @@ export class UploadPhotosComponent implements OnDestroy{
 
     if (status === 403) {
       const expeditionDetail = opts.hasExpeditionCode
-        ? ['With expeditionCode set, you must be expedition owner or project owner.']
+        ? ['If expedition access control is on, photo uploads require expedition ownership or project ownership. If it is off, verified project members may upload.']
         : [];
       const result = withDetail({
         status,
