@@ -63,7 +63,11 @@
                                                 }
                                                 @default {
                                                     <label [for]="item.name" class="form-group-label">{{item.name}}</label>
-                                                    <input [id]="item.name" type="text" class="input-cus d-block" style="width: 280px" placeholder="Enter meta data" [formControlName]="item.name">
+                                                    @if(item.name.toLowerCase() === 'description'){
+                                                        <textarea [id]="item.name" class="input-cus d-block expedition-description" rows="2" placeholder="Enter description" [formControlName]="item.name"></textarea>
+                                                    } @else {
+                                                        <input [id]="item.name" type="text" class="input-cus d-block" style="width: 280px" placeholder="Enter meta data" [formControlName]="item.name">
+                                                    }
                                                 }
                                             }
                                             @if(item.required && form[item.name].touched && (form[item.name].invalid)){

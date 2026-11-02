@@ -1,3 +1,13 @@
+.input-cus.expedition-description {
+    width: 100%;
+    max-width: 560px;
+    height: auto;
+    min-height: calc(3em + 18px);
+    line-height: 1.5;
+    resize: vertical;
+    overflow-y: auto;
+}
+
 ::ng-deep ngb-modal-window.d-block.modal.fade.show{
     background-color: #00000080;
 }
