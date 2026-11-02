@@ -1,12 +1,13 @@
-<div class="mt-4" cdkDropList [cdkDropListData]="entitiesList" (cdkDropListDropped)="dropEntities($event)">
+@if(isLoading){ <p role="status" class="mt-4">Loading entities…</p> }
+<div class="mt-4 entity-list" cdkDropList [cdkDropListData]="entitiesList" (cdkDropListDropped)="dropEntities($event)">
     @for(entity of entitiesList; track entity;){
         <ul class="list-group" cdkDrag>
-            <li class="list-group-box d-flex align-items-center">
-                <div class="d-flex align-items-center events-first">
+            <li class="list-group-box entity-row">
+                <div class="entity-controls">
                     <i class="fa fa-arrows-up-down-left-right cursor-move text-secondary" cdkDragHandle></i>
-                    <i class="fa fa-pencil ms-3 cursor-pointer text-secondary" (click)="openEditPopup(p, entity)"></i>
+                    <i class="fa fa-pencil cursor-pointer text-secondary" (click)="openEditPopup(p, entity)"></i>
                 </div>
-                <div class="third-list cursor-ointer" [ngbPopover]="popContent" [autoClose]="false" triggers="manual" #p="ngbPopover">
+                <div class="entity-details" [ngbPopover]="popContent" [autoClose]="false" triggers="manual" #p="ngbPopover">
                     <a href="javascript:void(0)" class="event-hed">{{entity.conceptAlias}}</a>
                     <ul class="work-list">
                         <li><strong>worksheet:</strong> {{entity.worksheet}}</li>
@@ -14,9 +15,9 @@
                         <li><strong>uniqueAcrossProject:</strong> {{entity.uniqueAcrossProject}}</li>
                     </ul>
                 </div>
-                <div>
+                <div class="entity-links">
                     <ul class="list-inline mb-0">
-                        <li class="lists-attributes mb-1 cursor-pointer" [routerLink]="['/workbench','config','entities', entity.conceptAlias,'attributes']">
+                        <li class="lists-attributes cursor-pointer" [routerLink]="['/workbench','config','entities', entity.conceptAlias,'attributes']">
                             <span class="badge bg-primary">{{entity.attributes.length}}</span> Attributes
                         </li>
                         <li class="lists-attributes cursor-pointer" [routerLink]="['/workbench','config','entities', entity.conceptAlias, 'rules']">

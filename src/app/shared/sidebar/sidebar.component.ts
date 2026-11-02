@@ -6,6 +6,7 @@ import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { ProjectSelectorComponent } from '../project-selector/project-selector.component';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { DummyDataService } from '../../../helpers/services/dummy-data.service';
+import { ProjectAccessService } from '../../../helpers/services/project-access.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -20,6 +21,8 @@ export class SidebarComponent implements OnDestroy{
   modalService = inject(NgbModal);
   projectService = inject(ProjectService);
   dummyDataService = inject(DummyDataService);
+  accessService = inject(ProjectAccessService);
+  isProjectMember = false;
 
   // Variables
   @ViewChild('selectProjectModal', { static: false }) selectProjectModal!:NgbModalRef;
@@ -60,6 +63,7 @@ export class SidebarComponent implements OnDestroy{
 
   constructor(){
     this.onResize();
+    this.accessService.context$.pipe(takeUntil(this.destroy$)).subscribe(access => this.isProjectMember = !access.loading && !access.error && access.isMember);
     this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       this.currentProject = res;
       if(this.currentProject && !this.currentProject?.limitedAccess){
@@ -82,13 +86,13 @@ export class SidebarComponent implements OnDestroy{
       case 'Upload Photos':
         return  this.currentUser &&
                 this.currentProject &&
-                this.currentProject.config.entities.some((e:any) => e.type === 'Photo')
+                this.currentProject.config?.entities?.some((e:any) => e.type === 'Photo')
       case 'Plate Viewer':
         return  this.currentProject &&
-                this.currentProject.config.entities.some((e:any) => e.conceptAlias === 'Tissue' && e.uniqueKey === 'tissueID')
+                this.currentProject.config?.entities?.some((e:any) => e.conceptAlias === 'Tissue' && e.uniqueKey === 'tissueID')
       case 'Team Overview':
         return  this.currentProject &&
-                this.currentProject.projectConfiguration.networkApproved === true
+                this.currentProject.projectConfiguration?.networkApproved === true
       default:
         return false
     }
@@ -104,6 +108,7 @@ export class SidebarComponent implements OnDestroy{
 
   canAccessAdminTab(item:any): boolean {
     if (item?.alwaysVisible) return true;
+    if (item?.name === 'Project Settings') return this.isProjectMember;
     if (Number(this.currentUser?.userId) === 1) return true;
 
     const currentUserId = Number(this.currentUser?.userId);

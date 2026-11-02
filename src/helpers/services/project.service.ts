@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, forkJoin, Observable, catchError, map, of, switchMap, take } from 'rxjs';
+import { BehaviorSubject, forkJoin, Observable, catchError, map, of, shareReplay, switchMap, take, tap, throwError } from 'rxjs';
 import { ProjectConfig } from '../models/projectConfig.model';
 import { environment } from '../../environments/environment';
 import { AuthenticationService } from './authentication.service';
@@ -27,6 +27,7 @@ export class ProjectService{
   private allProjectSubject = new BehaviorSubject<Project[] | null>(null);
   private allProjectStatsSubject = new BehaviorSubject<any>(null);
   userProjectSubject = new BehaviorSubject<any>(null);
+  private authenticatedProjectsCache?: { session: string; expiresAt: number; request: Observable<any[]> };
 
   constructor(
     private router: Router,
@@ -34,7 +35,11 @@ export class ProjectService{
     private activatedRoute: ActivatedRoute,
     private authService: AuthenticationService,
     private projectConfigService : ProjectConfigurationService
-  ) {}
+  ) {
+    this.authService.currentUser.subscribe(user => {
+      if (!user) this.clearAuthenticatedProjectsCache();
+    });
+  }
 
   currentProject$(): Observable<Project | null> {
     return this.projectSubject.asObservable();
@@ -117,6 +122,7 @@ export class ProjectService{
   }
 
   getAllProjects(includePublic: boolean): Observable<any> {
+    if (!includePublic) return this.getAuthenticatedProjects();
     const paramsBase:any = { includePublic: String(includePublic) };
     const paramsWithPresentFalse:any = { ...paramsBase, present: 'false' };
 
@@ -129,6 +135,35 @@ export class ProjectService{
       map(({ base, withPresentFalse }: any) => this.mergeUniqueProjectsById([...(base || []), ...(withPresentFalse || [])]))
     );
   }
+
+  // These responses contain only projects associated with the authenticated account.
+  // Keep failures observable: an unavailable membership list is not an empty membership list.
+  getAuthenticatedProjects(): Observable<any[]> {
+    const session = this.authService.getUserFromStorage()?.accessToken;
+    if (!session) return throwError(() => new Error('Sign in to verify project membership.'));
+    const cached = this.authenticatedProjectsCache;
+    if (cached && cached.session === session && cached.expiresAt > Date.now()) return cached.request;
+
+    // One complete authenticated list serves startup and permission checks. The backend
+    // does not need a second request with the default "present" parameter.
+    const entry = { session, expiresAt: Infinity, request: undefined! as Observable<any[]> };
+    entry.request = this.http.get<any[]>(`${this.apiUrl}projects`, { params: { includePublic: 'false', present: 'false' } }).pipe(
+      map(items => {
+        if (!Array.isArray(items)) throw new Error('Invalid project response');
+        return items;
+      }),
+      tap(() => entry.expiresAt = Date.now() + 60_000),
+      catchError(error => {
+        if (this.authenticatedProjectsCache === entry) this.clearAuthenticatedProjectsCache();
+        return throwError(() => error);
+      }),
+      shareReplay({ bufferSize: 1, refCount: false })
+    );
+    this.authenticatedProjectsCache = entry;
+    return entry.request;
+  }
+
+  clearAuthenticatedProjectsCache(): void { this.authenticatedProjectsCache = undefined; }
 
   loadAllProjects(){
     this.getAllProjects(true).pipe(take(1)).subscribe((res:any) =>{
@@ -185,18 +220,20 @@ export class ProjectService{
   createProject(project: Project): Observable<Project> {
     return this.http
       .post<Project>(`${this.apiUrl}projects`, project)
+      .pipe(tap(() => this.clearAuthenticatedProjectsCache()))
       .pipe(catchError(() => of(null as any)));
   }
 
   updateProject(project: Project): Observable<Project> {
     return this.http
       .put<Project>(`${this.apiUrl}projects/${project.projectId}`, project)
-      .pipe(catchError(() => of(null as any)));
+      .pipe(tap(() => this.clearAuthenticatedProjectsCache()));
   }
 
   deleteProject(project: Project): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}projects/${project.projectId}`).pipe(
       map(() => {
+        this.clearAuthenticatedProjectsCache();
         this.setCurrentProject(null);
       }),
       catchError(() => of())
@@ -256,10 +293,10 @@ export class ProjectService{
   }
 
   addMember(projectId:number, username:string):Observable<any> {
-    return this.http.put(`${this.apiUrl}projects/${projectId}/members/${username}`,'');
+    return this.http.put(`${this.apiUrl}projects/${projectId}/members/${username}`,'').pipe(tap(() => this.clearAuthenticatedProjectsCache()));
   }
 
   removeMember(projectId:number, username:string):Observable<any> {
-    return this.http.delete(`${this.apiUrl}projects/${projectId}/members/${username}`);
+    return this.http.delete(`${this.apiUrl}projects/${projectId}/members/${username}`).pipe(tap(() => this.clearAuthenticatedProjectsCache()));
   }
 }

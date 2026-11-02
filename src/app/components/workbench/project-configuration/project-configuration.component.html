@@ -1,7 +1,7 @@
 <section class="project-configuration">
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-lg12">
+            <div class="col-12">
                 <div class="proj-config">
                     <h3 class="mek-hed1">Project configuration</h3>
                     @if(canEditConfiguration){
@@ -20,8 +20,8 @@
                 <div class="col-lg-12">
                     <div class="proj-config">
 
-                        <div class="d-flex mb-3 justify-content-between">
-                            <div class="d-flex">
+                        <div class="d-flex flex-wrap gap-3 mb-3 justify-content-between">
+                            <div class="d-flex flex-wrap gap-1">
                                 <button class="btn" [routerLink]="['/workbench','config', 'entities']" routerLinkActive="btn-primary custom">Entities</button>
                                 <button class="btn" [routerLink]="['/workbench','config', 'expedition', 'properties']" routerLinkActive="btn-primary custom">Expedition Properties</button>
                                 <button class="btn" [routerLink]="['/workbench','config', 'lists']" routerLinkActive="btn-primary custom">Lists</button>

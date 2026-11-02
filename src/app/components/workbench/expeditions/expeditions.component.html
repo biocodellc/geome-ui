@@ -4,8 +4,7 @@
             <div class="col-lg-12">
                 <h4 class="m-0 text-center mb-3">Project Expeditions</h4>
                 <p class="mt-2 mb-3 text-center">
-                    The following may not represent a comprehensive list of expeditions for this project, which can be
-                    found under
+                    Browse the expeditions available to your account. View project data under
                 </p>
                 <div class="proj-btn-sec">
                     <button class="proj-btn" [routerLink]="['/workbench','project-overview']">
@@ -20,7 +19,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="create-btn-sec">
-                    <button type="button" class="btn btn-primary" (click)="openCreateModal()" [disabled]="!currentProject">
+                    <button type="button" class="btn btn-primary" (click)="openCreateModal()" [disabled]="!isMember || isLoading || !!loadError">
                         <span class="exp-icon"><i class="fa-solid fa-plus"></i></span> CREATE EXPEDITION
                     </button>
                 </div>
@@ -29,7 +28,21 @@
 
         <div class="row mt-3">
             <div class="col-lg-12">
-                @for(item of projectExpeditions; track item){
+                <div class="form-check mb-3">
+                    <input id="my-expeditions" type="checkbox" class="form-check-input" [checked]="myExpeditionsOnly" (change)="myExpeditionsOnly = !myExpeditionsOnly">
+                    <label for="my-expeditions" class="form-check-label">My Expeditions</label>
+                </div>
+                @if(isLoading){
+                    <p role="status">Loading expeditions…</p>
+                } @else if(loadError){
+                    <div class="alert alert-danger" role="alert">
+                        {{loadError}}
+                        <button type="button" class="btn btn-outline-danger ms-2" (click)="accessService.retry()">Retry</button>
+                    </div>
+                } @else if(!visibleExpeditions.length){
+                    <p role="status">{{myExpeditionsOnly ? 'You do not own any expeditions in this project.' : 'No expeditions are available to your account in this project.'}}</p>
+                }
+                @for(item of visibleExpeditions; track item.expeditionId){
                     <div class="d-flex flex-wrap p-3 mb-3 shadow cursor-pointer" [routerLink]="[item.expeditionId, 'settings']">
                         <div class="col-12 col-md-6">
                             <h4 class="m-0 mb-3">{{item.expeditionTitle}}</h4>
@@ -38,7 +51,7 @@
                         <div class="col-12 col-md-6">
                             <p class="m-0"><span class="fw-semibold">Identifier:</span> http://n2t.net/{{item.identifier}}</p>
                             <p class="mt-2 mb-0"><span class="fw-semibold">Visibility:</span> {{item.visibility}}</p>
-                            <p class="mt-2 mb-0"><span class="fw-semibold">Owner:</span> {{item?.user?.username}} (<a [href]="'mailto:' + item?.user?.email" target="_blank">{{item.user.email}}</a>)</p>
+                            <p class="mt-2 mb-0"><span class="fw-semibold">Owner:</span> {{item?.user?.username}} (<a [href]="'mailto:' + item?.user?.email" target="_blank" (click)="$event.stopPropagation()">{{item?.user?.email}}</a>)</p>
                         </div>
                     </div>
                 }

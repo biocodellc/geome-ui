@@ -6,6 +6,15 @@
             </span>
         </div>
         
+        @if(isLoading){
+            <p role="status">Loading expedition details…</p>
+        } @else if(loadError){
+            <div class="alert alert-danger" role="alert">
+                {{loadError}}
+                <button type="button" class="btn btn-outline-danger ms-2" (click)="accessService.retry()">Retry</button>
+            </div>
+        }
+        @if(!isLoading && !loadError && currentExpedition){
         <div class="row mb-3">
             <div class="container-bg shadow px-3 py-4">
                 <h3 class="m-0 mb-3">{{currentExpedition?.expeditionTitle}}</h3>
@@ -25,6 +34,29 @@
         <div class="row mb-3">
         <div class="col-lg-9">
             <div class="container-bg shadow px-3 py-4">
+                @if(!canEditExpeditionSettings){
+                    <div class="alert alert-info" role="note">
+                        You are viewing {{currentExpedition.expeditionCode}} as a member of {{currentProject.projectTitle}}.
+                        This expedition is owned by {{expeditionOwnerName}}. Your account can view its details, but changes
+                        to its title, description, and visibility must be saved by the expedition owner or project owner.
+                        For description changes, contact {{expeditionOwnerName}}.
+                    </div>
+                }
+                <div class="alert alert-secondary" role="note">
+                    @if(currentProject.enforceExpeditionAccess === undefined || currentProject.enforceExpeditionAccess === null){
+                        Expedition access control status is unavailable. Upload permissions are determined by the server.
+                    } @else if(!expeditionAccessEnabled){
+                        Expedition access control is currently off. Project members may upload expedition data under the applicable upload rules.
+                        This setting does not grant permission to edit expedition settings.
+                    } @else {
+                        Expedition access control is currently on. Uploads are subject to the applicable expedition ownership and upload rules.
+                        This setting does not grant permission to edit expedition settings.
+                    }
+                    <a class="d-block mt-2" [routerLink]="['/workbench/project/settings']" fragment="expedition-access-control">View project access settings</a>
+                </div>
+                @if(saveError){
+                    <div class="alert alert-danger" role="alert">{{saveError}}</div>
+                }
                 <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs">
                     <li [ngbNavItem]="'settings'">
                         <button ngbNavLink>Settings</button>
@@ -64,7 +96,11 @@
                                                 @default {
                                                     <label [for]="item.name" class="form-group-label">{{item.name}}</label>
                                                     @if(item.name.toLowerCase() === 'description'){
-                                                        <textarea [id]="item.name" class="input-cus d-block expedition-description" rows="2" placeholder="Enter description" [formControlName]="item.name"></textarea>
+                                                        @if(canEditExpeditionSettings){
+                                                            <textarea [id]="item.name" class="input-cus d-block expedition-description" rows="2" placeholder="Enter description" [formControlName]="item.name"></textarea>
+                                                        } @else {
+                                                            <textarea [id]="item.name" class="input-cus d-block expedition-description" rows="2" readonly [value]="form[item.name].value || ''"></textarea>
+                                                        }
                                                     } @else {
                                                         <input [id]="item.name" type="text" class="input-cus d-block" style="width: 280px" placeholder="Enter meta data" [formControlName]="item.name">
                                                     }
@@ -78,9 +114,10 @@
                                         </div>
                                     }
                                     <div class="form-group-div">
-                                        <button type="submit" class="pro-save">Save</button>
+                                        <button type="submit" class="pro-save" [disabled]="!canEditExpeditionSettings || isSaving">{{isSaving ? 'Saving…' : 'Save'}}</button>
                                     </div>
                                 </form>
+                                @if(canEditExpeditionSettings){
                                 <div class="mt-3">
                                     <div class="border border-danger bg-danger-subtle p-3 rounded">
                                         <div class="mb-1 d-flex justify-content-between">
@@ -93,6 +130,7 @@
                                         </p>
                                     </div>
                                 </div>
+                                }
                             </div>
                         </ng-template>
                     </li>
@@ -121,15 +159,9 @@
                         <button ngbNavLink>Members</button>
                         <ng-template ngbNavContent>
                             <div class="p-3">
-                                A project can be setup to disable expedition access checks, allowing all project members to upload
-                                to any expedition. To allow expedition access to all project members, the project administrator
-                                may do the following:
-                                <ul>
-                                  <li>Visit <span class="text-primary cursor-pointer" [routerLink]="currentProject.user.email == currentExpedition.user.email ? ['/workbench/project/settings'] : ['']">"Project Settings"</span> under Workbench</li>
-                                  <li>Uncheck the "Enforce Expedition Access Control" checkbox</li>
-                                </ul>
-                                <br />
-                                Having multiple members in one expedition is a feature that will be implemented in the future.
+                                Expedition settings may be changed by {{expeditionOwnerName}} or the project owner.
+                                Contact {{expeditionOwnerName}} for description changes. Data upload access is governed
+                                separately by the project's access control setting and the applicable upload rules.
                               </div>
                         </ng-template>
                     </li>
@@ -138,7 +170,6 @@
                 <div [ngbNavOutlet]="nav" class="mt-2"></div>
             </div>
         </div>
-
         <div class="col-lg-3">
             <div class="view-section container-bg shadow px-3 py-4">
                 <ul class="view-list">
@@ -151,6 +182,7 @@
         </div>
 
         </div>
+        }
     </div>
 </section>
 
@@ -165,7 +197,7 @@
     </div>
     <div class="modal-footer border-0 pt-0">
 		<div class="d-flex justify-content-end gap-2">
-            <button type="button" class="btn btn-danger" (click)="deleteExpedition()">Delete</button>
+            <button type="button" class="btn btn-danger" [disabled]="!canEditExpeditionSettings || isSaving" (click)="deleteExpedition()">Delete</button>
             <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">Cancel</button>
         </div>
 	</div>

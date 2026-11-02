@@ -8,7 +8,6 @@ import { CommonModule } from '@angular/common';
 import { NgbPopover, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { DummyDataService } from '../../../../../helpers/services/dummy-data.service';
 import { cloneDeep } from 'lodash';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 
@@ -24,7 +23,6 @@ export class EntitiesComponent implements OnDestroy{
   fb = inject(FormBuilder);
   toastr = inject(ToastrService);
   projectService = inject(ProjectService);
-  dummyDataService = inject(DummyDataService);
   projectConfService = inject(ProjectConfigurationService);
 
   // Variables
@@ -34,9 +32,9 @@ export class EntitiesComponent implements OnDestroy{
   entitiesList:Array<any> = [];
   openedPopup!:NgbPopover;
   entityForm!:FormGroup;
+  isLoading = true;
 
   constructor(){
-    this.dummyDataService.loadingState.next(true);
     this.initForm();
     this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       this.currentProject = res;
@@ -77,7 +75,7 @@ export class EntitiesComponent implements OnDestroy{
       }
       this.currentProjectConfig = project.config;
       this.entitiesList = this.currentProjectConfig.entities;
-      this.dummyDataService.loadingState.next(false);
+      this.isLoading = false;
     })
   }
 

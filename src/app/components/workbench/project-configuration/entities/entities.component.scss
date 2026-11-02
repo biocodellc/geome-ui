@@ -1,3 +1,64 @@
 ::ng-deep .popover{
     --bs-popover-max-width: auto;
 }
+
+:host {
+    display: block;
+    width: 100%;
+    min-width: 0;
+}
+
+.entity-list .entity-row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.entity-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.entity-details {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.entity-details .work-list {
+    flex-wrap: wrap;
+    gap: .5rem 1.5rem;
+    margin: .5rem 0 0;
+}
+
+.entity-links .list-inline {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 1.5rem;
+    white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+    .entity-list .entity-row {
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: start;
+        gap: 1rem;
+    }
+
+    .entity-controls {
+        padding-top: .4rem;
+    }
+
+    .entity-links {
+        grid-column: 2;
+        min-width: 0;
+    }
+
+    .entity-links .list-inline {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: .75rem;
+        white-space: normal;
+    }
+}

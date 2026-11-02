@@ -5,7 +5,7 @@
                 <div class="flower-section">
                     <h3 class="flow-hed">{{currentProject?.projectTitle}}</h3>
                     <p>{{currentProject?.description}}</p>
-                    <p><strong>Project Owner:</strong> {{currentProject?.user.username}}</p>
+                    <p><strong>Project Owner:</strong> {{currentProject?.user?.username || 'Not available'}}</p>
                 </div>
             </div>
         </div>

@@ -8,6 +8,15 @@
     overflow-y: auto;
 }
 
+.expedition-description[readonly] {
+    user-select: text;
+}
+
+button.pro-save:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
 ::ng-deep ngb-modal-window.d-block.modal.fade.show{
     background-color: #00000080;
 }

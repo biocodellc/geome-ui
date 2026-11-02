@@ -14,7 +14,18 @@
                     <p class="proj-1">Project owner</p>
                 </div>
                 <div class="col-lg-10">
-                    <p class="proj-2"><a [href]="'mailto:' + projectDetails?.user.email" target="_blank">{{projectDetails?.user.firstName}} {{projectDetails?.user.lastName}}</a>  {{projectDetails?.user.username? '[' + projectDetails?.user.username+ ']' : '' }}</p>
+                    <p class="proj-2">
+                        @if(projectDetails?.user; as owner){
+                            @if(owner.email){
+                                <a [href]="'mailto:' + owner.email" target="_blank">{{owner.firstName}} {{owner.lastName}}</a>
+                            } @else {
+                                <span>{{owner.firstName}} {{owner.lastName}}</span>
+                            }
+                            {{owner.username ? '[' + owner.username + ']' : ''}}
+                        } @else {
+                            <span>Not available</span>
+                        }
+                    </p>
                 </div>
             </div>
 
@@ -151,15 +162,17 @@
                 </div>
             }
 
-            @if(projectDetails?.projectConfiguration.networkApproved){
+            @if(projectDetails?.projectConfiguration?.networkApproved){
                 <div class="row">
                     <div class="col-lg-2">
                         <p class="proj-1">Team workspace</p>
                     </div>
                     <div class="col-lg-10">
                         <p class="proj-2">
-                            <span class="biocode-btn cursor-pointer" [routerLink]="['/workbench','team-overview']">{{projectDetails?.projectConfiguration.name}} team</span>
-                            <span class="px-2"><a [href]="'mailto:' + projectDetails?.projectConfiguration.user.email" target="_blank">{{projectDetails?.projectConfiguration.user.email}}</a></span>
+                            <span class="biocode-btn cursor-pointer" [routerLink]="['/workbench','team-overview']">{{projectDetails?.projectConfiguration?.name}} team</span>
+                            @if(projectDetails?.projectConfiguration?.user?.email; as email){
+                                <span class="px-2"><a [href]="'mailto:' + email" target="_blank">{{email}}</a></span>
+                            }
                             <button class="btn" placement="top" ngbPopover="This team workspace specifies all validation rules and terms for this project. If you have any questions or suggestions, please contact the team owner."><i class="fas fa-circle-question"></i></button>
                         </p>
                     </div>

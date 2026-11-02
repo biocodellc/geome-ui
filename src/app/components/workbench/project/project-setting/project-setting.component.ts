@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnDestroy, TemplateRef } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ProjectService } from '../../../../../helpers/services/project.service';
-import { Subject, take, takeUntil } from 'rxjs';
+import { finalize, Subject, take, takeUntil } from 'rxjs';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { DeleteModalComponent } from '../../../../dialogs/delete-modal/delete-modal.component';
-import { DummyDataService } from '../../../../../helpers/services/dummy-data.service';
+import { ProjectAccessService, sameUserId } from '../../../../../helpers/services/project-access.service';
 
 @Component({
   selector: 'app-project-setting',
@@ -21,7 +22,22 @@ export class ProjectSettingComponent implements OnDestroy {
   toastr = inject(ToastrService);
   modalService = inject(NgbModal);
   projectService = inject(ProjectService);
-  dummyDataService = inject(DummyDataService);
+  accessService = inject(ProjectAccessService);
+  private route = inject(ActivatedRoute);
+  private loadedKey = '';
+  private writeDenied = false;
+  isLoading = true;
+  isSaving = false;
+  canViewProjectSettings = false;
+  canEditProjectSettings = false;
+  accessError = '';
+  saveError = '';
+
+  @ViewChild('expeditionAccessControl') set accessControlAnchor(element: ElementRef<HTMLElement> | undefined) {
+    if (element && this.route.snapshot.fragment === 'expedition-access-control') {
+      setTimeout(() => element.nativeElement.scrollIntoView({ block: 'center' }));
+    }
+  }
 
   // Variables
   destroy$: Subject<any> = new Subject();
@@ -30,15 +46,25 @@ export class ProjectSettingComponent implements OnDestroy {
   modalRef!: NgbModalRef;
 
   constructor() {
-    this.dummyDataService.loadingState.next(true);
     this.initForm();
-    this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-      this.currentProject = res;
-      if(this.currentProject){
-        this.setFormValues()
-        this.dummyDataService.loadingState.next(false);
+    this.projectForm.disable({ emitEvent: false });
+    this.accessService.context$.pipe(takeUntil(this.destroy$)).subscribe(access => {
+      this.isLoading = access.loading;
+      this.accessError = access.error;
+      this.canViewProjectSettings = !access.loading && !access.error && access.isMember;
+      this.currentProject = access.project;
+      if (this.canViewProjectSettings) {
+        const key = `${access.user.userId}/${access.project.projectId}`;
+        if (key !== this.loadedKey || !this.projectForm.dirty) {
+          this.setFormValues();
+          this.projectForm.markAsPristine();
+          this.saveError = '';
+        }
+        if (key !== this.loadedKey) this.writeDenied = false;
+        this.loadedKey = key;
       }
-    })
+      this.refreshProjectPermission();
+    });
   }
 
   initForm() {
@@ -68,23 +94,44 @@ export class ProjectSettingComponent implements OnDestroy {
   }
 
   update() {
+    if (this.isSaving) return;
+    if (!this.refreshProjectPermission()) {
+      this.saveError = 'Only the project owner can change project settings, including expedition access control. Your draft is retained on this page.';
+      return;
+    }
     this.projectForm.markAllAsTouched();
     if (this.projectForm.invalid) return;
-    this.dummyDataService.loadingState.next(true);
-    const updatedData = { ...this.currentProject, ...this.projectForm.value };
-    this.projectService.updateProject(updatedData).pipe(take(1), takeUntil(this.destroy$)).subscribe(
-      (res: any) => {
-        if (!res) return;
+    this.isSaving = true;
+    this.saveError = '';
+    const updatedData = { ...this.currentProject, ...this.projectForm.getRawValue() };
+    this.projectService.updateProject(updatedData).pipe(take(1), takeUntil(this.destroy$), finalize(() => this.isSaving = false)).subscribe({
+      next: (res: any) => {
+        if (!res) { this.saveError = 'The server did not confirm the update. Your draft is retained on this page.'; return; }
+        this.projectForm.markAsPristine();
+        this.toastr.success('Project Updated');
         this.projectService.loadAllProjects();
-        setTimeout(() => {
-          this.toastr.success('Project Updated');
-          this.dummyDataService.loadingState.next(false);
-        }, 2000);
+      },
+      error: error => {
+        if (error.status === 403) {
+          this.writeDenied = true;
+          this.refreshProjectPermission();
+          this.saveError = 'The server denied permission to update this project. Only the project owner can change expedition access control. Your draft is retained on this page.';
+        } else this.saveError = 'Unable to update the project. Your draft is retained on this page. Please retry.';
       }
-    )
+    });
+  }
+
+  refreshProjectPermission(): boolean {
+    const access = this.accessService.current;
+    this.canEditProjectSettings = !this.writeDenied && !access.loading && !access.error && access.isMember && sameUserId(access.user, access.project?.user) &&
+      `${access.user?.userId}/${access.project?.projectId}` === this.loadedKey;
+    if (this.canEditProjectSettings) this.projectForm.enable({ emitEvent: false });
+    else this.projectForm.disable({ emitEvent: false });
+    return this.canEditProjectSettings;
   }
 
   deleteProject() {
+    if (!this.refreshProjectPermission()) return;
     this.projectService.deleteProject(this.currentProject)
       .pipe(take(1), takeUntil(this.destroy$)).subscribe((res: any) => {
         this.toastr.success('Project Deleted!');
@@ -92,6 +139,7 @@ export class ProjectSettingComponent implements OnDestroy {
   }
 
   openModal(){
+    if (!this.refreshProjectPermission()) return;
     this.modalRef = this.modalService.open(DeleteModalComponent, { animation: true, centered: true, windowClass: 'no-backdrop', backdrop: false })
     this.modalRef.componentInstance.modalFor = 'Project';
     this.modalRef.dismissed.subscribe((res:any)=>{

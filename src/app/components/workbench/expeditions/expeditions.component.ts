@@ -1,70 +1,68 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnDestroy } from '@angular/core';
-import { ProjectService } from '../../../../helpers/services/project.service';
 import { RouterLink } from '@angular/router';
-import { Subject, take, takeUntil } from 'rxjs';
+import { catchError, map, of, startWith, Subject, switchMap, takeUntil } from 'rxjs';
 import { ExpeditionService } from '../../../../helpers/services/expedition.service';
-import { AuthenticationService } from '../../../../helpers/services/authentication.service';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ProjectAccessService, sameUserId } from '../../../../helpers/services/project-access.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateExpeditionComponent } from '../../../dialogs/create-expedition/create-expedition.component';
 
 @Component({
   selector: 'app-expeditions',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, RouterLink],
   templateUrl: './expeditions.component.html',
   styleUrl: './expeditions.component.scss'
 })
-export class ExpeditionsComponent implements OnDestroy{
-  // Injectors
-  private fb = inject(FormBuilder);
+export class ExpeditionsComponent implements OnDestroy {
   private modalService = inject(NgbModal);
-  private projectService = inject(ProjectService);
-  private authService = inject(AuthenticationService);
   private expeditionService = inject(ExpeditionService);
-
-  // Variables
+  accessService = inject(ProjectAccessService);
   private destroy$ = new Subject<void>();
-  currentUser:any;
-  currentProject:any;
-  isLoading:boolean = true;
-  codeExists:boolean = true;
-  projectExpeditions:Array<any> = [];
-  modalRef!:NgbModalRef;
-  codeRegex:any = /^[a-zA-Z0-9_]{4,50}$/;
+  currentUser: any;
+  currentProject: any;
+  isLoading = true;
+  isMember = false;
+  loadError = '';
+  myExpeditionsOnly = false;
+  projectExpeditions: any[] = [];
 
-  // Modal Variables
-  expeditionForm!:FormGroup;
-
-  constructor(){
-    this.authService.currentUser.pipe(takeUntil(this.destroy$)).subscribe((res:any)=> this.currentUser = res);
-    this.projectService.currentProject$().pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-      if(res){
-        this.currentProject = res;
-        this.getProjectExpeditions();
-      }
-    })
+  constructor() {
+    this.accessService.context$.pipe(
+      switchMap(access => {
+        this.currentUser = access.user;
+        this.currentProject = access.project;
+        this.isMember = access.isMember;
+        if (access.loading || access.error) return of({ items: [], loading: access.loading, error: access.error });
+        return this.expeditionService.getAccessibleExpeditions(access).pipe(
+          map(items => ({ items, loading: false, error: '' })),
+          catchError(error => of({ items: [], loading: false, error: error.status === 403
+            ? 'Your account does not have permission to view these expeditions. Please contact the project owner.'
+            : 'Unable to load expeditions. Please retry.' })),
+          startWith({ items: [], loading: true, error: '' })
+        );
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe(state => {
+      this.projectExpeditions = state.items;
+      this.isLoading = state.loading;
+      this.loadError = state.error;
+    });
   }
 
-  getProjectExpeditions(){
-    this.expeditionService.getExpeditionsForUser(this.currentProject.projectId, true).pipe(take(1), takeUntil(this.destroy$)).subscribe({
-      next: (res:any)=>{
-        this.isLoading = false;
-        if(res) this.projectExpeditions = res.filter((exp:any) => exp.user.username == this.currentUser.username)
-      },
-      error: (err:any)=> this.isLoading = false
-    })
+  get visibleExpeditions(): any[] {
+    return this.myExpeditionsOnly
+      ? this.projectExpeditions.filter(item => sameUserId(this.currentUser, item.user))
+      : this.projectExpeditions;
   }
 
-  openCreateModal(){
-    this.modalRef = this.modalService.open(CreateExpeditionComponent, { animation: true, centered: true, backdrop: false });
-    this.modalRef.componentInstance.currentProject = { ...this.currentProject };
-    this.modalRef.result.then((res:boolean)=>{
-      if(res) this.getProjectExpeditions();
-    })
+  openCreateModal(): void {
+    if (!this.isMember || this.isLoading || this.loadError) return;
+    const modal = this.modalService.open(CreateExpeditionComponent, { animation: true, centered: true, backdrop: false });
+    modal.componentInstance.currentProject = { ...this.currentProject };
+    modal.result.then(result => { if (result) this.accessService.retry(); }, () => {});
   }
-  
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

@@ -81,7 +81,7 @@ export class ProjectOverviewComponent implements OnDestroy{
   }
 
   menuOptions(expedition: any): any[] | undefined {
-    if (this.projectDetails.limitedAccess) {
+    if (!this.projectDetails || this.projectDetails.limitedAccess) {
       return;
     }
 
@@ -90,7 +90,7 @@ export class ProjectOverviewComponent implements OnDestroy{
       this.menuCache[expedition.expeditionCode] = this.headers
         .map((header:any) => {
           const conceptAlias = header.replace('Count', '');
-          const entity = this.projectDetails.config.entities.find(
+          const entity = (this.projectDetails.config?.entities || []).find(
             (e: any) => e.conceptAlias === conceptAlias
           );
 
@@ -173,7 +173,7 @@ export class ProjectOverviewComponent implements OnDestroy{
   }
 
   worksheetEntities() {
-    return this.projectDetails.config.entities
+    return (this.projectDetails?.config?.entities || [])
       .filter((e:any) => !!e.worksheet)
       .sort((a:any, b:any) => {
         if (a.parentEntity) {

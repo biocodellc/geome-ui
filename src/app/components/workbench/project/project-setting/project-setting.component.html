@@ -1,3 +1,18 @@
+@if(isLoading){
+    <p role="status">Checking project membership and settings permissions…</p>
+} @else if(accessError){
+    <div class="alert alert-danger" role="alert">
+        {{accessError}}
+        <button type="button" class="btn btn-outline-danger ms-2" (click)="accessService.retry()">Retry</button>
+    </div>
+}
+@if(canViewProjectSettings){
+@if(!canEditProjectSettings){
+    <div class="alert alert-info" role="note">You are viewing project settings read-only. Only the project owner, {{currentProject.user?.username}}, can change these settings.</div>
+}
+@if(saveError){
+    <div class="alert alert-danger" role="alert">{{saveError}}</div>
+}
 <div class="col-lg-9">
 
     <div class="box-container mt-4 pl-4">
@@ -36,14 +51,13 @@
                     project metadata and project statistics.</small>
             </div>
 
-            <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" formControlName="enforceExpeditionAccess">
-                <label class="form-check-label">Enforce Expedition Access
+            <div class="mb-3 form-check" id="expedition-access-control" #expeditionAccessControl>
+                <input id="enforce-expedition-access" type="checkbox" class="form-check-input" formControlName="enforceExpeditionAccess">
+                <label for="enforce-expedition-access" class="form-check-label">Enforce Expedition Access
                     Control?</label>
-                <small class="form-text text-muted d-block">Enforcing Expedition access
-                    will allow only the expedition owner to update the expedition. If
-                    disabled, any project member will be able to update the expedition
-                    data.</small>
+                <small class="form-text text-muted d-block">This setting controls expedition data access under the applicable upload rules.
+                    When off, project members may upload expedition data under those rules. It does not grant permission to edit
+                    expedition titles, descriptions, or visibility. Only the expedition owner or project owner can save those settings.</small>
             </div>
 
             <div class="mb-3">
@@ -138,8 +152,8 @@
                 <label class="form-label">*Required Elements</label>
             </div>
 
-            <button type="submit" class="btn req-save" [disabled]="dummyDataService.loadingState | async">
-                @if(dummyDataService.loadingState | async){
+            <button type="submit" class="btn req-save" [disabled]="!canEditProjectSettings || isSaving">
+                @if(isSaving){
                     <div class="spinner-border text-light" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
@@ -149,6 +163,7 @@
         </form>
     </div>
 </div>
+@if(canEditProjectSettings){
 <div class="card-sec border-danger">
     <div class="card-body d-flex justify-content-between align-items-center">
         <div>
@@ -162,3 +177,5 @@
         <button class="btn btn-danger" (click)="openModal()">Delete</button>
     </div>
 </div>
+}
+}

@@ -47,7 +47,10 @@ export class TeamOverviewComponent implements OnDestroy{
   }
 
   filterStats(){
-    this.projectStats = this.allProjectsStats.filter((proj:any)=> proj.projectConfiguration.name == this.currentProject.projectConfiguration.name);
+    const configName = this.currentProject?.projectConfiguration?.name;
+    this.projectStats = configName
+      ? this.allProjectsStats.filter((proj:any) => proj.projectConfiguration?.name === configName)
+      : [];
     this.dummyDataService.loadingState.next(false);
   }
 
